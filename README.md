@@ -52,9 +52,10 @@ Open the page, press **▶ PLAY TRAILER** (audio needs one click).
 
 ## Deploying
 
-It's a static site — `vercel deploy` from the repo root, or import the
-repo at vercel.com. No configuration needed beyond the included
-`vercel.json`.
+A GitHub Actions workflow (`.github/workflows/pages.yml`) deploys the
+site to **GitHub Pages** on every push. It also works on Vercel as a
+static site — `vercel deploy` from the repo root, or import the repo at
+vercel.com; no configuration needed beyond the included `vercel.json`.
 
 ---
 
