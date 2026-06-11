@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brooklyn, Explained — an extremely detailed neighborhood map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root {
+    --sidebar-w: 400px;
+    --ink: #1c2430;
+    --muted: #5b6878;
+    --paper: #f7f5f0;
+    --card: #ffffff;
+    --line: #e3ddd2;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    display: flex;
+  }
+  #sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    height: 100%;
+    overflow-y: auto;
+    background: var(--paper);
+    border-right: 1px solid var(--line);
+    padding: 18px 18px 40px;
+  }
+  #map { flex: 1; height: 100%; background: #cfe3ec; }
+
+  h1 { font-size: 26px; margin: 0 0 2px; letter-spacing: -0.5px; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .card h2 { font-size: 15px; margin: 0 0 8px; text-transform: uppercase; letter-spacing: .08em; color: #8a7b5c; }
+  .card p { font-size: 13.5px; line-height: 1.55; margin: 0 0 10px; }
+  .card p:last-child { margin-bottom: 0; }
+  .small { font-size: 12px; color: var(--muted); }
+
+  /* compare table */
+  table.vs { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.vs th, table.vs td { text-align: left; padding: 6px 6px; vertical-align: top; border-top: 1px solid var(--line); line-height: 1.45; }
+  table.vs th { border-top: none; font-size: 13px; }
+  table.vs td:first-child, table.vs th:first-child { width: 74px; color: var(--muted); font-weight: 600; padding-left: 0; }
+  .vs-btns { display: flex; gap: 8px; margin-top: 10px; }
+  .btn {
+    flex: 1; border: 1px solid var(--line); background: #fff; border-radius: 8px;
+    padding: 7px 10px; font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--ink);
+  }
+  .btn:hover { background: #f0ece3; }
+
+  /* legend */
+  .legend-row { display: flex; align-items: flex-start; gap: 9px; padding: 6px 4px; border-radius: 7px; cursor: pointer; }
+  .legend-row:hover { background: #f0ece3; }
+  .swatch { width: 14px; height: 14px; border-radius: 4px; margin-top: 2px; flex: none; border: 1px solid rgba(0,0,0,.2); }
+  .legend-row b { font-size: 13px; display: block; }
+  .legend-row span { font-size: 11.5px; color: var(--muted); line-height: 1.35; display: block; }
+  .toggles { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 13px; }
+  .toggles label { display: flex; gap: 8px; align-items: center; padding: 3px 0; cursor: pointer; }
+
+  /* index list */
+  #search {
+    width: 100%; padding: 8px 10px; font-size: 13.5px; border: 1px solid var(--line);
+    border-radius: 8px; margin-bottom: 10px; background: #fff; color: var(--ink);
+  }
+  .idx-group { margin-bottom: 6px; }
+  .idx-group-title { display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin: 10px 0 3px; }
+  .idx-group-title .swatch { width: 10px; height: 10px; margin: 0; }
+  .idx-item {
+    display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+    font-size: 13.5px; padding: 5px 8px; border-radius: 6px; color: var(--ink);
+  }
+  .idx-item:hover { background: #f0ece3; }
+  .idx-item .small { display: block; }
+
+  /* detail panel */
+  #detail { display: none; }
+  .back { background: none; border: none; color: #2e6fdb; font-size: 13px; cursor: pointer; padding: 0; margin-bottom: 10px; font-weight: 600; }
+  .region-pill { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #fff; border-radius: 20px; padding: 3px 10px; margin-bottom: 8px; }
+  #detail h2.hood { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.3px; text-transform: none; color: var(--ink); }
+  .tagline { font-size: 14px; font-style: italic; color: var(--muted); margin: 0 0 10px; line-height: 1.4; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip { font-size: 11.5px; background: #efe9dc; border-radius: 14px; padding: 3px 10px; color: #6b5d3f; font-weight: 600; }
+  .body p { font-size: 13.5px; line-height: 1.6; margin: 0 0 10px; }
+  .facts { margin: 12px 0 0; padding: 0 0 0 18px; }
+  .facts li { font-size: 13px; line-height: 1.5; margin-bottom: 6px; }
+  .facts-h { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin: 14px 0 4px; }
+  .subway-line { font-size: 13px; line-height: 1.9; }
+
+  /* subway bullets */
+  .bullet {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 700;
+    margin-right: 3px; vertical-align: -4px; font-family: Helvetica, Arial, sans-serif;
+  }
+  .bullet.dark { color: #111; }
+
+  /* map labels */
+  .hood-label { background: none; border: none; box-shadow: none; }
+  .hood-label div {
+    font-size: 11px; font-weight: 700; color: #2b3340; text-align: center;
+    text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 5px #fff;
+    white-space: nowrap; transform: translate(-50%, -50%); width: max-content;
+  }
+  .hood-label.minor div { font-size: 10px; font-weight: 600; }
+  .hide-labels .hood-label { display: none !important; }
+  .hide-minor .hood-label.minor { display: none !important; }
+
+  .leaflet-tooltip.hood-tip { font-size: 13px; font-weight: 600; }
+  .hood-tip .small { font-weight: 400; }
+
+  @media (max-width: 860px) {
+    body { flex-direction: column-reverse; }
+    #sidebar { width: 100%; min-width: 0; height: 46%; border-right: none; border-top: 1px solid var(--line); padding: 12px 14px 30px; }
+    #map { height: 54%; }
+    :root { --sidebar-w: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <h1>Brooklyn, Explained</h1>
+  <div class="subtitle">An extremely detailed field guide to the borough's neighborhoods. Click any area on the map.</div>
+
+  <div id="index-view">
+    <div class="card">
+      <h2>How to read Brooklyn</h2>
+      <p>Brooklyn was its own city until 1898 (America's third largest), stitched together from six original Dutch and English towns. That's why it has no single "center" — it has <b>several Brooklyns</b>, and the fastest way to understand it is to learn the big color zones on this map:</p>
+      <p><b>1. Downtown &amp; Civic Brooklyn (blue)</b> — the skyscraper/office/courthouse core, Brooklyn's version of Midtown.<br>
+      <b>2. North Brooklyn (pink)</b> — Williamsburg, Greenpoint, Bushwick: former factory land that became the global symbol of "hipster Brooklyn," now increasingly luxury.<br>
+      <b>3. Brownstone Brooklyn (amber)</b> — Park Slope, Carroll Gardens &amp; co.: leafy 1880s rowhouse streets, strollers and restaurant rows.<br>
+      <b>4. Central Brooklyn (violet)</b> — Bed-Stuy, Crown Heights, Flatbush's eastern half: the historic heart of Black and Caribbean Brooklyn.<br>
+      <b>5. The rest is its own world</b> — Hasidic Borough Park, the Chinatowns of Sunset Park and Bensonhurst, Russian Brighton Beach, and a genuinely suburban southeast with boats in driveways.</p>
+    </div>
+
+    <div class="card">
+      <h2>Downtown Brooklyn vs. Williamsburg</h2>
+      <p class="small" style="margin-bottom:8px">The two are 3 miles apart and totally different animals:</p>
+      <table class="vs">
+        <tr><th></th><th>Downtown</th><th>Williamsburg</th></tr>
+        <tr><td>What it is</td><td>The borough's central business district: courts, Borough Hall, offices, college campuses, malls</td><td>A former industrial waterfront district that became the world's shorthand for "cool Brooklyn"</td></tr>
+        <tr><td>Looks like</td><td>Glass towers (incl. Brooklyn's tallest, the 93-story Brooklyn Tower), wide avenues, chain stores</td><td>Low warehouses, lofts, street art, plus a wall of new glass condos along the East River</td></tr>
+        <tr><td>Daytime crowd</td><td>Office workers, jurors, students, shoppers</td><td>Creatives, tourists, brunch lines, stroller-pushing transplants</td></tr>
+        <tr><td>Nightlife</td><td>Quiet — people commute out</td><td>One of the best bar/music/restaurant scenes in NYC</td></tr>
+        <tr><td>Trains</td><td>Nearly every line: 2 3 4 5 A C F G B D N Q R</td><td>Basically the L (plus G, J M Z on the edges) and the ferry</td></tr>
+        <tr><td>Analogy</td><td>Brooklyn's Midtown</td><td>Brooklyn's East Village-meets-SoHo</td></tr>
+      </table>
+      <div class="vs-btns">
+        <button class="btn" data-goto="BK0202">Show me Downtown</button>
+        <button class="btn" data-goto="BK0102">Show me Williamsburg</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Regions</h2>
+      <div id="legend"></div>
+      <div class="toggles">
+        <label><input type="checkbox" id="tgl-stations" checked> Show subway stations</label>
+        <label><input type="checkbox" id="tgl-labels" checked> Show neighborhood labels</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>All neighborhoods</h2>
+      <input id="search" type="search" placeholder="Search… (try DUMBO, Red Hook, Little Odessa)">
+      <div id="idx"></div>
+    </div>
+
+    <p class="small">Boundaries: NYC Dept. of City Planning 2020 Neighborhood Tabulation Areas. Stations: MTA. Some small neighborhoods (DUMBO, Red Hook, Ditmas Park…) are grouped into one official area — the write-ups cover each one inside it.</p>
+  </div>
+
+  <div id="detail"></div>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="data.js"></script>
+<script>
+'use strict';
+
+/* ---------------- region groups ---------------- */
+const GROUPS = {
+  north:     { name: 'North Brooklyn',            color: '#e0408a', blurb: 'Greenpoint, Williamsburg, Bushwick. Factory land turned creative capital turned luxury waterfront. The L train corridor.' },
+  downtown:  { name: 'Downtown & Civic Brooklyn', color: '#3a6fe8', blurb: 'Skyscrapers, courthouses, BAM, DUMBO, the Heights. Where Brooklyn does business — its Midtown.' },
+  brownstone:{ name: 'Brownstone Brooklyn',       color: '#ef9b20', blurb: 'Park Slope, Carroll Gardens, Prospect Heights. 19th-century stoops, strollers, restaurant rows, food co-ops.' },
+  central:   { name: 'Central Brooklyn',          color: '#8d5bf0', blurb: 'Bed-Stuy, Crown Heights, East Flatbush, Brownsville. The historic heart of Black and Caribbean Brooklyn.' },
+  east:      { name: 'Eastern Brooklyn',          color: '#0d9488', blurb: 'East New York and Cypress Hills. Working-class rowhouses, big transit junctions, and the city’s edge.' },
+  flatbush:  { name: 'Greater Flatbush',          color: '#e8554a', blurb: 'Flatbush, Ditmas Park, Midwood, Kensington. Victorian houses, Caribbean high streets, Orthodox enclaves.' },
+  southwest: { name: 'Southwest Brooklyn',        color: '#8a5a2b', blurb: 'Sunset Park, Bay Ridge, Bensonhurst, Borough Park. Old-world immigrant Brooklyn: Chinese, Mexican, Arab, Italian, Hasidic.' },
+  coastal:   { name: 'The Coast',                 color: '#0c9bd6', blurb: 'Coney Island, Brighton Beach, Sheepshead Bay. Boardwalks, roller coasters, Little Odessa, fishing boats.' },
+  southeast: { name: 'Suburban Southeast',        color: '#a88a00', blurb: 'Canarsie, Marine Park, Mill Basin. Detached houses, driveways, boats — Brooklyn at its most suburban.' },
+  green:     { name: 'Parks & Cemeteries',        color: '#3fa34d', blurb: 'Prospect Park, Green-Wood, Floyd Bennett Field and the great green spaces in between.' },
+};
+const GROUP_ORDER = ['downtown','north','brownstone','central','flatbush','east','southwest','coastal','southeast','green'];
+
+/* ---------------- subway bullet rendering ---------------- */
+const ROUTE_COLORS = { '1':'#EE352E','2':'#EE352E','3':'#EE352E','4':'#00933C','5':'#00933C','6':'#00933C',
+  '7':'#B933AD','A':'#0039A6','C':'#0039A6','E':'#0039A6','B':'#FF6319','D':'#FF6319','F':'#FF6319','M':'#FF6319',
+  'G':'#6CBE45','J':'#996633','Z':'#996633','L':'#A7A9AC','N':'#FCCC0A','Q':'#FCCC0A','R':'#FCCC0A','W':'#FCCC0A','S':'#808183' };
+function bullets(routes) {
+  return routes.trim().split(/[\s,]+/).map(r => {
+    const c = ROUTE_COLORS[r] || '#555';
+    const dark = (c === '#FCCC0A') ? ' dark' : '';
+    return '<span class="bullet' + dark + '" style="background:' + c + '">' + r + '</span>';
+  }).join('');
+}
+// In prose, [[A C]] becomes route bullets.
+function prose(html) { return html.replace(/\[\[([0-9A-Z\s]+)\]\]/g, (_, r) => bullets(r)); }
+
+/* ---------------- neighborhood write-ups ----------------
+   Keyed by 2020 NTA id. g=group, n=display name, major=show label early,
+   tag=tagline, vibe=chips, body=paragraph HTML, know=bullets, sub=subway, alias=search terms */
+const INFO = {
+
+/* ===== DOWNTOWN & CIVIC ===== */
+BK0202: { g:'downtown', n:'Downtown Brooklyn, DUMBO & Boerum Hill', major:1,
+  tag:'The borough’s Midtown: courts and office towers, with a postcard waterfront and a brownstone fringe.',
+  vibe:['Skyline','Civic','Shopping','Waterfront'],
+  body:`<p><b>Downtown Brooklyn</b> is the central business district — the third largest in New York after Midtown and Lower Manhattan. This is where Brooklyn governs itself (Borough Hall, the state and federal courthouses where everyone does jury duty) and where it shops (the Fulton Mall, City Point). A 2004 rezoning unleashed a forest of residential towers, capped by the 93-story Brooklyn Tower at 9 DeKalb — the borough’s first true supertall, looming over the landmark Dime Savings Bank it grew out of. Junior’s, on Flatbush Avenue since 1950, still sells the definitive cheesecake. It is busy at noon and quiet at midnight: people work and study here (NYU Tandon, City Tech, Brooklyn Law), then go home somewhere else.</p>
+  <p><b>DUMBO</b> ("Down Under the Manhattan Bridge Overpass") is the cobblestoned wedge between the two bridges. A century ago its factories made cardboard boxes and Brillo pads; today the same brick hulks hold tech offices (Etsy’s HQ) and the most expensive lofts in Brooklyn. The view from Washington Street — Manhattan Bridge framing the Empire State Building — may be the most photographed spot in the borough, and Brooklyn Bridge Park runs the whole waterfront below. Tiny, gas-lamped <b>Vinegar Hill</b> hides just east.</p>
+  <p><b>Boerum Hill</b>, south of the courts, is the gentle landing: three-story brownstone streets, the antique shops of Atlantic Avenue, and the restaurant rows of Smith Street. It feels like a village ten minutes’ walk from the skyscrapers.</p>`,
+  know:['Brooklyn Tower (93 floors, the borough’s tallest)','Borough Hall & the courthouses','Junior’s cheesecake','DUMBO’s Washington St photo spot & Brooklyn Bridge Park','Atlantic Avenue antiques row'],
+  sub:'Almost everything: [[2 3 4 5]] Borough Hall, [[A C F]] Jay St-MetroTech, [[B D N Q R]] DeKalb Av/Atlantic Av, [[F]] York St for DUMBO',
+  alias:'dumbo vinegar hill boerum hill downtown cbd metrotech city point fulton mall' },
+
+BK0201: { g:'downtown', n:'Brooklyn Heights', major:1,
+  tag:'America’s first suburb and New York’s first historic district — the Promenade view is the whole city in one glance.',
+  vibe:['Patrician','Historic','Quiet money'],
+  body:`<p>When steam ferries started crossing the East River in 1814, Manhattan bankers built their villas on this bluff — making Brooklyn Heights arguably <b>America’s first commuter suburb</b>. It still looks like its 1840s self: block after block of Greek Revival and brownstone rowhouses, including the whimsical "fruit streets" (Pineapple, Orange, Cranberry). In 1965 it became New York City’s very first protected historic district, which is why nothing here ever seems to change.</p>
+  <p>The <b>Promenade</b>, cantilevered over the BQE, delivers the iconic full-frontal view of Lower Manhattan, the harbor, and the Statue of Liberty. Plymouth Church, where Henry Ward Beecher preached abolition, was a stop on the Underground Railroad; Truman Capote wrote <i>Breakfast at Tiffany’s</i> in a basement on Willow Street. Quietly wealthy, stroller-heavy, and almost eerily serene given it’s one subway stop from Wall Street.</p>`,
+  know:['The Promenade and its skyline view','First historic district in NYC (1965)','The "fruit streets"','Plymouth Church (Underground Railroad)'],
+  sub:'[[2 3]] Clark St, [[2 3 4 5]] Borough Hall, [[R]] Court St, [[A C]] High St',
+  alias:'heights promenade fruit streets' },
+
+BK0203: { g:'downtown', n:'Fort Greene', major:1,
+  tag:'Brownstones around an Olmsted park, with BAM at its feet — Black Brooklyn’s longtime cultural salon.',
+  vibe:['Artistic','Brownstone','Historic'],
+  body:`<p>Fort Greene wraps around its namesake hilltop park (designed by Olmsted &amp; Vaux, crowned by the Prison Ship Martyrs Monument, which holds remains of some 11,500 Americans who died on British prison ships in the Revolution). The blocks south of the park are some of the most beautiful brownstone streets in the city.</p>
+  <p>It has been a center of Black middle-class and artistic life for over a century — Richard Wright wrote <i>Native Son</i> here, Spike Lee set up Forty Acres and a Mule on DeKalb Avenue, and the Brooklyn Academy of Music (BAM, founded 1861) anchors a whole cultural district on its downtown edge. Add Brooklyn Tech (one of the city’s elite specialized high schools) and the Saturday greenmarket, and you get a neighborhood that mixes intellect, elegance and ease like nowhere else in the borough.</p>`,
+  know:['Fort Greene Park & Martyrs Monument','BAM cultural district','Spike Lee’s 40 Acres HQ','DeKalb Ave restaurant row'],
+  sub:'[[G]] Fulton St, [[C]] Lafayette Av, [[B D N Q R 2 3 4 5]] at Atlantic Av-Barclays nearby',
+  alias:'bam fort green' },
+
+BK0204: { g:'downtown', n:'Clinton Hill',
+  tag:'Oil-baron mansions, Pratt’s sculpture garden campus, and the blocks where Biggie grew up.',
+  vibe:['Collegiate','Mansions','Creative'],
+  body:`<p>In the 1880s Charles Pratt (Standard Oil) built his mansion on Clinton Avenue and gave one to each son as a wedding gift — the "Gold Coast" row still stands, much of it now owned by <b>Pratt Institute</b>, the art and architecture school whose leafy campus doubles as a free sculpture park. The rest of the neighborhood mixes grand rowhouses with handsome pre-war apartment buildings.</p>
+  <p>Christopher Wallace — the Notorious B.I.G. — grew up at 226 St. James Place and made these corners famous. Today Clinton Hill is a comfortable blend of students, old families and creative professionals, with Myrtle and Fulton as its everyday main streets.</p>`,
+  know:['Pratt Institute campus & sculpture garden','Clinton Avenue mansion row','Biggie’s childhood block (St. James Pl)'],
+  sub:'[[G]] Clinton-Washington Avs, [[C]] Clinton-Washington Avs (Fulton St)',
+  alias:'pratt biggie' },
+
+BK0261: { g:'downtown', n:'Brooklyn Navy Yard',
+  tag:'Where the USS Missouri was built — now a 300-acre hive of modern manufacturing.',
+  vibe:['Industrial','Innovation'],
+  body:`<p>For 165 years this was one of America’s great shipyards — the USS Arizona and USS Missouri were both launched here, and during WWII some 70,000 people worked the yard around the clock. The Navy left in 1966; today it’s a city-owned industrial park where 11,000+ people make everything from film sets (Steiner Studios, the largest studio complex outside Hollywood) to whiskey and body armor. BLDG 92 is the free museum; there’s a Wegmans at the gate. Not residential — but the reason the surrounding neighborhoods exist.</p>`,
+  know:['USS Missouri & Arizona built here','Steiner Studios','BLDG 92 museum'],
+  sub:'No subway inside — [[F]] York St or [[G]] Flushing Av nearby; NYC Ferry stop',
+  alias:'navy yard wallabout' },
+
+/* ===== NORTH BROOKLYN ===== */
+BK0102: { g:'north', n:'Williamsburg', major:1,
+  tag:'The neighborhood that redefined "Brooklyn" for the whole world — factories to artists to luxury towers in 25 years.',
+  vibe:['Trendy','Nightlife','Waterfront','Expensive now'],
+  body:`<p>Until the 1990s Williamsburg was a hard-working district of factories (Domino Sugar refined half of America’s sugar on this waterfront) and immigrant blocks. Cheap lofts pulled in artists and musicians; by the mid-2000s the Bedford Avenue [[L]] stop was the global epicenter of hipster culture; and a sweeping 2005 rezoning then lined the East River with glass condo towers. The arc — industrial, bohemian, luxury — happened faster and more visibly here than anywhere in America, which is why "Williamsburg" is now an international word for a certain kind of cool.</p>
+  <p>What’s actually here: <b>Bedford Avenue</b> and its side streets (boutiques, record shops, an Apple Store where squatters once lived), <b>Domino Park</b> under the restored refinery, the <b>Smorgasburg</b> food market by the river, music venues like Music Hall of Williamsburg and National Sawdust, rooftop bars (the Wythe Hotel made the skyline-view bar a genre), and <b>McCarren Park</b> shared with Greenpoint. Restaurants run from Michelin stars to 4 a.m. tacos.</p>
+  <p>It remains genuinely fun — but the artists who made it famous have mostly been priced toward Bushwick and Ridgewood. The crowd today is tech workers, European tourists, and weekenders from Manhattan, which locals find either ironic or inevitable.</p>`,
+  know:['Bedford Avenue','Domino Park & the sugar refinery','Smorgasburg (Saturdays)','Music venues & rooftop bars','East River ferry views'],
+  sub:'[[L]] Bedford Av (one stop from Manhattan), [[G]] along Union Av, [[J M Z]] Marcy Av; NYC Ferry',
+  alias:'wburg billyburg bedford domino smorgasburg' },
+
+BK0101: { g:'north', n:'Greenpoint', major:1,
+  tag:'Little Poland on the East River — Williamsburg’s quieter, scrappier northern sibling.',
+  vibe:['Polish','Low-key cool','Waterfront'],
+  body:`<p>Brooklyn’s northernmost tip has been the city’s great Polish enclave for a century — Manhattan Avenue still has kielbasa butchers, pierogi lunch counters and Polish-language bookstores, though each year a few more become wine bars. Because its only subway is the modest [[G]] (the one line that never enters Manhattan), Greenpoint gentrified a beat slower than Williamsburg and kept more of its soul: quiet side streets of vinyl-sided rowhouses, a genuinely local bar scene, and Transmitter Park’s dead-on Midtown skyline view.</p>
+  <p>The waterfront is now sprouting its own wall of towers, and the ferry has ended the isolation. Trivia for walks: Newtown Creek, the Superfund waterway separating Greenpoint from Queens, hides one of the largest oil spills in U.S. history under these streets — and the sci-fi-looking "digester eggs" of the sewage plant are weirdly beautiful at night.</p>`,
+  know:['Manhattan Avenue’s Polish shops','Transmitter Park skyline view','McGolrick & McCarren parks','Newtown Creek’s strange industrial edge'],
+  sub:'[[G]] Greenpoint Av & Nassau Av; NYC Ferry to Wall St',
+  alias:'little poland transmitter' },
+
+BK0103: { g:'north', n:'South Williamsburg',
+  tag:'Satmar Hasidic Brooklyn on one side, the old Puerto Rican Southside on the other — two worlds under the bridge.',
+  vibe:['Hasidic','Latino roots','Untouristed'],
+  body:`<p>South of the Williamsburg Bridge the neighborhood changes completely. The blocks around Bedford and Lee Avenues are home to the <b>Satmar Hasidic community</b>, one of the largest Hasidic populations in the world: Yiddish is the street language, school buses carry Hebrew lettering, and on Friday evenings the sidewalks fill with families in traditional dress. It runs on its own institutions — and has some of the highest birthrates and most distinctive streetlife in the city.</p>
+  <p>Toward the river, the historically Puerto Rican and Dominican <b>Southside ("Los Sures")</b> was the subject of a famous 1984 documentary about urban survival; its remaining casitas and social clubs now sit between new condos. Peter Luger, the 1887 steakhouse, holds the corner by the bridge.</p>`,
+  know:['Satmar Hasidic community life','Los Sures history','Peter Luger Steak House (1887)'],
+  sub:'[[J M Z]] Marcy Av, [[G]] Broadway',
+  alias:'los sures southside satmar' },
+
+BK0104: { g:'north', n:'East Williamsburg',
+  tag:'Warehouses by day, warehouse parties by night — the industrial buffer that became a scene.',
+  vibe:['Industrial','Nightlife','Studios'],
+  body:`<p>The official industrial zone between Williamsburg proper and Bushwick: food distributors, metal shops and film stages by day. But those same windowless blocks now hold artist studios, breweries, climbing gyms and some of the city’s best music venues and clubs — Brooklyn Steel headlines, and half the "Bushwick" warehouse party scene is technically here. Residential pockets along Graham and Grand have an old Italian layer (fresh mozzarella holdouts) under the newer arrivals.</p>`,
+  know:['Brooklyn Steel','Brewery row','Studio buildings off Morgan Av'],
+  sub:'[[L]] Graham Av, Grand St, Montrose Av, Morgan Av',
+  alias:'morgantown graham' },
+
+BK0401: { g:'north', n:'Bushwick (West)', major:1,
+  tag:'Street-art capital of New York — lofts, galleries and nightlife where the artists landed after Williamsburg.',
+  vibe:['Street art','Nightlife','Gritty-cool'],
+  body:`<p>In the 1800s Bushwick was America’s brewing capital — a dozen breweries run by German families lined "Brewers’ Row." After decades of disinvestment (the 1977 blackout looting and fires hit Broadway hardest), it became a proudly Puerto Rican and Dominican neighborhood; since the 2010s it has also absorbed the artists priced out of Williamsburg, one [[L]] stop at a time.</p>
+  <p>The result is the city’s densest concentration of street art — the <b>Bushwick Collective</b> murals around Troutman Street draw tour groups — plus galleries in converted lofts around the Jefferson and Morgan stops, legendary clubs (House of Yes), and tortillerias next to natural-wine bars. Maria Hernandez Park is the living room. Gentrification battles here are real and ongoing; the neighborhood’s identity is precisely that collision.</p>`,
+  know:['Bushwick Collective murals','House of Yes & the club scene','Maria Hernandez Park','Brewers’ Row history'],
+  sub:'[[L]] Jefferson St, DeKalb Av, Myrtle-Wyckoff; [[M]] along Myrtle Av',
+  alias:'bushwick collective jefferson' },
+
+BK0402: { g:'north', n:'Bushwick (East)',
+  tag:'The quieter, more residential half of Bushwick — aluminum-sided rowhouses and a strong Latino core.',
+  vibe:['Residential','Latino','Changing'],
+  body:`<p>East of Knickerbocker Avenue, Bushwick stays closer to its working-class self: tight rows of three-story houses, bodegas on every corner, and one of Brooklyn’s most established Puerto Rican, Dominican and Mexican communities (Knickerbocker Avenue is the shopping spine). The gentrification wave thins out block by block toward Broadway Junction, though the [[L]] stops here are the next frontier. Highland Park and the cemetery belt rise just east.</p>`,
+  know:['Knickerbocker Avenue market strip','Classic Bushwick rowhouse blocks'],
+  sub:'[[L]] Halsey St, Wilson Av, Bushwick Av-Aberdeen; [[J Z]] along Broadway',
+  alias:'' },
+
+/* ===== BROWNSTONE BROOKLYN ===== */
+BK0602: { g:'brownstone', n:'Park Slope', major:1,
+  tag:'The capital of brownstone Brooklyn: Prospect Park on one side, strollers, co-ops and excellent schools on the other.',
+  vibe:['Family','Brownstones','Progressive','Leafy'],
+  body:`<p>If you picture "brownstone Brooklyn" — tree tunnels, stoops, kids on scooters — you are picturing Park Slope. Built as a showcase district in the 1880s after Prospect Park opened (Montgomery Place and Prospect Park West are among the finest Victorian blocks in America), it became, from the 1970s onward, the destination for book-writing, school-obsessed, politically progressive Brooklyn. The 1973 <b>Park Slope Food Coop</b>, where 16,000 members still work shifts for groceries, is the neighborhood’s id.</p>
+  <p>Seventh Avenue is the sleepy family high street; Fifth Avenue is the livelier restaurant-and-bar strip; the park supplies Saturday. The Slope tilts literally and socially — grander near the park, younger and more renter-heavy downhill. It’s the borough’s easiest neighborhood to love and to tease ("stroller gridlock"), often in the same sentence.</p>`,
+  know:['Prospect Park West’s mansion row','Park Slope Food Coop','Fifth & Seventh Ave strips','Grand Army Plaza greenmarket at its tip'],
+  sub:'[[2 3]] Grand Army Plaza, [[B Q]] 7 Av, [[F G]] 4th Av/7th Av & 15 St, [[R]] Union St',
+  alias:'slope food coop' },
+
+BK0601: { g:'brownstone', n:'Carroll Gardens, Cobble Hill, Gowanus & Red Hook', major:1,
+  tag:'Four distinct villages in one: Italian front gardens, genteel rowhouses, a Superfund canal turned hot zone, and a salty harbor outpost.',
+  vibe:['Italian roots','Foodie','Canal','Harbor'],
+  body:`<p><b>Carroll Gardens</b> is old Italian Brooklyn at its most charming — the brownstones famously sit behind deep front gardens (a quirk of an 1846 street plan), and Court Street still has 100-year-old pork stores and pasticcerias alongside some of Brooklyn’s best restaurants. <b>Cobble Hill</b>, just north, is smaller-scaled and more genteel, all Greek Revival rowhouses and quiet pocket parks — basically Brooklyn Heights without the views or the prices (almost).</p>
+  <p><b>Gowanus</b> is the in-between zone along its infamous canal — so polluted it became a federal Superfund site, yet now flanked by art studios, shuffleboard clubs, music venues and, post-2021 rezoning, a rapidly rising wall of apartment towers. The smell is improving; the irony is not.</p>
+  <p><b>Red Hook</b>, cut off by the BQE and with no subway at all, feels like a New England harbor town that drifted into the city: Civil War-era warehouses, key-lime-pie shacks, artist studios, a working container port, and a head-on view of the Statue of Liberty from Valentino Pier. The Red Hook ballfields’ Latin American food vendors are a summer institution. Hurricane Sandy flooded it badly in 2012; it rebuilt, stubbornly itself.</p>`,
+  know:['Carroll Gardens’ front gardens & Court St','Gowanus Canal (Superfund, now condos)','Red Hook’s Valentino Pier & Statue of Liberty view','IKEA & ferry dock','Smith St restaurant row'],
+  sub:'[[F G]] Bergen St, Carroll St, Smith-9 Sts; Red Hook has none — the B61 bus or NYC Ferry',
+  alias:'red hook gowanus cobble hill carroll gardens columbia waterfront valentino' },
+
+BK0801: { g:'brownstone', n:'Prospect Heights', major:1,
+  tag:'Small, central and culture-rich: the Brooklyn Museum, the Botanic Garden and Barclays Center all touch it.',
+  vibe:['Cultured','Brownstones','Central'],
+  body:`<p>A compact triangle of handsome rowhouse blocks with an outsized cultural payload on its edges: <b>Grand Army Plaza</b> (the borough’s triumphal arch) with the Central Library’s art-deco facade, the <b>Brooklyn Museum</b>, and the <b>Brooklyn Botanic Garden</b> — cherry-blossom season is a borough-wide event. Vanderbilt Avenue has quietly become one of Brooklyn’s best eating streets, and is car-free on summer weekends.</p>
+  <p>At the northern point sits <b>Barclays Center</b> (Nets, concerts) and the Pacific Park towers — the controversial Atlantic Yards megaproject that put cranes over the neighborhood for a decade. Locals’ secret: it’s the most connected residential spot in Brooklyn, with nearly every train at its doorstep.</p>`,
+  know:['Brooklyn Museum & Botanic Garden','Grand Army Plaza & Central Library','Vanderbilt Avenue restaurants','Barclays Center'],
+  sub:'[[2 3 4 5 B D N Q R]] Atlantic Av-Barclays & along Eastern Pkwy/Flatbush',
+  alias:'barclays vanderbilt' },
+
+BK0701: { g:'brownstone', n:'Windsor Terrace & South Slope',
+  tag:'Park Slope’s mellow little sibling, wedged between the park and the cemetery.',
+  vibe:['Quiet','Family','Old-school'],
+  body:`<p>A narrow ribbon between Prospect Park and Green-Wood Cemetery with a small-town feel: modest rowhouses and wood-frames, a single sleepy main street (Prospect Park West, with a beloved 1940s diner and an indie bookstore), and longtime Irish and Italian families mixed with priced-out-of-the-Slope newcomers. <i>Dog Day Afternoon</i> was filmed on these streets. The <b>South Slope</b> blocks toward 4th Avenue add more bars and a younger crowd. People move here for the park entrance and stay forever.</p>`,
+  know:['Farrell’s Bar (1933)','Prospect Park’s quieter southwest entrances','Dog Day Afternoon location'],
+  sub:'[[F G]] 15 St-Prospect Park & Fort Hamilton Pkwy',
+  alias:'south slope greenwood heights' },
+
+/* ===== CENTRAL BROOKLYN ===== */
+BK0301: { g:'central', n:'Bedford-Stuyvesant (West)', major:1,
+  tag:'The brownstone heart of Black Brooklyn — Jay-Z’s Marcy, Biggie’s corners, and block associations that saved it all.',
+  vibe:['Brownstones','Historic','Hip-hop lore'],
+  body:`<p>Bed-Stuy holds one of the largest stretches of intact Victorian brownstones in America — when Manhattan’s Harlem got crowded in the 1930s, Black families bought these houses and built the cultural capital of Black Brooklyn. Through redlining and the hard decades, block associations and churches held the neighborhood together ("Bed-Stuy, do or die" was both warning and pride); the 1967 Bedford Stuyvesant Restoration Corporation, launched with Robert F. Kennedy, was <b>America’s first community development corporation</b>.</p>
+  <p>The western half is the brownstone showcase: think tree-lined blocks around Herbert Von King Park and the western avenues. Hip-hop’s royalty grew up here — Jay-Z in the Marcy Houses, Biggie a few blocks west — and <i>Do the Right Thing</i> was shot on a Bed-Stuy block. Today Tompkins and Bedford Avenues hum with Black-owned cafés and wine bars, amid very visible gentrification pressure.</p>`,
+  know:['Marcy Houses (Jay-Z)','Herbert Von King Park','Restoration Plaza','Brownstone historic districts'],
+  sub:'[[G]] Bedford-Nostrand, Myrtle-Willoughby; [[A C]] Nostrand Av',
+  alias:'bedstuy bedford stuyvesant marcy' },
+
+BK0302: { g:'central', n:'Bedford-Stuyvesant (East)',
+  tag:'Stuyvesant Heights’ landmark blocks and the quieter, deeper half of Bed-Stuy.',
+  vibe:['Landmark blocks','Community','Churches'],
+  body:`<p>The eastern half contains <b>Stuyvesant Heights</b>, the landmarked core whose 1890s rowhouses — turrets, stained glass, wrought iron — are as fine as anything in Park Slope. Decatur, MacDonough and Stuyvesant Avenues are the showpieces. This side stays more rooted: multigenerational homeowners, a church on seemingly every block (Bed-Stuy has one of the city’s great gospel traditions), and Caribbean and African-American businesses along Malcolm X Boulevard. Saraghina and the cafés around Lewis Avenue mark the new layer.</p>`,
+  know:['Stuyvesant Heights historic district','MacDonough St architecture','Lewis Avenue strip'],
+  sub:'[[A C]] Utica Av, Ralph Av; [[J Z]] along Broadway',
+  alias:'stuyvesant heights ocean hill border' },
+
+BK0802: { g:'central', n:'Crown Heights (North)', major:1,
+  tag:'Eastern Parkway’s grand spine: Caribbean Brooklyn, Chabad-Lubavitch world headquarters, and Franklin Avenue’s revival.',
+  vibe:['Caribbean','Hasidic','Parkway'],
+  body:`<p>Crown Heights runs along <b>Eastern Parkway</b> — the world’s first parkway, an Olmsted &amp; Vaux design of 1870 — and contains two communities living side by side: one of the largest <b>Caribbean</b> populations outside the islands (Trinidadian, Jamaican, Guyanese...), and the global headquarters of <b>Chabad-Lubavitch</b> Hasidism at 770 Eastern Parkway. Every Labor Day the parkway becomes the <b>West Indian American Day Carnival</b>, one of the biggest street festivals in North America — feathers, steel pan, and a million-plus people; J’ouvert begins before dawn.</p>
+  <p>The 1991 riots made the neighborhood a byword for Black–Jewish tension; three decades on, coexistence is the quieter, truer story. It also holds <b>Weeksville</b> — one of America’s first free Black communities (1838), whose original houses survive as a heritage center. Franklin Avenue is the gentrifying café row; the Brooklyn Children’s Museum (1899, the world’s first) sits in Brower Park.</p>`,
+  know:['West Indian Day Carnival (Labor Day)','770 Eastern Parkway (Chabad HQ)','Weeksville Heritage Center','Franklin Avenue'],
+  sub:'[[2 3 4 5]] along Eastern Pkwy (Franklin, Nostrand, Kingston, Utica), [[S]] Franklin Av shuttle, [[A C]] on the north edge',
+  alias:'weeksville chabad eastern parkway carnival' },
+
+BK0901: { g:'central', n:'Crown Heights (South)',
+  tag:'The quieter blocks below Eastern Parkway, sharing the Lubavitch core and sliding toward Lefferts.',
+  vibe:['Residential','Caribbean','Hasidic'],
+  body:`<p>South of the parkway the avenues (President, Carroll, Crown) carry big limestone rowhouses and apartment blocks, home to the heart of the Lubavitch community around Kingston Avenue — kosher pizza, Judaica shops, men in black hats streaming to 770 on Shabbat — interleaved with longtime Caribbean homeowners. Medgar Evers College anchors the west end. It’s less "scene" than the north side: this is everyday Crown Heights, going about its business.</p>`,
+  know:['Kingston Avenue’s Lubavitch shops','Medgar Evers College','Limestone rowhouse blocks'],
+  sub:'[[3 4]] along Eastern Pkwy edge; [[2 5]] President St, Sterling St',
+  alias:'' },
+
+BK0902: { g:'central', n:'Prospect Lefferts Gardens & Wingate',
+  tag:'Prospect Park’s Caribbean front porch, with a covenant-protected core of perfect rowhouses.',
+  vibe:['Caribbean','Park-side','Underrated'],
+  body:`<p>PLG sits directly on Prospect Park’s eastern flank — same park access as Park Slope at a fraction of the fame. Its core, <b>Lefferts Manor</b>, is protected by an 1893 single-family covenant, which preserved 600 immaculate rowhouses. Flatbush and Nostrand Avenues are vibrant Caribbean high streets (roti, jerk, juice bars); the Parade Ground’s soccer fields trained generations of players. <b>Wingate</b>, the eastern chunk, is dominated by hospitals (Kings County, Downstate). Long one of Brooklyn’s best-value brownstone areas, and locals would rather you didn’t spread that.</p>`,
+  know:['Lefferts Manor historic core','Flatbush Ave Caribbean strip','Prospect Park’s east side'],
+  sub:'[[Q B S]] Prospect Park & Parkside Av; [[2 5]] Sterling St, Winthrop St',
+  alias:'plg lefferts wingate' },
+
+BK1601: { g:'central', n:'Ocean Hill',
+  tag:'A rowhouse pocket between Bed-Stuy and Brownsville with an outsized place in civil-rights history.',
+  vibe:['Rowhouses','Working-class','History'],
+  body:`<p>Often folded into Bed-Stuy or Brownsville, Ocean Hill is its own grid of brick rowhouses with a famous chapter: the 1968 <b>Ocean Hill–Brownsville school decentralization fight</b>, the community-control experiment that triggered citywide teacher strikes and reshaped the politics of American education. Today it’s a modest, mostly Black and Latino homeowner neighborhood — and the actual location of 328 Chauncey Street, the address Jackie Gleason used for the Kramdens in <i>The Honeymooners</i>.</p>`,
+  know:['1968 school-control crisis','328 Chauncey St (The Honeymooners)'],
+  sub:'[[A C]] Rockaway Av, [[J Z]] Chauncey St, [[L]] Atlantic Av edge',
+  alias:'' },
+
+BK1602: { g:'central', n:'Brownsville',
+  tag:'"Never ran, never will" — a proud, hard-pressed neighborhood with deep boxing and civic roots.',
+  vibe:['Resilient','NYCHA towers','Historic'],
+  body:`<p>Brownsville began as a dense Jewish quarter (Margaret Sanger opened America’s first birth-control clinic here in 1916; Murder Inc. ran its rackets from a Livonia Ave candy store). Post-war urban renewal rebuilt it with the <b>highest concentration of public housing in the United States</b>, and decades of disinvestment followed. Its motto — "Never ran, never will" — fits a place that produced Mike Tyson, Riddick Bowe and a remarkable roster of champions out of the Brownsville Recreation Center, plus a new generation of community-led anti-violence work. Betsy Head Park’s art-deco pool is the summer hub. Tough statistics, fierce loyalty.</p>`,
+  know:['Brownsville Rec (Tyson’s gym roots)','Betsy Head Pool','First U.S. birth-control clinic (1916)'],
+  sub:'[[3]] along Livonia Av (Saratoga, Rockaway, Junius), [[L]] New Lots edge',
+  alias:'' },
+
+BK1701: { g:'central', n:'East Flatbush — Erasmus',
+  tag:'The official "Little Caribbean": Flatbush and Church Avenues at full volume.',
+  vibe:['Caribbean','High street','Flavor'],
+  body:`<p>The blocks around Erasmus Hall — the 1786 academy whose alumni run from Barbra Streisand to Bobby Fischer — are the densest Caribbean commercial district in America, officially designated <b>"Little Caribbean"</b> in 2017. Church and Flatbush Avenues are wall-to-wall roti shops, bakeries selling currant rolls and hard dough bread, dollar vans running to Kings Plaza, and music from a dozen islands. If you want to feel why Brooklyn has the largest Caribbean population outside the Caribbean, stand on this corner.</p>`,
+  know:['Little Caribbean designation','Erasmus Hall Academy (1786)','Church Ave food crawl'],
+  sub:'[[2 5]] Church Av, [[B Q]] Church Av (west edge)',
+  alias:'little caribbean erasmus' },
+
+BK1702: { g:'central', n:'East Flatbush — Farragut',
+  tag:'Tidy homeowner blocks south of the hospitals — nurses’ Brooklyn.',
+  vibe:['Homeowners','Caribbean','Quiet'],
+  body:`<p>The Farragut section is classic East Flatbush: rows of well-kept brick houses with front yards, owned heavily by Caribbean families — many of them the nurses, transit workers and city employees who keep New York running (SUNY Downstate and Kings County Hospital are just north). Quiet streets, serious homeownership pride, Sunday church and Saturday markets on Utica Avenue.</p>`,
+  know:['Brick rowhouse blocks','Utica Avenue shopping'],
+  sub:'[[2 5]] Newkirk Av-Little Haiti, Beverly Rd',
+  alias:'' },
+
+BK1703: { g:'central', n:'East Flatbush — Rugby',
+  tag:'Heart of Haitian and West Indian homeowner Brooklyn.',
+  vibe:['Haitian','Residential','Community'],
+  body:`<p>Rugby’s blocks between Utica and Ralph hold one of the largest Haitian communities in the U.S. — the [[2 5]] stop at Newkirk is literally subtitled "Little Haiti." Single- and two-family brick houses, Creole churches, botanicas and bakeries; East 49th Street could be a street in Port-au-Prince that learned to shovel snow. Deeply residential, deeply rooted.</p>`,
+  know:['Little Haiti corridor','Church & community life'],
+  sub:'[[2 5]] along Utica/Remsen edges; B46 bus on Utica',
+  alias:'little haiti' },
+
+BK1704: { g:'central', n:'East Flatbush — Remsen Village',
+  tag:'A small wedge of solid homes between Brownsville and Canarsie.',
+  vibe:['Modest','Homeowners'],
+  body:`<p>Remsen Village is the quiet far corner of East Flatbush — rows of attached brick homes along Remsen and Ralph Avenues, mostly Caribbean-American families, with Holy Cross Cemetery as its green western border. No sights, no scene: just the steady homeowner Brooklyn that rarely makes the guidebooks.</p>`,
+  know:['Ralph Avenue shopping','Holy Cross Cemetery border'],
+  sub:'No subway inside — B46/B47 buses; [[3 4]] Utica Av to the north',
+  alias:'' },
+
+/* ===== EASTERN ===== */
+BK0501: { g:'east', n:'Cypress Hills',
+  tag:'Hilly streets under the cemetery belt, where Brooklyn quietly becomes Queens.',
+  vibe:['Hilly','Latino','Borderland'],
+  body:`<p>Tucked under the glacial ridge that carries the great cemetery belt (Jackie Robinson and Mae West rest in the cemeteries above), Cypress Hills is a hilly, modest neighborhood of frame houses and small apartment buildings, today largely Latino (Dominican, Puerto Rican, Ecuadorian) with growing Bangladeshi blocks. Highland Park, shared with Queens, has reservoir views back to the skyline. Fulton Street’s el rattles overhead; the Queens border is an unmarked line mid-block.</p>`,
+  know:['Highland Park & Ridgewood Reservoir','Cemetery belt views'],
+  sub:'[[J Z]] Crescent St, Cypress Hills; [[A C]] Euclid Av on the south edge',
+  alias:'highland park' },
+
+BK0502: { g:'east', n:'East New York (North)',
+  tag:'Broadway Junction’s tangle of els and the gritty, reviving blocks around it.',
+  vibe:['Transit hub','Industrial','Changing'],
+  body:`<p>The northern slice of East New York centers on <b>Broadway Junction</b>, a three-line elevated interchange that looks like a steampunk drawing and may someday be "the Hub of Brooklyn" planners keep promising. Around it: bus depots, light industry, NYCHA campuses and rowhouse blocks that bore the brunt of the 1970s collapse — East New York was the city’s emblem of abandonment — and have been slowly rebuilt by nonprofit housing efforts ever since. A major 2016 rezoning is bringing new apartment blocks to Atlantic Avenue.</p>`,
+  know:['Broadway Junction','Atlantic Ave rezoning corridor'],
+  sub:'[[A C J Z L]] Broadway Junction',
+  alias:'broadway junction' },
+
+BK0503: { g:'east', n:'East New York — New Lots',
+  tag:'The historic core of East New York: church spires, community gardens, comeback story in progress.',
+  vibe:['Working-class','Community gardens','Rooted'],
+  body:`<p>Named for the 1660s Dutch "new lots" farmland (the little 1824 New Lots Reformed Church still stands on its colonial site), this is East New York’s residential heart: brick rowhouses, the city’s densest cluster of community gardens (a legacy of residents reclaiming burned lots in the 1980s), and strong Caribbean, African-American and Latino communities. The Sutter and New Lots Avenue strips are the daily main streets. Decades of grassroots rebuilding — notably the Nehemiah owner-built homes — quietly made this one of NYC’s great recovery stories.</p>`,
+  know:['New Lots Reformed Church (1824)','Nehemiah homes','Community gardens'],
+  sub:'[[3]] New Lots Av terminus, [[L]] New Lots Av, Sutter Av',
+  alias:'new lots' },
+
+BK0504: { g:'east', n:'Spring Creek & Starrett City',
+  tag:'A 1970s tower-in-the-park mega-complex by Jamaica Bay — its own world with its own power plant.',
+  vibe:['Towers','Planned','Bayfront'],
+  body:`<p><b>Starrett City</b> (officially Spring Creek Towers) is one of the largest federally subsidized housing complexes in America: 46 towers, ~15,000 residents, its own schools, shopping center, security force and even its own power plant. Built in 1974 as a racially integrated middle-income community, it has stayed remarkably stable and remarkably affordable. Beyond it stretch the Spring Creek wetlands, the Gateway Center big-box mall, and the marsh edge of Jamaica Bay.</p>`,
+  know:['Starrett City towers','Shirley Chisholm State Park next door'],
+  sub:'No subway — B82/B84 buses to [[L]] New Lots/Canarsie',
+  alias:'starrett city spring creek' },
+
+BK0505: { g:'east', n:'East New York — City Line',
+  tag:'Brooklyn’s last blocks before Queens, with a thriving South Asian main street.',
+  vibe:['Borderland','South Asian','Dense'],
+  body:`<p>The narrow strip where Brooklyn runs out: Liberty and Atlantic Avenues continue straight into Ozone Park, Queens, and only the street signs change. Once Italian "City Line," it’s now heavily Bangladeshi, Guyanese and Latino — Liberty Avenue’s sari shops, halal butchers and roti stands form one of the city’s liveliest South Asian/Indo-Caribbean corridors.</p>`,
+  know:['Liberty Avenue shops','Brooklyn–Queens border quirks'],
+  sub:'[[A C]] Euclid Av, Grant Av',
+  alias:'city line' },
+
+/* ===== GREATER FLATBUSH ===== */
+BK1401: { g:'flatbush', n:'Flatbush', major:1,
+  tag:'A 1652 Dutch town that became the bustling crossroads of Caribbean Brooklyn — with a movie palace to prove it.',
+  vibe:['Caribbean','Bustling','Historic'],
+  body:`<p>Flatbush was one of Brooklyn’s six original towns (Dutch "Vlacke Bos," 1652) and its colonial relics hide in plain sight — the Flatbush Reformed Church has stood at Church &amp; Flatbush since the 1790s, and Erasmus Hall’s Georgian academy building sits in its high-school courtyard. Around them roars one of Brooklyn’s great commercial crossroads: discount stores, juice stands, dollar vans, and the full energy of Caribbean Brooklyn.</p>
+  <p>The crown jewel is the <b>Kings Theatre</b> (1929), a 3,000-seat French-baroque movie palace restored in 2015 to full gilded glory — catching any show there is a reason to visit by itself. The side streets swing between dense apartment blocks and, to the west, the surprise of Victorian mansions (see Ditmas Park).</p>`,
+  know:['Kings Theatre','Erasmus Hall & the Dutch Reformed Church','Flatbush Ave commercial energy'],
+  sub:'[[B Q]] Church Av, Newkirk Plaza; [[2 5]] Church Av (east side)',
+  alias:'' },
+
+BK1402: { g:'flatbush', n:'Ditmas Park & Victorian Flatbush', major:1,
+  tag:'Free-standing Victorian mansions with porches and lawns — the block that makes everyone say "this can’t be New York."',
+  vibe:['Victorian','Porches','Leafy'],
+  body:`<p>West of Coney Island Avenue, the grid suddenly fills with enormous free-standing Victorian and Colonial Revival houses — turrets, wraparound porches, actual front lawns. Developed around 1900 as planned "suburbs in the city" (Prospect Park South, Ditmas Park, Beverley Square), this is the largest concentration of Victorian houses in the country, and film crews use it constantly as stand-in Americana. <b>Cortelyou Road</b> supplies the farm-to-table restaurants and a great food co-op; the community is famously mixed — old Caribbean and Pakistani families, artists, academics, young families fleeing brownstone prices. <b>Parkville</b>, the southwest corner, is denser and more apartment-built.</p>`,
+  know:['Prospect Park South’s mansion blocks','Cortelyou Road strip','Constant film-shoot sightings'],
+  sub:'[[B Q]] Cortelyou Rd, Beverley Rd; [[F]] at Parkville’s edge',
+  alias:'ditmas victorian flatbush prospect park south beverley parkville' },
+
+BK1403: { g:'flatbush', n:'Midwood',
+  tag:'Quiet streets, great pizza, and one of Brooklyn’s major Modern Orthodox communities.',
+  vibe:['Orthodox','Residential','Pizza'],
+  body:`<p>Midwood is deep, calm, residential Brooklyn: detached and semi-detached houses on tree-lined streets, home to a large Modern Orthodox and Sephardic Jewish community (Avenues J and M are the kosher commercial spines, dead quiet on Shabbat) alongside Pakistani, Russian and Mexican neighbors. Pilgrims come for <b>Di Fara</b>, where Dom DeMarco hand-made every pizza for 60 years. Brooklyn College’s collegiate-Georgian campus sits at the north edge; Woody Allen and Marisa Tomei both grew up on these blocks.</p>`,
+  know:['Di Fara Pizza','Avenue J','Brooklyn College'],
+  sub:'[[Q]] Avenue J, Avenue M, Kings Hwy; [[2 5]] Flatbush Av-Brooklyn College',
+  alias:'' },
+
+BK1203: { g:'flatbush', n:'Kensington',
+  tag:'Maybe Brooklyn’s most quietly diverse square mile — Little Bangladesh on Church Avenue.',
+  vibe:['Diverse','Affordable-ish','Low-key'],
+  body:`<p>Kensington packs Bangladeshi, Pakistani, Mexican, Polish, Ukrainian, Haitian and Orthodox Jewish communities into a modest grid of co-op buildings and frame houses south of Green-Wood. Church Avenue’s <b>"Little Bangladesh"</b> strip (sweets shops, biryani houses, sari stores) is the most visible identity; Ocean Parkway’s tree-lined malls — designed by Olmsted &amp; Vaux as a carriage road to Coney Island — give it a grand spine. The kind of unglamorous, functioning diversity New York is actually about.</p>`,
+  know:['Little Bangladesh on Church Ave','Ocean Parkway malls','Kensington Stables (last riding stable near Prospect Park)'],
+  sub:'[[F G]] Church Av, Fort Hamilton Pkwy',
+  alias:'little bangladesh' },
+
+/* ===== SOUTHWEST ===== */
+BK0702: { g:'southwest', n:'Sunset Park (West)', major:1,
+  tag:'Brooklyn’s Latino main street, Industry City’s food halls, and the harbor view that names the neighborhood.',
+  vibe:['Mexican','Industrial-chic','Views'],
+  body:`<p>The blocks from the harbor to 6th Avenue are the heart of Mexican and broader Latino Brooklyn — <b>Fifth Avenue</b> is an unbroken run of taquerias, quinceañera shops, fruit stands and banda music, with Central American and Puerto Rican layers underneath. On the waterfront, the massive <b>Industry City</b> complex (16 former shipping buildings) now holds food halls, designers and Japanese groceries — the polished face of the working industrial waterfront that still operates around it.</p>
+  <p>Climb the hill in <b>Sunset Park itself</b> at dusk: the lawn faces the harbor, the Statue of Liberty and the full Manhattan skyline. Locals consider it the best free view in Brooklyn, and they’re right.</p>`,
+  know:['Sunset Park’s skyline panorama','Industry City','5th Avenue taquerias'],
+  sub:'[[R]] 25 St, 36 St, 45 St; [[D N]] 36 St express',
+  alias:'industry city' },
+
+BK0703: { g:'southwest', n:'Sunset Park (Central)',
+  tag:'Brooklyn’s biggest Chinatown climbs the hill along Eighth Avenue.',
+  vibe:['Chinatown','Bustling','Food'],
+  body:`<p>Eighth Avenue — lucky number deliberate — is the spine of Brooklyn’s largest <b>Chinatown</b>, built largely by Fuzhounese immigrants from the 1980s onward and now bigger and arguably better-fed than Manhattan’s: dim sum palaces, hand-pulled noodles, fish markets spilling onto the sidewalk, bubble-tea rows. The [[N]] stop at 8th Avenue is the gateway. Uphill, the rowhouse blocks mix Chinese, Latino and remaining Scandinavian-era families (this was once "Little Norway" — Lutheran Medical Center is the relic).</p>`,
+  know:['8th Avenue Chinatown','Dim sum & noodle crawl','Little Norway history'],
+  sub:'[[N]] 8 Av; [[D]] 9 Av, Fort Hamilton Pkwy',
+  alias:'chinatown eighth avenue' },
+
+BK1201: { g:'southwest', n:'Sunset Park (East) & Borough Park (West)',
+  tag:'The hand-off zone where Chinatown meets Hasidic Brooklyn along the cemetery edge.',
+  vibe:['Transitional','Dense','Working'],
+  body:`<p>A border strip where the Chinese blocks of Sunset Park shade into the Hasidic blocks of Borough Park — Mandarin signage gives way to Yiddish over the space of a few avenues, with Mexican and Central American blocks threaded through. Green-Wood Cemetery walls the north; the [[D]] el on New Utrecht Avenue stitches it together. Pure, unselfconscious working Brooklyn.</p>`,
+  know:['New Utrecht Ave el','Cemetery-edge quiet streets'],
+  sub:'[[D]] 9 Av through 55 St; [[N]] Fort Hamilton Pkwy',
+  alias:'' },
+
+BK1202: { g:'southwest', n:'Borough Park', major:1,
+  tag:'The largest Hasidic community in the world outside Israel — a complete society in fifty square blocks.',
+  vibe:['Hasidic','Self-contained','Bustling'],
+  body:`<p>Borough Park is the global capital of Hasidic life: Bobov, Satmar, Ger and dozens of other communities, with what may be the <b>highest birthrate of any neighborhood in America</b> — school buses are the defining traffic. Thirteenth Avenue is a remarkable commercial street of kosher bakeries, silver shops, wig stores and gown rentals; everything closes Friday afternoon and the streets go profoundly still for Shabbat. Life runs through its own institutions — yeshivas, synagogues on every block, the Hatzalah volunteer ambulance corps. Visitors are welcome to walk and shop; it is one of the most distinct cultural landscapes in the United States.</p>`,
+  know:['13th Avenue','Shabbat stillness','Bobov world headquarters'],
+  sub:'[[D]] 50 St, 55 St; [[F]] Ditmas/18 Av edge',
+  alias:'boro park' },
+
+BK1204: { g:'southwest', n:'Mapleton & Midwood (West)',
+  tag:'Quiet grid between Borough Park and Bensonhurst — Hasidic growth meets old Italian and new Chinese blocks.',
+  vibe:['Residential','Mixed','Quiet'],
+  body:`<p>A low-key buffer of semi-detached brick houses and small apartment buildings where three worlds meet: Borough Park’s expanding Orthodox families, longtime Italian-American holdouts, and newer Chinese homeowners spreading from Bensonhurst. Avenue M? quiet. Eighteenth Avenue? Sicilian bakeries next to bubble tea. The blocks themselves are sleepy, tidy, and stubbornly normal.</p>`,
+  know:['18th Avenue’s old-meets-new shops'],
+  sub:'[[F]] Avenue I, Bay Pkwy; [[N]] on the southern edge',
+  alias:'mapleton' },
+
+BK1001: { g:'southwest', n:'Bay Ridge', major:1,
+  tag:'Shore Road sunsets under the Verrazzano — Norwegian-then-Italian-then-Arab Brooklyn, and proudly unhip.',
+  vibe:['Middle-class','Arab-American','Waterfront'],
+  body:`<p>Bay Ridge runs down to the Narrows under the <b>Verrazzano-Narrows Bridge</b> (the longest suspension span in the Americas when built, 1964), with Shore Road’s parks and harbor sunsets as its front porch. Once the heart of Scandinavian Brooklyn (the Norwegian Day Parade survives), then deeply Italian and Irish — <i>Saturday Night Fever</i> was set and filmed on these avenues — it now also holds one of America’s largest <b>Arab-American</b> communities: Lebanese, Palestinian, Yemeni and Egyptian restaurants and bakeries line Fifth Avenue south of 72nd.</p>
+  <p>Third Avenue is a long restaurant-and-bar strip with a stubbornly local feel; politics and accents are more old-Brooklyn than anywhere north of it. The [[R]] train is slow and everyone complains; the express buses and the ferry are the secret.</p>`,
+  know:['Verrazzano Bridge & Shore Road','5th Ave Arab-American strip','Saturday Night Fever locations','Century-old single-family "Doctor’s Row" blocks'],
+  sub:'[[R]] 77 St, 86 St, Bay Ridge-95 St; NYC Ferry from the 69th St pier',
+  alias:'verrazzano shore road' },
+
+BK1002: { g:'southwest', n:'Dyker Heights',
+  tag:'Detached houses, a golf course, and the most famous Christmas lights in America.',
+  vibe:['Italian','Suburban','Christmas'],
+  body:`<p>Dyker Heights is Brooklyn’s deepest Italian-American stronghold — detached and semi-detached houses with manicured yards, religious statuary, and multigenerational households (with growing Chinese-American ownership). Every December the blocks from 11th to 13th Avenue around 83rd–86th Streets erupt into the <b>"Dyker Lights"</b>: animatronic santas, life-size nutcrackers, tour buses from Manhattan — easily the most extravagant residential Christmas display in the country. The rest of the year: golf at the public Dyker Beach course and total quiet.</p>`,
+  know:['Dyker Lights (December)','Dyker Beach Golf Course','86th St shopping under the el'],
+  sub:'Largely subway-free — [[D]] on its eastern edge (71 St, 79 St); express buses',
+  alias:'dyker lights' },
+
+BK1061: { g:'southwest', n:'Fort Hamilton',
+  tag:'New York City’s only active military base, guarding the Narrows since 1825.',
+  vibe:['Military','Historic'],
+  body:`<p>The Army has garrisoned this point since 1825 (a young Robert E. Lee served as post engineer; the chapel he vestried still stands). Today Fort Hamilton is NYC’s only active-duty military installation, handling recruiting and National Guard logistics, with the small Harbor Defense Museum inside the original granite fort. The Verrazzano’s Brooklyn tower planted itself right next door.</p>`,
+  know:['Harbor Defense Museum','Verrazzano’s Brooklyn anchorage'],
+  sub:'[[R]] Bay Ridge-95 St, then a walk',
+  alias:'' },
+
+BK1101: { g:'southwest', n:'Bensonhurst', major:1,
+  tag:'The old capital of Italian Brooklyn is now also its biggest Chinese neighborhood — 86th Street has seen everything.',
+  vibe:['Italian legacy','Chinese','Markets'],
+  body:`<p>For most of the 20th century Bensonhurst <i>was</i> Italian Brooklyn — the world of <i>Welcome Back, Kotter</i> and Saturday passeggiatas on 86th Street, with 18th Avenue as "Little Italy by the el." The Italian layer survives (Villabate Alba’s pastries, social clubs, the Santa Rosalia feast), but since the 2000s Bensonhurst has become <b>Brooklyn’s largest Chinese neighborhood</b>, with Cantonese and Fuzhounese markets, plus Russian, Ukrainian and Mexican blocks. The result: 86th Street under the el is one of the most genuinely multilingual shopping streets in America. Densely built with semi-detached brick houses; family-first; zero interest in being trendy.</p>`,
+  know:['18th Avenue (Little Italy of Brooklyn)','86th Street market crawl','Villabate Alba bakery'],
+  sub:'[[D]] along New Utrecht/86 St, [[N]] along Sea Beach line',
+  alias:'' },
+
+BK1102: { g:'southwest', n:'Bath Beach',
+  tag:'A modest grid by the Belt Parkway where Brooklyn’s waterfront once meant resort hotels.',
+  vibe:['Quiet','Mixed','Shoreline'],
+  body:`<p>Named for the Victorian resort era when this shore imitated Bath, England, today’s Bath Beach is a quiet residential strip — brick rowhouses and small apartment buildings, heavily Chinese and Italian with Russian and Arab families mixed in — separated from the water by the Belt Parkway. The Shore Parkway path gives bikers the Verrazzano view; Caesar’s Bay shopping center and Nellie Bly’s little amusement park serve the everyday.</p>`,
+  know:['Shore Parkway waterfront path','Resort-era history'],
+  sub:'[[D]] Bay Pkwy, 25 Av',
+  alias:'' },
+
+/* ===== COASTAL ===== */
+BK1302: { g:'coastal', n:'Coney Island & Sea Gate', major:1,
+  tag:'America’s playground: the Cyclone, the Wonder Wheel, Nathan’s, the Mermaid Parade — and a gated village at the tip.',
+  vibe:['Amusement','Boardwalk','Iconic'],
+  body:`<p>Coney Island invented mass entertainment: by 1900 its three great parks (Luna, Dreamland, Steeplechase) drew the entire city by nickel subway to what showmen called "America’s playground." The survivors are landmarks — the 1927 <b>Cyclone</b> wooden coaster, the 1920 <b>Wonder Wheel</b>, the defunct Parachute Jump standing as Brooklyn’s Eiffel Tower — joined by the modern Luna Park. <b>Nathan’s Famous</b> (1916) holds its hot-dog eating contest every July 4th; the <b>Mermaid Parade</b> in June is the city’s great surrealist costume party; the Cyclones play in a little ballpark by the beach; the New York Aquarium fronts the boardwalk.</p>
+  <p>Behind the amusements live real, mostly working-class communities — large Russian-speaking and Black populations in the towers along Surf and Mermaid Avenues. At the peninsula’s western tip, <b>Sea Gate</b> is a private gated community (one of NYC’s few) with its own police force and lighthouse. The Riegelmann Boardwalk ties it all together for 2.7 miles.</p>`,
+  know:['Cyclone & Wonder Wheel','Nathan’s July 4th contest','Mermaid Parade','Riegelmann Boardwalk','Sea Gate’s private streets'],
+  sub:'[[D F N Q]] all terminate at Coney Island-Stillwell Av — the world’s largest elevated terminal',
+  alias:'sea gate luna park cyclone stillwell' },
+
+BK1303: { g:'coastal', n:'Brighton Beach', major:1,
+  tag:'"Little Odessa": the boardwalk speaks Russian, the groceries are epic, and the el thunders over it all.',
+  vibe:['Russian','Ukrainian','Boardwalk'],
+  body:`<p>Brighton Beach has been the capital of the Russian-speaking diaspora since Soviet Jewish refugees began arriving in the 1970s — hence <b>"Little Odessa"</b> (many families are in fact Ukrainian, from Odesa itself). Under the elevated [[B Q]] on Brighton Beach Avenue: caviar counters, smoked-fish emporiums, pelmeni cafeterias, fur coats in winter, and grocery stores (NetCost, Brighton Bazaar) that amount to museums of the former USSR. On the boardwalk, supper clubs like Tatiana serve vodka-and-variety-show dinners facing the Atlantic. Grandmothers swim year-round; the beach is broad and less carnival than Coney next door. One of the most complete immigrant worlds in America, fifty minutes from Midtown.</p>`,
+  know:['Brighton Beach Ave under the el','Boardwalk supper clubs','Soviet grocery emporiums'],
+  sub:'[[B Q]] Brighton Beach',
+  alias:'little odessa' },
+
+BK1503: { g:'coastal', n:'Sheepshead Bay, Manhattan Beach & Gerritsen Beach', major:1,
+  tag:'Party-boat piers, a wealthy beach enclave, and a volunteer-firehouse fishing village — maritime Brooklyn in three flavors.',
+  vibe:['Maritime','Russian','Village'],
+  body:`<p><b>Sheepshead Bay</b> is built around an actual bay where party fishing boats still leave Emmons Avenue’s piers every morning (and sell the catch at dusk). Once famous for seafood palaces like Lundy’s (its landmark shell remains), Emmons is now a Russian and Turkish restaurant row with a marina backdrop. Inland, solid apartment blocks house big Russian-speaking, Chinese and Sephardic communities.</p>
+  <p><b>Manhattan Beach</b>, across the footbridge, is a hushed, wealthy grid of mansions ending in a calm family beach and Kingsborough Community College’s seaside campus. <b>Gerritsen Beach</b>, on its own marshy peninsula, is a former bungalow colony turned year-round Irish-American village — narrow lanes, boats in yards, and the city’s only all-volunteer fire department (the "Vollies"). Three adjacent worlds, none of which most New Yorkers have ever visited.</p>`,
+  know:['Emmons Ave fishing fleet','Manhattan Beach mansions','Gerritsen’s volunteer fire dept','Holocaust Memorial Park'],
+  sub:'[[B Q]] Sheepshead Bay; Gerritsen & Manhattan Beach are bus-only',
+  alias:'gerritsen manhattan beach emmons lundys' },
+
+BK1501: { g:'coastal', n:'Homecrest & Gravesend (East)',
+  tag:'Avenue U’s polyglot shopping mile between Midwood and the bay.',
+  vibe:['Mixed','Residential','Markets'],
+  body:`<p>A deep residential swath where <b>Avenue U</b> does the talking: Chinese seafood markets, Turkish bakeries, Russian delis, halal butchers and old-line Italian pork stores in a single mile — south Brooklyn’s quiet diversity in retail form. The streets between are detached and semi-attached houses with driveways, popular with families pushed from pricier areas. No landmarks, no tourists; just functioning, affordable-ish Brooklyn.</p>`,
+  know:['Avenue U food crawl'],
+  sub:'[[Q]] Avenue U, Kings Hwy; [[B]] Sheepshead Bay edge',
+  alias:'homecrest' },
+
+BK1502: { g:'coastal', n:'Madison',
+  tag:'Tidy porches and quiet streets around Kings Highway’s eastern reach.',
+  vibe:['Quiet','Homeowners'],
+  body:`<p>Madison is the definition of unsung: well-kept detached houses and duplexes between Kings Highway and Avenue U, long Italian and Jewish, now with large Chinese and Russian-speaking communities. Edward R. Murrow High School is the local claim to fame. People here measure neighborhood quality in parking spots and school zones — and by those metrics, they’re winning.</p>`,
+  know:['Kings Highway shopping nearby'],
+  sub:'[[B Q]] Kings Hwy',
+  alias:'' },
+
+BK1103: { g:'coastal', n:'Gravesend (West)',
+  tag:'The western blocks of Brooklyn’s most storied old town, under the els.',
+  vibe:['Working-class','Italian','Mixed'],
+  body:`<p>The west side of Gravesend along Stillwell and 86th Street keeps an old-Brooklyn texture: Italian-American families (this is John Travolta’s actual childhood territory — and Sally from <i>The Sopranos</i> could live on any of these blocks), with growing Chinese and Mexican communities. Marlboro Houses and the freight cut frame it. Unfussy, unpretentious, well-fed.</p>`,
+  know:['86th St & Avenue U intersections','Marlboro Houses'],
+  sub:'[[D]] 25 Av, Bay 50 St; [[N]] 86 St',
+  alias:'' },
+
+BK1301: { g:'coastal', n:'Gravesend (South)',
+  tag:'Founded in 1645 by a woman — the original town square still shapes the streets; today it’s the heart of Syrian Jewish Brooklyn.',
+  vibe:['Historic','Sephardic','Residential'],
+  body:`<p>Gravesend was one of Brooklyn’s six original towns and the only colonial settlement in America founded by a woman — <b>Lady Deborah Moody</b>, an English dissenter, laid out its 16-acre town square in 1645, and you can still trace her grid (and visit the old cemetery) at McDonald Avenue and Gravesend Neck Road. The modern neighborhood around it is the heart of the <b>Syrian Sephardic Jewish community</b> ("the Community"), one of the wealthiest and most tight-knit in the city — along with Italian, Chinese and Russian blocks running down to the Belt.</p>`,
+  know:['Lady Moody’s 1645 town plan','Syrian Jewish community along Ocean Pkwy'],
+  sub:'[[F]] Avenue X; [[N]] Avenue U',
+  alias:'lady moody' },
+
+/* ===== SOUTHEAST ===== */
+BK1803: { g:'southeast', n:'Canarsie', major:1,
+  tag:'Caribbean homeowner heartland at the end of the L, with a pier on Jamaica Bay.',
+  vibe:['Homeowners','Caribbean','Bayside'],
+  body:`<p>Named for the Canarsee Lenape who sold Manhattan, Canarsie spent the 20th century as Jewish and Italian rowhouse territory and is now one of the largest <b>Caribbean-American homeowner communities</b> in the country — Jamaican, Haitian, Trinidadian families with serious lawn pride. The [[L]] ends here (locals invented the commute everyone in Williamsburg now shares), Canarsie Pier juts into Jamaica Bay for fishing and barbecue, and the new Shirley Chisholm State Park covers the old landfills with 10 miles of bike trails and bay views.</p>`,
+  know:['Canarsie Pier','Shirley Chisholm State Park','Rockaway Pkwy hub'],
+  sub:'[[L]] Canarsie-Rockaway Pkwy terminus',
+  alias:'' },
+
+BK1801: { g:'southeast', n:'Flatlands',
+  tag:'One of the six original Dutch towns, now deep driveway-Brooklyn.',
+  vibe:['Suburban','Caribbean','Quiet'],
+  body:`<p>Chartered in 1647, Flatlands keeps a relic to prove it — the Flatlands Dutch Reformed Church (congregation est. 1654) sits on its colonial site at Kings Highway, with Dutch farmers buried in the churchyard. Everything else is mid-century Brooklyn: detached brick houses, driveways, strip malls along Flatbush Avenue toward Kings Plaza, and a strong Caribbean-American homeowner base. No subway ever reached it, which is exactly why it looks the way it does.</p>`,
+  know:['1654-congregation Dutch church','Kings Plaza nearby'],
+  sub:'None — buses to [[2 5]] Flatbush Av or [[L]] Canarsie',
+  alias:'' },
+
+BK1802: { g:'southeast', n:'Marine Park, Mill Basin & Bergen Beach', major:1,
+  tag:'Boats in the driveway, salt marsh at the corner — Brooklyn’s most suburban square miles.',
+  vibe:['Suburban','Boating','Marshland'],
+  body:`<p>This is the Brooklyn that surprises everyone: cul-de-sacs, two-car garages, and in <b>Mill Basin</b> — a peninsula of waterfront homes with private docks — actual yachts. <b>Marine Park</b> wraps the city’s largest park you’ve never heard of (798 acres, mostly salt marsh, with a nature center, cricket fields and a famous bocce court); <b>Bergen Beach</b> has an equestrian center where Brooklynites keep horses. Long Italian, Irish and Jewish, now with growing Caribbean, Russian and Chinese homeowners. Kings Plaza, the borough’s biggest mall, anchors the shopping. Car keys required.</p>`,
+  know:['Salt Marsh Nature Center','Mill Basin’s waterfront houses','Jamaica Bay Riding Academy'],
+  sub:'None — the B41/B46 to the [[2 5]] or [[Q]]; this is driving Brooklyn',
+  alias:'mill basin bergen beach' },
+
+/* ===== PARKS, CEMETERIES & GREEN ===== */
+BK5591: { g:'green', n:'Prospect Park', major:1,
+  tag:'Olmsted & Vaux’s self-declared masterpiece — 526 acres they liked better than Central Park.',
+  vibe:['Olmsted','Meadow','Beloved'],
+  body:`<p>Frederick Law Olmsted and Calvert Vaux designed Central Park first — then came to Brooklyn and made what they considered their true masterpiece (1867). The 90-acre <b>Long Meadow</b> is one of the longest unbroken sweeps of lawn in any U.S. park; the Ravine fakes an Adirondack gorge; the lake hosts rowboats and ice skating at the LeFrak Center. Grand Army Plaza’s triumphal arch guards the main gate, with the borough’s biggest greenmarket on Saturdays. Drummers’ Grove, the carousel, the zoo, the Audubon boathouse — every Brooklyn neighborhood culture meets on this lawn, which is rather the point.</p>`,
+  know:['Long Meadow','Grand Army Plaza arch','LeFrak skating rink','Saturday greenmarket'],
+  sub:'[[2 3]] Grand Army Plaza, [[B Q S]] Prospect Park, [[F G]] 15 St',
+  alias:'long meadow' },
+
+BK0771: { g:'green', n:'Green-Wood Cemetery', major:1,
+  tag:'A Victorian celebrity in its own right: 478 acres, Brooklyn’s highest hill, and half its history buried inside.',
+  vibe:['Gothic gates','Parrots','History'],
+  body:`<p>Founded in 1838, Green-Wood was so beautiful that by the 1850s it drew 500,000 visitors a year — second only to Niagara Falls as an American tourist attraction, and the direct inspiration for building Central and Prospect Parks. Leonard Bernstein, Jean-Michel Basquiat, Boss Tweed and 570,000 others rest here. <b>Battle Hill</b>, the highest natural point in Brooklyn (~200 ft), saw real fighting in the 1776 Battle of Brooklyn and now stares straight at the harbor and skyline. Wild monk parakeets nest in the Gothic Revival gates. Open daily — locals use it as their most peaceful park.</p>`,
+  know:['Battle Hill & the Minerva statue','Basquiat & Bernstein graves','The parakeet-filled gates'],
+  sub:'[[R]] 25 St',
+  alias:'greenwood' },
+
+BK5691: { g:'green', n:'Floyd Bennett Field & Barren Island',
+  tag:'New York’s first municipal airport, now a wonderfully strange national parkland.',
+  vibe:['Runways','Wild','Odd'],
+  body:`<p>NYC’s first municipal airport (1931) — where Howard Hughes and "Wrong Way" Corrigan launched record flights — was retired into <b>Gateway National Recreation Area</b>, and today its intact runways host cyclists, kite-flyers and drag-racing model cars. There’s a campground (yes, camping in Brooklyn), community gardens, a hangar full of restored vintage aircraft, and grassland that hosts owls and pheasants. Gloriously empty.</p>`,
+  know:['Historic hangars & runways','NYC’s only campground'],
+  sub:'None — Q35 bus over the Marine Parkway Bridge corridor',
+  alias:'floyd bennett' },
+
+BK5693: { g:'green', n:'Shirley Chisholm State Park',
+  tag:'Landfills reborn as 407 hilltop acres of bay-view trails (opened 2019).',
+  vibe:['New','Trails','Bay views'],
+  body:`<p>Two former landfills, capped and sculpted into New York City’s largest state park, named for the Brooklyn congresswoman who was the first Black woman elected to Congress. Ten miles of trails climb 130 feet over Jamaica Bay — borrow a free bike at the gate. The skyline-to-seabirds panorama from the top is one of the city’s newest great views.</p>`,
+  know:['Free bike library','Jamaica Bay overlooks'],
+  sub:'None — B6/B82 buses toward Spring Creek',
+  alias:'chisholm' },
+
+BK5692: { g:'green', n:'Jamaica Bay (West)',
+  tag:'The wild marsh islands of Brooklyn’s great lagoon.',
+  vibe:['Marsh','Wildlife'],
+  body:`<p>The Brooklyn share of Jamaica Bay’s open water and marsh islands — part of Gateway National Recreation Area and one of the most important bird stopovers on the Atlantic flyway, all within sight of the skyline. Herons, ospreys and horseshoe crabs; kayakers and the occasional hardy angler.</p>`,
+  know:['Atlantic flyway birding'],
+  sub:'None (it’s water)',
+  alias:'' },
+
+BK1891: { g:'green', n:'Marine Park & Plumb Island',
+  tag:'Brooklyn’s largest park: 798 acres of salt marsh, ballfields and bocce.',
+  vibe:['Salt marsh','Recreation'],
+  body:`<p>The borough’s biggest park is mostly living salt marsh around Gerritsen Creek — the Salt Marsh Nature Center’s trail loops past egrets and fiddler crabs on land the Lenape fished for centuries. The landward edge is pure neighborhood recreation: cricket and baseball leagues, the famous bocce courts, and one of the city’s best-loved running ovals.</p>`,
+  know:['Salt Marsh Nature Center trail','Bocce & cricket culture'],
+  sub:'None — B3/B44 buses',
+  alias:'plumb island' },
+
+BK1091: { g:'green', n:'Dyker Beach Park',
+  tag:'A public golf course with Verrazzano views since 1897.',
+  vibe:['Golf','Shorefront'],
+  body:`<p>One of the oldest public golf courses in America (1897) spreads beneath the Verrazzano approaches, flanked by ballfields and the Shore Parkway path. Where southwest Brooklyn jogs, golfs, and watches container ships slide under the bridge.</p>`,
+  know:['Public 18 holes','Shore Parkway path'],
+  sub:'[[R]] 86 St, then a walk',
+  alias:'' },
+
+BK1391: { g:'green', n:'Calvert Vaux Park',
+  tag:'Windblown ballfields on Gravesend Bay, named for Prospect Park’s co-designer.',
+  vibe:['Ballfields','Bayfront'],
+  body:`<p>Built partly on fill from the Verrazzano Bridge excavation, this scrappy waterfront park (soccer leagues, kite-flyers, a kayak launch) honors Calvert Vaux, who co-designed Central and Prospect Parks — and drowned nearby in Gravesend Bay in 1895.</p>`,
+  know:['Soccer-league weekends','Gravesend Bay views'],
+  sub:'[[D]] Bay 50 St',
+  alias:'' },
+
+BK1893: { g:'green', n:'Canarsie Park & Pier',
+  tag:'Jamaica Bay’s neighborhood front yard.',
+  vibe:['Pier','Barbecue'],
+  body:`<p>The pier pushes 600 feet into Jamaica Bay — fishing poles, salsa and soca from parked cars, grills going all summer — with the park’s ballfields and a popular cricket ground behind. The most Brooklyn way to watch a sunset over water.</p>`,
+  know:['Pier fishing & sunsets'],
+  sub:'[[L]] Canarsie-Rockaway Pkwy + B42 bus',
+  alias:'' },
+
+BK1892: { g:'green', n:'McGuire Fields',
+  tag:'A plain of ballfields by Mill Basin’s creek.',
+  vibe:['Sports'],
+  body:`<p>Acres of baseball, soccer and cricket fields on the flat land along Mill Basin — pure league-sports Brooklyn, busiest on summer weekends when the parking lot smells like four cuisines’ worth of barbecue.</p>`,
+  know:['Weekend league marathon'],
+  sub:'None — B3/B100 buses',
+  alias:'' },
+
+BK0891: { g:'green', n:'Lincoln Terrace Park',
+  tag:'Crown Heights’ hilltop courts — serious handball country.',
+  vibe:['Courts','Local'],
+  body:`<p>A terraced park on the ridge between Crown Heights and Brownsville famous for its tennis and handball courts — some of the city’s most competitive — with Eastern Parkway’s mall as its front walk.</p>`,
+  know:['Handball & tennis culture'],
+  sub:'[[3 4]] Crown Hts-Utica Av',
+  alias:'' },
+
+BK0471: { g:'green', n:'The Evergreens Cemetery',
+  tag:'A rural-style cemetery on the Bushwick ridge — jazz greats and 526 acres of quiet.',
+  vibe:['Historic','Hilly'],
+  body:`<p>A non-denominational rural cemetery (1849) draped over the glacial ridge at Bushwick’s edge. Bill "Bojangles" Robinson and tap legends rest here, along with victims of the Triangle Shirtwaist fire and General Slocum disasters. Skyline views between the oaks.</p>`,
+  know:['Bojangles’ grave','Ridge-top views'],
+  sub:'[[J Z]] along Bushwick’s edge; [[L]] Wilson Av',
+  alias:'evergreens' },
+
+BK0571: { g:'green', n:'Highland Park & the Cemetery Belt',
+  tag:'Cemeteries and a hilltop park along the moraine where Jackie Robinson rests.',
+  vibe:['Ridge','Cemeteries','Views'],
+  body:`<p>The terminal moraine — the ridge of glacial rubble that runs across Brooklyn — carries the great 19th-century cemetery belt here: Cypress Hills Cemetery holds <b>Jackie Robinson</b> and Mae West, and magicians make pilgrimages to Houdini’s grave just over the Queens line. Highland Park’s upper lawns, around the old Ridgewood Reservoir, look back across the whole borough to the harbor.</p>`,
+  know:['Jackie Robinson’s grave','Ridgewood Reservoir loop'],
+  sub:'[[J]] Cypress Hills, Crescent St',
+  alias:'cypress hills cemetery' },
+
+BK1771: { g:'green', n:'Holy Cross Cemetery',
+  tag:'East Flatbush’s green square — Brooklyn Catholic history in 96 acres.',
+  vibe:['Cemetery','Quiet'],
+  body:`<p>The Diocese of Brooklyn’s great 19th-century cemetery, resting place of Dodgers-era Brooklyn: beloved first baseman Gil Hodges and generations of Irish and Italian Brooklyn. Its walls make a sudden green pause in East Flatbush’s grid.</p>`,
+  know:['Gil Hodges’ grave'],
+  sub:'[[2 5]] Beverly Rd, then B8 bus',
+  alias:'' },
+};
+
+/* ---------------- map ---------------- */
+const map = L.map('map', { zoomControl: true, minZoom: 10, maxZoom: 18 })
+  .setView([40.6450, -73.9530], 12);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> | Boundaries: NYC DCP | Stations: MTA',
+  subdomains: 'abcd', maxZoom: 19,
+}).addTo(map);
+
+const layersById = {};
+let selectedId = null;
+
+function baseStyle(f) {
+  const info = INFO[f.properties.id];
+  const g = GROUPS[info ? info.g : 'green'];
+  return { color: '#ffffff', weight: 1.4, fillColor: g.color, fillOpacity: 0.42 };
+}
+function hoverStyle(f) { const s = baseStyle(f); s.fillOpacity = 0.62; return s; }
+function selStyle(f)   { const s = baseStyle(f); s.fillOpacity = 0.66; s.color = '#1c2430'; s.weight = 2.5; return s; }
+
+const ntaLayer = L.geoJSON(BK_DATA.ntas, {
+  style: baseStyle,
+  onEachFeature: (f, layer) => {
+    const id = f.properties.id;
+    layersById[id] = layer;
+    const info = INFO[id];
+    const gname = GROUPS[info ? info.g : 'green'].name;
+    layer.bindTooltip(
+      '<div>' + (info ? info.n : f.properties.name) + '<br><span class="small">' + gname + ' — click for the story</span></div>',
+      { sticky: true, className: 'hood-tip' });
+    layer.on('mouseover', () => { if (id !== selectedId) layer.setStyle(hoverStyle(f)); });
+    layer.on('mouseout',  () => { if (id !== selectedId) layer.setStyle(baseStyle(f)); });
+    layer.on('click',     () => select(id, false));
+  },
+}).addTo(map);
+
+/* labels */
+const labelLayer = L.layerGroup().addTo(map);
+BK_DATA.ntas.features.forEach(f => {
+  const info = INFO[f.properties.id];
+  if (!info) return;
+  const minor = info.major ? '' : ' minor';
+  const short = info.n.split(/,|&| — /)[0].trim();
+  L.marker(f.properties.c, {
+    interactive: false,
+    icon: L.divIcon({ className: 'hood-label' + minor, html: '<div>' + short + '</div>', iconSize: [0, 0] }),
+  }).addTo(labelLayer);
+});
+function updateLabelVisibility() {
+  const z = map.getZoom();
+  const el = map.getContainer();
+  el.classList.toggle('hide-labels', z < 12 || !document.getElementById('tgl-labels').checked);
+  el.classList.toggle('hide-minor', z < 13);
+}
+map.on('zoomend', updateLabelVisibility);
+
+/* stations */
+const stationLayer = L.layerGroup().addTo(map);
+BK_DATA.stations.forEach(([lat, lng, name, routes]) => {
+  L.circleMarker([lat, lng], { radius: 4, color: '#1c2430', weight: 1.5, fillColor: '#fff', fillOpacity: 1 })
+    .bindTooltip('<b>' + name + '</b><br>' + bullets(routes), { className: 'hood-tip' })
+    .addTo(stationLayer);
+});
+
+document.getElementById('tgl-stations').addEventListener('change', e => {
+  if (e.target.checked) map.addLayer(stationLayer); else map.removeLayer(stationLayer);
+});
+document.getElementById('tgl-labels').addEventListener('change', updateLabelVisibility);
+updateLabelVisibility();
+
+/* ---------------- sidebar ---------------- */
+const indexView = document.getElementById('index-view');
+const detailView = document.getElementById('detail');
+const sidebar = document.getElementById('sidebar');
+
+function select(id, fly) {
+  const info = INFO[id]; if (!info) return;
+  if (selectedId && layersById[selectedId]) layersById[selectedId].setStyle(baseStyle(layersById[selectedId].feature));
+  selectedId = id;
+  const layer = layersById[id];
+  layer.setStyle(selStyle(layer.feature));
+  layer.bringToFront();
+  if (fly) map.flyToBounds(layer.getBounds(), { padding: [30, 30], maxZoom: 14, duration: 0.8 });
+  history.replaceState(null, '', '#' + id);
+
+  const g = GROUPS[info.g];
+  detailView.innerHTML =
+    '<button class="back">&larr; Back to the guide</button>' +
+    '<span class="region-pill" style="background:' + g.color + '">' + g.name + '</span>' +
+    '<h2 class="hood">' + info.n + '</h2>' +
+    '<p class="tagline">' + info.tag + '</p>' +
+    '<div class="chips">' + info.vibe.map(v => '<span class="chip">' + v + '</span>').join('') + '</div>' +
+    '<div class="body">' + prose(info.body) + '</div>' +
+    '<div class="facts-h">Know it for</div><ul class="facts">' + info.know.map(k => '<li>' + k + '</li>').join('') + '</ul>' +
+    '<div class="facts-h">Getting there</div><div class="subway-line">' + prose(info.sub) + '</div>';
+  detailView.querySelector('.back').addEventListener('click', clearSelect);
+  indexView.style.display = 'none';
+  detailView.style.display = 'block';
+  sidebar.scrollTop = 0;
+}
+
+function clearSelect() {
+  if (selectedId && layersById[selectedId]) layersById[selectedId].setStyle(baseStyle(layersById[selectedId].feature));
+  selectedId = null;
+  history.replaceState(null, '', location.pathname);
+  detailView.style.display = 'none';
+  indexView.style.display = 'block';
+}
+
+/* legend */
+const legend = document.getElementById('legend');
+GROUP_ORDER.forEach(gid => {
+  const g = GROUPS[gid];
+  const row = document.createElement('div');
+  row.className = 'legend-row';
+  row.innerHTML = '<span class="swatch" style="background:' + g.color + '"></span><div><b>' + g.name + '</b><span>' + g.blurb + '</span></div>';
+  row.addEventListener('click', () => {
+    let bounds = null;
+    Object.keys(INFO).forEach(id => {
+      if (INFO[id].g === gid && layersById[id]) {
+        const b = layersById[id].getBounds();
+        bounds = bounds ? bounds.extend(b) : L.latLngBounds(b.getSouthWest(), b.getNorthEast());
+      }
+    });
+    if (bounds) map.flyToBounds(bounds, { padding: [25, 25], duration: 0.8 });
+  });
+  legend.appendChild(row);
+});
+
+/* index list */
+const idx = document.getElementById('idx');
+function renderIndex(filter) {
+  idx.innerHTML = '';
+  const q = (filter || '').toLowerCase().trim();
+  GROUP_ORDER.forEach(gid => {
+    const ids = Object.keys(INFO).filter(id => INFO[id].g === gid)
+      .filter(id => !q || (INFO[id].n + ' ' + (INFO[id].alias || '') + ' ' + INFO[id].tag).toLowerCase().includes(q))
+      .sort((a, b) => INFO[a].n.localeCompare(INFO[b].n));
+    if (!ids.length) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'idx-group';
+    wrap.innerHTML = '<div class="idx-group-title"><span class="swatch" style="background:' + GROUPS[gid].color + '"></span>' + GROUPS[gid].name + '</div>';
+    ids.forEach(id => {
+      const b = document.createElement('button');
+      b.className = 'idx-item';
+      b.innerHTML = INFO[id].n + '<span class="small">' + INFO[id].tag + '</span>';
+      b.addEventListener('click', () => select(id, true));
+      wrap.appendChild(b);
+    });
+    idx.appendChild(wrap);
+  });
+}
+renderIndex('');
+document.getElementById('search').addEventListener('input', e => renderIndex(e.target.value));
+
+document.querySelectorAll('[data-goto]').forEach(btn =>
+  btn.addEventListener('click', () => select(btn.dataset.goto, true)));
+
+/* deep link */
+const hash = location.hash.replace('#', '');
+if (hash && INFO[hash]) { select(hash, true); }
+</script>
+</body>
+</html>
