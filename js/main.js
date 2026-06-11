@@ -9,7 +9,11 @@
 
 import * as THREE from '../vendor/three.module.min.js';
 
-const DUR = 180;
+const DUR = 180;        // authored timeline length (seconds)
+const RATE = 1.3;       // play the whole cut this much faster — tighter pacing
+
+/* real-world playtime, for the timecode readout */
+const REAL_DUR = DUR / RATE;
 
 /* ---------------- small helpers ---------------- */
 
@@ -20,6 +24,27 @@ const m2f = (m) => 440 * Math.pow(2, (m - 69) / 12);
 
 const M = (color, opts = {}) =>
   new THREE.MeshStandardMaterial({ color, roughness: 0.85, ...opts });
+
+/* the late Chairman, on file — used for the portraits the cast can't stop
+   glancing at. Shared across every set; three updates the meshes once the
+   image decodes. */
+const texLoader = new THREE.TextureLoader();
+const maoTex = texLoader.load('assets/cast/mao.jpg');
+maoTex.colorSpace = THREE.SRGBColorSpace;
+
+/* a framed Mao portrait: gold frame box + photographic field. Returns a group
+   sized `w`×`h`, facing +z. */
+function maoPortrait(w, h, { frame = 0xb08d2e } = {}) {
+  const g = new THREE.Group();
+  g.add(box(w, h, 0.14, M(frame, { metalness: 0.6, roughness: 0.35 }), 0, 0, 0, false));
+  const photo = new THREE.Mesh(
+    new THREE.PlaneGeometry(w * 0.82, h * 0.86),
+    new THREE.MeshBasicMaterial({ map: maoTex })
+  );
+  photo.position.z = 0.08;
+  g.add(photo);
+  return g;
+}
 
 function box(w, h, d, mat, x = 0, y = 0, z = 0, shadow = true) {
   const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
@@ -516,11 +541,9 @@ function buildMeeting() {
   sc.add(box(0.3, 5.4, 14, M(0x33201c), 7.6, 2.7, 0, false));
 
   // the portrait nobody dares look at
-  const frame = box(2.6, 3.2, 0.12, M(0xb08d2e, { metalness: 0.6, roughness: 0.35 }), 0, 2.9, -4.2, false);
-  const canvas = box(2.2, 2.8, 0.06, M(0x8e1418), 0, 2.9, -4.12, false);
-  const star = new THREE.Mesh(starGeo(0.55), M(0xe8c33c, { emissive: 0x6a5210, side: THREE.DoubleSide }));
-  star.position.set(0, 3.05, -4.04);
-  sc.add(frame, canvas, star);
+  const portrait = maoPortrait(2.6, 3.2);
+  portrait.position.set(0, 2.9, -4.18);
+  sc.add(portrait);
 
   // table
   sc.add(box(6.4, 0.16, 1.9, M(0x2c1d12, { roughness: 0.35 }), 0, 0.95, 0));
@@ -693,12 +716,10 @@ function buildSquare() {
     gate.add(arch);
   }
 
-  // the portrait: gold frame, red field, gold star (stylised)
-  gate.add(box(4.6, 5.6, 0.3, M(0xb08d2e, { metalness: 0.6, roughness: 0.35 }), 0, 7.6, 3.7, false));
-  gate.add(box(4.0, 5.0, 0.2, M(0x7e1216), 0, 7.6, 3.78, false));
-  const pStar = new THREE.Mesh(starGeo(1.1), M(0xe8c33c, { emissive: 0x6a5210, side: THREE.DoubleSide }));
-  pStar.position.set(0, 7.9, 3.95);
-  gate.add(pStar);
+  // the portrait on the gate — the one the whole Square is facing
+  const gatePortrait = maoPortrait(4.6, 5.6);
+  gatePortrait.position.set(0, 7.6, 3.78);
+  gate.add(gatePortrait);
 
   // hanging banners (mercifully blank — the slogans are being rewritten)
   gate.add(box(2.2, 7, 0.1, M(0xa31218), -13, 6.5, 3.6, false));
@@ -983,6 +1004,11 @@ function buildDesk() {
   peek.position.set(4.4, 1.5, -1.9);
   sc.add(peek);
 
+  // the Chairman, still keeping an eye on the paperwork
+  const watch = maoPortrait(1.5, 1.9);
+  watch.position.set(-0.15, 2.5, -3.0);
+  sc.add(watch);
+
   const cone = new THREE.SpotLight(0xfff0d0, 380, 30, 0.34, 0.6, 2);
   cone.position.set(0, 7.5, 0.5);
   cone.target.position.set(0, 1, -0.5);
@@ -1110,7 +1136,7 @@ const SHOTS = [
    ============================================================ */
 
 const CARDS = [
-  { t: [1, 6.2], cls: 'card-studio', html: `<div class="star">&#9733;</div><div class="name">PEOPLE&rsquo;S PICTURES</div><div class="sub">PRESENTS &mdash; BY UNANIMOUS VOTE</div>` },
+  { t: [1, 6.2], cls: 'card-studio', html: `<div class="star">&#9733;</div><div class="name">PEOPLE&rsquo;S PICTURES</div><div class="sub">PRESENTS &mdash; BY UNANIMOUS VOTE</div><div class="sub2">the other studios have been thanked for their service</div>` },
 
   { t: [9.5, 14.5], cls: 'card-lower', html: `<div class="line">Zhongnanhai &mdash; Beijing, September 1976</div>` },
 
@@ -1120,13 +1146,17 @@ const CARDS = [
 
   { t: [38.3, 42.7], cls: 'card-big solid', html: `<div class="line red">Now he&rsquo;s dead.</div><div class="line">Which is officially a problem.</div>` },
 
-  { t: [56.2, 60.8], cls: 'card-quote', html: `<div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="text">&ldquo;The funniest five-year plan ever executed.&rdquo;</div><div class="src">&mdash; The Daily Plenum</div>` },
+  { t: [47.6, 51.4], cls: 'card-lower', html: `<div class="line">official cause of death: natural, obviously</div>` },
 
-  { t: [64.0, 66.6], cls: 'card-cast', html: `<div class="role">The Widow</div><div class="name">Jiang&nbsp;Qing</div><div class="note"><em>&ldquo;I speak for my husband. He agrees with me.&rdquo;</em></div>` },
-  { t: [69.6, 72.2], cls: 'card-cast alt', html: `<div class="role">The Successor</div><div class="name">Hua&nbsp;Guofeng</div><div class="note"><em>&ldquo;I was as surprised as anyone.&rdquo;</em></div>` },
-  { t: [75.2, 77.8], cls: 'card-cast', html: `<div class="role">The Marshal</div><div class="name">Ye&nbsp;Jianying</div><div class="note"><em>&ldquo;I am simply here to observe. Armed.&rdquo;</em></div>` },
-  { t: [80.8, 83.4], cls: 'card-cast alt', html: `<div class="role">The Exile</div><div class="name">Deng&nbsp;Xiaoping</div><div class="note"><em>&ldquo;Purged twice. Punctual always.&rdquo;</em></div>` },
-  { t: [86.4, 88.4], cls: 'card-cast', html: `<div class="role">&hellip;and</div><div class="name">The Gang<br>of&nbsp;Four</div><div class="note">(they counted themselves)</div>` },
+  { t: [56.2, 60.8], cls: 'card-quote', html: `<div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="text">&ldquo;The funniest five-year plan ever executed.&rdquo;</div><div class="src">&mdash; The Daily Plenum</div><div class="also">&ldquo;Two thumbs up &mdash; both later confiscated.&rdquo; &mdash; Pravda</div>` },
+
+  { t: [64.0, 66.6], cls: 'card-cast', html: `<img class="portrait" src="assets/cast/jiang.jpg" alt="Jiang Qing"><div class="role">The Widow</div><div class="name">Jiang&nbsp;Qing</div><div class="note"><em>&ldquo;I speak for my husband. He agrees with me.&rdquo;</em></div>` },
+  { t: [69.6, 72.2], cls: 'card-cast alt', html: `<img class="portrait" src="assets/cast/hua.jpg" alt="Hua Guofeng"><div class="role">The Successor</div><div class="name">Hua&nbsp;Guofeng</div><div class="note"><em>&ldquo;I was as surprised as anyone.&rdquo;</em></div>` },
+  { t: [75.2, 77.8], cls: 'card-cast', html: `<img class="portrait" src="assets/cast/ye.jpg" alt="Ye Jianying"><div class="role">The Marshal</div><div class="name">Ye&nbsp;Jianying</div><div class="note"><em>&ldquo;I am simply here to observe. Armed.&rdquo;</em></div>` },
+  { t: [80.8, 83.4], cls: 'card-cast alt', html: `<img class="portrait" src="assets/cast/deng.jpg" alt="Deng Xiaoping"><div class="role">The Exile</div><div class="name">Deng&nbsp;Xiaoping</div><div class="note"><em>&ldquo;Purged twice. Punctual always.&rdquo;</em></div>` },
+  { t: [86.4, 88.4], cls: 'card-cast gang-card', html: `<div class="mugshots"><figure><img src="assets/cast/jiang.jpg" alt="Jiang Qing"><figcaption>1</figcaption></figure><figure><img src="assets/cast/wang.jpg" alt="Wang Hongwen"><figcaption>2</figcaption></figure><figure><img src="assets/cast/zhang.jpg" alt="Zhang Chunqiao"><figcaption>3</figcaption></figure><figure><img src="assets/cast/yao.jpg" alt="Yao Wenyuan"><figcaption>4</figcaption></figure></div><div class="role">&hellip;and</div><div class="name gang-name">The Gang of&nbsp;Four</div><div class="note">(they counted themselves)</div>` },
+
+  { t: [89.3, 91.8], cls: 'card-flash red-bg', html: `<div class="line">Name a successor</div>` },
 
   { t: [92.5, 95.6], cls: 'card-mao', html: `<div class="text">&ldquo;Whoever speaks first is a traitor.<br>Whoever speaks last is also a traitor.&rdquo;</div><div class="src">&mdash; minutes of an emergency session</div>` },
 
@@ -1134,6 +1164,9 @@ const CARDS = [
 
   { t: [106.3, 108.9], cls: 'card-big solid', html: `<div class="line">Power abhors a vacuum.</div>` },
   { t: [109.1, 111.8], cls: 'card-big solid', html: `<div class="line red">Paranoia doesn&rsquo;t.</div>` },
+
+  { t: [114.5, 118.0], cls: 'card-lower', html: `<div class="line">everyone is helping with enquiries</div>` },
+  { t: [122.0, 125.5], cls: 'card-lower', html: `<div class="line">the meeting will continue without them</div>` },
 
   { t: [126.3, 129.0], cls: 'card-big solid', html: `<div class="line">From the committee that brought you</div><div class="line red">the Five-Year Plan</div>` },
   { t: [129.2, 131.9], cls: 'card-big solid', html: `<div class="line">comes a succession</div><div class="line red">with no plan at all.</div>` },
@@ -1146,9 +1179,9 @@ const CARDS = [
 
   { t: [156.5, 161.5], cls: 'card-mao', html: `<div class="text">&ldquo;With you in charge, I&rsquo;m at ease.&rdquo;</div><div class="src">&mdash; Chairman Mao (deceased)</div>` },
 
-  { t: [162.2, 173.8], cls: 'card-title', html: `<div class="kicker">A comedy of succession</div><div class="big">THE DEATH<br>OF <span class="mao">MAO</span></div><div class="tag" style="transition-delay:3.1s">Nobody is in charge. Everybody is in trouble.</div><div class="soon" style="transition-delay:6.5s">Coming soon &mdash; pending committee approval</div>` },
+  { t: [162.2, 173.8], cls: 'card-title', html: `<div class="kicker">A comedy of succession</div><div class="big">THE DEATH<br>OF <span class="mao">MAO</span></div><div class="tag" style="transition-delay:2.0s">Nobody is in charge. Everybody is in trouble.</div><div class="soon" style="transition-delay:4.2s">Coming soon &mdash; pending committee approval</div>` },
 
-  { t: [174.5, 179.4], cls: 'card-credits', html: `<div class="block">People&rsquo;s Pictures &middot; in association with the Ministry of Approved Laughter<br>written by a committee &middot; rewritten by a different committee<br>directed by whoever survives the edit</div><div class="fine">This is a work of satire in the tradition of THE DEATH OF STALIN (2017). All low-poly persons depicted are 14 centimetres tall and entirely fictional. No historical accuracy was harmed in the making of this trailer &mdash; it was never consulted. A 3D production rendered live in your browser.</div>` },
+  { t: [174.5, 179.4], cls: 'card-credits', html: `<div class="block">People&rsquo;s Pictures &middot; in association with the Ministry of Approved Laughter<br>written by a committee &middot; rewritten by a different committee<br>casting by elimination &middot; directed by whoever survives the edit</div><div class="fine">This is a work of satire in the tradition of THE DEATH OF STALIN (2017). Archival portraits of the principals are genuine; every word they say here is invented. All low-poly persons depicted are 14 centimetres tall and entirely fictional. No historical accuracy was harmed in the making of this trailer &mdash; it was never consulted. A 3D production rendered live in your browser.</div>` },
 ];
 
 /* ============================================================
@@ -1534,8 +1567,8 @@ let evPtr = 0;
 let lastT = 0;
 
 function now() {
-  if (orch) return offset + (orch.ctx.currentTime - startCtxTime);
-  return offset + (performance.now() - startPerf) / 1000;
+  if (orch) return offset + (orch.ctx.currentTime - startCtxTime) * RATE;
+  return offset + ((performance.now() - startPerf) / 1000) * RATE;
 }
 
 function startPlayback(at = 0) {
@@ -1606,8 +1639,10 @@ function frame() {
     const horizon = t + 1.4;
     while (evPtr < SCORE.length && SCORE[evPtr].t < horizon) {
       const e = SCORE[evPtr++];
-      const when = startCtxTime + (e.t - offset);
-      if (when >= orch.ctx.currentTime - 0.02) orch.play(e, Math.max(when, orch.ctx.currentTime + 0.005));
+      const when = startCtxTime + (e.t - offset) / RATE;
+      // notes are authored in timeline seconds; shrink them to match the tempo
+      if (when >= orch.ctx.currentTime - 0.02)
+        orch.play({ ...e, dur: e.dur / RATE }, Math.max(when, orch.ctx.currentTime + 0.005));
     }
   }
 
@@ -1634,11 +1669,14 @@ function frame() {
     renderer.render(blackScene, camera);
   }
 
-  /* progress + timecode */
+  /* progress + timecode (shown in real playback seconds, not timeline) */
   fill.style.width = `${(t / DUR) * 100}%`;
-  const mm = String(Math.floor(t / 60)).padStart(2, '0');
-  const ss = String(Math.floor(t % 60)).padStart(2, '0');
-  timecode.textContent = `${mm}:${ss} / 03:00`;
+  const rt = t / RATE;
+  const mm = String(Math.floor(rt / 60)).padStart(2, '0');
+  const ss = String(Math.floor(rt % 60)).padStart(2, '0');
+  const tm = String(Math.floor(REAL_DUR / 60)).padStart(2, '0');
+  const ts = String(Math.floor(REAL_DUR % 60)).padStart(2, '0');
+  timecode.textContent = `${mm}:${ss} / ${tm}:${ts}`;
 }
 frame();
 
