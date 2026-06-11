@@ -46,6 +46,29 @@ function maoPortrait(w, h, { frame = 0xb08d2e } = {}) {
   return g;
 }
 
+/* a face texture cropped to the head: `zoom` tightens the frame, (cx,cy) is
+   the focus point in UV space (cy near 1 = top of the photo, where faces sit). */
+function faceTex(file, { zoom = 1.7, cx = 0.5, cy = 0.64 } = {}) {
+  const t = texLoader.load('assets/cast/' + file);
+  t.colorSpace = THREE.SRGBColorSpace;
+  const win = 1 / zoom;
+  t.repeat.set(win, win);
+  t.offset.set(clamp01(cx - win / 2), clamp01(cy - win / 2));
+  return t;
+}
+
+/* the principals, cropped to the face — mapped onto the little people so you
+   can tell who's plotting against whom. Tuned by eye per photo. */
+const FACE = {
+  jiang: faceTex('jiang.jpg', { zoom: 2.0, cy: 0.70 }),
+  hua: faceTex('hua.jpg', { zoom: 2.9, cy: 0.73 }),
+  ye: faceTex('ye.jpg', { zoom: 1.8, cy: 0.68 }),
+  deng: faceTex('deng.jpg', { zoom: 1.75, cy: 0.62 }),
+  wang: faceTex('wang.jpg', { zoom: 1.7, cy: 0.58 }),
+  zhang: faceTex('zhang.jpg', { zoom: 1.7, cy: 0.64 }),
+  yao: faceTex('yao.jpg', { zoom: 2.6, cx: 0.46, cy: 0.63 }),
+};
+
 function box(w, h, d, mat, x = 0, y = 0, z = 0, shadow = true) {
   const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
   m.position.set(x, y, z);
@@ -92,7 +115,7 @@ function roof(w, h, d, color, x = 0, y = 0, z = 0) {
 
 const SKIN = 0xd9b38c;
 
-function makeFigure({ suit = 0x6b705c, cap = null, scale = 1 } = {}) {
+function makeFigure({ suit = 0x6b705c, cap = null, scale = 1, face = null } = {}) {
   const g = new THREE.Group();
   const mSuit = M(suit, { roughness: 0.95 });
   const mSkin = M(SKIN, { roughness: 0.7 });
@@ -117,6 +140,16 @@ function makeFigure({ suit = 0x6b705c, cap = null, scale = 1 } = {}) {
   headG.position.set(0, 1.13, 0);
   const head = box(0.24, 0.26, 0.24, mSkin, 0, 0.14, 0);
   headG.add(head);
+  if (face) {
+    // a real face on the front of the head; unlit + slightly muted so it reads
+    // in the dim rooms without glaring against the lit suits
+    const fp = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.238, 0.275),
+      new THREE.MeshBasicMaterial({ map: face, color: 0xdacfbd })
+    );
+    fp.position.set(0, 0.145, 0.1215);
+    headG.add(fp);
+  }
   if (cap !== null) {
     const c = box(0.27, 0.07, 0.27, M(cap), 0, 0.3, 0);
     const brim = box(0.27, 0.025, 0.12, M(cap), 0, 0.265, 0.16);
@@ -273,6 +306,18 @@ function buildExt() {
     lanterns.push(s);
   }
 
+  // the one lit window — the Chairman's room, still awake at a bad hour
+  const winWarm = new THREE.Color(0xffce82), winDark = new THREE.Color(0x130d06);
+  const winPane = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.25, 1.35),
+    new THREE.MeshBasicMaterial({ color: winWarm.clone() })
+  );
+  winPane.position.set(0.3, 1.75, -1.74);
+  sc.add(winPane);
+  const winGlow = new THREE.PointLight(0xffba63, 30, 11, 2);
+  winGlow.position.set(0.3, 1.85, -1.3);
+  sc.add(winGlow);
+
   // moon + moonlight
   const moon = new THREE.Mesh(
     new THREE.SphereGeometry(1.6, 16, 16),
@@ -280,11 +325,11 @@ function buildExt() {
   );
   moon.position.set(-14, 16, -34);
   sc.add(moon);
-  const dir = new THREE.DirectionalLight(0x8fa6c9, 2.4);
+  const dir = new THREE.DirectionalLight(0x8fa6c9, 2.7);
   dir.position.set(-14, 18, -10);
   dir.castShadow = true;
   dir.shadow.mapSize.set(1024, 1024);
-  sc.add(dir, new THREE.AmbientLight(0x2a3a55, 2.4));
+  sc.add(dir, new THREE.AmbientLight(0x2a3a55, 3.0));
 
   // a lone sentry pacing the platform
   const sentry = makeFigure({ suit: 0x37422f, cap: 0x2c3526 });
@@ -294,12 +339,26 @@ function buildExt() {
   return {
     scene: sc,
     update(sh, tL, tG, cam) {
+      // the light in the Chairman's window goes out at tL≈6 (he expires);
+      // the sentry, naturally, notices nothing
+      const lit = clamp01(1 - (tL - 6) / 0.45);
+      winPane.material.color.copy(winDark).lerp(winWarm, lit);
+      winGlow.intensity = 30 * lit;
+
       sentry.position.x = 2.2 + Math.sin(tG * 0.28) * 1.6;
       sentry.rotation.y = Math.cos(tG * 0.28) > 0 ? Math.PI / 2 : -Math.PI / 2;
       runCycle(sentry, tG, 4.4, 0.45);
-      const k = easeIO(clamp01(tL / 12));
-      cam.position.set(lerp(-11, -5, k), lerp(1.4, 2.2, k), lerp(16, 10.5, k));
-      cam.lookAt(0, 2.6, -4);
+
+      // two beats: a low drift across the lake, then a push onto the window
+      if (tL < 6) {
+        const a = easeIO(clamp01(tL / 6));
+        cam.position.set(lerp(-12, -3.4, a), lerp(1.3, 2.0, a), lerp(17.5, 12, a));
+        cam.lookAt(0.3, 2.3, -3);
+      } else {
+        const b = easeIO(clamp01((tL - 6) / 6));
+        cam.position.set(lerp(-3.4, 1.0, b), lerp(2.0, 1.95, b), lerp(12, 5.6, b));
+        cam.lookAt(0.3, lerp(2.3, 1.8, b), -1.8);
+      }
     },
   };
 }
@@ -320,6 +379,11 @@ function buildStudy() {
   sc.add(box(14, 5, 0.3, M(0x4b1f1c), 0, 2.5, -4, false));
   sc.add(box(0.3, 5, 12, M(0x42201d), -6, 2.5, 0, false));
   sc.add(box(0.3, 5, 12, M(0x42201d), 6.5, 2.5, 2, false));
+
+  // the Chairman, presiding over his own deathbed
+  const studyPortrait = maoPortrait(1.3, 1.6);
+  studyPortrait.position.set(-0.1, 2.95, -3.82);
+  sc.add(studyPortrait);
 
   // bookshelves crammed with little books
   for (let bx = -5; bx <= -1.4; bx += 1.8) {
@@ -570,17 +634,17 @@ function buildMeeting() {
   // cast
   const fig = {};
   const seatDefs = [
-    ['hua', 0x55555c, 3.85, 0, -Math.PI / 2],     // head of table
-    ['ye', 0x37422f, -1.9, -1.35, 0],
-    ['m1', 0x3a3a3a, 0.1, -1.35, 0],
-    ['m2', 0x33415c, 2.0, -1.35, 0],
-    ['gang1', 0x26262a, -1.9, 1.35, Math.PI],
-    ['gang2', 0x26262a, 0.1, 1.35, Math.PI],
-    ['gang3', 0x26262a, 2.0, 1.35, Math.PI],
+    ['hua', 0x55555c, 3.85, 0, -Math.PI / 2, FACE.hua],     // head of table
+    ['ye', 0x37422f, -1.9, -1.35, 0, FACE.ye],
+    ['m1', 0x3a3a3a, 0.1, -1.35, 0, null],
+    ['m2', 0x33415c, 2.0, -1.35, 0, null],
+    ['gang1', 0x26262a, -1.9, 1.35, Math.PI, FACE.wang],
+    ['gang2', 0x26262a, 0.1, 1.35, Math.PI, FACE.zhang],
+    ['gang3', 0x26262a, 2.0, 1.35, Math.PI, FACE.yao],
   ];
-  for (const [k, suit, x, z, ry] of seatDefs) {
+  for (const [k, suit, x, z, ry, face] of seatDefs) {
     mkChair(x, z, ry);
-    const f = makeFigure({ suit, cap: k === 'ye' ? 0x2c3526 : null });
+    const f = makeFigure({ suit, cap: k === 'ye' ? 0x2c3526 : null, face });
     f.position.set(x, 0, z);
     f.rotation.y = ry;
     sit(f);
@@ -588,7 +652,7 @@ function buildMeeting() {
     fig[k] = f;
   }
   // Jiang Qing — standing, of course
-  fig.jiang = makeFigure({ suit: 0x3c2a3e });
+  fig.jiang = makeFigure({ suit: 0x3c2a3e, face: FACE.jiang });
   fig.jiang.position.set(-3.85, 0, 0);
   fig.jiang.rotation.y = Math.PI / 2;
   sc.add(fig.jiang);
@@ -598,7 +662,7 @@ function buildMeeting() {
   door.position.set(6.2, 0, 2.8);
   door.rotation.y = -0.5;
   sc.add(door);
-  fig.deng = makeFigure({ suit: 0x3a3a3a, scale: 0.88 });
+  fig.deng = makeFigure({ suit: 0x3a3a3a, scale: 0.88, face: FACE.deng });
   fig.deng.position.set(4.9, 0, 3.2);
   fig.deng.rotation.y = -2.2;
   sc.add(fig.deng);
@@ -635,25 +699,29 @@ function buildMeeting() {
         fig.jiang.userData.rArm.rotation.x = -1.25 - Math.sin(tG * 7) * 0.12; // jabbing finger
         fig.jiang.userData.head.rotation.y = Math.sin(tG * 2.2) * 0.4;
         everyone.forEach((k) => (fig[k].userData.torso.rotation.x = -0.08)); // collective lean-back
-        cam.position.set(0.6, 1.45, 2.7);
-        cam.lookAt(-3.8, 1.25, -0.3);
+        const k = easeIO(clamp01(tL / 3)); // push in onto the face
+        cam.position.set(lerp(-1.78, -2.25, k), lerp(1.57, 1.5, k), lerp(1.51, 1.15, k));
+        cam.lookAt(-3.75, 1.27, 0.02);
       } else if (id === 'vHua') {
-        fig.hua.userData.rArm.rotation.x = -2.3; // scratching head
+        fig.hua.userData.rArm.rotation.x = -2.3; // scratching head (arm stays on the far side)
         fig.hua.userData.rArm.rotation.z = -0.5;
-        fig.hua.userData.head.rotation.y = Math.sin(tG * 1.1) * 0.8; // scanning for help
-        cam.position.set(0.8, 1.8, 0.4);
-        cam.lookAt(3.9, 1.1, 0);
+        fig.hua.userData.head.rotation.y = -0.1 + Math.sin(tG * 1.1) * 0.18; // small, helpless scan
+        const k = easeIO(clamp01(tL / 3));
+        cam.position.set(lerp(1.45, 2.1, k), lerp(1.52, 1.4, k), lerp(-0.75, -0.55, k));
+        cam.lookAt(3.78, 1.08, 0.02);
       } else if (id === 'vYe') {
         fig.ye.userData.lArm.rotation.x = -1.1; fig.ye.userData.lArm.rotation.z = 0.9;
         fig.ye.userData.rArm.rotation.x = -1.1; fig.ye.userData.rArm.rotation.z = -0.9; // crossed arms
         fig.ye.userData.head.rotation.y = Math.sin(tG * 3.2) * 0.22; // slow, professional "no"
-        cam.position.set(-1.9, 1.4, 1.6);
-        cam.lookAt(-1.9, 1.1, -1.5);
+        const k = easeIO(clamp01(tL / 3));
+        cam.position.set(lerp(-0.92, -1.15, k), lerp(1.5, 1.4, k), lerp(0.73, 0.25, k));
+        cam.lookAt(-1.9, 1.05, -1.35);
       } else if (id === 'vDeng') {
-        fig.deng.rotation.y = 0.55; // turns to face the room, brightly
+        fig.deng.rotation.y = -0.6; // turns to face the room (and us), brightly
         fig.deng.userData.rArm.rotation.z = -2.6 + Math.sin(tG * 6) * 0.25; // jaunty wave
-        cam.position.set(2.9, 1.25, 4.6);
-        cam.lookAt(4.9, 1.0, 3.0);
+        const k = easeIO(clamp01(tL / 3));
+        cam.position.set(lerp(3.3, 3.7, k), lerp(1.36, 1.3, k), lerp(4.9, 4.5, k));
+        cam.lookAt(4.85, 1.12, 3.35);
       } else if (id === 'vGang') {
         ['gang1', 'gang2', 'gang3'].forEach((k, i) => {
           fig[k].userData.head.rotation.x = 0.35;
@@ -981,7 +1049,7 @@ function buildDesk() {
   // an in-tray containing the entire nation
   sc.add(box(0.5, 0.5, 0.36, M(0xe8e2d0), -0.9, 1.35, 0, false));
 
-  const hua = makeFigure({ suit: 0x787882, scale: 1.12 });
+  const hua = makeFigure({ suit: 0x787882, scale: 1.12, face: FACE.hua });
   hua.position.set(0, 0, -0.85);
   sit(hua);
   hua.position.y = 0.12;
@@ -1140,7 +1208,7 @@ const CARDS = [
 
   { t: [9.5, 14.5], cls: 'card-lower', html: `<div class="line">Zhongnanhai &mdash; Beijing, September 1976</div>` },
 
-  { t: [19.4, 24.6], cls: 'card-big solid', html: `<div class="line">For 27 years,</div><div class="line">one man held absolute power.</div>` },
+  { t: [19.4, 24.6], cls: 'card-big solid', html: `<div class="line">For 27 years,</div><div class="line">one man was never wrong.</div>` },
 
   { t: [33, 37], cls: 'card-lower', html: `<div class="line">the doctors were chosen for loyalty, not medicine</div>` },
 
@@ -1165,8 +1233,8 @@ const CARDS = [
   { t: [106.3, 108.9], cls: 'card-big solid', html: `<div class="line">Power abhors a vacuum.</div>` },
   { t: [109.1, 111.8], cls: 'card-big solid', html: `<div class="line red">Paranoia doesn&rsquo;t.</div>` },
 
-  { t: [114.5, 118.0], cls: 'card-lower', html: `<div class="line">everyone is helping with enquiries</div>` },
-  { t: [122.0, 125.5], cls: 'card-lower', html: `<div class="line">the meeting will continue without them</div>` },
+  { t: [114.5, 118.0], cls: 'card-lower', html: `<div class="line">arrests will continue until morale improves</div>` },
+  { t: [122.0, 125.5], cls: 'card-lower', html: `<div class="line">the Gang of Four could not be reached for comment</div>` },
 
   { t: [126.3, 129.0], cls: 'card-big solid', html: `<div class="line">From the committee that brought you</div><div class="line red">the Five-Year Plan</div>` },
   { t: [129.2, 131.9], cls: 'card-big solid', html: `<div class="line">comes a succession</div><div class="line red">with no plan at all.</div>` },
