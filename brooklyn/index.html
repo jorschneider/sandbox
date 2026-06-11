@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Brooklyn, Explained — an extremely detailed neighborhood map</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<title>Brooklyn, Explained — an extremely detailed 3D neighborhood map (toddler edition)</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css">
 <style>
   :root {
     --sidebar-w: 400px;
@@ -102,19 +101,46 @@
   }
   .bullet.dark { color: #111; }
 
-  /* map labels */
-  .hood-label { background: none; border: none; box-shadow: none; }
-  .hood-label div {
-    font-size: 11px; font-weight: 700; color: #2b3340; text-align: center;
-    text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 5px #fff;
-    white-space: nowrap; transform: translate(-50%, -50%); width: max-content;
+  /* map labels, markers & popups */
+  #map { position: relative; }
+  #hoverchip {
+    position: absolute; top: 10px; left: 10px; z-index: 5; display: none;
+    background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 8px;
+    padding: 6px 11px; font-size: 13px; font-weight: 700; color: var(--ink);
+    box-shadow: 0 1px 4px rgba(0,0,0,.15); pointer-events: none; max-width: 290px;
   }
-  .hood-label.minor div { font-size: 10px; font-weight: 600; }
-  .hide-labels .hood-label { display: none !important; }
-  .hide-minor .hood-label.minor { display: none !important; }
+  #hoverchip .small { font-weight: 400; display: block; }
+  .spot-marker {
+    width: 30px; height: 30px; border-radius: 50%; background: #fff;
+    border: 2.5px solid #e0408a; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; box-shadow: 0 1px 5px rgba(0,0,0,.35); cursor: pointer; line-height: 1;
+  }
+  .maplibregl-popup-content {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px; line-height: 1.45; padding: 10px 13px; border-radius: 9px; color: var(--ink);
+  }
+  .maplibregl-popup-content p { margin: 6px 0 0; }
+  .pop-title { font-weight: 700; font-size: 13.5px; }
 
-  .leaflet-tooltip.hood-tip { font-size: 13px; font-weight: 600; }
-  .hood-tip .small { font-weight: 400; }
+  /* toddler guide */
+  .tot {
+    background: #fdf2f7; border: 1px solid #f3cfdf; border-radius: 9px;
+    padding: 11px 13px; margin-top: 14px;
+  }
+  .tot .facts-h { margin-top: 0; color: #b03a72; }
+  .tot p { font-size: 13px; line-height: 1.55; margin: 0; }
+  .tot .spot-row { background: #fff; margin-top: 7px; border: 1px solid #f3cfdf; }
+  .spot-row {
+    display: flex; gap: 9px; align-items: flex-start; width: 100%; text-align: left;
+    background: none; border: none; cursor: pointer; font-size: 13px; padding: 6px 8px;
+    border-radius: 7px; color: var(--ink); line-height: 1.4;
+  }
+  .spot-row:hover { background: #f9e3ee; }
+  .spot-row .em { font-size: 16px; flex: none; margin-top: 1px; }
+  .spot-row b { display: block; }
+  .spot-row .small { display: block; }
+  .cat-h { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #b03a72; margin: 12px 0 3px; }
+  .cat-legend { font-size: 12px; color: var(--muted); line-height: 1.9; margin-bottom: 4px; }
 
   @media (max-width: 860px) {
     body { flex-direction: column-reverse; }
@@ -128,7 +154,7 @@
 
 <div id="sidebar">
   <h1>Brooklyn, Explained</h1>
-  <div class="subtitle">An extremely detailed field guide to the borough's neighborhoods. Click any area on the map.</div>
+  <div class="subtitle">An extremely detailed <b>3D</b> field guide to the borough — now starring the places a 2-year-old will love. Click any area on the map.</div>
 
   <div id="index-view">
     <div class="card">
@@ -139,6 +165,17 @@
       <b>3. Brownstone Brooklyn (amber)</b> — Park Slope, Carroll Gardens &amp; co.: leafy 1880s rowhouse streets, strollers and restaurant rows.<br>
       <b>4. Central Brooklyn (violet)</b> — Bed-Stuy, Crown Heights, Flatbush's eastern half: the historic heart of Black and Caribbean Brooklyn.<br>
       <b>5. The rest is its own world</b> — Hasidic Borough Park, the Chinatowns of Sunset Park and Bensonhurst, Russian Brighton Beach, and a genuinely suburban southeast with boats in driveways.</p>
+      <p class="small"><b>It's 3D:</b> drag with the right mouse button (or two fingers on a trackpad/phone) to tilt and spin. The terrain is exaggerated ~2.5× so you can actually see Brooklyn's geography: the glacial ridge that runs through Green-Wood Cemetery, Sunset Park and Highland Park is the borough's spine — everything south of it slopes to the sea. Downtown's towers pop up when you zoom in close. The ⛰ button turns terrain off.</p>
+    </div>
+
+    <div class="card" id="tot-card">
+      <h2>With a 2-year-old 🧸</h2>
+      <p>This map's specialty: everywhere worth taking a toddler. The pink-ringed markers are the hand-picked hits; at closer zooms, every one of Brooklyn's <b>589 public playgrounds</b> appears as a small green dot. Every neighborhood write-up also ends with a "with a 2-year-old" verdict.</p>
+      <div class="cat-legend">🎠 rides &nbsp;·&nbsp; 🛝 playgrounds &nbsp;·&nbsp; 🦁 animals &nbsp;·&nbsp; 🌊 water &amp; beaches &nbsp;·&nbsp; 🏛 indoor / rainy day &nbsp;·&nbsp; 🌳 nature &nbsp;·&nbsp; ⚾ outings</div>
+      <div class="cat-h">The greatest hits</div>
+      <div id="spot-hits"></div>
+      <div class="cat-h">Everything else, by category</div>
+      <div id="spot-all"></div>
     </div>
 
     <div class="card">
@@ -163,8 +200,10 @@
       <h2>Regions</h2>
       <div id="legend"></div>
       <div class="toggles">
-        <label><input type="checkbox" id="tgl-stations" checked> Show subway stations</label>
-        <label><input type="checkbox" id="tgl-labels" checked> Show neighborhood labels</label>
+        <label><input type="checkbox" id="tgl-spots" checked> Toddler spots (pink markers)</label>
+        <label><input type="checkbox" id="tgl-playgrounds" checked> All 589 playgrounds (green dots, zoom in)</label>
+        <label><input type="checkbox" id="tgl-stations" checked> Subway stations</label>
+        <label><input type="checkbox" id="tgl-labels" checked> Neighborhood labels</label>
       </div>
     </div>
 
@@ -174,7 +213,7 @@
       <div id="idx"></div>
     </div>
 
-    <p class="small">Boundaries: NYC Dept. of City Planning 2020 Neighborhood Tabulation Areas. Stations: MTA. Some small neighborhoods (DUMBO, Red Hook, Ditmas Park…) are grouped into one official area — the write-ups cover each one inside it.</p>
+    <p class="small">Boundaries: NYC Dept. of City Planning 2020 Neighborhood Tabulation Areas. Stations: MTA. Playgrounds © OpenStreetMap contributors. Terrain: Mapzen/AWS Open Data. Some small neighborhoods (DUMBO, Red Hook, Ditmas Park…) are grouped into one official area — the write-ups cover each one inside it.</p>
   </div>
 
   <div id="detail"></div>
@@ -182,8 +221,7 @@
 
 <div id="map"></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 <script src="data.js"></script>
 <script>
 'use strict';
@@ -806,74 +844,384 @@ BK1771: { g:'green', n:'Holy Cross Cemetery',
   alias:'' },
 };
 
-/* ---------------- map ---------------- */
-const map = L.map('map', { zoomControl: true, minZoom: 10, maxZoom: 18 })
-  .setView([40.6450, -73.9530], 12);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> | Boundaries: NYC DCP | Stations: MTA',
-  subdomains: 'abcd', maxZoom: 19,
-}).addTo(map);
+/* ================= toddler guide data ================= */
+const TODDLER_CATS = {
+  rides:  ['🎠', 'Rides'],
+  play:   ['🛝', 'Playgrounds'],
+  animals:['🦁', 'Animals'],
+  water:  ['🌊', 'Water & beaches'],
+  indoor: ['🏛', 'Indoor / rainy day'],
+  nature: ['🌳', 'Nature'],
+  ball:   ['⚾', 'Outings'],
+};
 
-const layersById = {};
-let selectedId = null;
+/* Hand-picked places that genuinely work with a 2-year-old.
+   ll = [lat, lng] (resolved from OpenStreetMap). star = greatest hits. rain = good in bad weather. */
+const SPOTS = [
+  { n:`Jane's Carousel`, e:'🎠', ll:[40.70443,-73.99238], cat:'rides', area:'DUMBO', star:1,
+    blurb:`A gleaming 1922 carousel in a glass box between the bridges — short lines, gentle ride, skyline backdrop. A couple of dollars a spin.` },
+  { n:`Main Street Playground & Pebble Beach`, e:'🛝', ll:[40.70406,-73.99018], cat:'play', area:'DUMBO',
+    blurb:`Nautical-themed playground plus a tiny pebble cove where toddlers throw rocks at the East River forever.` },
+  { n:`Brooklyn Bridge Park — Pier 6`, e:'🛝', ll:[40.69230,-74.00100], cat:'play', area:'Atlantic Ave waterfront', star:1,
+    blurb:`The best playground complex in the borough: Slide Mountain, Swing Valley, a sand village and the Water Lab splash zone. Plan a whole morning.` },
+  { n:`Pierrepont Playground`, e:'🛝', ll:[40.69624,-73.99754], cat:'play', area:'Brooklyn Heights',
+    blurb:`Gated, shady and right off the Promenade — harbor views for the grown-ups, diggers for the kid.` },
+  { n:`New York Transit Museum`, e:'🏛', ll:[40.69052,-73.98998], cat:'indoor', area:'Downtown Brooklyn', star:1, rain:1,
+    blurb:`A decommissioned 1936 subway station full of vintage trains you can board. Toddlers lose their minds (happily). The best rainy-day ace in Brooklyn.` },
+  { n:`Fort Greene Park playground`, e:'🛝', ll:[40.69152,-73.97548], cat:'play', area:'Fort Greene',
+    blurb:`Big classic playground on the park's east side; Saturday greenmarket strawberries at the bottom of the hill.` },
+  { n:`Underwood Park`, e:'🛝', ll:[40.68839,-73.96639], cat:'play', area:'Clinton Hill',
+    blurb:`Beloved local tot lot under big trees between the Pratt campus and the mansions.` },
+  { n:`Carroll Park`, e:'🛝', ll:[40.68112,-73.99543], cat:'play', area:'Carroll Gardens',
+    blurb:`The classic Carroll Gardens square: sandbox, sprinklers, and nonna-supervised bocce next door.` },
+  { n:`Cobble Hill Park`, e:'🛝', ll:[40.68820,-73.99601], cat:'play', area:'Cobble Hill',
+    blurb:`A genteel pocket park with a tidy tot playground; bakery on the corner for the post-swing snack.` },
+  { n:`Valentino Pier`, e:'🌊', ll:[40.67820,-74.01700], cat:'water', area:'Red Hook',
+    blurb:`Tiny beach-let and a pier staring straight at the Statue of Liberty. Pair with key lime pie from Steve's around the corner.` },
+  { n:`Prospect Park Zoo`, e:'🦁', ll:[40.66529,-73.96489], cat:'animals', area:'Prospect Park', star:1,
+    blurb:`Perfectly toddler-sized zoo: sea lion feedings, prairie dogs at eye level, a barn of farm animals. An hour and a half, done by nap.` },
+  { n:`Prospect Park Carousel`, e:'🎠', ll:[40.66374,-73.96423], cat:'rides', area:'Prospect Park',
+    blurb:`A 1912 carousel with 51 hand-carved horses (plus a lion and a giraffe), steps from the zoo.` },
+  { n:`Lefferts Historic House`, e:'🏛', ll:[40.66437,-73.96380], cat:'indoor', area:'Prospect Park', rain:1,
+    blurb:`A 1780s Dutch farmhouse run for little kids — garden tools, churning demos, chickens in season.` },
+  { n:`Imagination Playground`, e:'🛝', ll:[40.65864,-73.96306], cat:'play', area:'Prospect Park east side',
+    blurb:`The one with the black dragon fountain rising from the sprinkler pool — a Prospect Lefferts rite of passage.` },
+  { n:`LeFrak Center at Lakeside`, e:'🌊', ll:[40.65706,-73.96421], cat:'water', area:'Prospect Park',
+    blurb:`Water jets to toddle through all summer; toddler-on-skates comedy on the rinks all winter.` },
+  { n:`Audubon Center Boathouse`, e:'🌳', ll:[40.66077,-73.96525], cat:'nature', area:'Prospect Park',
+    blurb:`Duck-feeding HQ (the ducks feed themselves, the toddler points) with gentle nature programming on weekends.` },
+  { n:`Harmony Playground`, e:'🛝', ll:[40.66344,-73.97698], cat:'play', area:'Park Slope',
+    blurb:`The music-themed playground at the Bandshell — sprinklers in summer, instruments built into the equipment.` },
+  { n:`Vanderbilt Playground`, e:'🛝', ll:[40.65508,-73.97291], cat:'play', area:'Windsor Terrace side',
+    blurb:`The quieter Prospect Park playground locals keep to themselves; sprinklers and shade.` },
+  { n:`Discovery Garden, Brooklyn Botanic Garden`, e:'🌳', ll:[40.66423,-73.96270], cat:'nature', area:'Prospect Heights', star:1,
+    blurb:`A garden literally designed for this age: dirt to dig, logs to balance on, plants to smell. Admission required; weekday winter mornings are free-ish and empty.` },
+  { n:`Central Library Youth Wing`, e:'🏛', ll:[40.67253,-73.96838], cat:'indoor', area:'Grand Army Plaza', rain:1,
+    blurb:`A whole art-deco wing of board books, train tables and daily storytimes. Free, warm, and stroller-parking pros.` },
+  { n:`J.J. Byrne Playground & Old Stone House`, e:'🛝', ll:[40.67277,-73.98412], cat:'play', area:'Park Slope',
+    blurb:`Great equipment for the small set on a Revolutionary War battlefield — the 1699 stone farmhouse does toddler programs.` },
+  { n:`Brooklyn Children's Museum`, e:'🏛', ll:[40.67442,-73.94389], cat:'indoor', area:'Crown Heights', star:1, rain:1,
+    blurb:`The world's first children's museum (1899) with a dedicated under-5 floor (Totally Tots). The borough's #1 wet-Tuesday destination.` },
+  { n:`Brower Park`, e:'🛝', ll:[40.67390,-73.94321], cat:'play', area:'Crown Heights',
+    blurb:`The Children's Museum's front yard — run off the post-museum energy here.` },
+  { n:`Herbert Von King Park`, e:'🛝', ll:[40.69013,-73.94644], cat:'play', area:'Bed-Stuy',
+    blurb:`Bed-Stuy's living room: shady lawns, a fine playground, and serious cookout energy on summer weekends.` },
+  { n:`Betsy Head Park & Pool`, e:'🌊', ll:[40.66356,-73.91304], cat:'water', area:'Brownsville',
+    blurb:`A grand WPA-era pool complex with a shallow kiddie section, plus a renovated playground.` },
+  { n:`Domino Park`, e:'🛝', ll:[40.71560,-73.96758], cat:'play', area:'Williamsburg', star:1,
+    blurb:`Sweetwater playground (built from sugar-refinery salvage), a fountain plaza made for toddling through, and tacos on site. Skyline included.` },
+  { n:`Marsha P. Johnson State Park`, e:'🌳', ll:[40.72159,-73.96207], cat:'nature', area:'Williamsburg',
+    blurb:`Open riverfront lawns for wobbly running; Smorgasburg on Saturdays if you can steer the stroller through it.` },
+  { n:`Bushwick Inlet Park playground`, e:'🛝', ll:[40.72211,-73.96068], cat:'play', area:'Williamsburg',
+    blurb:`Modern playground on the hill with a lawn that rolls down toward the river.` },
+  { n:`McCarren Park`, e:'🛝', ll:[40.72112,-73.95227], cat:'play', area:'Williamsburg/Greenpoint',
+    blurb:`Multiple playgrounds, a huge summer pool with shallow zones, and prime dog-watching (the other great toddler sport).` },
+  { n:`WNYC Transmitter Park`, e:'🌳', ll:[40.73007,-73.96044], cat:'nature', area:'Greenpoint',
+    blurb:`Pocket waterfront park with a little playground and a pier for ferry- and barge-spotting.` },
+  { n:`McGolrick Park`, e:'🛝', ll:[40.72445,-73.94336], cat:'play', area:'Greenpoint',
+    blurb:`Deep shade, an old-world pavilion, a good playground and a Sunday farmers market — Greenpoint parenting HQ.` },
+  { n:`Cooper Park`, e:'🛝', ll:[40.71598,-73.93734], cat:'play', area:'East Williamsburg',
+    blurb:`The local hub on the industrial side: solid playground, sprinklers, weekday-morning calm.` },
+  { n:`Maria Hernandez Park`, e:'🛝', ll:[40.70318,-73.92386], cat:'play', area:'Bushwick',
+    blurb:`Bushwick's main square — busy playground, sprinklers, and the whole neighborhood out on a warm evening.` },
+  { n:`New York Aquarium`, e:'🦁', ll:[40.57437,-73.97541], cat:'animals', area:'Coney Island', star:1, rain:1,
+    blurb:`Sea otters, a walk-through shark tunnel, and sea lion shows — compact enough for a toddler attention span, right on the boardwalk.` },
+  { n:`Deno's Wonder Wheel Kiddie Park`, e:'🎠', ll:[40.57402,-73.97919], cat:'rides', area:'Coney Island', star:1,
+    blurb:`The amusement park that actually works at age two: a dozen kiddie rides (fire engines, boats, the Tea Party) most of which take small riders with an adult.` },
+  { n:`B&B Carousell`, e:'🎠', ll:[40.57307,-73.98324], cat:'rides', area:'Coney Island',
+    blurb:`Coney's lovingly restored 1906 carousel in its own pavilion by the boardwalk — calmer than the rest of the midway.` },
+  { n:`Coney Island Beach & Boardwalk`, e:'🌊', ll:[40.57280,-73.97800], cat:'water', area:'Coney Island',
+    blurb:`Wide, free sand with lifeguards in season; the boardwalk is the borough's great stroller promenade. Nathan's fries split two ways.` },
+  { n:`Maimonides Park — Brooklyn Cyclones`, e:'⚾', ll:[40.57434,-73.98408], cat:'ball', area:'Coney Island',
+    blurb:`Minor-league baseball by the sea: cheap seats, between-inning mascot chaos, fireworks Fridays. Lap kids free.` },
+  { n:`Manhattan Beach`, e:'🌊', ll:[40.57730,-73.94150], cat:'water', area:'Manhattan Beach',
+    blurb:`The calmest, most toddler-proof beach in Brooklyn — gentle bay water, picnic tables and grills under the trees.` },
+  { n:`Sunset Park hilltop playground & pool`, e:'🛝', ll:[40.64772,-74.00448], cat:'play', area:'Sunset Park',
+    blurb:`Playground and big summer pool on top of the hill with the best free skyline view in Brooklyn. Popsicle carts at the gates.` },
+  { n:`Owl's Head Park`, e:'🛝', ll:[40.63970,-74.03280], cat:'play', area:'Bay Ridge',
+    blurb:`A glacial hill for epic rolling, a renovated playground, and harbor freighters sliding past below.` },
+  { n:`Bensonhurst Park`, e:'🛝', ll:[40.59701,-73.99965], cat:'play', area:'Bath Beach',
+    blurb:`Playground by Gravesend Bay at the foot of the Shore Parkway path; the Verrazzano fills the sky.` },
+  { n:`Salt Marsh Nature Center`, e:'🌳', ll:[40.60397,-73.93058], cat:'nature', area:'Marine Park', star:1,
+    blurb:`A flat boardwalk trail through real salt marsh: fiddler crabs, egrets, grasshoppers — a full toddler safari, free, stroller-friendly.` },
+  { n:`Aviator Sports`, e:'🏛', ll:[40.58961,-73.89906], cat:'indoor', area:'Floyd Bennett Field', rain:1,
+    blurb:`Indoor toddler gym, open-play sessions and ice rinks inside old airport hangars. Easy parking — this is driving Brooklyn.` },
+  { n:`Canarsie Pier`, e:'🌳', ll:[40.62866,-73.88389], cat:'nature', area:'Canarsie',
+    blurb:`Six hundred feet into Jamaica Bay: fishing buckets to inspect, gulls to chase, barbecue smoke to follow.` },
+];
 
-function baseStyle(f) {
-  const info = INFO[f.properties.id];
-  const g = GROUPS[info ? info.g : 'green'];
-  return { color: '#ffffff', weight: 1.4, fillColor: g.color, fillOpacity: 0.42 };
-}
-function hoverStyle(f) { const s = baseStyle(f); s.fillOpacity = 0.62; return s; }
-function selStyle(f)   { const s = baseStyle(f); s.fillOpacity = 0.66; s.color = '#1c2430'; s.weight = 2.5; return s; }
+/* Per-neighborhood toddler verdicts, keyed by NTA id. */
+const TOT = {
+BK0202:`Jackpot territory: Jane's Carousel, the Pebble Beach cove and the Main Street playground are all within ten minutes, and the Transit Museum's vintage subway cars are the borough's best rainy-day move. Hot chocolate at Jacques Torres seals it.`,
+BK0201:`Pierrepont Playground plus a Promenade stroll is the classic Heights morning; take the hillside path down into Brooklyn Bridge Park when the scooter energy builds.`,
+BK0203:`The park playground does the work; the Saturday greenmarket below adds strawberries and people-watching from the stroller.`,
+BK0204:`Underwood Park is the local tot lot, and the Pratt campus lawns — sculptures, squirrels and the famous campus cats — are a free toddler museum.`,
+BK0261:`Not a toddler destination, but BLDG 92's free museum tolerates small visitors and the Wegmans café works for a snack-and-crane-watching stop.`,
+BK0101:`Transmitter Park has a riverside playground and a boat-spotting pier; shady McGolrick is the stroller-set favorite. Ride the ferry one stop purely for the ride — the best $4.50 in toddler entertainment.`,
+BK0102:`Domino Park was practically built for this age (playground, fountains, lawns, tacos), with Bushwick Inlet's playground and McCarren's pool as backups. Saturday Smorgasburg works if you accept the crowds.`,
+BK0103:`Thin on toddler stops — the waterfront greenway makes a quiet stroller mile, and the bridge-watching from the small parks under the Williamsburg Bridge is free drama.`,
+BK0104:`Cooper Park is the neighborhood hub: good equipment, sprinklers, and weekday-morning calm while the warehouses hum.`,
+BK0401:`Maria Hernandez Park is Bushwick's living room — busy playground, sprinklers in summer, and the whole neighborhood out by evening.`,
+BK0402:`Local pocket playgrounds plus Highland Park up the ridge when you need real running room.`,
+BK0601:`Carroll Park's sandbox is a rite of passage; Cobble Hill Park adds a genteel tot lot. In Red Hook, Valentino Pier's mini-beach waves at the Statue of Liberty — pair with key lime pie.`,
+BK0602:`Peak toddler infrastructure: Harmony and Third Street playgrounds at the park edge, J.J. Byrne at the Old Stone House, and Fifth Avenue's endless pizza-and-bakery circuit.`,
+BK0701:`Vanderbilt Playground is the quieter Prospect Park entrance locals prize, and Greenwood Playground serves the cemetery side.`,
+BK0801:`The Botanic Garden's Discovery Garden was designed for exactly this age; the Central Library's youth wing runs daily storytimes; Vanderbilt Avenue goes car-free on summer weekends.`,
+BK0301:`Herbert Von King Park covers it: shady lawns, a solid playground, and summer cookout energy worth wandering into.`,
+BK0302:`Saratoga Park's century-old trees shade a good tot lot; the brownstone blocks make handsome nap-walk terrain.`,
+BK0802:`Home of the Brooklyn Children's Museum — the world's first, with a whole under-5 floor — and Brower Park right outside for the leftover energy.`,
+BK0901:`Lincoln Terrace Park's tot swings and big lawns are the local move; Kingston Avenue's bakeries handle the snack run.`,
+BK0902:`The Imagination Playground's dragon fountain is the icon, and the zoo, carousel and Lefferts farmhouse all sit on this side of Prospect Park.`,
+BK1601:`Pocket playgrounds serve the daily run; Betsy Head's grand pool is a short hop south in summer.`,
+BK1602:`Betsy Head Park is the anchor — a WPA-era pool with a shallow kiddie section and a renovated playground.`,
+BK1701:`Do the Little Caribbean snack crawl with the stroller (currant rolls travel well) and burn it off at the Parade Ground's playgrounds ten minutes west.`,
+BK1702:`Quiet homeowner blocks; Wingate Park's fields and playground are the neighborhood release valve.`,
+BK1703:`Tot lots between the brick rows, Creole bakeries for the snack stop, and easy access to the Parade Ground.`,
+BK1704:`Local playgrounds plus Canarsie Park's open hills a short ride south.`,
+BK0501:`Highland Park's playgrounds and the stroller loop around Ridgewood Reservoir — boardwalk, birdsong, zero cars — are an underrated morning.`,
+BK0502:`Playground pockets under the els; Highland Park up the hill is the green escape when the energy peaks.`,
+BK0503:`The community gardens adore tiny visitors, and the New Lots library branch runs storytimes between playground stops.`,
+BK0504:`Shirley Chisholm State Park next door is the move: smooth gravel loops for the carrier or a rugged stroller, with rabbits and kestrels as entertainment.`,
+BK0505:`Liberty Avenue's sweet shops plus small local playgrounds — and City Line's blocks make flat, easy stroller terrain.`,
+BK1203:`Ocean Parkway's benches host the borough's great stroller parade; Greenwood Playground and the Avenue C Plaza's weekend events fill the mornings.`,
+BK1401:`Kings Theatre runs family shows under all that gilt, and the Parade Ground playgrounds sit at the neighborhood's western edge.`,
+BK1402:`The Victorian blocks are made for nap-inducing stroller miles (count the porches); the Sunday Cortelyou greenmarket adds samples and dogs.`,
+BK1403:`A Di Fara slice while the stroller naps is a legitimate Brooklyn achievement; otherwise it's quiet local tot lots and wide, calm sidewalks.`,
+BK0702:`The hilltop playground and pool come with Brooklyn's best free view; Industry City's food halls are a stroller-friendly rainy-day reset; popsicle carts work the park gates all summer.`,
+BK0703:`Dim sum is elite toddler food (steamed buns, pointing encouraged) — do Eighth Avenue, then roll downhill to the park.`,
+BK1201:`Dome Playground is the local anchor, and the cemetery-edge blocks are quiet enough to hear yourself push the stroller.`,
+BK1202:`Thirteenth Avenue's bakeries are a toddler wonderland (babka, rainbow cookies), and every small park brims with big friendly families.`,
+BK1204:`Gravesend Park — "the 18th Avenue park" — covers playground duty between bakery stops.`,
+BK1001:`Owl's Head Park has a hill made for rolling and a harbor full of ships; the Shore Road playgrounds run for a mile under the Verrazzano. Third Avenue handles pizza and bakery logistics.`,
+BK1002:`A bundled-up toddler at the December Dyker Lights is core-memory material. The rest of the year: deep quiet and lawn-side strolls.`,
+BK1061:`The Harbor Defense Museum is tiny, free and tank-adjacent — a curiosity stop rather than a destination.`,
+BK1101:`Seth Low Playground is the big local yard; in late August the Santa Rosalia feast on 18th Avenue brings rides and zeppole.`,
+BK1102:`Bensonhurst Park's playground sits by the bay at the foot of the Shore Parkway stroller path, and the Adventurers kiddie park (the old Nellie Bly) with genuinely-for-toddlers rides is just along the shore.`,
+BK1103:`Adventurers Amusement Park runs kiddie rides sized for the just-walking, and Calvert Vaux Park's big skies are kite country.`,
+BK1301:`Quiet residential blocks — stroll Lady Moody's 1645 town square for the history, hit Avenue U for the buns.`,
+BK1302:`The toddler grand slam: Deno's kiddie rides, the B&B Carousell, sand-digging on the beach, sea otters at the Aquarium, and a Cyclones game if the nap holds.`,
+BK1303:`The boardwalk is a flawless stroller cruise; add a beach hour and a bag of cherry vareniki. In winter, toddlers find the year-round swimmers deeply hilarious.`,
+BK1501:`Avenue U supplies buns and bubble tea; Marine Park's ovals and playgrounds are ten minutes east.`,
+BK1502:`Tot lots and unhurried sidewalks — Kings Highway shopping with built-in snack stops is the local outing.`,
+BK1503:`Watch the fishing fleet unload on Emmons around mid-afternoon (free show), then take the footbridge to Manhattan Beach — the calmest toddler water in Brooklyn.`,
+BK1801:`Backyard Brooklyn: local playgrounds, wide sidewalks, and Kings Plaza for air-conditioned escalator entertainment.`,
+BK1802:`The Salt Marsh Nature Center's boardwalk (fiddler crabs!) is a free toddler safari; Marine Park's playgrounds and the horses at Jamaica Bay Riding Academy round out the circuit.`,
+BK1803:`Canarsie Pier delivers boats, gulls and barbecue smells; Seaview Park and Canarsie Park handle playground duty.`,
+BK5591:`The single best toddler day in Brooklyn: zoo → carousel → Lefferts farmhouse → Imagination Playground dragon, with LeFrak's water jets in summer and duck-pointing at the Boathouse year-round.`,
+BK0771:`Genuinely great with a sleeping toddler: smooth quiet lanes, monk parakeets squawking at the gates, and Battle Hill's harbor view at the top.`,
+BK5691:`Empty runways are the safest balance-bike terrain in New York; Aviator's toddler gym hides in a hangar; vintage planes sit in Hangar B.`,
+BK5693:`Smooth gravel loops over Jamaica Bay for the carrier or a rugged stroller — rabbits, kestrels and skyline as the payoff.`,
+BK5692:`For a toddler this is "look — boats," delivered from Canarsie Pier or the Shirley Chisholm hills. The birds are for you.`,
+BK1891:`The Salt Marsh boardwalk is the draw: crabs, egrets and grasshoppers at toddler eye level on a flat, free trail.`,
+BK1091:`Kite lawns and bridge-watching — container ships under the Verrazzano are reliably mesmerizing.`,
+BK1391:`Weekend soccer leagues, big skies and kites; bring the wagon.`,
+BK1893:`Pier gulls, fishing buckets and new playgrounds along the bay edge.`,
+BK1892:`Weekend cricket is a free spectacle, and there is always a spare field to run across.`,
+BK0891:`Tot swings under big old trees, with Eastern Parkway's mall as the stroller runway.`,
+BK0471:`Not a toddler stop, frankly — but a beautiful, silent walk if the nap requires motion.`,
+BK0571:`The Ridgewood Reservoir boardwalk loop is car-free, shaded and full of birds — a sleeper hit for the stroller set.`,
+BK1771:`Not toddler territory; the surrounding blocks' tot lots serve instead.`,
+};
 
-const ntaLayer = L.geoJSON(BK_DATA.ntas, {
-  style: baseStyle,
-  onEachFeature: (f, layer) => {
-    const id = f.properties.id;
-    layersById[id] = layer;
-    const info = INFO[id];
-    const gname = GROUPS[info ? info.g : 'green'].name;
-    layer.bindTooltip(
-      '<div>' + (info ? info.n : f.properties.name) + '<br><span class="small">' + gname + ' — click for the story</span></div>',
-      { sticky: true, className: 'hood-tip' });
-    layer.on('mouseover', () => { if (id !== selectedId) layer.setStyle(hoverStyle(f)); });
-    layer.on('mouseout',  () => { if (id !== selectedId) layer.setStyle(baseStyle(f)); });
-    layer.on('click',     () => select(id, false));
-  },
-}).addTo(map);
+/* ================= 3D map (MapLibre GL) ================= */
+const DEM_TILES = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png';
 
-/* labels */
-const labelLayer = L.layerGroup().addTo(map);
+/* fill color expression from region groups */
+const colorMatch = ['match', ['get', 'id']];
+Object.keys(INFO).forEach(id => { colorMatch.push(id, GROUPS[INFO[id].g].color); });
+colorMatch.push('#3fa34d');
+
+/* bounding boxes + point-in-polygon for spot→neighborhood assignment */
+const bboxById = {};
 BK_DATA.ntas.features.forEach(f => {
-  const info = INFO[f.properties.id];
-  if (!info) return;
-  const minor = info.major ? '' : ' minor';
-  const short = info.n.split(/,|&| — /)[0].trim();
-  L.marker(f.properties.c, {
-    interactive: false,
-    icon: L.divIcon({ className: 'hood-label' + minor, html: '<div>' + short + '</div>', iconSize: [0, 0] }),
-  }).addTo(labelLayer);
+  let w = 180, s = 90, e = -180, n = -90;
+  f.geometry.coordinates.forEach(poly => poly.forEach(ring => ring.forEach(([x, y]) => {
+    if (x < w) w = x; if (x > e) e = x; if (y < s) s = y; if (y > n) n = y;
+  })));
+  bboxById[f.properties.id] = [[w, s], [e, n]];
 });
-function updateLabelVisibility() {
-  const z = map.getZoom();
-  const el = map.getContainer();
-  el.classList.toggle('hide-labels', z < 12 || !document.getElementById('tgl-labels').checked);
-  el.classList.toggle('hide-minor', z < 13);
+function hoodAt(lng, lat) {
+  for (const f of BK_DATA.ntas.features) {
+    const [[w, s], [e, n]] = bboxById[f.properties.id];
+    if (lng < w || lng > e || lat < s || lat > n) continue;
+    let inside = false;
+    f.geometry.coordinates.forEach(poly => poly.forEach(ring => {
+      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+        if (((yi > lat) !== (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside;
+      }
+    }));
+    if (inside) return f.properties.id;
+  }
+  return null;
 }
-map.on('zoomend', updateLabelVisibility);
+SPOTS.forEach(s => { s.hood = hoodAt(s.ll[1], s.ll[0]); });
 
-/* stations */
-const stationLayer = L.layerGroup().addTo(map);
-BK_DATA.stations.forEach(([lat, lng, name, routes]) => {
-  L.circleMarker([lat, lng], { radius: 4, color: '#1c2430', weight: 1.5, fillColor: '#fff', fillOpacity: 1 })
-    .bindTooltip('<b>' + name + '</b><br>' + bullets(routes), { className: 'hood-tip' })
-    .addTo(stationLayer);
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://tiles.openfreemap.org/styles/liberty',
+  center: [-73.9530, 40.6500],
+  zoom: 11.3, pitch: 50, bearing: -12, maxPitch: 80,
+  attributionControl: { compact: true, customAttribution: 'Boundaries: NYC DCP · Stations: MTA · Playgrounds © OpenStreetMap · Terrain: Mapzen/AWS Open Data' },
+});
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
+map.addControl(new maplibregl.FullscreenControl());
+
+const hoverchip = document.createElement('div');
+hoverchip.id = 'hoverchip';
+map.getContainer().appendChild(hoverchip);
+
+let selectedId = null, hoverId = null, pendingSelect = null, layersReady = false;
+
+map.on('load', () => {
+  /* --- terrain, hillshade, sky --- */
+  map.addSource('terrain-dem', { type: 'raster-dem', tiles: [DEM_TILES], tileSize: 256, encoding: 'terrarium', maxzoom: 13 });
+  map.addSource('hillshade-dem', { type: 'raster-dem', tiles: [DEM_TILES], tileSize: 256, encoding: 'terrarium', maxzoom: 13 });
+  map.setTerrain({ source: 'terrain-dem', exaggeration: 2.5 });
+  map.addControl(new maplibregl.TerrainControl({ source: 'terrain-dem', exaggeration: 2.5 }));
+  try {
+    map.setSky({ 'sky-color': '#aed3ee', 'horizon-color': '#f6eedd', 'fog-color': '#f3efe7',
+      'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.7, 'fog-ground-blend': 0.8 });
+  } catch (e) { /* older runtime without sky support */ }
+
+  const styleLayers = map.getStyle().layers;
+  const firstSymbol = (styleLayers.find(l => l.type === 'symbol') || {}).id;
+  map.addLayer({ id: 'hillshading', type: 'hillshade', source: 'hillshade-dem',
+    paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#6b5a44' } }, firstSymbol);
+
+  /* --- 3D buildings (if the basemap style doesn't already extrude) --- */
+  if (!styleLayers.some(l => l.type === 'fill-extrusion')) {
+    const bsrc = (styleLayers.find(l => l['source-layer'] === 'building') || {}).source;
+    if (bsrc) map.addLayer({ id: 'bk-3d-buildings', type: 'fill-extrusion', source: bsrc, 'source-layer': 'building', minzoom: 13.5,
+      paint: { 'fill-extrusion-color': '#d8d0c3',
+        'fill-extrusion-height': ['coalesce', ['get', 'render_height'], ['get', 'height'], 10],
+        'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], ['get', 'min_height'], 0],
+        'fill-extrusion-opacity': 0.78 } });
+  }
+
+  /* --- neighborhoods --- */
+  map.addSource('ntas', { type: 'geojson', data: BK_DATA.ntas, promoteId: 'id' });
+  map.addLayer({ id: 'nta-fill', type: 'fill', source: 'ntas', paint: {
+    'fill-color': colorMatch,
+    'fill-opacity': ['case',
+      ['boolean', ['feature-state', 'selected'], false], 0.60,
+      ['boolean', ['feature-state', 'hover'], false], 0.55, 0.38],
+  } }, firstSymbol);
+  map.addLayer({ id: 'nta-line', type: 'line', source: 'ntas',
+    paint: { 'line-color': '#ffffff', 'line-width': 1.2 } }, firstSymbol);
+  map.addLayer({ id: 'nta-line-sel', type: 'line', source: 'ntas', paint: {
+    'line-color': '#1c2430',
+    'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 3, 0],
+  } }, firstSymbol);
+
+  /* --- subway stations --- */
+  map.addSource('stations', { type: 'geojson', data: { type: 'FeatureCollection',
+    features: BK_DATA.stations.map(([lat, lng, name, routes]) =>
+      ({ type: 'Feature', properties: { name, routes }, geometry: { type: 'Point', coordinates: [lng, lat] } })) } });
+  map.addLayer({ id: 'stations-lyr', type: 'circle', source: 'stations', minzoom: 11, paint: {
+    'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 2.5, 14, 5.5],
+    'circle-color': '#ffffff', 'circle-stroke-color': '#1c2430', 'circle-stroke-width': 1.4 } });
+
+  /* --- every playground in Brooklyn --- */
+  map.addSource('playgrounds', { type: 'geojson', data: { type: 'FeatureCollection',
+    features: BK_DATA.playgrounds.map(([lat, lng, name]) =>
+      ({ type: 'Feature', properties: { name }, geometry: { type: 'Point', coordinates: [lng, lat] } })) } });
+  map.addLayer({ id: 'playgrounds-lyr', type: 'circle', source: 'playgrounds', minzoom: 12, paint: {
+    'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 2.5, 16, 7],
+    'circle-color': '#2f9e4f', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 1, 'circle-opacity': 0.9 } });
+
+  /* --- neighborhood name labels --- */
+  map.addSource('hood-labels', { type: 'geojson', data: { type: 'FeatureCollection',
+    features: BK_DATA.ntas.features.filter(f => INFO[f.properties.id]).map(f => {
+      const info = INFO[f.properties.id];
+      return { type: 'Feature',
+        properties: { n: info.n.split(/,|&| — /)[0].trim(), minor: info.major ? 0 : 1 },
+        geometry: { type: 'Point', coordinates: [f.properties.c[1], f.properties.c[0]] } };
+    }) } });
+  map.addLayer({ id: 'hood-labels-major', type: 'symbol', source: 'hood-labels',
+    filter: ['==', ['get', 'minor'], 0], minzoom: 10.8,
+    layout: { 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Bold'],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 11, 11, 14, 15] },
+    paint: { 'text-color': '#2b3340', 'text-halo-color': '#ffffff', 'text-halo-width': 1.6 } });
+  map.addLayer({ id: 'hood-labels-minor', type: 'symbol', source: 'hood-labels',
+    filter: ['==', ['get', 'minor'], 1], minzoom: 12.6,
+    layout: { 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Regular'],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 12.6, 10.5, 15, 13] },
+    paint: { 'text-color': '#3b4350', 'text-halo-color': '#ffffff', 'text-halo-width': 1.5 } });
+
+  layersReady = true;
+  if (pendingSelect) { const p = pendingSelect; pendingSelect = null; select(p, true); }
 });
 
-document.getElementById('tgl-stations').addEventListener('change', e => {
-  if (e.target.checked) map.addLayer(stationLayer); else map.removeLayer(stationLayer);
+/* --- toddler spot markers (HTML markers ride the terrain) --- */
+const spotMarkers = SPOTS.map((s, i) => {
+  const el = document.createElement('div');
+  el.className = 'spot-marker';
+  el.textContent = s.e;
+  el.title = s.n;
+  el.addEventListener('click', ev => { ev.stopPropagation(); openSpot(i, false); });
+  return new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([s.ll[1], s.ll[0]]).addTo(map);
 });
-document.getElementById('tgl-labels').addEventListener('change', updateLabelVisibility);
-updateLabelVisibility();
+
+let spotPopup = null;
+function openSpot(i, fly) {
+  const s = SPOTS[i];
+  if (fly) map.flyTo({ center: [s.ll[1], s.ll[0]], zoom: 15.4, pitch: 55, duration: 1400 });
+  if (spotPopup) spotPopup.remove();
+  const c = TODDLER_CATS[s.cat];
+  spotPopup = new maplibregl.Popup({ maxWidth: '280px', offset: 22 })
+    .setLngLat([s.ll[1], s.ll[0]])
+    .setHTML('<div class="pop-title">' + s.e + ' ' + s.n + '</div>' +
+      '<span class="small">' + c[1] + (s.rain ? ' · good rainy-day call' : '') + (s.area ? ' · ' + s.area : '') + '</span>' +
+      '<p>' + s.blurb + '</p>')
+    .addTo(map);
+}
+
+/* --- hover & click --- */
+map.on('mousemove', 'nta-fill', e => {
+  const id = e.features[0].properties.id;
+  if (hoverId && hoverId !== id) map.setFeatureState({ source: 'ntas', id: hoverId }, { hover: false });
+  hoverId = id;
+  map.setFeatureState({ source: 'ntas', id }, { hover: true });
+  const info = INFO[id];
+  hoverchip.innerHTML = '<b>' + (info ? info.n : id) + '</b><span class="small">' +
+    GROUPS[info ? info.g : 'green'].name + ' — click for the story</span>';
+  hoverchip.style.display = 'block';
+  map.getCanvas().style.cursor = 'pointer';
+});
+map.on('mouseleave', 'nta-fill', () => {
+  if (hoverId) map.setFeatureState({ source: 'ntas', id: hoverId }, { hover: false });
+  hoverId = null;
+  hoverchip.style.display = 'none';
+  map.getCanvas().style.cursor = '';
+});
+
+map.on('click', ev => {
+  const ptLayers = ['stations-lyr', 'playgrounds-lyr'].filter(l => map.getLayer(l));
+  const hits = ptLayers.length ? map.queryRenderedFeatures(ev.point, { layers: ptLayers }) : [];
+  if (hits.length) {
+    const f = hits[0];
+    const html = f.layer.id === 'stations-lyr'
+      ? '<div class="pop-title">' + f.properties.name + '</div>' + bullets(f.properties.routes)
+      : '<div class="pop-title">' + (f.properties.name || 'Playground') + '</div><span class="small">Public playground (OpenStreetMap)</span>';
+    new maplibregl.Popup({ maxWidth: '260px' }).setLngLat(f.geometry.coordinates).setHTML(html).addTo(map);
+    return;
+  }
+  const nta = map.getLayer('nta-fill') ? map.queryRenderedFeatures(ev.point, { layers: ['nta-fill'] }) : [];
+  if (nta.length) select(nta[0].properties.id, false);
+});
+
+/* --- layer toggles --- */
+function setVis(ids, on) {
+  ids.forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'); });
+}
+document.getElementById('tgl-stations').addEventListener('change', e => setVis(['stations-lyr'], e.target.checked));
+document.getElementById('tgl-playgrounds').addEventListener('change', e => setVis(['playgrounds-lyr'], e.target.checked));
+document.getElementById('tgl-labels').addEventListener('change', e => setVis(['hood-labels-major', 'hood-labels-minor'], e.target.checked));
+document.getElementById('tgl-spots').addEventListener('change', e => {
+  spotMarkers.forEach(m => { m.getElement().style.display = e.target.checked ? 'flex' : 'none'; });
+  if (!e.target.checked && spotPopup) spotPopup.remove();
+});
 
 /* ---------------- sidebar ---------------- */
 const indexView = document.getElementById('index-view');
@@ -881,16 +1229,29 @@ const detailView = document.getElementById('detail');
 const sidebar = document.getElementById('sidebar');
 
 function select(id, fly) {
-  const info = INFO[id]; if (!info) return;
-  if (selectedId && layersById[selectedId]) layersById[selectedId].setStyle(baseStyle(layersById[selectedId].feature));
+  const info = INFO[id];
+  if (!info) return;
+  if (!layersReady) { pendingSelect = id; return; }
+  if (selectedId) map.setFeatureState({ source: 'ntas', id: selectedId }, { selected: false });
   selectedId = id;
-  const layer = layersById[id];
-  layer.setStyle(selStyle(layer.feature));
-  layer.bringToFront();
-  if (fly) map.flyToBounds(layer.getBounds(), { padding: [30, 30], maxZoom: 14, duration: 0.8 });
+  map.setFeatureState({ source: 'ntas', id }, { selected: true });
+  if (fly) map.fitBounds(bboxById[id], { padding: 70, maxZoom: 14.4, duration: 1100 });
   history.replaceState(null, '', '#' + id);
 
   const g = GROUPS[info.g];
+  const spotsHere = SPOTS.map((s, i) => i).filter(i => SPOTS[i].hood === id);
+  let totHtml = '';
+  if (TOT[id] || spotsHere.length) {
+    totHtml = '<div class="tot"><div class="facts-h">🧸 With a 2-year-old</div>' +
+      (TOT[id] ? '<p>' + TOT[id] + '</p>' : '');
+    spotsHere.forEach(i => {
+      const s = SPOTS[i];
+      totHtml += '<button class="spot-row" data-spot="' + i + '"><span class="em">' + s.e + '</span>' +
+        '<span><b>' + s.n + '</b><span class="small">' + s.blurb + '</span></span></button>';
+    });
+    totHtml += '</div>';
+  }
+
   detailView.innerHTML =
     '<button class="back">&larr; Back to the guide</button>' +
     '<span class="region-pill" style="background:' + g.color + '">' + g.name + '</span>' +
@@ -899,15 +1260,18 @@ function select(id, fly) {
     '<div class="chips">' + info.vibe.map(v => '<span class="chip">' + v + '</span>').join('') + '</div>' +
     '<div class="body">' + prose(info.body) + '</div>' +
     '<div class="facts-h">Know it for</div><ul class="facts">' + info.know.map(k => '<li>' + k + '</li>').join('') + '</ul>' +
-    '<div class="facts-h">Getting there</div><div class="subway-line">' + prose(info.sub) + '</div>';
+    '<div class="facts-h">Getting there</div><div class="subway-line">' + prose(info.sub) + '</div>' +
+    totHtml;
   detailView.querySelector('.back').addEventListener('click', clearSelect);
+  detailView.querySelectorAll('[data-spot]').forEach(b =>
+    b.addEventListener('click', () => openSpot(+b.dataset.spot, true)));
   indexView.style.display = 'none';
   detailView.style.display = 'block';
   sidebar.scrollTop = 0;
 }
 
 function clearSelect() {
-  if (selectedId && layersById[selectedId]) layersById[selectedId].setStyle(baseStyle(layersById[selectedId].feature));
+  if (selectedId && layersReady) map.setFeatureState({ source: 'ntas', id: selectedId }, { selected: false });
   selectedId = null;
   history.replaceState(null, '', location.pathname);
   detailView.style.display = 'none';
@@ -922,16 +1286,40 @@ GROUP_ORDER.forEach(gid => {
   row.className = 'legend-row';
   row.innerHTML = '<span class="swatch" style="background:' + g.color + '"></span><div><b>' + g.name + '</b><span>' + g.blurb + '</span></div>';
   row.addEventListener('click', () => {
-    let bounds = null;
+    let w = 180, s = 90, e = -180, n = -90, any = false;
     Object.keys(INFO).forEach(id => {
-      if (INFO[id].g === gid && layersById[id]) {
-        const b = layersById[id].getBounds();
-        bounds = bounds ? bounds.extend(b) : L.latLngBounds(b.getSouthWest(), b.getNorthEast());
+      if (INFO[id].g === gid && bboxById[id]) {
+        any = true;
+        const [[w2, s2], [e2, n2]] = bboxById[id];
+        if (w2 < w) w = w2; if (e2 > e) e = e2; if (s2 < s) s = s2; if (n2 > n) n = n2;
       }
     });
-    if (bounds) map.flyToBounds(bounds, { padding: [25, 25], duration: 0.8 });
+    if (any) map.fitBounds([[w, s], [e, n]], { padding: 55, duration: 1000 });
   });
   legend.appendChild(row);
+});
+
+/* toddler lists in the sidebar */
+function spotRow(i) {
+  const s = SPOTS[i];
+  const b = document.createElement('button');
+  b.className = 'spot-row';
+  b.innerHTML = '<span class="em">' + s.e + '</span><span><b>' + s.n + '</b>' +
+    '<span class="small">' + (s.area ? s.area + ' — ' : '') + s.blurb + '</span></span>';
+  b.addEventListener('click', () => openSpot(i, true));
+  return b;
+}
+const hitsEl = document.getElementById('spot-hits');
+const allEl = document.getElementById('spot-all');
+SPOTS.forEach((s, i) => { if (s.star) hitsEl.appendChild(spotRow(i)); });
+Object.keys(TODDLER_CATS).forEach(cat => {
+  const ids = SPOTS.map((s, i) => i).filter(i => SPOTS[i].cat === cat && !SPOTS[i].star);
+  if (!ids.length) return;
+  const h = document.createElement('div');
+  h.className = 'cat-h';
+  h.textContent = TODDLER_CATS[cat][0] + ' ' + TODDLER_CATS[cat][1];
+  allEl.appendChild(h);
+  ids.forEach(i => allEl.appendChild(spotRow(i)));
 });
 
 /* index list */
