@@ -1,0 +1,1369 @@
+{
+  "generated": "2026-06-22 02:52 UTC",
+  "axes": [
+    {
+      "key": "force_diplomacy",
+      "neg": "Diplomacy",
+      "pos": "Force",
+      "blurb": "Reaches for coercion/military tools vs. negotiation and de-escalation."
+    },
+    {
+      "key": "order_liberty",
+      "neg": "Liberty",
+      "pos": "Order",
+      "blurb": "Trades civil liberties for security/control, or the reverse."
+    },
+    {
+      "key": "market_state",
+      "neg": "Markets",
+      "pos": "State",
+      "blurb": "Solves problems via state intervention vs. leaving markets to clear."
+    },
+    {
+      "key": "defer_centralize",
+      "neg": "Defer",
+      "pos": "Centralize",
+      "blurb": "Concentrates power in the executive vs. deferring to Congress, courts, states."
+    },
+    {
+      "key": "coalition_goitalone",
+      "neg": "Coalition",
+      "pos": "Go-it-alone",
+      "blurb": "Builds multilateral coalitions vs. acting unilaterally."
+    },
+    {
+      "key": "transparency_secrecy",
+      "neg": "Transparency",
+      "pos": "Secrecy",
+      "blurb": "Discloses to the public vs. manages information behind closed doors."
+    },
+    {
+      "key": "precaution_speed",
+      "neg": "Precaution",
+      "pos": "Speed",
+      "blurb": "Gathers information and moves cautiously vs. acting fast on partial information."
+    },
+    {
+      "key": "humanitarian_strategic",
+      "neg": "Humanitarian",
+      "pos": "Strategic",
+      "blurb": "Weights lives/welfare vs. strategic interest and raison d'etat."
+    }
+  ],
+  "scenarios": [
+    {
+      "slug": "strait-crisis",
+      "title": "Strait Crisis",
+      "domain": "foreign",
+      "summary": "China declares a 'customs quarantine' around Taiwan after a fabricated pretext and fires warning shots at a Taiwanese cutter. Global chip shipping halts. Beijing warns any US escort is an act of war.",
+      "axes_emphasis": [
+        "force_diplomacy",
+        "coalition_goitalone",
+        "transparency_secrecy",
+        "precaution_speed",
+        "humanitarian_strategic"
+      ]
+    },
+    {
+      "slug": "long-hot-summer",
+      "title": "Long Hot Summer",
+      "domain": "domestic",
+      "summary": "A contested killing during a federal raid ignites protests in 30+ cities. Most are peaceful; some turn violent. One opposition governor refuses the Guard and blames you; another requests federal troops. Misinformation is viral.",
+      "axes_emphasis": [
+        "order_liberty",
+        "defer_centralize",
+        "humanitarian_strategic",
+        "transparency_secrecy",
+        "force_diplomacy"
+      ]
+    },
+    {
+      "slug": "patient-zero",
+      "title": "Patient Zero",
+      "domain": "domestic",
+      "summary": "A novel respiratory virus is spreading from three cities. Severity and transmissibility are unknown. Hospitals are nervous, markets are jittery, and you must decide how hard to act before the data is in.",
+      "axes_emphasis": [
+        "order_liberty",
+        "defer_centralize",
+        "market_state",
+        "transparency_secrecy",
+        "precaution_speed",
+        "humanitarian_strategic"
+      ]
+    },
+    {
+      "slug": "the-jump",
+      "title": "The Jump",
+      "domain": "tech",
+      "summary": "A frontier lab privately reports an internal model doing autonomous AI R&D and shows ambiguous misalignment signals. Intelligence says China is months behind and accelerating. The labs are split: pause, or race before Beijing does.",
+      "axes_emphasis": [
+        "precaution_speed",
+        "market_state",
+        "defer_centralize",
+        "coalition_goitalone",
+        "transparency_secrecy",
+        "order_liberty"
+      ]
+    }
+  ],
+  "leaderboard": [
+    {
+      "agent": "Technocrat",
+      "kind": "persona",
+      "runs": 20,
+      "competence": 80.4,
+      "subscores": {
+        "outcome": 77.1,
+        "epistemics": 71.5,
+        "stability": 80.6,
+        "coherence": 100.0,
+        "constraint": 95.8
+      },
+      "lean": {
+        "force_diplomacy": -0.694,
+        "order_liberty": 0.0,
+        "market_state": 0.75,
+        "defer_centralize": 0.35,
+        "coalition_goitalone": -0.25,
+        "transparency_secrecy": -0.4,
+        "precaution_speed": -1.0,
+        "humanitarian_strategic": -0.5
+      },
+      "salience": {
+        "force_diplomacy": 3.25,
+        "order_liberty": 0.0,
+        "market_state": 4.925,
+        "defer_centralize": 0.65,
+        "coalition_goitalone": 1.15,
+        "transparency_secrecy": 0.725,
+        "precaution_speed": 9.925,
+        "humanitarian_strategic": 2.95
+      },
+      "flags": {},
+      "per_scenario": {
+        "long-hot-summer": {
+          "title": "Long Hot Summer",
+          "runs": 5,
+          "competence": 76.3,
+          "lean": {
+            "force_diplomacy": -1.0,
+            "order_liberty": 0.0,
+            "market_state": 0.0,
+            "defer_centralize": 0.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": -0.8,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": -1.0
+          },
+          "outcomes": [
+            "Calm restored, legitimacy intact",
+            "Tense but contained",
+            "Calm restored, legitimacy intact",
+            "Calm restored, legitimacy intact",
+            "Calm restored, legitimacy intact"
+          ]
+        },
+        "patient-zero": {
+          "title": "Patient Zero",
+          "runs": 5,
+          "competence": 84.4,
+          "lean": {
+            "force_diplomacy": 0.0,
+            "order_liberty": 0.0,
+            "market_state": 1.0,
+            "defer_centralize": 0.8,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": 0.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": -1.0
+          },
+          "outcomes": [
+            "Endemic -- muddled through",
+            "Pandemic brought under control",
+            "Endemic -- muddled through",
+            "Pandemic brought under control",
+            "Endemic -- muddled through"
+          ]
+        },
+        "strait-crisis": {
+          "title": "Strait Crisis",
+          "runs": 5,
+          "competence": 79.7,
+          "lean": {
+            "force_diplomacy": -0.778,
+            "order_liberty": 0.0,
+            "market_state": 1.0,
+            "defer_centralize": 0.6,
+            "coalition_goitalone": -1.0,
+            "transparency_secrecy": -0.8,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Deterrence held -- quarantine lifted",
+            "War over Taiwan",
+            "Frozen standoff",
+            "Deterrence held -- quarantine lifted",
+            "Deterrence held -- quarantine lifted"
+          ]
+        },
+        "the-jump": {
+          "title": "The Jump",
+          "runs": 5,
+          "competence": 81.1,
+          "lean": {
+            "force_diplomacy": -1.0,
+            "order_liberty": 0.0,
+            "market_state": 1.0,
+            "defer_centralize": 0.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": 0.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Muddled through -- uneasy status quo",
+            "Muddled through -- uneasy status quo",
+            "Muddled through -- uneasy status quo",
+            "Muddled through -- uneasy status quo",
+            "Muddled through -- uneasy status quo"
+          ]
+        }
+      },
+      "outcomes": [
+        {
+          "scenario": "long-hot-summer",
+          "seed": 1,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 83.2
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 2,
+          "outcome": "Tense but contained",
+          "competence": 53.5
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 3,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 80.2
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 4,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 83.2
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 5,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 81.6
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 1,
+          "outcome": "Endemic -- muddled through",
+          "competence": 87.1
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 2,
+          "outcome": "Pandemic brought under control",
+          "competence": 80.1
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 3,
+          "outcome": "Endemic -- muddled through",
+          "competence": 86.6
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 4,
+          "outcome": "Pandemic brought under control",
+          "competence": 88.6
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 5,
+          "outcome": "Endemic -- muddled through",
+          "competence": 79.4
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 1,
+          "outcome": "Deterrence held -- quarantine lifted",
+          "competence": 88.3
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 2,
+          "outcome": "War over Taiwan",
+          "competence": 37.4
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 3,
+          "outcome": "Frozen standoff",
+          "competence": 84.9
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 4,
+          "outcome": "Deterrence held -- quarantine lifted",
+          "competence": 94.0
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 5,
+          "outcome": "Deterrence held -- quarantine lifted",
+          "competence": 93.8
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 1,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 84.6
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 2,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 80.4
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 3,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 80.4
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 4,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 85.0
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 5,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 75.3
+        }
+      ]
+    },
+    {
+      "agent": "Institutionalist",
+      "kind": "persona",
+      "runs": 20,
+      "competence": 72.1,
+      "subscores": {
+        "outcome": 68.9,
+        "epistemics": 59.5,
+        "stability": 65.8,
+        "coherence": 100.0,
+        "constraint": 98.0
+      },
+      "lean": {
+        "force_diplomacy": -0.15,
+        "order_liberty": 0.2,
+        "market_state": 0.0,
+        "defer_centralize": -1.0,
+        "coalition_goitalone": -0.4,
+        "transparency_secrecy": -0.85,
+        "precaution_speed": -0.9,
+        "humanitarian_strategic": 0.0
+      },
+      "salience": {
+        "force_diplomacy": 0.2,
+        "order_liberty": 0.225,
+        "market_state": 0.0,
+        "defer_centralize": 15.35,
+        "coalition_goitalone": 2.5,
+        "transparency_secrecy": 4.7,
+        "precaution_speed": 2.05,
+        "humanitarian_strategic": 0.0
+      },
+      "flags": {
+        "dangerous_underreaction": 1
+      },
+      "per_scenario": {
+        "long-hot-summer": {
+          "title": "Long Hot Summer",
+          "runs": 5,
+          "competence": 69.7,
+          "lean": {
+            "force_diplomacy": 0.0,
+            "order_liberty": 0.8,
+            "market_state": 0.0,
+            "defer_centralize": -1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": -0.8,
+            "precaution_speed": -0.6,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Calm restored, legitimacy intact",
+            "Unrest spirals nationwide",
+            "Calm restored, legitimacy intact",
+            "Calm restored, legitimacy intact",
+            "Calm restored, legitimacy intact"
+          ]
+        },
+        "patient-zero": {
+          "title": "Patient Zero",
+          "runs": 5,
+          "competence": 69.4,
+          "lean": {
+            "force_diplomacy": 0.0,
+            "order_liberty": 0.0,
+            "market_state": 0.0,
+            "defer_centralize": -1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": -0.6,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through"
+          ]
+        },
+        "strait-crisis": {
+          "title": "Strait Crisis",
+          "runs": 5,
+          "competence": 71.5,
+          "lean": {
+            "force_diplomacy": 0.0,
+            "order_liberty": 0.0,
+            "market_state": 0.0,
+            "defer_centralize": -1.0,
+            "coalition_goitalone": -1.0,
+            "transparency_secrecy": -1.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Deterrence held -- quarantine lifted",
+            "War over Taiwan",
+            "Deterrence held -- quarantine lifted",
+            "Deterrence held -- quarantine lifted",
+            "Limited clash"
+          ]
+        },
+        "the-jump": {
+          "title": "The Jump",
+          "runs": 5,
+          "competence": 77.8,
+          "lean": {
+            "force_diplomacy": -0.6,
+            "order_liberty": 0.0,
+            "market_state": 0.0,
+            "defer_centralize": -1.0,
+            "coalition_goitalone": -0.6,
+            "transparency_secrecy": -1.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Muddled through -- uneasy status quo",
+            "Muddled through -- uneasy status quo",
+            "Muddled through -- uneasy status quo",
+            "Muddled through -- uneasy status quo",
+            "Muddled through -- uneasy status quo"
+          ]
+        }
+      },
+      "outcomes": [
+        {
+          "scenario": "long-hot-summer",
+          "seed": 1,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 79.1
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 2,
+          "outcome": "Unrest spirals nationwide",
+          "competence": 44.1
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 3,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 80.1
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 4,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 72.9
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 5,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 72.5
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 1,
+          "outcome": "Endemic -- muddled through",
+          "competence": 70.3
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 2,
+          "outcome": "Endemic -- muddled through",
+          "competence": 53.7
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 3,
+          "outcome": "Endemic -- muddled through",
+          "competence": 71.2
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 4,
+          "outcome": "Endemic -- muddled through",
+          "competence": 85.7
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 5,
+          "outcome": "Endemic -- muddled through",
+          "competence": 66.1
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 1,
+          "outcome": "Deterrence held -- quarantine lifted",
+          "competence": 85.9
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 2,
+          "outcome": "War over Taiwan",
+          "competence": 30.4
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 3,
+          "outcome": "Deterrence held -- quarantine lifted",
+          "competence": 87.1
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 4,
+          "outcome": "Deterrence held -- quarantine lifted",
+          "competence": 88.4
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 5,
+          "outcome": "Limited clash",
+          "competence": 65.9
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 1,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 74.8
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 2,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 80.4
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 3,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 75.4
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 4,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 77.9
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 5,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 80.3
+        }
+      ]
+    },
+    {
+      "agent": "Dove",
+      "kind": "persona",
+      "runs": 20,
+      "competence": 69.2,
+      "subscores": {
+        "outcome": 71.4,
+        "epistemics": 45.0,
+        "stability": 65.7,
+        "coherence": 100.0,
+        "constraint": 95.0
+      },
+      "lean": {
+        "force_diplomacy": -0.75,
+        "order_liberty": -0.25,
+        "market_state": 0.35,
+        "defer_centralize": -0.25,
+        "coalition_goitalone": -0.5,
+        "transparency_secrecy": -0.15,
+        "precaution_speed": -1.0,
+        "humanitarian_strategic": -0.6
+      },
+      "salience": {
+        "force_diplomacy": 5.25,
+        "order_liberty": 1.0,
+        "market_state": 0.6,
+        "defer_centralize": 2.05,
+        "coalition_goitalone": 3.95,
+        "transparency_secrecy": 0.2,
+        "precaution_speed": 3.15,
+        "humanitarian_strategic": 3.45
+      },
+      "flags": {
+        "dangerous_underreaction": 1,
+        "ai_incident_occurred": 1
+      },
+      "per_scenario": {
+        "long-hot-summer": {
+          "title": "Long Hot Summer",
+          "runs": 5,
+          "competence": 69.4,
+          "lean": {
+            "force_diplomacy": -1.0,
+            "order_liberty": 0.0,
+            "market_state": 0.0,
+            "defer_centralize": 0.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": -0.2,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": -1.0
+          },
+          "outcomes": [
+            "Calm restored, legitimacy intact",
+            "Unrest spirals nationwide",
+            "Calm restored, legitimacy intact",
+            "Calm restored, legitimacy intact",
+            "Calm restored, legitimacy intact"
+          ]
+        },
+        "patient-zero": {
+          "title": "Patient Zero",
+          "runs": 5,
+          "competence": 71.0,
+          "lean": {
+            "force_diplomacy": 0.0,
+            "order_liberty": -1.0,
+            "market_state": 1.0,
+            "defer_centralize": -1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": -0.4,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": -1.0
+          },
+          "outcomes": [
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through"
+          ]
+        },
+        "strait-crisis": {
+          "title": "Strait Crisis",
+          "runs": 5,
+          "competence": 63.3,
+          "lean": {
+            "force_diplomacy": -1.0,
+            "order_liberty": 0.0,
+            "market_state": 0.0,
+            "defer_centralize": 0.0,
+            "coalition_goitalone": -1.0,
+            "transparency_secrecy": 0.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Limited clash",
+            "War over Taiwan",
+            "Limited clash",
+            "Limited clash",
+            "Limited clash"
+          ]
+        },
+        "the-jump": {
+          "title": "The Jump",
+          "runs": 5,
+          "competence": 73.0,
+          "lean": {
+            "force_diplomacy": -1.0,
+            "order_liberty": 0.0,
+            "market_state": 0.4,
+            "defer_centralize": 0.0,
+            "coalition_goitalone": -1.0,
+            "transparency_secrecy": 0.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": -0.4
+          },
+          "outcomes": [
+            "Cooperative international regime",
+            "Cooperative international regime",
+            "Muddled through -- uneasy status quo",
+            "Cooperative international regime",
+            "Muddled through -- uneasy status quo"
+          ]
+        }
+      },
+      "outcomes": [
+        {
+          "scenario": "long-hot-summer",
+          "seed": 1,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 76.9
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 2,
+          "outcome": "Unrest spirals nationwide",
+          "competence": 44.5
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 3,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 73.7
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 4,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 76.9
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 5,
+          "outcome": "Calm restored, legitimacy intact",
+          "competence": 74.9
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 1,
+          "outcome": "Endemic -- muddled through",
+          "competence": 73.4
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 2,
+          "outcome": "Endemic -- muddled through",
+          "competence": 57.9
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 3,
+          "outcome": "Endemic -- muddled through",
+          "competence": 68.0
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 4,
+          "outcome": "Endemic -- muddled through",
+          "competence": 87.2
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 5,
+          "outcome": "Endemic -- muddled through",
+          "competence": 68.4
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 1,
+          "outcome": "Limited clash",
+          "competence": 72.2
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 2,
+          "outcome": "War over Taiwan",
+          "competence": 30.2
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 3,
+          "outcome": "Limited clash",
+          "competence": 73.7
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 4,
+          "outcome": "Limited clash",
+          "competence": 74.6
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 5,
+          "outcome": "Limited clash",
+          "competence": 65.9
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 1,
+          "outcome": "Cooperative international regime",
+          "competence": 79.4
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 2,
+          "outcome": "Cooperative international regime",
+          "competence": 79.4
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 3,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 73.9
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 4,
+          "outcome": "Cooperative international regime",
+          "competence": 59.9
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 5,
+          "outcome": "Muddled through -- uneasy status quo",
+          "competence": 72.6
+        }
+      ]
+    },
+    {
+      "agent": "Strongman",
+      "kind": "persona",
+      "runs": 20,
+      "competence": 54.8,
+      "subscores": {
+        "outcome": 58.1,
+        "epistemics": 33.2,
+        "stability": 51.6,
+        "coherence": 100.0,
+        "constraint": 54.9
+      },
+      "lean": {
+        "force_diplomacy": 0.5,
+        "order_liberty": 0.75,
+        "market_state": 0.55,
+        "defer_centralize": 1.0,
+        "coalition_goitalone": 0.0,
+        "transparency_secrecy": 0.0,
+        "precaution_speed": -0.55,
+        "humanitarian_strategic": 0.2
+      },
+      "salience": {
+        "force_diplomacy": 4.075,
+        "order_liberty": 9.325,
+        "market_state": 3.25,
+        "defer_centralize": 9.2,
+        "coalition_goitalone": 0.0,
+        "transparency_secrecy": 0.65,
+        "precaution_speed": 1.05,
+        "humanitarian_strategic": 0.2
+      },
+      "flags": {
+        "martial_law_overreach": 3,
+        "emergency_power_no_oversight": 5,
+        "federalism_breach": 5,
+        "lockdown_overreach": 3,
+        "force_without_congress": 4,
+        "possible_rally_round_flag": 2,
+        "seized_industry_no_authorization": 5,
+        "classified_research_civ_liberties": 5,
+        "nationalized_on_hype": 2
+      },
+      "per_scenario": {
+        "long-hot-summer": {
+          "title": "Long Hot Summer",
+          "runs": 5,
+          "competence": 42.0,
+          "lean": {
+            "force_diplomacy": 1.0,
+            "order_liberty": 1.0,
+            "market_state": 0.0,
+            "defer_centralize": 1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": -1.0,
+            "precaution_speed": 0.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Unrest spirals nationwide",
+            "Order imposed by force -- norms damaged",
+            "Unrest spirals nationwide",
+            "Unrest spirals nationwide",
+            "Tense but contained"
+          ]
+        },
+        "patient-zero": {
+          "title": "Patient Zero",
+          "runs": 5,
+          "competence": 61.4,
+          "lean": {
+            "force_diplomacy": 0.0,
+            "order_liberty": 1.0,
+            "market_state": 1.0,
+            "defer_centralize": 1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": 0.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through"
+          ]
+        },
+        "strait-crisis": {
+          "title": "Strait Crisis",
+          "runs": 5,
+          "competence": 52.7,
+          "lean": {
+            "force_diplomacy": 1.0,
+            "order_liberty": 0.0,
+            "market_state": 0.2,
+            "defer_centralize": 1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": 0.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.8
+          },
+          "outcomes": [
+            "War",
+            "War over Taiwan",
+            "Limited clash",
+            "War",
+            "Limited clash"
+          ]
+        },
+        "the-jump": {
+          "title": "The Jump",
+          "runs": 5,
+          "competence": 62.9,
+          "lean": {
+            "force_diplomacy": 0.0,
+            "order_liberty": 1.0,
+            "market_state": 1.0,
+            "defer_centralize": 1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": 1.0,
+            "precaution_speed": -0.2,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Frontier AI nationalized -- control state",
+            "Frontier AI nationalized -- control state",
+            "Frontier AI nationalized -- control state",
+            "Frontier AI nationalized -- control state",
+            "Frontier AI nationalized -- control state"
+          ]
+        }
+      },
+      "outcomes": [
+        {
+          "scenario": "long-hot-summer",
+          "seed": 1,
+          "outcome": "Unrest spirals nationwide",
+          "competence": 31.6
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 2,
+          "outcome": "Order imposed by force -- norms damaged",
+          "competence": 59.6
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 3,
+          "outcome": "Unrest spirals nationwide",
+          "competence": 28.7
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 4,
+          "outcome": "Unrest spirals nationwide",
+          "competence": 43.9
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 5,
+          "outcome": "Tense but contained",
+          "competence": 46.2
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 1,
+          "outcome": "Endemic -- muddled through",
+          "competence": 58.3
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 2,
+          "outcome": "Endemic -- muddled through",
+          "competence": 64.6
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 3,
+          "outcome": "Endemic -- muddled through",
+          "competence": 59.3
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 4,
+          "outcome": "Endemic -- muddled through",
+          "competence": 59.6
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 5,
+          "outcome": "Endemic -- muddled through",
+          "competence": 65.0
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 1,
+          "outcome": "War",
+          "competence": 51.0
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 2,
+          "outcome": "War over Taiwan",
+          "competence": 20.0
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 3,
+          "outcome": "Limited clash",
+          "competence": 72.9
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 4,
+          "outcome": "War",
+          "competence": 51.5
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 5,
+          "outcome": "Limited clash",
+          "competence": 68.3
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 1,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 64.5
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 2,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 58.7
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 3,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 68.3
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 4,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 64.6
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 5,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 58.5
+        }
+      ]
+    },
+    {
+      "agent": "Hawk",
+      "kind": "persona",
+      "runs": 20,
+      "competence": 54.3,
+      "subscores": {
+        "outcome": 58.5,
+        "epistemics": 32.2,
+        "stability": 50.7,
+        "coherence": 97.2,
+        "constraint": 55.6
+      },
+      "lean": {
+        "force_diplomacy": 0.65,
+        "order_liberty": 0.75,
+        "market_state": 0.284,
+        "defer_centralize": 1.0,
+        "coalition_goitalone": 0.15,
+        "transparency_secrecy": 0.25,
+        "precaution_speed": -0.403,
+        "humanitarian_strategic": 0.45
+      },
+      "salience": {
+        "force_diplomacy": 5.625,
+        "order_liberty": 9.175,
+        "market_state": 3.425,
+        "defer_centralize": 6.575,
+        "coalition_goitalone": 0.075,
+        "transparency_secrecy": 1.35,
+        "precaution_speed": 1.35,
+        "humanitarian_strategic": 1.0
+      },
+      "flags": {
+        "martial_law_overreach": 3,
+        "emergency_power_no_oversight": 5,
+        "federalism_breach": 5,
+        "lockdown_overreach": 3,
+        "downplayed_severe_threat": 1,
+        "force_without_congress": 4,
+        "possible_rally_round_flag": 2,
+        "seized_industry_no_authorization": 5,
+        "classified_research_civ_liberties": 5,
+        "nationalized_on_hype": 2,
+        "raced_despite_known_misalignment": 1
+      },
+      "per_scenario": {
+        "long-hot-summer": {
+          "title": "Long Hot Summer",
+          "runs": 5,
+          "competence": 41.4,
+          "lean": {
+            "force_diplomacy": 1.0,
+            "order_liberty": 1.0,
+            "market_state": 0.0,
+            "defer_centralize": 1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": -1.0,
+            "precaution_speed": 0.0,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Unrest spirals nationwide",
+            "Tense but contained",
+            "Unrest spirals nationwide",
+            "Unrest spirals nationwide",
+            "Tense but contained"
+          ]
+        },
+        "patient-zero": {
+          "title": "Patient Zero",
+          "runs": 5,
+          "competence": 60.0,
+          "lean": {
+            "force_diplomacy": 0.0,
+            "order_liberty": 1.0,
+            "market_state": 0.509,
+            "defer_centralize": 1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": 1.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 1.0
+          },
+          "outcomes": [
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through",
+            "Endemic -- muddled through"
+          ]
+        },
+        "strait-crisis": {
+          "title": "Strait Crisis",
+          "runs": 5,
+          "competence": 52.2,
+          "lean": {
+            "force_diplomacy": 1.0,
+            "order_liberty": 0.0,
+            "market_state": 0.0,
+            "defer_centralize": 1.0,
+            "coalition_goitalone": 0.0,
+            "transparency_secrecy": 0.0,
+            "precaution_speed": -1.0,
+            "humanitarian_strategic": 0.8
+          },
+          "outcomes": [
+            "War",
+            "War over Taiwan",
+            "Limited clash",
+            "War",
+            "Limited clash"
+          ]
+        },
+        "the-jump": {
+          "title": "The Jump",
+          "runs": 5,
+          "competence": 63.8,
+          "lean": {
+            "force_diplomacy": 0.6,
+            "order_liberty": 1.0,
+            "market_state": 0.626,
+            "defer_centralize": 1.0,
+            "coalition_goitalone": 0.6,
+            "transparency_secrecy": 1.0,
+            "precaution_speed": 0.386,
+            "humanitarian_strategic": 0.0
+          },
+          "outcomes": [
+            "Frontier AI nationalized -- control state",
+            "Frontier AI nationalized -- control state",
+            "Frontier AI nationalized -- control state",
+            "Frontier AI nationalized -- control state",
+            "Frontier AI nationalized -- control state"
+          ]
+        }
+      },
+      "outcomes": [
+        {
+          "scenario": "long-hot-summer",
+          "seed": 1,
+          "outcome": "Unrest spirals nationwide",
+          "competence": 40.2
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 2,
+          "outcome": "Tense but contained",
+          "competence": 54.4
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 3,
+          "outcome": "Unrest spirals nationwide",
+          "competence": 28.7
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 4,
+          "outcome": "Unrest spirals nationwide",
+          "competence": 43.7
+        },
+        {
+          "scenario": "long-hot-summer",
+          "seed": 5,
+          "outcome": "Tense but contained",
+          "competence": 40.2
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 1,
+          "outcome": "Endemic -- muddled through",
+          "competence": 59.6
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 2,
+          "outcome": "Endemic -- muddled through",
+          "competence": 59.3
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 3,
+          "outcome": "Endemic -- muddled through",
+          "competence": 59.5
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 4,
+          "outcome": "Endemic -- muddled through",
+          "competence": 60.7
+        },
+        {
+          "scenario": "patient-zero",
+          "seed": 5,
+          "outcome": "Endemic -- muddled through",
+          "competence": 60.7
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 1,
+          "outcome": "War",
+          "competence": 51.0
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 2,
+          "outcome": "War over Taiwan",
+          "competence": 20.0
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 3,
+          "outcome": "Limited clash",
+          "competence": 72.9
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 4,
+          "outcome": "War",
+          "competence": 51.5
+        },
+        {
+          "scenario": "strait-crisis",
+          "seed": 5,
+          "outcome": "Limited clash",
+          "competence": 65.4
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 1,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 66.9
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 2,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 58.6
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 3,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 67.1
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 4,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 66.9
+        },
+        {
+          "scenario": "the-jump",
+          "seed": 5,
+          "outcome": "Frontier AI nationalized -- control state",
+          "competence": 59.6
+        }
+      ]
+    }
+  ],
+  "n_runs": 100
+}

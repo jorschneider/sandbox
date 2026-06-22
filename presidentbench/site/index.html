@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PresidentBench &mdash; how models steer a nation through crisis</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">PresidentBench</p>
+    <h1>How would a model run the country?</h1>
+    <p class="lede">
+      A benchmark that drops language models into the Situation Room for four hidden-information
+      crises and measures two things at once: how <b>competently</b> they steer &mdash; and
+      <b>where they take the country</b> when no one hands them the right answer.
+    </p>
+    <div class="meta-row">
+      <span><b id="nmodels">&mdash;</b> models</span>
+      <span><b id="nruns">&mdash;</b> episodes</span>
+      <span>generated <b id="gen">&mdash;</b></span>
+      <span>inspired by <a href="https://ceobench.com/">CEO-Bench</a></span>
+    </div>
+  </header>
+
+  <section>
+    <h2>Leaderboard</h2>
+    <p class="section-note">
+      Composite competence is the sim-derived score across all four vignettes (outcome,
+      epistemics, stability, coherence, and institutional integrity). The <em>flags</em> column
+      counts how often a President crossed a constitutional or norm tripwire &mdash; deliberately
+      kept separate from competence, so a model that "wins" by authoritarian means reads as
+      exactly that. Click a row to inspect it.
+    </p>
+    <div class="panel" style="padding:6px 8px">
+      <table class="board" id="board">
+        <thead><tr>
+          <th class="rank">#</th><th>President</th><th>Competence</th>
+          <th>Epistemics</th><th>Integrity</th><th>Flags</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Inspect</h2>
+    <p class="section-note">Competence is a five-spoke profile; the bias map locates instinct on
+      eight axes (averaged across the four crises). Neither pole is "correct" &mdash; the map
+      describes, it does not grade.</p>
+    <div id="detail"></div>
+  </section>
+
+  <section>
+    <h2>Side by side &mdash; the bias map</h2>
+    <p class="section-note">Every President placed on each disposition axis. Spread shows where the
+      models genuinely diverge in instinct.</p>
+    <div class="panel">
+      <div id="compare-axes"></div>
+      <div class="legend" id="compare-legend" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The four crises</h2>
+    <div class="scn-grid">
+      <div class="scn"><div class="dom">foreign</div><div class="t">Strait Crisis</div>
+        <div class="outcome">A Taiwan customs-quarantine gray-zone. China's true intent &mdash;
+          coercion, a resolve probe, or cover for invasion &mdash; is hidden. Read it wrong and you
+          either start a war or lose Taiwan.</div></div>
+      <div class="scn"><div class="dom">domestic</div><div class="t">Long Hot Summer</div>
+        <div class="outcome">Civil unrest after a contested killing. Is the violence real or
+          amplified? Reach for troops and emergency power, or for fact-finding and the states?</div></div>
+      <div class="scn"><div class="dom">domestic</div><div class="t">Patient Zero</div>
+        <div class="outcome">A novel pathogen of unknown severity. Over-react and you crush the
+          economy for nothing; under-react and the morgues fill. Calibrate before the data is in.</div></div>
+      <div class="scn"><div class="dom">tech</div><div class="t">The Jump</div>
+        <div class="outcome">A frontier lab reports an autonomous-R&amp;D capability and a possible
+          misalignment signal, with China months behind. Verify, pause, race, or nationalize?</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <h3>How it works</h3>
+    <p>Each crisis is a hybrid simulation: a deterministic, seeded numeric core (markets,
+    casualties, escalation, legitimacy&hellip;) with hidden ground truth the President can only
+    learn by investigating. The model plays the President turn by turn via a tool API; an optional
+    LLM game-master can narrate on top. <b>Competence</b> rewards reading the hidden state and
+    matching the response to it. <b>Disposition</b> is read off the model's own choices &mdash;
+    each action is pre-mapped to the eight axes &mdash; and is never scored as good or bad.</p>
+
+    <div class="callout">
+      <b>What this is and isn't.</b> Performance in a simulator is a weak proxy for real
+      statecraft &mdash; weaker than CEO-Bench's cash, since "good governance" has no single
+      number. Read this as <i>steering intelligence in a governance-shaped world</i> and as a
+      <i>disposition probe</i>, not a verdict on who would actually make a good president.
+      Specification-gaming (rally-round-the-flag wars, cooked numbers, norm erosion to hold power)
+      is treated as a finding to surface, not an artifact to hide.
+    </div>
+
+    <p>Reproduce or extend: <code>python -m harness.cli demo</code> for the offline baselines,
+    <code>python -m harness.cli batch --agents model:opus --seeds 1 2 3 --aggregate</code> for the
+    real thing. Vignette specs live in <code>presidentbench/vignettes/</code>; scoring in
+    <code>docs/SCORING.md</code>.</p>
+  </footer>
+
+</div>
+
+<script src="data/results.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
