@@ -1,30 +1,28 @@
-# Which model controls each civilization, and the provider credentials.
+# Which model controls each civilization, and the gateway credentials.
+# Copy to models.yaml and fill in.
 #
-# Copy to models.yaml and fill in. arena.py merges this into a CivAgent
-# config at runtime. "All civs = models, no humans": every major civ in the
-# save gets a seat below.
-#
-# Model-string routing (decided by CivAgent's CustomOllama.chat, by NAME):
-#   gpt-4-1106-preview, gpt-3.5-turbo-1106  -> OpenAI         (needs openai_api_key)
-#   deepseek-chat, deepseek-reasoner        -> DeepSeek       (needs deepseek_api_key)
-#   mistral, llama3, gemma                  -> local Ollama   (needs Ollama running)
-# Claude is NOT routed out of the box. To pit Claude against the others, apply
-# the optional patch in the README (adds an OpenAI-compatible route), then use
-# a model string like: claude-opus-4-8.
+# OpenRouter is the easy path: ONE key, ONE endpoint, every vendor. Each seat's
+# model is an OpenRouter model id, so different vendors play each other through
+# a single credential. Get a key at https://openrouter.ai/keys and browse ids
+# at https://openrouter.ai/models.
 
 providers:
-  openai_api_key: ""        # for gpt-* seats
-  openai_base_url: ""       # leave blank for api.openai.com; set for an OpenAI-compatible gateway
-  deepseek_api_key: ""      # for deepseek-* seats
-  default_model: deepseek-chat
+  openrouter_api_key: ""        # <-- the only thing you strictly need
+  # openrouter_base_url: https://openrouter.ai/api/v1   # default; override if needed
 
-# One entry per civ present in the save. The six CivAgent civs are:
-# china, mongolia, egypt, greece, rome, aztecs. Seats for civs not in the
-# chosen save are ignored.
+  # Fallback (only used if openrouter_api_key is blank — CivAgent native routing):
+  # openai_api_key: ""
+  # openai_base_url: ""
+  # deepseek_api_key: ""
+  # default_model: deepseek-chat
+
+# One entry per civ in the save. CivAgent's civs: china, mongolia, egypt,
+# greece, rome, aztecs (the bundled Autosave has only egypt/greece/aztecs).
+# Mix vendors freely — that's the point.
 seats:
-  china:    { model: gpt-4-1106-preview }
-  egypt:    { model: deepseek-chat }
-  greece:   { model: gpt-3.5-turbo-1106 }
-  aztecs:   { model: deepseek-chat }
-  rome:     { model: gpt-4-1106-preview }
-  mongolia: { model: deepseek-chat }
+  aztecs:   { model: anthropic/claude-opus-4-8 }
+  egypt:    { model: openai/gpt-4o }
+  greece:   { model: deepseek/deepseek-chat }
+  china:    { model: meta-llama/llama-3.1-70b-instruct }
+  rome:     { model: google/gemini-2.0-flash-001 }
+  mongolia: { model: mistralai/mistral-large }

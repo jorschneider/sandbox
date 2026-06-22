@@ -1,137 +1,158 @@
 # civ-arena — models playing each other, no humans
 
 A toolkit for running **LLM vs. LLM** matches in a Civilization-style strategy
-game, built on top of [CivAgent](https://github.com/asdqsczser/CivAgent)
-(the LLM-plays-Unciv research project) and its bundled headless game engine.
-Every civilization is driven by a model — different models can play each other —
-and there are no human players and no Discord in the loop.
+game, built on [CivAgent](https://github.com/asdqsczser/CivAgent) and its bundled
+headless Unciv engine. Every civilization is driven by a model — **different
+models play each other through one OpenRouter key** — they **negotiate and scheme
+in private**, and the match is replayed in an **animated HTML report**. No humans,
+no GUI, no Discord.
 
 > Scope note: this lives in the "Death of Mao" site repo only because that's
-> where the work was requested. It's self-contained under `civ-arena/` and has
-> nothing to do with the website.
+> where the work was requested. It's self-contained under `civ-arena/`.
 
 ## How it works
-
-CivAgent ships a **headless build of Unciv** (`resources/Unciv.jar`, a Civ V
-remake) plus a Python layer that lets LLMs make diplomatic decisions. The pieces:
 
 ```
    models.yaml ──┐
                  ▼
-  arena.py  ──► for each round:
-                 1. each civ's MODEL proposes a diplomatic action
-                 2. the TARGET civ's MODEL accepts/rejects        ← model-vs-model
+  arena.py  ──► each round:
+                 1. NEGOTIATE — each civ's model sends a private message to
+                    another (ally / threaten / deceive); the target replies   ← models talk
+                 2. ACT — informed by the chatter, each civ's model proposes
+                    a diplomatic action; the target's model accepts/rejects    ← model-vs-model
                  3. accepted actions mutate the game save
-                 4. Unciv.jar simulates N turns (war, tech, cities) ← real engine, headless
-                 5. record every civ's strength
+                 4. Unciv.jar simulates N turns (war, tech, cities)            ← real engine, headless
+                 5. record every civ's strength + every cable
                  ▼
-            scoreboard.csv  +  a declared winner
+       scoreboard.csv  +  animated report.html  +  a winner
 ```
 
-The engine runs **in-process via JPype** — no GUI, no game client, no Discord,
-no external server. The LLM "players" negotiate, ally, betray, and declare war
-on each other; the Unciv engine resolves the consequences.
+The engine runs **in-process via JPype** — no GUI, no client, no server.
+Private messages accumulate in each civ's memory, so a model can act on (or be
+fooled by) what it was told. The report animates the strength race and lets you
+scrub the **diplomatic cables** turn by turn.
 
-## What's been verified vs. what needs your keys
+## Quick start (OpenRouter — recommended)
 
-| Piece | Status |
-|---|---|
-| Headless Unciv engine advances a real game | ✅ Verified (turns + per-civ strength, no keys) |
-| Full pipeline: parse → rounds → engine → scoreboard → winner | ✅ Verified via `--dry-run` (no keys) |
-| Applying diplomatic actions (declare war, ally, peace, …) to the save | ✅ Verified (engine accepts them, keeps running) |
-| The actual LLM calls (live model-vs-model) | 🔑 Needs your API keys; prompts may want tuning |
-
-Why `arena.py` exists at all: CivAgent's *shipped* self-play script
-(`scripts/tasks/run_benchmark.py`) is **bit-rotted** — it calls
-`workflow_utils.run_workflows_with_tools`, which the current "shorter workflow"
-code comments out. `arena.py` targets the live primitive
-(`civagent.workflow.reply`) instead, so it runs against the repo as published.
-
-## Prerequisites
-
-- **Java 17+** (runs `Unciv.jar`; tested on JDK 21)
-- **Python 3.10+** (tested on 3.11)
-- **Redis** (CivAgent instantiates a Redis client at import time — even headless)
-- API keys for whichever providers you pit against each other
-
-## Quick start
+[OpenRouter](https://openrouter.ai) is one OpenAI-compatible endpoint with one
+key that proxies Claude, GPT, DeepSeek, Llama, Gemini, Mistral, and more — so a
+cross-vendor match needs a single credential.
 
 ```sh
 cd civ-arena
 ./setup.sh                       # clone CivAgent, venv, deps, redis, engine smoke test
 source .venv/bin/activate
 
-# 1) Prove the engine runs (no API keys needed):
-CIVAGENT_DIR=./vendor/CivAgent python smoke_test.py
+# Preview the report with NO keys (random diplomacy, real engine):
+CIVAGENT_DIR=./vendor/CivAgent python arena.py --demo --rounds 6
+open report.html                 # ▶ Play to animate; scrub the cables feed
 
-# 2) Dry-run a whole match — pipeline + scoreboard, still no keys:
-CIVAGENT_DIR=./vendor/CivAgent python arena.py --dry-run --rounds 5
-
-# 3) Live model-vs-model:
-cp models.example.yaml models.yaml   # add API keys, assign a model per civ
-CIVAGENT_DIR=./vendor/CivAgent python arena.py --rounds 8
+# Live model-vs-model:
+cp models.example.yaml models.yaml
+#   set providers.openrouter_api_key, assign an OpenRouter model id per civ
+CIVAGENT_DIR=./vendor/CivAgent python arena.py --rounds 10
 ```
 
-Output: a per-turn `scoreboard.csv` and a printed winner (highest final
-civilization strength).
+Outputs: `scoreboard.csv`, a printed winner, and a self-contained `report.html`.
 
 ## Configuring the match
 
-Edit `models.yaml` (copy from `models.example.yaml`). Each civ in the save gets
-a seat; assign any supported model string. **Different models per civ is the
-whole point** — e.g. DeepSeek vs. Claude vs. a local model.
+Edit `models.yaml` (copy from `models.example.yaml`). Put your key in
+`providers.openrouter_api_key` and give each civ an
+[OpenRouter model id](https://openrouter.ai/models) — **mixing vendors is the
+point**:
 
-Model-string routing (decided by name in CivAgent's `CustomOllama.chat`):
+```yaml
+providers:
+  openrouter_api_key: "sk-or-..."
+seats:
+  aztecs:   { model: anthropic/claude-opus-4-8 }
+  egypt:    { model: openai/gpt-4o }
+  greece:   { model: deepseek/deepseek-chat }
+```
 
-| Model string | Provider | Needs |
-|---|---|---|
-| `gpt-4-1106-preview`, `gpt-3.5-turbo-1106` | OpenAI | `openai_api_key` |
-| `deepseek-chat`, `deepseek-reasoner` | DeepSeek | `deepseek_api_key` |
-| `mistral`, `llama3`, `gemma` | local Ollama | Ollama running |
-| `claude-opus-4-8`, `claude-sonnet-4-6`, … | Anthropic | the patch below + `ANTHROPIC_API_KEY` |
+One key, one bill, any combination of models. (If you leave
+`openrouter_api_key` blank, arena falls back to CivAgent's native per-vendor
+routing — deepseek/openai/ollama keys in `providers`, and the optional Claude
+adapter in `patches/`. OpenRouter is far simpler.)
 
-### Adding Claude (recommended, optional)
+## Negotiation & scheming
 
-Claude isn't routed out of the box. The clean way is the official Anthropic
-SDK — see `patches/anthropic_llm_utils.py`, which is a drop-in adapter plus a
-3-line routing change. (Avoid the tempting shortcut of pointing CivAgent's
-`openai_base_url` at an OpenAI-compatible Anthropic endpoint; the official SDK
-is the supported path.) Once patched, give any seat a `claude-*` model string.
+Before acting each round, every civ's model sends a **private** message to one
+other civ and gets a reply. The prompt invites alliances, threats, tribute
+demands, and **deception** — and the model may lie. Those exchanges enter both
+parties' memory and are fed into the action/consent prompts, so betrayal and
+counter-betrayal emerge. Tune with:
 
-## Tuning the match
+- `--negotiation-rounds N` — message exchanges per round (default 1; `0` off).
 
-- `--rounds N` — number of diplomacy+simulation rounds (default 5).
-- `--turns-per-round N` — engine turns advanced per round (default 5). More
-  turns per round = faster games, less frequent diplomacy.
-- `--save PATH` — start from a different save. Two are bundled under
-  `vendor/CivAgent/scripts/reproductions/` (`Autosave`, `Autosave-China-60`).
+Every cable is recorded and shown in the report's feed.
+
+## The report
+
+`report.html` is a single self-contained file (no CDN, no build):
+
+- **Animated strength race** — multi-line chart of every civ over the match;
+  ▶ Play or drag the slider to scrub.
+- **Live leaderboard** — bars re-sort as the scrubber moves, labelled per model.
+- **Diplomatic cables** — the full negotiation + action feed, color-coded per
+  civ, filtered to the scrubbed point (wars highlighted).
+
+## What's verified vs. what needs your key
+
+| Piece | Status |
+|---|---|
+| Headless Unciv engine advances a real game | ✅ Verified (no keys) |
+| Full pipeline incl. negotiation + actions + report (`--demo`) | ✅ Verified (no keys) |
+| Diplomatic actions (war, ally, peace, …) applied to the save | ✅ Verified (engine reacts) |
+| `setup.sh` end-to-end | ✅ Verified |
+| Live LLM calls via OpenRouter | 🔑 Needs your key; prompts may want tuning |
+
+`arena.py` exists because CivAgent's shipped self-play script
+(`scripts/tasks/run_benchmark.py`) is bit-rotted — it calls
+`workflow_utils.run_workflows_with_tools`, which the current code comments out.
+
+## Prerequisites
+
+- **Java 17+** (runs `Unciv.jar`; tested on JDK 21)
+- **Python 3.10+** (tested on 3.11)
+- **Redis** (CivAgent opens a Redis client at import time, even headless)
+- An OpenRouter key for live matches (none needed for `--demo`/`--dry-run`)
+
+## Tuning
+
+- `--rounds N` — diplomacy+simulation rounds (default 6).
+- `--turns-per-round N` — engine turns advanced per round (default 4).
+- `--negotiation-rounds N` — private-message exchanges per round (default 1).
+- `--save PATH` — start from a different save (two bundled under
+  `vendor/CivAgent/scripts/reproductions/`).
+- `--report PATH`, `--out PATH` — report / CSV locations.
 
 ## Known limitations & gotchas
 
 - **The bundled `Autosave` has only 3 major civs** (Aztecs, Egypt, Greece).
-  CivAgent's six civs are china/mongolia/egypt/greece/rome/aztecs; which appear
-  depends on the save. Seats for absent civs are ignored. To run all six you
-  need a save that contains them.
-- **Live diplomacy is best-effort.** Action *application* is verified, but a
-  model returning malformed JSON, or proposing a parameter-heavy action, is
-  logged and skipped so the game keeps advancing. Expect to iterate on the
-  prompts in `arena.py` for your models.
-- **Cost.** Every civ calls a model every round (plus a consent call per
-  bilateral proposal). A long match with strong models adds up — start with
-  few rounds and cheaper models, then scale.
-- **Redis must be reachable** before importing CivAgent. `setup.sh` starts a
-  local one; override with `REDIS_HOST` / `REDIS_PORT`.
+  CivAgent's six are china/mongolia/egypt/greece/rome/aztecs; which appear
+  depends on the save. Seats for absent civs are ignored.
+- **Live diplomacy is best-effort.** Malformed model JSON or a parameter-heavy
+  action is logged and skipped so the match keeps advancing. Expect to iterate
+  on the prompts in `arena.py` for your lineup.
+- **Cost.** Each round makes ~`civs` negotiation calls + replies + `civs` action
+  calls + a consent call per bilateral proposal. Reasoning models (o1,
+  deepseek-r1) burn the `max_tokens` budget on hidden reasoning — start with a
+  few rounds and cheap models, then scale.
+- **Redis must be reachable** before importing CivAgent (`setup.sh` starts a
+  local one; override with `REDIS_HOST`/`REDIS_PORT`).
 
 ## Files
 
 | File | Purpose |
 |---|---|
-| `setup.sh` | Clone CivAgent, create venv, install pinned deps, start Redis, run smoke test |
-| `requirements.txt` | Verified-working dependency pins (e.g. `llama-index==0.10.58`) |
-| `smoke_test.py` | Advance the bundled save through the headless engine — no keys |
-| `arena.py` | The model-vs-model runner (`--dry-run` and live) → scoreboard |
-| `models.example.yaml` | Per-civ model assignment + provider keys (copy to `models.yaml`) |
-| `patches/anthropic_llm_utils.py` | Optional Claude adapter (official Anthropic SDK) |
+| `setup.sh` | Clone CivAgent, venv, pinned deps, Redis, smoke test |
+| `requirements.txt` | Verified dependency pins (e.g. `llama-index==0.10.58`) |
+| `smoke_test.py` | Advance the bundled save through the engine — no keys |
+| `arena.py` | The runner: negotiation + actions + engine → CSV + animated report |
+| `models.example.yaml` | OpenRouter key + per-civ model ids (copy to `models.yaml`) |
+| `patches/anthropic_llm_utils.py` | Optional Claude adapter for CivAgent-native routing (OpenRouter usually makes this unnecessary) |
 
 ## Credits
 
