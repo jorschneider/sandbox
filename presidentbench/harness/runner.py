@@ -154,12 +154,26 @@ def aggregate(results_dir: str, out_path: str) -> dict:
             ag["flags"][f] = ag["flags"].get(f, 0) + 1
         ps = ag["per_scenario"].setdefault(r["scenario"], {
             "title": r["scenario_title"], "n": 0, "competence_sum": 0.0,
-            "lean_sum": {k: 0.0 for k in AXIS_KEYS}, "outcomes": []})
+            "lean_sum": {k: 0.0 for k in AXIS_KEYS}, "outcomes": [],
+            "rep_seed": None, "rep": None})
         ps["n"] += 1
         ps["competence_sum"] += r["competence_composite"]
         for k in AXIS_KEYS:
             ps["lean_sum"][k] += r["disposition"]["lean"][k]
         ps["outcomes"].append(r["outcome"])
+        # keep one representative transcript (lowest seed) for the dashboard
+        if ps["rep_seed"] is None or r["seed"] < ps["rep_seed"]:
+            ps["rep_seed"] = r["seed"]
+            ps["rep"] = {
+                "seed": r["seed"], "outcome": r["outcome"], "hidden": r["hidden"],
+                "competence": r["competence_composite"],
+                "turns": [{"turn": t["turn"], "sitrep": t["sitrep"],
+                           "actions": [{"name": a["name"],
+                                        "rationale": a.get("rationale", "")}
+                                       for a in t["actions"]],
+                           "narrative": t["narrative"], "state": t["state"]}
+                          for t in r["transcript"]],
+            }
         ag["outcomes"].append({"scenario": r["scenario"], "seed": r["seed"],
                                "outcome": r["outcome"],
                                "competence": r["competence_composite"]})
@@ -182,7 +196,7 @@ def aggregate(results_dir: str, out_path: str) -> dict:
                     "competence": round(ps["competence_sum"] / max(1, ps["n"]), 1),
                     "lean": {k: round(ps["lean_sum"][k] / max(1, ps["n"]), 3)
                              for k in AXIS_KEYS},
-                    "outcomes": ps["outcomes"]}
+                    "outcomes": ps["outcomes"], "rep": ps["rep"]}
                 for s, ps in ag["per_scenario"].items()},
             "outcomes": ag["outcomes"],
         }

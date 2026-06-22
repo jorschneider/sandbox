@@ -145,6 +145,31 @@ table.board tr.selected { background: #1c2740; }
 /* radar */
 .radar-wrap { display: flex; justify-content: center; }
 
+/* ---- transcript modal ---- */
+.overlay { position: fixed; inset: 0; background: rgba(5,7,12,.78); display: flex;
+  align-items: flex-start; justify-content: center; padding: 40px 18px; z-index: 50; overflow-y: auto; }
+.modal { background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  max-width: 760px; width: 100%; box-shadow: 0 24px 80px rgba(0,0,0,.6); }
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 18px 22px; border-bottom: 1px solid var(--line); position: sticky; top: 0;
+  background: var(--panel); border-radius: 14px 14px 0 0; }
+.modal-title { font-size: 19px; font-weight: 700; }
+.modal-sub { color: var(--muted); font-size: 13px; font-family: var(--mono); margin-top: 3px; }
+.modal-head .x { cursor: pointer; font-size: 26px; line-height: 1; color: var(--faint); padding: 0 4px; }
+.modal-head .x:hover { color: var(--ink); }
+.modal-hidden { padding: 12px 22px; background: #15233a; color: #b9cdf0; font-size: 13px;
+  border-bottom: 1px solid var(--line); }
+.modal-body { padding: 8px 22px 22px; }
+.tr-turn { border-bottom: 1px solid var(--line); padding: 16px 0; }
+.tr-turn:last-child { border-bottom: none; }
+.tr-h { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 6px; }
+.tr-sit { color: var(--muted); font-size: 13px; line-height: 1.5; margin-bottom: 10px; }
+.tr-acts { margin: 0 0 10px; padding-left: 18px; }
+.tr-acts li { margin: 3px 0; font-size: 13.5px; }
+.tr-acts .an { font-family: var(--mono); color: var(--accent); font-size: 12.5px; }
+.tr-acts .ar { color: var(--muted); }
+.tr-nar { font-size: 13.5px; color: var(--ink); background: var(--panel-2); border-radius: 8px; padding: 8px 12px; }
+
 footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; }
 footer h3 { color: var(--muted); }
 .callout { background: #15233a; border: 1px solid #244a72; border-radius: 10px; padding: 14px 16px; color: #b9cdf0; font-size: 13.5px; margin: 14px 0; }

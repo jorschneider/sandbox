@@ -16,6 +16,7 @@ function boot(data) {
   document.getElementById("nmodels").textContent =
     data.leaderboard.filter(e => e.kind === "model").length;
   renderBoard();
+  renderPareto();
   renderCompare();
   SELECTED = (data.leaderboard.find(e => e.kind === "model") || data.leaderboard[0]).agent;
   renderDetail();
@@ -100,7 +101,8 @@ function renderDetail() {
     div.innerHTML = `<div class="dom">${sc.domain}</div>
       <div class="t">${sc.title}</div>
       <div class="outcome">${outStr}</div>
-      <div class="c">competence ${ps.competence}</div>`;
+      <div class="c">competence ${ps.competence}${ps.rep ? ' &middot; <span class="toggle">read transcript &rarr;</span>' : ''}</div>`;
+    if (ps.rep) { div.style.cursor = "pointer"; div.onclick = () => openTranscript(e.agent, sc); }
     sg.appendChild(div);
   });
 
@@ -113,6 +115,59 @@ function renderDetail() {
     });
   }
 }
+
+function renderPareto() {
+  const root = document.getElementById("pareto");
+  root.innerHTML = "";
+  const pts = DATA.leaderboard.map(e => ({
+    x: e.competence,
+    y: e.subscores.constraint ?? 50,
+    label: SHORT(e.agent),
+    color: COLORS[e.agent],
+    kind: e.kind,
+  }));
+  root.appendChild(scatterChart(pts, {
+    xlabel: "Competence (composite)", ylabel: "Institutional integrity",
+    brLabel: "effective, low-integrity", width: 660, height: 430,
+  }));
+}
+
+function openTranscript(agent, sc) {
+  const e = DATA.leaderboard.find(a => a.agent === agent);
+  const rep = e.per_scenario[sc.slug].rep;
+  if (!rep) return;
+  const hid = Object.entries(rep.hidden)
+    .filter(([k]) => !["volatility", "invasion_turn", "vax_eta"].includes(k))
+    .map(([k, v]) => `${k}=<b>${v}</b>`).join(" &middot; ");
+  const turns = rep.turns.map(t => {
+    const acts = t.actions.length
+      ? t.actions.map(a => `<li><span class="an">${a.name}</span>${a.rationale ? ` &mdash; <span class="ar">${esc(a.rationale)}</span>` : ""}</li>`).join("")
+      : "<li><em>(no action)</em></li>";
+    return `<div class="tr-turn">
+      <div class="tr-h">Turn ${t.turn}</div>
+      <div class="tr-sit">${esc(t.sitrep).replace(/\n/g, "<br>")}</div>
+      <ul class="tr-acts">${acts}</ul>
+      <div class="tr-nar">&rarr; ${esc(t.narrative)}</div>
+    </div>`;
+  }).join("");
+  const ov = document.createElement("div"); ov.className = "overlay";
+  ov.innerHTML = `<div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">${agent} &middot; ${sc.title}</div>
+        <div class="modal-sub">outcome: <b>${rep.outcome}</b> &middot; competence ${rep.competence} &middot; seed ${rep.seed}</div></div>
+      <span class="x">&times;</span>
+    </div>
+    <div class="modal-hidden"><b>Hidden truth this run</b> (the President had to infer this): ${hid}</div>
+    <div class="modal-body">${turns}</div>
+  </div>`;
+  ov.onclick = ev => { if (ev.target === ov || ev.target.className === "x") document.body.removeChild(ov); };
+  document.addEventListener("keydown", function esc2(ev) {
+    if (ev.key === "Escape" && ov.parentNode) { document.body.removeChild(ov); document.removeEventListener("keydown", esc2); }
+  });
+  document.body.appendChild(ov);
+}
+
+function esc(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
 function renderCompare() {
   const root = document.getElementById("compare-axes");

@@ -77,6 +77,49 @@ function biasBars(container, axes, lean, opts = {}) {
   });
 }
 
+/* ---- Pareto scatter: competence (x) vs a 0..100 measure (y) ---- */
+function scatterChart(points, opts = {}) {
+  const W = opts.width || 640, H = opts.height || 420;
+  const m = { l: 56, r: 24, t: 28, b: 48 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const xmin = opts.xmin ?? 0, xmax = opts.xmax ?? 100;
+  const ymin = opts.ymin ?? 0, ymax = opts.ymax ?? 100;
+  const X = v => m.l + (v - xmin) / (xmax - xmin) * iw;
+  const Y = v => m.t + ih - (v - ymin) / (ymax - ymin) * ih;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", height: "auto" });
+
+  // quadrant shading (top-right = competent + principled)
+  const midX = X((xmin + xmax) / 2), midY = Y((ymin + ymax) / 2);
+  svg.appendChild(el("rect", { x: midX, y: m.t, width: m.l + iw - midX, height: midY - m.t,
+    fill: "#46c08a", "fill-opacity": 0.05 }));
+  svg.appendChild(el("rect", { x: midX, y: midY, width: m.l + iw - midX, height: m.t + ih - midY,
+    fill: "#e0596b", "fill-opacity": 0.06 }));
+
+  // grid + axes
+  for (let g = 0; g <= 100; g += 25) {
+    svg.appendChild(el("line", { x1: X(g), y1: m.t, x2: X(g), y2: m.t + ih, stroke: "#1c2335", "stroke-width": 1 }));
+    svg.appendChild(el("line", { x1: m.l, y1: Y(g), x2: m.l + iw, y2: Y(g), stroke: "#1c2335", "stroke-width": 1 }));
+    svg.appendChild(el("text", { x: X(g), y: m.t + ih + 18, fill: "#5d6b86", "font-size": 10, "text-anchor": "middle", "font-family": "ui-monospace, monospace" }, "" + g));
+    svg.appendChild(el("text", { x: m.l - 10, y: Y(g) + 3, fill: "#5d6b86", "font-size": 10, "text-anchor": "end", "font-family": "ui-monospace, monospace" }, "" + g));
+  }
+  svg.appendChild(el("text", { x: m.l + iw / 2, y: H - 8, fill: "#93a0b8", "font-size": 12, "text-anchor": "middle" }, opts.xlabel || "Competence"));
+  svg.appendChild(el("text", { x: 16, y: m.t + ih / 2, fill: "#93a0b8", "font-size": 12, "text-anchor": "middle", transform: `rotate(-90 16 ${m.t + ih / 2})` }, opts.ylabel || "Integrity"));
+  // quadrant caption (bottom-right)
+  svg.appendChild(el("text", { x: m.l + iw - 6, y: m.t + ih - 8, fill: "#e0596b", "font-size": 10.5, "text-anchor": "end", "fill-opacity": .8 }, opts.brLabel || "competent, low-integrity"));
+
+  points.forEach(p => {
+    const cx = X(p.x), cy = Y(p.y);
+    const r = p.kind === "model" ? 7 : 5;
+    svg.appendChild(el("circle", { cx, cy, r, fill: p.color,
+      stroke: p.kind === "model" ? "#fff" : "none", "stroke-width": p.kind === "model" ? 1.5 : 0,
+      "fill-opacity": p.kind === "model" ? 0.95 : 0.6 }));
+    const lab = el("text", { x: cx + r + 4, y: cy + 3, fill: "#cdd7ea", "font-size": 11,
+      "font-family": "ui-monospace, monospace" }, p.label);
+    svg.appendChild(lab);
+  });
+  return svg;
+}
+
 /* ---- multi-agent comparison on a single axis ---- */
 function compareAxis(container, ax, entries) {
   container.innerHTML = "";
