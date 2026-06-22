@@ -45,6 +45,16 @@ def test_full_ground_mode_game_runs():
     assert engine.ground.taiwan_strength() >= 0
 
 
+def test_cas_is_per_turn_not_accumulated():
+    # Regression: close-air-support must not persist in the ground force.
+    g = GroundState.build()
+    rng = GameRNG(1)
+    g.land("Kaohsiung", lift_points=30.0)
+    for _ in range(5):
+        g.resolve(press=True, rng=rng, red_cas=8.0)
+    assert "cas" not in g.fronts["Kaohsiung"].pla   # never accumulated
+
+
 def test_ground_mode_is_deterministic():
     def play():
         st = build_base_case(seed=11)

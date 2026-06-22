@@ -13,6 +13,12 @@ from __future__ import annotations
 import argparse
 import itertools
 import json
+import zlib
+
+
+def _pair_seed(a: str, b: str, k: int) -> int:
+    """Deterministic per-pairing seed (Python's hash() is per-process randomized)."""
+    return 1000 * k + zlib.crc32(f"{a}|{b}".encode()) % 997
 
 from .agents.heuristic import HeuristicCommander
 from .engine import Engine
@@ -66,7 +72,7 @@ def cmd_tournament(args: argparse.Namespace) -> None:
     results: list[GameResult] = []
     for a, b in itertools.permutations(models, 2):  # role-swapped pairings
         for k in range(args.games_per_pair):
-            gr, _ = play_one(a, b, args.agent, seed=1000 * k + hash((a, b)) % 997,
+            gr, _ = play_one(a, b, args.agent, seed=_pair_seed(a, b, k),
                              turns=args.turns, ground_map=args.ground_map)
             results.append(gr)
     print(f"played {len(results)} games over {len(models)} models\n")

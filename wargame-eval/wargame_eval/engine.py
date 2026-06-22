@@ -31,6 +31,28 @@ _TARGET_BASE = {
 }
 
 
+def _partition_air(pool: dict[str, int], mission_counts: dict[str, int]) -> dict[str, dict]:
+    """Partition an air pool across missions WITHOUT double-counting airframes.
+
+    Each mission, in priority (dict) order, draws its requested sortie count from
+    the *remaining* pool strongest-generation-first. A given aircraft is assigned
+    to exactly one mission — unlike independently splitting the full pool per
+    mission, which would count elite jets in several missions at once.
+    """
+    remaining = {c: pool.get(c, 0) for c in AIRFRAMES}
+    result = {m: {c: 0 for c in AIRFRAMES} for m in mission_counts}
+    for mission, count in mission_counts.items():
+        rem = count
+        for c in ("5th", "4.5", "4th", "bomber"):
+            if rem <= 0:
+                break
+            take = min(remaining[c], rem)
+            result[mission][c] = take
+            remaining[c] -= take
+            rem -= take
+    return result
+
+
 class Engine:
     def __init__(self, state: GameState, red: Commander, blue: Commander,
                  ground_map: bool = False) -> None:
@@ -155,25 +177,23 @@ class Engine:
         red = self._ask(Side.RED, "RED_AIR")["allocation"]
         blue = self._ask(Side.BLUE, "BLUE_AIR")["allocation"]
 
-        def split(total_air: dict[str, int], assigned: int) -> dict[str, int]:
-            """Pull `assigned` sorties out of an air pool, strongest gens first."""
-            out = {c: 0 for c in AIRFRAMES}
-            remaining = assigned
-            for c in ("5th", "4.5", "4th", "bomber"):
-                if remaining <= 0:
-                    break
-                take = min(total_air.get(c, 0), remaining)
-                out[c] = take
-                remaining -= take
-            return out
-
-        red_air = s.available_sorties(Side.RED)
-        blue_air = s.available_sorties(Side.BLUE)
+        # Partition each side's available sorties across its missions ONCE so no
+        # airframe is counted in more than one mission.
+        blue_part = _partition_air(s.available_sorties(Side.BLUE), {
+            "cap": blue.get("cap", 0),
+            "strike_amphibs": blue.get("strike_amphibs", 0),
+            "strike_airbases": blue.get("strike_airbases", 0),
+        })
+        red_part = _partition_air(s.available_sorties(Side.RED), {
+            "cap": red.get("cap", 0),
+            "escort_strike": red.get("escort_strike", 0),
+            "strike_blue_airbases": red.get("strike_blue_airbases", 0),
+        })
 
         # Air-superiority clash: Red cap+escort vs Blue cap.
-        red_as = red.get("cap", 0) + red.get("escort_strike", 0)
-        red_as_sorties = split(red_air, red_as)
-        blue_cap_sorties = split(blue_air, blue.get("cap", 0))
+        red_as_sorties = {c: red_part["cap"][c] + red_part["escort_strike"][c]
+                          for c in AIRFRAMES}
+        blue_cap_sorties = blue_part["cap"]
         # Faithful air-to-air: quality-weighted exchange using CSIS Quality values.
         ac = csis.air_exchange(red_as_sorties, blue_cap_sorties, self.rng)
         self._apply_air_losses(Side.RED, ac.red_losses)
@@ -190,8 +210,8 @@ class Engine:
         # in-port and only the off-beach half is exposed to strike each turn
         # (round in favor of the beach).
         off_beach = (s.red_naval.amphib_flotillas + 1) // 2
-        amphib_sorties = split(blue_air, blue.get("strike_amphibs", 0))
-        amphib_sorties = {c: int(v * (1 - blue_strike_drag)) for c, v in amphib_sorties.items()}
+        amphib_sorties = {c: int(v * (1 - blue_strike_drag))
+                          for c, v in blue_part["strike_amphibs"].items()}
         r = calc.resolve_strike_on_amphibs(
             amphib_sorties, s.red_naval.pickets, s.red_naval.sags,
             off_beach, self.rng)
@@ -202,7 +222,7 @@ class Engine:
         s.log_event("AIR", "strike amphibs", **r)
 
         # Blue strike on PLA mainland airbase.
-        ab_sorties = split(blue_air, blue.get("strike_airbases", 0))
+        ab_sorties = blue_part["strike_airbases"]
         pla = s.bases.get("PLA-Mainland")
         if pla and sum(ab_sorties.values()) > 0:
             payload = calc._power(ab_sorties)
@@ -218,7 +238,7 @@ class Engine:
             s.log_event("AIR", "strike PLA airbase", killed=killed)
 
         # Red strike on Blue airbases.
-        red_strike = split(red_air, red.get("strike_blue_airbases", 0))
+        red_strike = red_part["strike_blue_airbases"]
         if sum(red_strike.values()) > 0:
             targets = [b for b in s.bases_of(Side.BLUE) if not b.mobile and b.in_range_of_china]
             if targets:
@@ -266,7 +286,7 @@ class Engine:
             # Land on the highest-value still-Taiwanese facility; the axis rolls
             # up to the next objective once the current one falls.
             self._objective = self.ground.choose_objective(s)
-            self.ground.land(self._objective, delivered, support.get("red_ground_support", 0))
+            self.ground.land(self._objective, delivered)
         else:
             s.pla_lodgment += delivered
         s.log_event("AMPHIB", "landing", committed=commit, sunk_crossing=sunk,
@@ -280,7 +300,9 @@ class Engine:
 
         # Hex ground game (v2): resolve fronts via the CSIS ground CRT.
         if self.ground is not None:
-            self.ground.resolve(press, self.rng, blue_cas=support.get("blue_ground_support", 0))
+            self.ground.resolve(press, self.rng,
+                                 blue_cas=support.get("blue_ground_support", 0),
+                                 red_cas=support.get("red_ground_support", 0))
             self.ground.sync_to(s)
             s.log_event("GROUND", "hex resolution",
                         pla_strength=round(self.ground.pla_strength(), 1),

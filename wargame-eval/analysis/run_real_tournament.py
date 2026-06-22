@@ -14,6 +14,7 @@ import itertools
 import json
 import os
 import time
+import zlib
 
 from wargame_eval.agents.claude import ClaudeCommander
 from wargame_eval.engine import Engine
@@ -42,7 +43,7 @@ def main() -> None:
     t0 = time.time()
     for a, b in itertools.permutations(MODELS, 2):
         for k in range(GAMES_PER_PAIR):
-            seed = 1000 * k + (hash((a, b)) % 997)
+            seed = 1000 * k + zlib.crc32(f"{a}|{b}".encode()) % 997  # deterministic
             state = build_base_case(seed=seed, max_turns=TURNS,
                                     us_entry_turn=US_ENTRY,
                                     japan_engaged=not JAPAN_NEUTRAL)

@@ -98,7 +98,7 @@ class GroundState:
 
     # -- campaign --------------------------------------------------------------
 
-    def land(self, objective: str, lift_points: float, cas_sorties: float = 0.0) -> None:
+    def land(self, objective: str, lift_points: float) -> None:
         """Land lift onto the front for `objective` (creating it on first use)."""
         if objective not in FACILITY_HEXES:
             objective = "Taichung"
@@ -110,11 +110,14 @@ class GroundState:
         bns = lift_points / LIFT_PER_BN
         fr.pla["inf"] = fr.pla.get("inf", 0.0) + bns * PLA_INF_FRACTION
         fr.pla["mech"] = fr.pla.get("mech", 0.0) + bns * (1 - PLA_INF_FRACTION)
-        if cas_sorties > 0:
-            fr.pla["cas"] = fr.pla.get("cas", 0.0) + cas_sorties / 4.0
 
-    def resolve(self, press: bool, rng: GameRNG, blue_cas: float = 0.0) -> None:
-        """Resolve one turn of ground combat on every active front."""
+    def resolve(self, press: bool, rng: GameRNG, blue_cas: float = 0.0,
+                red_cas: float = 0.0) -> None:
+        """Resolve one turn of ground combat on every active front.
+
+        Close-air-support (blue_cas / red_cas, in sorties) is applied as
+        per-turn fire support — it is NOT added to the persistent ground force.
+        """
         for fr in self.fronts.values():
             if fr.captured or self._strength(fr.pla) <= 0:
                 continue
@@ -122,6 +125,8 @@ class GroundState:
             if blue_cas > 0:
                 defender["cas"] = defender.get("cas", 0.0) + blue_cas / 4.0
             attacker = [(k, v) for k, v in fr.pla.items()]
+            if red_cas > 0:
+                attacker.append(("cas", red_cas / 4.0))
             defend = [(k, v) for k, v in defender.items()]
             e = gc.resolve_engagement(attacker, defend, fr.terrain, rng)
             # Apply battalion-step losses.

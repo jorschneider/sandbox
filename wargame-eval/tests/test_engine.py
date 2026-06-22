@@ -1,10 +1,28 @@
 """End-to-end engine + schema-validation tests."""
 from wargame_eval import schemas
 from wargame_eval.agents.heuristic import HeuristicCommander
-from wargame_eval.engine import Engine
+from wargame_eval.engine import Engine, _partition_air
 from wargame_eval.scenario import build_base_case
+from wargame_eval.state import AIRFRAMES, Side
 from wargame_eval.victory import VictoryClass
-from wargame_eval.state import Side
+
+
+def test_air_partition_no_double_counting():
+    # Regression: missions must share the pool, not each take elite jets.
+    pool = {"5th": 8, "4.5": 18, "4th": 24, "bomber": 6, "tanker": 4}
+    part = _partition_air(pool, {"cap": 10, "strike_amphibs": 15, "strike_airbases": 5})
+    for c in AIRFRAMES:
+        assert sum(part[m][c] for m in part) <= pool[c]
+    # Priority order: cap (first) gets the 5th-gen before the strikes.
+    assert part["cap"]["5th"] == 8
+    assert part["strike_amphibs"]["5th"] == 0
+
+
+def test_air_partition_respects_requested_counts():
+    pool = {"5th": 4, "4.5": 4, "4th": 4, "bomber": 0, "tanker": 0}
+    part = _partition_air(pool, {"cap": 5, "strike_amphibs": 3})
+    assert sum(part["cap"].values()) == 5
+    assert sum(part["strike_amphibs"].values()) == 3   # 12 available, 8 requested
 
 
 def test_full_game_runs_to_a_victory_class():
