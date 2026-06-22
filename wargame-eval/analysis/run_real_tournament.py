@@ -25,6 +25,11 @@ def _env(name, default):
     return os.environ.get(name, default)
 
 
+def _slug(model: str) -> str:
+    """Filesystem-safe token for a model id (vendor/model -> vendor_model)."""
+    return model.replace("/", "_").replace(":", "_")
+
+
 MODELS = _env("WG_MODELS", "claude-opus-4-8,claude-sonnet-4-6,claude-haiku-4-5").split(",")
 GAMES_PER_PAIR = int(_env("WG_GPP", "1"))
 TURNS = int(_env("WG_TURNS", "4"))
@@ -75,7 +80,8 @@ def main() -> None:
                   f"[{time.time()-t0:.0f}s, fb R{red.fallback_count}/B{blue.fallback_count}"
                   f"{' DEGRADED' if degraded else ''}]")
             time.sleep(3)  # gentle spacing to ease rate limits between games
-            with open(os.path.join(OUT, f"game_{a}_vs_{b}_{seed}.json"), "w") as f:
+            fn = f"game_{_slug(a)}_vs_{_slug(b)}_{seed}.json"
+            with open(os.path.join(OUT, fn), "w") as f:
                 json.dump({"result": gr.__dict__, "transcript": engine.transcript,
                            "log": engine.state.log}, f, indent=2, default=str)
 
