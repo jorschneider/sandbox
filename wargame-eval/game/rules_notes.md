@@ -71,13 +71,17 @@ outputs are exact targets):
 | `amphib_lift()` | `Attacks_on_Pickets_Amphibs` (AmphibiousTF!J28/J29) | EXACT: 60·afloat/36, ×1.5 turn 1 |
 | `air_exchange()` + `AIR_QUALITY` | `Taiwan_CAP_and_Air_Combat` (Combat!A67:B77) | Real Quality constants; quality-weighted exchange |
 | `ground_combat.resolve_engagement()` | `Ground_War_Adjudication` (Adjudication + FEBA Movement) | EXACT terrain/strength/odds/loss/FEBA tables |
+| `airbase_missile_attack()` | `RED_AB_ATK` / `Blue_AB_Atk` (+ rules Table 5C) | Real PK d20 model: SAM intercept 1-18, HAS kill 1-15 (2 msl/HAS), open 1-17, UGS PK 14 |
+
+The airbase-attack kill mechanic is the workbook's binomial d20 model — each
+leaking munition kills with probability PK/20: half the SAM battalions (rounded
+up) intercept on 1-18; hardened shelters take two missiles per kill-roll (1-15),
+aircraft in the open one (1-17), underground hangars trap at PK 14.
 
 **Representative coefficients** still pending exact ports (`calculators.py`,
-flagged `APPROX`): `resolve_missile_strike_on_base` / `resolve_asbm_vs_carriers`
-(`RED_AB_ATK`/`Blue_AB_Atk` HAS/AC/UGS kills), `resolve_strike_on_amphibs` (the
-picket/TF saturation-roll table — structure faithful: picket value, SAG screen,
-LRASM bonus), and `resolve_submarine_barrier` (Ch.8). **Milestone 1 remaining**:
-port the airbase-attack saturation rolls.
+flagged `APPROX`): `resolve_strike_on_amphibs` (the picket/TF saturation-roll
+table — structure faithful: picket value, SAG screen, LRASM bonus),
+`resolve_asbm_vs_carriers`, and `resolve_submarine_barrier` (Ch.8).
 
 ## Documented simplifications
 - **Ground war**: a **hex ground game** (`--ground-map`, `ground.py`) is now

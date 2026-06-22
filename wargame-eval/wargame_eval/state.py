@@ -49,6 +49,7 @@ class Airbase:
     #   requires Japan to be engaged (else strict-neutral Japan denies basing).
     country: str = "US"
     online: bool = True            # recomputed each turn from the excursion rules
+    sam_batteries: float = 2.0     # air-defense batteries (SAM interception of missiles)
 
     def total_combat_air(self) -> int:
         return sum(self.aircraft.get(c, 0) for c in ("4th", "4.5", "5th"))

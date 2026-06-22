@@ -16,6 +16,7 @@ abstracted. Picket/TF saturation rolls are abstracted; the lift output is exact.
 """
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 
 from .rng import GameRNG
@@ -220,3 +221,49 @@ def air_exchange(red_sorties: dict[str, int], blue_sorties: dict[str, int],
         return out
 
     return AirExchangeResult(spread(red_sorties, red_loss), spread(blue_sorties, blue_loss))
+
+
+# ============================================================================
+# RED_AB_ATK / Blue_AB_Atk — airbase missile attack (HAS / open / UGS)
+# Faithful kill model: each leaking munition is a d20 roll, kill if roll <= PK.
+# ============================================================================
+
+SAM_INTERCEPT_PK = 18          # d20 <= 18 removes a salvo (rulebook: "for each 1-18")
+HAS_AIRCRAFT_PK = 15           # Table 5C: roll 1-15 destroys an adversary aircraft step
+OPEN_AIRCRAFT_PK = 17          # aircraft in the open are easier to kill than in a HAS
+UGS_TRAP_PK = 14               # UGS TRAPS sheet C4 = 14 (70% trap chance per missile)
+MISSILES_PER_HAS = 2           # "two missiles are assumed to be allocated per HAS"
+
+
+def sam_interception(salvos: int, sam_batteries: float, rng: GameRNG) -> int:
+    """Missile salvos that penetrate. Half the SAM battalions (rounded up) engage;
+    each removes one salvo on a d20 of 1-18 (rulebook SAM interception)."""
+    engaging = math.ceil(max(0.0, sam_batteries) / 2.0)
+    intercepted = sum(1 for _ in range(engaging) if rng.roll(20) <= SAM_INTERCEPT_PK)
+    return max(0, int(salvos) - intercepted)
+
+
+@dataclass
+class AirbaseAttackResult:
+    penetrating: int
+    aircraft_killed: int
+    suppressed_turns: int
+
+
+def airbase_missile_attack(salvos: int, sam_batteries: float, hardened: bool,
+                           aircraft_present: int, rng: GameRNG) -> AirbaseAttackResult:
+    """Resolve a missile strike on an airbase (RED_AB_ATK / Blue_AB_Atk model).
+
+    SAM interception thins the salvo; surviving munitions kill aircraft steps via
+    the d20 PK tables — hardened shelters take two missiles per kill-roll (HAS,
+    1-15), aircraft in the open one (1-17). Heavy leakage suppresses the runway.
+    """
+    penetrating = sam_interception(salvos, sam_batteries, rng)
+    if hardened:
+        rolls = penetrating // MISSILES_PER_HAS
+        killed = sum(1 for _ in range(rolls) if rng.roll(20) <= HAS_AIRCRAFT_PK)
+    else:
+        killed = sum(1 for _ in range(penetrating) if rng.roll(20) <= OPEN_AIRCRAFT_PK)
+    killed = min(int(aircraft_present), killed)
+    suppressed = 1 if penetrating >= 3 else 0  # runway cratering / UGS digging out
+    return AirbaseAttackResult(penetrating, killed, suppressed)

@@ -105,3 +105,36 @@ def test_air_exchange_bounded():
     r = csis.air_exchange(red, blue, rng)
     assert 0 <= sum(r.red_losses.values()) <= 10
     assert 0 <= sum(r.blue_losses.values()) <= 12
+
+
+# --- Airbase missile attack (RED_AB_ATK / Blue_AB_Atk) ----------------------
+
+def test_airbase_attack_pk_constants():
+    # The PK thresholds match the workbook tables / rules.
+    assert csis.SAM_INTERCEPT_PK == 18      # SAM removes a salvo on d20 1-18
+    assert csis.HAS_AIRCRAFT_PK == 15       # Table 5C: aircraft step killed on 1-15
+    assert csis.UGS_TRAP_PK == 14           # UGS sheet PK = 14 (70%)
+
+
+def test_sam_interception_reduces_salvos():
+    # Heavy SAM coverage lets fewer salvos through, on average, than none.
+    with_sam = without = 0
+    for s in range(60):
+        with_sam += csis.sam_interception(10, sam_batteries=8, rng=GameRNG(s))
+        without += csis.sam_interception(10, sam_batteries=0, rng=GameRNG(s))
+    assert with_sam < without
+    assert without == 60 * 10  # no SAMs => nothing intercepted
+
+
+def test_hardened_protects_vs_open():
+    # Same salvo: a hardened base loses fewer aircraft on average than open.
+    hard = soft = 0
+    for s in range(80):
+        hard += csis.airbase_missile_attack(12, 0, True, 50, GameRNG(s)).aircraft_killed
+        soft += csis.airbase_missile_attack(12, 0, False, 50, GameRNG(s)).aircraft_killed
+    assert hard < soft
+
+
+def test_airbase_attack_bounded_by_aircraft_present():
+    r = csis.airbase_missile_attack(40, 0, False, aircraft_present=3, rng=GameRNG(2))
+    assert 0 <= r.aircraft_killed <= 3

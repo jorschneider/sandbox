@@ -42,13 +42,14 @@ def build_base_case(seed: int = 0, max_turns: int = 8,
     # --- Green (Taiwan) air — APPROX -----------------------------------------
     bases["Taiwan-AB"] = Airbase("Taiwan-AB", Side.BLUE,
                                  {"4th": 6, "4.5": 8, "5th": 2}, hardened=True,
-                                 in_range_of_china=True, country="TW")
+                                 in_range_of_china=True, country="TW", sam_batteries=4)
 
     # --- Red (China) air — aggregated mainland basing, APPROX -----------------
     bases["PLA-Mainland"] = Airbase("PLA-Mainland", Side.RED,
                                     {"4th": 24, "4.5": 18, "5th": 8, "bomber": 6,
                                      "tanker": 4}, hardened=True,
-                                    in_range_of_china=False, country="CN")
+                                    in_range_of_china=False, country="CN",
+                                    sam_batteries=6)  # densely defended mainland
 
     # --- Taiwan facilities (objective) — major ports & airports ---------------
     facilities = [

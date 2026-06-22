@@ -119,10 +119,11 @@ class Engine:
                 base = s.bases.get(_TARGET_BASE[target])
                 if base is None:
                     continue
-                r = calc.resolve_missile_strike_on_base(
-                    fired, base.hardened, base.total_combat_air(), self.rng)
+                r = csis.airbase_missile_attack(
+                    fired, base.sam_batteries, base.hardened,
+                    base.total_combat_air(), self.rng)
                 # distribute the ground kills across this base's combat classes
-                killed = r["aircraft_killed"]
+                killed = r.aircraft_killed
                 for cls in ("4th", "4.5", "5th"):
                     if killed <= 0:
                         break
@@ -130,8 +131,9 @@ class Engine:
                     base.aircraft[cls] = base.aircraft.get(cls, 0) - take
                     killed -= take
                     s.record_loss(Side.BLUE, f"air_{cls}", take)
-                base.suppressed_turns = max(base.suppressed_turns, r["suppressed_turns"])
-                s.log_event("MISSILE", f"strike {target}", fired=fired, **r)
+                base.suppressed_turns = max(base.suppressed_turns, r.suppressed_turns)
+                s.log_event("MISSILE", f"strike {target}", fired=fired,
+                            penetrating=r.penetrating, aircraft_killed=r.aircraft_killed)
             elif target == "carriers":
                 killed = calc.resolve_asbm_vs_carriers(fired, s.blue_naval.csg, self.rng)
                 for i in range(killed):
