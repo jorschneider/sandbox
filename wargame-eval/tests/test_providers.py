@@ -17,9 +17,33 @@ def test_routing_picks_the_right_client():
     cn = make_commander("deepseek/deepseek-chat-v3.1", seed=1)
     assert isinstance(cn.client, OpenAICompatibleModelClient)
     assert cn.client.model == "deepseek/deepseek-chat-v3.1"
+    assert cn.client.openai_native is False          # Chinese models -> OpenRouter
     # Claude ids route to the native client (lazy anthropic import; not called here).
     cl = make_commander("claude-haiku-4-5", seed=1)
     assert cl.client.__class__.__name__ == "AnthropicModelClient"
+
+
+def test_openai_models_route_to_openai_endpoint():
+    c = make_commander("gpt-5.5", seed=1)
+    assert isinstance(c.client, OpenAICompatibleModelClient)
+    assert c.client.openai_native is True
+    assert "api.openai.com" in c.client.base_url
+    assert c.client.api_key_env == "OPENAI_API_KEY"
+
+
+def test_openai_native_body_uses_completion_tokens(monkeypatch):
+    c = OpenAICompatibleModelClient("gpt-5.5", base_url="https://api.openai.com/v1",
+                                    api_key_env="OPENAI_API_KEY")
+    sent = {}
+
+    def fake_post(body):
+        sent.update(body)
+        return {"choices": [{"message": {"content": '{"allocation": {"cap": 1}}'}}]}
+
+    monkeypatch.setattr(c, "_post", fake_post)
+    c.generate_json("sys", "go", {"type": "object"})
+    assert "max_completion_tokens" in sent and "max_tokens" not in sent
+    assert "temperature" not in sent                  # reasoning models use the default
 
 
 def test_parse_strips_fences():

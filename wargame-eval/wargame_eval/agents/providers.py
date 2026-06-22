@@ -25,15 +25,30 @@ MODEL_INFO = {
     "claude-opus-4-8": ("Opus 4.8", "Anthropic"),
     "claude-sonnet-4-6": ("Sonnet 4.6", "Anthropic"),
     "claude-haiku-4-5": ("Haiku 4.5", "Anthropic"),
+    # OpenAI (Western frontier)
+    "gpt-5.5": ("GPT-5.5", "OpenAI"),
+    "gpt-5.4": ("GPT-5.4", "OpenAI"),
+    "gpt-5.2": ("GPT-5.2", "OpenAI"),
+    # Chinese labs (flagship + earlier entries)
     "deepseek/deepseek-chat-v3.1": ("DeepSeek V3.1", "DeepSeek"),
     "deepseek/deepseek-v3.2": ("DeepSeek V3.2", "DeepSeek"),
+    "deepseek/deepseek-v4-pro": ("DeepSeek V4 Pro", "DeepSeek"),
     "qwen/qwen3-max": ("Qwen3 Max", "Alibaba"),
     "qwen/qwen3-235b-a22b-2507": ("Qwen3 235B", "Alibaba"),
+    "qwen/qwen3.7-max": ("Qwen3.7 Max", "Alibaba"),
     "z-ai/glm-4.6": ("GLM-4.6", "Zhipu"),
+    "z-ai/glm-5.2": ("GLM-5.2", "Zhipu"),
     "minimax/minimax-m2": ("MiniMax M2", "MiniMax"),
+    "minimax/minimax-m3": ("MiniMax M3", "MiniMax"),
     "moonshotai/kimi-k2": ("Kimi K2", "Moonshot"),
+    "moonshotai/kimi-k2.6": ("Kimi K2.6", "Moonshot"),
 }
 CHINESE_ORIGINS = {"DeepSeek", "Alibaba", "Zhipu", "MiniMax", "Moonshot"}
+
+
+def _is_openai(model_id: str) -> bool:
+    """OpenAI-native model ids (routed to the OpenAI endpoint with OPENAI_API_KEY)."""
+    return model_id.startswith(("gpt-", "o1", "o3", "o4", "o5"))
 
 
 def model_label(model_id: str) -> str:
@@ -58,6 +73,11 @@ class OpenAICompatibleModelClient:
         self.api_key_env = api_key_env
         self.base_url = (base_url or os.environ.get(base_url_env)
                          or "https://openrouter.ai/api/v1").rstrip("/")
+        # OpenAI-native endpoints (reasoning models) want max_completion_tokens, the
+        # default temperature, and a longer timeout — and benefit from more headroom
+        # for reasoning tokens.
+        self.openai_native = "api.openai.com" in self.base_url
+        self.timeout = 300 if self.openai_native else 120
         self._mode = "json_object"   # downgrade to plain if the provider 400s on it
 
     def _post(self, body: dict) -> dict:
@@ -69,7 +89,7 @@ class OpenAICompatibleModelClient:
             data=json.dumps(body).encode(),
             headers={"Authorization": "Bearer " + key, "Content-Type": "application/json",
                      "HTTP-Referer": "https://warbench.vercel.app", "X-Title": "WarBench"})
-        with urllib.request.urlopen(req, timeout=120) as r:
+        with urllib.request.urlopen(req, timeout=self.timeout) as r:
             return json.load(r)
 
     @staticmethod
@@ -89,8 +109,13 @@ class OpenAICompatibleModelClient:
              + "\n\nReply with ONLY a JSON object matching the schema. "
                "No prose, no markdown fences."},
         ]
-        body = {"model": self.model, "messages": messages,
-                "max_tokens": 1500, "temperature": 0.3}
+        body = {"model": self.model, "messages": messages}
+        if self.openai_native:
+            # Reasoning models: max_completion_tokens (incl. reasoning), default temp.
+            body["max_completion_tokens"] = 6000
+        else:
+            body["max_tokens"] = 1500
+            body["temperature"] = 0.3
         if self._mode == "json_object":
             body["response_format"] = {"type": "json_object"}
         try:
@@ -109,5 +134,9 @@ def make_commander(model_id: str, seed: int = 0) -> ClaudeCommander:
     """Route a model id to a commander backed by the right client."""
     if model_id.startswith("claude-"):
         return ClaudeCommander(model_id, seed=seed)        # native Anthropic
-    client = OpenAICompatibleModelClient(model_id)         # OpenAI-compatible (OpenRouter)
+    if _is_openai(model_id):                               # OpenAI native (OPENAI_API_KEY)
+        client = OpenAICompatibleModelClient(
+            model_id, base_url="https://api.openai.com/v1", api_key_env="OPENAI_API_KEY")
+    else:                                                  # OpenRouter (Chinese open models)
+        client = OpenAICompatibleModelClient(model_id)
     return ClaudeCommander(model_id, seed=seed, client=client)
