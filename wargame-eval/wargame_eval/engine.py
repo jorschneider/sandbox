@@ -9,6 +9,7 @@ ground combat (Red posture) → victory check. Adjudication is deterministic
 from __future__ import annotations
 
 from . import calculators as calc
+from . import calculators_csis as csis
 from . import schemas
 from .agents.base import Commander
 from .rng import GameRNG
@@ -164,7 +165,8 @@ class Engine:
         red_as = red.get("cap", 0) + red.get("escort_strike", 0)
         red_as_sorties = split(red_air, red_as)
         blue_cap_sorties = split(blue_air, blue.get("cap", 0))
-        ac = calc.resolve_air_to_air(red_as_sorties, blue_cap_sorties, self.rng)
+        # Faithful air-to-air: quality-weighted exchange using CSIS Quality values.
+        ac = csis.air_exchange(red_as_sorties, blue_cap_sorties, self.rng)
         self._apply_air_losses(Side.RED, ac.red_losses)
         self._apply_air_losses(Side.BLUE, ac.blue_losses)
         s.log_event("AIR", "air superiority",
@@ -175,12 +177,15 @@ class Engine:
         red_cap_power = calc._power(red_as_sorties)
         blue_strike_drag = min(0.6, red_cap_power / 80.0)
 
-        # Blue strike on amphibs (off the beach).
+        # Blue strike on amphibs. Per the rules, flotillas alternate off-beach /
+        # in-port and only the off-beach half is exposed to strike each turn
+        # (round in favor of the beach).
+        off_beach = (s.red_naval.amphib_flotillas + 1) // 2
         amphib_sorties = split(blue_air, blue.get("strike_amphibs", 0))
         amphib_sorties = {c: int(v * (1 - blue_strike_drag)) for c, v in amphib_sorties.items()}
         r = calc.resolve_strike_on_amphibs(
             amphib_sorties, s.red_naval.pickets, s.red_naval.sags,
-            s.red_naval.amphib_flotillas, self.rng)
+            off_beach, self.rng)
         s.red_naval.amphib_flotillas = max(0, s.red_naval.amphib_flotillas - r["flotillas_sunk"])
         s.red_naval.pickets = max(0, s.red_naval.pickets - r["pickets_lost"])
         s.record_loss(Side.RED, "amphib_flotillas", r["flotillas_sunk"])
@@ -241,9 +246,10 @@ class Engine:
         s.red_naval.amphib_flotillas = max(0, s.red_naval.amphib_flotillas - sunk)
         s.record_loss(Side.RED, "amphib_flotillas", sunk)
         survivors = max(0, commit - sunk)
-        # Supply factor improves with functional captured facilities.
-        supply_factor = min(1.0, 0.3 + 0.35 * s.functional_facilities_captured())
-        delivered = calc.resolve_amphib_lift(survivors, supply_factor, self.rng)
+        # Faithful lift: CSIS AmphibiousTF formula (60 * amphib units afloat / 36,
+        # with a 1.5x turn-1 surge). Each surviving flotilla carries 6 amphib units.
+        units_afloat = survivors * csis.AMPHIB_UNITS_PER_TF
+        delivered = csis.amphib_lift(units_afloat, s.turn)
         s.pla_lodgment += delivered
         s.pla_supply = survivors * 4.0 + s.functional_facilities_captured() * 10.0
         s.log_event("AMPHIB", "landing", committed=commit, sunk_crossing=sunk,

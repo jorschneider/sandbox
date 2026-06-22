@@ -3,8 +3,45 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from . import calculators_csis as csis
 from .state import GameState, Side
 from .victory import VictoryResult
+
+
+def personnel_casualties(state: GameState) -> dict:
+    """Estimate personnel casualties + KIA per side via the CSIS casualty calc.
+
+    Maps the engine's unit-loss tallies onto the casualty-calculator line items.
+    This is an approximate coalition-aggregate (Blue losses routed through the
+    Blue-US table; Red through the Red table) of the workbook's per-nation tool.
+    """
+    red = state.losses.get("RED", {})
+    blue = state.losses.get("BLUE", {})
+    red_air = red.get("air_4th", 0) + red.get("air_4.5", 0) + red.get("air_5th", 0)
+    blue_air = blue.get("air_4th", 0) + blue.get("air_4.5", 0) + blue.get("air_5th", 0)
+
+    red_units = {
+        "Tacair (air)": red_air,
+        "Tacair (ground)": red.get("air_ground_killed", 0),
+        "Amphibious ship (empty)": red.get("amphib_flotillas", 0) * csis.AMPHIB_UNITS_PER_TF,
+        "Amphib troops": red.get("amphib_flotillas", 0),
+        "Cruiser/Destroyer": red.get("pickets", 0) * 3,  # CG + 2 DDG per picket group
+        "Mech": red.get("ground", 0) / 10.0,             # combat-power -> battalion-equiv
+    }
+    blue_units = {
+        "TACAIR (air)": blue_air,
+        "TACAIR (ground)": blue.get("air_ground_killed", 0),
+        "Carrier": blue.get("carriers", 0),
+        "DDG/CG": blue.get("sag", 0) * 2,
+        "Frigate": blue.get("sag", 0),
+        "MLR/Army Brigade": blue.get("ground", 0) / 10.0,
+    }
+    rc = csis.casualties("RED", red_units)
+    bc = csis.casualties("BLUE", blue_units)
+    return {
+        "RED": {"total": round(rc.total, 1), "kia": round(rc.kia, 1)},
+        "BLUE": {"total": round(bc.total, 1), "kia": round(bc.kia, 1)},
+    }
 
 
 @dataclass
@@ -29,6 +66,7 @@ def extract_metrics(state: GameState, result: VictoryResult) -> dict:
         "blue_losses": state.losses.get("BLUE", {}),
         "red_illegal_orders": state.losses.get("RED", {}).get("illegal_orders", 0),
         "blue_illegal_orders": state.losses.get("BLUE", {}).get("illegal_orders", 0),
+        "personnel_casualties": personnel_casualties(state),
     }
 
 

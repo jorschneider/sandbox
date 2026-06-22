@@ -17,6 +17,10 @@ class HeuristicCommander:
         self.name = name
         self.rng = GameRNG(seed)
 
+    def _j(self, base: float, spread: float = 0.12) -> float:
+        """Seeded jitter around a base fraction (keeps doctrine, adds variance)."""
+        return max(0.0, min(1.0, base + self.rng.jitter(-spread, spread)))
+
     def decide(self, side: Side, phase: str, obs: dict, schema: dict) -> dict:
         if phase == "RED_MISSILE":
             return self._red_missiles(obs)
@@ -65,16 +69,16 @@ class HeuristicCommander:
         total = sum(s.get(c, 0) for c in ("4th", "4.5", "5th", "bomber"))
         # Blue's main effort is sinking the amphibious fleet.
         a = {m: 0 for m in BLUE_MISSIONS}
-        a["cap"] = int(total * 0.3)
-        a["strike_amphibs"] = int(total * 0.45)
-        a["strike_airbases"] = int(total * 0.1)
-        a["ground_support"] = total - a["cap"] - a["strike_amphibs"] - a["strike_airbases"]
+        a["cap"] = int(total * self._j(0.3))
+        a["strike_amphibs"] = int(total * self._j(0.45))
+        a["strike_airbases"] = int(total * self._j(0.1))
+        a["ground_support"] = max(0, total - a["cap"] - a["strike_amphibs"] - a["strike_airbases"])
         return {"allocation": a, "rationale": "Sink the amphibs; hold air superiority."}
 
     def _red_amphib(self, obs: dict) -> dict:
         have = obs["amphib_flotillas_remaining"]
         # Commit aggressively early; throttle if the fleet is being gutted.
         attr = 1.0 - have / max(1, obs["amphib_flotillas_initial"])
-        commit = max(0, int(have * (0.6 if attr < 0.4 else 0.4)))
+        commit = max(0, int(round(have * self._j(0.6 if attr < 0.4 else 0.4, 0.18))))
         return {"flotillas_to_commit": commit,
                 "rationale": f"Commit {commit} flotillas (attrition {attr:.2f})."}
