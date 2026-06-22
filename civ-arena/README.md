@@ -190,9 +190,19 @@ SEED_MAP_SIZE=Large SEED_RNG=7 python generate_seed.py           # bigger map, n
 - `--rounds N` — diplomacy+simulation rounds (default 6).
 - `--turns-per-round N` — engine turns advanced per round (default 4).
 - `--negotiation-rounds N` — private-message exchanges per round (default 1).
-- `--save PATH` — start from a different save (two bundled under
-  `vendor/CivAgent/scripts/reproductions/`).
+- `--concurrency N` — parallel model calls per phase (default 1). A round makes
+  many independent calls; with real models that's the slow part, so `--concurrency
+  8` can take a live round from minutes to seconds. `>1` makes negotiation
+  *simultaneous* (everyone messages on the same pre-round view); the action phase
+  is parallelized with no change in outcome. Verified: 3.9s → 1.1s on a stub.
+- `--save PATH` — start from a different save (`seeds/six_civs.json` or the two
+  bundled under `vendor/CivAgent/scripts/reproductions/`).
 - `--report PATH`, `--out PATH` — report / CSV locations.
+
+Every finished match and tournament is archived under `runs/` and listed in
+**`history.html`** (serve the dir, open it) so you can re-open and compare past
+games. The prompts lean toward decisive play — alliances are framed as temporary
+tools, with explicit license to gang up and betray.
 
 ## Known limitations & gotchas
 
@@ -222,6 +232,7 @@ SEED_MAP_SIZE=Large SEED_RNG=7 python generate_seed.py           # bigger map, n
 | `tournament.py` | Many matches (rotating seats) → Elo leaderboard + head-to-head `tournament.html` |
 | `generate_seed.py` | Drive the engine to build a fresh 6-civ game → `seeds/six_civs.json` |
 | `seeds/six_civs.json` | Pre-built 6-civ start (all six CivAgent civs) for full tournaments |
+| `history.html` | Lists archived games (`runs/`) so you can re-open & compare past matches |
 | `models.example.yaml` | OpenRouter key + per-civ model ids (copy to `models.yaml`) |
 | `patches/anthropic_llm_utils.py` | Optional Claude adapter for CivAgent-native routing (OpenRouter usually makes this unnecessary) |
 

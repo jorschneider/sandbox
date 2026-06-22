@@ -21,6 +21,7 @@ Modes: --dry-run (no LLM, no diplomacy) · --demo (no LLM, random diplomacy) ·
 default = live model-vs-model. `run_match()` is importable — see tournament.py.
 """
 import argparse
+import concurrent.futures as cf
 import csv
 import json
 import os
@@ -175,10 +176,11 @@ def _mem(memory, me):
 
 def negotiate_prompt(me, others, stats, memory):
     return "\n".join([
-        f"You are the leader of {me} in a Civilization game, scheming for advantage.",
+        f"You are the leader of {me} in a Civilization game where only the strongest civ wins — scheme for advantage.",
         _state(me, others, stats), _mem(memory, me), "",
-        "Send a PRIVATE message to ONE other civ — propose an alliance, threaten, "
-        "demand tribute, or deceive — or stay silent. Be cunning; you may lie.",
+        "Send a PRIVATE message to ONE other civ — forge a temporary alliance, threaten, demand tribute, "
+        "bait a rival into a war, or deceive — or stay silent. Be cunning; lying and setting up a future "
+        "betrayal are fair game. Don't just make friends; maneuver to come out on top.",
         'Reply with ONLY JSON: {"to": "<civ or none>", "message": "<one or two sentences>"}'])
 
 
@@ -192,11 +194,12 @@ def reply_prompt(me, frm, text, others, stats, memory):
 
 def action_prompt(me, others, stats, memory):
     return "\n".join([
-        f"You are the leader of {me}. Act on your scheming.",
+        f"You are the leader of {me}. Only the single strongest civ wins — alliances are temporary tools, not the goal.",
         _state(me, others, stats), _mem(memory, me), "",
         "Choose ONE diplomatic action toward ONE other civ, or none.",
         f"Allowed: {', '.join(ALL_ACTIONS)}, or \"none\".",
-        "Ally against the strongest, betray the weak, make peace when losing.",
+        "Be decisive: declare war on a weaker rival to seize its power, gang up on the leader, and betray an "
+        "ally the moment it serves you. Endless peace and alliances will not make you #1 — take risks to win.",
         'Reply with ONLY JSON: {"action": "<action or none>", "target": "<civ or empty>", "reason": "<short>"}'])
 
 
@@ -262,7 +265,8 @@ def payload(civs, colors, models, snapshots, events, scorecards, winner, mode, l
 
 
 def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
-              demo=False, dry=False, verbose=True, live_path=None, report_path=None, mode="LIVE"):
+              demo=False, dry=False, verbose=True, live_path=None, report_path=None,
+              mode="LIVE", concurrency=1):
     from civsim import utils
     from civsim.simulator import simulator
     from civsim import action_space
@@ -321,54 +325,66 @@ def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
     snapshot(0); emit()
     for r in range(1, rounds + 1):
         s = stats_for(save)
+        # --- negotiation phase (one private message + reply per civ) ---
         if not dry and neg_rounds > 0:
             for _ in range(neg_rounds):
-                for sp in civs:
+                def negotiate_once(sp, mem_view):
                     others = [c for c in civs if c != sp]
                     if demo:
                         if random.random() >= 0.7:
-                            continue
+                            return None
                         tgt = random.choice(others)
                         msg = random.choice(DEMO_LINES).replace(
                             "{x}", random.choice([o for o in others if o != tgt] or [tgt]))
-                    else:
-                        d = lj(civ_models[sp], negotiate_prompt(sp, others, s, memory))
-                        if not d:
-                            continue
-                        t = str(d.get("to", "")).strip().lower()
-                        tgt = next((c for c in others if c.lower() == t), None)
-                        msg = str(d.get("message", "")).strip()
-                        if not tgt or not msg:
-                            continue
+                        return (sp, tgt, msg, random.choice(
+                            ["Agreed.", "Never.", "Perhaps... for a price.", "You will regret this."]))
+                    d = lj(civ_models[sp], negotiate_prompt(sp, others, s, mem_view))
+                    if not d:
+                        return None
+                    tgt = next((c for c in others if c.lower() == str(d.get("to", "")).strip().lower()), None)
+                    msg = str(d.get("message", "")).strip()
+                    if not tgt or not msg:
+                        return None
+                    rd = lj(civ_models[tgt], reply_prompt(tgt, sp, msg,
+                            [c for c in civs if c != tgt], s, mem_view))
+                    return (sp, tgt, msg, str(rd.get("message", "")).strip() if rd else "")
+
+                if concurrency > 1 and not demo:        # simultaneous diplomacy on a frozen view
+                    frozen = {c: list(memory[c]) for c in civs}
+                    with cf.ThreadPoolExecutor(max_workers=concurrency) as ex:
+                        exchanges = list(ex.map(lambda sp: negotiate_once(sp, frozen), civs))
+                else:                                   # sequential: later speakers see earlier messages
+                    exchanges = [negotiate_once(sp, memory) for sp in civs]
+
+                for res in exchanges:
+                    if not res:
+                        continue
+                    sp, tgt, msg, rep = res
                     if verbose:
                         print(f"  \U0001f5e3  {sp} → {tgt}: {msg}")
                     events.append({"round": r, "kind": "talk", "frm": sp, "to": tgt, "text": msg})
                     remember(sp, f"You told {tgt}: {msg}"); remember(tgt, f"{sp} told you: {msg}")
-                    rep = (random.choice(["Agreed.", "Never.", "Perhaps... for a price.",
-                                          "You will regret this."]) if demo
-                           else (lambda x: str(x.get("message", "")).strip() if x else "")(
-                               lj(civ_models[tgt], reply_prompt(tgt, sp, msg,
-                                  [c for c in civs if c != tgt], s, memory))))
                     if rep:
                         events.append({"round": r, "kind": "talk", "frm": tgt, "to": sp, "text": rep})
                         remember(tgt, f"You replied to {sp}: {rep}"); remember(sp, f"{tgt} replied: {rep}")
+
+        # --- action phase (proposals + consent; independent given round-start state) ---
         if not dry:
-            for actor in civs:
+            def act_once(actor):
                 others = [c for c in civs if c != actor]
                 if demo:
                     if random.random() >= 0.6:
-                        continue
+                        return None
                     action, target, reason = random.choice(ALL_ACTIONS), random.choice(others), "demo"
                 else:
                     d = lj(civ_models[actor], action_prompt(actor, others, s, memory))
                     if not d:
-                        continue
+                        return None
                     action = str(d.get("action", "none")).strip().lower()
-                    t = str(d.get("target", "")).strip().lower()
-                    target = next((c for c in others if c.lower() == t), None)
+                    target = next((c for c in others if c.lower() == str(d.get("target", "")).strip().lower()), None)
                     reason = d.get("reason", "")
                 if action not in ALL_ACTIONS or not target:
-                    continue
+                    return None
                 accepted = action in UNILATERAL
                 if action in BILATERAL:
                     if demo:
@@ -377,6 +393,18 @@ def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
                         cd = lj(civ_models[target], consent_prompt(target, actor, action, reason,
                                 [c for c in civs if c != target], s, memory))
                         accepted = bool(cd) and str(cd.get("decision", "no")).lower().startswith("y")
+                return (actor, action, target, accepted)
+
+            if concurrency > 1 and not demo:
+                with cf.ThreadPoolExecutor(max_workers=concurrency) as ex:
+                    proposals = list(ex.map(act_once, civs))
+            else:
+                proposals = [act_once(a) for a in civs]
+
+            for res in proposals:                       # apply in deterministic order
+                if not res:
+                    continue
+                actor, action, target, accepted = res
                 if verbose:
                     print(f"  {actor} {'→' if accepted else '✗'} {action} {target}")
                 events.append({"round": r, "kind": "war" if action == "declare_war" else "action",
@@ -413,6 +441,28 @@ def write_report(path, res, mode):
         f.write(_REPORT_TEMPLATE.replace("/*DATA*/", json.dumps(data)))
 
 
+def save_run(report_dir, kind, html, meta):
+    """Archive a finished game's report under runs/ and append to the manifest
+    so history.html can list and re-open past games."""
+    runs = os.path.join(report_dir, "runs")
+    os.makedirs(runs, exist_ok=True)
+    rid = time.strftime("%Y%m%d-%H%M%S") + "-" + kind
+    with open(os.path.join(runs, rid + ".html"), "w") as f:
+        f.write(html)
+    manifest = os.path.join(runs, "manifest.json")
+    items = []
+    if os.path.exists(manifest):
+        try:
+            with open(manifest) as f:
+                items = json.load(f)
+        except Exception:
+            items = []
+    items.insert(0, {"id": rid, "kind": kind, "time": time.strftime("%Y-%m-%d %H:%M:%S"), **meta})
+    with open(manifest, "w") as f:
+        json.dump(items[:200], f)
+    return rid
+
+
 def main():
     ap = argparse.ArgumentParser(description="Model-vs-model Civ match with negotiation, scorecards, report.")
     ap.add_argument("--save", default=None)
@@ -420,6 +470,8 @@ def main():
     ap.add_argument("--rounds", type=int, default=6)
     ap.add_argument("--turns-per-round", type=int, default=4)
     ap.add_argument("--negotiation-rounds", type=int, default=1)
+    ap.add_argument("--concurrency", type=int, default=1,
+                    help="parallel model calls per phase (>1 makes negotiation simultaneous; big live speedup)")
     ap.add_argument("--out", default=os.path.join(HERE, "scoreboard.csv"))
     ap.add_argument("--report", default=os.path.join(HERE, "report.html"))
     ap.add_argument("--live", action="store_true",
@@ -456,7 +508,8 @@ def main():
 
     res = run_match(save_path, civ_models, call, rounds=args.rounds, tpr=args.turns_per_round,
                     neg_rounds=args.negotiation_rounds, demo=args.demo, dry=args.dry_run,
-                    live_path=live_path, report_path=args.report, mode=mode)
+                    live_path=live_path, report_path=args.report, mode=mode,
+                    concurrency=args.concurrency)
 
     with open(args.out, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["turn", "round", "civ", "civ_strength", "army", "tech"])
@@ -464,6 +517,13 @@ def main():
     write_report(args.report, res, mode)
     print(f"\n\U0001f3c6 WINNER: {res['winner']} (power {res['final'][res['winner']]:.0f})")
     print(f"scoreboard → {args.out}\nreport     → {args.report}")
+    if not args.dry_run:
+        with open(args.report) as f:
+            html = f.read()
+        rid = save_run(os.path.dirname(os.path.abspath(args.report)), "match", html,
+                       {"winner": res["winner"], "civs": res["civs"], "models": res["models"],
+                        "rounds": args.rounds, "mode": mode})
+        print(f"history    → runs/{rid}.html  (open history.html)")
 
 
 _REPORT_TEMPLATE = r"""<!doctype html><html><head><meta charset="utf-8">

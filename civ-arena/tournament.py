@@ -144,6 +144,10 @@ def main():
     final = standings(args.matches, True, False)
     with open(args.report, "w") as f:
         f.write(_TPL.replace("/*DATA*/", json.dumps(final)))
+    arena.save_run(os.path.dirname(os.path.abspath(args.report)), "tournament",
+                   open(args.report).read(),
+                   {"top": final["rows"][0]["model"] if final["rows"] else None,
+                    "matches": args.matches, "models": final["ranking"]})
 
     print("\n=== FINAL ELO ===")
     for r in final["rows"]:
