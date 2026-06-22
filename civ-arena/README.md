@@ -111,13 +111,28 @@ start position:
 
 ```sh
 CIVAGENT_DIR=./vendor/CivAgent python tournament.py --demo --matches 8     # no keys, preview
-CIVAGENT_DIR=./vendor/CivAgent python tournament.py --config models.yaml --matches 20
+CIVAGENT_DIR=./vendor/CivAgent python tournament.py --config models.yaml \
+    --save seeds/six_civs.json --matches 20                                # rank six models
 ```
 
 It writes `tournament.html`: an **Elo leaderboard** (start 1000, K=24) with win
 rate, average placement, and the summed behavior stats, plus a **head-to-head
 matrix** (how often each model outranked each other). Aggregates per *model*, so
 the same model is pooled across the different civs it played.
+
+### Six-civ seed (rank up to six models)
+
+The bundled saves only have 3 major civs. `seeds/six_civs.json` is a pre-built
+**6-civ** start (China, Mongolia, Egypt, Greece, Rome, Aztecs) so a tournament
+can rank all six models at once — point `--save` at it (as above). It was made
+by `generate_seed.py`, which drives the headless engine's `GameStarter` to
+generate a fresh Pangaea game and advance it a few turns; regenerate (different
+map/size/seed) with:
+
+```sh
+CIVAGENT_DIR=./vendor/CivAgent python generate_seed.py            # → seeds/six_civs.json
+SEED_MAP_SIZE=Large SEED_RNG=7 python generate_seed.py           # bigger map, new layout
+```
 
 > In `--demo` the diplomacy is random, so the Elo spread is just RNG noise — it
 > only means something with real models.
@@ -130,6 +145,7 @@ the same model is pooled across the different civs it played.
 | Full pipeline incl. negotiation + actions + report (`--demo`) | ✅ Verified (no keys) |
 | Diplomatic actions (war, ally, peace, …) applied to the save | ✅ Verified (engine reacts) |
 | Per-model scorecards + tournament Elo / head-to-head (`--demo`) | ✅ Verified (no keys) |
+| 6-civ seed generation + 6-model tournament on it (`--demo`) | ✅ Verified (no keys) |
 | `setup.sh` end-to-end | ✅ Verified |
 | Live LLM calls via OpenRouter | 🔑 Needs your key; prompts may want tuning |
 
@@ -155,9 +171,9 @@ the same model is pooled across the different civs it played.
 
 ## Known limitations & gotchas
 
-- **The bundled `Autosave` has only 3 major civs** (Aztecs, Egypt, Greece).
-  CivAgent's six are china/mongolia/egypt/greece/rome/aztecs; which appear
-  depends on the save. Seats for absent civs are ignored.
+- **Civ roster comes from the save.** The bundled `Autosave` has only 3 major
+  civs (Aztecs, Egypt, Greece); use `--save seeds/six_civs.json` for all six.
+  Seats for civs not in the chosen save are ignored.
 - **Live diplomacy is best-effort.** Malformed model JSON or a parameter-heavy
   action is logged and skipped so the match keeps advancing. Expect to iterate
   on the prompts in `arena.py` for your lineup.
@@ -177,6 +193,8 @@ the same model is pooled across the different civs it played.
 | `smoke_test.py` | Advance the bundled save through the engine — no keys |
 | `arena.py` | One match: negotiation + actions + engine → CSV + animated report with scorecards |
 | `tournament.py` | Many matches (rotating seats) → Elo leaderboard + head-to-head `tournament.html` |
+| `generate_seed.py` | Drive the engine to build a fresh 6-civ game → `seeds/six_civs.json` |
+| `seeds/six_civs.json` | Pre-built 6-civ start (all six CivAgent civs) for full tournaments |
 | `models.example.yaml` | OpenRouter key + per-civ model ids (copy to `models.yaml`) |
 | `patches/anthropic_llm_utils.py` | Optional Claude adapter for CivAgent-native routing (OpenRouter usually makes this unnecessary) |
 
