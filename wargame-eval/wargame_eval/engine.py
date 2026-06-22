@@ -92,19 +92,20 @@ class Engine:
 
     def phase_reinforce(self) -> None:
         s = self.state
+        # Apply excursion rules (US entry timing, Japan neutrality) every turn.
+        s.apply_activation()
+        # Suppression decays for all bases.
+        for b in s.bases.values():
+            if b.suppressed_turns > 0:
+                b.suppressed_turns -= 1
         if s.turn < s.us_entry_turn:
             s.log_event("REINFORCE", "US not yet engaged")
-            return
-        # Light CONUS/Pacific reinforcement flow (APPROX).
-        if s.turn % 2 == 0 and "Guam" in s.bases:
+        elif s.turn % 2 == 0 and "Guam" in s.bases:
+            # Light CONUS/Pacific reinforcement flow (APPROX).
             s.bases["Guam"].aircraft["5th"] = s.bases["Guam"].aircraft.get("5th", 0) + 1
         # Taiwanese reserves trickle in early.
         if s.turn <= 3:
             s.taiwan_ground += 5.0
-        # Suppression decays.
-        for b in s.bases.values():
-            if b.suppressed_turns > 0:
-                b.suppressed_turns -= 1
 
     def phase_missiles(self) -> None:
         s = self.state
@@ -238,7 +239,9 @@ class Engine:
     def phase_naval(self) -> None:
         s = self.state
         orders = self._ask(Side.BLUE, "BLUE_NAVAL")
-        s.blue_naval.subron_on_barrier = orders["subron_on_barrier"]
+        # US submarines only operate the barrier once the US has entered the war.
+        s.blue_naval.subron_on_barrier = (
+            orders["subron_on_barrier"] if s.turn >= s.us_entry_turn else 0)
 
     def phase_amphib(self, support: dict) -> None:
         s = self.state

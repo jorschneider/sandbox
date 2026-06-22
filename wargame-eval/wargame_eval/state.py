@@ -44,12 +44,19 @@ class Airbase:
     suppressed_turns: int = 0      # >0: base sortie output degraded this many turns
     mobile: bool = False           # carrier deck (can be mission-killed by ASBMs)
     in_range_of_china: bool = True  # whether PLA conventional missiles can reach it
+    # Excursion control (rulebook Table 1A): which power hosts the base.
+    #   "TW"/"CN" always active; "US" active from us_entry_turn; "US-in-JP" also
+    #   requires Japan to be engaged (else strict-neutral Japan denies basing).
+    country: str = "US"
+    online: bool = True            # recomputed each turn from the excursion rules
 
     def total_combat_air(self) -> int:
         return sum(self.aircraft.get(c, 0) for c in ("4th", "4.5", "5th"))
 
     def available_factor(self) -> float:
         """Fraction of sorties this base can generate this turn (0..1)."""
+        if not self.online:
+            return 0.0
         return 0.35 if self.suppressed_turns > 0 else 1.0
 
 
@@ -106,6 +113,16 @@ class GameState:
     log: list[dict] = field(default_factory=list)
 
     # -- helpers ---------------------------------------------------------------
+
+    def apply_activation(self) -> None:
+        """Recompute base.online from the excursion rules for the current turn."""
+        for b in self.bases.values():
+            if b.country in ("TW", "CN"):
+                b.online = True
+            elif b.country == "US-in-JP":
+                b.online = self.japan_engaged and self.turn >= self.us_entry_turn
+            else:  # "US"
+                b.online = self.turn >= self.us_entry_turn
 
     def bases_of(self, side: Side) -> list[Airbase]:
         return [b for b in self.bases.values() if b.owner == side]

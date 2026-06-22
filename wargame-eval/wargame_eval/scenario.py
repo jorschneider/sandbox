@@ -12,33 +12,43 @@ from __future__ import annotations
 from .state import Airbase, BlueNaval, Facility, GameState, Owner, RedNaval, Side
 
 
-def build_base_case(seed: int = 0, max_turns: int = 8) -> GameState:
+def build_base_case(seed: int = 0, max_turns: int = 8,
+                    us_entry_turn: int = 1, japan_engaged: bool = True) -> GameState:
+    """Build the base case. Excursions (rulebook Table 1A): `us_entry_turn` > 1
+    delays US combat entry; `japan_engaged=False` makes Japan strictly neutral
+    (US operations from Japanese bases — Kadena/Iwakuni/Misawa — are denied)."""
     bases: dict[str, Airbase] = {}
 
     # --- Blue (US/Japan) airbases — Table 2B laydown (counts APPROX) ----------
+    # Kadena/Iwakuni/Misawa are US aircraft at *Japanese* bases (host = US-in-JP).
     bases["Kadena"] = Airbase("Kadena", Side.BLUE,
-                              {"4.5": 2, "5th": 2, "tanker": 1}, hardened=True)
+                              {"4.5": 2, "5th": 2, "tanker": 1}, hardened=True,
+                              country="US-in-JP")
     bases["Iwakuni"] = Airbase("Iwakuni", Side.BLUE,
-                               {"5th": 1, "tanker": 1}, hardened=True)
+                               {"5th": 1, "tanker": 1}, hardened=True,
+                               country="US-in-JP")
     bases["Misawa"] = Airbase("Misawa", Side.BLUE,
-                              {"4.5": 2, "tanker": 1}, hardened=True)
+                              {"4.5": 2, "tanker": 1}, hardened=True,
+                              country="US-in-JP")
     bases["Guam"] = Airbase("Guam", Side.BLUE,
                             {"5th": 2, "tanker": 1, "bomber": 1}, hardened=True,
-                            in_range_of_china=True)  # reachable by DF-26
+                            in_range_of_china=True, country="US")  # reachable by DF-26
     # US carriers as mobile decks (naval air, Table 2A: CSG x2 at start).
-    bases["CSG-1"] = Airbase("CSG-1", Side.BLUE, {"4.5": 1, "5th": 1}, mobile=True)
-    bases["CSG-2"] = Airbase("CSG-2", Side.BLUE, {"4.5": 1, "5th": 1}, mobile=True)
+    bases["CSG-1"] = Airbase("CSG-1", Side.BLUE, {"4.5": 1, "5th": 1},
+                             mobile=True, country="US")
+    bases["CSG-2"] = Airbase("CSG-2", Side.BLUE, {"4.5": 1, "5th": 1},
+                             mobile=True, country="US")
 
     # --- Green (Taiwan) air — APPROX -----------------------------------------
     bases["Taiwan-AB"] = Airbase("Taiwan-AB", Side.BLUE,
                                  {"4th": 6, "4.5": 8, "5th": 2}, hardened=True,
-                                 in_range_of_china=True)
+                                 in_range_of_china=True, country="TW")
 
     # --- Red (China) air — aggregated mainland basing, APPROX -----------------
     bases["PLA-Mainland"] = Airbase("PLA-Mainland", Side.RED,
                                     {"4th": 24, "4.5": 18, "5th": 8, "bomber": 6,
                                      "tanker": 4}, hardened=True,
-                                    in_range_of_china=False)
+                                    in_range_of_china=False, country="CN")
 
     # --- Taiwan facilities (objective) — major ports & airports ---------------
     facilities = [
@@ -85,6 +95,6 @@ def build_base_case(seed: int = 0, max_turns: int = 8) -> GameState:
         pla_lodgment=0.0,
         pla_supply=0.0,
         initial_amphib_flotillas=red_naval.amphib_flotillas,
-        japan_engaged=True,
-        us_entry_turn=1,       # base case: US in from the beginning
+        japan_engaged=japan_engaged,
+        us_entry_turn=us_entry_turn,   # base case: US in from the beginning
     )

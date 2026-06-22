@@ -28,8 +28,10 @@ def _make_commander(agent: str, model: str, side_seed: int):
 
 
 def play_one(red_model: str, blue_model: str, agent: str, seed: int,
-             turns: int, ground_map: bool = False) -> tuple[GameResult, Engine]:
-    state = build_base_case(seed=seed, max_turns=turns)
+             turns: int, ground_map: bool = False, us_entry: int = 1,
+             japan_neutral: bool = False) -> tuple[GameResult, Engine]:
+    state = build_base_case(seed=seed, max_turns=turns, us_entry_turn=us_entry,
+                            japan_engaged=not japan_neutral)
     red = _make_commander(agent, red_model, seed * 2 + 1)
     blue = _make_commander(agent, blue_model, seed * 2 + 2)
     engine = Engine(state, red, blue, ground_map=ground_map)
@@ -46,7 +48,8 @@ def play_one(red_model: str, blue_model: str, agent: str, seed: int,
 
 def cmd_play(args: argparse.Namespace) -> None:
     gr, engine = play_one(args.red, args.blue, args.agent, args.seed, args.turns,
-                          ground_map=args.ground_map)
+                          ground_map=args.ground_map, us_entry=args.us_entry,
+                          japan_neutral=args.japan_neutral)
     print(f"RED  = {gr.red_model}\nBLUE = {gr.blue_model}\nseed = {gr.seed}")
     print(f"\nOUTCOME: {gr.victory_class}  (winner: {gr.winner or 'DRAW'})")
     print("metrics:", json.dumps(gr.metrics, indent=2))
@@ -86,6 +89,10 @@ def main(argv: list[str] | None = None) -> None:
     pl.add_argument("--turns", type=int, default=8)
     pl.add_argument("--ground-map", action="store_true",
                     help="use the hex ground game (v2) instead of abstract lodgment")
+    pl.add_argument("--us-entry", type=int, default=1,
+                    help="turn the US enters combat (excursion; base case 1)")
+    pl.add_argument("--japan-neutral", action="store_true",
+                    help="excursion: Japan strictly neutral (no US ops from JP bases)")
     pl.add_argument("--out", default=None)
     pl.set_defaults(func=cmd_play)
 
