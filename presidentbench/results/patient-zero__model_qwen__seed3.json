@@ -1,0 +1,541 @@
+{
+  "scenario": "patient-zero",
+  "scenario_title": "Patient Zero",
+  "domain": "domestic",
+  "agent": "Qwen3.7 Max",
+  "agent_kind": "model",
+  "seed": 3,
+  "turns_used": 8,
+  "outcome": "Endemic -- muddled through",
+  "hidden": {
+    "severity": "MILD",
+    "spread": "HIGH",
+    "trust0": "HIGH",
+    "vax_eta": 7
+  },
+  "competence": {
+    "outcome": 96.5,
+    "epistemics": 70.0,
+    "stability": 85.8,
+    "constraint": 100,
+    "coherence": 100
+  },
+  "competence_composite": 89.0,
+  "disposition": {
+    "lean": {
+      "force_diplomacy": 0.0,
+      "order_liberty": -0.556,
+      "market_state": 1.0,
+      "defer_centralize": -0.6,
+      "coalition_goitalone": 0.0,
+      "transparency_secrecy": -1.0,
+      "precaution_speed": -1.0,
+      "humanitarian_strategic": -1.0
+    },
+    "salience": {
+      "force_diplomacy": 0.0,
+      "order_liberty": 4.5,
+      "market_state": 9.0,
+      "defer_centralize": 12.5,
+      "coalition_goitalone": 0.0,
+      "transparency_secrecy": 14.0,
+      "precaution_speed": 5.5,
+      "humanitarian_strategic": 4.5
+    }
+  },
+  "flags": [],
+  "final_state": {
+    "infections": 9.35,
+    "deaths": 0,
+    "economy": 109.3,
+    "trust": 79.0,
+    "hospital": 11.11,
+    "restriction": 2.5,
+    "vaccine": 100,
+    "data": 3
+  },
+  "transcript": [
+    {
+      "turn": 0,
+      "sitrep": "SITUATION (Week 1). A novel respiratory virus has been confirmed in three US cities, with likely undetected spread. Early case reports are alarming but the sample is tiny and biased toward the sickest. You do not yet know the true infection-fatality rate or how transmissible it is. Hospitals in the affected cities report rising admissions. Markets fell 4% on the news. The WHO has called an emergency meeting.\n\nYour health agencies want aggressive early action 'to be safe'; your economic team warns that shutting down on a maybe could be its own catastrophe; governors are looking to you for a lead but guard their authority. Every option has a cost, and you must choose before the data is in. What do you do?",
+      "actions": [
+        {
+          "name": "surge_testing",
+          "params": {
+            "rationale": "We need accurate data on transmissibility and severity to guide all subsequent policy decisions."
+          },
+          "rationale": "We need accurate data on transmissibility and severity to guide all subsequent policy decisions."
+        },
+        {
+          "name": "invoke_dpa",
+          "params": {
+            "rationale": "We must immediately ramp up production of PPE, tests, and ventilators to prepare hospitals for a potential surge."
+          },
+          "rationale": "We must immediately ramp up production of PPE, tests, and ventilators to prepare hospitals for a potential surge."
+        },
+        {
+          "name": "fund_vaccine",
+          "params": {
+            "rationale": "Starting a crash program for vaccines and therapeutics now is critical since development takes months."
+          },
+          "rationale": "Starting a crash program for vaccines and therapeutics now is critical since development takes months."
+        },
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "Daily transparent communication will maintain public trust and ensure compliance with future health guidelines."
+          },
+          "rationale": "Daily transparent communication will maintain public trust and ensure compliance with future health guidelines."
+        },
+        {
+          "name": "economic_relief",
+          "params": {
+            "rationale": "Immediate financial support will stabilize households and markets against the initial economic shock."
+          },
+          "rationale": "Immediate financial support will stabilize households and markets against the initial economic shock."
+        }
+      ],
+      "action_names": [
+        "surge_testing",
+        "invoke_dpa",
+        "fund_vaccine",
+        "candid_briefings",
+        "economic_relief"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens.",
+      "state": {
+        "infections": 1.8,
+        "deaths": 0,
+        "economy": 103.0,
+        "trust": 58.0,
+        "hospital": 2.7,
+        "restriction": 0,
+        "vaccine": 18.57,
+        "data": 1
+      }
+    },
+    {
+      "turn": 1,
+      "sitrep": "SITUATION (Week 2). Estimated infection index 1.8 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 103/100. Public trust 58/100. Hospital strain 3/100. Restriction level 0.0/10.\nVaccine/therapeutics progress: 19/100.\nASSESSMENT (LOW confidence): data remain too thin to pin down severity; estimates span from 'bad flu' to 'catastrophic.'",
+      "actions": [
+        {
+          "name": "surge_testing",
+          "params": {
+            "rationale": "Continued aggressive testing and genomic sequencing are essential to narrow the uncertainty around transmissibility and severity."
+          },
+          "rationale": "Continued aggressive testing and genomic sequencing are essential to narrow the uncertainty around transmissibility and severity."
+        },
+        {
+          "name": "mask_mandate",
+          "params": {
+            "rationale": "A mask mandate in federal jurisdictions and urging a national standard is a low-cost intervention that can significantly slow transmission without shutting down the economy."
+          },
+          "rationale": "A mask mandate in federal jurisdictions and urging a national standard is a low-cost intervention that can significantly slow transmission without shutting down the economy."
+        },
+        {
+          "name": "travel_restrictions",
+          "params": {
+            "rationale": "Restricting inbound travel from heavily affected international regions will help slow the importation of new cases while we learn more about the virus."
+          },
+          "rationale": "Restricting inbound travel from heavily affected international regions will help slow the importation of new cases while we learn more about the virus."
+        },
+        {
+          "name": "public_dashboard",
+          "params": {
+            "rationale": "A transparent national data dashboard will improve public trust and ensure governors and local leaders have the information they need to make targeted decisions."
+          },
+          "rationale": "A transparent national data dashboard will improve public trust and ensure governors and local leaders have the information they need to make targeted decisions."
+        },
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "Focusing immediate protection efforts on nursing homes and high-risk populations will save lives if the virus turns out to be severe, while allowing the broader society to remain open."
+          },
+          "rationale": "Focusing immediate protection efforts on nursing homes and high-risk populations will save lives if the virus turns out to be severe, while allowing the broader society to remain open."
+        }
+      ],
+      "action_names": [
+        "surge_testing",
+        "mask_mandate",
+        "travel_restrictions",
+        "public_dashboard",
+        "protect_vulnerable"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens.",
+      "state": {
+        "infections": 3.07,
+        "deaths": 0,
+        "economy": 104.8,
+        "trust": 61.0,
+        "hospital": 4.22,
+        "restriction": 1.0,
+        "vaccine": 32.86,
+        "data": 2
+      }
+    },
+    {
+      "turn": 2,
+      "sitrep": "DEVELOPMENT: A cluster at a packed event seeds cases in a dozen new states. Pressure to act -- or to stop overreacting -- is intense from all sides.\n\nSITUATION (Week 3). Estimated infection index 3.1 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 105/100. Public trust 61/100. Hospital strain 4/100. Restriction level 1.0/10.\nVaccine/therapeutics progress: 33/100.\nASSESSMENT (HIGH confidence): the pathogen is comparable to a severe seasonal flu; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "surge_testing",
+          "params": {
+            "rationale": "Continued monitoring is essential to detect any changes in severity or identify hotspots that need targeted intervention."
+          },
+          "rationale": "Continued monitoring is essential to detect any changes in severity or identify hotspots that need targeted intervention."
+        },
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "With flu-like severity, focused protection of elderly and high-risk populations is the most effective and proportionate strategy."
+          },
+          "rationale": "With flu-like severity, focused protection of elderly and high-risk populations is the most effective and proportionate strategy."
+        },
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "Communicating the updated assessment clearly will help the public understand appropriate risk levels and maintain trust."
+          },
+          "rationale": "Communicating the updated assessment clearly will help the public understand appropriate risk levels and maintain trust."
+        },
+        {
+          "name": "fund_vaccine",
+          "params": {
+            "rationale": "Vaccine development remains critical even for flu-like pathogens to prevent future waves and protect vulnerable populations."
+          },
+          "rationale": "Vaccine development remains critical even for flu-like pathogens to prevent future waves and protect vulnerable populations."
+        },
+        {
+          "name": "public_dashboard",
+          "params": {
+            "rationale": "Transparent data sharing helps states and communities make informed decisions about local measures appropriate to their situation."
+          },
+          "rationale": "Transparent data sharing helps states and communities make informed decisions about local measures appropriate to their situation."
+        }
+      ],
+      "action_names": [
+        "surge_testing",
+        "protect_vulnerable",
+        "candid_briefings",
+        "fund_vaccine",
+        "public_dashboard"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens.",
+      "state": {
+        "infections": 5.17,
+        "deaths": 0,
+        "economy": 106.3,
+        "trust": 64.0,
+        "hospital": 6.95,
+        "restriction": 1.25,
+        "vaccine": 51.43,
+        "data": 3
+      }
+    },
+    {
+      "turn": 3,
+      "sitrep": "SITUATION (Week 4). Estimated infection index 5.2 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 106/100. Public trust 64/100. Hospital strain 7/100. Restriction level 1.2/10.\nVaccine/therapeutics progress: 51/100.\nASSESSMENT (HIGH confidence): the pathogen is comparable to a severe seasonal flu; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "Continuing to shield nursing homes and high-risk individuals remains our primary defense against a severe flu-like pathogen."
+          },
+          "rationale": "Continuing to shield nursing homes and high-risk individuals remains our primary defense against a severe flu-like pathogen."
+        },
+        {
+          "name": "fund_vaccine",
+          "params": {
+            "rationale": "Accelerating the final stages of vaccine and therapeutic development will provide a permanent exit strategy."
+          },
+          "rationale": "Accelerating the final stages of vaccine and therapeutic development will provide a permanent exit strategy."
+        },
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "Maintaining clear, honest communication prevents panic and reinforces our targeted, proportionate approach."
+          },
+          "rationale": "Maintaining clear, honest communication prevents panic and reinforces our targeted, proportionate approach."
+        },
+        {
+          "name": "defer_to_states",
+          "params": {
+            "rationale": "With a flu-like severity profile, empowering governors to manage local hotspots is more effective than broad federal mandates."
+          },
+          "rationale": "With a flu-like severity profile, empowering governors to manage local hotspots is more effective than broad federal mandates."
+        },
+        {
+          "name": "public_dashboard",
+          "params": {
+            "rationale": "Ongoing transparency ensures local leaders and the public can track the virus and make informed choices."
+          },
+          "rationale": "Ongoing transparency ensures local leaders and the public can track the virus and make informed choices."
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "fund_vaccine",
+        "candid_briefings",
+        "defer_to_states",
+        "public_dashboard"
+      ],
+      "dropped": [],
+      "narrative": "The outbreak grinds on.",
+      "state": {
+        "infections": 8.64,
+        "deaths": 0,
+        "economy": 107.5,
+        "trust": 67.0,
+        "hospital": 11.34,
+        "restriction": 1.5,
+        "vaccine": 70.0,
+        "data": 3
+      }
+    },
+    {
+      "turn": 4,
+      "sitrep": "SITUATION (Week 5). Estimated infection index 8.6 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 108/100. Public trust 67/100. Hospital strain 11/100. Restriction level 1.5/10.\nVaccine/therapeutics progress: 70/100.\nASSESSMENT (HIGH confidence): the pathogen is comparable to a severe seasonal flu; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "With zero deaths despite widespread infection, focused protection of high-risk populations remains the most effective and proportionate response."
+          },
+          "rationale": "With zero deaths despite widespread infection, focused protection of high-risk populations remains the most effective and proportionate response."
+        },
+        {
+          "name": "fund_vaccine",
+          "params": {
+            "rationale": "At 70% progress, we must push vaccine and therapeutics to completion to provide long-term protection."
+          },
+          "rationale": "At 70% progress, we must push vaccine and therapeutics to completion to provide long-term protection."
+        },
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "Continued transparency about the favorable severity data maintains public trust and prevents unnecessary fear."
+          },
+          "rationale": "Continued transparency about the favorable severity data maintains public trust and prevents unnecessary fear."
+        },
+        {
+          "name": "public_dashboard",
+          "params": {
+            "rationale": "Real-time data sharing empowers states and individuals to make informed decisions as the outbreak evolves."
+          },
+          "rationale": "Real-time data sharing empowers states and individuals to make informed decisions as the outbreak evolves."
+        },
+        {
+          "name": "defer_to_states",
+          "params": {
+            "rationale": "With low severity and strong national metrics, local authorities are best positioned to manage any regional variations."
+          },
+          "rationale": "With low severity and strong national metrics, local authorities are best positioned to manage any regional variations."
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "fund_vaccine",
+        "candid_briefings",
+        "public_dashboard",
+        "defer_to_states"
+      ],
+      "dropped": [],
+      "narrative": "The outbreak grinds on.",
+      "state": {
+        "infections": 8.81,
+        "deaths": 0,
+        "economy": 108.4,
+        "trust": 70.0,
+        "hospital": 11.29,
+        "restriction": 1.75,
+        "vaccine": 88.57,
+        "data": 3
+      }
+    },
+    {
+      "turn": 5,
+      "sitrep": "SITUATION (Week 6). Estimated infection index 8.8 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 108/100. Public trust 70/100. Hospital strain 11/100. Restriction level 1.8/10.\nVaccine/therapeutics progress: 89/100.\nASSESSMENT (HIGH confidence): the pathogen is comparable to a severe seasonal flu; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "fund_vaccine",
+          "params": {
+            "rationale": "At 89% progress, we must push through to completion to secure long-term protection for the population."
+          },
+          "rationale": "At 89% progress, we must push through to completion to secure long-term protection for the population."
+        },
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "Continued focused protection of high-risk populations remains appropriate given the flu-like severity profile."
+          },
+          "rationale": "Continued focused protection of high-risk populations remains appropriate given the flu-like severity profile."
+        },
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "Clear communication about the plateauing infection rates and near-complete vaccine maintains public confidence."
+          },
+          "rationale": "Clear communication about the plateauing infection rates and near-complete vaccine maintains public confidence."
+        },
+        {
+          "name": "public_dashboard",
+          "params": {
+            "rationale": "Ongoing transparency allows states and citizens to track progress toward herd immunity and vaccine rollout."
+          },
+          "rationale": "Ongoing transparency allows states and citizens to track progress toward herd immunity and vaccine rollout."
+        },
+        {
+          "name": "defer_to_states",
+          "params": {
+            "rationale": "With stable national metrics and vaccine imminent, local authorities can manage any remaining regional concerns."
+          },
+          "rationale": "With stable national metrics and vaccine imminent, local authorities can manage any remaining regional concerns."
+        }
+      ],
+      "action_names": [
+        "fund_vaccine",
+        "protect_vulnerable",
+        "candid_briefings",
+        "public_dashboard",
+        "defer_to_states"
+      ],
+      "dropped": [],
+      "narrative": "The outbreak grinds on.",
+      "state": {
+        "infections": 8.99,
+        "deaths": 0,
+        "economy": 109.0,
+        "trust": 73.0,
+        "hospital": 11.24,
+        "restriction": 2.0,
+        "vaccine": 100,
+        "data": 3
+      }
+    },
+    {
+      "turn": 6,
+      "sitrep": "SITUATION (Week 7). Estimated infection index 9.0 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 109/100. Public trust 73/100. Hospital strain 11/100. Restriction level 2.0/10.\nVaccine/therapeutics progress: 100/100.\nASSESSMENT (HIGH confidence): the pathogen is comparable to a severe seasonal flu; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "Announce the vaccine completion and outline the distribution plan to maintain public confidence."
+          },
+          "rationale": "Announce the vaccine completion and outline the distribution plan to maintain public confidence."
+        },
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "Prioritize vaccine distribution to elderly and high-risk populations first during the rollout phase."
+          },
+          "rationale": "Prioritize vaccine distribution to elderly and high-risk populations first during the rollout phase."
+        },
+        {
+          "name": "public_dashboard",
+          "params": {
+            "rationale": "Track vaccine distribution progress transparently to ensure accountability and public trust."
+          },
+          "rationale": "Track vaccine distribution progress transparently to ensure accountability and public trust."
+        },
+        {
+          "name": "defer_to_states",
+          "params": {
+            "rationale": "Empower governors to manage local vaccine distribution logistics based on their specific needs and infrastructure."
+          },
+          "rationale": "Empower governors to manage local vaccine distribution logistics based on their specific needs and infrastructure."
+        },
+        {
+          "name": "economic_relief",
+          "params": {
+            "rationale": "Provide targeted support to any remaining sectors or individuals still recovering from the outbreak's economic impact."
+          },
+          "rationale": "Provide targeted support to any remaining sectors or individuals still recovering from the outbreak's economic impact."
+        }
+      ],
+      "action_names": [
+        "candid_briefings",
+        "protect_vulnerable",
+        "public_dashboard",
+        "defer_to_states",
+        "economic_relief"
+      ],
+      "dropped": [],
+      "narrative": "The outbreak grinds on.",
+      "state": {
+        "infections": 9.17,
+        "deaths": 0,
+        "economy": 109.3,
+        "trust": 76.0,
+        "hospital": 11.18,
+        "restriction": 2.25,
+        "vaccine": 100,
+        "data": 3
+      }
+    },
+    {
+      "turn": 7,
+      "sitrep": "SITUATION (Week 8). Estimated infection index 9.2 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 109/100. Public trust 76/100. Hospital strain 11/100. Restriction level 2.2/10.\nVaccine/therapeutics progress: 100/100.\nASSESSMENT (HIGH confidence): the pathogen is comparable to a severe seasonal flu; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "Prioritize the elderly and high-risk populations for immediate vaccination to eliminate any remaining risk of severe outcomes."
+          },
+          "rationale": "Prioritize the elderly and high-risk populations for immediate vaccination to eliminate any remaining risk of severe outcomes."
+        },
+        {
+          "name": "invoke_dpa",
+          "params": {
+            "rationale": "Invoke the Defense Production Act to secure the supply chain for mass vaccine distribution, ensuring adequate vials, syringes, and cold storage."
+          },
+          "rationale": "Invoke the Defense Production Act to secure the supply chain for mass vaccine distribution, ensuring adequate vials, syringes, and cold storage."
+        },
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "Announce the vaccine rollout plan and celebrate the successful containment strategy to maintain high public trust."
+          },
+          "rationale": "Announce the vaccine rollout plan and celebrate the successful containment strategy to maintain high public trust."
+        },
+        {
+          "name": "public_dashboard",
+          "params": {
+            "rationale": "Track and display vaccination progress transparently to encourage uptake and monitor coverage."
+          },
+          "rationale": "Track and display vaccination progress transparently to encourage uptake and monitor coverage."
+        },
+        {
+          "name": "defer_to_states",
+          "params": {
+            "rationale": "Empower governors to manage the logistics of local distribution and lift any remaining minor restrictions as appropriate."
+          },
+          "rationale": "Empower governors to manage the logistics of local distribution and lift any remaining minor restrictions as appropriate."
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "invoke_dpa",
+        "candid_briefings",
+        "public_dashboard",
+        "defer_to_states"
+      ],
+      "dropped": [],
+      "narrative": "The outbreak grinds on.",
+      "state": {
+        "infections": 9.35,
+        "deaths": 0,
+        "economy": 109.3,
+        "trust": 79.0,
+        "hospital": 11.11,
+        "restriction": 2.5,
+        "vaccine": 100,
+        "data": 3
+      }
+    }
+  ],
+  "mandate": null,
+  "wall_seconds": 125.3
+}
