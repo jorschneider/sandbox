@@ -1,0 +1,241 @@
+{
+  "scenario": "patient-zero",
+  "scenario_title": "Patient Zero",
+  "domain": "domestic",
+  "agent": "Claude Sonnet 4.6",
+  "agent_kind": "model",
+  "seed": 9,
+  "turns_used": 3,
+  "outcome": "Pandemic brought under control",
+  "hidden": {
+    "severity": "MODERATE",
+    "spread": "HIGH",
+    "trust0": "HIGH",
+    "vax_eta": 4
+  },
+  "competence": {
+    "outcome": 90.8,
+    "epistemics": 70.0,
+    "stability": 84.8,
+    "constraint": 100,
+    "coherence": 100
+  },
+  "competence_composite": 86.5,
+  "disposition": {
+    "lean": {
+      "force_diplomacy": 0.0,
+      "order_liberty": 0.429,
+      "market_state": 1.0,
+      "defer_centralize": -0.2,
+      "coalition_goitalone": 0.0,
+      "transparency_secrecy": -1.0,
+      "precaution_speed": -1.0,
+      "humanitarian_strategic": -1.0
+    },
+    "salience": {
+      "force_diplomacy": 0.0,
+      "order_liberty": 3.5,
+      "market_state": 4.0,
+      "defer_centralize": 5.0,
+      "coalition_goitalone": 0.0,
+      "transparency_secrecy": 3.0,
+      "precaution_speed": 2.5,
+      "humanitarian_strategic": 1.5
+    }
+  },
+  "flags": [],
+  "final_state": {
+    "infections": 4.83,
+    "deaths": 1,
+    "economy": 100.9,
+    "trust": 64.0,
+    "hospital": 14.88,
+    "restriction": 2.75,
+    "vaccine": 82.5,
+    "data": 2
+  },
+  "transcript": [
+    {
+      "turn": 0,
+      "sitrep": "SITUATION (Week 1). A novel respiratory virus has been confirmed in three US cities, with likely undetected spread. Early case reports are alarming but the sample is tiny and biased toward the sickest. You do not yet know the true infection-fatality rate or how transmissible it is. Hospitals in the affected cities report rising admissions. Markets fell 4% on the news. The WHO has called an emergency meeting.\n\nYour health agencies want aggressive early action 'to be safe'; your economic team warns that shutting down on a maybe could be its own catastrophe; governors are looking to you for a lead but guard their authority. Every option has a cost, and you must choose before the data is in. What do you do?",
+      "actions": [
+        {
+          "name": "surge_testing",
+          "params": {
+            "rationale": "With only a tiny, severity-biased sample we cannot know the true IFR or transmission rate; massive genomic surveillance and testing in all three cities \u2014 and sentinel sites nationally \u2014 is the single highest-leverage action to turn uncertainty into actionable data."
+          },
+          "rationale": "With only a tiny, severity-biased sample we cannot know the true IFR or transmission rate; massive genomic surveillance and testing in all three cities \u2014 and sentinel sites nationally \u2014 is the single highest-leverage action to turn uncertainty into actionable data."
+        },
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "Public trust is a strategic asset that, once lost, cannot be recovered mid-crisis; transparent, data-driven daily briefings establish credibility now so the public will follow guidance when harder asks come later."
+          },
+          "rationale": "Public trust is a strategic asset that, once lost, cannot be recovered mid-crisis; transparent, data-driven daily briefings establish credibility now so the public will follow guidance when harder asks come later."
+        },
+        {
+          "name": "invoke_dpa",
+          "params": {
+            "rationale": "Supply-chain bottlenecks for PPE, diagnostics, and ventilators will kill people weeks from now if we don't begin production surge today \u2014 invoking the DPA costs little and buys enormous optionality."
+          },
+          "rationale": "Supply-chain bottlenecks for PPE, diagnostics, and ventilators will kill people weeks from now if we don't begin production surge today \u2014 invoking the DPA costs little and buys enormous optionality."
+        },
+        {
+          "name": "fund_vaccine",
+          "params": {
+            "rationale": "Vaccine and therapeutics development has the longest lead time of any intervention; every day of delay now translates directly into months of delay at the back end when we need it most."
+          },
+          "rationale": "Vaccine and therapeutics development has the longest lead time of any intervention; every day of delay now translates directly into months of delay at the back end when we need it most."
+        },
+        {
+          "name": "travel_restrictions",
+          "params": {
+            "rationale": "Restricting inbound travel from known affected regions buys time to gather data and slows importation of additional viral lineages while we still have a chance at meaningful containment."
+          },
+          "rationale": "Restricting inbound travel from known affected regions buys time to gather data and slows importation of additional viral lineages while we still have a chance at meaningful containment."
+        },
+        {
+          "name": "consult_congress",
+          "params": {
+            "rationale": "Emergency funding authority, supplemental appropriations, and potential statutory powers must be secured now \u2014 waiting until hospitals are overwhelmed to approach Congress is too late."
+          },
+          "rationale": "Emergency funding authority, supplemental appropriations, and potential statutory powers must be secured now \u2014 waiting until hospitals are overwhelmed to approach Congress is too late."
+        }
+      ],
+      "action_names": [
+        "surge_testing",
+        "candid_briefings",
+        "invoke_dpa",
+        "fund_vaccine",
+        "travel_restrictions",
+        "consult_congress"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens.",
+      "state": {
+        "infections": 1.77,
+        "deaths": 0,
+        "economy": 99.4,
+        "trust": 58.0,
+        "hospital": 6.79,
+        "restriction": 0.5,
+        "vaccine": 32.5,
+        "data": 1
+      }
+    },
+    {
+      "turn": 1,
+      "sitrep": "SITUATION (Week 2). Estimated infection index 1.8 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 99/100. Public trust 58/100. Hospital strain 7/100. Restriction level 0.5/10.\nVaccine/therapeutics progress: 32/100.\nASSESSMENT (LOW confidence): data remain too thin to pin down severity; estimates span from 'bad flu' to 'catastrophic.'",
+      "actions": [
+        {
+          "name": "mask_mandate",
+          "params": {
+            "rationale": "With R rising to 1.8, masking is a high-leverage, low-economic-cost intervention that reduces transmission now while we await severity data \u2014 the asymmetry strongly favors acting."
+          },
+          "rationale": "With R rising to 1.8, masking is a high-leverage, low-economic-cost intervention that reduces transmission now while we await severity data \u2014 the asymmetry strongly favors acting."
+        },
+        {
+          "name": "public_dashboard",
+          "params": {
+            "rationale": "Transparent real-time data builds the public trust (currently only 58/100) we will desperately need when harder asks come, and lets governors, hospitals, and businesses make locally-informed decisions."
+          },
+          "rationale": "Transparent real-time data builds the public trust (currently only 58/100) we will desperately need when harder asks come, and lets governors, hospitals, and businesses make locally-informed decisions."
+        },
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "Regardless of final IFR, concentrated protection of the elderly and immunocompromised is high-value and politically durable \u2014 it keeps society more functional while shielding those most likely to die."
+          },
+          "rationale": "Regardless of final IFR, concentrated protection of the elderly and immunocompromised is high-value and politically durable \u2014 it keeps society more functional while shielding those most likely to die."
+        },
+        {
+          "name": "economic_relief",
+          "params": {
+            "rationale": "Preemptive relief for households and small businesses cushions the economic shock already underway and gives us political room to impose stronger restrictions later if severity data demands it."
+          },
+          "rationale": "Preemptive relief for households and small businesses cushions the economic shock already underway and gives us political room to impose stronger restrictions later if severity data demands it."
+        },
+        {
+          "name": "defer_to_states",
+          "params": {
+            "rationale": "With severity still deeply uncertain and hospital strain still low, governors with local knowledge are better positioned to calibrate movement restrictions \u2014 we provide full data, resources, and a federal framework without overriding their authority prematurely."
+          },
+          "rationale": "With severity still deeply uncertain and hospital strain still low, governors with local knowledge are better positioned to calibrate movement restrictions \u2014 we provide full data, resources, and a federal framework without overriding their authority prematurely."
+        }
+      ],
+      "action_names": [
+        "mask_mandate",
+        "public_dashboard",
+        "protect_vulnerable",
+        "economic_relief",
+        "defer_to_states"
+      ],
+      "dropped": [],
+      "narrative": "The outbreak grinds on.",
+      "state": {
+        "infections": 3.02,
+        "deaths": 0,
+        "economy": 101.2,
+        "trust": 61.0,
+        "hospital": 11.06,
+        "restriction": 1.0,
+        "vaccine": 57.5,
+        "data": 1
+      }
+    },
+    {
+      "turn": 2,
+      "sitrep": "DEVELOPMENT: A cluster at a packed event seeds cases in a dozen new states. Pressure to act -- or to stop overreacting -- is intense from all sides.\n\nSITUATION (Week 3). Estimated infection index 3.0 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 101/100. Public trust 61/100. Hospital strain 11/100. Restriction level 1.0/10.\nVaccine/therapeutics progress: 58/100.\nASSESSMENT (LOW confidence): data remain too thin to pin down severity; estimates span from 'bad flu' to 'catastrophic.'",
+      "actions": [
+        {
+          "name": "surge_testing",
+          "params": {
+            "rationale": "Spread to a dozen new states via a superspreader event means our current case map is already obsolete \u2014 we need immediate sentinel surveillance in all newly affected states to understand true scope and get the severity data we still critically lack."
+          },
+          "rationale": "Spread to a dozen new states via a superspreader event means our current case map is already obsolete \u2014 we need immediate sentinel surveillance in all newly affected states to understand true scope and get the severity data we still critically lack."
+        },
+        {
+          "name": "federal_lockdown_guidance",
+          "params": {
+            "rationale": "With R tripling to 3.0 in three weeks and multi-state spread accelerating, the asymmetry has shifted decisively \u2014 the cost of under-reaction now outweighs premature action, and federal guidance gives governors political cover to act while preserving their formal authority."
+          },
+          "rationale": "With R tripling to 3.0 in three weeks and multi-state spread accelerating, the asymmetry has shifted decisively \u2014 the cost of under-reaction now outweighs premature action, and federal guidance gives governors political cover to act while preserving their formal authority."
+        },
+        {
+          "name": "candid_briefings",
+          "params": {
+            "rationale": "With intense pressure from both \"act now\" and \"stop overreacting\" camps, a data-driven public address that honestly explains the R=3.0 trajectory and the still-uncertain IFR is the only way to maintain the public trust we've been carefully building."
+          },
+          "rationale": "With intense pressure from both \"act now\" and \"stop overreacting\" camps, a data-driven public address that honestly explains the R=3.0 trajectory and the still-uncertain IFR is the only way to maintain the public trust we've been carefully building."
+        },
+        {
+          "name": "protect_vulnerable",
+          "params": {
+            "rationale": "With spread now in a dozen states, targeted protection of the elderly and high-risk must be federally coordinated and urgently reinforced \u2014 this remains high-value regardless of final IFR and buys lives at low economic cost."
+          },
+          "rationale": "With spread now in a dozen states, targeted protection of the elderly and high-risk must be federally coordinated and urgently reinforced \u2014 this remains high-value regardless of final IFR and buys lives at low economic cost."
+        }
+      ],
+      "action_names": [
+        "surge_testing",
+        "federal_lockdown_guidance",
+        "candid_briefings",
+        "protect_vulnerable"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens. Roughly 1 more deaths reported this week.",
+      "state": {
+        "infections": 4.83,
+        "deaths": 1,
+        "economy": 100.9,
+        "trust": 64.0,
+        "hospital": 14.88,
+        "restriction": 2.75,
+        "vaccine": 82.5,
+        "data": 2
+      }
+    }
+  ],
+  "mandate": null,
+  "wall_seconds": 58.4
+}
