@@ -94,8 +94,29 @@ figure.map figcaption { color: var(--muted); font-size: 14px; margin-top: 10px; 
 .map .lbl.red { fill: var(--red); font-weight: 600; }
 .map .lbl.blue { fill: var(--blue); font-weight: 600; }
 .map .terr { font-size: 15px; font-weight: 700; letter-spacing: 0.04em; }
+.map .lbl.b { font-size: 12.5px; font-weight: 700; }
 .maplegend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
 .maplegend i { display: inline-block; width: 11px; height: 11px; margin-right: 5px; vertical-align: -1px; }
+
+/* "this game" data panel under the map */
+.gamepanel { border: 1px solid var(--line); border-radius: 10px; background: var(--panel);
+  padding: 14px 16px; margin: 12px 0 6px; }
+.gp-head { font-size: 14.5px; margin-bottom: 12px; }
+.gp-head .chip { margin: 0 1px; }
+.gp-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.gp-stats > div { display: flex; flex-direction: column; gap: 2px; }
+.gp-stats b { font-family: var(--mono); font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+.gp-stats span { font-size: 11.5px; color: var(--muted); line-height: 1.25; }
+.gp-turns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+.gp-turns .t { flex: 1 1 0; min-width: 92px; border: 1px solid var(--line); border-radius: 7px;
+  padding: 7px 9px; background: var(--bg); }
+.gp-turns .t .tn { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.gp-turns .t .row { font-size: 12px; display: flex; justify-content: space-between; }
+.gp-turns .t .row .v { font-family: var(--mono); }
+.gp-turns .t .row .red { color: var(--red); } .gp-turns .t .row .blue { color: var(--blue); }
+@media (max-width: 560px) {
+  .gp-stats { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* --- leaderboard --- */
 .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 14px; }

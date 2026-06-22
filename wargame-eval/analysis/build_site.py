@@ -41,6 +41,52 @@ def short(model: str) -> str:
     return model_label(model)
 
 
+def pick_featured(valid: list) -> dict | None:
+    """Choose one representative game to drive the theater map.
+
+    We want a game that tells the "take Taiwan" story: prefer a Chinese model on
+    the RED (invader) side, then the most ports/airfields taken, then the most
+    lodgment ashore, then the highest continuous Chinese-success score. The
+    per-turn timeline (lift committed, sunk crossing vs. by air, lodgment, fleet
+    remaining) is what the map renders.
+    """
+    timelined = [g for g in valid if (g.metrics or {}).get("timeline")]
+    if not timelined:
+        return None
+
+    def key(gr):
+        m = gr.metrics or {}
+        tl = m["timeline"]
+        last = tl[-1]
+        red_cn = model_origin(gr.red_model) in CHINESE_ORIGINS
+        return (red_cn, last.get("facilities_captured", 0),
+                last.get("lodgment_total", 0.0), gr.red_score)
+
+    best = max(timelined, key=key)
+    tl = best.metrics["timeline"]
+    last = tl[-1]
+    sunk_crossing = sum(r.get("sunk_crossing", 0) for r in tl)
+    sunk_air = sum(r.get("sunk_air", 0) for r in tl)
+    return {
+        "red": short(best.red_model), "blue": short(best.blue_model),
+        "red_cn": model_origin(best.red_model) in CHINESE_ORIGINS,
+        "blue_cn": model_origin(best.blue_model) in CHINESE_ORIGINS,
+        "outcome": best.victory_class, "winner": best.winner or "DRAW",
+        "committed_total": sum(r.get("committed", 0) for r in tl),
+        "sunk_crossing": sunk_crossing, "sunk_air": sunk_air,
+        "sunk_total": sunk_crossing + sunk_air,
+        "lodgment": last.get("lodgment_total", 0.0),
+        "facilities": last.get("facilities_captured", 0),
+        "taiwan_ground": last.get("taiwan_ground", 0.0),
+        "amphib_initial": last.get("amphib_initial", 0),
+        "amphib_remaining": last.get("amphib_remaining", 0),
+        "timeline": [{k: r.get(k) for k in
+                      ("turn", "committed", "sunk_crossing", "sunk_air",
+                       "lodgment_total", "amphib_remaining", "taiwan_ground",
+                       "facilities_captured")} for r in tl],
+    }
+
+
 def build_run(path: str) -> dict | None:
     d = json.load(open(path))
     all_games, valid = [], []
@@ -58,7 +104,11 @@ def build_run(path: str) -> dict | None:
     perf = side_performance(valid)
     fb = d.get("total_fallbacks", {})
     models = []
-    for m in sorted(elo, key=lambda x: elo[x], reverse=True):
+    # Headline metric is OFFENSE — how far a model gets as the invader (can it take
+    # Taiwan?). Sort by it, ties broken by the better defense.
+    order = sorted(elo, key=lambda x: (-perf[x]["offense_red_score"],
+                                       perf[x]["defense_conceded"]))
+    for m in order:
         origin = model_origin(m)
         models.append({
             "model": m, "label": short(m), "origin": origin,
@@ -70,21 +120,23 @@ def build_run(path: str) -> dict | None:
             "defense": perf[m]["defense_conceded"],
             "fallbacks": fb.get(m, 0),
         })
-    scenario = ("Base case — US in from turn 1, Japan engaged"
-                if d.get("us_entry", 1) == 1 and not d.get("japan_neutral")
-                else f"Excursion — US entry turn {d.get('us_entry')}, "
-                     f"Japan {'neutral' if d.get('japan_neutral') else 'engaged'}")
-    # A run that pits Claude against the Chinese open models is the cross-provider
-    # headline — label it as such (the base-case detail moves into the prose below).
+    balance = d.get("balance", "historical")
+    if balance == "competitive":
+        scenario = "Competitive — maximal PLA sealift, US entry T+2"
+    elif d.get("us_entry", 1) == 1 and not d.get("japan_neutral"):
+        scenario = "Historical base case — defender-favored"
+    else:
+        scenario = (f"Excursion — US entry turn {d.get('us_entry')}, "
+                    f"Japan {'neutral' if d.get('japan_neutral') else 'engaged'}")
     cross = any(m["cn"] for m in models) and any(not m["cn"] for m in models)
-    if cross:
-        scenario = "Cross-provider — frontier Claude vs Chinese open models"
     label = os.path.basename(os.path.dirname(path)).replace("real_run_", "").replace("real_run", "base")
     return {
-        "label": label, "scenario": scenario, "cross": cross, "turns": d.get("turns"),
+        "label": label, "scenario": scenario, "cross": cross,
+        "competitive": balance == "competitive", "turns": d.get("turns"),
         "n_games": len(all_games), "n_valid": len(valid),
         "n_degraded": len(all_games) - len(valid),
         "models": models,
+        "featured_game": pick_featured(valid),
         "games": [{"red": short(gr.red_model), "blue": short(gr.blue_model),
                    "outcome": gr.victory_class, "winner": gr.winner or "DRAW",
                    "degraded": deg} for gr, deg in all_games],
@@ -97,8 +149,8 @@ def main() -> None:
         r = build_run(path)
         if r:
             runs.append(r)
-    # Feature the cross-provider (Claude vs Chinese) run first, then by sample size.
-    runs.sort(key=lambda r: (not r.get("cross"), -r["n_valid"]))
+    # Feature the competitive cross-provider run first, then by sample size.
+    runs.sort(key=lambda r: (not r.get("competitive"), not r.get("cross"), -r["n_valid"]))
     data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs}
     out = os.path.join(ROOT, "site", "data.js")
     os.makedirs(os.path.dirname(out), exist_ok=True)

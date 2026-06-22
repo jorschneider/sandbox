@@ -18,7 +18,7 @@ import zlib
 
 from wargame_eval.agents.providers import make_commander
 from wargame_eval.engine import Engine
-from wargame_eval.scenario import build_base_case
+from wargame_eval.scenario import build_base_case, build_competitive_case
 from wargame_eval.scoring import GameResult, elo_ratings, extract_metrics, win_table
 
 def _env(name, default):
@@ -36,7 +36,17 @@ TURNS = int(_env("WG_TURNS", "4"))
 GROUND_MAP = _env("WG_GROUND", "0") == "1"
 US_ENTRY = int(_env("WG_US_ENTRY", "1"))
 JAPAN_NEUTRAL = _env("WG_JP_NEUTRAL", "0") == "1"
+# "competitive" = balanced eval scenario (build_competitive_case); "historical" =
+# the defender-favored base case (build_base_case with US_ENTRY / JAPAN_NEUTRAL).
+BALANCE = _env("WG_BALANCE", "competitive")
 LABEL = _env("WG_LABEL", "base")  # results file suffix
+
+
+def _build_state(seed: int):
+    if BALANCE == "competitive":
+        return build_competitive_case(seed=seed, max_turns=TURNS)
+    return build_base_case(seed=seed, max_turns=TURNS, us_entry_turn=US_ENTRY,
+                           japan_engaged=not JAPAN_NEUTRAL)
 
 OUT = os.path.join(os.path.dirname(__file__), f"real_run_{LABEL}")
 os.makedirs(OUT, exist_ok=True)
@@ -49,9 +59,7 @@ def main() -> None:
     for a, b in itertools.permutations(MODELS, 2):
         for k in range(GAMES_PER_PAIR):
             seed = 1000 * k + zlib.crc32(f"{a}|{b}".encode()) % 997  # deterministic
-            state = build_base_case(seed=seed, max_turns=TURNS,
-                                    us_entry_turn=US_ENTRY,
-                                    japan_engaged=not JAPAN_NEUTRAL)
+            state = _build_state(seed)
             red = make_commander(a, seed=seed * 2 + 1)
             blue = make_commander(b, seed=seed * 2 + 2)
             engine = Engine(state, red, blue, ground_map=GROUND_MAP)
@@ -73,6 +81,7 @@ def main() -> None:
             gr.metrics["red_fallbacks"] = red.fallback_count
             gr.metrics["blue_fallbacks"] = blue.fallback_count
             gr.metrics["degraded"] = degraded
+            gr.metrics["timeline"] = engine.timeline   # per-turn lift / attrition
             results.append(gr)
             fallbacks[a] = fallbacks.get(a, 0) + red.fallback_count
             fallbacks[b] = fallbacks.get(b, 0) + blue.fallback_count
@@ -92,7 +101,8 @@ def main() -> None:
     elo = elo_ratings(valid)
     summary = {
         "models": MODELS, "games_per_pair": GAMES_PER_PAIR, "turns": TURNS,
-        "ground_map": GROUND_MAP, "us_entry": US_ENTRY, "japan_neutral": JAPAN_NEUTRAL,
+        "ground_map": GROUND_MAP, "balance": BALANCE,
+        "us_entry": US_ENTRY, "japan_neutral": JAPAN_NEUTRAL,
         "n_games": len(results), "elapsed_sec": round(time.time() - t0, 1),
         "win_table": wt, "elo": elo, "total_fallbacks": fallbacks,
         "games": [g.__dict__ for g in results],

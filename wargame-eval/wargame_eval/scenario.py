@@ -13,10 +13,15 @@ from .state import Airbase, BlueNaval, Facility, GameState, Owner, RedNaval, Sid
 
 
 def build_base_case(seed: int = 0, max_turns: int = 8,
-                    us_entry_turn: int = 1, japan_engaged: bool = True) -> GameState:
+                    us_entry_turn: int = 1, japan_engaged: bool = True,
+                    amphib_flotillas: int = 6, taiwan_ground: float = 100.0,
+                    taiwan_reinforce: float = 5.0) -> GameState:
     """Build the base case. Excursions (rulebook Table 1A): `us_entry_turn` > 1
     delays US combat entry; `japan_engaged=False` makes Japan strictly neutral
-    (US operations from Japanese bases — Kadena/Iwakuni/Misawa — are denied)."""
+    (US operations from Japanese bases — Kadena/Iwakuni/Misawa — are denied).
+
+    `amphib_flotillas`, `taiwan_ground`, and `taiwan_reinforce` are balance knobs
+    (the historical base case is 6 / 100 / 5); see `build_competitive_case`."""
     bases: dict[str, Airbase] = {}
 
     # --- Blue (US/Japan) airbases — Table 2B laydown (counts APPROX) ----------
@@ -64,8 +69,9 @@ def build_base_case(seed: int = 0, max_turns: int = 8,
     ]
 
     # --- Naval ----------------------------------------------------------------
-    # Red: six amphibious flotillas, SAG escorts, ~12 picket groups, submarines.
-    red_naval = RedNaval(amphib_flotillas=6, sags=8, pickets=12, submarines=12)
+    # Red: amphibious flotillas (6 historical), SAG escorts, ~12 picket groups, subs.
+    red_naval = RedNaval(amphib_flotillas=amphib_flotillas, sags=8, pickets=12,
+                         submarines=12)
     # Blue: Table 2A — CSG x2, SAG x3, SUBRON x3, ARG x1.
     blue_naval = BlueNaval(csg=2, sag=3, subron=3, arg=1, subron_on_barrier=1)
 
@@ -92,10 +98,26 @@ def build_base_case(seed: int = 0, max_turns: int = 8,
         red_naval=red_naval,
         blue_naval=blue_naval,
         red_missiles=red_missiles,
-        taiwan_ground=100.0,   # APPROX aggregate Taiwanese ground defense
+        taiwan_ground=taiwan_ground,   # APPROX aggregate Taiwanese ground defense
         pla_lodgment=0.0,
         pla_supply=0.0,
         initial_amphib_flotillas=red_naval.amphib_flotillas,
         japan_engaged=japan_engaged,
         us_entry_turn=us_entry_turn,   # base case: US in from the beginning
+        taiwan_reinforce=taiwan_reinforce,
     )
+
+
+def build_competitive_case(seed: int = 0, max_turns: int = 8) -> GameState:
+    """A deliberately *balanced* scenario for the eval (not the historical base
+    case, which is strongly defender-favored — the CSIS finding).
+
+    It models a near-best-case Chinese attempt: a maximal sealift (civilian
+    RO/RO ferries surged alongside the navy's amphibs), a one-turn lag in US
+    combat entry, and a Taiwanese ground force that mobilizes more slowly. The
+    point is a contest whose outcome depends on *how well each side is played*,
+    so good and bad command separate — rather than a near-deterministic defense.
+    """
+    return build_base_case(seed=seed, max_turns=max_turns, us_entry_turn=2,
+                           japan_engaged=True, amphib_flotillas=11,
+                           taiwan_ground=68.0, taiwan_reinforce=2.0)

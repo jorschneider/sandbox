@@ -23,13 +23,16 @@
 <div class="wrap">
 
   <header class="hero">
-    <h1>WarBench</h1>
-    <p class="tag">Can a language model command a war?</p>
-    <p class="lede">Frontier models play <em>both sides</em> of the CSIS Taiwan Operational
-      Wargame against each other &mdash; <span class="sides"><span class="chip red">RED · China</span>
+    <h1>Can Chinese models take&nbsp;Taiwan?</h1>
+    <p class="tag">We put frontier and Chinese open models in command of a 2028 invasion &mdash;
+      and scored how far each one got.</p>
+    <p class="lede">In the CSIS Taiwan Operational Wargame, each model commands <em>both sides</em>
+      &mdash; <span class="sides"><span class="chip red">RED · China</span>
       vs <span class="chip blue">BLUE · US / Japan / Taiwan</span></span> &mdash; while a
-      deterministic, rules-faithful engine adjudicates every move. The benchmark measures
-      multi-turn adversarial <em>command</em>, not one-shot task skill.</p>
+      deterministic, rules-faithful engine adjudicates every move. The headline number is
+      <strong>offense</strong>: how much of Taiwan a model seizes when it runs the PLA. Frontier
+      Claude and the leading Chinese open models &mdash; <strong>DeepSeek, Qwen, GLM</strong> &mdash;
+      each take their turn as the invader.</p>
     <p class="byline">A research prototype built on the published CSIS wargame
       &ldquo;The First Battle of the Next War.&rdquo; <span id="genline"></span></p>
   </header>
@@ -89,14 +92,15 @@
   </section>
 
   <section id="theater">
-    <p class="eyebrow">The theater</p>
-    <h2>What the two commanders are fighting over</h2>
+    <p class="eyebrow">The theater · a real game</p>
+    <h2 id="map-title">Watch a model try to take Taiwan</h2>
     <p>The whole campaign turns on a hundred miles of water. <span class="chip red">RED</span>
       opens with a missile barrage to suppress coalition airpower, then pushes an
       <strong>amphibious lift</strong> across the Taiwan Strait to seize the island&rsquo;s western
       ports and airfields before help arrives. <span class="chip blue">BLUE</span> sinks that fleet
       from beneath the sea and from the air, keeps the airbases at Kadena flying, and feeds carriers
-      and reinforcements in from Guam. The map below is the board both models are reading.</p>
+      and reinforcements in from Guam. The numbers on the map are an <em>actual game</em> from the
+      featured scenario &mdash; the lift committed, what the defenders sank, and what got ashore.</p>
 
     <figure class="map">
       <svg viewBox="0 0 720 430" role="img"
@@ -147,7 +151,8 @@
           <path d="M214,210 Q322,214 430,238" marker-end="url(#ahRed)"/>
           <path d="M216,250 Q322,266 436,292" marker-end="url(#ahRed)"/>
         </g>
-        <text class="lbl red" x="270" y="246">amphibious lift</text>
+        <text class="lbl red" x="232" y="200">amphibious lift</text>
+        <text class="lbl red b" id="m_lift" x="232" y="276">&nbsp;</text>
 
         <!-- PLA missile / air bases on the coast -->
         <g fill="#b23a2e">
@@ -165,6 +170,7 @@
           <ellipse cx="349" cy="276" rx="8" ry="3.4"/>
         </g>
         <text class="lbl blue" x="338" y="352" text-anchor="middle">submarine + picket screen</text>
+        <text class="lbl blue b" id="m_sunk" x="338" y="338" text-anchor="middle">&nbsp;</text>
 
         <!-- Taiwan objectives: ports &amp; airfields RED must seize (gold diamonds) -->
         <g fill="#caa23a" stroke="#8a6d1c" stroke-width="1">
@@ -172,7 +178,9 @@
           <path d="M440,235 l6,6 l-6,6 l-6,-6 Z"/>
           <path d="M450,300 l6,6 l-6,6 l-6,-6 Z"/>
         </g>
-        <text class="lbl sm" x="516" y="248">ports &amp;<tspan x="516" dy="13">airfields</tspan></text>
+        <text class="lbl sm" x="516" y="214">ports &amp;<tspan x="516" dy="13">airfields</tspan></text>
+        <text class="lbl red b" id="m_ashore" x="516" y="252">&nbsp;</text>
+        <text class="lbl red b" id="m_taken" x="516" y="268">&nbsp;</text>
 
         <!-- BLUE carriers / coalition airpower east of Taiwan + Kadena -->
         <g fill="#28508c">
@@ -187,11 +195,24 @@
               stroke-linecap="round" marker-end="url(#ahBlue)"/>
         <text class="lbl blue" x="708" y="276" text-anchor="end">reinforcements from Guam</text>
       </svg>
-      <figcaption>RED suppresses coalition airpower with missiles and runs an amphibious lift across
-        the strait to seize Taiwan&rsquo;s western ports and airfields; BLUE sinks the lift with
-        submarines and air, holds Kadena, and surges carriers and reinforcements from Guam. A game
-        is decided by how much of that lift gets ashore &mdash; and survives.</figcaption>
+      <figcaption id="map-cap">RED runs an amphibious lift across the strait to seize Taiwan&rsquo;s
+        western ports and airfields; BLUE sinks the lift with submarines and air, holds Kadena, and
+        surges reinforcements from Guam. A game is decided by how much of that lift gets ashore
+        &mdash; and survives.</figcaption>
     </figure>
+
+    <div class="gamepanel" id="gamepanel" hidden>
+      <div class="gp-head" id="gp_head"></div>
+      <div class="gp-stats">
+        <div><b id="gp_committed">—</b><span>flotillas committed</span></div>
+        <div><b id="gp_sunk">—</b><span>sunk crossing / by air</span></div>
+        <div><b id="gp_lodg">—</b><span>lodgment ashore</span></div>
+        <div><b id="gp_fac">—</b><span>ports &amp; airfields taken</span></div>
+        <div><b id="gp_fleet">—</b><span>amphib fleet surviving</span></div>
+      </div>
+      <div class="gp-turns" id="gp_turns"></div>
+    </div>
+
     <div class="maplegend">
       <span><i style="background:#b23a2e"></i>PLA missile / air base</span>
       <span><i style="background:#b23a2e;opacity:.5"></i>missile salvo &amp; amphibious lift</span>
@@ -221,14 +242,18 @@
 
   <section id="scoring">
     <p class="eyebrow">Scoring</p>
-    <h2>Win/loss is only the start</h2>
-    <p>The base scenario is strongly <strong>defender-favored</strong> &mdash; the coalition usually
-      repels the invasion, which is itself the CSIS finding. With sides swapped each pairing, that
-      ties win-rate and Elo at .500, so WarBench reports several signals:</p>
+    <h2>Offense is the headline</h2>
+    <p>The CSIS <em>historical</em> base case is strongly <strong>defender-favored</strong> &mdash;
+      the coalition almost always repels the invasion, which is itself the report&rsquo;s finding. But
+      that makes a poor benchmark: if everyone loses as RED, nothing separates the models. So the
+      featured run uses a <strong>balanced scenario</strong> &mdash; a maximal PLA sealift and a
+      one-turn lag in US entry &mdash; calibrated so the invasion is genuinely winnable and the
+      outcome depends on <em>how well each side is played</em>. (The historical case is still on the
+      board, for honesty.) Each model commands both sides, so WarBench reports:</p>
     <ul class="clean">
+      <li><b>Offense</b> &mdash; the headline: how much of Taiwan a model takes as <span class="chip red">RED</span> (a continuous score from lodgment, force ratio, fleet survival). Higher is a better invader.</li>
+      <li><b>Defense</b> &mdash; how little it concedes as <span class="chip blue">BLUE</span>. Lower is a better defender.</li>
       <li><b>Outcome &amp; Elo</b> &mdash; head-to-head on the victory spectrum, sides swapped to cancel side advantage.</li>
-      <li><b>Offense</b> &mdash; how far a model got as <span class="chip red">RED</span> (a continuous score from lodgment, force ratio, fleet survival). Higher is a better invader.</li>
-      <li><b>Defense</b> &mdash; how little it conceded as <span class="chip blue">BLUE</span>. Lower is a better defender.</li>
       <li><b>Reliability</b> &mdash; how often a model failed to produce a legal, parseable order and fell back to a scripted baseline. Lower is better.</li>
     </ul>
     <p class="muted">Games where the live API rate-limited so badly that a side mostly fell back to
@@ -245,9 +270,10 @@
     <p class="runmeta" id="runmeta"></p>
     <table class="board" id="board">
       <thead><tr>
-        <th class="model">Model</th><th>Elo</th><th>Win&nbsp;rate</th>
-        <th title="Mean Chinese-success score as RED (higher = better invader)">Offense</th>
-        <th title="Mean score conceded as BLUE (lower = better defender)">Defense</th>
+        <th class="model">Model</th>
+        <th title="How much of Taiwan it seizes as RED — the headline metric (higher = better invader)">Offense&nbsp;↗</th>
+        <th title="Mean Chinese-success score conceded as BLUE (lower = better defender)">Defense</th>
+        <th>Win&nbsp;rate</th><th>Elo</th>
         <th title="Fallbacks to the scripted baseline (lower = better)">Fallbacks</th>
       </tr></thead>
       <tbody></tbody>
@@ -301,12 +327,63 @@
   });
 
   function fmt(x) { return (x === null || x === undefined) ? '—' : x; }
+  function setText(id, s) { var e = document.getElementById(id); if (e) e.textContent = s; }
+
+  // Drive the theater map from one real game's lift / attrition timeline.
+  function renderMap(run) {
+    var f = run && run.featured_game;
+    var panel = document.getElementById('gamepanel');
+    if (!f) {
+      panel.hidden = true;
+      ['m_lift', 'm_sunk', 'm_ashore', 'm_taken'].forEach(function (id) { setText(id, ' '); });
+      return;
+    }
+    panel.hidden = false;
+    function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+    // on-map badges
+    setText('m_lift', plural(f.committed_total, 'flotilla') + ' committed');
+    setText('m_sunk', plural(f.sunk_total, 'flotilla') + ' sunk');
+    setText('m_ashore', f.lodgment + ' ashore');
+    setText('m_taken', f.facilities + (f.facilities === 1 ? ' port taken' : ' taken'));
+    // panel
+    document.getElementById('gp_head').innerHTML =
+      'A representative game &mdash; <span class="chip red">' + f.red + '</span> invades, ' +
+      '<span class="chip blue">' + f.blue + '</span> defends &rarr; <strong>' +
+      f.outcome.replace(/_/g, ' ').toLowerCase() + '</strong>' +
+      (f.red_cn ? ' &nbsp;<span class="origin cn">Chinese model on offense</span>' : '');
+    setText('gp_committed', f.committed_total);
+    setText('gp_sunk', f.sunk_crossing + ' / ' + f.sunk_air);
+    setText('gp_lodg', f.lodgment);
+    setText('gp_fac', f.facilities);
+    setText('gp_fleet', f.amphib_remaining + ' / ' + f.amphib_initial);
+    var t = document.getElementById('gp_turns');
+    t.innerHTML = '';
+    (f.timeline || []).forEach(function (r) {
+      var d = document.createElement('div');
+      d.className = 't';
+      d.innerHTML =
+        '<div class="tn">TURN ' + r.turn + '</div>' +
+        '<div class="row"><span>committed</span><span class="v red">' + r.committed + '</span></div>' +
+        '<div class="row"><span>sunk</span><span class="v blue">' +
+          (r.sunk_crossing + r.sunk_air) + '</span></div>' +
+        '<div class="row"><span>lodgment</span><span class="v">' + r.lodgment_total + '</span></div>';
+      t.appendChild(d);
+    });
+    document.getElementById('map-cap').innerHTML =
+      'An actual game from the featured scenario: <strong>' + f.red + '</strong> (RED) ran ' +
+      f.committed_total + ' flotilla-crossings at Taiwan; the defenders sank ' + f.sunk_total +
+      ' (' + f.sunk_crossing + ' to submarines, ' + f.sunk_air + ' to air strike), leaving ' +
+      f.lodgment + ' lodgment ashore and ' + f.facilities + ' port/airfield' +
+      (f.facilities === 1 ? '' : 's') + ' taken &mdash; outcome <strong>' +
+      f.outcome.replace(/_/g, ' ').toLowerCase() + '</strong>.';
+  }
 
   function render() {
     Array.prototype.forEach.call(tabs.children, function (b, i) {
       b.className = 'tab' + (i === active ? ' active' : '');
     });
     var run = D.runs[active];
+    renderMap(run);
     document.getElementById('runmeta').innerHTML =
       '<strong>' + run.scenario + '.</strong> ' + run.n_valid + ' valid games' +
       (run.n_degraded ? ' (' + run.n_degraded + ' degraded, excluded)' : '') +
@@ -324,10 +401,10 @@
       var origin = m.origin ? ' <span class="origin' + (m.cn ? ' cn' : '') + '">' + m.origin + '</span>' : '';
       tr.innerHTML =
         '<td class="model">' + m.label + origin + '</td>' +
-        '<td><span class="num">' + m.elo + '</span></td>' +
-        '<td><span class="num">' + Math.round(m.win_rate * 100) + '%</span></td>' +
         '<td><span class="bar off" style="width:' + offW + 'px"></span> <span class="num">' + fmt(m.offense) + '</span></td>' +
         '<td><span class="bar def" style="width:' + defW + 'px"></span> <span class="num">' + fmt(m.defense) + '</span></td>' +
+        '<td><span class="num">' + Math.round(m.win_rate * 100) + '%</span></td>' +
+        '<td><span class="num">' + m.elo + '</span></td>' +
         '<td class="' + fbCls + '"><span class="num">' + m.fallbacks + '</span></td>';
       tb.appendChild(tr);
     });
@@ -348,9 +425,12 @@
     var best = run.models.slice().sort(function (a, b) { return (b.offense||0)-(a.offense||0); })[0];
     var safe = run.models.slice().sort(function (a, b) { return (a.defense||1)-(b.defense||1); })[0];
     var reliable = run.models.slice().sort(function (a, b) { return a.fallbacks - b.fallbacks; })[0];
+    var lead = run.competitive
+      ? 'In a balanced scenario where the invasion is genuinely winnable, '
+      : 'In a defender-favored, small-sample setting, ';
     var read =
-      '<strong>The honest read.</strong> In a defender-favored, small-sample setting, ' +
-      'offense/defense skill and reliability separate the field more cleanly than Elo. Here the ' +
+      '<strong>The honest read.</strong> ' + lead +
+      'offense is the headline: who takes the most of Taiwan as RED. Here the ' +
       'best invader was <strong>' + best.label + '</strong> (offense ' + fmt(best.offense) + '), the ' +
       'best defender <strong>' + safe.label + '</strong> (conceded ' + fmt(safe.defense) + '), and the ' +
       'most reliable order-generator <strong>' + reliable.label + '</strong> (' + reliable.fallbacks + ' fallbacks).';
@@ -359,10 +439,10 @@
       if (best.cn) cnLeads.push('offense');
       if (safe.cn) cnLeads.push('defense');
       read += cnLeads.length
-        ? ' This is a cross-provider field, and a Chinese open model leads on ' +
-          cnLeads.join(' and ') + ' &mdash; the open models are clearly in contention.'
-        : ' This is a cross-provider field; the Chinese open models trail the frontier on ' +
-          'skill here but mostly match it on reliability.';
+        ? ' And the answer to the headline: a <strong>Chinese open model leads on ' +
+          cnLeads.join(' and ') + '</strong> &mdash; the open models can take Taiwan about as well as the frontier.'
+        : ' On the headline question, the Chinese open models trail the frontier on skill here, ' +
+          'though they mostly match it on reliability.';
     }
     document.getElementById('readout').innerHTML = read;
   }

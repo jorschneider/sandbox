@@ -61,6 +61,8 @@ class Engine:
         self.blue = blue
         self.rng = GameRNG(state.seed)
         self.transcript: list[dict] = []
+        self.timeline: list[dict] = []      # per-turn lift / attrition record
+        self._tstats: dict = {}
         self.ground = None
         self._objective = None
         if ground_map:
@@ -127,7 +129,7 @@ class Engine:
             s.bases["Guam"].aircraft["5th"] = s.bases["Guam"].aircraft.get("5th", 0) + 1
         # Taiwanese reserves trickle in early.
         if s.turn <= 3:
-            s.taiwan_ground += 5.0
+            s.taiwan_ground += s.taiwan_reinforce
 
     def phase_missiles(self) -> None:
         s = self.state
@@ -218,6 +220,7 @@ class Engine:
             off_beach, self.rng)
         s.red_naval.amphib_flotillas = max(0, s.red_naval.amphib_flotillas - r["flotillas_sunk"])
         s.red_naval.pickets = max(0, s.red_naval.pickets - r["pickets_lost"])
+        self._tstats["sunk_air"] = r["flotillas_sunk"]
         s.record_loss(Side.RED, "amphib_flotillas", r["flotillas_sunk"])
         s.record_loss(Side.RED, "pickets", r["pickets_lost"])
         s.log_event("AIR", "strike amphibs", **r)
@@ -273,10 +276,12 @@ class Engine:
         if commit <= 0:
             s.log_event("AMPHIB", "no flotillas committed")
             return
+        self._tstats["committed"] = commit
         # Submarine barrier attrition on the crossing.
         sunk = calc.resolve_submarine_barrier(s.blue_naval.subron_on_barrier, commit, self.rng)
         s.red_naval.amphib_flotillas = max(0, s.red_naval.amphib_flotillas - sunk)
         s.record_loss(Side.RED, "amphib_flotillas", sunk)
+        self._tstats["sunk_crossing"] = sunk
         survivors = max(0, commit - sunk)
         # Faithful lift: CSIS AmphibiousTF formula (60 * amphib units afloat / 36,
         # with a 1.5x turn-1 surge). Each surviving flotilla carries 6 amphib units.
@@ -290,6 +295,8 @@ class Engine:
             self.ground.land(self._objective, delivered)
         else:
             s.pla_lodgment += delivered
+        self._tstats["survivors"] = survivors
+        self._tstats["lodgment_delivered"] = round(delivered, 1)
         s.log_event("AMPHIB", "landing", committed=commit, sunk_crossing=sunk,
                     survivors=survivors, lodgment_delivered=round(delivered, 1),
                     objective=self._objective)
@@ -344,6 +351,8 @@ class Engine:
     # -- turn / game -----------------------------------------------------------
 
     def run_turn(self) -> None:
+        self._tstats = {"committed": 0, "sunk_crossing": 0, "sunk_air": 0,
+                        "survivors": 0, "lodgment_delivered": 0.0}
         self.phase_reinforce()
         self.phase_missiles()
         support = self.phase_air()
@@ -352,12 +361,32 @@ class Engine:
         self.phase_ground(support)
         self.phase_repair_and_equalize()
 
+    def _record_turn(self, result: VictoryResult) -> None:
+        """Append this turn's lift / attrition snapshot (drives the theater map)."""
+        s = self.state
+        self.timeline.append({
+            "turn": s.turn,
+            "committed": self._tstats.get("committed", 0),
+            "sunk_crossing": self._tstats.get("sunk_crossing", 0),  # submarine barrier
+            "sunk_air": self._tstats.get("sunk_air", 0),            # anti-ship strike
+            "survivors": self._tstats.get("survivors", 0),
+            "lodgment_delivered": self._tstats.get("lodgment_delivered", 0.0),
+            "lodgment_total": round(s.pla_lodgment, 1),
+            "amphib_remaining": s.red_naval.amphib_flotillas,
+            "amphib_initial": s.initial_amphib_flotillas,
+            "taiwan_ground": round(s.taiwan_ground, 1),
+            "facilities_captured": sum(1 for f in s.facilities if f.owner == Owner.CHINA),
+            "red_score": result.red_score,
+            "class": result.klass.value,
+        })
+
     def run(self) -> VictoryResult:
         for t in range(1, self.state.max_turns + 1):
             self.state.turn = t
             self.run_turn()
             result = evaluate(self.state)
             self.state.metrics[f"turn{t}_class"] = result.klass.value
+            self._record_turn(result)
             # Decisive outcomes end the game early.
             if result.klass in (VictoryClass.CHINESE_VICTORY, VictoryClass.CHINESE_DEFEAT):
                 self.state.log_event("GAME", "decisive outcome", klass=result.klass.value)

@@ -108,6 +108,7 @@ class GameState:
     initial_amphib_flotillas: int = 1
     japan_engaged: bool = True
     us_entry_turn: int = 1
+    taiwan_reinforce: float = 5.0   # Taiwanese reserves added per turn (turns 1-3)
 
     losses: dict[str, dict[str, float]] = field(default_factory=dict)
     metrics: dict[str, float] = field(default_factory=dict)
