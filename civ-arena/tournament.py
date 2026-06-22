@@ -58,7 +58,8 @@ def main():
         sys.exit("No major civs in save.")
 
     default_model = cfg["LLM"]["default_model"]
-    base = [seats.get(c, {}).get("model", default_model) for c in civs]
+    seat_lc = {k.lower(): v for k, v in seats.items()}   # save civ names are capitalized
+    base = [(seat_lc.get(c.lower()) or {}).get("model", default_model) for c in civs]
     if args.demo and not seats:
         base = [f"demo/model-{chr(65 + i)}" for i in range(len(civs))]
     pool = list(dict.fromkeys(base)) or [f"demo/model-{chr(65 + i)}" for i in range(len(civs))]

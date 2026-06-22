@@ -82,11 +82,23 @@ def bootstrap_config(models_path, want_models):
 
 
 def build_caller(providers):
-    key = providers.get("openrouter_api_key", "")
+    # OpenAI-compatible path: OpenRouter (one key, many vendors) OR direct OpenAI
+    # (or any compatible endpoint). Keys may come from models.yaml or the
+    # environment, so you never have to write a secret into a file.
+    orouter = providers.get("openrouter_api_key") or os.environ.get("OPENROUTER_API_KEY")
+    openai_key = providers.get("openai_api_key") or os.environ.get("OPENAI_API_KEY")
+    if orouter:
+        base, key = providers.get("openrouter_base_url") or "https://openrouter.ai/api/v1", orouter
+    elif openai_key:
+        base = (providers.get("openai_base_url") or os.environ.get("OPENAI_BASE_URL")
+                or "https://api.openai.com/v1")
+        key = openai_key
+    else:
+        base = key = None
+
     if key:
         from openai import OpenAI
-        client = OpenAI(base_url=providers.get("openrouter_base_url", "https://openrouter.ai/api/v1"),
-                        api_key=key, default_headers={"X-Title": "civ-arena"})
+        client = OpenAI(base_url=base, api_key=key, default_headers={"X-Title": "civ-arena"})
 
         def call(model, prompt):
             r = client.chat.completions.create(
@@ -94,12 +106,21 @@ def build_caller(providers):
                 max_tokens=700, temperature=0.8)
             return r.choices[0].message.content or ""
         return call
+
     from civagent.workflow import reply as reply_fn
 
     def call(model, prompt):
         r = reply_fn({"prompt": prompt}, model, True)
         return r.message.content if r is not None else ""
     return call
+
+
+def gateway_name(providers):
+    if providers.get("openrouter_api_key") or os.environ.get("OPENROUTER_API_KEY"):
+        return "OpenRouter"
+    if providers.get("openai_api_key") or os.environ.get("OPENAI_API_KEY"):
+        return "OpenAI-compatible"
+    return "CivAgent native"
 
 
 def parse_json(text):
@@ -397,7 +418,8 @@ def main():
     with open(save_path) as f:
         civs_all = major_civs(utils.json_load_defaultdict(f.read()))
     default_model = cfg["LLM"]["default_model"]
-    civ_models = {c: seats.get(c, {}).get("model", default_model) for c in civs_all}
+    seat_lc = {k.lower(): v for k, v in seats.items()}   # save civ names are capitalized
+    civ_models = {c: (seat_lc.get(c.lower()) or {}).get("model", default_model) for c in civs_all}
     if args.demo and not seats:
         civ_models = {c: f"demo/{c.lower()}" for c in civs_all}
 
@@ -405,7 +427,7 @@ def main():
     mode = "DRY-RUN" if args.dry_run else ("DEMO" if args.demo else "LIVE")
     print(f"=== Civ Arena: {mode} ===")
     if live:
-        print(f"gateway={'OpenRouter' if providers.get('openrouter_api_key') else 'CivAgent native'}")
+        print(f"gateway={gateway_name(providers)}")
     live_path = os.path.join(os.path.dirname(os.path.abspath(args.report)), "live.json") if args.live else None
     if args.live:
         print(f"LIVE: serve this dir (python -m http.server) and open report.html — it updates each round")
