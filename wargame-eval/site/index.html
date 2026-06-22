@@ -16,6 +16,7 @@
     <a href="#theater">Map</a>
     <a href="#scoring">Scoring</a>
     <a href="#results">Results</a>
+    <a href="#trashtalk">Trash talk</a>
     <a href="#code">Code</a>
   </nav>
 </div></div>
@@ -289,6 +290,18 @@
     <div class="callout" id="readout"></div>
   </section>
 
+  <section id="trashtalk">
+    <p class="eyebrow">Bonus · graded by an LLM judge</p>
+    <h2>Trash talk</h2>
+    <p>Every commander can drop an in-character taunt at the enemy each turn. So we also asked
+      Claude&nbsp;Opus &mdash; blind to who won &mdash; to grade each model&rsquo;s smack talk on wit,
+      menace, and battlefield specificity. Whether a model bothers to talk trash at all is part of
+      the score.</p>
+    <div class="talk" id="talk"></div>
+    <p class="muted" id="talk-empty" hidden>Trash-talk grades land once the featured run finishes
+      and the judge has scored it.</p>
+  </section>
+
   <section id="code">
     <p class="eyebrow">Reproduce</p>
     <h2>It&rsquo;s all code</h2>
@@ -315,6 +328,7 @@
   var D = window.WARBENCH_DATA || { runs: [] };
   var gen = document.getElementById('genline');
   if (D.generated) gen.textContent = 'Data generated ' + D.generated + '.';
+  renderTrashTalk();                 // independent of the run tabs below
   if (!D.runs.length) return;
 
   var tabs = document.getElementById('tabs');
@@ -329,6 +343,28 @@
 
   function fmt(x) { return (x === null || x === undefined) ? '—' : x; }
   function setText(id, s) { var e = document.getElementById(id); if (e) e.textContent = s; }
+
+  // Trash-talk showcase (LLM-judged). Rendered once from the global grades.
+  function renderTrashTalk() {
+    var talk = D.trash_talk || [];
+    var box = document.getElementById('talk');
+    var empty = document.getElementById('talk-empty');
+    if (!talk.length) { if (empty) empty.hidden = false; return; }
+    if (empty) empty.hidden = true;
+    box.innerHTML = '';
+    talk.forEach(function (t, i) {
+      var c = document.createElement('div');
+      c.className = 'tcard';
+      var origin = t.origin ? '<span class="origin' + (t.cn ? ' cn' : '') + '">' + t.origin + '</span>' : '';
+      c.innerHTML =
+        '<div class="th"><span class="rank">#' + (i + 1) + '</span>' +
+          '<span class="tm">' + t.label + '</span>' + origin +
+          '<span class="score">' + (t.score != null ? t.score.toFixed(1) : '—') + '<small>/10</small></span></div>' +
+        '<blockquote>&ldquo;' + t.best_line + '&rdquo;</blockquote>' +
+        (t.comment ? '<div class="tc">' + t.comment + '</div>' : '');
+      box.appendChild(c);
+    });
+  }
 
   // Drive the theater map from one real game's lift / attrition timeline.
   function renderMap(run) {

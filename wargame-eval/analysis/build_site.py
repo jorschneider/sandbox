@@ -23,6 +23,15 @@ FIELDS = ("red_model", "blue_model", "seed", "victory_class", "winner",
           "red_score", "metrics")
 
 
+def load_grades() -> dict:
+    """Trash-talk grades from analysis/grade_trash_talk.py, if present."""
+    p = os.path.join(HERE, "trash_talk_grades.json")
+    return json.load(open(p)) if os.path.exists(p) else {}
+
+
+GRADES = load_grades()
+
+
 def progress_from_metrics(m: dict) -> float:
     """Continuous Chinese-success score from a game's metrics (see victory.py)."""
     if not m:
@@ -119,6 +128,7 @@ def build_run(path: str) -> dict | None:
             "offense": perf[m]["offense_red_score"],
             "defense": perf[m]["defense_conceded"],
             "fallbacks": fb.get(m, 0),
+            "taunt_score": GRADES.get(m, {}).get("score"),
         })
     balance = d.get("balance", "historical")
     if balance == "competitive":
@@ -151,7 +161,13 @@ def main() -> None:
             runs.append(r)
     # Feature the competitive cross-provider run first, then by sample size.
     runs.sort(key=lambda r: (not r.get("competitive"), not r.get("cross"), -r["n_valid"]))
-    data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs}
+    talk = []
+    for m, g in GRADES.items():
+        origin = model_origin(m)
+        talk.append({"model": m, "label": model_label(m), "origin": origin,
+                     "cn": origin in CHINESE_ORIGINS, **g})
+    talk.sort(key=lambda x: -x.get("score", 0))
+    data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs, "trash_talk": talk}
     out = os.path.join(ROOT, "site", "data.js")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w") as f:
