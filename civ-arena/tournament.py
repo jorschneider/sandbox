@@ -42,6 +42,8 @@ def main():
     ap.add_argument("--rounds", type=int, default=5)
     ap.add_argument("--turns-per-round", type=int, default=4)
     ap.add_argument("--negotiation-rounds", type=int, default=1)
+    ap.add_argument("--concurrency", type=int, default=1,
+                    help="parallel model calls per phase within each match (live speedup)")
     ap.add_argument("--report", default=os.path.join(HERE, "tournament.html"))
     ap.add_argument("--live", action="store_true",
                     help="update tournament_live.json + a live report as matches finish")
@@ -117,7 +119,7 @@ def main():
         civ_models = {civs[i]: pool[(i + m) % len(pool)] for i in range(len(civs))}
         res = arena.run_match(save_path, civ_models, call, rounds=args.rounds,
                               tpr=args.turns_per_round, neg_rounds=args.negotiation_rounds,
-                              demo=args.demo, dry=False, verbose=False)
+                              demo=args.demo, dry=False, verbose=False, concurrency=args.concurrency)
         cards = sorted(res["scorecards"], key=lambda c: c["place"])
         order = [c["model"] for c in cards]
         for c in cards:
