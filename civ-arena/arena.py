@@ -25,6 +25,7 @@ import csv
 import json
 import os
 import random
+import re
 import statistics
 import sys
 import tempfile
@@ -99,12 +100,33 @@ def build_caller(providers):
     if key:
         from openai import OpenAI
         client = OpenAI(base_url=base, api_key=key, default_headers={"X-Title": "civ-arena"})
+        # Reasoning models (o-series, deepseek-r1, *-reasoner/thinking) reject
+        # temperature and want max_completion_tokens + headroom for hidden reasoning.
+        is_reasoning = lambda m: bool(re.search(r"(^|/)(o\d|gpt-5)|reason|think|-r\d", m.lower()))
 
         def call(model, prompt):
-            r = client.chat.completions.create(
-                model=model, messages=[{"role": "user", "content": prompt}],
-                max_tokens=700, temperature=0.8)
-            return r.choices[0].message.content or ""
+            if is_reasoning(model):
+                kw = {"model": model, "messages": [{"role": "user", "content": prompt}],
+                      "max_completion_tokens": 3000}
+            else:
+                kw = {"model": model, "messages": [{"role": "user", "content": prompt}],
+                      "max_tokens": 700, "temperature": 0.8}
+            for attempt in range(4):
+                try:
+                    r = client.chat.completions.create(**kw)
+                    return r.choices[0].message.content or ""
+                except Exception as e:
+                    msg = str(e).lower()
+                    if "max_completion_tokens" in msg and "max_tokens" in kw:      # param-name swap
+                        kw["max_completion_tokens"] = kw.pop("max_tokens"); continue
+                    if "temperature" in msg and "temperature" in kw:               # unsupported temp
+                        kw.pop("temperature"); continue
+                    transient = any(s in msg for s in ("rate limit", "429", "timeout",
+                                    "overloaded", "503", "502", "500", "connection"))
+                    if transient and attempt < 3:
+                        time.sleep(2 ** attempt); continue
+                    raise
+            return ""
         return call
 
     from civagent.workflow import reply as reply_fn

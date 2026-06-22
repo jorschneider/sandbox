@@ -141,7 +141,9 @@ CIVAGENT_DIR=./vendor/CivAgent python tournament.py --config models.yaml \
 It writes `tournament.html`: an **Elo leaderboard** (start 1000, K=24) with win
 rate, average placement, and the summed behavior stats, plus a **head-to-head
 matrix** (how often each model outranked each other). Aggregates per *model*, so
-the same model is pooled across the different civs it played.
+the same model is pooled across the different civs it played. For a meaningful
+Elo, give it **distinct** models (one per seat). Add `--live` and serve the dir
+to watch the leaderboard re-sort as matches finish.
 
 ### Six-civ seed (rank up to six models)
 
@@ -201,9 +203,11 @@ SEED_MAP_SIZE=Large SEED_RNG=7 python generate_seed.py           # bigger map, n
   action is logged and skipped so the match keeps advancing. Expect to iterate
   on the prompts in `arena.py` for your lineup.
 - **Cost.** Each round makes ~`civs` negotiation calls + replies + `civs` action
-  calls + a consent call per bilateral proposal. Reasoning models (o1,
-  deepseek-r1) burn the `max_tokens` budget on hidden reasoning — start with a
-  few rounds and cheap models, then scale.
+  calls + a consent call per bilateral proposal — start with a few rounds and
+  cheap models, then scale. The caller adapts per model (reasoning models like
+  o-series / deepseek-r1 get `max_completion_tokens` + headroom and no
+  `temperature`) and retries transient rate-limit/5xx errors with backoff, so
+  you can mix any OpenRouter models — but reasoning models cost more per call.
 - **Redis must be reachable** before importing CivAgent (`setup.sh` starts a
   local one; override with `REDIS_HOST`/`REDIS_PORT`).
 
