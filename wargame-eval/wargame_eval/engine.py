@@ -32,12 +32,18 @@ _TARGET_BASE = {
 
 
 class Engine:
-    def __init__(self, state: GameState, red: Commander, blue: Commander) -> None:
+    def __init__(self, state: GameState, red: Commander, blue: Commander,
+                 ground_map: bool = False) -> None:
         self.state = state
         self.red = red
         self.blue = blue
         self.rng = GameRNG(state.seed)
         self.transcript: list[dict] = []
+        self.ground = None
+        self._objective = None
+        if ground_map:
+            from .ground import GroundState
+            self.ground = GroundState.build()
 
     # -- helpers ---------------------------------------------------------------
 
@@ -234,7 +240,7 @@ class Engine:
         orders = self._ask(Side.BLUE, "BLUE_NAVAL")
         s.blue_naval.subron_on_barrier = orders["subron_on_barrier"]
 
-    def phase_amphib(self) -> None:
+    def phase_amphib(self, support: dict) -> None:
         s = self.state
         orders = self._ask(Side.RED, "RED_AMPHIB")
         commit = min(orders["flotillas_to_commit"], s.red_naval.amphib_flotillas)
@@ -250,19 +256,35 @@ class Engine:
         # with a 1.5x turn-1 surge). Each surviving flotilla carries 6 amphib units.
         units_afloat = survivors * csis.AMPHIB_UNITS_PER_TF
         delivered = csis.amphib_lift(units_afloat, s.turn)
-        s.pla_lodgment += delivered
         s.pla_supply = survivors * 4.0 + s.functional_facilities_captured() * 10.0
+        if self.ground is not None:
+            # Land on the highest-value still-Taiwanese facility; the axis rolls
+            # up to the next objective once the current one falls.
+            self._objective = self.ground.choose_objective(s)
+            self.ground.land(self._objective, delivered, support.get("red_ground_support", 0))
+        else:
+            s.pla_lodgment += delivered
         s.log_event("AMPHIB", "landing", committed=commit, sunk_crossing=sunk,
-                    survivors=survivors, lodgment_delivered=round(delivered, 1))
+                    survivors=survivors, lodgment_delivered=round(delivered, 1),
+                    objective=self._objective)
 
     def phase_ground(self, support: dict) -> None:
         s = self.state
-        if s.pla_lodgment <= 0:
-            self._ask(Side.RED, "RED_GROUND")  # still record the decision
-            s.log_event("GROUND", "no lodgment ashore")
-            return
         orders = self._ask(Side.RED, "RED_GROUND")
         press = orders["posture"] == "press"
+
+        # Hex ground game (v2): resolve fronts via the CSIS ground CRT.
+        if self.ground is not None:
+            self.ground.resolve(press, self.rng, blue_cas=support.get("blue_ground_support", 0))
+            self.ground.sync_to(s)
+            s.log_event("GROUND", "hex resolution",
+                        pla_strength=round(self.ground.pla_strength(), 1),
+                        taiwan_strength=round(self.ground.taiwan_strength(), 1))
+            return
+
+        if s.pla_lodgment <= 0:
+            s.log_event("GROUND", "no lodgment ashore")
+            return
 
         eff_lodgment = s.pla_lodgment + support.get("red_ground_support", 0) * 0.5
         eff_taiwan = s.taiwan_ground + support.get("blue_ground_support", 0) * 0.5
@@ -298,7 +320,7 @@ class Engine:
         self.phase_missiles()
         support = self.phase_air()
         self.phase_naval()
-        self.phase_amphib()
+        self.phase_amphib(support)
         self.phase_ground(support)
         self.phase_repair_and_equalize()
 

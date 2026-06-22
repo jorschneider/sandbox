@@ -48,20 +48,23 @@ def evaluate(state: GameState) -> VictoryResult:
         "force_ratio": round(ratio, 2),
     }
 
-    # Chinese victory: firmly established ashore + can sustain via functional facilities.
-    if lodgment >= 60 and functional_captured >= 1.5 and ratio >= 1.2:
-        return VictoryResult(VictoryClass.CHINESE_VICTORY, Side.RED,
-                             min(1.0, 0.8 + 0.2 * ratio / 2), detail)
+    # Thresholds are scale-free (ratio / facilities / attrition) so they apply
+    # to both the abstract lodgment model and the hex ground game.
 
-    # Chinese defeat: amphibious fleet gutted, only a beachhead (if that).
-    if attrition >= 0.7 and lodgment < 25:
+    # Chinese victory: holds enough functional facilities to sustain + winning ashore.
+    if functional_captured >= 1.5 and ratio >= 1.0:
+        return VictoryResult(VictoryClass.CHINESE_VICTORY, Side.RED,
+                             min(1.0, 0.8 + 0.1 * min(2.0, ratio)), detail)
+
+    # Chinese defeat: amphibious fleet gutted, no functional lodgment.
+    if attrition >= 0.7 and functional_captured < 0.5 and ratio < 0.6:
         return VictoryResult(VictoryClass.CHINESE_DEFEAT, Side.BLUE,
                              max(0.0, 0.15 - 0.1 * attrition), detail)
 
     # Otherwise a stalemate; grade by trend.
-    if lodgment >= 35 and attrition < 0.5 and ratio >= 1.0:
+    if functional_captured >= 0.5 and ratio >= 0.9:
         return VictoryResult(VictoryClass.STALEMATE_TREND_CHINA, Side.RED, 0.62, detail)
-    if attrition >= 0.5 or ratio < 0.7:
+    if attrition >= 0.5 or ratio < 0.6:
         return VictoryResult(VictoryClass.STALEMATE_TREND_AGAINST_CHINA, Side.BLUE,
                              0.38, detail)
     return VictoryResult(VictoryClass.STALEMATE_INDETERMINATE, None, 0.5, detail)
