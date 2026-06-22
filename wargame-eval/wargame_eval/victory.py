@@ -40,31 +40,34 @@ def evaluate(state: GameState) -> VictoryResult:
     # Force-balance trend ashore.
     ratio = lodgment / max(1.0, taiwan)
 
+    # Continuous "Chinese success" score in [0,1] from the rules-relevant
+    # quantities — facilities held, the ground balance, and fleet survival. This
+    # differentiates models *within* a victory class (e.g. two stalemates where
+    # one invader got materially further), which a fixed-per-class score cannot.
+    progress = (0.35 * min(1.0, functional_captured / 2.0)
+                + 0.40 * min(1.0, ratio / 1.3)
+                + 0.25 * (1.0 - min(1.0, attrition)))
+    red_score = round(max(0.0, min(1.0, progress)), 3)
+
     detail = {
         "amphib_attrition": round(attrition, 2),
         "functional_facilities_captured": round(functional_captured, 2),
         "pla_lodgment": round(lodgment, 1),
         "taiwan_ground": round(taiwan, 1),
         "force_ratio": round(ratio, 2),
+        "red_progress": red_score,
     }
 
-    # Thresholds are scale-free (ratio / facilities / attrition) so they apply
-    # to both the abstract lodgment model and the hex ground game.
-
-    # Chinese victory: holds enough functional facilities to sustain + winning ashore.
+    # Class thresholds are scale-free (ratio / facilities / attrition) so they
+    # apply to both the abstract lodgment model and the hex ground game. The
+    # continuous red_score is reported alongside the class.
     if functional_captured >= 1.5 and ratio >= 1.0:
-        return VictoryResult(VictoryClass.CHINESE_VICTORY, Side.RED,
-                             min(1.0, 0.8 + 0.1 * min(2.0, ratio)), detail)
-
-    # Chinese defeat: amphibious fleet gutted, no functional lodgment.
+        return VictoryResult(VictoryClass.CHINESE_VICTORY, Side.RED, red_score, detail)
     if attrition >= 0.7 and functional_captured < 0.5 and ratio < 0.6:
-        return VictoryResult(VictoryClass.CHINESE_DEFEAT, Side.BLUE,
-                             max(0.0, 0.15 - 0.1 * attrition), detail)
-
-    # Otherwise a stalemate; grade by trend.
+        return VictoryResult(VictoryClass.CHINESE_DEFEAT, Side.BLUE, red_score, detail)
     if functional_captured >= 0.5 and ratio >= 0.9:
-        return VictoryResult(VictoryClass.STALEMATE_TREND_CHINA, Side.RED, 0.62, detail)
+        return VictoryResult(VictoryClass.STALEMATE_TREND_CHINA, Side.RED, red_score, detail)
     if attrition >= 0.5 or ratio < 0.6:
         return VictoryResult(VictoryClass.STALEMATE_TREND_AGAINST_CHINA, Side.BLUE,
-                             0.38, detail)
-    return VictoryResult(VictoryClass.STALEMATE_INDETERMINATE, None, 0.5, detail)
+                             red_score, detail)
+    return VictoryResult(VictoryClass.STALEMATE_INDETERMINATE, None, red_score, detail)

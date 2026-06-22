@@ -90,6 +90,30 @@ def elo_ratings(results: list[GameResult], k: float = 24.0, base: float = 1000.0
     return dict(sorted(ratings.items(), key=lambda kv: kv[1], reverse=True))
 
 
+def side_performance(results: list[GameResult]) -> dict:
+    """Per-model offense/defense skill via red_score (works even when one side
+    always wins). `offense` = mean red_score while playing Red (higher = better
+    invader); `defense` = mean red_score conceded while playing Blue (lower =
+    better defender). This differentiates models in defender-favored scenarios
+    where win/loss (and Elo) tie at .500.
+    """
+    perf: dict[str, dict] = {}
+    for g in (results or []):
+        ro = perf.setdefault(g.red_model, {"red_scores": [], "conceded": []})
+        bo = perf.setdefault(g.blue_model, {"red_scores": [], "conceded": []})
+        ro["red_scores"].append(g.red_score)
+        bo["conceded"].append(g.red_score)
+    out = {}
+    for m, d in perf.items():
+        rs, cc = d["red_scores"], d["conceded"]
+        out[m] = {
+            "offense_red_score": round(sum(rs) / len(rs), 3) if rs else None,
+            "defense_conceded": round(sum(cc) / len(cc), 3) if cc else None,
+            "games_red": len(rs), "games_blue": len(cc),
+        }
+    return out
+
+
 def win_table(results: list[GameResult]) -> dict:
     """Per-model record: games, wins, losses, draws, win rate."""
     rec: dict[str, dict] = {}

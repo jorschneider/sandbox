@@ -39,9 +39,20 @@ makes every model go ~.500 and ties the Elo; the differentiator there is
 reliability. The **excursion** runs (delayed US entry, neutral Japan) open the
 outcome space so model *skill* on each side separates the field.
 
+## Skill leaderboard (`summarize.py`)
+
+`python analysis/summarize.py` combines every saved run into
+[`LEADERBOARD.md`](LEADERBOARD.md), ranking models by **offense** (mean
+`red_score` as Red) and **defense** (mean `red_score` conceded as Blue),
+recomputed continuously from each game's metrics. This separates models even
+when every game is won by the same side — in the competitive excursion run it
+ranks Sonnet the best invader, Opus the best defender, and Haiku weakest on
+both, none of which the (tied) Elo shows.
+
 ## Files
 
-- `REAL_RUN_RESULTS*.md` — committed leaderboards (one per `WG_LABEL`).
+- `LEADERBOARD.md` — combined offense/defense skill ranking across runs.
+- `REAL_RUN_RESULTS*.md` — per-run leaderboards (Elo, win table, reliability).
 - `real_run_*/summary.json` — full machine-readable summary.
 - `real_run_*/game_*.json` — per-game transcript + event log (gitignored;
   regenerate locally).
