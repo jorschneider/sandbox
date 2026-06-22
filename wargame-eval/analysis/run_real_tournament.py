@@ -20,12 +20,19 @@ from wargame_eval.engine import Engine
 from wargame_eval.scenario import build_base_case
 from wargame_eval.scoring import GameResult, elo_ratings, extract_metrics, win_table
 
-MODELS = ["claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5"]
-GAMES_PER_PAIR = 1
-TURNS = 4
-GROUND_MAP = False
+def _env(name, default):
+    return os.environ.get(name, default)
 
-OUT = os.path.join(os.path.dirname(__file__), "real_run")
+
+MODELS = _env("WG_MODELS", "claude-opus-4-8,claude-sonnet-4-6,claude-haiku-4-5").split(",")
+GAMES_PER_PAIR = int(_env("WG_GPP", "1"))
+TURNS = int(_env("WG_TURNS", "4"))
+GROUND_MAP = _env("WG_GROUND", "0") == "1"
+US_ENTRY = int(_env("WG_US_ENTRY", "1"))
+JAPAN_NEUTRAL = _env("WG_JP_NEUTRAL", "0") == "1"
+LABEL = _env("WG_LABEL", "base")  # results file suffix
+
+OUT = os.path.join(os.path.dirname(__file__), f"real_run_{LABEL}")
 os.makedirs(OUT, exist_ok=True)
 
 
@@ -36,7 +43,9 @@ def main() -> None:
     for a, b in itertools.permutations(MODELS, 2):
         for k in range(GAMES_PER_PAIR):
             seed = 1000 * k + (hash((a, b)) % 997)
-            state = build_base_case(seed=seed, max_turns=TURNS)
+            state = build_base_case(seed=seed, max_turns=TURNS,
+                                    us_entry_turn=US_ENTRY,
+                                    japan_engaged=not JAPAN_NEUTRAL)
             red = ClaudeCommander(a, seed=seed * 2 + 1)
             blue = ClaudeCommander(b, seed=seed * 2 + 2)
             engine = Engine(state, red, blue, ground_map=GROUND_MAP)
@@ -62,15 +71,19 @@ def main() -> None:
     elo = elo_ratings(results)
     summary = {
         "models": MODELS, "games_per_pair": GAMES_PER_PAIR, "turns": TURNS,
-        "ground_map": GROUND_MAP, "n_games": len(results),
-        "elapsed_sec": round(time.time() - t0, 1),
+        "ground_map": GROUND_MAP, "us_entry": US_ENTRY, "japan_neutral": JAPAN_NEUTRAL,
+        "n_games": len(results), "elapsed_sec": round(time.time() - t0, 1),
         "win_table": wt, "elo": elo, "total_fallbacks": fallbacks,
         "games": [g.__dict__ for g in results],
     }
     with open(os.path.join(OUT, "summary.json"), "w") as f:
         json.dump(summary, f, indent=2, default=str)
 
-    lines = ["# Real (live-API) tournament results", "",
+    scen = (f"base case (US in turn 1, Japan engaged)" if US_ENTRY == 1 and not JAPAN_NEUTRAL
+            else f"excursion: US entry turn {US_ENTRY}, Japan "
+                 f"{'neutral' if JAPAN_NEUTRAL else 'engaged'}")
+    lines = [f"# Real (live-API) tournament — {LABEL}", "",
+             f"- Scenario: {scen}",
              f"- Models: {', '.join(MODELS)}",
              f"- {len(results)} games, {TURNS} turns each, "
              f"ground_map={GROUND_MAP}, {summary['elapsed_sec']}s total", "",
@@ -90,7 +103,7 @@ def main() -> None:
     for g in results:
         lines.append(f"| {g.red_model} | {g.blue_model} | {g.victory_class} | "
                      f"{g.winner or 'DRAW'} |")
-    md = os.path.join(os.path.dirname(__file__), "REAL_RUN_RESULTS.md")
+    md = os.path.join(os.path.dirname(__file__), f"REAL_RUN_RESULTS_{LABEL}.md")
     with open(md, "w") as f:
         f.write("\n".join(lines) + "\n")
     print(f"\nWrote {md} and {OUT}/summary.json ({len(results)} games)")
