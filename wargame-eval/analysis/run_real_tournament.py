@@ -52,6 +52,28 @@ OUT = os.path.join(os.path.dirname(__file__), f"real_run_{LABEL}")
 os.makedirs(OUT, exist_ok=True)
 
 
+def _write_summary(results: list, fallbacks: dict, t0: float) -> dict:
+    """Build + persist summary.json from the games played so far.
+
+    Written after every game so a long run survives an interruption near the end
+    (the build step reads whatever was last persisted)."""
+    valid = [g for g in results if not g.metrics.get("degraded")]
+    summary = {
+        "models": MODELS, "games_per_pair": GAMES_PER_PAIR, "turns": TURNS,
+        "ground_map": GROUND_MAP, "balance": BALANCE,
+        "us_entry": US_ENTRY, "japan_neutral": JAPAN_NEUTRAL,
+        "n_games": len(results), "n_valid": len(valid),
+        "elapsed_sec": round(time.time() - t0, 1),
+        "win_table": win_table(valid), "elo": elo_ratings(valid),
+        "total_fallbacks": fallbacks, "games": [g.__dict__ for g in results],
+    }
+    tmp = os.path.join(OUT, "summary.json.tmp")
+    with open(tmp, "w") as f:
+        json.dump(summary, f, indent=2, default=str)
+    os.replace(tmp, os.path.join(OUT, "summary.json"))  # atomic
+    return summary
+
+
 def main() -> None:
     results: list[GameResult] = []
     fallbacks: dict[str, int] = {}
@@ -93,22 +115,13 @@ def main() -> None:
             with open(os.path.join(OUT, fn), "w") as f:
                 json.dump({"result": gr.__dict__, "transcript": engine.transcript,
                            "log": engine.state.log}, f, indent=2, default=str)
+            _write_summary(results, fallbacks, t0)  # persist progress each game
 
-    # Rankings use only non-degraded games (real model-vs-model play).
+    # Final summary + markdown report.
+    summary = _write_summary(results, fallbacks, t0)
     valid = [g for g in results if not g.metrics.get("degraded")]
     n_degraded = len(results) - len(valid)
-    wt = win_table(valid)
-    elo = elo_ratings(valid)
-    summary = {
-        "models": MODELS, "games_per_pair": GAMES_PER_PAIR, "turns": TURNS,
-        "ground_map": GROUND_MAP, "balance": BALANCE,
-        "us_entry": US_ENTRY, "japan_neutral": JAPAN_NEUTRAL,
-        "n_games": len(results), "elapsed_sec": round(time.time() - t0, 1),
-        "win_table": wt, "elo": elo, "total_fallbacks": fallbacks,
-        "games": [g.__dict__ for g in results],
-    }
-    with open(os.path.join(OUT, "summary.json"), "w") as f:
-        json.dump(summary, f, indent=2, default=str)
+    wt, elo = summary["win_table"], summary["elo"]
 
     scen = (f"base case (US in turn 1, Japan engaged)" if US_ENTRY == 1 and not JAPAN_NEUTRAL
             else f"excursion: US entry turn {US_ENTRY}, Japan "
