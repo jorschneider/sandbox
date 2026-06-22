@@ -81,6 +81,7 @@ class Engine:
             "turn": self.state.turn, "phase": phase, "side": side.value,
             "orders": clean, "violations": violations,
             "rationale": (raw or {}).get("rationale", ""),
+            "trash_talk": (raw or {}).get("trash_talk", "") or "",
         })
         if violations:
             self.state.record_loss(side, "illegal_orders", len(violations))

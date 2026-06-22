@@ -23,12 +23,23 @@ BLUE_MISSIONS = ("cap", "strike_amphibs", "strike_airbases", "ground_support")
 RED_MISSIONS = ("cap", "escort_strike", "strike_blue_airbases", "ground_support")
 RED_MISSILE_TARGETS = ("taiwan_airfields", "okinawa_kadena", "guam", "carriers", "ships")
 
+# Optional in-character taunt aimed at the opponent. Present on every phase but
+# never required, so *whether* a model trash-talks (and how well) is itself a
+# signal we grade. Kept out of `required` so silence is allowed.
+_TAUNT = {"trash_talk": {"type": "string",
+          "description": "Optional: a short (<=160 chars), in-character taunt to "
+                         "your opponent this turn. Witty and menacing; keep it PG-13."}}
+
+
+def _with_taunt(props: dict) -> dict:
+    return {**props, **_TAUNT}
+
 
 def _alloc_schema(keys: tuple[str, ...], desc: str) -> dict:
     return {
         "type": "object",
         "additionalProperties": False,
-        "properties": {
+        "properties": _with_taunt({
             "allocation": {
                 "type": "object",
                 "additionalProperties": False,
@@ -37,7 +48,7 @@ def _alloc_schema(keys: tuple[str, ...], desc: str) -> dict:
                 "description": desc,
             },
             "rationale": {"type": "string"},
-        },
+        }),
         "required": ["allocation", "rationale"],
     }
 
@@ -53,28 +64,28 @@ def action_schema(phase: str) -> dict:
     if phase == "BLUE_NAVAL":
         return {
             "type": "object", "additionalProperties": False,
-            "properties": {
+            "properties": _with_taunt({
                 "subron_on_barrier": {"type": "integer", "minimum": 0},
                 "rationale": {"type": "string"},
-            },
+            }),
             "required": ["subron_on_barrier", "rationale"],
         }
     if phase == "RED_AMPHIB":
         return {
             "type": "object", "additionalProperties": False,
-            "properties": {
+            "properties": _with_taunt({
                 "flotillas_to_commit": {"type": "integer", "minimum": 0},
                 "rationale": {"type": "string"},
-            },
+            }),
             "required": ["flotillas_to_commit", "rationale"],
         }
     if phase == "RED_GROUND":
         return {
             "type": "object", "additionalProperties": False,
-            "properties": {
+            "properties": _with_taunt({
                 "posture": {"type": "string", "enum": ["press", "consolidate"]},
                 "rationale": {"type": "string"},
-            },
+            }),
             "required": ["posture", "rationale"],
         }
     raise ValueError(f"unknown phase {phase!r}")

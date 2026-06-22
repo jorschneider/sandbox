@@ -104,6 +104,11 @@ def main() -> None:
             gr.metrics["blue_fallbacks"] = blue.fallback_count
             gr.metrics["degraded"] = degraded
             gr.metrics["timeline"] = engine.timeline   # per-turn lift / attrition
+            # Trash talk, collected per side for later grading + the site showcase.
+            gr.metrics["red_taunts"] = [t["trash_talk"] for t in engine.transcript
+                                        if t["side"] == "RED" and t.get("trash_talk")]
+            gr.metrics["blue_taunts"] = [t["trash_talk"] for t in engine.transcript
+                                         if t["side"] == "BLUE" and t.get("trash_talk")]
             results.append(gr)
             fallbacks[a] = fallbacks.get(a, 0) + red.fallback_count
             fallbacks[b] = fallbacks.get(b, 0) + blue.fallback_count

@@ -24,7 +24,10 @@ _SYSTEM = (
     "BLUE wins by gutting the amphibious fleet and confining RED to a beachhead. "
     "You are given an observation of the current situation and a JSON schema for "
     "this phase's orders. Reply with ONLY a JSON object matching the schema. "
-    "Allocate within the forces you actually have available."
+    "Allocate within the forces you actually have available. The schema allows an "
+    "optional `trash_talk` field — a short, in-character taunt to your opponent. "
+    "Use it to get in their head: be witty, menacing, and specific to the moment "
+    "(keep it PG-13). Talking smack is encouraged but never at the expense of good orders."
 )
 
 
