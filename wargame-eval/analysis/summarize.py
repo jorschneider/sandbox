@@ -39,6 +39,8 @@ def load(path: str):
     d = json.load(open(path))
     games = []
     for g in d.get("games", []):
+        if (g.get("metrics") or {}).get("degraded"):
+            continue  # skip API-degraded (rate-limited) games — see analysis/README
         gr = GameResult(**{k: g.get(k) for k in FIELDS})
         gr.red_score = progress_from_metrics(gr.metrics)  # continuous, from metrics
         games.append(gr)

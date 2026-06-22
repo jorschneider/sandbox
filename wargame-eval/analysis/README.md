@@ -31,6 +31,17 @@ pairing), `WG_TURNS`, `WG_GROUND` (`1` for the hex ground game), `WG_US_ENTRY`,
   the structured-output schema. This is a first-class eval signal.
 - **Per-game** — the CSIS victory class and the winning side.
 
+## Degraded (rate-limited) games
+
+When the live API rate-limits or errors, `ClaudeCommander` falls back to the
+deterministic heuristic *per decision* — so a game can silently degrade into
+heuristic-vs-heuristic without raising. The runner now flags a game as
+**degraded** when a side's fallbacks exceed 50% of its decisions, records
+per-game `red_fallbacks`/`blue_fallbacks`/`degraded` in the summary, **excludes
+degraded games from Elo/win-table/leaderboard**, and spaces games out to ease
+rate limits. `summarize.py` likewise skips degraded games. (The `long_excursion`
+run's last two games were rate-limited and are excluded from `LEADERBOARD.md`.)
+
 ## Caveat on the base case
 
 The base-case scenario is strongly defender-favored (the coalition usually

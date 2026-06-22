@@ -59,17 +59,31 @@ def main() -> None:
                             victory_class=r.klass.value,
                             winner=(r.winner.value if r.winner else None),
                             red_score=r.red_score, metrics=extract_metrics(state, r))
+            # A game is "degraded" if the API rate-limited/failed so often that a
+            # side's decisions mostly fell back to the heuristic — such a game is
+            # effectively heuristic-vs-heuristic and must not count in rankings.
+            red_decisions, blue_decisions = TURNS * 4, TURNS * 2
+            degraded = (red.fallback_count > 0.5 * red_decisions
+                        or blue.fallback_count > 0.5 * blue_decisions)
+            gr.metrics["red_fallbacks"] = red.fallback_count
+            gr.metrics["blue_fallbacks"] = blue.fallback_count
+            gr.metrics["degraded"] = degraded
             results.append(gr)
             fallbacks[a] = fallbacks.get(a, 0) + red.fallback_count
             fallbacks[b] = fallbacks.get(b, 0) + blue.fallback_count
             print(f"  {a} (RED) vs {b} (BLUE) seed {seed} -> {r.klass.value} "
-                  f"[{time.time()-t0:.0f}s, fb R{red.fallback_count}/B{blue.fallback_count}]")
+                  f"[{time.time()-t0:.0f}s, fb R{red.fallback_count}/B{blue.fallback_count}"
+                  f"{' DEGRADED' if degraded else ''}]")
+            time.sleep(3)  # gentle spacing to ease rate limits between games
             with open(os.path.join(OUT, f"game_{a}_vs_{b}_{seed}.json"), "w") as f:
                 json.dump({"result": gr.__dict__, "transcript": engine.transcript,
                            "log": engine.state.log}, f, indent=2, default=str)
 
-    wt = win_table(results)
-    elo = elo_ratings(results)
+    # Rankings use only non-degraded games (real model-vs-model play).
+    valid = [g for g in results if not g.metrics.get("degraded")]
+    n_degraded = len(results) - len(valid)
+    wt = win_table(valid)
+    elo = elo_ratings(valid)
     summary = {
         "models": MODELS, "games_per_pair": GAMES_PER_PAIR, "turns": TURNS,
         "ground_map": GROUND_MAP, "us_entry": US_ENTRY, "japan_neutral": JAPAN_NEUTRAL,
@@ -87,7 +101,10 @@ def main() -> None:
              f"- Scenario: {scen}",
              f"- Models: {', '.join(MODELS)}",
              f"- {len(results)} games, {TURNS} turns each, "
-             f"ground_map={GROUND_MAP}, {summary['elapsed_sec']}s total", "",
+             f"ground_map={GROUND_MAP}, {summary['elapsed_sec']}s total",
+             f"- Rankings use {len(valid)} non-degraded games"
+             + (f" ({n_degraded} excluded for excessive API fallbacks)" if n_degraded else ""),
+             "",
              "## Elo", "", "| Model | Elo |", "|---|---|"]
     for m, rt in elo.items():
         lines.append(f"| {m} | {rt:.0f} |")

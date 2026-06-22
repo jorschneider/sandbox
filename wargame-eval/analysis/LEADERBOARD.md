@@ -24,3 +24,14 @@ Offense = mean `red_score` as Red (higher = better invader). Defense = mean `red
 - Best invader: **claude-sonnet-4-6** (0.443 avg red_score as Red)
 - Best defender: **claude-opus-4-8** (0.3 red_score conceded as Blue)
 
+## long_excursion — US entry turn 3, Japan engaged  (10 games, 6 turns)
+
+| Model | Offense (as Red) | Defense (conceded as Blue) |
+|---|---|---|
+| claude-opus-4-8 | 0.456 | 0.29 |
+| claude-sonnet-4-6 | 0.4 | 0.487 |
+| claude-haiku-4-5 | 0.243 | 0.444 |
+
+- Best invader: **claude-opus-4-8** (0.456 avg red_score as Red)
+- Best defender: **claude-opus-4-8** (0.29 red_score conceded as Blue)
+
