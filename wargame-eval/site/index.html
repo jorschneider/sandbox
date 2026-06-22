@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WarBench — can language models command a war?</title>
+<meta name="description" content="Frontier LLMs play both sides of the CSIS Taiwan Operational Wargame against each other, adjudicated by a deterministic, rules-faithful engine.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <div class="brand"><span class="dot"></span> WarBench</div>
+  <nav class="navlinks">
+    <a href="#how">How it works</a>
+    <a href="#scoring">Scoring</a>
+    <a href="#results">Results</a>
+    <a href="#code">Code</a>
+  </nav>
+</div></div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <h1>WarBench</h1>
+    <p class="tag">Can a language model command a war?</p>
+    <p class="lede">Frontier models play <em>both sides</em> of the CSIS Taiwan Operational
+      Wargame against each other &mdash; <span class="sides"><span class="chip red">RED · China</span>
+      vs <span class="chip blue">BLUE · US / Japan / Taiwan</span></span> &mdash; while a
+      deterministic, rules-faithful engine adjudicates every move. The benchmark measures
+      multi-turn adversarial <em>command</em>, not one-shot task skill.</p>
+    <p class="byline">A research prototype built on the published CSIS wargame
+      &ldquo;The First Battle of the Next War.&rdquo; <span id="genline"></span></p>
+  </header>
+
+  <section id="why">
+    <p class="eyebrow">The gap</p>
+    <h2>Models ace isolated tasks. Can they run a campaign?</h2>
+    <p>Benchmarks mostly measure execution: answer this question, write this function, pass
+      this exam. Real command is different &mdash; a sequence of interdependent decisions under
+      uncertainty, against an adversary who is adapting to you, where the cost of a mistake
+      compounds over days. WarBench puts two models on opposite sides of a serious operational
+      wargame and asks: who manages escalation, allocates scarce forces, and reads the
+      opponent better?</p>
+    <p>The wargame is <strong>CSIS&rsquo;s Taiwan Operational Wargame</strong> &mdash; a 2028
+      Chinese invasion of Taiwan, the model from the report
+      <em>The First Battle of the Next War</em>. Crucially, its rules state that combat is
+      resolved by <strong>&ldquo;objective criteria &hellip; computer programs, Excel
+      spreadsheets, and lookup tables with die rolls,&rdquo;</strong> not by a human umpire&rsquo;s
+      judgment. So we make the adjudicator <strong>deterministic code</strong> &mdash; the models
+      are the <em>players</em>, and the engine resolves their orders exactly as the umpire would.</p>
+    <div class="callout">
+      <strong>Why that matters.</strong> A coded referee makes the eval <strong>reproducible</strong>
+      (same orders + seed &rarr; same game), gives an <strong>objective</strong> winner from the
+      rulebook&rsquo;s victory conditions, and removes the bias and noise of an LLM judge. The only
+      judgment calls in a game are the two commanders&rsquo; orders.
+    </div>
+  </section>
+
+  <section id="how">
+    <p class="eyebrow">How it works</p>
+    <h2>Two commanders, eleven phases, a coded umpire</h2>
+    <p>Each turn is 3.5 days; games run six to eight turns &mdash; the intense opening weeks of the
+      campaign. Every turn, the engine shows each side what it can see (fog of war from an ISR
+      phase) and the legal orders for the current phase. Each model returns
+      <strong>structured orders</strong> &mdash; how many missile salvos at which targets, how many
+      sorties to CAP vs. anti-ship strike, how many amphibious flotillas to commit, ground
+      posture &mdash; and the engine resolves them.</p>
+    <div class="flow">
+      <span>reinforce</span>
+      <span class="r">RED missiles</span>
+      <span class="r">RED air</span><span class="b">BLUE air</span>
+      <span class="b">BLUE naval</span>
+      <span class="r">RED amphibious lift</span>
+      <span class="r">RED ground</span>
+      <span>adjudicate &amp; check victory</span>
+    </div>
+    <p class="muted">The decision-bearing phases of the CSIS cycle of play. Illegal or impossible
+      orders are clamped and recorded &mdash; a commander that can&rsquo;t issue valid orders is itself
+      a signal.</p>
+
+    <h3>The outcome is computed, not voted on</h3>
+    <p>Victory is scored on the rulebook&rsquo;s spectrum &mdash; the prospect for Taiwan&rsquo;s
+      continuity &mdash; from <em>Chinese victory</em> through <em>stalemate</em> to
+      <em>Chinese defeat</em>, read directly off the game state: how much PLA lodgment is ashore,
+      how many functional ports and airfields China holds, and how badly the amphibious fleet was
+      attrited.</p>
+  </section>
+
+  <section id="faithful">
+    <p class="eyebrow">Fidelity</p>
+    <h2>Grounded in the actual CSIS tables</h2>
+    <p>The engine&rsquo;s combat is not hand-waved. The core calculators are ported from the CSIS
+      workbooks and rulebook tables, each checked against the source by &ldquo;golden&rdquo; tests
+      that reproduce the workbook&rsquo;s own cached outputs:</p>
+    <ul class="clean">
+      <li><b>Casualty calculator</b> &mdash; per-side personnel losses &amp; KIA (exact, all four nations).</li>
+      <li><b>Amphibious lift</b> &mdash; the exact <code>60 &times; afloat / 36</code> formula with the turn-1 surge.</li>
+      <li><b>Air combat</b> &mdash; the real per-airframe Quality constants (J-20/F-35/F-22 = 8, &hellip;).</li>
+      <li><b>Ground combat CRT</b> &mdash; terrain modifiers, odds bands, step losses, FEBA movement (worked example reproduced).</li>
+      <li><b>Airbase missile attack</b> &mdash; SAM intercept on 1&ndash;18, hardened-shelter kills on 1&ndash;15, open on 1&ndash;17.</li>
+      <li><b>Anti-ship strike</b> &mdash; rules Table&nbsp;5H: each leaking missile rolls a d20 for ship hits; a natural 20 destroys the flotilla.</li>
+    </ul>
+    <p class="muted">A 30&nbsp;km hex ground game (with Taiwan&rsquo;s real Table&nbsp;10A order of
+      battle) and scenario excursions (delayed US entry, a neutral Japan) are also implemented.
+      Two minor calculators remain representative and are flagged as such.</p>
+  </section>
+
+  <section id="scoring">
+    <p class="eyebrow">Scoring</p>
+    <h2>Win/loss is only the start</h2>
+    <p>The base scenario is strongly <strong>defender-favored</strong> &mdash; the coalition usually
+      repels the invasion, which is itself the CSIS finding. With sides swapped each pairing, that
+      ties win-rate and Elo at .500, so WarBench reports several signals:</p>
+    <ul class="clean">
+      <li><b>Outcome &amp; Elo</b> &mdash; head-to-head on the victory spectrum, sides swapped to cancel side advantage.</li>
+      <li><b>Offense</b> &mdash; how far a model got as <span class="chip red">RED</span> (a continuous score from lodgment, force ratio, fleet survival). Higher is a better invader.</li>
+      <li><b>Defense</b> &mdash; how little it conceded as <span class="chip blue">BLUE</span>. Lower is a better defender.</li>
+      <li><b>Reliability</b> &mdash; how often a model failed to produce a legal, parseable order and fell back to a scripted baseline. Lower is better.</li>
+    </ul>
+    <p class="muted">Games where the live API rate-limited so badly that a side mostly fell back to
+      the baseline are flagged <em>degraded</em> and excluded from the rankings &mdash; otherwise a
+      throttled game silently becomes script-vs-script.</p>
+  </section>
+
+  <section id="results">
+    <p class="eyebrow">Results · live API</p>
+    <h2>Leaderboard</h2>
+    <p class="muted">Real games played through the Anthropic API. Pick a scenario:</p>
+    <div class="tabs" id="tabs"></div>
+    <p class="runmeta" id="runmeta"></p>
+    <table class="board" id="board">
+      <thead><tr>
+        <th class="model">Model</th><th>Elo</th><th>Win&nbsp;rate</th>
+        <th title="Mean Chinese-success score as RED (higher = better invader)">Offense</th>
+        <th title="Mean score conceded as BLUE (lower = better defender)">Defense</th>
+        <th title="Fallbacks to the scripted baseline (lower = better)">Fallbacks</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="legend">
+      <span><i style="background:var(--red)"></i>Red (China) win</span>
+      <span><i style="background:var(--blue)"></i>Blue (coalition) win</span>
+      <span><i style="background:var(--draw)"></i>Draw</span>
+      <span>faded = degraded (API-limited), excluded</span>
+    </div>
+    <div class="games" id="games"></div>
+    <div class="callout" id="readout"></div>
+  </section>
+
+  <section id="code">
+    <p class="eyebrow">Reproduce</p>
+    <h2>It&rsquo;s all code</h2>
+    <p>The engine, the faithful calculator ports with golden tests, the hex ground game, the model
+      commanders, and the tournament harness are open. Heuristic (no-API) commanders let the whole
+      pipeline &mdash; and the test suite &mdash; run with zero network access.</p>
+    <p><code>pip install -e ".[claude]"</code> &middot; <code>pytest -q</code> &middot;
+      <code>python analysis/run_real_tournament.py</code> &middot;
+      <code>python analysis/build_site.py</code></p>
+  </section>
+
+  <footer>
+    WarBench is a research prototype and an <em>adaptation</em> of the CSIS Taiwan Operational
+    Wargame (Cancian, Cancian &amp; Heginbotham), not an official CSIS product. Scenarios depict a
+    hypothetical conflict for analytic purposes. Built with the
+    <a href="https://github.com/jorschneider/sandbox">wargame-eval</a> harness.
+  </footer>
+
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  var D = window.WARBENCH_DATA || { runs: [] };
+  var gen = document.getElementById('genline');
+  if (D.generated) gen.textContent = 'Data generated ' + D.generated + '.';
+  if (!D.runs.length) return;
+
+  var tabs = document.getElementById('tabs');
+  var active = 0;
+  D.runs.forEach(function (run, i) {
+    var b = document.createElement('button');
+    b.className = 'tab' + (i === 0 ? ' active' : '');
+    b.textContent = run.scenario.split('—')[0].trim() + ' · ' + run.turns + 't';
+    b.onclick = function () { active = i; render(); };
+    tabs.appendChild(b);
+  });
+
+  function fmt(x) { return (x === null || x === undefined) ? '—' : x; }
+
+  function render() {
+    Array.prototype.forEach.call(tabs.children, function (b, i) {
+      b.className = 'tab' + (i === active ? ' active' : '');
+    });
+    var run = D.runs[active];
+    document.getElementById('runmeta').innerHTML =
+      '<strong>' + run.scenario + '.</strong> ' + run.n_valid + ' valid games' +
+      (run.n_degraded ? ' (' + run.n_degraded + ' degraded, excluded)' : '') +
+      ', ' + run.turns + ' turns each. Models: ' +
+      run.models.map(function (m) { return m.label; }).join(', ') + '.';
+
+    var maxOff = Math.max.apply(null, run.models.map(function (m) { return m.offense || 0; })) || 1;
+    var tb = document.querySelector('#board tbody');
+    tb.innerHTML = '';
+    run.models.forEach(function (m) {
+      var offW = Math.round(46 * (m.offense || 0) / maxOff);
+      var defW = Math.round(46 * (1 - Math.min(1, (m.defense || 0) / maxOff)));
+      var fbCls = m.fallbacks <= 10 ? 'fb-ok' : 'fb-warn';
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="model">' + m.label + '</td>' +
+        '<td><span class="num">' + m.elo + '</span></td>' +
+        '<td><span class="num">' + Math.round(m.win_rate * 100) + '%</span></td>' +
+        '<td><span class="bar off" style="width:' + offW + 'px"></span> <span class="num">' + fmt(m.offense) + '</span></td>' +
+        '<td><span class="bar def" style="width:' + defW + 'px"></span> <span class="num">' + fmt(m.defense) + '</span></td>' +
+        '<td class="' + fbCls + '"><span class="num">' + m.fallbacks + '</span></td>';
+      tb.appendChild(tr);
+    });
+
+    var g = document.getElementById('games');
+    g.innerHTML = '';
+    run.games.forEach(function (gm) {
+      var d = document.createElement('div');
+      d.className = 'gcard win-' + gm.winner + (gm.degraded ? ' deg' : '');
+      d.innerHTML = '<div class="vs"><span class="chip red">' + gm.red + '</span> vs ' +
+        '<span class="chip blue">' + gm.blue + '</span></div>' +
+        '<div class="res">' + gm.outcome.replace(/_/g, ' ').toLowerCase() +
+        (gm.degraded ? ' · degraded' : '') + '</div>';
+      g.appendChild(d);
+    });
+
+    // a one-line honest read of the featured run
+    var best = run.models.slice().sort(function (a, b) { return (b.offense||0)-(a.offense||0); })[0];
+    var safe = run.models.slice().sort(function (a, b) { return (a.defense||1)-(b.defense||1); })[0];
+    var reliable = run.models.slice().sort(function (a, b) { return a.fallbacks - b.fallbacks; })[0];
+    document.getElementById('readout').innerHTML =
+      '<strong>The honest read.</strong> In a defender-favored, small-sample setting, ' +
+      'offense/defense skill and reliability separate the field more cleanly than Elo. Here the ' +
+      'best invader was <strong>' + best.label + '</strong> (offense ' + fmt(best.offense) + '), the ' +
+      'best defender <strong>' + safe.label + '</strong> (conceded ' + fmt(safe.defense) + '), and the ' +
+      'most reliable order-generator <strong>' + reliable.label + '</strong> (' + reliable.fallbacks + ' fallbacks).';
+  }
+  render();
+})();
+</script>
+</body>
+</html>
