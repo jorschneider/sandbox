@@ -1,266 +1,339 @@
 # WarGames Eval — Plan
 
-A plan for an evaluation in which **different LLMs play crisis-simulation
-wargames against each other**, adapted from the Hoover Institution's
-*International Crisis Wargame* format.
+An evaluation in which **different LLMs play opposing sides of the CSIS Taiwan
+Operational Wargame against each other**, scored head-to-head.
 
-> Status: **planning document only.** No eval code is implemented yet. This
-> file is the design we'll build against. Decisions marked _(default)_ were
-> chosen for us and can be overridden.
+> Status: **planning document only.** No eval code is implemented yet. This is
+> the design we'll build against. Decisions marked _(default)_ were chosen for
+> us and can be overridden.
 
----
-
-## 1. What `wargaming.hoover.org` actually is
-
-A key finding shaped this whole design: **`wargaming.hoover.org` is a digital
-archive, not a playable game.**
-
-- It's the *Wargaming and Crisis Simulation Initiative Collection* — a
-  searchable repository of wargame materials, reports, and historical
-  documents hosted by the Hoover Library & Archives.
-- It returns **HTTP 403 to automated clients** and exposes **no API or
-  programmatic play surface**. There is nothing to "connect" an eval to.
-
-So the eval cannot drive the Hoover site. Instead we **reconstruct a
-documented scenario** — the flagship **International Crisis Wargame** — into
-our own engine.
-
-### The wargame format we're adapting
-
-The International Crisis Wargame is a **qualitative / seminar ("matrix")
-wargame**, not a deterministic board game:
-
-- **Players:** a 4–6 person national-security cabinet. Documented roles:
-  Executive (Head of State/Government), National Security Advisor, National
-  Intelligence Advisor, Minister of Defense, Minister of State, Economic
-  Affairs Advisor.
-- **Scenarios:** two linked hypotheticals — (1) a lower-intensity territorial
-  conflict and (2) a crisis "on the brink of nuclear war." The series was
-  designed in part to study cyber operations' impact on nuclear stability.
-- **Play:** players get briefing materials and role handbooks, then produce a
-  written **Crisis Response Plan**. A facilitator runs the game with a guide
-  and injects dynamic events ("NC3 injects" = simulated incoming
-  communications). Assessment is via post-game survey.
-
-This maps cleanly onto the established LLM-wargaming architecture (a
-**control/adjudicator** agent plus **player/team** agents) seen in prior work:
-"Open-Ended Wargames with Large Language Models" (Snow Globe), Crisis-Bench,
-and OpenAI's SIM-1.
+> History: an earlier draft of this plan targeted the Hoover *International
+> Crisis Wargame* (a qualitative crisis simulation). The user then provided the
+> actual game — the **CSIS Taiwan Operational Wargame** — which is rules-based
+> and computational. This plan is rewritten around it. (Hoover's
+> `wargaming.hoover.org` is an archive with no API; it was never a usable play
+> surface anyway.)
 
 ---
 
-## 2. Design decisions (locked)
+## 1. The game we're modeling
 
-| Question | Decision |
+**CSIS Taiwan Operational Wargame (TOW)** — "The First Battle of the Next War:
+Wargaming a Chinese Invasion of Taiwan" (Cancian, Cancian, Heginbotham, CSIS).
+The uploaded archive contains the **umpire rulebook** (v11, 127 pp), the
+**initial setup**, the **map and unit counters** (air, naval, submarine,
+ground), and a set of **Excel "calculators"** that adjudicate combat.
+
+What it is:
+
+- **Premise:** China (Red) has decided to invade Taiwan in ~2028. The game
+  plays the first ~3–4 weeks of conflict.
+- **Sides:** **Red** (China) vs a **Blue** coalition — Blue (US), White
+  (Japan), Green (Taiwan).
+- **Time:** each turn = **3.5 days**; games run **6–8 turns**.
+- **Maps:** an **operational map** (air/maritime, hex-based) and a **Taiwan
+  ground map** (hex-based).
+- **Forces:** real-world orders of battle projected to 2028 (PLA air/naval air,
+  PLAN surface + submarines, missile inventories; US/Japan/Taiwan air, naval,
+  ground).
+
+### The decisive design fact
+
+The rulebook is explicit (Ch. 1, *Objective and Design*):
+
+> "Movement and combat results during gameplay are … set by objective criteria
+> and not by the judgment of subject matter experts in a control group (white
+> cell). Umpires determine combat results using **computer programs, Excel
+> spreadsheets, and lookup tables with die rolls**."
+
+So **adjudication is deterministic, not a judgment call.** The umpire's job is
+mechanical. That means in our eval the **adjudicator is code we write (porting
+the calculators), not an LLM.** The LLMs are the *players* (operational
+commanders); the engine resolves the consequences exactly as the umpire would.
+This is the ideal property for a reproducible eval — it removes adjudicator
+bias and variance from the core loop.
+
+### The 11-phase cycle of play (per turn)
+
+| # | Phase | What happens |
+|---|---|---|
+| 0 | Initial Map Laydown | One-time setup of starting forces (Blue/White/Green/Red). |
+| 1 | Reinforcements & Withdrawals | US airlift/naval/air reinforcement; Taiwanese reserves; Chinese withdrawals. |
+| 2 | ISR | Each side establishes targetable surveillance. |
+| 3 | Missile Attacks | PLA missile strikes on airbases, ships in port, naval task forces; SAM/CAP interception. |
+| 4 | Space & Cyber | Space and cyber effects. |
+| 5 | Aircraft Mission Assignment | CAP, SEAD, tankers, rebasing, ground support, strike packages (airbase/naval/resupply), air combat. |
+| 6 | Surface Ship & Submarine Movement & Combat | Naval movement/combat, submarine warfare, ASW barriers. |
+| 7 | Adjudication on Operational Map | All operational-map combat resolved together. |
+| 8 | Chinese Lift | Amphibious + airborne/air-assault lift calculation; capturing Taiwan facilities. |
+| 9 | Chinese Force Movement to Taiwan & Supply | Amphibious/airborne landings, supply, then ground combat. |
+| … | Ground game | Ground movement & FEBA combat on the Taiwan hex map. |
+
+In live play, players move on the operational map, then on the ground map,
+while umpires adjudicate — adjudication is batched (Phase 7) rather than done
+move-by-move.
+
+### Victory conditions (the natural scoring spine)
+
+Scored on a single spectrum — the prospect for Taiwan's continuity as an
+autonomous democratic entity:
+
+1. **Chinese victory** — PLA ground forces firmly established ashore with
+   enough functional ports/airports to bring over and sustain large forces.
+2. **Stalemate** — significant lodgment, neither side making rapid gains
+   (gradations: trending-China / indeterminate / trending-against-China),
+   keyed to beachhead security, port/airport functionality, and amphibious
+   fleet attrition.
+3. **Chinese defeat** — amphibious fleet mostly destroyed, PLA confined to a
+   beachhead, no sustaining lift or facilities.
+
+These map to **measurable game-state quantities** (lodgment, ports/airports
+captured & operational, amphibious fleet losses), so the winner can be computed
+from state — no LLM judge required to decide it.
+
+### The calculators (confirmed portable to code)
+
+Each is an input-driven model with rosters → formula/lookup tables → loss
+trackers (verified by inspecting the workbooks):
+
+| Calculator | Adjudicates |
 |---|---|
-| How do models "play each other"? | **Adversarial — model vs model.** Each model controls an opposing national team (e.g. Red vs Blue) in one shared, adjudicated crisis world. Yields head-to-head win/loss and rankings. |
-| How are outcomes scored? | **Hybrid.** A `control` LLM narrates consequences each turn; the engine tracks quantitative world-state (escalation, objectives, resources); a separate `judge` LLM scores plans against a rubric. |
-| Tech stack / models first | **Claude-only first**, behind a provider-agnostic interface. Validate end-to-end with Claude variants, then add other providers. |
+| `Attacks_on_Pickets_Amphibs` | Strikes against Chinese picket ships and amphibious task forces. |
+| `Taiwan_CAP_and_Air_Combat` | CAP, air combat, tanking, sorties. |
+| `RED_AB_ATK` / `Blue_AB_Atk` | Missile/air attacks on airbases (HAS kills, aircraft-in-open, underground hangars) per side. |
+| `Casualty_Calculator` | Per-side losses (Blue-US, Red-China, White-Japan, Green-Taiwan; carrier/CruDes historical curves). |
+| `Ground_War_Adjudication` | Ground combat + FEBA (forward edge of battle area) movement. |
 
-### Models (Claude-first)
+These become deterministic Python functions with a **seeded RNG** for the die
+rolls — same seed ⇒ same result.
 
-Use the official `anthropic` Python SDK. Target models for the first
-tournament:
+---
 
-- `claude-opus-4-8` (Opus 4.8)
-- `claude-sonnet-4-6` (Sonnet 4.6)
-- `claude-haiku-4-5` (Haiku 4.5)
-- `claude-fable-5` (Fable 5)
+## 2. Design decisions (locked) and how the game changes them
 
-The **control** and **judge** roles are held to a fixed, strong model
-(default: `claude-opus-4-8`) so they act as neutral infrastructure rather than
-contestants. Players are the models under test.
+| Decision | How it applies to the TOW |
+|---|---|
+| **Adversarial — model vs model** | Red commander (model A) vs Blue-coalition commander (model B), same map/rules. Head-to-head outcome on the victory spectrum. |
+| **Hybrid scoring** | Reinterpreted: a **deterministic rules engine** resolves combat; **quantitative victory conditions** decide win/loss; an **LLM judge is optional/secondary**, used only to rate *decision quality* (not to pick the winner). |
+| **Claude-first stack** | Players are Claude models under test (`claude-opus-4-8`, `claude-sonnet-4-6`, `claude-haiku-4-5`, `claude-fable-5`) behind a provider-agnostic interface. No LLM is needed for adjudication. |
+
+The "control/adjudicator LLM" from the first draft is **gone** — the rules make
+it a deterministic program. That's a strict improvement for eval validity.
 
 ---
 
 ## 3. Architecture
 
-Three agent roles, following the matrix-wargame pattern:
-
 ```
-                      ┌─────────────────────────────┐
-                      │  CONTROL / ADJUDICATOR        │  fixed model (Opus 4.8)
-                      │  - owns ground-truth state    │  neutral "white cell"
-                      │  - resolves both sides' orders│
-                      │  - narrates + issues injects  │
-                      └───────┬──────────────┬────────┘
-            private brief +   │              │   private brief +
-            public situation  │              │   public situation
-                      ┌───────▼───┐      ┌───▼───────┐
-                      │ PLAYER RED │      │ PLAYER BLUE│  models under test
-                      │ (model A)  │      │ (model B)  │  submit Crisis
-                      └────────────┘      └────────────┘  Response Plans
-                                  \          /
-                                   ▼        ▼
-                      ┌─────────────────────────────┐
-                      │  JUDGE(S)                     │  fixed / panel
-                      │  - rubric scoring, pairwise   │  blind to model identity
-                      │  - independent context        │
-                      └─────────────────────────────┘
+                 ┌──────────────────────────────────────────┐
+                 │  GAME ENGINE  (deterministic, seeded)       │
+                 │  - game state: maps, units, OOB, inventories│
+                 │  - 11-phase turn sequencer                  │
+                 │  - ported calculators + lookup tables       │
+                 │  - victory-condition evaluator              │
+                 │  - full transcript / state log              │
+                 └───────┬───────────────────────────┬─────────┘
+        per-phase legal   │                           │  per-phase legal
+        actions + obs     │                           │  actions + obs
+                 ┌────────▼─────────┐        ┌────────▼─────────┐
+                 │  RED COMMANDER    │        │  BLUE COMMANDER   │  models
+                 │  (model A)        │        │  (model B)        │  under test
+                 │  structured orders│        │  structured orders│
+                 └───────────────────┘        └───────────────────┘
+                                  \            /
+                                   ▼          ▼
+                 ┌──────────────────────────────────────────┐
+                 │  JUDGE (optional, fixed model)              │
+                 │  rates decision quality from transcripts;   │
+                 │  does NOT decide the winner                  │
+                 └──────────────────────────────────────────┘
 ```
 
-1. **Control / Adjudicator** — the white cell. Maintains the authoritative
-   world-state, ingests both sides' orders each turn, resolves interacting
-   actions, applies the state-transition model, narrates consequences, and
-   issues injects. Held to a fixed model so the referee is constant across
-   matchups.
-2. **Player / Team agents** — the two competing sides, each driven by one
-   model under test. v1: one agent plays the whole cabinet per side. v2
-   (optional): each side is a sub-cabinet of role agents (Executive, Defense,
-   Intel, …) that deliberate, then submit a unified plan.
-3. **Judge(s)** — separate context window, scores each side after the game
-   (and optionally per-turn) against a rubric. Independent of the players to
-   reduce self-preference bias; can be a panel.
+1. **Game engine (deterministic).** Owns authoritative state, runs the phase
+   sequence, exposes to each side a per-phase **observation** (what that side
+   can see — fog of war from the ISR phase) and the **set of legal actions**,
+   ingests structured orders, and resolves them via the ported calculators with
+   a seeded RNG. Computes victory state each turn. Logs everything.
+2. **Player agents (models under test).** Red and Blue commanders. Each turn,
+   for each phase that requires a decision, the model receives the observation +
+   legal action schema and returns **structured orders** (JSON via structured
+   outputs) plus a free-text rationale (logged, for the judge and for humans).
+   v1: one model per side. v2: split Blue into US/Japan/Taiwan sub-commanders
+   that coordinate.
+3. **Judge (optional).** A fixed model scores *decision quality* (did the
+   commander make sound operational choices given what it could see?) from
+   transcripts — useful signal, but the **win/loss comes from the engine's
+   victory evaluation**, not the judge. Blind to which model played which side.
 
-### Game loop (turn structure)
+### Why this is a good eval
 
-1. **Setup.** Control loads the scenario pack: brief, per-side role handbooks,
-   initial world-state, and **asymmetric objectives** (each side has its own
-   win conditions; some hidden from the opponent).
-2. **Per turn:**
-   1. Control issues each side its private briefing + the current public
-      situation + any injects (NC3-style events).
-   2. Each side deliberates and submits **structured orders** — a Crisis
-      Response Plan spanning diplomatic / military / economic / cyber /
-      information actions — as parseable JSON plus a free-text rationale.
-   3. Control adjudicates: resolves interacting orders, applies a deterministic
-      core (escalation ladder + resource model) plus LLM narrative for the
-      rest, updates quantitative state, and produces the next situation +
-      injects.
-   4. Optional **negotiation phase**: sides exchange messages/ultimatums routed
-      *through* Control (which can limit or distort info to model fog of war).
-3. **Termination.** Fixed N turns, or a terminal condition: war / negotiated
-   peace / nuclear use / objective achieved / state collapse.
+- **Reproducible:** deterministic engine + seeded RNG ⇒ identical replays.
+- **Objective outcome:** winner computed from rules-defined victory state.
+- **Rich signal:** beyond win/loss — amphibious attrition, air losses by type,
+  lodgment size, sortie efficiency, missile expenditure, escalation timeline.
+- **Fog of war:** the ISR phase gives a principled basis for asymmetric
+  observations, testing planning under uncertainty.
 
 ---
 
-## 4. Scoring (hybrid)
+## 4. The hard parts (honest assessment)
 
-- **Quantitative state metrics** (tracked by the engine): objectives achieved
-  per side's win conditions; escalation level reached; casualties / economic
-  damage inflicted vs absorbed; whether the nuclear threshold was crossed;
-  territory / position; crisis resolved vs spiraled.
-- **Adjudicated outcome:** who achieved their objectives at least cost → a
-  head-to-head result (win / loss / draw).
-- **Judge rubric (LLM judge):** scores each side on strategic coherence,
-  escalation management, exploitation of the opponent's mistakes, role/
-  constraint adherence, and realism. **Pairwise** comparison to cut
-  absolute-score noise.
-- **Aggregation:** per-matchup results → **Elo / Bradley–Terry** rankings
-  across models, plus dimension-level metrics. Each pairing is run multiple
-  times **with sides swapped** to control for side advantage and variance.
+The difficulty moves from "adjudicator consistency" (solved by determinism) to:
 
-### Validity & bias controls
-
-- Hold control and judge models **constant and distinct from players**;
-  consider a **judge panel**; **swap sides**; randomize scenario seeds; **blind
-  the judge** to which model played which side.
-- Track **refusal and format-failure rates** as first-class signals (a model
-  that won't engage or can't emit valid orders is information). Fable 5 may
-  return `stop_reason: "refusal"` — handle it and enable server-side
-  `fallbacks` so a refusal doesn't silently void a game.
-- **Log full transcripts** (prompts, thinking summaries, orders, adjudications,
-  scores) for reproducibility and human spot-checking. Qualitative wargames
-  *require* a human-audited sample — adjudication is the hardest part.
+1. **Faithfully porting the rules + calculators.** 127 pp of rules and six
+   workbooks. Tractable but detailed; needs validation against the workbooks'
+   own outputs (golden tests: replicate a spreadsheet's result for given
+   inputs).
+2. **Digitizing the game state.** The map is a 21 MB JPG and units are counter
+   images. We must build a **machine-readable encoding**: hex grid (operational
+   + ground), unit roster with stats, OOB, base/port/airport locations, missile
+   inventories. This is real work and is the critical path.
+3. **Designing the action interface per phase.** Each phase needs a clean,
+   legal-move schema the model can reason over and the engine can validate
+   (reject illegal orders, surface why). Eleven phases = eleven small action
+   spaces.
+4. **Making the state legible to an LLM.** A hex board + hundreds of counters
+   must be serialized into text/structured form a model can plan over (unit
+   lists by hex, ranges, adjacency, what's visible). Prompt design and a compact
+   state notation matter a lot here.
 
 ---
 
-## 5. Tech stack & SDK usage (Claude-first)
+## 5. Recommended scope: stage the fidelity
 
-- **Language:** Python, official `anthropic` SDK.
-- **Provider abstraction:** a `ModelClient` protocol so OpenAI/Google adapters
-  drop in later; first implementation is `AnthropicModelClient`.
-- **Thinking/effort:** adaptive thinking (`thinking={"type": "adaptive"}`);
-  tune `output_config={"effort": ...}` per role (players high; cheap control
-  sub-tasks lower).
-- **Structured outputs:** orders and world-state updates use
-  `output_config.format` / `messages.parse()` so they parse reliably instead of
-  regexing free text.
-- **Streaming:** stream long turns (`max_tokens` well above ~16K) and use
-  `.get_final_message()`.
-- **Prompt caching:** the large static prefix (scenario brief + role handbooks)
-  is shared across every turn of a game — cache it; keep volatile per-turn
-  state after the last cache breakpoint.
-- **Fable 5:** thinking always on (omit the `thinking` param's disabled form);
-  include `fallbacks=[{"model": "claude-opus-4-8"}]` with the server-side
-  fallback beta by default.
-- **Concurrency:** each game is a sequential loop, but games are independent —
-  run matchups concurrently (asyncio).
+Building all 11 phases + the full ground hex game before anything runs is a
+long path. Recommended staging _(default)_:
+
+- **v1 — Air-maritime + lift/lodgment core.** Phases 1–9 focused on the
+  air/missile/naval fight and the amphibious-lift + lodgment outcome; use a
+  **simplified ground resolution** (aggregate lodgment vs Taiwanese defense
+  rather than full hex FEBA combat). This already exercises the central
+  question (can China get ashore and sustain?) and yields a real win/loss on
+  the victory spectrum.
+- **v2 — Full ground hex game.** Add the Taiwan ground map, unit-level movement,
+  and FEBA combat (`Ground_War_Adjudication`).
+- **v3 — Multi-commander Blue + excursions.** Split Blue into US/Japan/Taiwan;
+  add scenario excursions (US entry delayed, Japan neutral, etc. — the rulebook
+  enumerates these as first-class variables).
+
+Alternative if you want maximum fidelity first: build the complete 11-phase +
+ground engine before running matchups (slower to first result, but no
+re-scoping later). I recommend the staged path.
 
 ---
 
-## 6. Repo layout
+## 6. Tech stack & SDK usage (Claude-first)
+
+- **Language:** Python; official `anthropic` SDK.
+- **Engine:** pure-Python, deterministic, seeded RNG; no LLM in the adjudication
+  path.
+- **Provider abstraction:** a `ModelClient` protocol; first implementation
+  `AnthropicModelClient`. OpenAI/Google adapters added later.
+- **Structured outputs:** orders use `output_config.format` / `messages.parse()`
+  against a per-phase JSON schema so the engine can validate legality.
+- **Thinking/effort:** adaptive thinking; tune `effort` per side/phase.
+- **Streaming + caching:** stream long turns; prompt-cache the large static
+  prefix (rules summary + OOB + map encoding) shared across a game's turns; keep
+  volatile per-turn state after the last cache breakpoint.
+- **Fable 5:** thinking always on; include `fallbacks=[{"model":
+  "claude-opus-4-8"}]` so a refusal doesn't void a game.
+- **Concurrency:** games are independent — run matchups concurrently (asyncio).
+
+---
+
+## 7. Repo layout
 
 A new subfolder, separate from the Three.js site at the repo root:
 
 ```
 wargame-eval/
   README.md
-  pyproject.toml                # or requirements.txt
-  scenarios/                    # scenario packs
-    crisis_v1/
-      brief.md                  # shared public situation
-      roles/                    # per-side role handbooks
-      objectives.yaml           # asymmetric win conditions (some hidden)
-      injects.yaml              # NC3-style dynamic events
-      initial_state.yaml        # quantitative world-state seed
-      rubric.md                 # judge scoring rubric
+  pyproject.toml
+  game/                         # encoded rules data (derived from the CSIS archive)
+    oob/                        # orders of battle (Blue/White/Green/Red), 2028
+    map/                        # hex encodings (operational + ground), bases/ports
+    inventories/                # PLA missile inventories, etc.
+    rules_notes.md              # phase-by-phase mechanics distilled from the rulebook
   engine/
-    state.py                    # world-state model + escalation ladder
-    adjudicator.py              # hybrid resolution (deterministic + narrative)
-    turn.py                     # turn manager / game loop
+    state.py                    # game state: maps, units, inventories, supply
+    phases/                     # one module per phase (reinforce, isr, missiles, ...)
+    calculators/                # ported Excel calculators (+ golden tests)
+    sequencer.py                # 11-phase turn loop
+    victory.py                  # victory-condition evaluator
+    rng.py                      # seeded die rolls
   agents/
     client.py                   # ModelClient protocol + AnthropicModelClient
-    player.py                   # player/team agent
-    control.py                  # control/adjudicator agent
-    judge.py                    # judge agent(s)
+    commander.py                # player agent: observation -> structured orders
+    judge.py                    # optional decision-quality judge
+  schemas/                      # per-phase action + observation JSON schemas
   scoring/
-    metrics.py                  # quantitative metrics
-    rubric.py                   # rubric scoring
+    metrics.py                  # attrition, lodgment, sorties, missile expenditure
     rankings.py                 # Elo / Bradley-Terry, side-swap aggregation
-  runner.py                     # CLI: models, scenario, n_games, seeds
+  runner.py                     # CLI: models, scenario/excursion, n_games, seed
   transcripts/                  # per-game logs (gitignored)
   analysis/                     # leaderboards & plots
 ```
 
-Scenario content is **fictionalized** _(default)_ — invented states rather than
-real countries — to keep the nuclear-brink material clearly analytic and reduce
-refusals. Easy to swap if you'd prefer named actors.
+**Game assets:** the uploaded archive is ~29 MB (a 21 MB map JPG + PDFs +
+xlsx). We will **not commit the raw binaries** to this repo (it's a static
+Three.js site). Instead we commit the **encoded/derived data** (OOB tables,
+calculator ports, hex encodings, distilled rules notes) under `game/`. Keep the
+source archive outside git or in Git LFS for reference.
 
 ---
 
-## 7. Milestones
+## 8. Scoring
+
+- **Primary (engine):** victory-condition class (Chinese victory →
+  defeat, with stalemate gradations) computed from state. Per-matchup
+  win/loss/draw.
+- **Secondary metrics (engine):** amphibious fleet attrition, air losses by
+  airframe, naval losses, lodgment size, ports/airports captured & operational,
+  missile expenditure, turn at which the outcome crystallized.
+- **Rankings:** run each Red/Blue pairing multiple times with **roles swapped**
+  and multiple **seeds**; aggregate to Elo / Bradley-Terry plus per-metric
+  comparisons. Track **refusal / illegal-order rates** as first-class signals.
+- **Optional judge:** decision-quality scores from transcripts (blind to model
+  identity) — diagnostic, not outcome-determining.
+
+---
+
+## 9. Milestones
 
 | Phase | Deliverable |
 |---|---|
-| **0 — Schemas & scenario** | JSON/YAML schemas for orders, world-state, injects, rubric; one fictionalized crisis scenario pack (territorial → nuclear-brink). No model calls. |
-| **1 — Engine + smoke test** | `AnthropicModelClient`, control, player, turn loop, structured-output orders, transcript logging. End-to-end all-Claude game (e.g. Opus vs Sonnet). |
-| **2 — Adjudication & state** | Hybrid adjudicator: deterministic escalation ladder + resource model + Control narrative + injects. Games terminate sensibly. |
-| **3 — Scoring & rankings** | Judge + rubric, metrics, side-swapping, Elo/Bradley-Terry, refusal/format-failure tracking. Leaderboard from a Claude-only tournament (Opus 4.8 / Sonnet 4.6 / Haiku 4.5 / Fable 5). |
-| **4 — Robustness** | Judge panel, blinding, human spot-check workflow, variance analysis, cost/cache tuning, more scenarios. |
-| **5 — Multi-provider** | OpenAI/Google adapters behind `ModelClient`; cross-provider tournament. |
+| **0 — Encode the game** | Distill the rulebook into `rules_notes.md`; encode OOB, map (hex), bases/ports, missile inventories; define per-phase action/observation schemas. No model calls. |
+| **1 — Port calculators + golden tests** | Implement each calculator in Python; validate against the workbooks' own outputs for sample inputs (seeded RNG for die rolls). |
+| **2 — Engine + state** | Game state, 11-phase sequencer (v1 simplified ground), victory evaluator, transcript logging. Runs a scripted/random-agent game end to end. |
+| **3 — Player agent (Claude) + smoke test** | `AnthropicModelClient`, commander agent with structured per-phase orders + legality validation. End-to-end all-Claude game (e.g. Opus Red vs Sonnet Blue). |
+| **4 — Scoring & rankings** | Metrics, side-swapping, seeds, Elo/Bradley-Terry, refusal/illegal-order tracking. Leaderboard from a Claude-only tournament (Opus 4.8 / Sonnet 4.6 / Haiku 4.5 / Fable 5). |
+| **5 — Full ground game** | Taiwan ground hex map, unit movement, FEBA combat. |
+| **6 — Multi-commander & excursions** | Split Blue into US/Japan/Taiwan; scenario excursions (US-entry timing, Japan neutrality, etc.). |
+| **7 — Multi-provider** | OpenAI/Google adapters behind `ModelClient`; cross-provider tournament. |
 
 ---
 
-## 8. Risks & open questions
+## 10. Risks & open questions
 
-- **Adjudicator consistency/bias** — the hardest problem in qualitative LLM
-  wargames. Mitigate with a fixed strong model, a structured/deterministic
-  state core, and human audit of a transcript sample.
-- **Judge self-preference** — mitigate with a distinct/panel judge, blinding,
-  and pairwise scoring.
-- **Reproducibility & variance** — qualitative games are noisy; mitigate with
-  many seeds, side-swaps, and full transcript logging.
-- **Content sensitivity** — nuclear-conflict scenarios; mitigate with fictional
-  actors and explicit analytic framing; track refusals as data.
-- **Cost** — mitigate with prompt caching of the static prefix, effort tuning,
-  Haiku for cheap control sub-tasks, and concurrent runs.
-- **Faithfulness to Hoover** — this is an *adaptation*, not the real game (no
-  API exists). We state that plainly.
+- **Rules-porting fidelity** — mitigate with golden tests against the workbooks
+  and a distilled, reviewed `rules_notes.md`; accept documented simplifications
+  in v1 and list them.
+- **State digitization effort** — the map/counter encoding is the critical
+  path; budget for it explicitly.
+- **LLM legibility of a hex wargame** — needs a compact state notation and good
+  prompts; iterate with the smoke test.
+- **Variance** — many seeds + role swaps + full transcript logging.
+- **Content sensitivity** — a realistic Taiwan-invasion scenario; framed as
+  analytic simulation of a published CSIS wargame. Track refusals as data;
+  Fable 5 refusal handling + fallbacks included.
+- **Cost** — prompt-cache the static prefix; tune effort; concurrent runs.
 
-### Things worth your input before/while building
+### Decisions worth your input
 
-- **Scenario actors:** fictional _(default)_ vs named real-world states.
-- **Side structure:** single agent per side _(default for v1)_ vs full
-  multi-role sub-cabinet per side.
-- **Judge:** single fixed judge _(default for v1)_ vs panel from the start.
+- **v1 fidelity** — air-maritime + lift/lodgment core first _(recommended)_ vs
+  full 11-phase + ground hex game before first run.
+- **Blue structure** — single Blue commander _(v1 default)_ vs US/Japan/Taiwan
+  sub-commanders from the start.
+- **Judge** — include the optional decision-quality judge in v1, or defer it.
+- **Asset handling** — confirm we keep the 29 MB source archive out of git
+  (commit only derived/encoded data).
