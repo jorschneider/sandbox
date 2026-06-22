@@ -234,13 +234,16 @@ class OpenAICompatAgent(Agent):
 
     def __init__(self, model: str, name=None, base_url=None, api_key=None,
                  max_tokens: int = 1600, temperature: float = 0.8):
-        import openai
+        import openai, re
         self.client = openai.OpenAI(base_url=base_url, api_key=api_key,
                                     default_headers={"HTTP-Referer": "https://presidentbench.vercel.app",
                                                      "X-Title": "PresidentBench"})
         self.model = model
         self.name = name or model
-        self.max_tokens = max_tokens
+        # GPT-5 / o-series are reasoning models: give them a bigger budget (reasoning
+        # tokens) and don't force a custom temperature.
+        self.reasoning = bool(re.search(r"(gpt-5|gpt-6|o[0-9])", model))
+        self.max_tokens = 5000 if self.reasoning and max_tokens < 5000 else max_tokens
         self.temperature = temperature
         self.messages = []
         self.pending = []          # tool_call ids awaiting a tool message
@@ -272,13 +275,15 @@ class OpenAICompatAgent(Agent):
         self.messages.append({"role": "user", "content":
                               sitrep + "\n\nTake your action(s) now by calling one or more tools."})
 
+        kw = dict(model=self.model, messages=self.messages,
+                  tools=self._tools(tools), tool_choice="auto",
+                  max_tokens=self.max_tokens)
+        if not self.reasoning:
+            kw["temperature"] = self.temperature
         resp = None
         for attempt in range(4):
             try:
-                resp = self.client.chat.completions.create(
-                    model=self.model, messages=self.messages,
-                    tools=self._tools(tools), tool_choice="auto",
-                    max_tokens=self.max_tokens, temperature=self.temperature)
+                resp = self.client.chat.completions.create(**kw)
                 break
             except (openai.APIStatusError, openai.APIConnectionError, openai.RateLimitError):
                 if attempt == 3:
@@ -329,6 +334,7 @@ OPENROUTER_ALIASES = {
     "qwen": ("qwen/qwen3.7-max", "Qwen3.7 Max"),
     "glm": ("z-ai/glm-5.2", "GLM-5.2"),
     "kimi": ("moonshotai/kimi-k2.6", "Kimi K2.6"),
+    "gpt": ("openai/gpt-5.5", "GPT-5.5"),
 }
 
 
