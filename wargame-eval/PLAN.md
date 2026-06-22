@@ -300,16 +300,16 @@ source archive outside git or in Git LFS for reference.
 
 ## 9. Milestones
 
-| Phase | Deliverable |
-|---|---|
-| **0 — Encode the game** | Distill the rulebook into `rules_notes.md`; encode OOB, map (hex), bases/ports, missile inventories; define per-phase action/observation schemas. No model calls. |
-| **1 — Port calculators + golden tests** | Implement each calculator in Python; validate against the workbooks' own outputs for sample inputs (seeded RNG for die rolls). |
-| **2 — Engine + state** | Game state, 11-phase sequencer (v1 simplified ground), victory evaluator, transcript logging. Runs a scripted/random-agent game end to end. |
-| **3 — Player agent (Claude) + smoke test** | `AnthropicModelClient`, commander agent with structured per-phase orders + legality validation. End-to-end all-Claude game (e.g. Opus Red vs Sonnet Blue). |
-| **4 — Scoring & rankings** | Metrics, side-swapping, seeds, Elo/Bradley-Terry, refusal/illegal-order tracking. Leaderboard from a Claude-only tournament (Opus 4.8 / Sonnet 4.6 / Haiku 4.5 / Fable 5). |
-| **5 — Full ground game** | Taiwan ground hex map, unit movement, FEBA combat. |
-| **6 — Multi-commander & excursions** | Split Blue into US/Japan/Taiwan; scenario excursions (US-entry timing, Japan neutrality, etc.). |
-| **7 — Multi-provider** | OpenAI/Google adapters behind `ModelClient`; cross-provider tournament. |
+| Phase | Deliverable | Status |
+|---|---|---|
+| **0 — Encode the game** | Distill the rulebook into `rules_notes.md`; encode OOB, bases/ports, missile inventories; per-phase action/observation schemas. | ✅ done |
+| **1 — Port calculators + golden tests** | Faithful Python ports validated against the workbooks' cached outputs. | ✅ casualty calc, lift, air Quality, ground CRT done & golden-tested; airbase-attack saturation rolls remaining |
+| **2 — Engine + state** | Game state, phase sequencer, victory evaluator, transcript logging; runs end to end. | ✅ done |
+| **3 — Player agent (Claude) + smoke test** | `AnthropicModelClient`, commander with structured per-phase orders + legality validation; all-Claude game. | ✅ done (live API) |
+| **4 — Scoring & rankings** | Metrics, side-swapping, seeds, Elo, refusal/illegal-order tracking; tournament leaderboard. | ✅ done — see `analysis/REAL_RUN_RESULTS.md` |
+| **5 — Ground hex game** | Taiwan ground hex map, OOB, landings, FEBA combat. | ✅ done (`--ground-map`); multi-axis/full movement remaining |
+| **6 — Multi-commander & excursions** | Split Blue into US/Japan/Taiwan; scenario excursions (US-entry timing, Japan neutrality, etc.). | ⬜ todo |
+| **7 — Multi-provider** | OpenAI/Google adapters behind `ModelClient`; cross-provider tournament. | ⬜ todo (interface in place) |
 
 ---
 

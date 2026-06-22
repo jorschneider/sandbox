@@ -59,25 +59,34 @@ captured`, and `amphib_attrition`.
 - **Air OOB / Taiwan ground strength** — `APPROX`; exact figures live in the
   CSIS backup OOB papers and should be calibrated there.
 
-## Calculators (`calculators.py`) ↔ CSIS workbooks
-| Engine function | CSIS workbook |
-|---|---|
-| `resolve_air_to_air` | `Taiwan_CAP_and_Air_Combat` (AirCombat/Combat/Sorties/Tanking) |
-| `resolve_missile_strike_on_base`, `resolve_asbm_vs_carriers` | `RED_AB_ATK` / `Blue_AB_Atk` (HAS/AC/UGS kills) |
-| `resolve_strike_on_amphibs` | `Attacks_on_Pickets_Amphibs` (picket value, cap bonus, LRASM) |
-| `resolve_submarine_barrier` | barrier attrition (Ch.8) |
-| `resolve_ground_combat` | `Ground_War_Adjudication` (Adjudication / FEBA Movement) |
-| per-side loss tallies | `Casualty_Calculator` |
+## Calculators ↔ CSIS workbooks
 
-Structurally faithful (LRASM standoff bonus, picket+SAG screen, hardened-shelter
-mitigation, sweep-value-style leakage), but the coefficients in `COEFFS` are
-representative. **Milestone 1**: replace bodies with ports validated against the
-workbooks' own outputs (golden tests).
+**Faithful, golden-tested ports** (`calculators_csis.py`, `ground_combat.py`) —
+each reproduces the workbook's cached values (these paths have no `RAND`, so the
+outputs are exact targets):
 
-## Documented v1 simplifications
-- **Ground war** abstracted to a lodgment-vs-defense balance with probabilistic
-  facility capture, instead of the full Taiwan ground **hex map** with
-  battalion movement and FEBA combat (milestone 5).
+| Engine function | CSIS workbook | Status |
+|---|---|---|
+| `casualties()` (4 sides) | `Casualty_Calculator_V7` | EXACT (incl. subtotal quirks) |
+| `amphib_lift()` | `Attacks_on_Pickets_Amphibs` (AmphibiousTF!J28/J29) | EXACT: 60·afloat/36, ×1.5 turn 1 |
+| `air_exchange()` + `AIR_QUALITY` | `Taiwan_CAP_and_Air_Combat` (Combat!A67:B77) | Real Quality constants; quality-weighted exchange |
+| `ground_combat.resolve_engagement()` | `Ground_War_Adjudication` (Adjudication + FEBA Movement) | EXACT terrain/strength/odds/loss/FEBA tables |
+
+**Representative coefficients** still pending exact ports (`calculators.py`,
+flagged `APPROX`): `resolve_missile_strike_on_base` / `resolve_asbm_vs_carriers`
+(`RED_AB_ATK`/`Blue_AB_Atk` HAS/AC/UGS kills), `resolve_strike_on_amphibs` (the
+picket/TF saturation-roll table — structure faithful: picket value, SAG screen,
+LRASM bonus), and `resolve_submarine_barrier` (Ch.8). **Milestone 1 remaining**:
+port the airbase-attack saturation rolls.
+
+## Documented simplifications
+- **Ground war**: a **hex ground game** (`--ground-map`, `ground.py`) is now
+  implemented — 30 km hexes, exact Table 10A Taiwanese OOB, lift→landings, and
+  the ported FEBA CRT. Simplified vs. the full game: a single advancing axis per
+  campaign (rolls up facilities by priority) rather than free counter-by-counter
+  movement across multiple simultaneous fronts; engineer fortify/repair and
+  airborne/airmobile insertion not yet modeled. The default mode remains the
+  abstract lodgment-vs-defense balance.
 - **One Blue commander** rather than separate US / Japan / Taiwan decision-makers
   (milestone 6). Japan is assumed engaged; US enters at turn 1 (base case).
 - **ISR / Space / Cyber** abstracted; fog of war is light (each side sees enemy

@@ -31,10 +31,13 @@ _SYSTEM = (
 class AnthropicModelClient:
     """Provider-agnostic ModelClient backed by the Anthropic SDK."""
 
-    def __init__(self, model: str = "claude-opus-4-8", effort: str = "high") -> None:
+    def __init__(self, model: str = "claude-opus-4-8", effort: str = "low",
+                 max_tokens: int = 1500) -> None:
         self.model = model
         self.effort = effort
+        self.max_tokens = max_tokens
         self._client = None
+        self._mode = "modern"   # downgrades to "plain" if structured outputs 400
 
     def _ensure_client(self):
         if self._client is None:
@@ -42,29 +45,39 @@ class AnthropicModelClient:
             self._client = anthropic.Anthropic()
         return self._client
 
-    def generate_json(self, system: str, prompt: str, schema: dict) -> dict:
-        client = self._ensure_client()
-        kwargs = dict(
-            model=self.model,
-            max_tokens=8000,
-            system=system,
-            messages=[{"role": "user", "content": prompt}],
-            output_config={"format": {"type": "json_schema", "schema": schema},
-                           "effort": self.effort},
-        )
-        # Fable 5: thinking is always on (omit the param); enable refusal fallback.
-        if self.model != "claude-fable-5":
-            kwargs["thinking"] = {"type": "adaptive"}
-        if self.model == "claude-fable-5":
-            resp = client.beta.messages.create(
-                betas=["server-side-fallback-2026-06-01"],
-                fallbacks=[{"model": "claude-opus-4-8"}], **kwargs)
-        else:
-            resp = client.messages.create(**kwargs)
+    @staticmethod
+    def _parse(resp) -> dict:
         if getattr(resp, "stop_reason", None) == "refusal":
             raise RuntimeError("model refused")
         text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
+        text = text.strip()
+        if text.startswith("```"):  # strip markdown fences if present
+            text = text.split("```", 2)[1].lstrip("json").strip()
         return json.loads(text)
+
+    def generate_json(self, system: str, prompt: str, schema: dict) -> dict:
+        client = self._ensure_client()
+        base = dict(model=self.model, max_tokens=self.max_tokens, system=system,
+                    messages=[{"role": "user", "content": prompt}])
+        if self._mode == "modern":
+            try:
+                resp = client.messages.create(
+                    thinking={"type": "adaptive"},
+                    output_config={"format": {"type": "json_schema", "schema": schema},
+                                   "effort": self.effort},
+                    **base)
+                return self._parse(resp)
+            except (TypeError, Exception) as e:  # noqa: BLE001 — degrade once on param issues
+                import anthropic
+                if isinstance(e, (anthropic.AuthenticationError, anthropic.RateLimitError,
+                                  anthropic.APIConnectionError, RuntimeError)):
+                    raise
+                self._mode = "plain"  # SDK/endpoint doesn't accept these params here
+        # Plain path: instruct JSON-only and parse the text.
+        plain = dict(base)
+        plain["messages"] = [{"role": "user", "content":
+                              prompt + "\n\nReply with ONLY minified JSON, no prose."}]
+        return self._parse(client.messages.create(**plain))
 
 
 class ClaudeCommander:
