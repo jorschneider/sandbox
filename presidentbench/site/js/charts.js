@@ -87,7 +87,8 @@ function scatterChart(points, opts = {}) {
   const ymin = opts.ymin ?? 0, ymax = opts.ymax ?? 100;
   const X = v => m.l + (v - xmin) / (xmax - xmin) * iw;
   const Y = v => m.t + ih - (v - ymin) / (ymax - ymin) * ih;
-  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", height: "auto" });
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H,
+    style: "width:100%;height:auto;display:block" });
 
   // quadrant shading (top-right = competent + principled)
   const midX = X((xmin + xmax) / 2), midY = Y((ymin + ymax) / 2);

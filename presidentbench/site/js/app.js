@@ -3,8 +3,7 @@
 const COMP_LABELS = { outcome: "Outcome", epistemics: "Epistemics", stability: "Stability",
                       coherence: "Coherence", constraint: "Integrity" };
 const SHORT = s => s.replace(/^Claude /, "").replace(/Institutionalist/, "Inst.");
-const PALETTE = ["#1f5fa6", "#2f9e6e", "#c98a23", "#c0394e", "#7a5bb0",
-                 "#2b8fa6", "#b5651d", "#5a8f2b"];
+// PALETTE is defined once in charts.js (loaded first) and shared here.
 
 let DATA = null, SELECTED = null, COLORS = {};
 
