@@ -13,6 +13,7 @@
   <div class="brand"><span class="dot"></span> WarBench</div>
   <nav class="navlinks">
     <a href="#how">How it works</a>
+    <a href="#theater">Map</a>
     <a href="#scoring">Scoring</a>
     <a href="#results">Results</a>
     <a href="#code">Code</a>
@@ -85,6 +86,118 @@
       <em>Chinese defeat</em>, read directly off the game state: how much PLA lodgment is ashore,
       how many functional ports and airfields China holds, and how badly the amphibious fleet was
       attrited.</p>
+  </section>
+
+  <section id="theater">
+    <p class="eyebrow">The theater</p>
+    <h2>What the two commanders are fighting over</h2>
+    <p>The whole campaign turns on a hundred miles of water. <span class="chip red">RED</span>
+      opens with a missile barrage to suppress coalition airpower, then pushes an
+      <strong>amphibious lift</strong> across the Taiwan Strait to seize the island&rsquo;s western
+      ports and airfields before help arrives. <span class="chip blue">BLUE</span> sinks that fleet
+      from beneath the sea and from the air, keeps the airbases at Kadena flying, and feeds carriers
+      and reinforcements in from Guam. The map below is the board both models are reading.</p>
+
+    <figure class="map">
+      <svg viewBox="0 0 720 430" role="img"
+           aria-label="Map of the Taiwan Strait theater: a Chinese amphibious invasion across the strait against a coalition defense.">
+        <defs>
+          <marker id="ahRed" markerWidth="9" markerHeight="9" refX="5.5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#b23a2e"/>
+          </marker>
+          <marker id="ahRedT" markerWidth="8" markerHeight="8" refX="4.5" refY="2.5" orient="auto">
+            <path d="M0,0 L5,2.5 L0,5 Z" fill="#b23a2e"/>
+          </marker>
+          <marker id="ahBlue" markerWidth="9" markerHeight="9" refX="5.5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#28508c"/>
+          </marker>
+        </defs>
+
+        <!-- sea -->
+        <rect x="0" y="0" width="720" height="430" fill="#e3edf3"/>
+
+        <!-- China mainland (RED) -->
+        <path d="M0,0 L225,0 L205,60 L240,120 L210,185 L245,255 L215,320 L245,400 L230,430 L0,430 Z"
+              fill="#e7d6d1" stroke="#cdb3ac" stroke-width="1"/>
+        <text class="terr" x="48" y="50" fill="#b23a2e">CHINA</text>
+        <text class="lbl red" x="48" y="69">People&rsquo;s Liberation Army</text>
+
+        <!-- Taiwan (BLUE — the prize) -->
+        <path d="M452,92 L498,140 L505,225 L470,332 L441,300 L433,205 L443,130 Z"
+              fill="#d6e0ee" stroke="#aebfda" stroke-width="1"/>
+        <text class="terr" x="487" y="206" fill="#28508c" transform="rotate(80 487 206)">TAIWAN</text>
+
+        <!-- Okinawa / Kadena -->
+        <path d="M560,44 L634,38 L650,64 L586,76 Z" fill="#d6e0ee" stroke="#aebfda" stroke-width="1"/>
+        <text class="lbl blue" x="556" y="32">Okinawa &middot; Kadena AB</text>
+
+        <!-- Taiwan Strait label -->
+        <text class="lbl sm" x="322" y="372" text-anchor="middle">TAIWAN STRAIT &middot; ~130 km</text>
+
+        <!-- RED missile salvos: suppress airpower (dashed arcs to airfields + Kadena) -->
+        <g fill="none" stroke="#b23a2e" stroke-width="1.7" stroke-dasharray="5 4" opacity="0.85">
+          <path d="M196,94 Q322,52 450,122" marker-end="url(#ahRedT)"/>
+          <path d="M206,314 Q330,360 462,300" marker-end="url(#ahRedT)"/>
+          <path d="M210,204 Q400,104 588,62" marker-end="url(#ahRedT)"/>
+        </g>
+        <text class="lbl red" x="300" y="92">missile barrage</text>
+
+        <!-- RED amphibious lift: thick arrows across the strait to the ports -->
+        <g fill="none" stroke="#b23a2e" stroke-width="7" stroke-linecap="round" opacity="0.92">
+          <path d="M214,210 Q322,214 430,238" marker-end="url(#ahRed)"/>
+          <path d="M216,250 Q322,266 436,292" marker-end="url(#ahRed)"/>
+        </g>
+        <text class="lbl red" x="270" y="246">amphibious lift</text>
+
+        <!-- PLA missile / air bases on the coast -->
+        <g fill="#b23a2e">
+          <rect x="190" y="88" width="13" height="13" rx="1"/><line x1="196" y1="88" x2="196" y2="80" stroke="#b23a2e" stroke-width="1.5"/>
+          <rect x="204" y="198" width="13" height="13" rx="1"/><line x1="210" y1="198" x2="210" y2="190" stroke="#b23a2e" stroke-width="1.5"/>
+          <rect x="200" y="308" width="13" height="13" rx="1"/><line x1="206" y1="308" x2="206" y2="300" stroke="#b23a2e" stroke-width="1.5"/>
+        </g>
+
+        <!-- BLUE submarine + picket barrier in the strait: sinks the lift -->
+        <path d="M346,90 L356,212 L344,332" fill="none" stroke="#28508c" stroke-width="2.4"
+              stroke-dasharray="2 6" stroke-linecap="round"/>
+        <g fill="#28508c">
+          <ellipse cx="350" cy="150" rx="8" ry="3.4"/>
+          <ellipse cx="352" cy="212" rx="8" ry="3.4"/>
+          <ellipse cx="349" cy="276" rx="8" ry="3.4"/>
+        </g>
+        <text class="lbl blue" x="338" y="352" text-anchor="middle">submarine + picket screen</text>
+
+        <!-- Taiwan objectives: ports &amp; airfields RED must seize (gold diamonds) -->
+        <g fill="#caa23a" stroke="#8a6d1c" stroke-width="1">
+          <path d="M444,150 l6,6 l-6,6 l-6,-6 Z"/>
+          <path d="M440,235 l6,6 l-6,6 l-6,-6 Z"/>
+          <path d="M450,300 l6,6 l-6,6 l-6,-6 Z"/>
+        </g>
+        <text class="lbl sm" x="516" y="248">ports &amp;<tspan x="516" dy="13">airfields</tspan></text>
+
+        <!-- BLUE carriers / coalition airpower east of Taiwan + Kadena -->
+        <g fill="#28508c">
+          <path d="M600,52 l7,12 l-14,0 Z"/>
+          <path d="M604,120 l7,12 l-14,0 Z"/>
+          <path d="M644,166 l7,12 l-14,0 Z"/>
+        </g>
+        <text class="lbl blue" x="664" y="124" text-anchor="end">carrier strike groups</text>
+
+        <!-- Guam reinforcement inflow -->
+        <path d="M712,256 L648,216" fill="none" stroke="#28508c" stroke-width="3"
+              stroke-linecap="round" marker-end="url(#ahBlue)"/>
+        <text class="lbl blue" x="708" y="276" text-anchor="end">reinforcements from Guam</text>
+      </svg>
+      <figcaption>RED suppresses coalition airpower with missiles and runs an amphibious lift across
+        the strait to seize Taiwan&rsquo;s western ports and airfields; BLUE sinks the lift with
+        submarines and air, holds Kadena, and surges carriers and reinforcements from Guam. A game
+        is decided by how much of that lift gets ashore &mdash; and survives.</figcaption>
+    </figure>
+    <div class="maplegend">
+      <span><i style="background:#b23a2e"></i>PLA missile / air base</span>
+      <span><i style="background:#b23a2e;opacity:.5"></i>missile salvo &amp; amphibious lift</span>
+      <span><i style="background:#caa23a"></i>port / airfield objective</span>
+      <span><i style="background:#28508c"></i>coalition subs, carriers &amp; airbases</span>
+    </div>
   </section>
 
   <section id="faithful">

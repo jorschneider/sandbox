@@ -14,6 +14,7 @@ import json
 import os
 import time
 
+from wargame_eval.agents.providers import (CHINESE_ORIGINS, model_label, model_origin)
 from wargame_eval.scoring import GameResult, elo_ratings, side_performance, win_table
 
 HERE = os.path.dirname(__file__)
@@ -37,9 +38,7 @@ def progress_from_metrics(m: dict) -> float:
 
 
 def short(model: str) -> str:
-    return (model.replace("claude-", "").replace("-", " ")
-            .replace("opus 4 8", "Opus 4.8").replace("sonnet 4 6", "Sonnet 4.6")
-            .replace("haiku 4 5", "Haiku 4.5"))
+    return model_label(model)
 
 
 def build_run(path: str) -> dict | None:
@@ -60,8 +59,11 @@ def build_run(path: str) -> dict | None:
     fb = d.get("total_fallbacks", {})
     models = []
     for m in sorted(elo, key=lambda x: elo[x], reverse=True):
+        origin = model_origin(m)
         models.append({
-            "model": m, "label": short(m), "elo": round(elo[m]),
+            "model": m, "label": short(m), "origin": origin,
+            "cn": origin in CHINESE_ORIGINS,
+            "elo": round(elo[m]),
             "games": wt[m]["games"], "wins": wt[m]["wins"],
             "win_rate": wt[m]["win_rate"],
             "offense": perf[m]["offense_red_score"],

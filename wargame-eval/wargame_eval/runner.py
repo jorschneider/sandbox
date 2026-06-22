@@ -27,9 +27,9 @@ from .scoring import GameResult, elo_ratings, extract_metrics, win_table
 
 
 def _make_commander(agent: str, model: str, side_seed: int):
-    if agent == "claude":
-        from .agents.claude import ClaudeCommander
-        return ClaudeCommander(model=model, seed=side_seed)
+    if agent in ("claude", "api"):
+        from .agents.providers import make_commander
+        return make_commander(model, side_seed)
     return HeuristicCommander(name=model, seed=side_seed)
 
 
@@ -90,7 +90,8 @@ def main(argv: list[str] | None = None) -> None:
     pl = sub.add_parser("play", help="play one game")
     pl.add_argument("--red", default="heuristic-red")
     pl.add_argument("--blue", default="heuristic-blue")
-    pl.add_argument("--agent", choices=["heuristic", "claude"], default="heuristic")
+    pl.add_argument("--agent", choices=["heuristic", "claude", "api"], default="heuristic",
+                    help="'api' routes each model id to its provider (Claude or OpenRouter)")
     pl.add_argument("--seed", type=int, default=0)
     pl.add_argument("--turns", type=int, default=8)
     pl.add_argument("--ground-map", action="store_true",
@@ -104,7 +105,8 @@ def main(argv: list[str] | None = None) -> None:
 
     tn = sub.add_parser("tournament", help="round-robin with role swaps")
     tn.add_argument("--models", required=True, help="comma-separated model ids")
-    tn.add_argument("--agent", choices=["heuristic", "claude"], default="heuristic")
+    tn.add_argument("--agent", choices=["heuristic", "claude", "api"], default="heuristic",
+                    help="'api' routes each model id to its provider (Claude or OpenRouter)")
     tn.add_argument("--games-per-pair", type=int, default=4)
     tn.add_argument("--turns", type=int, default=8)
     tn.add_argument("--ground-map", action="store_true",

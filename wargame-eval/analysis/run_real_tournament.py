@@ -16,7 +16,7 @@ import os
 import time
 import zlib
 
-from wargame_eval.agents.claude import ClaudeCommander
+from wargame_eval.agents.providers import make_commander
 from wargame_eval.engine import Engine
 from wargame_eval.scenario import build_base_case
 from wargame_eval.scoring import GameResult, elo_ratings, extract_metrics, win_table
@@ -47,8 +47,8 @@ def main() -> None:
             state = build_base_case(seed=seed, max_turns=TURNS,
                                     us_entry_turn=US_ENTRY,
                                     japan_engaged=not JAPAN_NEUTRAL)
-            red = ClaudeCommander(a, seed=seed * 2 + 1)
-            blue = ClaudeCommander(b, seed=seed * 2 + 2)
+            red = make_commander(a, seed=seed * 2 + 1)
+            blue = make_commander(b, seed=seed * 2 + 2)
             engine = Engine(state, red, blue, ground_map=GROUND_MAP)
             try:
                 r = engine.run()
