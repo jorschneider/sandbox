@@ -10,8 +10,9 @@ function el(tag, attrs = {}, kids = []) {
   return n;
 }
 
-const PALETTE = ["#5b8cff", "#46c08a", "#e0a23f", "#e0596b", "#c0a6d8",
-                 "#4fc7d4", "#e0833f", "#9bd45b"];
+const PALETTE = ["#1f5fa6", "#2f9e6e", "#c98a23", "#c0394e", "#7a5bb0",
+                 "#2b8fa6", "#b5651d", "#5a8f2b"];
+const GRID = "#e6e4dd", AXLINE = "#e0ded6", LABEL = "#6a675f", TICK = "#97938a", PLABEL = "#33312c";
 
 /* ---- competence radar (values 0..100) ---- */
 function radarChart(labels, series, opts = {}) {
@@ -24,14 +25,14 @@ function radarChart(labels, series, opts = {}) {
   for (const frac of [0.25, 0.5, 0.75, 1]) {
     let d = "";
     for (let i = 0; i < n; i++) { const [x, y] = pt(i, R * frac); d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1); }
-    svg.appendChild(el("path", { d: d + "Z", fill: "none", stroke: "#273046", "stroke-width": 1 }));
+    svg.appendChild(el("path", { d: d + "Z", fill: "none", stroke: GRID, "stroke-width": 1 }));
   }
   for (let i = 0; i < n; i++) {
     const [x, y] = pt(i, R);
-    svg.appendChild(el("line", { x1: cx, y1: cy, x2: x, y2: y, stroke: "#273046", "stroke-width": 1 }));
+    svg.appendChild(el("line", { x1: cx, y1: cy, x2: x, y2: y, stroke: GRID, "stroke-width": 1 }));
     const [lx, ly] = pt(i, R + 22);
     svg.appendChild(el("text", {
-      x: lx, y: ly, fill: "#93a0b8", "font-size": 11, "text-anchor":
+      x: lx, y: ly, fill: LABEL, "font-size": 11, "text-anchor":
         Math.abs(lx - cx) < 8 ? "middle" : (lx > cx ? "start" : "end"),
       "dominant-baseline": "middle", "font-family": "ui-monospace, monospace"
     }, labels[i]));
@@ -43,7 +44,7 @@ function radarChart(labels, series, opts = {}) {
       const v = Math.max(0, Math.min(100, s.values[i])) / 100;
       const [x, y] = pt(i, R * v); d += (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
     }
-    svg.appendChild(el("path", { d: d + "Z", fill: col, "fill-opacity": 0.14, stroke: col, "stroke-width": 2 }));
+    svg.appendChild(el("path", { d: d + "Z", fill: col, "fill-opacity": 0.16, stroke: col, "stroke-width": 2 }));
     for (let i = 0; i < n; i++) {
       const v = Math.max(0, Math.min(100, s.values[i])) / 100;
       const [x, y] = pt(i, R * v);
@@ -97,23 +98,23 @@ function scatterChart(points, opts = {}) {
 
   // grid + axes
   for (let g = 0; g <= 100; g += 25) {
-    svg.appendChild(el("line", { x1: X(g), y1: m.t, x2: X(g), y2: m.t + ih, stroke: "#1c2335", "stroke-width": 1 }));
-    svg.appendChild(el("line", { x1: m.l, y1: Y(g), x2: m.l + iw, y2: Y(g), stroke: "#1c2335", "stroke-width": 1 }));
-    svg.appendChild(el("text", { x: X(g), y: m.t + ih + 18, fill: "#5d6b86", "font-size": 10, "text-anchor": "middle", "font-family": "ui-monospace, monospace" }, "" + g));
-    svg.appendChild(el("text", { x: m.l - 10, y: Y(g) + 3, fill: "#5d6b86", "font-size": 10, "text-anchor": "end", "font-family": "ui-monospace, monospace" }, "" + g));
+    svg.appendChild(el("line", { x1: X(g), y1: m.t, x2: X(g), y2: m.t + ih, stroke: "#eeece6", "stroke-width": 1 }));
+    svg.appendChild(el("line", { x1: m.l, y1: Y(g), x2: m.l + iw, y2: Y(g), stroke: "#eeece6", "stroke-width": 1 }));
+    svg.appendChild(el("text", { x: X(g), y: m.t + ih + 18, fill: TICK, "font-size": 10, "text-anchor": "middle", "font-family": "ui-monospace, monospace" }, "" + g));
+    svg.appendChild(el("text", { x: m.l - 10, y: Y(g) + 3, fill: TICK, "font-size": 10, "text-anchor": "end", "font-family": "ui-monospace, monospace" }, "" + g));
   }
-  svg.appendChild(el("text", { x: m.l + iw / 2, y: H - 8, fill: "#93a0b8", "font-size": 12, "text-anchor": "middle" }, opts.xlabel || "Competence"));
-  svg.appendChild(el("text", { x: 16, y: m.t + ih / 2, fill: "#93a0b8", "font-size": 12, "text-anchor": "middle", transform: `rotate(-90 16 ${m.t + ih / 2})` }, opts.ylabel || "Integrity"));
+  svg.appendChild(el("text", { x: m.l + iw / 2, y: H - 8, fill: PLABEL, "font-size": 12, "text-anchor": "middle" }, opts.xlabel || "Competence"));
+  svg.appendChild(el("text", { x: 16, y: m.t + ih / 2, fill: PLABEL, "font-size": 12, "text-anchor": "middle", transform: `rotate(-90 16 ${m.t + ih / 2})` }, opts.ylabel || "Integrity"));
   // quadrant caption (bottom-right)
-  svg.appendChild(el("text", { x: m.l + iw - 6, y: m.t + ih - 8, fill: "#e0596b", "font-size": 10.5, "text-anchor": "end", "fill-opacity": .8 }, opts.brLabel || "competent, low-integrity"));
+  svg.appendChild(el("text", { x: m.l + iw - 6, y: m.t + ih - 8, fill: "#c0394e", "font-size": 10.5, "text-anchor": "end", "fill-opacity": .85 }, opts.brLabel || "competent, low-integrity"));
 
   points.forEach(p => {
     const cx = X(p.x), cy = Y(p.y);
     const r = p.kind === "model" ? 7 : 5;
     svg.appendChild(el("circle", { cx, cy, r, fill: p.color,
-      stroke: p.kind === "model" ? "#fff" : "none", "stroke-width": p.kind === "model" ? 1.5 : 0,
-      "fill-opacity": p.kind === "model" ? 0.95 : 0.6 }));
-    const lab = el("text", { x: cx + r + 4, y: cy + 3, fill: "#cdd7ea", "font-size": 11,
+      stroke: p.kind === "model" ? "#1b1a17" : "none", "stroke-width": p.kind === "model" ? 1.2 : 0,
+      "fill-opacity": p.kind === "model" ? 0.95 : 0.55 }));
+    const lab = el("text", { x: cx + r + 4, y: cy + 3, fill: PLABEL, "font-size": 11,
       "font-family": "ui-monospace, monospace" }, p.label);
     svg.appendChild(lab);
   });

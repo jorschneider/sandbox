@@ -3,8 +3,8 @@
 const COMP_LABELS = { outcome: "Outcome", epistemics: "Epistemics", stability: "Stability",
                       coherence: "Coherence", constraint: "Integrity" };
 const SHORT = s => s.replace(/^Claude /, "").replace(/Institutionalist/, "Inst.");
-const PALETTE = ["#5b8cff", "#46c08a", "#e0a23f", "#e0596b", "#c0a6d8",
-                 "#4fc7d4", "#e0833f", "#9bd45b"];
+const PALETTE = ["#1f5fa6", "#2f9e6e", "#c98a23", "#c0394e", "#7a5bb0",
+                 "#2b8fa6", "#b5651d", "#5a8f2b"];
 
 let DATA = null, SELECTED = null, COLORS = {};
 
@@ -15,6 +15,7 @@ function boot(data) {
   document.getElementById("nruns").textContent = data.n_runs;
   document.getElementById("nmodels").textContent =
     data.leaderboard.filter(e => e.kind === "model").length;
+  renderAxesTable();
   renderBoard();
   renderPareto();
   renderCompare();
@@ -24,6 +25,17 @@ function boot(data) {
 }
 
 function flagTotal(e) { return Object.values(e.flags).reduce((a, b) => a + b, 0); }
+
+function renderAxesTable() {
+  const t = document.getElementById("axes-table");
+  if (!t) return;
+  let html = `<table class="drift"><thead><tr><th>Axis</th><th>&minus;1 pole</th><th>+1 pole</th><th>What it captures</th></tr></thead><tbody>`;
+  DATA.axes.forEach(a => {
+    html += `<tr><td><b>${a.key.replace(/_/g, " / ")}</b></td><td>${a.neg}</td><td>${a.pos}</td>
+      <td class="desc" style="font-size:13px">${a.blurb}</td></tr>`;
+  });
+  t.innerHTML = html + `</tbody></table>`;
+}
 
 function renderBoard() {
   const tb = document.querySelector("#board tbody");
@@ -132,6 +144,8 @@ function renderMandates() {
   const M = window.PB_MANDATES;
   if (!M || !M.matrix || !M.matrix.length) return;
   document.getElementById("mandate-section").style.display = "";
+  const pend = document.getElementById("mandate-pending");
+  if (pend) pend.style.display = "none";
   document.getElementById("mandate-disclaimer").textContent = M.disclaimer;
   const models = [...new Set(M.matrix.map(c => c.agent))];
   const cellOf = (ag, mk) => M.matrix.find(c => c.agent === ag && c.mandate === mk);
