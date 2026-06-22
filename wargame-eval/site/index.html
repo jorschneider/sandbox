@@ -239,7 +239,8 @@
   <section id="results">
     <p class="eyebrow">Results · live API</p>
     <h2>Leaderboard</h2>
-    <p class="muted">Real games played through the Anthropic API. Pick a scenario:</p>
+    <p class="muted">Real games played live against each model&rsquo;s API &mdash; Anthropic for
+      Claude, OpenRouter for the Chinese open models. Pick a scenario:</p>
     <div class="tabs" id="tabs"></div>
     <p class="runmeta" id="runmeta"></p>
     <table class="board" id="board">
@@ -320,8 +321,9 @@
       var defW = Math.round(46 * (1 - Math.min(1, (m.defense || 0) / maxOff)));
       var fbCls = m.fallbacks <= 10 ? 'fb-ok' : 'fb-warn';
       var tr = document.createElement('tr');
+      var origin = m.origin ? ' <span class="origin' + (m.cn ? ' cn' : '') + '">' + m.origin + '</span>' : '';
       tr.innerHTML =
-        '<td class="model">' + m.label + '</td>' +
+        '<td class="model">' + m.label + origin + '</td>' +
         '<td><span class="num">' + m.elo + '</span></td>' +
         '<td><span class="num">' + Math.round(m.win_rate * 100) + '%</span></td>' +
         '<td><span class="bar off" style="width:' + offW + 'px"></span> <span class="num">' + fmt(m.offense) + '</span></td>' +
@@ -346,12 +348,23 @@
     var best = run.models.slice().sort(function (a, b) { return (b.offense||0)-(a.offense||0); })[0];
     var safe = run.models.slice().sort(function (a, b) { return (a.defense||1)-(b.defense||1); })[0];
     var reliable = run.models.slice().sort(function (a, b) { return a.fallbacks - b.fallbacks; })[0];
-    document.getElementById('readout').innerHTML =
+    var read =
       '<strong>The honest read.</strong> In a defender-favored, small-sample setting, ' +
       'offense/defense skill and reliability separate the field more cleanly than Elo. Here the ' +
       'best invader was <strong>' + best.label + '</strong> (offense ' + fmt(best.offense) + '), the ' +
       'best defender <strong>' + safe.label + '</strong> (conceded ' + fmt(safe.defense) + '), and the ' +
       'most reliable order-generator <strong>' + reliable.label + '</strong> (' + reliable.fallbacks + ' fallbacks).';
+    if (run.cross) {
+      var cnLeads = [];
+      if (best.cn) cnLeads.push('offense');
+      if (safe.cn) cnLeads.push('defense');
+      read += cnLeads.length
+        ? ' This is a cross-provider field, and a Chinese open model leads on ' +
+          cnLeads.join(' and ') + ' &mdash; the open models are clearly in contention.'
+        : ' This is a cross-provider field; the Chinese open models trail the frontier on ' +
+          'skill here but mostly match it on reliability.';
+    }
+    document.getElementById('readout').innerHTML = read;
   }
   render();
 })();

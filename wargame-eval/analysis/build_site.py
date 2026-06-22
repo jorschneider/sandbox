@@ -74,9 +74,14 @@ def build_run(path: str) -> dict | None:
                 if d.get("us_entry", 1) == 1 and not d.get("japan_neutral")
                 else f"Excursion — US entry turn {d.get('us_entry')}, "
                      f"Japan {'neutral' if d.get('japan_neutral') else 'engaged'}")
+    # A run that pits Claude against the Chinese open models is the cross-provider
+    # headline — label it as such (the base-case detail moves into the prose below).
+    cross = any(m["cn"] for m in models) and any(not m["cn"] for m in models)
+    if cross:
+        scenario = "Cross-provider — frontier Claude vs Chinese open models"
     label = os.path.basename(os.path.dirname(path)).replace("real_run_", "").replace("real_run", "base")
     return {
-        "label": label, "scenario": scenario, "turns": d.get("turns"),
+        "label": label, "scenario": scenario, "cross": cross, "turns": d.get("turns"),
         "n_games": len(all_games), "n_valid": len(valid),
         "n_degraded": len(all_games) - len(valid),
         "models": models,
@@ -92,8 +97,8 @@ def main() -> None:
         r = build_run(path)
         if r:
             runs.append(r)
-    # Feature the competitive run with the most valid games first.
-    runs.sort(key=lambda r: (r["scenario"].startswith("Base"), -r["n_valid"]))
+    # Feature the cross-provider (Claude vs Chinese) run first, then by sample size.
+    runs.sort(key=lambda r: (not r.get("cross"), -r["n_valid"]))
     data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs}
     out = os.path.join(ROOT, "site", "data.js")
     os.makedirs(os.path.dirname(out), exist_ok=True)
