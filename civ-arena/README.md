@@ -97,6 +97,30 @@ Every cable is recorded and shown in the report's feed.
 - **Live leaderboard** — bars re-sort as the scrubber moves, labelled per model.
 - **Diplomatic cables** — the full negotiation + action feed, color-coded per
   civ, filtered to the scrubbed point (wars highlighted).
+- **Per-model scorecards** — a table characterizing *how each model played*:
+  wars declared, **betrayals** (accepted a pact then declared war on that
+  ally), times betrayed, pacts, and **neg%** (share of its bilateral proposals
+  that were accepted). These are computed from the event log — no fuzzy
+  sentiment, just verifiable actions.
+
+## Ranking the models (tournament)
+
+One match is noisy. `tournament.py` runs many matches and ranks the **models**,
+rotating which model starts in which civ so nobody is stuck with a strong/weak
+start position:
+
+```sh
+CIVAGENT_DIR=./vendor/CivAgent python tournament.py --demo --matches 8     # no keys, preview
+CIVAGENT_DIR=./vendor/CivAgent python tournament.py --config models.yaml --matches 20
+```
+
+It writes `tournament.html`: an **Elo leaderboard** (start 1000, K=24) with win
+rate, average placement, and the summed behavior stats, plus a **head-to-head
+matrix** (how often each model outranked each other). Aggregates per *model*, so
+the same model is pooled across the different civs it played.
+
+> In `--demo` the diplomacy is random, so the Elo spread is just RNG noise — it
+> only means something with real models.
 
 ## What's verified vs. what needs your key
 
@@ -105,6 +129,7 @@ Every cable is recorded and shown in the report's feed.
 | Headless Unciv engine advances a real game | ✅ Verified (no keys) |
 | Full pipeline incl. negotiation + actions + report (`--demo`) | ✅ Verified (no keys) |
 | Diplomatic actions (war, ally, peace, …) applied to the save | ✅ Verified (engine reacts) |
+| Per-model scorecards + tournament Elo / head-to-head (`--demo`) | ✅ Verified (no keys) |
 | `setup.sh` end-to-end | ✅ Verified |
 | Live LLM calls via OpenRouter | 🔑 Needs your key; prompts may want tuning |
 
@@ -150,7 +175,8 @@ Every cable is recorded and shown in the report's feed.
 | `setup.sh` | Clone CivAgent, venv, pinned deps, Redis, smoke test |
 | `requirements.txt` | Verified dependency pins (e.g. `llama-index==0.10.58`) |
 | `smoke_test.py` | Advance the bundled save through the engine — no keys |
-| `arena.py` | The runner: negotiation + actions + engine → CSV + animated report |
+| `arena.py` | One match: negotiation + actions + engine → CSV + animated report with scorecards |
+| `tournament.py` | Many matches (rotating seats) → Elo leaderboard + head-to-head `tournament.html` |
 | `models.example.yaml` | OpenRouter key + per-civ model ids (copy to `models.yaml`) |
 | `patches/anthropic_llm_utils.py` | Optional Claude adapter for CivAgent-native routing (OpenRouter usually makes this unnecessary) |
 
