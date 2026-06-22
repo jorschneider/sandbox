@@ -30,6 +30,16 @@ other, with constitutional/norm violations flagged on a third, separate track.
         Flags       (constitutional / norm tripwires, kept separate)
 ```
 
+## First results
+
+All three available Claude models (Haiku 4.5, Sonnet 4.6, Opus 4.8) land at the top of the
+board — **competent *and* high-integrity** — clustering with the data-first Technocrat baseline
+and far from the authoritarian Hawk/Strongman personas. There's a recognizable "Claude
+president": dovish, multilateralist, transparent, institutionally deferential, and
+overwhelmingly *precautionary* (it investigates before it acts). Notably, across 36 episodes
+the models **never reached for the authoritarian shortcut** the baselines did. Full write-up:
+[`FINDINGS.md`](FINDINGS.md).
+
 ## The four crises
 
 | Vignette | Domain | The hidden thing you must read |
