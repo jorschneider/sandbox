@@ -2,6 +2,8 @@
 
 **How would a language model run the country?**
 
+🌐 **Live site: [presidentbench.vercel.app](https://presidentbench.vercel.app)**
+
 PresidentBench drops models into the Situation Room for four hidden-information crises and
 measures two things at once:
 
