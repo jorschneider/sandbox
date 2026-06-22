@@ -18,6 +18,7 @@ function boot(data) {
   renderBoard();
   renderPareto();
   renderCompare();
+  renderMandates();
   SELECTED = (data.leaderboard.find(e => e.kind === "model") || data.leaderboard[0]).agent;
   renderDetail();
 }
@@ -115,6 +116,102 @@ function renderDetail() {
     });
   }
 }
+
+function fidColor(v) {
+  // 40 -> red, 70 -> amber, 100 -> green
+  const t = Math.max(0, Math.min(1, (v - 45) / 45));
+  const a = [224, 89, 107], b = [224, 162, 63], c = [70, 192, 138];
+  const lerp = (x, y, k) => Math.round(x + (y - x) * k);
+  let col = t < 0.5
+    ? a.map((x, i) => lerp(x, b[i], t * 2))
+    : b.map((x, i) => lerp(x, c[i], (t - 0.5) * 2));
+  return `rgb(${col[0]},${col[1]},${col[2]})`;
+}
+
+function renderMandates() {
+  const M = window.PB_MANDATES;
+  if (!M || !M.matrix || !M.matrix.length) return;
+  document.getElementById("mandate-section").style.display = "";
+  document.getElementById("mandate-disclaimer").textContent = M.disclaimer;
+  const models = [...new Set(M.matrix.map(c => c.agent))];
+  const cellOf = (ag, mk) => M.matrix.find(c => c.agent === ag && c.mandate === mk);
+
+  // build table: rows = models, cols = mandates
+  let html = `<table class="mtx"><thead><tr><th></th>`;
+  M.mandates.forEach(m => {
+    html += `<th><div class="mh"><span class="pty ${m.party}">${m.party}</span>${m.name}</div>
+      <div class="msl">&ldquo;${m.slogan}&rdquo;</div></th>`;
+  });
+  html += `</tr></thead><tbody>`;
+  models.forEach(ag => {
+    html += `<tr><td class="rowh">${ag}</td>`;
+    M.mandates.forEach(m => {
+      const c = cellOf(ag, m.key);
+      if (!c) { html += `<td class="mc empty">&mdash;</td>`; return; }
+      html += `<td class="mc" style="background:${fidColor(c.fidelity)}22;border-color:${fidColor(c.fidelity)}55"
+        data-ag="${ag}" data-mk="${m.key}">
+        <div class="fid" style="color:${fidColor(c.fidelity)}">${c.fidelity}</div>
+        <div class="sp">s${c.style} &middot; p${c.promise}</div></td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody></table>
+    <div class="legend" style="margin-top:10px">
+      <span><b>fidelity</b> = mean(style, promise)</span>
+      <span><b>s</b> = style (governed as promised)</span>
+      <span><b>p</b> = promise (delivered the pledges)</span>
+      <span style="color:#5d6b86">click a cell for the drift detail</span>
+    </div>`;
+  document.getElementById("mandate-matrix").innerHTML = html;
+
+  // headline insight
+  const avgS = avg(M.matrix.map(c => c.style)), avgP = avg(M.matrix.map(c => c.promise));
+  const di = document.getElementById("mandate-detail");
+  di.innerHTML = `<div class="callout" style="margin-top:16px">Across every model &times; mandate,
+    average <b>promise</b> fidelity is ${avgP.toFixed(0)} but average <b>style</b> fidelity is
+    only ${avgS.toFixed(0)} &mdash; the models tend to <em>deliver the platform's goals while
+    governing in their own disposition</em>. Click a cell to see exactly where a model drifts
+    from the mandate it was given.</div>`;
+
+  document.querySelectorAll("td.mc[data-ag]").forEach(td => {
+    td.style.cursor = "pointer";
+    td.onclick = () => showMandateDrift(td.dataset.ag, td.dataset.mk);
+  });
+}
+
+function showMandateDrift(ag, mk) {
+  const M = window.PB_MANDATES;
+  const c = M.matrix.find(x => x.agent === ag && x.mandate === mk);
+  const m = M.mandates.find(x => x.key === mk);
+  const axName = {}; M.axes.forEach(a => axName[a.key] = a);
+  const rows = Object.entries(m.priorities).map(([k, tgt]) => {
+    const act = c.lean[k];
+    const ax = axName[k];
+    const gap = Math.abs(act - tgt);
+    const pole = v => v >= 0 ? ax.pos : ax.neg;
+    return `<tr><td>${ax.neg} &harr; ${ax.pos}</td>
+      <td class="num">${tgt >= 0 ? "+" : ""}${tgt.toFixed(2)} <span class="pl">${pole(tgt)}</span></td>
+      <td class="num">${act >= 0 ? "+" : ""}${act.toFixed(2)} <span class="pl">${pole(act)}</span></td>
+      <td class="num" style="color:${gap > 0.7 ? "#e0596b" : gap > 0.4 ? "#e0a23f" : "#46c08a"}">${gap.toFixed(2)}</td></tr>`;
+  }).join("");
+  const broke = Object.keys(c.broken || {}).length
+    ? `<div class="flags" style="margin-top:10px">` + Object.entries(c.broken)
+        .map(([f, n]) => `<span class="flag">broke: ${f.replace(/_/g, " ")} &times;${n}</span>`).join("") + `</div>`
+    : `<p class="desc" style="margin-top:8px">No redlines broken.</p>`;
+  const di = document.getElementById("mandate-detail");
+  di.innerHTML = `<div class="panel" style="margin-top:16px;background:var(--panel-2)">
+    <div class="detail-head"><span class="big" style="font-size:20px">${ag}</span>
+      <span class="badge persona">running on ${m.name}'s platform</span></div>
+    <p class="desc">&ldquo;${m.slogan}&rdquo; &mdash; fidelity <b>${c.fidelity}</b>
+      (style ${c.style} / promise ${c.promise}), n=${c.n}</p>
+    <table class="drift"><thead><tr><th>Axis</th><th>Mandate wanted</th><th>Model did</th><th>gap</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    ${broke}
+  </div>`;
+  di.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function avg(a) { const x = a.filter(v => v != null); return x.reduce((s, v) => s + v, 0) / (x.length || 1); }
 
 function renderPareto() {
   const root = document.getElementById("pareto");

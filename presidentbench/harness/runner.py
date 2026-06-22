@@ -14,8 +14,11 @@ from .scoring import (disposition_from_history, coherence_score, composite,
                       COMPETENCE_WEIGHTS)
 
 
-def run_episode(scenario_slug: str, agent, seed: int, verbose: bool = False) -> dict:
+def run_episode(scenario_slug: str, agent, seed: int, verbose: bool = False,
+                mandate=None) -> dict:
     import random
+    from .mandates import MANDATES, score_mandate
+    mandate_obj = MANDATES[mandate] if mandate else None
     scen = get_scenario(scenario_slug)
     rng = random.Random(seed)
     hidden = scen.roll_hidden(rng)
@@ -27,6 +30,9 @@ def run_episode(scenario_slug: str, agent, seed: int, verbose: bool = False) -> 
         inj = scen.injected(turn, st, hidden) if turn > 0 else None
         body = scen.opening_brief(st, hidden) if turn == 0 else scen.sitrep(st, hidden)
         sitrep = (inj + "\n\n" + body) if inj else body
+        if mandate_obj:
+            head = mandate_obj.full_brief() if turn == 0 else "[YOUR MANDATE] " + mandate_obj.banner()
+            sitrep = head + "\n\n" + sitrep
 
         tools_avail = [t for t in scen.tools() if t.available(st.v)]
         avail_names = {t.name for t in tools_avail}
@@ -57,7 +63,7 @@ def run_episode(scenario_slug: str, agent, seed: int, verbose: bool = False) -> 
     comp_composite = composite(comp)
     disp = disposition_from_history(scen, st.history)
 
-    return {
+    result = {
         "scenario": scen.slug,
         "scenario_title": scen.title,
         "domain": scen.domain,
@@ -74,19 +80,26 @@ def run_episode(scenario_slug: str, agent, seed: int, verbose: bool = False) -> 
         "flags": st.flags,
         "final_state": st.snapshot(scen.snapshot_keys),
         "transcript": st.history,
+        "mandate": mandate,
     }
+    if mandate_obj:
+        result["mandate_meta"] = {"name": mandate_obj.name, "party": mandate_obj.party,
+                                  "slogan": mandate_obj.slogan}
+        result["mandate_score"] = score_mandate(result, mandate_obj)
+    return result
 
 
 def run_batch(scenario_slugs, agent_specs, seeds, out_dir, verbose=False,
-              resume=True) -> list:
+              resume=True, mandate=None) -> list:
     from .agents import make_agent
     os.makedirs(out_dir, exist_ok=True)
+    mtag = f"__mandate_{mandate}" if mandate else ""
     results = []
     for spec in agent_specs:
         for slug in scenario_slugs:
             for seed in seeds:
                 safe_agent = spec.replace(":", "_")
-                fname = f"{slug}__{safe_agent}__seed{seed}.json"
+                fname = f"{slug}__{safe_agent}{mtag}__seed{seed}.json"
                 fpath = os.path.join(out_dir, fname)
                 if resume and os.path.exists(fpath):
                     print(f"skip (exists): {fname}")
@@ -97,13 +110,15 @@ def run_batch(scenario_slugs, agent_specs, seeds, out_dir, verbose=False,
                 t0 = time.time()
                 try:
                     agent = make_agent(spec)
-                    res = run_episode(slug, agent, seed, verbose=verbose)
+                    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
                     res["wall_seconds"] = round(time.time() - t0, 1)
                     with open(fpath, "w") as fh:
                         json.dump(res, fh, indent=2)
                     results.append(res)
+                    extra = (f"  | fidelity {res['mandate_score']['fidelity']}"
+                             if res.get("mandate_score") else "")
                     print(f"   -> {res['outcome']}  | competence "
-                          f"{res['competence_composite']}  | {res['wall_seconds']}s",
+                          f"{res['competence_composite']}{extra}  | {res['wall_seconds']}s",
                           flush=True)
                 except Exception as e:
                     print(f"   !! ERROR {type(e).__name__}: {e}")
@@ -123,9 +138,12 @@ def aggregate(results_dir: str, out_path: str) -> dict:
         if fn.endswith(".json") and fn != os.path.basename(out_path):
             with open(os.path.join(results_dir, fn)) as fh:
                 try:
-                    runs.append(json.load(fh))
+                    r = json.load(fh)
                 except json.JSONDecodeError:
-                    pass
+                    continue
+            if r.get("mandate"):   # mandate runs live in their own dashboard
+                continue
+            runs.append(r)
 
     agents = {}   # agent -> aggregate
     for r in runs:
@@ -220,6 +238,74 @@ def aggregate(results_dir: str, out_path: str) -> dict:
     js_path = os.path.splitext(out_path)[0] + ".js"
     with open(js_path, "w") as fh:
         fh.write("window.PB_DATA = ")
+        json.dump(payload, fh)
+        fh.write(";\n")
+    return payload
+
+
+def aggregate_mandates(results_dir: str, out_path: str) -> dict:
+    """Build the model x mandate fidelity matrix from mandate-mode runs."""
+    from .mandates import MANDATES, AXIS_KEYS as _ignore  # noqa
+    from .core import AXIS_KEYS
+
+    cells = {}   # (agent, mandate) -> accumulator
+    for fn in sorted(os.listdir(results_dir)):
+        if not fn.endswith(".json"):
+            continue
+        with open(os.path.join(results_dir, fn)) as fh:
+            try:
+                r = json.load(fh)
+            except json.JSONDecodeError:
+                continue
+        if not r.get("mandate") or not r.get("mandate_score"):
+            continue
+        key = (r["agent"], r["mandate"])
+        c = cells.setdefault(key, {"agent": r["agent"], "mandate": r["mandate"],
+                                   "n": 0, "fid": 0.0, "sty": 0.0, "pro": 0.0,
+                                   "lean_sum": {k: 0.0 for k in AXIS_KEYS},
+                                   "broken": {}, "per_scenario": {}})
+        ms = r["mandate_score"]
+        c["n"] += 1
+        c["fid"] += ms["fidelity"] or 0
+        c["sty"] += ms["style"] or 0
+        c["pro"] += ms["promise"] or 0
+        for k in AXIS_KEYS:
+            c["lean_sum"][k] += r["disposition"]["lean"][k]
+        for b in ms["broken_redlines"]:
+            c["broken"][b] = c["broken"].get(b, 0) + 1
+        ps = c["per_scenario"].setdefault(r["scenario"], {"n": 0, "fid": 0.0})
+        ps["n"] += 1
+        ps["fid"] += ms["fidelity"] or 0
+
+    matrix = []
+    for (agent, mkey), c in cells.items():
+        n = max(1, c["n"])
+        matrix.append({
+            "agent": agent, "mandate": mkey, "n": c["n"],
+            "fidelity": round(c["fid"] / n, 1),
+            "style": round(c["sty"] / n, 1),
+            "promise": round(c["pro"] / n, 1),
+            "lean": {k: round(c["lean_sum"][k] / n, 3) for k in AXIS_KEYS},
+            "broken": c["broken"],
+            "per_scenario": {s: round(v["fid"] / max(1, v["n"]), 1)
+                             for s, v in c["per_scenario"].items()},
+        })
+
+    payload = {
+        "generated": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
+        "disclaimer": ("Stylized platforms approximating the publicly stated policy "
+                       "priorities of widely-discussed 2028 contenders. Not endorsements, "
+                       "predictions, or verbatim positions -- benchmarking instruments only."),
+        "mandates": [{"key": m.key, "name": m.name, "party": m.party, "slogan": m.slogan,
+                      "brief": m.brief, "priorities": m.priorities, "redlines": m.redlines}
+                     for m in MANDATES.values()],
+        "axes": [{"key": ax.key, "neg": ax.neg, "pos": ax.pos} for ax in AXES],
+        "matrix": matrix,
+    }
+    with open(out_path, "w") as fh:
+        json.dump(payload, fh, indent=2)
+    with open(os.path.splitext(out_path)[0] + ".js", "w") as fh:
+        fh.write("window.PB_MANDATES = ")
         json.dump(payload, fh)
         fh.write(";\n")
     return payload
