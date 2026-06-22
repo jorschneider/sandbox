@@ -223,10 +223,100 @@ class AnthropicAgent(Agent):
 
 
 # --------------------------------------------------------------------------- #
+# OpenAI-compatible model agent (OpenRouter, DashScope, Zhipu, OpenAI, ...).
+# Lets us benchmark non-Anthropic models -- e.g. Qwen, GLM, Kimi -- through any
+# OpenAI-style chat-completions endpoint with tool calling.
+# --------------------------------------------------------------------------- #
+
+
+class OpenAICompatAgent(Agent):
+    kind = "model"
+
+    def __init__(self, model: str, name=None, base_url=None, api_key=None,
+                 max_tokens: int = 1600, temperature: float = 0.8):
+        import openai
+        self.client = openai.OpenAI(base_url=base_url, api_key=api_key,
+                                    default_headers={"HTTP-Referer": "https://presidentbench.vercel.app",
+                                                     "X-Title": "PresidentBench"})
+        self.model = model
+        self.name = name or model
+        self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.messages = []
+        self.pending = []          # tool_call ids awaiting a tool message
+        self.last_feedback = "Actions registered."
+
+    def reset(self):
+        self.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        self.pending = []
+        self.last_feedback = "Actions registered."
+
+    @staticmethod
+    def _tools(tools):
+        out = []
+        for t in tools:
+            props = {"rationale": {"type": "string", "description": "One short sentence on why."}}
+            props.update(t.params or {})
+            out.append({"type": "function", "function": {
+                "name": t.name, "description": t.desc,
+                "parameters": {"type": "object", "properties": props}}})
+        return out
+
+    def act(self, scenario, sitrep, tools, history, rng):
+        import json as _json
+        import openai
+        for tid in self.pending:
+            self.messages.append({"role": "tool", "tool_call_id": tid,
+                                  "content": self.last_feedback})
+        self.pending = []
+        self.messages.append({"role": "user", "content":
+                              sitrep + "\n\nTake your action(s) now by calling one or more tools."})
+
+        resp = None
+        for attempt in range(4):
+            try:
+                resp = self.client.chat.completions.create(
+                    model=self.model, messages=self.messages,
+                    tools=self._tools(tools), tool_choice="auto",
+                    max_tokens=self.max_tokens, temperature=self.temperature)
+                break
+            except (openai.APIStatusError, openai.APIConnectionError, openai.RateLimitError):
+                if attempt == 3:
+                    raise
+                import time
+                time.sleep(2 ** attempt)
+
+        msg = resp.choices[0].message
+        tcs = msg.tool_calls or []
+        self.messages.append({
+            "role": "assistant", "content": msg.content or "",
+            "tool_calls": [{"id": tc.id, "type": "function",
+                            "function": {"name": tc.function.name,
+                                         "arguments": tc.function.arguments}} for tc in tcs]
+        } if tcs else {"role": "assistant", "content": msg.content or ""})
+
+        actions = []
+        self.pending = []
+        for tc in tcs:
+            try:
+                params = _json.loads(tc.function.arguments or "{}")
+            except Exception:
+                params = {}
+            if not isinstance(params, dict):
+                params = {}
+            actions.append(Action(tc.function.name, params, params.get("rationale", "")))
+            self.pending.append(tc.id)
+        return actions
+
+    def observe(self, feedback: str):
+        self.last_feedback = feedback
+
+
+# --------------------------------------------------------------------------- #
 # Factory
 # --------------------------------------------------------------------------- #
 
-# Friendly display names for the models we benchmark.
+# Anthropic models (native API).
 MODEL_ALIASES = {
     "haiku": ("claude-haiku-4-5-20251001", "Claude Haiku 4.5"),
     "sonnet": ("claude-sonnet-4-6", "Claude Sonnet 4.6"),
@@ -234,9 +324,20 @@ MODEL_ALIASES = {
     "fable": ("claude-fable-5", "Claude Fable 5"),
 }
 
+# OpenAI-compatible models, served via OpenRouter (the KIMI_* env points there).
+OPENROUTER_ALIASES = {
+    "qwen": ("qwen/qwen3.7-max", "Qwen3.7 Max"),
+    "glm": ("z-ai/glm-5.2", "GLM-5.2"),
+    "kimi": ("moonshotai/kimi-k2.6", "Kimi K2.6"),
+}
+
+
+def _openrouter_key():
+    return os.environ.get("OPENROUTER_API_KEY") or os.environ.get("KIMI_API_KEY")
+
 
 def make_agent(spec: str) -> Agent:
-    """spec is 'persona:<name>' or 'model:<alias-or-id>'."""
+    """spec is 'persona:<name>', 'model:<alias>', or 'openrouter:<model-id>'."""
     kind, _, ident = spec.partition(":")
     if kind == "persona":
         personas = build_personas()
@@ -244,6 +345,15 @@ def make_agent(spec: str) -> Agent:
             raise KeyError(f"unknown persona {ident!r}; have {sorted(personas)}")
         return personas[ident]
     if kind == "model":
+        if ident in OPENROUTER_ALIASES:
+            model_id, display = OPENROUTER_ALIASES[ident]
+            return OpenAICompatAgent(model_id, name=display,
+                                     base_url="https://openrouter.ai/api/v1",
+                                     api_key=_openrouter_key())
         model_id, display = MODEL_ALIASES.get(ident, (ident, ident))
         return AnthropicAgent(model_id, name=display)
-    raise ValueError(f"bad agent spec {spec!r} (expected 'persona:x' or 'model:y')")
+    if kind == "openrouter":
+        return OpenAICompatAgent(ident, name=ident,
+                                 base_url="https://openrouter.ai/api/v1",
+                                 api_key=_openrouter_key())
+    raise ValueError(f"bad agent spec {spec!r}")

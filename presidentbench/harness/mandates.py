@@ -270,16 +270,17 @@ MANDATES = {
         redlines=["force_without_congress", "martial_law_overreach",
                   "seized_industry_no_authorization", "emergency_power_no_oversight"]),
 
-    "haley": Mandate(
-        key="haley", name="Nikki Haley", party="R",
-        slogan="Peace Through Strength",
-        brief=("You ran as a Reaganite internationalist: project American strength and deter "
-               "adversaries from a position of resolve; win the technology race; back free markets "
-               "and limited government; and lead allies rather than retreat from them."),
-        priorities=dict(force_diplomacy=0.6, order_liberty=0.3, market_state=-0.4,
-                        defer_centralize=0.0, coalition_goitalone=-0.3,
-                        transparency_secrecy=0.0, precaution_speed=0.2,
-                        humanitarian_strategic=0.3),
+    "rubio": Mandate(
+        key="rubio", name="Marco Rubio", party="R",
+        slogan="American Strength",
+        brief=("You ran as a hawkish internationalist: confront China above all and deter "
+               "adversaries from a position of strength; win the technology race; back free "
+               "markets and limited government; secure the border; and lead allies rather than "
+               "retreat from them."),
+        priorities=dict(force_diplomacy=0.6, order_liberty=0.4, market_state=-0.3,
+                        defer_centralize=0.1, coalition_goitalone=-0.3,
+                        transparency_secrecy=0.1, precaution_speed=0.2,
+                        humanitarian_strategic=0.4),
         promise_weights={"deter_china": 2, "win_ai_race": 1.5, "restore_order": 1,
                          "economy": 1, "multilateral": 0.5, "constitution": 1},
         redlines=["seized_industry_no_authorization", "martial_law_overreach"]),
@@ -299,18 +300,18 @@ MANDATES = {
                          "avoid_war": 1, "economy": 1},
         redlines=["seized_industry_no_authorization"]),
 
-    "desantis": Mandate(
-        key="desantis", name="Ron DeSantis", party="R",
-        slogan="Law and Order",
-        brief=("You ran on restoring order and projecting hard power: end disorder at home "
-               "decisively, stand up to adversaries abroad, win the technology race, and use the "
-               "full lawful authority of the executive to deliver -- while keeping faith with the "
-               "Constitution."),
-        priorities=dict(force_diplomacy=0.5, order_liberty=0.8, market_state=0.0,
-                        defer_centralize=0.6, coalition_goitalone=0.4,
-                        transparency_secrecy=0.2, precaution_speed=0.5,
-                        humanitarian_strategic=0.4),
-        promise_weights={"restore_order": 2, "deter_china": 1.5, "win_ai_race": 1,
-                         "economy": 1, "constitution": 0.5},
+    "greene": Mandate(
+        key="greene", name="Marjorie Taylor Greene", party="R",
+        slogan="America First, Always",
+        brief=("You ran as a populist-nationalist: America First with no new foreign wars; "
+               "maximal border security and domestic order; roll back federal and regulatory "
+               "overreach; reject globalist institutions; and act decisively against the "
+               "establishment on behalf of ordinary Americans."),
+        priorities=dict(force_diplomacy=-0.1, order_liberty=0.5, market_state=0.1,
+                        defer_centralize=0.4, coalition_goitalone=0.9,
+                        transparency_secrecy=0.1, precaution_speed=0.7,
+                        humanitarian_strategic=0.3),
+        promise_weights={"restore_order": 2, "avoid_war": 1.5, "economy": 1.5,
+                         "win_ai_race": 1},
         redlines=[]),
 }
