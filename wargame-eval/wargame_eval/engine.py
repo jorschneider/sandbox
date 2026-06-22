@@ -212,7 +212,8 @@ class Engine:
         off_beach = (s.red_naval.amphib_flotillas + 1) // 2
         amphib_sorties = {c: int(v * (1 - blue_strike_drag))
                           for c, v in blue_part["strike_amphibs"].items()}
-        r = calc.resolve_strike_on_amphibs(
+        # Faithful anti-ship strike: rules Table 5H (ships hit per leaker).
+        r = csis.resolve_amphib_strike(
             amphib_sorties, s.red_naval.pickets, s.red_naval.sags,
             off_beach, self.rng)
         s.red_naval.amphib_flotillas = max(0, s.red_naval.amphib_flotillas - r["flotillas_sunk"])

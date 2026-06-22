@@ -267,3 +267,85 @@ def airbase_missile_attack(salvos: int, sam_batteries: float, hardened: bool,
     killed = min(int(aircraft_present), killed)
     suppressed = 1 if penetrating >= 3 else 0  # runway cratering / UGS digging out
     return AirbaseAttackResult(penetrating, killed, suppressed)
+
+
+# ============================================================================
+# Attacks_on_Pickets_Amphibs — anti-ship strike on Chinese amphibious TFs.
+# Faithful port of rules Table 5H ("# Ships Hit by Leakers", Interception of
+# Anti-Ship Missiles): each leaking missile rolls a d20 against the table.
+# ============================================================================
+
+# Anti-ship missiles carried per squadron (Inputs!C28:C40 payload column).
+ANTISHIP_MISSILES_PER_SQN = {"4th": 4.0, "4.5": 4.0, "5th": 2.0, "bomber": 8.0}
+LRASM_GENS = {"4.5"}                 # 4.5-gen carry LRASM (Inputs!E29 = 'Y')
+ANTISHIP_INTERCEPT_PK = 18           # picket/SAG defenders remove a missile on 1-18
+SHIPS_PER_FLOTILLA_LOSS = 4.0        # ship hits that render one flotilla ineffective
+
+
+def antiship_hits(roll: int, lrasm: bool) -> tuple[int, bool]:
+    """Table 5H — ships hit by one leaking missile against a Chinese TF.
+
+    Returns (ship_hits, tf_destroyed). A natural 20 is a catastrophic
+    defensive failure: the whole TF (flotilla) is destroyed.
+    """
+    if lrasm:                        # LRASM row
+        if roll <= 6:
+            return 0, False
+        if roll <= 13:
+            return 1, False
+        if roll <= 16:
+            return 2, False
+        if roll <= 18:
+            return 3, False
+        if roll == 19:
+            return 4, False
+        return 0, True               # 20 -> TF destroyed
+    # JASSM / other cruise missile row
+    if roll <= 11:
+        return 0, False
+    if roll <= 18:
+        return 1, False
+    if roll == 19:
+        return 2, False
+    return 0, True                   # 20 -> TF destroyed
+
+
+def resolve_amphib_strike(strike_sorties: dict[str, int], pickets: int, sags: int,
+                          off_beach_flotillas: int, rng: GameRNG) -> dict:
+    """Blue anti-ship strike on the off-beach amphibious fleet (Table 5H).
+
+    Each strike squadron contributes its anti-ship missile payload (LRASM for
+    4.5-gen, JASSM/cruise otherwise). Escorting SAGs and screening pickets
+    intercept missiles (SAM-style, d20 1-18); each leaker then rolls Table 5H
+    for ship hits, with a natural 20 destroying a whole flotilla. Ship hits
+    accumulate into flotillas rendered ineffective.
+    """
+    lrasm_msl = sum(strike_sorties.get(g, 0) * ANTISHIP_MISSILES_PER_SQN.get(g, 0)
+                    for g in LRASM_GENS)
+    cruise_msl = sum(strike_sorties.get(g, 0) * ANTISHIP_MISSILES_PER_SQN.get(g, 0)
+                     for g in ANTISHIP_MISSILES_PER_SQN if g not in LRASM_GENS)
+    total = int(round(lrasm_msl + cruise_msl))
+    if total <= 0:
+        return {"missiles": 0, "leakers": 0, "ship_hits": 0, "tf_destroyed": 0,
+                "flotillas_sunk": 0, "pickets_lost": 0}
+    # Escort + picket interception (each defender engages once on d20 1-18).
+    engaging = int(sags + pickets)
+    intercepted = sum(1 for _ in range(engaging) if rng.roll(20) <= ANTISHIP_INTERCEPT_PK)
+    leakers = max(0, total - intercepted)
+    lrasm_frac = lrasm_msl / (lrasm_msl + cruise_msl) if (lrasm_msl + cruise_msl) else 0.0
+    lrasm_leakers = int(round(leakers * lrasm_frac))
+    cruise_leakers = leakers - lrasm_leakers
+
+    ship_hits = 0
+    tf_destroyed = 0
+    for is_lrasm, n in ((True, lrasm_leakers), (False, cruise_leakers)):
+        for _ in range(n):
+            h, tf = antiship_hits(rng.roll(20), is_lrasm)
+            ship_hits += h
+            tf_destroyed += 1 if tf else 0
+    flotillas_sunk = min(off_beach_flotillas,
+                         tf_destroyed + int(ship_hits // SHIPS_PER_FLOTILLA_LOSS))
+    pickets_lost = min(pickets, ship_hits // 6)  # some hits fall on the screen
+    return {"missiles": total, "leakers": leakers, "ship_hits": ship_hits,
+            "tf_destroyed": tf_destroyed, "flotillas_sunk": flotillas_sunk,
+            "pickets_lost": pickets_lost}

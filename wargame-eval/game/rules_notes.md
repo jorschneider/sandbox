@@ -72,16 +72,21 @@ outputs are exact targets):
 | `air_exchange()` + `AIR_QUALITY` | `Taiwan_CAP_and_Air_Combat` (Combat!A67:B77) | Real Quality constants; quality-weighted exchange |
 | `ground_combat.resolve_engagement()` | `Ground_War_Adjudication` (Adjudication + FEBA Movement) | EXACT terrain/strength/odds/loss/FEBA tables |
 | `airbase_missile_attack()` | `RED_AB_ATK` / `Blue_AB_Atk` (+ rules Table 5C) | Real PK d20 model: SAM intercept 1-18, HAS kill 1-15 (2 msl/HAS), open 1-17, UGS PK 14 |
+| `resolve_amphib_strike()` + `antiship_hits()` | `Attacks_on_Pickets_Amphibs` (+ rules Table 5H) | EXACT anti-ship table: per leaker d20 -> ships hit (LRASM 1-6/7-13/14-16/17-18/19/20; cruise 1-11/12-18/19/20), nat-20 = TF destroyed |
 
 The airbase-attack kill mechanic is the workbook's binomial d20 model — each
 leaking munition kills with probability PK/20: half the SAM battalions (rounded
 up) intercept on 1-18; hardened shelters take two missiles per kill-roll (1-15),
-aircraft in the open one (1-17), underground hangars trap at PK 14.
+aircraft in the open one (1-17), underground hangars trap at PK 14. The anti-ship
+strike on the amphibious fleet uses rules Table 5H exactly: escorts/pickets
+intercept the salvo, then each leaking missile rolls a d20 for ship hits (a
+natural 20 destroys the whole flotilla), accumulating into flotillas sunk.
 
 **Representative coefficients** still pending exact ports (`calculators.py`,
-flagged `APPROX`): `resolve_strike_on_amphibs` (the picket/TF saturation-roll
-table — structure faithful: picket value, SAG screen, LRASM bonus),
-`resolve_asbm_vs_carriers`, and `resolve_submarine_barrier` (Ch.8).
+flagged `APPROX`): `resolve_asbm_vs_carriers` and `resolve_submarine_barrier`
+(Ch.8 barrier attrition). The picket-screen *penetration* table (rules Table 5G
+"Attacks Past Picket Ships") is folded into a single interception step rather
+than modeled as a separate screen — a documented simplification.
 
 ## Documented simplifications
 - **Ground war**: a **hex ground game** (`--ground-map`, `ground.py`) is now

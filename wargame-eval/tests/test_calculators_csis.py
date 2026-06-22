@@ -138,3 +138,44 @@ def test_hardened_protects_vs_open():
 def test_airbase_attack_bounded_by_aircraft_present():
     r = csis.airbase_missile_attack(40, 0, False, aircraft_present=3, rng=GameRNG(2))
     assert 0 <= r.aircraft_killed <= 3
+
+
+# --- Anti-ship strike: Table 5H (ships hit by leakers vs Chinese TF) ---------
+
+def test_table_5h_lrasm_exact():
+    # LRASM: 1-6->0, 7-13->1, 14-16->2, 17-18->3, 19->4, 20->TF destroyed.
+    assert csis.antiship_hits(6, True) == (0, False)
+    assert csis.antiship_hits(7, True) == (1, False)
+    assert csis.antiship_hits(13, True) == (1, False)
+    assert csis.antiship_hits(14, True) == (2, False)
+    assert csis.antiship_hits(16, True) == (2, False)
+    assert csis.antiship_hits(17, True) == (3, False)
+    assert csis.antiship_hits(19, True) == (4, False)
+    assert csis.antiship_hits(20, True) == (0, True)
+
+
+def test_table_5h_cruise_exact():
+    # Cruise: 1-11->0, 12-18->1, 19->2, 20->TF destroyed.
+    assert csis.antiship_hits(11, False) == (0, False)
+    assert csis.antiship_hits(12, False) == (1, False)
+    assert csis.antiship_hits(18, False) == (1, False)
+    assert csis.antiship_hits(19, False) == (2, False)
+    assert csis.antiship_hits(20, False) == (0, True)
+
+
+def test_lrasm_outperforms_plain_cruise():
+    # Aggregated over rolls, LRASM scores more ship hits than plain cruise.
+    lr = sum(csis.antiship_hits(r, True)[0] for r in range(1, 20))   # exclude 20 (TF)
+    cr = sum(csis.antiship_hits(r, False)[0] for r in range(1, 20))
+    assert lr > cr
+
+
+def test_amphib_strike_bounded_and_intercepted():
+    rng = GameRNG(4)
+    sorties = {"4th": 0, "4.5": 20, "5th": 0, "bomber": 0}  # LRASM shooters
+    r = csis.resolve_amphib_strike(sorties, pickets=12, sags=8,
+                                   off_beach_flotillas=3, rng=rng)
+    assert 0 <= r["flotillas_sunk"] <= 3
+    assert r["leakers"] <= r["missiles"]
+    # Heavy escort/picket screen intercepts a large share of the salvo.
+    assert r["leakers"] < r["missiles"]
