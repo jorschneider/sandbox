@@ -36,7 +36,7 @@ what is faithful vs. approximate.
 
 Validated against the **live Anthropic API** (Opus 4.8 / Sonnet 4.6 / Haiku 4.5
 play real games via structured outputs + adaptive thinking) — see
-[`analysis/REAL_RUN_RESULTS.md`](analysis/REAL_RUN_RESULTS.md).
+[`analysis/`](analysis/README.md) for leaderboards and how to reproduce them.
 
 ## Install
 
