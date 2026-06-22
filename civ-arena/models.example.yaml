@@ -1,0 +1,30 @@
+# Which model controls each civilization, and the provider credentials.
+#
+# Copy to models.yaml and fill in. arena.py merges this into a CivAgent
+# config at runtime. "All civs = models, no humans": every major civ in the
+# save gets a seat below.
+#
+# Model-string routing (decided by CivAgent's CustomOllama.chat, by NAME):
+#   gpt-4-1106-preview, gpt-3.5-turbo-1106  -> OpenAI         (needs openai_api_key)
+#   deepseek-chat, deepseek-reasoner        -> DeepSeek       (needs deepseek_api_key)
+#   mistral, llama3, gemma                  -> local Ollama   (needs Ollama running)
+# Claude is NOT routed out of the box. To pit Claude against the others, apply
+# the optional patch in the README (adds an OpenAI-compatible route), then use
+# a model string like: claude-opus-4-8.
+
+providers:
+  openai_api_key: ""        # for gpt-* seats
+  openai_base_url: ""       # leave blank for api.openai.com; set for an OpenAI-compatible gateway
+  deepseek_api_key: ""      # for deepseek-* seats
+  default_model: deepseek-chat
+
+# One entry per civ present in the save. The six CivAgent civs are:
+# china, mongolia, egypt, greece, rome, aztecs. Seats for civs not in the
+# chosen save are ignored.
+seats:
+  china:    { model: gpt-4-1106-preview }
+  egypt:    { model: deepseek-chat }
+  greece:   { model: gpt-3.5-turbo-1106 }
+  aztecs:   { model: deepseek-chat }
+  rome:     { model: gpt-4-1106-preview }
+  mongolia: { model: deepseek-chat }
