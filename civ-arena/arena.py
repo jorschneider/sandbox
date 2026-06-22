@@ -9,16 +9,16 @@ accepted actions to the save; (4) Unciv.jar simulates N turns; (5) record
 strengths. Produces a scoreboard CSV and an animated, self-contained
 `report.html` (strength race + diplomatic cables + per-model scorecards).
 
+Watch live: pass --live to rewrite `live.json` each round; serve the directory
+(`python -m http.server`) and open report.html — it polls and re-renders as the
+match unfolds. (The terminal also streams every message/action as it happens.)
+
 Providers: OpenRouter is the easy path (one key proxies every vendor). Set
 `providers.openrouter_api_key` in models.yaml and give each seat an OpenRouter
 model id. Falls back to CivAgent's native routing if unset.
 
-Modes:
-    --dry-run   no LLM, no diplomacy (engine + chart only; no keys)
-    --demo      no LLM; RANDOM diplomacy to preview the full report (no keys)
-    (default)   live model-vs-model (needs models.yaml + key)
-
-`run_match()` is importable — see tournament.py.
+Modes: --dry-run (no LLM, no diplomacy) · --demo (no LLM, random diplomacy) ·
+default = live model-vs-model. `run_match()` is importable — see tournament.py.
 """
 import argparse
 import csv
@@ -55,9 +55,6 @@ DEMO_LINES = [
 ]
 
 
-# ---------------------------------------------------------------------------
-# config + LLM wiring (must bootstrap config before importing civsim)
-# ---------------------------------------------------------------------------
 def bootstrap_config(models_path, want_models):
     seats, providers = {}, {}
     if want_models and models_path and os.path.exists(models_path):
@@ -85,7 +82,6 @@ def bootstrap_config(models_path, want_models):
 
 
 def build_caller(providers):
-    """Return call(model, prompt) -> str. Prefers OpenRouter; else CivAgent reply()."""
     key = providers.get("openrouter_api_key", "")
     if key:
         from openai import OpenAI
@@ -120,9 +116,6 @@ def parse_json(text):
         return None
 
 
-# ---------------------------------------------------------------------------
-# prompts
-# ---------------------------------------------------------------------------
 def _state(me, others, stats):
     out = ["Standings:"]
     for c in [me] + others:
@@ -188,12 +181,9 @@ def major_civs(data):
             and c.get("civName") != "Barbarians"]
 
 
-# ---------------------------------------------------------------------------
-# per-model scorecards (computed from the ordered event log)
-# ---------------------------------------------------------------------------
 def compute_scorecards(civs, civ_models, colors, events, final_strength, winner):
     allies, betr, betrd = defaultdict(set), Counter(), Counter()
-    for e in events:                                   # in chronological order
+    for e in events:
         if e["kind"] == "action" and e.get("accepted") and e.get("action") in PACTS:
             allies[e["frm"]].add(e["to"]); allies[e["to"]].add(e["frm"])
         if e.get("action") == "declare_war":
@@ -222,11 +212,14 @@ def compute_scorecards(civs, civ_models, colors, events, final_strength, winner)
     return cards
 
 
-# ---------------------------------------------------------------------------
-# one match (importable)
-# ---------------------------------------------------------------------------
+def payload(civs, colors, models, snapshots, events, scorecards, winner, mode, live, final):
+    return {"civs": civs, "colors": colors, "models": models, "snapshots": snapshots,
+            "events": events, "scorecards": scorecards, "winner": winner,
+            "mode": mode, "live": live, "final": final}
+
+
 def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
-              demo=False, dry=False, verbose=True):
+              demo=False, dry=False, verbose=True, live_path=None, report_path=None, mode="LIVE"):
     from civsim import utils
     from civsim.simulator import simulator
     from civsim import action_space
@@ -259,6 +252,21 @@ def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
                             "tech": round(s[c]["tech_strength"], 1)})
         return s
 
+    def emit(final=False):
+        if not live_path:
+            return
+        cur = snapshots[-1]["strength"]
+        leader = max(civs, key=lambda c: cur[c]) if civs else None
+        cards = compute_scorecards(civs, civ_models, colors, events, cur, leader)
+        data = payload(civs, colors, civ_models, snapshots, events, cards, leader, mode,
+                       live=True, final=final)
+        with open(live_path, "w") as f:
+            json.dump(data, f)
+        if report_path and not os.path.exists(report_path + ".live"):
+            with open(report_path, "w") as f:
+                f.write(_REPORT_TEMPLATE.replace("/*DATA*/", json.dumps(data)))
+            open(report_path + ".live", "w").close()   # write the live report once
+
     def lj(model, prompt):
         try:
             return parse_json(call(model, prompt))
@@ -267,10 +275,9 @@ def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
                 print(f"  ! model error ({model}): {e}")
             return None
 
-    snapshot(0)
+    snapshot(0); emit()
     for r in range(1, rounds + 1):
         s = stats_for(save)
-        # negotiation
         if not dry and neg_rounds > 0:
             for _ in range(neg_rounds):
                 for sp in civs:
@@ -302,7 +309,6 @@ def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
                     if rep:
                         events.append({"round": r, "kind": "talk", "frm": tgt, "to": sp, "text": rep})
                         remember(tgt, f"You replied to {sp}: {rep}"); remember(sp, f"{tgt} replied: {rep}")
-        # action
         if not dry:
             for actor in civs:
                 others = [c for c in civs if c != actor]
@@ -341,7 +347,7 @@ def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
                             print(f"    (apply failed: {e})")
         t0 = time.time()
         save = simulator.run(save, turns=tpr, diplomacy_flag=False, worker_auto=True)
-        s = snapshot(r)
+        s = snapshot(r); emit(final=(r == rounds))
         if verbose:
             board = " | ".join(f"{c} {s[c]['civ_strength']:.0f}"
                                for c in sorted(civs, key=lambda c: s[c]["civ_strength"], reverse=True))
@@ -350,14 +356,20 @@ def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
     final = {c: stats_for(save)[c]["civ_strength"] for c in civs}
     winner = max(civs, key=lambda c: final[c])
     cards = compute_scorecards(civs, civ_models, colors, events, final, winner)
+    if report_path and os.path.exists(report_path + ".live"):
+        os.remove(report_path + ".live")
     return {"civs": civs, "models": civ_models, "colors": colors,
             "snapshots": snapshots, "events": events, "scorecards": cards,
             "winner": winner, "final": final, "history": history}
 
 
-# ---------------------------------------------------------------------------
-# CLI (single match)
-# ---------------------------------------------------------------------------
+def write_report(path, res, mode):
+    data = payload(res["civs"], res["colors"], res["models"], res["snapshots"],
+                   res["events"], res["scorecards"], res["winner"], mode, live=False, final=True)
+    with open(path, "w") as f:
+        f.write(_REPORT_TEMPLATE.replace("/*DATA*/", json.dumps(data)))
+
+
 def main():
     ap = argparse.ArgumentParser(description="Model-vs-model Civ match with negotiation, scorecards, report.")
     ap.add_argument("--save", default=None)
@@ -367,6 +379,8 @@ def main():
     ap.add_argument("--negotiation-rounds", type=int, default=1)
     ap.add_argument("--out", default=os.path.join(HERE, "scoreboard.csv"))
     ap.add_argument("--report", default=os.path.join(HERE, "report.html"))
+    ap.add_argument("--live", action="store_true",
+                    help="rewrite live.json each round + a live-updating report (serve the dir over http)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--demo", action="store_true")
     args = ap.parse_args()
@@ -379,7 +393,6 @@ def main():
 
     save_path = os.path.abspath(args.save or os.path.join(
         CIVAGENT_DIR, "scripts", "reproductions", "Autosave"))
-    # determine civs from the save, map each to its configured model (or default)
     from civsim import utils
     with open(save_path) as f:
         civs_all = major_civs(utils.json_load_defaultdict(f.read()))
@@ -392,11 +405,14 @@ def main():
     mode = "DRY-RUN" if args.dry_run else ("DEMO" if args.demo else "LIVE")
     print(f"=== Civ Arena: {mode} ===")
     if live:
-        gw = "OpenRouter" if providers.get("openrouter_api_key") else "CivAgent native"
-        print(f"gateway={gw}")
+        print(f"gateway={'OpenRouter' if providers.get('openrouter_api_key') else 'CivAgent native'}")
+    live_path = os.path.join(os.path.dirname(os.path.abspath(args.report)), "live.json") if args.live else None
+    if args.live:
+        print(f"LIVE: serve this dir (python -m http.server) and open report.html — it updates each round")
 
     res = run_match(save_path, civ_models, call, rounds=args.rounds, tpr=args.turns_per_round,
-                    neg_rounds=args.negotiation_rounds, demo=args.demo, dry=args.dry_run)
+                    neg_rounds=args.negotiation_rounds, demo=args.demo, dry=args.dry_run,
+                    live_path=live_path, report_path=args.report, mode=mode)
 
     with open(args.out, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["turn", "round", "civ", "civ_strength", "army", "tech"])
@@ -404,14 +420,6 @@ def main():
     write_report(args.report, res, mode)
     print(f"\n\U0001f3c6 WINNER: {res['winner']} (power {res['final'][res['winner']]:.0f})")
     print(f"scoreboard → {args.out}\nreport     → {args.report}")
-
-
-def write_report(path, res, mode):
-    data = {"civs": res["civs"], "colors": res["colors"], "models": res["models"],
-            "snapshots": res["snapshots"], "events": res["events"],
-            "scorecards": res["scorecards"], "winner": res["winner"], "mode": mode}
-    with open(path, "w") as f:
-        f.write(_REPORT_TEMPLATE.replace("/*DATA*/", json.dumps(data)))
 
 
 _REPORT_TEMPLATE = r"""<!doctype html><html><head><meta charset="utf-8">
@@ -422,6 +430,8 @@ _REPORT_TEMPLATE = r"""<!doctype html><html><head><meta charset="utf-8">
     font:14px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
   header{padding:18px 24px;border-bottom:1px solid var(--line)}
   h1{margin:0;font-size:20px} .sub{color:var(--dim);margin-top:4px}
+  .live{color:#3cb44b;font-weight:700;animation:blink 1.4s infinite}
+  @keyframes blink{50%{opacity:.35}}
   .wrap{display:grid;grid-template-columns:1fr 360px;gap:16px;padding:16px 24px}
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
   canvas{width:100%;height:340px;display:block}
@@ -464,61 +474,60 @@ _REPORT_TEMPLATE = r"""<!doctype html><html><head><meta charset="utf-8">
   </div>
 </div>
 <script>
-const DATA = /*DATA*/;
-const {civs,colors,models,snapshots,events,scorecards,winner,mode} = DATA;
-const N = snapshots.length; let idx=N-1, playing=false, timer=null;
-document.getElementById('sub').innerHTML =
-  `${mode} · ${civs.length} civs · winner <span class="win">${winner}</span> &nbsp;|&nbsp; `+
-  civs.map(c=>`<span style="color:${colors[c]}">${c}</span>=${models[c]}`).join(' · ');
-document.getElementById('legend').innerHTML =
-  civs.map(c=>`<span><i class="dot" style="background:${colors[c]}"></i>${c}</span>`).join('');
-const slider=document.getElementById('slider'); slider.max=N-1; slider.value=idx;
-const cv=document.getElementById('chart'), ctx=cv.getContext('2d');
-function fit(){cv.width=cv.clientWidth*devicePixelRatio;cv.height=340*devicePixelRatio;
-  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);draw();}
-addEventListener('resize',fit);
-let maxV=1; snapshots.forEach(s=>civs.forEach(c=>maxV=Math.max(maxV,s.strength[c]||0)));
-function draw(){const W=cv.clientWidth,H=340,pad=36;ctx.clearRect(0,0,W,H);
+let D = /*DATA*/;
+let idx=D.snapshots.length-1, follow=true, playing=false, timer=null, maxV=1;
+const $=id=>document.getElementById(id), cv=$('chart'), ctx=cv.getContext('2d'), slider=$('slider');
+function recompute(){maxV=1;D.snapshots.forEach(s=>D.civs.forEach(c=>maxV=Math.max(maxV,s.strength[c]||0)));}
+function header(){const lbl=D.final?'winner':'leading';
+  $('sub').innerHTML=`${D.mode}${D.live&&!D.final?' <span class="live">● LIVE</span>':''} · ${D.civs.length} civs · ${lbl} `+
+    `<span class="win">${D.winner||'—'}</span> &nbsp;|&nbsp; `+
+    D.civs.map(c=>`<span style="color:${D.colors[c]}">${c}</span>=${D.models[c]}`).join(' · ');
+  $('legend').innerHTML=D.civs.map(c=>`<span><i class="dot" style="background:${D.colors[c]}"></i>${c}</span>`).join('');}
+function draw(){const N=D.snapshots.length,W=cv.clientWidth,H=340,pad=36;ctx.clearRect(0,0,W,H);
   ctx.strokeStyle='#30363d';ctx.lineWidth=1;ctx.beginPath();
   ctx.moveTo(pad,8);ctx.lineTo(pad,H-22);ctx.lineTo(W-8,H-22);ctx.stroke();
-  ctx.fillStyle='#8b949e';ctx.font='11px sans-serif';
-  ctx.fillText(maxV.toFixed(0),4,14);ctx.fillText('0',pad-14,H-22);
+  ctx.fillStyle='#8b949e';ctx.font='11px sans-serif';ctx.fillText(maxV.toFixed(0),4,14);ctx.fillText('0',pad-14,H-22);
   const x=i=>pad+(W-pad-12)*(N<=1?0:i/(N-1)), y=v=>(H-22)-(H-30)*(v/maxV);
-  civs.forEach(c=>{ctx.strokeStyle=colors[c];ctx.lineWidth=2.5;ctx.beginPath();
-    for(let i=0;i<=idx;i++){const v=snapshots[i].strength[c]||0;i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v));}
-    ctx.stroke();const v=snapshots[idx].strength[c]||0;ctx.fillStyle=colors[c];
+  D.civs.forEach(c=>{ctx.strokeStyle=D.colors[c];ctx.lineWidth=2.5;ctx.beginPath();
+    for(let i=0;i<=idx;i++){const v=D.snapshots[i].strength[c]||0;i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v));}
+    ctx.stroke();const v=D.snapshots[idx].strength[c]||0;ctx.fillStyle=D.colors[c];
     ctx.beginPath();ctx.arc(x(idx),y(v),3.5,0,7);ctx.fill();});}
-function board(){const s=snapshots[idx].strength;
-  const order=[...civs].sort((a,b)=>(s[b]||0)-(s[a]||0)), mx=Math.max(1,...civs.map(c=>s[c]||0));
-  document.getElementById('board').innerHTML=order.map(c=>`<div class="row">
-    <span class="name" style="color:${colors[c]}">${c}</span>
-    <div class="bar" style="background:${colors[c]};width:${(s[c]||0)/mx*180}px"></div>
-    <span class="val">${(s[c]||0).toFixed(0)}</span><span class="model">${models[c]}</span></div>`).join('');}
-function feed(){const upto=snapshots[idx].round;
-  document.getElementById('cables').innerHTML=events.filter(e=>e.round<=upto).map(e=>{
-    const col=colors[e.frm]||'#888', ar=e.kind==='talk'?'→':(e.kind==='war'?'⚔':'⇒');
+function board(){const s=D.snapshots[idx].strength;
+  const order=[...D.civs].sort((a,b)=>(s[b]||0)-(s[a]||0)), mx=Math.max(1,...D.civs.map(c=>s[c]||0));
+  $('board').innerHTML=order.map(c=>`<div class="row"><span class="name" style="color:${D.colors[c]}">${c}</span>
+    <div class="bar" style="background:${D.colors[c]};width:${(s[c]||0)/mx*180}px"></div>
+    <span class="val">${(s[c]||0).toFixed(0)}</span><span class="model">${D.models[c]}</span></div>`).join('');}
+function feed(){const upto=D.snapshots[idx].round;
+  $('cables').innerHTML=D.events.filter(e=>e.round<=upto).map(e=>{const col=D.colors[e.frm]||'#888',
+    ar=e.kind==='talk'?'→':(e.kind==='war'?'⚔':'⇒');
     return `<div class="cable ${e.kind}" style="border-color:${col}">
       <div class="meta">round ${e.round} · <span style="color:${col}">${e.frm}</span> ${ar} ${e.to}</div>
       ${(e.text||'').replace(/</g,'&lt;')}</div>`;}).reverse().join('')
-    ||'<div style="color:#8b949e">No diplomacy this match.</div>';}
-function cards(){const rows=[...scorecards].sort((a,b)=>a.place-b.place);
-  document.getElementById('cards').innerHTML=
-    `<tr><th>Model (civ)</th><th>Place</th><th>Wars</th><th>Betrayals</th><th>Betrayed</th>
-       <th>Pacts</th><th>Neg%</th><th>Msgs</th></tr>`+
-    rows.map(c=>`<tr><td><span class="pill" style="background:${c.color}">${c.winner?'🏆 ':''}${c.model}</span>
-       <span style="color:var(--dim)">${c.civ}</span></td>
-       <td>${c.place}</td><td>${c.wars}</td><td>${c.betrayals}</td><td>${c.betrayed}</td>
-       <td>${c.pacts}</td><td>${c.neg_success==null?'–':Math.round(c.neg_success*100)+'%'}</td>
-       <td>${c.msgs}</td></tr>`).join('');}
-function render(){slider.value=idx;document.getElementById('turnlbl').textContent=
-  `round ${snapshots[idx].round} · turn ${snapshots[idx].turn}`;draw();board();feed();}
-slider.oninput=()=>{idx=+slider.value;render();};
-document.getElementById('play').onclick=function(){playing=!playing;
-  this.textContent=playing?'❚❚ Pause':'▶ Play';
-  if(playing){if(idx>=N-1)idx=0;timer=setInterval(()=>{if(idx>=N-1){clearInterval(timer);
-    playing=false;document.getElementById('play').textContent='▶ Play';return;}idx++;render();},700);}
+    ||'<div style="color:#8b949e">No diplomacy yet.</div>';}
+function cards(){const rows=[...D.scorecards].sort((a,b)=>a.place-b.place);
+  $('cards').innerHTML=`<tr><th>Model (civ)</th><th>Place</th><th>Wars</th><th>Betrayals</th><th>Betrayed</th>
+     <th>Pacts</th><th>Neg%</th><th>Msgs</th></tr>`+
+    rows.map(c=>`<tr><td><span class="pill" style="background:${c.color}">${c.winner&&D.final?'🏆 ':''}${c.model}</span>
+     <span style="color:var(--dim)">${c.civ}</span></td><td>${c.place}</td><td>${c.wars}</td>
+     <td>${c.betrayals}</td><td>${c.betrayed}</td><td>${c.pacts}</td>
+     <td>${c.neg_success==null?'–':Math.round(c.neg_success*100)+'%'}</td><td>${c.msgs}</td></tr>`).join('');}
+function render(){const N=D.snapshots.length;slider.max=N-1;slider.value=idx;
+  $('turnlbl').textContent=`round ${D.snapshots[idx].round} · turn ${D.snapshots[idx].turn}`;draw();board();feed();}
+function applyData(nd){D=nd;recompute();
+  if(follow)idx=D.snapshots.length-1; else idx=Math.min(idx,D.snapshots.length-1);
+  header();render();cards();}
+function fit(){cv.width=cv.clientWidth*devicePixelRatio;cv.height=340*devicePixelRatio;
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);draw();}
+addEventListener('resize',fit);
+slider.oninput=()=>{idx=+slider.value;follow=(idx===D.snapshots.length-1);render();};
+$('play').onclick=function(){playing=!playing;this.textContent=playing?'❚❚ Pause':'▶ Play';
+  if(playing){if(idx>=D.snapshots.length-1)idx=0;timer=setInterval(()=>{if(idx>=D.snapshots.length-1){
+    clearInterval(timer);playing=false;$('play').textContent='▶ Play';return;}idx++;render();},700);}
   else clearInterval(timer);};
-fit();render();cards();
+recompute();header();fit();render();cards();
+if(D.live && location.protocol.startsWith('http')){
+  setInterval(async()=>{try{const r=await fetch('live.json?_='+Date.now());if(r.ok){const nd=await r.json();
+    if(nd.snapshots.length!==D.snapshots.length||nd.final!==D.final)applyData(nd);}}catch(e){}},2000);}
 </script></body></html>"""
 
 

@@ -103,6 +103,29 @@ Every cable is recorded and shown in the report's feed.
   that were accepted). These are computed from the event log — no fuzzy
   sentiment, just verifiable actions.
 
+## Watch it live
+
+Two ways:
+
+1. **Terminal** — every run streams as it happens: each 🗣 private message, each
+   action, and each round's leaderboard print to stdout. Just run it and watch.
+2. **Browser (live-updating report)** — pass `--live` and serve the directory.
+   arena rewrites `live.json` each round; the report polls it and re-renders in
+   place (the ● LIVE badge shows it's following, and the scrubber still works —
+   drag back to review, it auto-follows the latest when you're at the end):
+
+   ```sh
+   # terminal 1 — run the match with --live
+   CIVAGENT_DIR=./vendor/CivAgent python arena.py --live --config models.yaml --rounds 12
+   # terminal 2 — serve the dir (browser fetch needs http, not file://)
+   cd civ-arena && python -m http.server 8000
+   # open http://localhost:8000/report.html  → it updates each round
+   ```
+
+   Live matters most for real matches: each round makes many model calls, so a
+   round takes a while — the browser fills in as the models scheme. (A `--demo`
+   run with no LLM rips through rounds in seconds, so there's little to watch.)
+
 ## Ranking the models (tournament)
 
 One match is noisy. `tournament.py` runs many matches and ranks the **models**,
