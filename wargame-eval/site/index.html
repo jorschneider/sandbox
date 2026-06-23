@@ -293,7 +293,7 @@
       <li><b>Offense</b> &mdash; the headline: how much of Taiwan a model takes as <span class="chip red">RED</span> (a continuous score from lodgment, force ratio, fleet survival). Higher is a better invader.</li>
       <li><b>Defense</b> &mdash; how little it concedes as <span class="chip blue">BLUE</span>. Lower is a better defender.</li>
       <li><b>Outcome &amp; Elo</b> &mdash; head-to-head on the victory spectrum, sides swapped to cancel side advantage.</li>
-      <li><b>Reliability</b> &mdash; how often a model failed to produce a legal, parseable order and fell back to a scripted baseline. Lower is better.</li>
+      <li><b>Invalid orders</b> &mdash; how often a model failed to produce a legal, parseable order, so a scripted baseline had to step in for that turn. Lower is better.</li>
     </ul>
     <p class="muted">Games where the live API rate-limited so badly that a side mostly fell back to
       the baseline are flagged <em>degraded</em> and excluded from the rankings &mdash; otherwise a
@@ -314,7 +314,7 @@
     <h3>Skill vs. reliability</h3>
     <p class="muted">The sharpest split in the field isn&rsquo;t who invades best &mdash; it&rsquo;s who
       can be trusted to issue a legal order every turn. Each dot is a model: <b>right</b> = takes more
-      of Taiwan, <b>up</b> = more reliable (fewer fallbacks to the scripted baseline).</p>
+      of Taiwan, <b>up</b> = more reliable (fewer invalid orders).</p>
     <figure class="scatfig"><div id="scatter"></div></figure>
 
     <h3>How the games ended</h3>
@@ -330,7 +330,7 @@
           <th title="Share of Taiwan seized as RED — higher is a better invader">Offense&nbsp;↗</th>
           <th title="Chinese-success conceded as BLUE — lower is a better defender">Defense</th>
           <th>Win&nbsp;rate</th><th>Elo</th>
-          <th title="Fallbacks to the scripted baseline — lower is better">Fallbacks</th>
+          <th title="Turns the model failed to produce a usable order, so a script stepped in — lower is better">Invalid&nbsp;orders</th>
         </tr></thead>
         <tbody></tbody>
       </table>
@@ -348,7 +348,7 @@
     <p class="eyebrow">How they think</p>
     <h2>Six commanders, six doctrines</h2>
     <p>Each model writes a rationale for every order, so we can read its actual thinking and
-      measure its playstyle from the orders themselves (heuristic-fallback turns are filtered out).
+      measure its playstyle from the orders themselves (turns it failed to order validly are filtered out).
       Two numbers separate the field most: how much of the amphibious fleet a model throws across
       as <span class="chip red">RED</span> per turn (aggression), and how many submarine squadrons
       it commits to the barrier as <span class="chip blue">BLUE</span> (sea denial).</p>
@@ -441,8 +441,8 @@
       v = 'Closer than the headlines suggest. <b>' + inv.label + '</b> takes the most of Taiwan, but ' +
           '<b>' + ru.label + '</b>' + (ru.cn ? ', a Chinese model,' : '') + ' is right on its heels' +
           ((ru.fallbacks || 0) === 0 ? ' and just as dependable' : '') + '. The real gap isn&rsquo;t skill &mdash; ' +
-          'it&rsquo;s <em>reliability</em>: <b>' + worst.label + '</b> fell back to the scripted baseline ' +
-          worst.fallbacks + ' times, where ' + reliable.length + ' models never did.';
+          'it&rsquo;s <em>reliability</em>: <b>' + worst.label + '</b> issued ' +
+          worst.fallbacks + ' invalid orders, where ' + reliable.length + ' models never slipped once.';
     }
     document.getElementById('verdict').innerHTML = v;
 
@@ -454,8 +454,8 @@
       { k: 'Toughest defender', m: def, v: def.label,
         s: 'concedes ' + fmt(def.defense) + ' as BLUE',
         n: 'Gives up the least of Taiwan when defending &mdash; the hardest island in the field to crack.' },
-      { k: 'The reliability tax', v: reliable.length + ' never fall back',
-        s: worst.label + ' fell back ' + worst.fallbacks + '×',
+      { k: 'The reliability tax', v: reliable.length + ' always valid',
+        s: worst.label + ': ' + worst.fallbacks + ' invalid orders',
         n: 'Emitting a legal order every turn is its own skill &mdash; and where the field splits hardest.' },
       { k: 'A real contest', v: cv + ' / ' + run.n_valid + ' Chinese victories',
         s: 'balanced scenario',
@@ -560,7 +560,7 @@
       '<line x1="' + L + '" y1="' + (H - B) + '" x2="' + (W - R) + '" y2="' + (H - B) + '" stroke="#d9d2c4"/>' +
       '<line x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + (H - B) + '" stroke="#d9d2c4"/>' +
       '<text class="scax" x="' + ((L + W - R) / 2) + '" y="' + (H - 22) + '" text-anchor="middle">Offense &mdash; takes more of Taiwan &rarr;</text>' +
-      '<text class="scax" transform="translate(20 ' + ((T + H - B) / 2) + ') rotate(-90)" text-anchor="middle">more reliable, fewer fallbacks &rarr;</text>' +
+      '<text class="scax" transform="translate(20 ' + ((T + H - B) / 2) + ') rotate(-90)" text-anchor="middle">more reliable, fewer invalid orders &rarr;</text>' +
       dots + '</svg>';
   }
 
@@ -574,7 +574,7 @@
     document.getElementById('replay-sub').innerHTML =
       '<span class="chip red">' + r.red + '</span> invades, <span class="chip blue">' + r.blue +
       '</span> defends &mdash; outcome <strong>' + r.outcome.replace(/_/g, ' ').toLowerCase() +
-      '</strong>. Every order below is the model&rsquo;s own (no fallbacks).';
+      '</strong>. Every order below is the model&rsquo;s own (no invalid orders).';
     box.innerHTML = '';
     r.turns.forEach(function (t) {
       var blk = document.createElement('div');
