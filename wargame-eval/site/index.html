@@ -14,7 +14,7 @@
   <nav class="navlinks">
     <a href="#results">Leaderboard</a>
     <a href="#strategies">Strategies</a>
-    <a href="#theater">Map</a>
+    <a href="#anatomy">A game</a>
     <a href="#how">How it works</a>
     <a href="#trashtalk">Trash talk</a>
   </nav>
@@ -130,153 +130,26 @@
     </figure>
   </section>
 
-  <section id="theater">
-    <p class="eyebrow">The theater · a real game</p>
-    <h2 id="map-title">Watch a model try to take Taiwan</h2>
-    <p>The whole campaign turns on a hundred miles of water. <span class="chip red">RED</span>
-      opens with a missile barrage to suppress coalition airpower, then pushes an
-      <strong>amphibious lift</strong> across the Taiwan Strait to seize the island&rsquo;s western
-      ports and airfields before help arrives. <span class="chip blue">BLUE</span> sinks that fleet
-      from beneath the sea and from the air, keeps the airbases at Kadena flying, and feeds carriers
-      and reinforcements in from Guam. The numbers on the map are an <em>actual game</em> from the
-      featured scenario &mdash; the lift committed, what the defenders sank, and what got ashore.</p>
-
-    <figure class="map">
-      <svg viewBox="0 0 720 430" role="img"
-           aria-label="Map of the Taiwan Strait theater: a Chinese amphibious invasion across the strait against a coalition defense.">
-        <defs>
-          <marker id="ahRed" markerWidth="9" markerHeight="9" refX="5.5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#b23a2e"/>
-          </marker>
-          <marker id="ahRedT" markerWidth="8" markerHeight="8" refX="4.5" refY="2.5" orient="auto">
-            <path d="M0,0 L5,2.5 L0,5 Z" fill="#b23a2e"/>
-          </marker>
-          <marker id="ahBlue" markerWidth="9" markerHeight="9" refX="5.5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#28508c"/>
-          </marker>
-        </defs>
-
-        <!-- sea -->
-        <rect x="0" y="0" width="720" height="430" fill="#e3edf3"/>
-
-        <!-- China mainland (RED) -->
-        <path d="M0,0 L225,0 L205,60 L240,120 L210,185 L245,255 L215,320 L245,400 L230,430 L0,430 Z"
-              fill="#e7d6d1" stroke="#cdb3ac" stroke-width="1"/>
-        <text class="terr" x="48" y="50" fill="#b23a2e">CHINA</text>
-        <text class="lbl red" x="48" y="69">People&rsquo;s Liberation Army</text>
-
-        <!-- Taiwan (BLUE — the prize) -->
-        <path d="M452,92 L498,140 L505,225 L470,332 L441,300 L433,205 L443,130 Z"
-              fill="#d6e0ee" stroke="#aebfda" stroke-width="1"/>
-        <text class="terr" x="487" y="206" fill="#28508c" transform="rotate(80 487 206)">TAIWAN</text>
-
-        <!-- Okinawa / Kadena -->
-        <path d="M560,44 L634,38 L650,64 L586,76 Z" fill="#d6e0ee" stroke="#aebfda" stroke-width="1"/>
-        <text class="lbl blue" x="556" y="32">Okinawa &middot; Kadena AB</text>
-
-        <!-- Taiwan Strait label -->
-        <text class="lbl sm" x="322" y="372" text-anchor="middle">TAIWAN STRAIT &middot; ~130 km</text>
-
-        <!-- RED missile salvos: suppress airpower (dashed arcs to airfields + Kadena) -->
-        <g fill="none" stroke="#b23a2e" stroke-width="1.7" stroke-dasharray="5 4" opacity="0.85">
-          <path d="M196,94 Q322,52 450,122" marker-end="url(#ahRedT)"/>
-          <path d="M206,314 Q330,360 462,300" marker-end="url(#ahRedT)"/>
-          <path d="M210,204 Q400,104 588,62" marker-end="url(#ahRedT)"/>
-        </g>
-        <text class="lbl red" x="300" y="92">missile barrage</text>
-
-        <!-- RED amphibious lift: thick arrows across the strait to the ports -->
-        <g fill="none" stroke="#b23a2e" stroke-width="7" stroke-linecap="round" opacity="0.92">
-          <path d="M214,210 Q322,214 430,238" marker-end="url(#ahRed)"/>
-          <path d="M216,250 Q322,266 436,292" marker-end="url(#ahRed)"/>
-        </g>
-        <text class="lbl red" x="232" y="200">amphibious lift</text>
-        <text class="lbl red b" id="m_lift" x="232" y="276">&nbsp;</text>
-
-        <!-- PLA missile / air bases on the coast -->
-        <g fill="#b23a2e">
-          <rect x="190" y="88" width="13" height="13" rx="1"/><line x1="196" y1="88" x2="196" y2="80" stroke="#b23a2e" stroke-width="1.5"/>
-          <rect x="204" y="198" width="13" height="13" rx="1"/><line x1="210" y1="198" x2="210" y2="190" stroke="#b23a2e" stroke-width="1.5"/>
-          <rect x="200" y="308" width="13" height="13" rx="1"/><line x1="206" y1="308" x2="206" y2="300" stroke="#b23a2e" stroke-width="1.5"/>
-        </g>
-
-        <!-- BLUE submarine + picket barrier in the strait: sinks the lift -->
-        <path d="M346,90 L356,212 L344,332" fill="none" stroke="#28508c" stroke-width="2.4"
-              stroke-dasharray="2 6" stroke-linecap="round"/>
-        <g fill="#28508c">
-          <ellipse cx="350" cy="150" rx="8" ry="3.4"/>
-          <ellipse cx="352" cy="212" rx="8" ry="3.4"/>
-          <ellipse cx="349" cy="276" rx="8" ry="3.4"/>
-        </g>
-        <text class="lbl blue" x="338" y="352" text-anchor="middle">submarine + picket screen</text>
-        <text class="lbl blue b" id="m_sunk" x="338" y="338" text-anchor="middle">&nbsp;</text>
-
-        <!-- Taiwan objectives: ports &amp; airfields RED must seize (gold diamonds) -->
-        <g fill="#caa23a" stroke="#8a6d1c" stroke-width="1">
-          <path d="M444,150 l6,6 l-6,6 l-6,-6 Z"/>
-          <path d="M440,235 l6,6 l-6,6 l-6,-6 Z"/>
-          <path d="M450,300 l6,6 l-6,6 l-6,-6 Z"/>
-        </g>
-        <text class="lbl sm" x="516" y="214">ports &amp;<tspan x="516" dy="13">airfields</tspan></text>
-        <text class="lbl red b" id="m_ashore" x="516" y="252">&nbsp;</text>
-        <text class="lbl red b" id="m_taken" x="516" y="268">&nbsp;</text>
-
-        <!-- BLUE carriers / coalition airpower east of Taiwan + Kadena -->
-        <g fill="#28508c">
-          <path d="M600,52 l7,12 l-14,0 Z"/>
-          <path d="M604,120 l7,12 l-14,0 Z"/>
-          <path d="M644,166 l7,12 l-14,0 Z"/>
-        </g>
-        <text class="lbl blue" x="664" y="124" text-anchor="end">carrier strike groups</text>
-
-        <!-- Guam reinforcement inflow -->
-        <path d="M712,256 L648,216" fill="none" stroke="#28508c" stroke-width="3"
-              stroke-linecap="round" marker-end="url(#ahBlue)"/>
-        <text class="lbl blue" x="708" y="276" text-anchor="end">reinforcements from Guam</text>
-      </svg>
-      <figcaption id="map-cap">RED runs an amphibious lift across the strait to seize Taiwan&rsquo;s
-        western ports and airfields; BLUE sinks the lift with submarines and air, holds Kadena, and
-        surges reinforcements from Guam. A game is decided by how much of that lift gets ashore
-        &mdash; and survives.</figcaption>
-    </figure>
-
-    <div class="gamepanel" id="gamepanel" hidden>
-      <div class="gp-head" id="gp_head"></div>
-      <div class="gp-stats">
-        <div><b id="gp_committed">—</b><span>flotillas committed</span></div>
-        <div><b id="gp_sunk">—</b><span>sunk crossing / by air</span></div>
-        <div><b id="gp_lodg">—</b><span>lodgment ashore</span></div>
-        <div><b id="gp_fac">—</b><span>ports &amp; airfields taken</span></div>
-        <div><b id="gp_fleet">—</b><span>amphib fleet surviving</span></div>
-      </div>
-      <div class="gp-turns" id="gp_turns"></div>
-    </div>
-
-    <div class="maplegend">
-      <span><i style="background:#b23a2e"></i>PLA missile / air base</span>
-      <span><i style="background:#b23a2e;opacity:.5"></i>missile salvo &amp; amphibious lift</span>
-      <span><i style="background:#caa23a"></i>port / airfield objective</span>
-      <span><i style="background:#28508c"></i>coalition subs, carriers &amp; airbases</span>
-    </div>
-  </section>
-
   <section id="faithful">
     <p class="eyebrow">Fidelity</p>
     <h2>Grounded in the actual CSIS tables</h2>
-    <p>The engine&rsquo;s combat is not hand-waved. The core calculators are ported from the CSIS
-      workbooks and rulebook tables, each checked against the source by &ldquo;golden&rdquo; tests
-      that reproduce the workbook&rsquo;s own cached outputs:</p>
-    <ul class="clean">
-      <li><b>Casualty calculator</b> &mdash; per-side personnel losses &amp; KIA (exact, all four nations).</li>
-      <li><b>Amphibious lift</b> &mdash; the exact <code>60 &times; afloat / 36</code> formula with the turn-1 surge.</li>
-      <li><b>Air combat</b> &mdash; the real per-airframe Quality constants (J-20/F-35/F-22 = 8, &hellip;).</li>
-      <li><b>Ground combat CRT</b> &mdash; terrain modifiers, odds bands, step losses, FEBA movement (worked example reproduced).</li>
-      <li><b>Airbase missile attack</b> &mdash; SAM intercept on 1&ndash;18, hardened-shelter kills on 1&ndash;15, open on 1&ndash;17.</li>
-      <li><b>Anti-ship strike</b> &mdash; rules Table&nbsp;5H: each leaking missile rolls a d20 for ship hits; a natural 20 destroys the flotilla.</li>
-    </ul>
-    <p class="muted">A 30&nbsp;km hex ground game (with Taiwan&rsquo;s real Table&nbsp;10A order of
-      battle) and scenario excursions (delayed US entry, a neutral Japan) are also implemented.
-      Two minor calculators remain representative and are flagged as such.</p>
+    <p>The engine&rsquo;s combat is not hand-waved &mdash; the core calculators are ported from the CSIS
+      workbooks and rulebook tables, each checked against the source by &ldquo;golden&rdquo; tests that
+      reproduce the workbook&rsquo;s own cached outputs.</p>
+    <details class="more">
+      <summary>The six faithful calculators</summary>
+      <ul class="clean">
+        <li><b>Casualty calculator</b> &mdash; per-side personnel losses &amp; KIA (exact, all four nations).</li>
+        <li><b>Amphibious lift</b> &mdash; the exact <code>60 &times; afloat / 36</code> formula with the turn-1 surge.</li>
+        <li><b>Air combat</b> &mdash; the real per-airframe Quality constants (J-20/F-35/F-22 = 8, &hellip;).</li>
+        <li><b>Ground combat CRT</b> &mdash; terrain modifiers, odds bands, step losses, FEBA movement (worked example reproduced).</li>
+        <li><b>Airbase missile attack</b> &mdash; SAM intercept on 1&ndash;18, hardened-shelter kills on 1&ndash;15, open on 1&ndash;17.</li>
+        <li><b>Anti-ship strike</b> &mdash; rules Table&nbsp;5H: each leaking missile rolls a d20 for ship hits; a natural 20 destroys the flotilla.</li>
+      </ul>
+      <p class="muted">A 30&nbsp;km hex ground game (with Taiwan&rsquo;s real Table&nbsp;10A order of
+        battle) and scenario excursions (delayed US entry, a neutral Japan) are also implemented.
+        Two minor calculators remain representative and are flagged as such.</p>
+    </details>
   </section>
 
   <section id="scoring">
@@ -343,13 +216,6 @@
         </tr></thead>
         <tbody></tbody>
       </table>
-      <div class="legend">
-        <span><i style="background:var(--red)"></i>Red (China) win</span>
-        <span><i style="background:var(--blue)"></i>Blue (coalition) win</span>
-        <span><i style="background:var(--draw)"></i>Draw</span>
-        <span>faded = degraded (API-limited), excluded</span>
-      </div>
-      <div class="games" id="games"></div>
     </details>
   </section>
 
@@ -365,12 +231,13 @@
     <p class="muted" id="strats-empty" hidden>Strategy profiles appear once a run is analyzed.</p>
   </section>
 
-  <section id="replay">
-    <p class="eyebrow">Decision replay · one game, turn by turn</p>
-    <h2>Watch them think it through</h2>
-    <p id="replay-sub" class="muted"></p>
-    <div class="replay" id="replaybox"></div>
-    <p class="muted" id="replay-empty" hidden>A replay appears once a clean game is available.</p>
+  <section id="anatomy">
+    <p class="eyebrow">Anatomy of a game · turn by turn</p>
+    <h2 id="anatomy-h">How a Chinese model takes Taiwan</h2>
+    <p id="anatomy-sub" class="muted"></p>
+    <div class="storyturns" id="storyturns"></div>
+    <div class="callout" id="anatomy-out"></div>
+    <p class="muted" id="anatomy-empty" hidden>The walkthrough appears once a clean Chinese-victory game is available.</p>
   </section>
 
   <section id="trashtalk">
@@ -429,9 +296,53 @@
 
   renderTrashTalk();
   renderStrategies();
-  renderReplay();
+  renderStoryGame();
   renderInvalid();
-  if (featured) { renderMap(featured); renderStory(featured); }
+  if (featured) { renderStory(featured); }
+
+  // Anatomy of a game — a Chinese model beats an American model, turn by turn.
+  function renderStoryGame() {
+    var s = D.story_game;
+    var box = document.getElementById('storyturns');
+    if (!s) { var e = document.getElementById('anatomy-empty'); if (e) e.hidden = false; return; }
+    document.getElementById('anatomy-h').innerHTML =
+      'How ' + s.red + ' takes Taiwan from ' + s.blue;
+    document.getElementById('anatomy-sub').innerHTML =
+      '<span class="chip red">' + s.red + '</span> (' + s.red_origin + ') invades; ' +
+      '<span class="chip blue">' + s.blue + '</span> (' + s.blue_origin + ') defends. The lodgment ' +
+      'builds wave by wave while Taiwan&rsquo;s defense is ground down &mdash; here it is, turn by turn.';
+    var maxv = Math.max.apply(null, s.turns.map(function (t) { return Math.max(t.lodgment, t.ground); })) || 1;
+    var maxc = s.amphib_initial || 11;
+    box.innerHTML = s.turns.map(function (t) {
+      var th = Math.round(5 + (t.committed / maxc) * 24);
+      var lp = Math.round(t.lodgment / maxv * 100), gp = Math.round(t.ground / maxv * 100);
+      var pips = '';
+      for (var i = 0; i < s.facilities_total; i++) pips += '<i class="pip' + (i < t.facilities ? ' on' : '') + '"></i>';
+      var oc = OUTCOMES.filter(function (o) { return o[0] === t.class; })[0];
+      var clab = oc ? oc[1] : (t.class || '').replace(/_/g, ' ').toLowerCase();
+      var ccol = oc ? oc[2] : '#8a7f6b';
+      return '<div class="gturn">' +
+        '<div class="gth"><span class="gtn">TURN ' + t.turn + '</span>' +
+          '<span class="gtc" style="color:' + ccol + ';border-color:' + ccol + '">' + clab + '</span></div>' +
+        '<div class="cross"><span class="bank cn">' + s.red + '<small>China · invades</small></span>' +
+          '<span class="lane"><span class="clabel">' + t.committed + ' flotillas across' +
+            (t.sunk ? ' &middot; &minus;' + t.sunk + ' sunk' : '') + '</span>' +
+            '<span class="wave" style="height:' + th + 'px"></span></span>' +
+          '<span class="bank we">' + s.blue + '<small>defends</small></span></div>' +
+        '<div class="gbars">' +
+          '<div class="gbar"><label>PLA ashore</label><span class="trk"><span class="fil red" style="width:' + lp + '%"></span></span><b>' + Math.round(t.lodgment) + '</b></div>' +
+          '<div class="gbar"><label>Taiwan defense</label><span class="trk"><span class="fil blue" style="width:' + gp + '%"></span></span><b>' + Math.round(t.ground) + '</b></div>' +
+          '<div class="pips">' + pips + '<span>' + t.facilities + ' / ' + s.facilities_total + ' ports &amp; airfields taken</span></div>' +
+        '</div>' +
+        (t.caption ? '<p class="gtcap">&ldquo;' + t.caption + '&rdquo;</p>' : '') +
+      '</div>';
+    }).join('');
+    var last = s.turns[s.turns.length - 1];
+    document.getElementById('anatomy-out').innerHTML =
+      '<strong>Result.</strong> By turn ' + s.turns.length + ', Taiwan&rsquo;s defense is spent and <b>' +
+      last.facilities + ' of ' + s.facilities_total + '</b> ports and airfields have fallen, with ' +
+      Math.round(last.lodgment) + ' PLA strength ashore &mdash; a Chinese victory over a frontier American model.';
+  }
 
   // Why orders go invalid — per-model stacked breakdown of failure types + examples.
   function renderInvalid() {
@@ -577,17 +488,6 @@
         '<td class="' + fbCls + '"><span class="num">' + m.fallbacks + '</span></td>';
       tb.appendChild(tr);
     });
-    var g = document.getElementById('games');
-    g.innerHTML = '';
-    run.games.forEach(function (gm) {
-      var d = document.createElement('div');
-      d.className = 'gcard win-' + gm.winner + (gm.degraded ? ' deg' : '');
-      d.innerHTML = '<div class="vs"><span class="chip red">' + gm.red + '</span> vs ' +
-        '<span class="chip blue">' + gm.blue + '</span></div>' +
-        '<div class="res">' + gm.outcome.replace(/_/g, ' ').toLowerCase() +
-        (gm.degraded ? ' · degraded' : '') + '</div>';
-      g.appendChild(d);
-    });
   }
 
   // offense (x) × reliability (y, fewer fallbacks = higher) scatter
@@ -628,34 +528,6 @@
   }
 
   // Decision replay — one marquee game, every turn's orders + the model's reasoning.
-  function renderReplay() {
-    var r = D.replay;
-    var box = document.getElementById('replaybox');
-    var empty = document.getElementById('replay-empty');
-    if (!r) { if (empty) empty.hidden = false; return; }
-    if (empty) empty.hidden = true;
-    document.getElementById('replay-sub').innerHTML =
-      '<span class="chip red">' + r.red + '</span> invades, <span class="chip blue">' + r.blue +
-      '</span> defends &mdash; outcome <strong>' + r.outcome.replace(/_/g, ' ').toLowerCase() +
-      '</strong>. Every order below is the model&rsquo;s own (no invalid orders).';
-    box.innerHTML = '';
-    r.turns.forEach(function (t) {
-      var blk = document.createElement('div');
-      blk.className = 'rturn';
-      var rows = t.decisions.map(function (d) {
-        var cls = d.side === 'RED' ? 'red' : 'blue';
-        var tt = d.trash_talk ? '<div class="rtt">&ldquo;' + d.trash_talk + '&rdquo;</div>' : '';
-        return '<div class="rd ' + cls + '">' +
-          '<div class="rdh"><span class="chip ' + cls + '">' + d.side + '</span>' +
-            '<span class="rph">' + d.phase.replace(/_/g, ' ').toLowerCase() + '</span>' +
-            '<span class="rord">' + d.order + '</span></div>' +
-          (d.rationale ? '<div class="rr">' + d.rationale + '</div>' : '') + tt + '</div>';
-      }).join('');
-      blk.innerHTML = '<div class="rt">TURN ' + t.turn + '</div><div class="rds">' + rows + '</div>';
-      box.appendChild(blk);
-    });
-  }
-
   // "How they think" — each model's LLM-summarized doctrine + playstyle bars + a real rationale.
   function renderStrategies() {
     var s = D.strategies || [];
@@ -716,54 +588,6 @@
   }
 
   // Drive the theater map from one real game's lift / attrition timeline.
-  function renderMap(run) {
-    var f = run && run.featured_game;
-    var panel = document.getElementById('gamepanel');
-    if (!f) {
-      panel.hidden = true;
-      ['m_lift', 'm_sunk', 'm_ashore', 'm_taken'].forEach(function (id) { setText(id, ' '); });
-      return;
-    }
-    panel.hidden = false;
-    function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
-    // on-map badges
-    setText('m_lift', plural(f.committed_total, 'flotilla') + ' committed');
-    setText('m_sunk', plural(f.sunk_total, 'flotilla') + ' sunk');
-    setText('m_ashore', f.lodgment + ' ashore');
-    setText('m_taken', f.facilities + (f.facilities === 1 ? ' port taken' : ' taken'));
-    // panel
-    document.getElementById('gp_head').innerHTML =
-      'A representative game &mdash; <span class="chip red">' + f.red + '</span> invades, ' +
-      '<span class="chip blue">' + f.blue + '</span> defends &rarr; <strong>' +
-      f.outcome.replace(/_/g, ' ').toLowerCase() + '</strong>' +
-      (f.red_cn ? ' &nbsp;<span class="origin cn">Chinese model on offense</span>' : '');
-    setText('gp_committed', f.committed_total);
-    setText('gp_sunk', f.sunk_crossing + ' / ' + f.sunk_air);
-    setText('gp_lodg', f.lodgment);
-    setText('gp_fac', f.facilities);
-    setText('gp_fleet', f.amphib_remaining + ' / ' + f.amphib_initial);
-    var t = document.getElementById('gp_turns');
-    t.innerHTML = '';
-    (f.timeline || []).forEach(function (r) {
-      var d = document.createElement('div');
-      d.className = 't';
-      d.innerHTML =
-        '<div class="tn">TURN ' + r.turn + '</div>' +
-        '<div class="row"><span>committed</span><span class="v red">' + r.committed + '</span></div>' +
-        '<div class="row"><span>sunk</span><span class="v blue">' +
-          (r.sunk_crossing + r.sunk_air) + '</span></div>' +
-        '<div class="row"><span>lodgment</span><span class="v">' + r.lodgment_total + '</span></div>';
-      t.appendChild(d);
-    });
-    document.getElementById('map-cap').innerHTML =
-      'An actual game from the featured scenario: <strong>' + f.red + '</strong> (RED) ran ' +
-      f.committed_total + ' flotilla-crossings at Taiwan; the defenders sank ' + f.sunk_total +
-      ' (' + f.sunk_crossing + ' to submarines, ' + f.sunk_air + ' to air strike), leaving ' +
-      f.lodgment + ' lodgment ashore and ' + f.facilities + ' port/airfield' +
-      (f.facilities === 1 ? '' : 's') + ' taken &mdash; outcome <strong>' +
-      f.outcome.replace(/_/g, ' ').toLowerCase() + '</strong>.';
-  }
-
 })();
 </script>
 </body>

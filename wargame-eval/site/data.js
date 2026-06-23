@@ -1450,5 +1450,65 @@ window.WARBENCH_DATA = {
         ]
       }
     ]
+  },
+  "invalid": [],
+  "story_game": {
+    "red": "Qwen3.7 Max",
+    "blue": "Opus 4.8",
+    "red_origin": "Alibaba",
+    "blue_origin": "Anthropic",
+    "outcome": "CHINESE_VICTORY",
+    "facilities_total": 8,
+    "amphib_initial": 11,
+    "turns": [
+      {
+        "turn": 1,
+        "committed": 8,
+        "sunk": 0,
+        "lodgment": 105.9,
+        "ground": 57.2,
+        "fleet": 11,
+        "facilities": 0,
+        "class": "STALEMATE_INDETERMINATE",
+        "caption": "Committing 8 flotillas to establish a decisive initial lodgment and overwhelm coastal defenses, while holding 3 in reserve for subsequent waves or contingency.",
+        "cap_phase": "RED_AMPHIB"
+      },
+      {
+        "turn": 2,
+        "committed": 8,
+        "sunk": 1,
+        "lodgment": 162.9,
+        "ground": 41.0,
+        "fleet": 10,
+        "facilities": 1,
+        "class": "STALEMATE_INDETERMINATE",
+        "caption": "Committing 8 flotillas balances the need for a massive buildup to crush the remaining 59.2 Taiwan ground strength and capture a port, while keeping a reserve and allowing our 8 SAGs and 12 pickets to effectively screen the crossing from the 6 enemy subrons.",
+        "cap_phase": "RED_AMPHIB"
+      },
+      {
+        "turn": 3,
+        "committed": 10,
+        "sunk": 2,
+        "lodgment": 233.1,
+        "ground": 12.4,
+        "fleet": 8,
+        "facilities": 2,
+        "class": "STALEMATE_TREND_CHINA",
+        "caption": "With a massive 4:1 ground advantage and Kaohsiung partially secured, committing all 10 remaining flotillas maximizes our lodgment and supply throughput. This guarantees a sustainable, overwhelming victory and secures the win condition before the final turn, backed by our air and naval escorts.",
+        "cap_phase": "RED_AMPHIB"
+      },
+      {
+        "turn": 4,
+        "committed": 4,
+        "sunk": 2,
+        "lodgment": 251.1,
+        "ground": 0.0,
+        "fleet": 6,
+        "facilities": 3,
+        "class": "CHINESE_VICTORY",
+        "caption": "We hold Kaohsiung and Taichung with a massive 233.1 lodgment. Committing 4 flotillas secures vital resupply to cement sustainability while keeping 4 in reserve to deny BLUE the 'gutted fleet' victory condition.",
+        "cap_phase": "RED_AMPHIB"
+      }
+    ]
   }
 };

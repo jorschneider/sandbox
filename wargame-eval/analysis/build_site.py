@@ -90,6 +90,74 @@ def _order_summary(phase: str, o: dict) -> str:
     return ""
 
 
+WEST_ORIGINS = {"Anthropic", "OpenAI"}
+FACILITIES_TOTAL = 8        # 4 ports + 4 airfields in the scenario
+
+
+def build_story_game() -> dict | None:
+    """A marquee game where a Chinese model invades and an American model defends,
+    ending in a Chinese victory — extracted turn by turn for the walkthrough.
+
+    Prefers a clean (no invalid-order) game that took the most ports/airfields."""
+    sp = os.path.join(HERE, "real_run_mixed", "summary.json")
+    if not os.path.exists(sp):
+        return None
+    summ = json.load(open(sp))
+    best, bkey = None, None
+    for g in summ.get("games", []):
+        m = g.get("metrics") or {}
+        if m.get("degraded") or g["victory_class"] != "CHINESE_VICTORY":
+            continue
+        if model_origin(g["red_model"]) not in CHINESE_ORIGINS:
+            continue
+        if model_origin(g["blue_model"]) not in WEST_ORIGINS:
+            continue
+        tl = m.get("timeline") or []
+        if not tl:
+            continue
+        last = tl[-1]
+        key = (m.get("red_fallbacks", 9) + m.get("blue_fallbacks", 9) == 0,
+               last.get("facilities_captured", 0), last.get("lodgment_total", 0))
+        if bkey is None or key > bkey:
+            best, bkey = g, key
+    if not best:
+        return None
+    g, m = best, best["metrics"]
+    tl = m["timeline"]
+    fn = os.path.join(HERE, "real_run_mixed",
+                      f"game_{_slug(g['red_model'])}_vs_{_slug(g['blue_model'])}_{g['seed']}.json")
+    cap: dict[int, dict] = {}
+    if os.path.exists(fn):
+        order = {"RED_AMPHIB": 0, "RED_MISSILE": 1, "RED_GROUND": 2, "RED_AIR": 3}
+        for t in json.load(open(fn))["transcript"]:
+            if t["side"] != "RED" or not (t.get("rationale") or "").strip():
+                continue
+            cur = cap.get(t["turn"])
+            if cur is None or order.get(t["phase"], 9) < order.get(cur["phase"], 9):
+                cap[t["turn"]] = {"phase": t["phase"], "text": t["rationale"].strip()}
+    turns = []
+    for r in tl:
+        c = cap.get(r["turn"], {})
+        turns.append({
+            "turn": r["turn"], "committed": r.get("committed", 0),
+            "sunk": r.get("sunk_crossing", 0) + r.get("sunk_air", 0),
+            "lodgment": r.get("lodgment_total", 0.0),
+            "ground": r.get("taiwan_ground", 0.0),
+            "fleet": r.get("amphib_remaining", 0),
+            "facilities": r.get("facilities_captured", 0),
+            "class": r.get("class", ""),
+            "caption": c.get("text", ""), "cap_phase": c.get("phase", ""),
+        })
+    return {
+        "red": short(g["red_model"]), "blue": short(g["blue_model"]),
+        "red_origin": model_origin(g["red_model"]),
+        "blue_origin": model_origin(g["blue_model"]),
+        "outcome": g["victory_class"], "facilities_total": FACILITIES_TOTAL,
+        "amphib_initial": (tl[0].get("amphib_initial") if tl else 11) or 11,
+        "turns": turns,
+    }
+
+
 def build_replay() -> dict | None:
     """Turn-by-turn decision replay of one marquee game (both sides' reasoning).
 
@@ -259,7 +327,7 @@ def main() -> None:
     invalid = sorted(INVALID.values(), key=lambda x: -x.get("invalid", 0))
     data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs,
             "trash_talk": talk, "strategies": strat, "replay": build_replay(),
-            "invalid": invalid}
+            "invalid": invalid, "story_game": build_story_game()}
     out = os.path.join(ROOT, "site", "data.js")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w") as f:
