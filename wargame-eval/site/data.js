@@ -1047,5 +1047,202 @@ window.WARBENCH_DATA = {
       "doctrine": "RED: max-mass shock landing under missile/air suppression to seize port fast. BLUE: submarine barrier plus air strikes to gut amphibious flotillas.",
       "signature": "Commit all flotillas at once; concentrate everything on sinking amphibs."
     }
-  ]
+  ],
+  "replay": {
+    "red": "GPT-5.5",
+    "blue": "DeepSeek V4 Pro",
+    "red_cn": false,
+    "blue_cn": true,
+    "outcome": "CHINESE_VICTORY",
+    "turns": [
+      {
+        "turn": 1,
+        "decisions": [
+          {
+            "side": "RED",
+            "phase": "RED_MISSILE",
+            "order": "missiles \u2192 40 airfields, 18 Kadena, 10 Guam, 18 carriers, 24 ships",
+            "rationale": "Opening strike prioritizes paralyzing Taiwan air operations to cover the crossing, while suppressing Kadena and Guam enough to delay US/Japanese sortie generation. Heavy anti-ship salvos target the two carrier groups and escorts/ARG to thin the forces most capable of gutting the amphibious fleet before lodgment.",
+            "trash_talk": "Your carriers came to make history; I brought enough missiles to make them archaeology."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_AIR",
+            "order": "sorties \u2192 18 CAP, 14 escort, 18 strike bases, 6 CAS",
+            "rationale": "Commit all 56 combat sorties. Heavy CAP shields the Strait and amphibious lanes from the small but high-end BLUE air package; escorts ensure strike packages get through contested airspace. Priority strikes hit Taiwan/BLUE airbases early to reduce sortie generation before follow-on naval and landing operations. Limited ground support focuses on disrupting coastal defenses without diluting the air-superiority effort.",
+            "trash_talk": "Your runway lights are about to become landing-zone candles. Watch the Strait, not the sky\u2014both are closing."
+          },
+          {
+            "side": "BLUE",
+            "phase": "BLUE_AIR",
+            "order": "sorties \u2192 none available",
+            "rationale": "No sorties available this turn due to base suppression and aircraft generation constraints. We are forced to posture while we recover and relocate.",
+            "trash_talk": "Eleven flotillas? That's a lot of targets for a single submarine ambush. Hope your sailors can swim."
+          },
+          {
+            "side": "BLUE",
+            "phase": "BLUE_NAVAL",
+            "order": "1 SUBRON to the strait barrier",
+            "rationale": "Maintaining one subron on barrier to attrit RED amphibious flotillas as they approach Taiwan. With 11 flotillas still in play, early submarine interdiction is critical to prevent a lodgment. Remaining subs held for mobile strike.",
+            "trash_talk": "11 flotillas? That's a lot of targets. Hope your sailors can swim\u2014because we're about to turn the Luzon Strait into a submarine shooting gallery."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_AMPHIB",
+            "order": "commit 10 flotillas across the strait",
+            "rationale": "Commit decisive mass immediately while BLUE air is thin and no submarine barrier is yet reported. Ten flotillas maximize first-wave lodgment potential against Taiwan's intact defenses while retaining one flotilla as a reserve for reinforcement or exploitation once a port/airport is seized.",
+            "trash_talk": "The strait is not your moat tonight; it is our highway, and the first convoy is already at speed."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_GROUND",
+            "order": "ground posture: press",
+            "rationale": "Exploit the initial 150-to-70 ground advantage before BLUE air/naval pressure can isolate the beachhead. A hard push now is the best chance to overrun Taiwanese defenders and seize functional port/airport infrastructure, converting the lodgment from exposed assault force into a sustainable foothold despite limited supply.",
+            "trash_talk": "You let us ashore with eleven flotillas intact; now the beachhead grows teeth."
+          }
+        ]
+      },
+      {
+        "turn": 2,
+        "decisions": [
+          {
+            "side": "RED",
+            "phase": "RED_MISSILE",
+            "order": "missiles \u2192 18 airfields, 13 Kadena, 12 Guam, 10 carriers, 10 ships",
+            "rationale": "Use all remaining land-attack missiles to keep Taiwan airfields suppressed while hitting Kadena and Guam to reduce coalition 5th-gen, bomber, and tanker sortie generation. Allocate all remaining anti-ship missiles against the carrier group and surface/ARG shipping to protect the intact amphibious fleet and preserve the Kaohsiung lodgment and supply flow.",
+            "trash_talk": "Kaohsiung is ours; your carriers are just expensive reefs waiting for coordinates."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_AIR",
+            "order": "sorties \u2192 18 CAP, 10 escort, 8 strike bases, 20 CAS",
+            "rationale": "Enemy air is badly depleted, so maintain a strong CAP over the strait, Kaohsiung lodgment, and amphibious approaches while shifting the main effort to ground support to break remaining Taiwanese resistance. Limited airbase strikes focus on keeping Taoyuan, Chiayi, and Taitung disrupted without wasting sorties, while escort-strike packages cover attacks against any BLUE naval aviation probing from the CSG/ARG.",
+            "trash_talk": "Your air force is a rumor, your fleet is a target list, and Kaohsiung is becoming a delivery address."
+          },
+          {
+            "side": "BLUE",
+            "phase": "BLUE_AIR",
+            "order": "sorties \u2192 2 CAP, 3 anti-ship, 1 CAS",
+            "rationale": "Kadena and Taiwan-AB are suppressed, limiting our sortie generation. We have 3x 4.5-gen, 3x 5th-gen, 1x bomber, and 3x tankers. CAP: 2x 5th-gen from CSG-1 and Iwakuni to shield the ARG and CSG from PLAAF bomber raids. Strike Amphibs: 1x bomber from Guam with tanker support, plus 2x 4.5-gen from Misawa (also tanker-supported) to hit the amphib flotillas before they can reinforce the lodgment. Ground Support: 1x 4.5-gen from CSG-1 to help Taiwan hold the line at Kaohsiung. No strike on airbases\u2014we lack the mass to suppress their 4th-gen horde, and preserving our limited 5th-gen for fleet defense is critical.",
+            "trash_talk": "Eleven flotillas still afloat? Guess the PLA-Navy skipped damage control training. Let's see how many make it to the beach this turn."
+          },
+          {
+            "side": "BLUE",
+            "phase": "BLUE_NAVAL",
+            "order": "3 SUBRON to the strait barrier",
+            "rationale": "All three submarine squadrons are ordered onto the barrier to maximize interdiction of the PLA amphibious fleet. With 11 amphib flotillas still intact, targeting them is critical to preventing resupply and reinforcement of the lodgment at Kaohsiung. A concentrated sub barrier will attrit the flotillas before they can offload.",
+            "trash_talk": "All those amphibs still afloat? Perfect target practice. My subs are hungry \u2014 tell your sailors to practice their backstroke."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_AMPHIB",
+            "order": "commit 11 flotillas across the strait",
+            "rationale": "Exploit the current window while BLUE air is badly depleted and Kaohsiung is already in Chinese hands. Commit the full amphibious lift to surge combat power, supplies, engineers, air-defense assets, and port-repair capability into the lodgment. The priority is to push PLA supply above the danger zone, secure and expand around Kaohsiung, restore the port toward functionality, and convert the beachhead into a sustainable lodgment before BLUE can reconstitute naval or air pressure.",
+            "trash_talk": "Kaohsiung is the door. We already have the key; now we bring the whole house through it."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_GROUND",
+            "order": "ground posture: consolidate",
+            "rationale": "PLA forces ashore already overmatch Taiwan's remaining ground strength. The decisive requirement now is sustainability: secure and restore Kaohsiung, build supply depth, harden the lodgment, and reduce dependence on the remaining amphibious fleet before BLUE's submarines and carrier air can attrit it further.",
+            "trash_talk": "You wanted a beachhead to bottle up; we built a province. Now watch Kaohsiung become the hinge that swings the island open."
+          }
+        ]
+      },
+      {
+        "turn": 3,
+        "decisions": [
+          {
+            "side": "RED",
+            "phase": "RED_MISSILE",
+            "order": "missiles \u2192 4 airfields, 6 Kadena, 8 Guam, 8 carriers, 2 ships",
+            "rationale": "Fire all remaining land-attack missiles/ALCMs to keep Taiwan runways suppressed while prioritizing Kadena and Guam to cut off the remaining US/Japan fighters, bombers, and tankers before the final turn. Commit the YJ anti-ship inventory primarily against the carrier group with a smaller strike on the ARG/escorts, reducing the main threat to our amphibious sustainment into Kaohsiung.",
+            "trash_talk": "Your carriers came to stop the tide; now they get to learn what saturation feels like."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_AIR",
+            "order": "sorties \u2192 15 CAP, 20 escort, 8 strike bases, 12 CAS",
+            "rationale": "Enemy air is nearly spent, so maintain a solid CAP over the Strait and Kaohsiung lodgment while shifting weight to escorted maritime strikes against the remaining CSG/ARG threat and close air support to collapse Taiwan's residual ground strength. Limited airbase strikes keep Blue aircraft suppressed without overinvesting against a small force.",
+            "trash_talk": "Your carriers sailed in to save Taiwan; now they're just new reefs marking the route to Kaohsiung."
+          },
+          {
+            "side": "BLUE",
+            "phase": "BLUE_AIR",
+            "order": "sorties \u2192 2 CAP, 3 anti-ship, 1 CAS",
+            "rationale": "RED has seized Kaohsiung port and is pushing a lodgment. We must gut the remaining amphib flotillas to prevent reinforcement and resupply. Assign 3 strike sorties (2x 4.5-gen from Misawa, 1x 5th-gen from Guam) to hunt amphibs, supported by tankers. 2 CAP sorties (1x 5th-gen from Iwakuni, 1x 5th-gen from CSG-1) to shield the ARG and CSG. 1 ground support sortie (4.5-gen from CSG-1) to blunt the PLA lodgment advance. No strike on airbases\u2014RED's air is still too strong and we lack the mass to suppress them.",
+            "trash_talk": "Nice beachhead. Too bad your flotillas are about to become artificial reefs. Hope your swimmers packed floaties."
+          },
+          {
+            "side": "BLUE",
+            "phase": "BLUE_NAVAL",
+            "order": "3 SUBRON to the strait barrier",
+            "rationale": "Maintaining all three subrons on the barrier to screen the CSG and ARG from the 12 enemy submarines and to interdict pickets. Air power (5th gen, bombers) will focus on gutting the remaining amphibious flotillas.",
+            "trash_talk": "4 amphib flotillas down, 7 more to the bottom. Your lodgment is a supply-starved coffin. Keep feeding them into the grinder!"
+          },
+          {
+            "side": "RED",
+            "phase": "RED_AMPHIB",
+            "order": "commit 7 flotillas across the strait",
+            "rationale": "Commit all remaining amphibious lift to exploit the Kaohsiung lodgment while the enemy air threat is depleted. The priority is to surge combat power and supplies ashore through the partially functional port now, before BLUE can reorganize its submarines and carrier forces for a final interdiction effort. Holding back lift risks an undersupplied beachhead; massing now gives the lodgment the depth needed to seize nearby airfield access and become sustainable.",
+            "trash_talk": "Kaohsiung is a door, not a beach. We\u2019re bringing the hinges with us."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_GROUND",
+            "order": "ground posture: press",
+            "rationale": "Exploit the overwhelming PLA lodgment before the final turn: drive out from Kaohsiung to shatter the remaining Taiwan ground force, seize Kaohsiung-Intl, and expand the port-airfield lodgment into a sustainable bridgehead while our remaining amphibious lift still matters.",
+            "trash_talk": "You hit the ferries; the army already got off. Now watch Kaohsiung become the hinge that swings the door shut."
+          }
+        ]
+      },
+      {
+        "turn": 4,
+        "decisions": [
+          {
+            "side": "RED",
+            "phase": "RED_MISSILE",
+            "order": "missiles \u2192 6 airfields, 4 Kadena, 4 Guam, 5 carriers, 3 ships",
+            "rationale": "Final turn priority is preserving the lodgment and keeping sustainment flowing through Kaohsiung and Taichung. Land-attack missiles are split to crater Taiwan airfields and disrupt Kadena/Guam sortie generation, limiting coalition air attacks on ports and amphibious lift. All available anti-ship salvos go against the remaining carrier/ARG threat, weighted toward the CSG while still hitting other surface forces that could interdict resupply.",
+            "trash_talk": "Your carrier is late to the funeral, and our lodgment already owns the address."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_AIR",
+            "order": "sorties \u2192 18 CAP, 14 escort, 6 strike bases, 16 CAS",
+            "rationale": "Final turn: the lodgment is already decisive but supply and remaining amphib shipping must survive Blue's last throw. Keep a heavy CAP over the Strait, Kaohsiung/Taichung, and the lodgment to blunt the small remaining Blue air package. Use escorted strikes to cover anti-ship attacks and suppress the CSG/ARG threat. Minimal airbase strikes focus on disrupting Taiwan's remaining operational fields without over-investing in infrastructure we may need. Ground support concentrates on collapsing the remaining Taiwan ground strength around our ports and expanding the beachhead into a sustainable lodgment.",
+            "trash_talk": "Your carriers came to write history; now they are just footnotes in the Strait."
+          },
+          {
+            "side": "BLUE",
+            "phase": "BLUE_AIR",
+            "order": "sorties \u2192 5 anti-ship, 3 CAS",
+            "rationale": "Turn 4 of 4. PLA lodgment is 237.2 with 5 amphib flotillas remaining. We must gut the amphib fleet to prevent further reinforcement and supply. All available 4.5 and 5th gen sorties (3+4=7 total) are allocated: 5 to strike_amphibs to maximize kills on the flotillas, and 2 to ground_support to blunt the lodgment. No CAP needed as enemy air is focused on protecting the beachhead and our sorties are offensive. Tankers support all strikes. Bomber held in reserve as no suitable target without air superiority.",
+            "trash_talk": "Five flotillas left? I've sunk more boats in a bathtub. Your beachhead is about to become a very expensive artificial reef."
+          },
+          {
+            "side": "BLUE",
+            "phase": "BLUE_NAVAL",
+            "order": "0 SUBRON to the strait barrier",
+            "rationale": "Final turn. To win, we must gut the amphibious fleet. All 3 subrons leave the barrier and aggressively hunt the remaining 5 amphibious flotillas. No point in a barrier when the enemy is already ashore; we need kills.",
+            "trash_talk": "Your amphibs are just targets now. Say hello to Davy Jones for me."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_AMPHIB",
+            "order": "commit 5 flotillas across the strait",
+            "rationale": "Final turn: we already hold Kaohsiung and Taichung with substantial lodgment ashore, but supply is the limiting factor for a sustainable victory. Commit all remaining amphibious flotillas to surge reinforcements, ammunition, fuel, engineers, and port-repair/logistics units into the captured western ports while available surface, submarine, missile, and air assets cover the crossing. With no later turn to preserve lift for, maximizing throughput now is decisive.",
+            "trash_talk": "You can count hulls; we count ports. Kaohsiung is open, Taichung is breathing, and the tide is bringing the bill due."
+          },
+          {
+            "side": "RED",
+            "phase": "RED_GROUND",
+            "order": "ground posture: press",
+            "rationale": "Final turn: PLA lodgment strength overwhelmingly exceeds remaining Taiwan ground strength, and we already hold two usable ports. Drive inland from Kaohsiung and Taichung to collapse remaining resistance, prioritize seizure of Kaohsiung-Intl/Chiayi airfields, and link port lodgments into a durable supply network before BLUE can isolate the beachhead.",
+            "trash_talk": "Your beachhead problem just became an island problem."
+          }
+        ]
+      }
+    ]
+  }
 };

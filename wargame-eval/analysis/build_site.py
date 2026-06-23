@@ -57,6 +57,74 @@ def short(model: str) -> str:
     return model_label(model)
 
 
+def _slug(m: str) -> str:
+    return m.replace("/", "_").replace(":", "_")
+
+
+def _order_summary(phase: str, o: dict) -> str:
+    """One-line human summary of a phase's orders for the decision replay."""
+    a = o.get("allocation") or {}
+    nice = {"taiwan_airfields": "airfields", "okinawa_kadena": "Kadena", "guam": "Guam",
+            "carriers": "carriers", "ships": "ships", "escort_strike": "escort",
+            "strike_blue_airbases": "strike bases", "strike_amphibs": "anti-ship",
+            "strike_airbases": "strike bases", "ground_support": "CAS", "cap": "CAP"}
+    if phase == "RED_MISSILE":
+        parts = [f"{int(v)} {nice.get(k, k)}" for k, v in a.items() if v]
+        return "missiles → " + (", ".join(parts) if parts else "hold fire")
+    if phase in ("RED_AIR", "BLUE_AIR"):
+        parts = [f"{int(v)} {nice.get(k, k)}" for k, v in a.items() if v]
+        return "sorties → " + (", ".join(parts) if parts else "none available")
+    if phase == "BLUE_NAVAL":
+        return f"{int(o.get('subron_on_barrier', 0))} SUBRON to the strait barrier"
+    if phase == "RED_AMPHIB":
+        return f"commit {int(o.get('flotillas_to_commit', 0))} flotillas across the strait"
+    if phase == "RED_GROUND":
+        return f"ground posture: {o.get('posture', '—')}"
+    return ""
+
+
+def build_replay() -> dict | None:
+    """Turn-by-turn decision replay of one marquee game (both sides' reasoning).
+
+    Prefers a clean (no-fallback) Chinese-victory, ideally with the strongest
+    invader on offense, so every rationale shown is the model's own."""
+    sp = os.path.join(HERE, "real_run_mixed", "summary.json")
+    if not os.path.exists(sp):
+        return None
+    summ = json.load(open(sp))
+    games = [g for g in summ.get("games", []) if not (g.get("metrics") or {}).get("degraded")]
+    if not games:
+        return None
+
+    def score(g):
+        m = g.get("metrics") or {}
+        clean = (m.get("red_fallbacks", 9) == 0 and m.get("blue_fallbacks", 9) == 0)
+        return (g["victory_class"] == "CHINESE_VICTORY", clean,
+                g["red_model"] == "gpt-5.5", m.get("functional_facilities_captured", 0))
+
+    g = max(games, key=score)
+    fn = os.path.join(HERE, "real_run_mixed",
+                      f"game_{_slug(g['red_model'])}_vs_{_slug(g['blue_model'])}_{g['seed']}.json")
+    if not os.path.exists(fn):
+        return None
+    tr = json.load(open(fn))["transcript"]
+    turns: dict[int, list] = {}
+    for t in tr:
+        turns.setdefault(t["turn"], []).append({
+            "side": t["side"], "phase": t["phase"],
+            "order": _order_summary(t["phase"], t.get("orders") or {}),
+            "rationale": (t.get("rationale") or "").strip(),
+            "trash_talk": (t.get("trash_talk") or "").strip(),
+        })
+    return {
+        "red": short(g["red_model"]), "blue": short(g["blue_model"]),
+        "red_cn": model_origin(g["red_model"]) in CHINESE_ORIGINS,
+        "blue_cn": model_origin(g["blue_model"]) in CHINESE_ORIGINS,
+        "outcome": g["victory_class"],
+        "turns": [{"turn": k, "decisions": v} for k, v in sorted(turns.items())],
+    }
+
+
 def pick_featured(valid: list) -> dict | None:
     """Choose one representative game to drive the theater map.
 
@@ -178,7 +246,7 @@ def main() -> None:
     strat = list(STRATS.values())
     strat.sort(key=lambda s: -((s.get("red") or {}).get("amphib_aggression") or 0))
     data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs,
-            "trash_talk": talk, "strategies": strat}
+            "trash_talk": talk, "strategies": strat, "replay": build_replay()}
     out = os.path.join(ROOT, "site", "data.js")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w") as f:

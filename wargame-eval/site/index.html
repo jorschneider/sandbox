@@ -303,6 +303,14 @@
     <p class="muted" id="strats-empty" hidden>Strategy profiles appear once a run is analyzed.</p>
   </section>
 
+  <section id="replay">
+    <p class="eyebrow">Decision replay · one game, turn by turn</p>
+    <h2>Watch them think it through</h2>
+    <p id="replay-sub" class="muted"></p>
+    <div class="replay" id="replaybox"></div>
+    <p class="muted" id="replay-empty" hidden>A replay appears once a clean game is available.</p>
+  </section>
+
   <section id="trashtalk">
     <p class="eyebrow">Bonus · graded by an LLM judge</p>
     <h2>Trash talk</h2>
@@ -343,6 +351,7 @@
   if (D.generated) gen.textContent = 'Data generated ' + D.generated + '.';
   renderTrashTalk();                 // independent of the run tabs below
   renderStrategies();
+  renderReplay();
   if (!D.runs.length) return;
 
   var tabs = document.getElementById('tabs');
@@ -383,6 +392,35 @@
       fmt(inv.offense) + ', ' + (inv.cn ? 'a Chinese model' : inv.origin) + '). ' +
       'Most wins overall: <b>' + win.label + '</b> (' + Math.round(win.win_rate * 100) + '%). ' +
       'Best defender: <b>' + def.label + '</b> (conceded ' + fmt(def.defense) + '). ' + rel;
+  }
+
+  // Decision replay — one marquee game, every turn's orders + the model's reasoning.
+  function renderReplay() {
+    var r = D.replay;
+    var box = document.getElementById('replaybox');
+    var empty = document.getElementById('replay-empty');
+    if (!r) { if (empty) empty.hidden = false; return; }
+    if (empty) empty.hidden = true;
+    document.getElementById('replay-sub').innerHTML =
+      '<span class="chip red">' + r.red + '</span> invades, <span class="chip blue">' + r.blue +
+      '</span> defends &mdash; outcome <strong>' + r.outcome.replace(/_/g, ' ').toLowerCase() +
+      '</strong>. Every order below is the model&rsquo;s own (no fallbacks).';
+    box.innerHTML = '';
+    r.turns.forEach(function (t) {
+      var blk = document.createElement('div');
+      blk.className = 'rturn';
+      var rows = t.decisions.map(function (d) {
+        var cls = d.side === 'RED' ? 'red' : 'blue';
+        var tt = d.trash_talk ? '<div class="rtt">&ldquo;' + d.trash_talk + '&rdquo;</div>' : '';
+        return '<div class="rd ' + cls + '">' +
+          '<div class="rdh"><span class="chip ' + cls + '">' + d.side + '</span>' +
+            '<span class="rph">' + d.phase.replace(/_/g, ' ').toLowerCase() + '</span>' +
+            '<span class="rord">' + d.order + '</span></div>' +
+          (d.rationale ? '<div class="rr">' + d.rationale + '</div>' : '') + tt + '</div>';
+      }).join('');
+      blk.innerHTML = '<div class="rt">TURN ' + t.turn + '</div><div class="rds">' + rows + '</div>';
+      box.appendChild(blk);
+    });
   }
 
   // "How they think" — each model's LLM-summarized doctrine + playstyle bars + a real rationale.
