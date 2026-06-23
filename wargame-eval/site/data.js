@@ -1457,22 +1457,34 @@ window.WARBENCH_DATA = {
       "origin": "MiniMax",
       "cn": true,
       "trials": 30,
-      "valid": 18,
-      "invalid": 12,
+      "valid": 22,
+      "invalid": 8,
       "categories": {
-        "empty reply": 9,
-        "truncated JSON": 1,
-        "other (JSONDecodeError)": 1,
-        "timeout / network": 1
+        "empty reply": 6,
+        "truncated JSON": 2
       },
       "examples": {
         "truncated JSON": {
-          "phase": "BLUE_AIR",
-          "text": "ty against RED's 50-aircraft order of battle) protects our CSGs, Taiwan AB, and the tanker track. 2 sorties (1 B-1, 1 4.5th) hit RED's shore-based air"
-        },
-        "other (JSONDecodeError)": {
-          "phase": "BLUE_AIR",
-          "text": "Expecting value: line 209 column 1 (char 1144)"
+          "phase": "BLUE_NAVAL",
+          "text": "ED escorts to expend ASW weapons instead of screening their amphibs against air and missile attack.\", \"trash_talk\": \"Eleven flotillas. Two CSGs. Three"
+        }
+      }
+    },
+    {
+      "label": "GLM-5.2",
+      "origin": "Zhipu",
+      "cn": true,
+      "trials": 30,
+      "valid": 25,
+      "invalid": 5,
+      "categories": {
+        "empty reply": 4,
+        "truncated JSON": 1
+      },
+      "examples": {
+        "truncated JSON": {
+          "phase": "RED_MISSILE",
+          "text": " the coalition before amphibious assault. 64 SRBMs and LACMs against Taiwan's 4 airfields to crater runways and suppress ROC air defense \u2014 this is the"
         }
       }
     },
@@ -1487,24 +1499,6 @@ window.WARBENCH_DATA = {
         "empty reply": 4
       },
       "examples": {}
-    },
-    {
-      "label": "GLM-5.2",
-      "origin": "Zhipu",
-      "cn": true,
-      "trials": 30,
-      "valid": 27,
-      "invalid": 3,
-      "categories": {
-        "empty reply": 1,
-        "prose, not JSON": 2
-      },
-      "examples": {
-        "prose, not JSON": {
-          "phase": "BLUE_NAVAL",
-          "text": "{\"sub{ \"subron_on_barrier\": 3, \"rationale\": \"Turn 1 with all 11 amphibious flotillas intact \u2014 this is the decisive moment. Committing all 3 subrons to"
-        }
-      }
     },
     {
       "label": "GPT-5.5",
