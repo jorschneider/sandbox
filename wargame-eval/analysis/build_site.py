@@ -35,8 +35,15 @@ def load_strategies() -> dict:
     return json.load(open(p)) if os.path.exists(p) else {}
 
 
+def load_reasoning() -> dict:
+    """Per-model reasoning grades from analysis/grade_reasoning.py, if present."""
+    p = os.path.join(HERE, "reasoning_grades.json")
+    return json.load(open(p)) if os.path.exists(p) else {}
+
+
 GRADES = load_grades()
 STRATS = load_strategies()
+REASON = load_reasoning()
 
 
 def progress_from_metrics(m: dict) -> float:
@@ -242,8 +249,16 @@ def main() -> None:
         talk.append({"model": m, "label": model_label(m), "origin": origin,
                      "cn": origin in CHINESE_ORIGINS, **g})
     talk.sort(key=lambda x: -x.get("score", 0))
-    # Strategy profiles, ordered by how aggressively each model invades as RED.
-    strat = list(STRATS.values())
+    # Strategy profiles (+ reasoning grade), ordered by how aggressively each invades.
+    strat = []
+    for mid, s in STRATS.items():
+        e = dict(s)
+        e["model"] = mid
+        rg = REASON.get(mid)
+        if rg:
+            e["reasoning"] = rg.get("score")
+            e["reasoning_note"] = rg.get("critique", "")
+        strat.append(e)
     strat.sort(key=lambda s: -((s.get("red") or {}).get("amphib_aggression") or 0))
     data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs,
             "trash_talk": talk, "strategies": strat, "replay": build_replay()}

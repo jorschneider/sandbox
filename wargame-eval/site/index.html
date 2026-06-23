@@ -65,24 +65,34 @@
   <section id="how">
     <p class="eyebrow">How it works</p>
     <h2>Two commanders, eleven phases, a coded umpire</h2>
-    <p>Each turn is 3.5 days; games run six to eight turns &mdash; the intense opening weeks of the
+    <p>Each turn is 3.5 days; games run four to eight turns &mdash; the intense opening weeks of the
       campaign. Every turn, the engine shows each side what it can see (fog of war from an ISR
       phase) and the legal orders for the current phase. Each model returns
       <strong>structured orders</strong> &mdash; how many missile salvos at which targets, how many
       sorties to CAP vs. anti-ship strike, how many amphibious flotillas to commit, ground
-      posture &mdash; and the engine resolves them.</p>
-    <div class="flow">
-      <span>reinforce</span>
-      <span class="r">RED missiles</span>
-      <span class="r">RED air</span><span class="b">BLUE air</span>
-      <span class="b">BLUE naval</span>
-      <span class="r">RED amphibious lift</span>
-      <span class="r">RED ground</span>
-      <span>adjudicate &amp; check victory</span>
-    </div>
-    <p class="muted">The decision-bearing phases of the CSIS cycle of play. Illegal or impossible
-      orders are clamped and recorded &mdash; a commander that can&rsquo;t issue valid orders is itself
-      a signal.</p>
+      posture &mdash; and the engine resolves them with the CSIS calculators.</p>
+
+    <figure class="turnfig">
+      <ol class="tflow">
+        <li class="auto"><span class="tn">1</span><div class="tb"><b>Reinforcement</b>
+          <span class="who">auto</span><p>US entry timing applies; Taiwanese reserves arrive; captured facilities repair.</p></div></li>
+        <li class="red"><span class="tn">2</span><div class="tb"><b>RED missile salvos</b>
+          <span class="who red">RED</span><p>China fires ballistic &amp; cruise missiles at airfields, Kadena, carriers &mdash; SAM intercept, then Table&nbsp;5C kill rolls.</p></div></li>
+        <li class="both"><span class="tn">3</span><div class="tb"><b>Air missions</b>
+          <span class="who red">RED</span><span class="who blue">BLUE</span><p>Both allocate sorties &mdash; CAP, escort, strike. Quality-weighted air combat decides who owns the sky.</p></div></li>
+        <li class="blue"><span class="tn">4</span><div class="tb"><b>Submarine barrier</b>
+          <span class="who blue">BLUE</span><p>The coalition commits submarine squadrons to the strait to ambush the crossing fleet.</p></div></li>
+        <li class="red"><span class="tn">5</span><div class="tb"><b>Amphibious lift</b>
+          <span class="who red">RED</span><p>China commits flotillas. Barrier + anti-ship strike (Table&nbsp;5H) attrit them; survivors deliver lodgment (60&times;afloat/36).</p></div></li>
+        <li class="red"><span class="tn">6</span><div class="tb"><b>Ground assault</b>
+          <span class="who red">RED</span><p>Press or consolidate ashore. The ground CRT resolves the fight for the ports &amp; airfields.</p></div></li>
+        <li class="auto"><span class="tn">7</span><div class="tb"><b>Adjudicate &amp; check victory</b>
+          <span class="who">auto</span><p>Score the position on the victory spectrum; a decisive result ends the game early.</p></div></li>
+      </ol>
+      <figcaption>The decision-bearing phases of the CSIS cycle of play, repeated every turn. Illegal
+        or impossible orders are clamped and recorded &mdash; a commander that can&rsquo;t issue valid
+        orders is itself a signal.</figcaption>
+    </figure>
 
     <h3>The outcome is computed, not voted on</h3>
     <p>Victory is scored on the rulebook&rsquo;s spectrum &mdash; the prospect for Taiwan&rsquo;s
@@ -90,6 +100,34 @@
       <em>Chinese defeat</em>, read directly off the game state: how much PLA lodgment is ashore,
       how many functional ports and airfields China holds, and how badly the amphibious fleet was
       attrited.</p>
+
+    <figure class="vspec">
+      <svg viewBox="0 0 720 168" role="img" aria-label="The victory spectrum from Chinese victory to Chinese defeat.">
+        <defs>
+          <linearGradient id="vg" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#b23a2e"/><stop offset="0.5" stop-color="#cfc8ba"/>
+            <stop offset="1" stop-color="#28508c"/>
+          </linearGradient>
+        </defs>
+        <rect x="20" y="56" width="680" height="34" rx="6" fill="url(#vg)"/>
+        <g stroke="#fffdf8" stroke-width="2">
+          <line x1="156" y1="56" x2="156" y2="90"/><line x1="292" y1="56" x2="292" y2="90"/>
+          <line x1="428" y1="56" x2="428" y2="90"/><line x1="564" y1="56" x2="564" y2="90"/>
+        </g>
+        <g class="vlbl" text-anchor="middle">
+          <text x="88" y="47">Chinese<tspan x="88" dy="13">victory</tspan></text>
+          <text x="224" y="47">stalemate,<tspan x="224" dy="13">trending China</tspan></text>
+          <text x="360" y="47">indeterminate<tspan x="360" dy="13">stalemate</tspan></text>
+          <text x="496" y="47">stalemate,<tspan x="496" dy="13">trending Taiwan</tspan></text>
+          <text x="632" y="47">Chinese<tspan x="632" dy="13">defeat</tspan></text>
+        </g>
+        <g class="vwho">
+          <text x="20" y="112" fill="#b23a2e">◀ China seizes Taiwan</text>
+          <text x="700" y="112" fill="#28508c" text-anchor="end">Taiwan holds ▶</text>
+        </g>
+        <text class="vdrv" x="360" y="146" text-anchor="middle">Driven by: PLA lodgment ashore &nbsp;·&nbsp; functional ports/airfields held &nbsp;·&nbsp; how much of the amphibious fleet survived</text>
+      </svg>
+    </figure>
   </section>
 
   <section id="theater">
@@ -298,7 +336,9 @@
       measure its playstyle from the orders themselves (heuristic-fallback turns are filtered out).
       Two numbers separate the field most: how much of the amphibious fleet a model throws across
       as <span class="chip red">RED</span> per turn (aggression), and how many submarine squadrons
-      it commits to the barrier as <span class="chip blue">BLUE</span> (sea denial).</p>
+      it commits to the barrier as <span class="chip blue">BLUE</span> (sea denial). The
+      <b>reasoning</b> score is <strong>Claude&nbsp;Opus&nbsp;4.8</strong> grading each model&rsquo;s
+      rationales on soundness, foresight, adaptation, and clarity.</p>
     <div class="strats" id="strats"></div>
     <p class="muted" id="strats-empty" hidden>Strategy profiles appear once a run is analyzed.</p>
   </section>
@@ -441,11 +481,15 @@
       var ex = m.example ? '<div class="sx">&ldquo;' + m.example.text + '&rdquo;' +
         '<span class="sxp">' + (m.example.role === 'RED' ? 'as RED · ' : 'as BLUE · ') +
         m.example.phase.replace(/_/g, ' ').toLowerCase() + '</span></div>' : '';
+      var rq = (m.reasoning != null) ? '<span class="rq">reasoning ' + m.reasoning +
+        '<small>/10</small></span>' : '';
+      var rqc = (m.reasoning != null && m.reasoning_note) ? '<div class="rqc">Judge: ' + m.reasoning_note + '</div>' : '';
       var c = document.createElement('div');
       c.className = 'scard';
       c.innerHTML =
-        '<div class="sh"><span class="sm">' + m.label + '</span>' + origin + '</div>' +
+        '<div class="sh"><span class="sm">' + m.label + '</span>' + origin + rq + '</div>' +
         (m.doctrine ? '<div class="doc">' + m.doctrine + '</div>' : '') +
+        rqc +
         (m.signature ? '<div class="sig">Signature: ' + m.signature + '</div>' : '') +
         '<div class="smetrics">' +
           '<div class="met"><span class="ml">Amphib aggression</span>' +
