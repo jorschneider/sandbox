@@ -28,6 +28,20 @@ class Source:
     note: str = ""     # what this source systematically does
 
 
+def render(intro, blocks, learned=None):
+    """Generic briefing-packet renderer. blocks = [(Source, text)];
+    learned = optional list of '✔ ...' established-fact strings."""
+    lines = ["===== PRESIDENTIAL BRIEFING PACKET =====", intro + "\n"]
+    for src, text in blocks:
+        lines.append(f"▸ {src.name}  [{src.reliability}]")
+        lines.append(f"  {text}")
+    if learned:
+        lines.append("\n--- WHAT YOUR INVESTIGATIONS HAVE ESTABLISHED ---")
+        lines.extend("✔ " + s for s in learned)
+    lines.append("\nNo source hands you the truth. Decide what you believe, and act.")
+    return "\n".join(lines)
+
+
 # Source roster for the Strait Crisis. Reliability labels are honest priors the
 # President can use; the *content* is where each source distorts the truth.
 STRAIT_SOURCES = {
