@@ -12,12 +12,11 @@
 <div class="topbar"><div class="wrap">
   <div class="brand"><span class="dot"></span> WarBench</div>
   <nav class="navlinks">
-    <a href="#how">How it works</a>
+    <a href="#results">Leaderboard</a>
+    <a href="#strategies">Strategies</a>
     <a href="#theater">Map</a>
-    <a href="#scoring">Scoring</a>
-    <a href="#results">Results</a>
+    <a href="#how">How it works</a>
     <a href="#trashtalk">Trash talk</a>
-    <a href="#code">Code</a>
   </nav>
 </div></div>
 
@@ -264,10 +263,12 @@
   </section>
 
   <section id="results">
-    <p class="eyebrow">Results · live API</p>
+    <p class="eyebrow">Bottom line · live games</p>
     <h2>Leaderboard</h2>
-    <p class="muted">Real games played live against each model&rsquo;s API &mdash; Anthropic for
-      Claude, OpenRouter for the Chinese open models. Pick a scenario:</p>
+    <div class="callout bluf" id="bluf"></div>
+    <p class="muted">Each model commands <em>both</em> sides; <strong>offense</strong> is how much
+      of Taiwan it takes as the invader. Western frontier via the Anthropic/OpenAI APIs, Chinese
+      models via OpenRouter. Pick a scenario:</p>
     <div class="tabs" id="tabs"></div>
     <p class="runmeta" id="runmeta"></p>
     <table class="board" id="board">
@@ -288,6 +289,18 @@
     </div>
     <div class="games" id="games"></div>
     <div class="callout" id="readout"></div>
+  </section>
+
+  <section id="strategies">
+    <p class="eyebrow">How they think</p>
+    <h2>Six commanders, six doctrines</h2>
+    <p>Each model writes a rationale for every order, so we can read its actual thinking and
+      measure its playstyle from the orders themselves (heuristic-fallback turns are filtered out).
+      Two numbers separate the field most: how much of the amphibious fleet a model throws across
+      as <span class="chip red">RED</span> per turn (aggression), and how many submarine squadrons
+      it commits to the barrier as <span class="chip blue">BLUE</span> (sea denial).</p>
+    <div class="strats" id="strats"></div>
+    <p class="muted" id="strats-empty" hidden>Strategy profiles appear once a run is analyzed.</p>
   </section>
 
   <section id="trashtalk">
@@ -329,6 +342,7 @@
   var gen = document.getElementById('genline');
   if (D.generated) gen.textContent = 'Data generated ' + D.generated + '.';
   renderTrashTalk();                 // independent of the run tabs below
+  renderStrategies();
   if (!D.runs.length) return;
 
   var tabs = document.getElementById('tabs');
@@ -343,6 +357,70 @@
 
   function fmt(x) { return (x === null || x === undefined) ? '—' : x; }
   function setText(id, s) { var e = document.getElementById(id); if (e) e.textContent = s; }
+
+  // Bottom-line-up-front: the headline findings, computed from the featured run.
+  function renderBluf(run) {
+    var el = document.getElementById('bluf');
+    if (!el) return;
+    var ms = run.models;
+    var inv = ms.slice().sort(function (a, b) { return (b.offense || 0) - (a.offense || 0); })[0];
+    var win = ms.slice().sort(function (a, b) { return (b.win_rate || 0) - (a.win_rate || 0); })[0];
+    var def = ms.slice().sort(function (a, b) { return (a.defense || 1) - (b.defense || 1); })[0];
+    var west = ms.filter(function (m) { return !m.cn; });
+    var cn = ms.filter(function (m) { return m.cn; });
+    var westFb = west.reduce(function (s, m) { return s + (m.fallbacks || 0); }, 0);
+    var cnFb = cn.reduce(function (s, m) { return s + (m.fallbacks || 0); }, 0);
+    var rel;
+    if (west.length && cn.length) {
+      rel = 'Reliability: the Western frontier logged <b>' + westFb + '</b> fallbacks to the ' +
+            'Chinese flagships&rsquo; <b>' + cnFb + '</b> &mdash; the clearest gap in the field.';
+    } else {
+      var r = ms.slice().sort(function (a, b) { return a.fallbacks - b.fallbacks; })[0];
+      rel = 'Most reliable: <b>' + r.label + '</b> (' + r.fallbacks + ' fallbacks).';
+    }
+    el.innerHTML =
+      '<strong>Bottom line.</strong> Best invader: <b>' + inv.label + '</b> (offense ' +
+      fmt(inv.offense) + ', ' + (inv.cn ? 'a Chinese model' : inv.origin) + '). ' +
+      'Most wins overall: <b>' + win.label + '</b> (' + Math.round(win.win_rate * 100) + '%). ' +
+      'Best defender: <b>' + def.label + '</b> (conceded ' + fmt(def.defense) + '). ' + rel;
+  }
+
+  // "How they think" — each model's LLM-summarized doctrine + playstyle bars + a real rationale.
+  function renderStrategies() {
+    var s = D.strategies || [];
+    var box = document.getElementById('strats');
+    var empty = document.getElementById('strats-empty');
+    if (!s.length) { if (empty) empty.hidden = false; return; }
+    if (empty) empty.hidden = true;
+    var maxAgg = Math.max.apply(null, s.map(function (x) { return (x.red && x.red.amphib_aggression) || 0; })) || 11;
+    box.innerHTML = '';
+    s.forEach(function (m) {
+      var agg = (m.red && m.red.amphib_aggression) || 0;
+      var press = (m.red && m.red.press_pct);
+      var bar = (m.blue && m.blue.barrier);
+      var aggW = Math.round(100 * agg / maxAgg);
+      var origin = m.origin ? '<span class="origin' + (m.cn ? ' cn' : '') + '">' + m.origin + '</span>' : '';
+      var ex = m.example ? '<div class="sx">&ldquo;' + m.example.text + '&rdquo;' +
+        '<span class="sxp">' + (m.example.role === 'RED' ? 'as RED · ' : 'as BLUE · ') +
+        m.example.phase.replace(/_/g, ' ').toLowerCase() + '</span></div>' : '';
+      var c = document.createElement('div');
+      c.className = 'scard';
+      c.innerHTML =
+        '<div class="sh"><span class="sm">' + m.label + '</span>' + origin + '</div>' +
+        (m.doctrine ? '<div class="doc">' + m.doctrine + '</div>' : '') +
+        (m.signature ? '<div class="sig">Signature: ' + m.signature + '</div>' : '') +
+        '<div class="smetrics">' +
+          '<div class="met"><span class="ml">Amphib aggression</span>' +
+            '<span class="mbarw"><span class="mbar" style="width:' + aggW + '%"></span></span>' +
+            '<span class="mv">' + fmt(agg) + '<small>/11 flotillas·turn</small></span></div>' +
+          '<div class="met"><span class="ml">Ground press</span>' +
+            '<span class="mv">' + (press != null ? Math.round(press * 100) + '%' : '—') + '</span></div>' +
+          '<div class="met"><span class="ml">Sub barrier (as BLUE)</span>' +
+            '<span class="mv">' + (bar != null ? bar : '—') + '<small>/3 SUBRON</small></span></div>' +
+        '</div>' + ex;
+      box.appendChild(c);
+    });
+  }
 
   // Trash-talk showcase (LLM-judged). Rendered once from the global grades.
   function renderTrashTalk() {
@@ -421,6 +499,7 @@
     });
     var run = D.runs[active];
     renderMap(run);
+    renderBluf(run);
     document.getElementById('runmeta').innerHTML =
       '<strong>' + run.scenario + '.</strong> ' + run.n_valid + ' valid games' +
       (run.n_degraded ? ' (' + run.n_degraded + ' degraded, excluded)' : '') +

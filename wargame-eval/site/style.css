@@ -82,6 +82,33 @@ ul.clean li b { font-weight: 650; }
 /* callout */
 .callout { background: var(--panel); border: 1px solid var(--line);
   border-left: 3px solid var(--red); border-radius: 8px; padding: 16px 18px; margin: 16px 0; }
+.callout.bluf { border-left-color: var(--blue); font-size: 16px; }
+
+/* BLUF section order — lead with results + strategies, then the explainer depth */
+body > .wrap { display: flex; flex-direction: column; }
+.hero { order: 0; }
+#results { order: 1; } #strategies { order: 2; } #theater { order: 3; }
+#why { order: 4; } #how { order: 5; } #faithful { order: 6; } #scoring { order: 7; }
+#trashtalk { order: 8; } #code { order: 9; }
+footer { order: 10; }
+
+/* strategy cards */
+.strats { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin: 8px 0; }
+.scard { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 13px 15px; }
+.scard .sh { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.scard .sm { font-weight: 700; }
+.scard .doc { font-size: 14px; line-height: 1.45; margin-bottom: 4px; }
+.scard .sig { font-size: 12px; color: var(--muted); font-style: italic; margin-bottom: 10px; }
+.smetrics { display: flex; flex-direction: column; gap: 5px; margin-bottom: 9px; }
+.met { display: grid; grid-template-columns: 110px 1fr auto; align-items: center; gap: 8px; font-size: 12px; }
+.met .ml { color: var(--muted); }
+.met .mbarw { height: 7px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.met .mbar { display: block; height: 7px; background: var(--red); border-radius: 3px; }
+.met .mv { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+.met .mv small { color: var(--muted); font-size: 10px; }
+.scard .sx { font-size: 12.5px; line-height: 1.5; border-top: 1px solid var(--line); padding-top: 9px; color: var(--ink); }
+.scard .sxp { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+@media (max-width: 560px) { .strats { grid-template-columns: 1fr; } .met { grid-template-columns: 96px 1fr auto; } }
 
 /* theater map */
 figure.map { margin: 8px 0 6px; }

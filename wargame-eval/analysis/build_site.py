@@ -29,7 +29,14 @@ def load_grades() -> dict:
     return json.load(open(p)) if os.path.exists(p) else {}
 
 
+def load_strategies() -> dict:
+    """Per-model strategy profiles from analysis/analyze_strategies.py, if present."""
+    p = os.path.join(HERE, "strategies.json")
+    return json.load(open(p)) if os.path.exists(p) else {}
+
+
 GRADES = load_grades()
+STRATS = load_strategies()
 
 
 def progress_from_metrics(m: dict) -> float:
@@ -167,7 +174,11 @@ def main() -> None:
         talk.append({"model": m, "label": model_label(m), "origin": origin,
                      "cn": origin in CHINESE_ORIGINS, **g})
     talk.sort(key=lambda x: -x.get("score", 0))
-    data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs, "trash_talk": talk}
+    # Strategy profiles, ordered by how aggressively each model invades as RED.
+    strat = list(STRATS.values())
+    strat.sort(key=lambda s: -((s.get("red") or {}).get("amphib_aggression") or 0))
+    data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs,
+            "trash_talk": talk, "strategies": strat}
     out = os.path.join(ROOT, "site", "data.js")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w") as f:
