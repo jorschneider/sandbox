@@ -192,8 +192,11 @@
 
     <h3>Why the orders go invalid</h3>
     <p class="muted">A focused probe: each model was asked for orders <span id="ivtrials">30</span>&times;
-      across the six phases. When it couldn&rsquo;t return a usable order, this is how it failed &mdash;
-      the unreliable models mostly bury the JSON in prose or run past the token budget mid-object.</p>
+      across the six phases. When it couldn&rsquo;t return a usable order, this is how it failed. The
+      surprise: the dominant mode is an <b>empty reply</b> &mdash; the model returns nothing at all (a
+      reasoning model often spends its whole budget on hidden thinking and never emits the JSON) &mdash;
+      with the rest garbled or truncated mid-object. (Rates here run lower than the live tournament,
+      which also faced rate-limit pressure; the order of reliability is the same.)</p>
     <div class="ivbars" id="ivbars"></div>
     <div class="ivlegend" id="ivlegend"></div>
     <div class="ivex" id="ivex"></div>
