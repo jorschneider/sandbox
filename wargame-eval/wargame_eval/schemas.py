@@ -94,6 +94,9 @@ def action_schema(phase: str) -> dict:
 def _clamp_alloc(alloc: dict, available: int, keys: tuple[str, ...]) -> tuple[dict, list]:
     """Clamp an allocation so the total does not exceed `available`."""
     violations = []
+    if not isinstance(alloc, dict):           # model returned a list/str/etc.
+        violations.append("allocation was not an object; treated as empty")
+        alloc = {}
     out = {k: max(0, int(alloc.get(k, 0) or 0)) for k in keys}
     total = sum(out.values())
     if total > available:
@@ -106,7 +109,7 @@ def _clamp_alloc(alloc: dict, available: int, keys: tuple[str, ...]) -> tuple[di
 
 def validate(phase: str, orders: dict, state: GameState) -> tuple[dict, list]:
     """Return (clean_orders, violations) for the given phase."""
-    orders = orders or {}
+    orders = orders if isinstance(orders, dict) else {}
     if phase == "RED_MISSILE":
         alloc = orders.get("allocation", {})
         total_missiles = sum(state.red_missiles.values())

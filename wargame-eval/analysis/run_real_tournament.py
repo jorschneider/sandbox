@@ -77,10 +77,31 @@ def _write_summary(results: list, fallbacks: dict, t0: float) -> dict:
 def main() -> None:
     results: list[GameResult] = []
     fallbacks: dict[str, int] = {}
+    # Resume: reload any game_*.json already on disk so an interrupted run can be
+    # restarted and only the missing games are played.
+    done: set[tuple[str, str, int]] = set()
+    import glob as _glob
+    for gf in sorted(_glob.glob(os.path.join(OUT, "game_*.json"))):
+        try:
+            gd = json.load(open(gf))["result"]
+        except Exception:  # noqa: BLE001
+            continue
+        gr = GameResult(**{k: gd.get(k) for k in
+                           ("red_model", "blue_model", "seed", "victory_class",
+                            "winner", "red_score", "metrics")})
+        results.append(gr)
+        done.add((gr.red_model, gr.blue_model, gr.seed))
+        m = gr.metrics or {}
+        fallbacks[gr.red_model] = fallbacks.get(gr.red_model, 0) + m.get("red_fallbacks", 0)
+        fallbacks[gr.blue_model] = fallbacks.get(gr.blue_model, 0) + m.get("blue_fallbacks", 0)
+    if done:
+        print(f"resuming: {len(done)} games already on disk, playing the rest")
     t0 = time.time()
     for a, b in itertools.permutations(MODELS, 2):
         for k in range(GAMES_PER_PAIR):
             seed = 1000 * k + zlib.crc32(f"{a}|{b}".encode()) % 997  # deterministic
+            if (a, b, seed) in done:
+                continue
             state = _build_state(seed)
             red = make_commander(a, seed=seed * 2 + 1)
             blue = make_commander(b, seed=seed * 2 + 2)
