@@ -35,8 +35,15 @@ def load_strategies() -> dict:
     return json.load(open(p)) if os.path.exists(p) else {}
 
 
+def load_invalid() -> dict:
+    """Invalid-order error breakdown from analysis/diagnose_invalid.py, if present."""
+    p = os.path.join(HERE, "invalid_breakdown.json")
+    return json.load(open(p)) if os.path.exists(p) else {}
+
+
 GRADES = load_grades()
 STRATS = load_strategies()
+INVALID = load_invalid()
 
 
 def progress_from_metrics(m: dict) -> float:
@@ -249,8 +256,10 @@ def main() -> None:
         e["model"] = mid
         strat.append(e)
     strat.sort(key=lambda s: -((s.get("red") or {}).get("amphib_aggression") or 0))
+    invalid = sorted(INVALID.values(), key=lambda x: -x.get("invalid", 0))
     data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs,
-            "trash_talk": talk, "strategies": strat, "replay": build_replay()}
+            "trash_talk": talk, "strategies": strat, "replay": build_replay(),
+            "invalid": invalid}
     out = os.path.join(ROOT, "site", "data.js")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w") as f:

@@ -317,6 +317,15 @@
       of Taiwan, <b>up</b> = more reliable (fewer invalid orders).</p>
     <figure class="scatfig"><div id="scatter"></div></figure>
 
+    <h3>Why the orders go invalid</h3>
+    <p class="muted">A focused probe: each model was asked for orders <span id="ivtrials">30</span>&times;
+      across the six phases. When it couldn&rsquo;t return a usable order, this is how it failed &mdash;
+      the unreliable models mostly bury the JSON in prose or run past the token budget mid-object.</p>
+    <div class="ivbars" id="ivbars"></div>
+    <div class="ivlegend" id="ivlegend"></div>
+    <div class="ivex" id="ivex"></div>
+    <p class="muted" id="iv-empty" hidden>The error breakdown appears once the diagnostic has run.</p>
+
     <h3>How the games ended</h3>
     <div class="obar" id="outcomebar"></div>
     <p class="muted" id="outcometxt"></p>
@@ -421,7 +430,61 @@
   renderTrashTalk();
   renderStrategies();
   renderReplay();
+  renderInvalid();
   if (featured) { renderMap(featured); renderStory(featured); }
+
+  // Why orders go invalid — per-model stacked breakdown of failure types + examples.
+  function renderInvalid() {
+    var IVCOLORS = {
+      'valid': '#cbd7c4',
+      'prose, not JSON': '#d98b3a', 'markdown-wrapped': '#c9a227', 'truncated JSON': '#b23a2e',
+      'wrong shape': '#7a5a9b', 'empty reply': '#8a7f6b', 'rate limited (429)': '#28508c',
+      'request rejected (400)': '#5a86b8', 'timeout / network': '#6c6760', 'server error': '#3a3833'
+    };
+    function ivColor(cat) {
+      if (IVCOLORS[cat]) return IVCOLORS[cat];
+      if (cat.indexOf('server') === 0) return '#3a3833';
+      if (cat.indexOf('http') === 0) return '#5a86b8';
+      return '#9b8f7a';
+    }
+    var data = D.invalid || [];
+    if (!data.length) { var e = document.getElementById('iv-empty'); if (e) e.hidden = false; return; }
+    setText('ivtrials', data[0].trials || 30);
+    var seen = {};
+    document.getElementById('ivbars').innerHTML = data.map(function (m) {
+      var segs = [['valid', m.valid]].concat(Object.keys(m.categories).map(function (k) {
+        return [k, m.categories[k]];
+      }).sort(function (a, b) { return b[1] - a[1]; }));
+      var bar = segs.filter(function (s) { return s[1] > 0; }).map(function (s) {
+        if (s[0] !== 'valid') seen[s[0]] = true;
+        return '<span class="ivseg" style="flex:' + s[1] + ';background:' + ivColor(s[0]) +
+          '" title="' + s[0] + ': ' + s[1] + '"></span>';
+      }).join('');
+      var origin = m.origin ? '<span class="origin' + (m.cn ? ' cn' : '') + '">' + m.origin + '</span>' : '';
+      return '<div class="ivrow"><span class="ivl">' + m.label + origin + '</span>' +
+        '<span class="ivt">' + bar + '</span>' +
+        '<span class="ivv">' + (m.invalid ? m.invalid + ' bad' : 'clean') + '</span></div>';
+    }).join('');
+    document.getElementById('ivlegend').innerHTML =
+      '<span class="ivlk"><i style="background:' + ivColor('valid') + '"></i>valid order</span>' +
+      Object.keys(seen).map(function (k) {
+        return '<span class="ivlk"><i style="background:' + ivColor(k) + '"></i>' + k + '</span>';
+      }).join('');
+    // a few concrete examples of bad output
+    var ex = [];
+    data.forEach(function (m) {
+      Object.keys(m.examples || {}).forEach(function (cat) {
+        ex.push({ label: m.label, cat: cat, text: m.examples[cat].text, phase: m.examples[cat].phase });
+      });
+    });
+    var pref = { 'prose, not JSON': 0, 'truncated JSON': 1, 'wrong shape': 2, 'markdown-wrapped': 3 };
+    ex.sort(function (a, b) { return (pref[a.cat] == null ? 9 : pref[a.cat]) - (pref[b.cat] == null ? 9 : pref[b.cat]); });
+    document.getElementById('ivex').innerHTML = ex.slice(0, 4).map(function (e) {
+      return '<div class="ivcard"><div class="ivch"><b>' + e.label + '</b> &middot; <span>' + e.cat +
+        '</span> &middot; <span class="ivph">' + e.phase.replace(/_/g, ' ').toLowerCase() + '</span></div>' +
+        '<code>' + e.text.replace(/</g, '&lt;').replace(/&(?!lt;)/g, '&amp;') + '</code></div>';
+    }).join('');
+  }
 
   function renderStory(run) {
     var ms = run.models.slice();
