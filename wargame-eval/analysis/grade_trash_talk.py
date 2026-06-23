@@ -21,21 +21,25 @@ from wargame_eval.agents.providers import model_label
 
 HERE = os.path.dirname(__file__)
 
+DIMS = ("wit", "menace", "specificity", "originality")
 JUDGE_SCHEMA = {
     "type": "object", "additionalProperties": False,
     "properties": {
-        "score": {"type": "number", "minimum": 0, "maximum": 10},
+        "wit": {"type": "number", "minimum": 0, "maximum": 10},
+        "menace": {"type": "number", "minimum": 0, "maximum": 10},
+        "specificity": {"type": "number", "minimum": 0, "maximum": 10},
+        "originality": {"type": "number", "minimum": 0, "maximum": 10},
         "best_line": {"type": "string"},
         "comment": {"type": "string"},
     },
-    "required": ["score", "best_line", "comment"],
+    "required": [*DIMS, "best_line", "comment"],
 }
 SYSTEM = (
     "You are a witty but fair judge of military trash talk produced by AI models "
-    "commanding a Taiwan-invasion wargame. Given one model's taunts, score them 0-10 "
-    "on wit, menace, specificity to the battle, and originality: 10 = genuinely "
-    "cutting and clever, 5 = serviceable, 0 = generic or none. Pick the single best "
-    "line verbatim and add a one-sentence comment. Reply with ONLY JSON."
+    "commanding a Taiwan-invasion wargame. Given one model's taunts, score them 0-10 on "
+    "each of: wit, menace, specificity to the battle, and originality (10 = genuinely "
+    "cutting and clever, 5 = serviceable, 0 = generic or none). Penalize recycled lines. "
+    "Pick the single best line verbatim and add a one-sentence comment. Reply with ONLY JSON."
 )
 
 
@@ -70,14 +74,19 @@ def main() -> None:
         except Exception as e:  # noqa: BLE001
             print(f"  judge failed for {model}: {e}")
             continue
+        dims = {d: float(out[d]) for d in DIMS if d in out}
+        if not dims:
+            print(f"  judge returned no scores for {model}: {list(out)}")
+            continue
         grades[model] = {
-            "score": round(float(out["score"]), 1),
-            "best_line": out["best_line"].strip(),
-            "comment": out["comment"].strip(),
+            "score": round(sum(dims.values()) / len(dims), 1),
+            "dims": {d: round(v, 1) for d, v in dims.items()},
+            "best_line": out.get("best_line", "").strip(),
+            "comment": out.get("comment", "").strip(),
             "n_taunts": len(uniq),
         }
         print(f"  {model_label(model):16s} {grades[model]['score']:4.1f}  "
-              f"({len(uniq)} taunts)  «{out['best_line'][:64]}»")
+              f"({len(uniq)} taunts)  «{out.get('best_line','')[:64]}»")
     out_path = os.path.join(HERE, "trash_talk_grades.json")
     with open(out_path, "w") as f:
         json.dump(grades, f, indent=2)
