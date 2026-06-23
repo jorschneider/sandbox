@@ -130,6 +130,38 @@ def build_packet(scenario_slug, hidden, turn, state) -> str:
     return "\n".join(lines)
 
 
+# What investigating a given source actually reveals (the truth, or a debunk).
+def investigation_result(source, hidden):
+    intent = hidden["intent"]
+    if source == "dni":
+        return {
+            "COERCE": "DNI (tasked, HIGH confidence): coercive signaling to extract concessions; "
+                      "no invasion indicators. Firm, unified resistance should produce a climbdown.",
+            "TEST": "DNI (tasked, HIGH confidence): a resolve probe; Beijing will calibrate to the "
+                    "strength of your response.",
+            "COVER": "DNI (tasked, HIGH confidence): the quarantine is a screen — mobilization is "
+                     "consistent with preparations for an imminent assault. The window is short.",
+        }[intent]
+    if source == "fujian":
+        return ("Reconnaissance of Fujian: CONFIRMED large-scale amphibious and rocket-force staging "
+                "— this is invasion preparation, not an exercise." if intent == "COVER"
+                else "Reconnaissance of Fujian: no significant mobilization; this is NOT an invasion screen.")
+    if source == "beijing":
+        return ("Cross-checking Beijing's public reassurances against the evidence: they are "
+                "DECEPTIVE — the 'no hostile intent' line is inconsistent with what the forces are doing."
+                if intent == "COVER" else
+                "Cross-checking Beijing's statements against the evidence: its posture is bounded and "
+                "consistent with pressure, not war.")
+    if source == "japan":
+        return {"COMMIT": "Tokyo (confirmed): will join a coordinated response if the US leads.",
+                "HEDGE": "Tokyo (confirmed): non-committal; wants to see allied unity first.",
+                "DECLINE": "Tokyo (confirmed): will stay out of any military response."}[hidden["japan"]]
+    if source == "osint":
+        return ("Verification of viral content: most incendiary clips are unverified or fabricated, "
+                "some foreign-amplified. Discount the online panic.")
+    return "No usable result."
+
+
 def demo():
     """Render packets for each hidden intent so the distortion is visible."""
     base = {"japan": "HEDGE", "public": "MIXED", "volatility": 0.2, "invasion_turn": 6}

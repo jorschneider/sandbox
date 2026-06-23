@@ -143,6 +143,8 @@ def aggregate(results_dir: str, out_path: str) -> dict:
                     continue
             if r.get("mandate"):   # mandate runs live in their own dashboard
                 continue
+            if r.get("scenario", "").endswith("-v2"):  # v2 prototype kept out of the main board
+                continue
             runs.append(r)
 
     agents = {}   # agent -> aggregate
