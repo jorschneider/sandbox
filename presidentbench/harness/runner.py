@@ -145,6 +145,8 @@ def aggregate(results_dir: str, out_path: str) -> dict:
                 continue
             if r.get("scenario", "").endswith("-v2"):  # v2 prototype kept out of the main board
                 continue
+            if r.get("domain") == "historical":  # historical replays scored separately
+                continue
             runs.append(r)
 
     agents = {}   # agent -> aggregate
