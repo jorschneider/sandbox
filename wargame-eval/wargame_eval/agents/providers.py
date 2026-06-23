@@ -112,9 +112,11 @@ class OpenAICompatibleModelClient:
         body = {"model": self.model, "messages": messages}
         if self.openai_native:
             # Reasoning models: max_completion_tokens (incl. reasoning), default temp.
-            body["max_completion_tokens"] = 6000
+            body["max_completion_tokens"] = 8000
         else:
-            body["max_tokens"] = 1500
+            # Generous budget so reasoning models (DeepSeek etc.) have room for their
+            # hidden reasoning *and* the JSON answer — 1500 starved them into empties.
+            body["max_tokens"] = 8000
             body["temperature"] = 0.3
         if self._mode == "json_object":
             body["response_format"] = {"type": "json_object"}

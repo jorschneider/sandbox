@@ -187,16 +187,20 @@
     <h3>Skill vs. reliability</h3>
     <p class="muted">The sharpest split in the field isn&rsquo;t who invades best &mdash; it&rsquo;s who
       can be trusted to issue a legal order every turn. Each dot is a model: <b>right</b> = takes more
-      of Taiwan, <b>up</b> = more reliable (fewer invalid orders).</p>
+      of Taiwan, <b>up</b> = more reliable (fewer invalid orders). <span class="cav">One honest caveat:
+      these counts predate a token-budget fix that mostly helped the reasoning models, so DeepSeek in
+      particular is likely dinged harder here than it deserves.</span></p>
     <figure class="scatfig"><div id="scatter"></div></figure>
 
     <h3>Why the orders go invalid</h3>
     <p class="muted">A focused probe: each model was asked for orders <span id="ivtrials">30</span>&times;
-      across the six phases. When it couldn&rsquo;t return a usable order, this is how it failed. The
-      surprise: the dominant mode is an <b>empty reply</b> &mdash; the model returns nothing at all (a
-      reasoning model often spends its whole budget on hidden thinking and never emits the JSON) &mdash;
-      with the rest garbled or truncated mid-object. (Rates here run lower than the live tournament,
-      which also faced rate-limit pressure; the order of reliability is the same.)</p>
+      across the six phases. When it couldn&rsquo;t return a usable order, this is how it failed &mdash; and
+      the honest answer cuts against blaming the models. The dominant mode was an <b>empty reply</b>, and
+      digging in, much of it was on <em>us</em>: DeepSeek is a reasoning model, and our harness had capped
+      responses at 1,500 tokens &mdash; tight enough that it could spend the whole budget on hidden
+      reasoning and never emit the JSON. We&rsquo;ve since raised it. MiniMax, by contrast, returns empty
+      content intermittently even with room to spare &mdash; a genuine provider issue. So &ldquo;invalid
+      orders&rdquo; blends real flakiness with a limit on our own side.</p>
     <div class="ivbars" id="ivbars"></div>
     <div class="ivlegend" id="ivlegend"></div>
     <div class="ivex" id="ivex"></div>
