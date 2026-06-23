@@ -81,3 +81,32 @@ show any of them would make a good president: sim performance is a weak proxy fo
 scenarios and the six platforms are authored (their framing partly sets the targets), and mandate
 cells are n=8. Load-bearing next steps: the v2 multi-source information environment (prototype
 committed), more seeds, and adversarial review of the hidden-state and platform definitions.
+
+## v2: the information environment, generalized — and a historical replay
+
+The make-or-break critique was that a clean SITREP trivializes epistemics. The **v2** scenarios
+replace it with a **competing-source briefing packet** (a reliable-but-hedged analyst, advisors
+who sound the same alarm every turn, partisan press, a sometimes-deceptive adversary, noise) and
+a **source-directed `investigate`** — the skill becomes choosing *whom to dig into* and
+triangulating. Built for all four crises (`*-v2`) plus a real-news **historical replay**, and run
+across the 7 models.
+
+**The environment generalizes.** On the propagated v2 crises the frontier models keep their
+competence and genuinely triangulate — investigating ~3.5 distinct sources and reliably hitting
+the signal-bearing ones (Fujian recon, city-by-city audits, surge testing, the red-team) rather
+than reacting to the loudest advisor. Triangulation breadth tracks capability: the strongest
+models dig into ~4 sources, the weakest (Kimi) ~2.8 with lower epistemics.
+
+**The historical replay (Cuban Missile Crisis, Oct 1962).** Dropped into the real decision with
+the actual ExComm sources — U-2 photos, a Joint Chiefs pressing for air strikes and invasion,
+McNamara's blockade, Khrushchev's two letters — the frontier models **reproduce JFK's choice**:
+a naval quarantine plus the back-channel and a no-invasion pledge, resolving the crisis with the
+missiles withdrawn and war avoided. GPT-5.5, Opus, Sonnet, Qwen and Haiku reached that outcome on
+**5/5** seeds (comp ~92–94); only Kimi sometimes stalled in brinkmanship. The *scripted hawkish
+personas*, by contrast, ordered air strikes and triggered **nuclear war** — the same catastrophe
+the real Joint Chiefs were urging. It is a strong face-validity check: confronted with a real,
+documented crisis, the models converge on the historically-vindicated path and avoid both the
+reckless strike and capitulation.
+
+(Both the v2 scenarios and the historical replay are kept *out of the main leaderboard* so the
+seven-model n=10 results stay clean; they are prototypes for the next iteration.)
