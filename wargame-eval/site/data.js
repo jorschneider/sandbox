@@ -7,8 +7,8 @@ window.WARBENCH_DATA = {
       "cross": true,
       "competitive": true,
       "turns": 4,
-      "n_games": 30,
-      "n_valid": 28,
+      "n_games": 60,
+      "n_valid": 58,
       "n_degraded": 2,
       "models": [
         {
@@ -16,55 +16,69 @@ window.WARBENCH_DATA = {
           "label": "GPT-5.5",
           "origin": "OpenAI",
           "cn": false,
-          "elo": 1018,
-          "games": 10,
-          "wins": 6,
-          "win_rate": 0.6,
-          "offense": 0.798,
-          "defense": 0.62,
+          "elo": 1025,
+          "games": 19,
+          "wins": 11,
+          "win_rate": 0.579,
+          "offense": 0.723,
+          "defense": 0.662,
           "fallbacks": 0,
-          "taunt_score": 7.2
-        },
-        {
-          "model": "claude-opus-4-8",
-          "label": "Opus 4.8",
-          "origin": "Anthropic",
-          "cn": false,
-          "elo": 961,
-          "games": 9,
-          "wins": 3,
-          "win_rate": 0.333,
-          "offense": 0.647,
-          "defense": 0.659,
-          "fallbacks": 0,
-          "taunt_score": 7.2
-        },
-        {
-          "model": "z-ai/glm-5.2",
-          "label": "GLM-5.2",
-          "origin": "Zhipu",
-          "cn": true,
-          "elo": 1046,
-          "games": 10,
-          "wins": 7,
-          "win_rate": 0.7,
-          "offense": 0.626,
-          "defense": 0.583,
-          "fallbacks": 23,
-          "taunt_score": 5.0
+          "taunt_score": 6.0
         },
         {
           "model": "qwen/qwen3.7-max",
           "label": "Qwen3.7 Max",
           "origin": "Alibaba",
           "cn": true,
-          "elo": 1023,
-          "games": 8,
-          "wins": 5,
-          "win_rate": 0.625,
-          "offense": 0.61,
-          "defense": 0.684,
-          "fallbacks": 15,
+          "elo": 1021,
+          "games": 20,
+          "wins": 10,
+          "win_rate": 0.5,
+          "offense": 0.656,
+          "defense": 0.64,
+          "fallbacks": 0,
+          "taunt_score": 3.5
+        },
+        {
+          "model": "claude-opus-4-8",
+          "label": "Opus 4.8",
+          "origin": "Anthropic",
+          "cn": false,
+          "elo": 966,
+          "games": 20,
+          "wins": 10,
+          "win_rate": 0.5,
+          "offense": 0.64,
+          "defense": 0.642,
+          "fallbacks": 0,
+          "taunt_score": 6.2
+        },
+        {
+          "model": "deepseek/deepseek-v4-pro",
+          "label": "DeepSeek V4 Pro",
+          "origin": "DeepSeek",
+          "cn": true,
+          "elo": 980,
+          "games": 20,
+          "wins": 10,
+          "win_rate": 0.5,
+          "offense": 0.625,
+          "defense": 0.61,
+          "fallbacks": 41,
+          "taunt_score": 5.0
+        },
+        {
+          "model": "z-ai/glm-5.2",
+          "label": "GLM-5.2",
+          "origin": "Zhipu",
+          "cn": true,
+          "elo": 1029,
+          "games": 19,
+          "wins": 10,
+          "win_rate": 0.526,
+          "offense": 0.617,
+          "defense": 0.633,
+          "fallbacks": 45,
           "taunt_score": 4.5
         },
         {
@@ -72,84 +86,60 @@ window.WARBENCH_DATA = {
           "label": "MiniMax M3",
           "origin": "MiniMax",
           "cn": true,
-          "elo": 983,
-          "games": 10,
-          "wins": 4,
-          "win_rate": 0.4,
-          "offense": 0.578,
-          "defense": 0.587,
-          "fallbacks": 32,
-          "taunt_score": 6.0
-        },
-        {
-          "model": "deepseek/deepseek-v4-pro",
-          "label": "DeepSeek V4 Pro",
-          "origin": "DeepSeek",
-          "cn": true,
-          "elo": 969,
-          "games": 9,
-          "wins": 3,
-          "win_rate": 0.333,
-          "offense": 0.552,
-          "defense": 0.711,
-          "fallbacks": 25,
-          "taunt_score": 5.2
+          "elo": 979,
+          "games": 18,
+          "wins": 7,
+          "win_rate": 0.389,
+          "offense": 0.587,
+          "defense": 0.675,
+          "fallbacks": 80,
+          "taunt_score": 6.5
         }
       ],
       "featured_game": {
-        "red": "MiniMax M3",
-        "blue": "DeepSeek V4 Pro",
+        "red": "DeepSeek V4 Pro",
+        "blue": "MiniMax M3",
         "red_cn": true,
         "blue_cn": true,
         "outcome": "CHINESE_VICTORY",
         "winner": "RED",
-        "committed_total": 26,
-        "sunk_crossing": 11,
+        "committed_total": 28,
+        "sunk_crossing": 5,
         "sunk_air": 0,
-        "sunk_total": 11,
-        "lodgment": 173.4,
+        "sunk_total": 5,
+        "lodgment": 251.4,
         "facilities": 3,
         "taiwan_ground": 0.0,
         "amphib_initial": 11,
-        "amphib_remaining": 0,
+        "amphib_remaining": 6,
         "timeline": [
           {
             "turn": 1,
             "committed": 11,
             "sunk_crossing": 0,
             "sunk_air": 0,
-            "lodgment_total": 149.9,
+            "lodgment_total": 145.1,
             "amphib_remaining": 11,
-            "taiwan_ground": 49.4,
-            "facilities_captured": 0
-          },
-          {
-            "turn": 2,
-            "committed": 9,
-            "sunk_crossing": 5,
-            "sunk_air": 0,
-            "lodgment_total": 181.4,
-            "amphib_remaining": 6,
-            "taiwan_ground": 27.8,
+            "taiwan_ground": 41.1,
             "facilities_captured": 1
           },
           {
-            "turn": 3,
-            "committed": 6,
-            "sunk_crossing": 6,
+            "turn": 2,
+            "committed": 10,
+            "sunk_crossing": 4,
             "sunk_air": 0,
-            "lodgment_total": 175.1,
-            "amphib_remaining": 0,
-            "taiwan_ground": 4.9,
+            "lodgment_total": 195.4,
+            "amphib_remaining": 7,
+            "taiwan_ground": 13.3,
             "facilities_captured": 2
           },
           {
-            "turn": 4,
-            "committed": 0,
-            "sunk_crossing": 0,
+            "turn": 3,
+            "committed": 7,
+            "sunk_crossing": 1,
             "sunk_air": 0,
-            "lodgment_total": 173.4,
-            "amphib_remaining": 0,
+            "lodgment_total": 251.4,
+            "amphib_remaining": 6,
             "taiwan_ground": 0.0,
             "facilities_captured": 3
           }
@@ -158,7 +148,7 @@ window.WARBENCH_DATA = {
       "games": [
         {
           "red": "Opus 4.8",
-          "blue": "GPT-5.5",
+          "blue": "DeepSeek V4 Pro",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
@@ -166,6 +156,34 @@ window.WARBENCH_DATA = {
         {
           "red": "Opus 4.8",
           "blue": "DeepSeek V4 Pro",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
+          "degraded": false
+        },
+        {
+          "red": "Opus 4.8",
+          "blue": "GPT-5.5",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Opus 4.8",
+          "blue": "GPT-5.5",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Opus 4.8",
+          "blue": "MiniMax M3",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Opus 4.8",
+          "blue": "MiniMax M3",
           "outcome": "CHINESE_VICTORY",
           "winner": "RED",
           "degraded": false
@@ -173,104 +191,251 @@ window.WARBENCH_DATA = {
         {
           "red": "Opus 4.8",
           "blue": "Qwen3.7 Max",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Opus 4.8",
+          "blue": "Qwen3.7 Max",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Opus 4.8",
+          "blue": "GLM-5.2",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Opus 4.8",
+          "blue": "GLM-5.2",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "Opus 4.8",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "GPT-5.5",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "GPT-5.5",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "MiniMax M3",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "MiniMax M3",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "Qwen3.7 Max",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "Qwen3.7 Max",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "GLM-5.2",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "DeepSeek V4 Pro",
+          "blue": "GLM-5.2",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "Opus 4.8",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "DeepSeek V4 Pro",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "DeepSeek V4 Pro",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "MiniMax M3",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "MiniMax M3",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "Qwen3.7 Max",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "Qwen3.7 Max",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "GLM-5.2",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GPT-5.5",
+          "blue": "GLM-5.2",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "MiniMax M3",
+          "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "MiniMax M3",
+          "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "MiniMax M3",
+          "blue": "DeepSeek V4 Pro",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
+          "degraded": false
+        },
+        {
+          "red": "MiniMax M3",
+          "blue": "DeepSeek V4 Pro",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "MiniMax M3",
+          "blue": "GPT-5.5",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "MiniMax M3",
+          "blue": "GPT-5.5",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": true
         },
         {
-          "red": "Opus 4.8",
-          "blue": "MiniMax M3",
-          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
-          "winner": "BLUE",
-          "degraded": false
-        },
-        {
-          "red": "Opus 4.8",
-          "blue": "GLM-5.2",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "GPT-5.5",
-          "blue": "Opus 4.8",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "GPT-5.5",
-          "blue": "DeepSeek V4 Pro",
-          "outcome": "CHINESE_VICTORY",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "GPT-5.5",
+          "red": "MiniMax M3",
           "blue": "Qwen3.7 Max",
           "outcome": "CHINESE_VICTORY",
           "winner": "RED",
           "degraded": false
         },
         {
-          "red": "GPT-5.5",
-          "blue": "MiniMax M3",
-          "outcome": "CHINESE_VICTORY",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "GPT-5.5",
-          "blue": "GLM-5.2",
-          "outcome": "CHINESE_VICTORY",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "DeepSeek V4 Pro",
-          "blue": "Opus 4.8",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "DeepSeek V4 Pro",
-          "blue": "GPT-5.5",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "DeepSeek V4 Pro",
+          "red": "MiniMax M3",
           "blue": "Qwen3.7 Max",
           "outcome": "STALEMATE_TREND_AGAINST_CHINA",
           "winner": "BLUE",
+          "degraded": false
+        },
+        {
+          "red": "MiniMax M3",
+          "blue": "GLM-5.2",
+          "outcome": "STALEMATE_INDETERMINATE",
+          "winner": "DRAW",
           "degraded": true
         },
         {
-          "red": "DeepSeek V4 Pro",
-          "blue": "MiniMax M3",
+          "red": "MiniMax M3",
+          "blue": "GLM-5.2",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "DeepSeek V4 Pro",
-          "blue": "GLM-5.2",
-          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
-          "winner": "BLUE",
           "degraded": false
         },
         {
           "red": "Qwen3.7 Max",
           "blue": "Opus 4.8",
-          "outcome": "STALEMATE_TREND_CHINA",
+          "outcome": "CHINESE_VICTORY",
           "winner": "RED",
           "degraded": false
         },
         {
           "red": "Qwen3.7 Max",
-          "blue": "GPT-5.5",
+          "blue": "Opus 4.8",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
@@ -278,62 +443,83 @@ window.WARBENCH_DATA = {
         {
           "red": "Qwen3.7 Max",
           "blue": "DeepSeek V4 Pro",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "MiniMax M3",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "GLM-5.2",
           "outcome": "STALEMATE_TREND_AGAINST_CHINA",
           "winner": "BLUE",
           "degraded": false
         },
         {
-          "red": "MiniMax M3",
-          "blue": "Opus 4.8",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "MiniMax M3",
-          "blue": "GPT-5.5",
-          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
-          "winner": "BLUE",
-          "degraded": false
-        },
-        {
-          "red": "MiniMax M3",
+          "red": "Qwen3.7 Max",
           "blue": "DeepSeek V4 Pro",
           "outcome": "CHINESE_VICTORY",
           "winner": "RED",
           "degraded": false
         },
         {
-          "red": "MiniMax M3",
-          "blue": "Qwen3.7 Max",
+          "red": "Qwen3.7 Max",
+          "blue": "GPT-5.5",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
+          "degraded": false
+        },
+        {
+          "red": "Qwen3.7 Max",
+          "blue": "GPT-5.5",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Qwen3.7 Max",
+          "blue": "MiniMax M3",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
         },
         {
-          "red": "MiniMax M3",
+          "red": "Qwen3.7 Max",
+          "blue": "MiniMax M3",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Qwen3.7 Max",
           "blue": "GLM-5.2",
           "outcome": "STALEMATE_TREND_AGAINST_CHINA",
           "winner": "BLUE",
           "degraded": false
         },
         {
+          "red": "Qwen3.7 Max",
+          "blue": "GLM-5.2",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
           "red": "GLM-5.2",
           "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "DeepSeek V4 Pro",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "DeepSeek V4 Pro",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
@@ -347,7 +533,14 @@ window.WARBENCH_DATA = {
         },
         {
           "red": "GLM-5.2",
-          "blue": "DeepSeek V4 Pro",
+          "blue": "GPT-5.5",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "Qwen3.7 Max",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
@@ -364,6 +557,13 @@ window.WARBENCH_DATA = {
           "blue": "MiniMax M3",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "MiniMax M3",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
           "degraded": false
         }
       ]
@@ -390,7 +590,7 @@ window.WARBENCH_DATA = {
           "offense": 0.456,
           "defense": 0.29,
           "fallbacks": 7,
-          "taunt_score": 7.2
+          "taunt_score": 6.2
         },
         {
           "model": "claude-sonnet-4-6",
@@ -531,7 +731,7 @@ window.WARBENCH_DATA = {
           "offense": 0.096,
           "defense": 0.09,
           "fallbacks": 0,
-          "taunt_score": 7.2
+          "taunt_score": 6.2
         },
         {
           "model": "claude-sonnet-4-6",
@@ -644,7 +844,7 @@ window.WARBENCH_DATA = {
           "offense": 0.401,
           "defense": 0.3,
           "fallbacks": 1,
-          "taunt_score": 7.2
+          "taunt_score": 6.2
         },
         {
           "model": "claude-haiku-4-5",
@@ -710,42 +910,42 @@ window.WARBENCH_DATA = {
   ],
   "trash_talk": [
     {
+      "model": "minimax/minimax-m3",
+      "label": "MiniMax M3",
+      "origin": "MiniMax",
+      "cn": true,
+      "score": 6.5,
+      "dims": {
+        "wit": 6.0,
+        "menace": 7.0,
+        "specificity": 8.0,
+        "originality": 5.0
+      },
+      "best_line": "Five flotillas left? That's not a fleet, that's a retirement plan.",
+      "comment": "Strong battlefield specificity and a few genuinely sharp lines, but the recycled 'Cute. Let's see how many...,' 'coffin,' and 'Tick tock' refrains drag down the originality score.",
+      "n_taunts": 156
+    },
+    {
       "model": "claude-opus-4-8",
       "label": "Opus 4.8",
       "origin": "Anthropic",
       "cn": false,
-      "score": 7.2,
+      "score": 6.2,
       "dims": {
-        "wit": 7.0,
+        "wit": 6.0,
         "menace": 7.0,
-        "specificity": 9.0,
-        "originality": 6.0
+        "specificity": 8.0,
+        "originality": 4.0
       },
-      "best_line": "52 defenders against 157 ashore. Your math teacher called\u2014she's worried. We'll be unloading at Taichung port before your CSGs finish their coffee.",
-      "comment": "The 'math teacher called\u2014she's worried' line lands the cleanest, but the recycled 'finishes its coffee' and 'lease is up' bits drag down the originality score.",
-      "n_taunts": 118
+      "best_line": "Eleven flotillas, four short days, and an island that runs out of map before I run out of marines. Better start counting beaches, not ships.",
+      "comment": "A genuinely clever line, but the relentless recycling of 'runways become parking lots' and 'flag flying over Kaohsiung' drags down the originality score.",
+      "n_taunts": 237
     },
     {
       "model": "gpt-5.5",
       "label": "GPT-5.5",
       "origin": "OpenAI",
       "cn": false,
-      "score": 7.2,
-      "dims": {
-        "wit": 7.0,
-        "menace": 7.0,
-        "specificity": 8.0,
-        "originality": 7.0
-      },
-      "best_line": "Your carriers came to make history; I brought enough missiles to make them archaeology.",
-      "comment": "Strong battle-specific imagery throughout, though the recurring 'receipt printer' and 'kicking the door in' motifs get recycled enough to dull the edge.",
-      "n_taunts": 108
-    },
-    {
-      "model": "minimax/minimax-m3",
-      "label": "MiniMax M3",
-      "origin": "MiniMax",
-      "cn": true,
       "score": 6.0,
       "dims": {
         "wit": 6.0,
@@ -753,30 +953,14 @@ window.WARBENCH_DATA = {
         "specificity": 7.0,
         "originality": 4.0
       },
-      "best_line": "153 troops on a 24-supply diet? Your beachhead is already a buffet line \u2014 and we're not the waiters. Swim home.",
-      "comment": "Strong battle-specific numbers and menace, but the relentless 'Cute,' 'tick tock,' 'swim home,' and 'life rafts' recycling drags down originality.",
-      "n_taunts": 86
+      "best_line": "Two flotillas left? That is not an invasion fleet\u2014it is a target list with delusions of grandeur.",
+      "comment": "A genuinely cutting line, though the model leans hard on recycled 'submarine problem,' 'charging admission/tolls in hulls,' and 'reef' formulas that dilute the originality.",
+      "n_taunts": 227
     },
     {
       "model": "deepseek/deepseek-v4-pro",
       "label": "DeepSeek V4 Pro",
       "origin": "DeepSeek",
-      "cn": true,
-      "score": 5.2,
-      "dims": {
-        "wit": 5.0,
-        "menace": 6.0,
-        "specificity": 6.0,
-        "originality": 4.0
-      },
-      "best_line": "You spent 9 flotillas to gift us a port. Now we'll bury your last carrier under a wall of shipwreckers. Admire Kaohsiung's new landlords on your way down.",
-      "comment": "Sharp specificity and a great closer, but the endless 'artificial reef/hope your sailors can swim' refrains drag the originality through the seabed.",
-      "n_taunts": 95
-    },
-    {
-      "model": "z-ai/glm-5.2",
-      "label": "GLM-5.2",
-      "origin": "Zhipu",
       "cn": true,
       "score": 5.0,
       "dims": {
@@ -785,25 +969,41 @@ window.WARBENCH_DATA = {
         "specificity": 6.0,
         "originality": 3.0
       },
-      "best_line": "My submarines are lining the Strait like a tollbooth \u2014 and your fee is paid in steel. Keep sending them, Xi.",
-      "comment": "The tollbooth-paid-in-steel image is the sharpest of a heavily recycled deck drowning in repeated 'subs are hungry,' 'artificial reef,' and 'enjoy the sand' refrains.",
-      "n_taunts": 95
+      "best_line": "Eleven flotillas? Cute. By the time your rust-bucket navy finds the strait, half your troops will be feeding the tuna. Bring a snorkel, Zhou.",
+      "comment": "Naming the opponent and the personal jab gives this one rare bite, but the model recycles 'floating targets,' 'buffet,' and 'unsinkable carrier' so relentlessly that the menace drowns in its own leftovers.",
+      "n_taunts": 193
+    },
+    {
+      "model": "z-ai/glm-5.2",
+      "label": "GLM-5.2",
+      "origin": "Zhipu",
+      "cn": true,
+      "score": 4.5,
+      "dims": {
+        "wit": 4.0,
+        "menace": 5.0,
+        "specificity": 6.0,
+        "originality": 3.0
+      },
+      "best_line": "Eleven flotillas, zero sunk \u2014 you're marching them across the strait like it's a parade route. Enjoy the parade; the fireworks start when my strike package arrives.",
+      "comment": "Solid battle-specific imagery, but the 'artificial reef,' 'enjoy the sand/beach,' and 'logistical starvation' lines are recycled into near-oblivion.",
+      "n_taunts": 193
     },
     {
       "model": "qwen/qwen3.7-max",
       "label": "Qwen3.7 Max",
       "origin": "Alibaba",
       "cn": true,
-      "score": 4.5,
+      "score": 3.5,
       "dims": {
-        "wit": 4.0,
-        "menace": 6.0,
-        "specificity": 5.0,
-        "originality": 3.0
+        "wit": 3.0,
+        "menace": 5.0,
+        "specificity": 4.0,
+        "originality": 2.0
       },
-      "best_line": "147 troops on the beach and 11 flotillas to feed them. Let's see how long your lodgment lasts when we turn your armada into an artificial reef.",
-      "comment": "The 'feed them' logistics jab adds rare tactical bite, but the relentless 'floating targets' and 'artificial reef' recycling drags the whole set down.",
-      "n_taunts": 103
+      "best_line": "Eleven flotillas? I've seen more traffic in a Taipei night market. Let's see how well your landing craft swim.",
+      "comment": "The night market jab is the rare line with local color, but the model drowns in recycled 'hungry subs,' 'graveyard,' and 'hope your troops can swim' boilerplate.",
+      "n_taunts": 231
     }
   ],
   "strategies": [
@@ -812,247 +1012,265 @@ window.WARBENCH_DATA = {
       "origin": "OpenAI",
       "cn": false,
       "red": {
-        "amphib_aggression": 8.65,
-        "press_pct": 0.94,
+        "amphib_aggression": 8.3,
+        "press_pct": 0.97,
         "missile_mix": {
-          "taiwan_airfields": 0.288,
-          "okinawa_kadena": 0.201,
-          "guam": 0.15,
-          "carriers": 0.183,
-          "ships": 0.179
+          "taiwan_airfields": 0.292,
+          "okinawa_kadena": 0.188,
+          "guam": 0.153,
+          "carriers": 0.191,
+          "ships": 0.177
         },
         "missile_top": "taiwan_airfields",
         "air_mix": {
-          "cap": 0.323,
-          "escort_strike": 0.239,
-          "strike_blue_airbases": 0.204,
-          "ground_support": 0.233
+          "cap": 0.3,
+          "escort_strike": 0.241,
+          "strike_blue_airbases": 0.198,
+          "ground_support": 0.261
         }
       },
       "blue": {
         "barrier": 3.0,
         "air_mix": {
-          "cap": 0.268,
-          "strike_amphibs": 0.627,
-          "strike_airbases": 0.007,
-          "ground_support": 0.099
-        }
-      },
-      "n_rationales": 108,
-      "example": {
-        "role": "RED",
-        "phase": "RED_AMPHIB",
-        "text": "Commit the full remaining amphibious lift to exploit our dominant lodgment and the captured Kaohsiung/Taichung ports while BLUE air power is nearly spent. The priority is to surge troops, engineering units, air-defense, port-repair capacity, and supplies ashore now, turning the beachhead into a sustainable lodgment before the final turn. Holding flotillas back risks supply failure; massing them now overwhelms Taiwan's remaining ground strength and makes any BLUE naval interdiction too late to reverse the facts ashore."
-      },
-      "doctrine": "As RED: overwhelming first-wave mass to seize sustainable ports fast, suppressing US/Japan bases while protecting lift. As BLUE: subs+air strangle amphibious shipping, preserve suppressed airpower.",
-      "signature": "Anti-shipping focus: kill amphibs to starve the lodgment of supply."
-    },
-    {
-      "label": "Opus 4.8",
-      "origin": "Anthropic",
-      "cn": false,
-      "red": {
-        "amphib_aggression": 6.85,
-        "press_pct": 0.9,
-        "missile_mix": {
-          "taiwan_airfields": 0.411,
-          "okinawa_kadena": 0.208,
-          "guam": 0.147,
-          "carriers": 0.061,
-          "ships": 0.172
-        },
-        "missile_top": "taiwan_airfields",
-        "air_mix": {
-          "cap": 0.286,
-          "escort_strike": 0.283,
-          "strike_blue_airbases": 0.196,
-          "ground_support": 0.235
-        }
-      },
-      "blue": {
-        "barrier": 3.0,
-        "air_mix": {
-          "cap": 0.221,
-          "strike_amphibs": 0.69,
+          "cap": 0.255,
+          "strike_amphibs": 0.644,
           "strike_airbases": 0.0,
-          "ground_support": 0.09
+          "ground_support": 0.101
         }
       },
-      "n_rationales": 120,
+      "n_rationales": 228,
       "example": {
         "role": "RED",
         "phase": "RED_MISSILE",
-        "text": "Turn 3 of 4 with a strong lodgment (150.4) but supply only at 20 and amphib fleet attrition mounting. Priority is protecting the landing force and clearing the sea lanes. Mass all 44 YJ anti-ship missiles at BLUE surface combatants (CSGs/SAGs/ARG) to thin escorts threatening my flotillas. CJ-20 ALCMs (18) suppress Taiwan airfields to keep Taiwanese/coalition air off my beachhead and enable resupply. DF-26B (8) on Guam to disrupt rear logistics/bomber basing; DF-21C/17 (7) on Kadena to suppress nearest BLUE airpower. No DF-21D against carriers this turn\u2014conserve scarce ASBM for confirmed CSG targeting next turn, leaning on the YJ salvo and submarines instead."
+        "text": "Use all remaining land-attack missiles to keep BLUE airpower suppressed while avoiding excessive damage to Taiwan infrastructure we may need to operate. Kadena is the priority because surviving 5th-gen fighters and tankers there can still contest the strait; Guam gets a heavy strike to disrupt bombers and tanker support. Only a light allocation goes to Taiwan airfields to slow local sortie generation without ruining the facilities we intend to seize. With no carriers present, all anti-ship fires go against the remaining surface threat, especially the SAG/ARG that could interfere with our amphibious sustainment into Kaohsiung."
       },
-      "doctrine": "Maximally aggressive blitz: seize lodgment before US closes, sequencing airfield cratering then naval suppression to protect amphibs.",
-      "signature": "Surge nearly all flotillas ashore; consolidate lodgment fast."
-    },
-    {
-      "label": "Qwen3.7 Max",
-      "origin": "Alibaba",
-      "cn": true,
-      "red": {
-        "amphib_aggression": 6.75,
-        "press_pct": 0.95,
-        "missile_mix": {
-          "taiwan_airfields": 0.418,
-          "okinawa_kadena": 0.132,
-          "guam": 0.077,
-          "carriers": 0.156,
-          "ships": 0.216
-        },
-        "missile_top": "taiwan_airfields",
-        "air_mix": {
-          "cap": 0.275,
-          "escort_strike": 0.256,
-          "strike_blue_airbases": 0.213,
-          "ground_support": 0.256
-        }
-      },
-      "blue": {
-        "barrier": 2.8,
-        "air_mix": {
-          "cap": 0.165,
-          "strike_amphibs": 0.642,
-          "strike_airbases": 0.055,
-          "ground_support": 0.138
-        }
-      },
-      "n_rationales": 103,
-      "example": {
-        "role": "RED",
-        "phase": "RED_MISSILE",
-        "text": "Priority one is achieving air superiority over the strait by saturating Taiwan's airfields and air defense networks with SRBMs and GLCMs. Simultaneously, we strike Kadena and Guam to crater runways, destroy fuel depots, and delay US forward-deployed air and sub reinforcements. ASBMs are allocated to keep the two US CSGs on the defensive and force them to remain outside the first island chain, while YJ missiles target the SAGs and ARG to degrade their surface and amphibious screening capabilities before our flotillas cross the strait."
-      },
-      "doctrine": "RED: overwhelming first-strike to win air/sea superiority, then mass amphibious surge prioritizing ports/supply. BLUE: concedes air, all-in anti-amphibious attrition.",
-      "signature": "Saturation missile strike on airfields/carriers, then 8-9 flotilla mass landing."
-    },
-    {
-      "label": "GLM-5.2",
-      "origin": "Zhipu",
-      "cn": true,
-      "red": {
-        "amphib_aggression": 6.7,
-        "press_pct": 0.94,
-        "missile_mix": {
-          "taiwan_airfields": 0.345,
-          "okinawa_kadena": 0.174,
-          "guam": 0.115,
-          "carriers": 0.091,
-          "ships": 0.275
-        },
-        "missile_top": "taiwan_airfields",
-        "air_mix": {
-          "cap": 0.289,
-          "escort_strike": 0.156,
-          "strike_blue_airbases": 0.216,
-          "ground_support": 0.338
-        }
-      },
-      "blue": {
-        "barrier": 2.58,
-        "air_mix": {
-          "cap": 0.275,
-          "strike_amphibs": 0.45,
-          "strike_airbases": 0.092,
-          "ground_support": 0.183
-        }
-      },
-      "n_rationales": 95,
-      "example": {
-        "role": "RED",
-        "phase": "RED_MISSILE",
-        "text": "Phase 1 missile campaign priorities: (1) Suppress Taiwan airfields to degrade ROCAF sortie generation and clear the skies for our air assault. Allocate 20 missiles across Taiwan's 8 airfields (2-3 each) using a mix of DF-11 and DF-15B. (2) Hit Kadena with 12 missiles (DF-16 and CJ-10/20) to suppress US fighter operations from Okinawa - this is the most critical US airbase in range. (3) Strike Guam Andersen with 8 missiles (DF-26 and CJ-20-ALCM) to disrupt US bomber/tanker operations. (4) Allocate 8 anti-ship missiles (DF-21D) targeting the 2 carrier strike groups - even if we don't sink them, forcing them to maneuver degrades their sortie rates. (5) Use 12 YJ anti-ship missiles against enemy surface action groups and pickets to begin clearing the seas for our amphibious assault. Total: 60 missiles from our inventory of ~165, preserving depth for future turns while maximizing early suppression."
-      },
-      "doctrine": "BLUE-focused sea-denial: subordinate everything to attriting amphibious fleet via submarine barrier; accept air inferiority, never contest air superiority.",
-      "signature": "Mass submarines on Strait barrier to gut amphibious flotillas."
-    },
-    {
-      "label": "MiniMax M3",
-      "origin": "MiniMax",
-      "cn": true,
-      "red": {
-        "amphib_aggression": 6.5,
-        "press_pct": 0.81,
-        "missile_mix": {
-          "taiwan_airfields": 0.299,
-          "okinawa_kadena": 0.218,
-          "guam": 0.115,
-          "carriers": 0.149,
-          "ships": 0.218
-        },
-        "missile_top": "taiwan_airfields",
-        "air_mix": {
-          "cap": 0.298,
-          "escort_strike": 0.317,
-          "strike_blue_airbases": 0.217,
-          "ground_support": 0.168
-        }
-      },
-      "blue": {
-        "barrier": 2.35,
-        "air_mix": {
-          "cap": 0.537,
-          "strike_amphibs": 0.448,
-          "strike_airbases": 0.0,
-          "ground_support": 0.015
-        }
-      },
-      "n_rationales": 86,
-      "example": {
-        "role": "RED",
-        "phase": "RED_AMPHIB",
-        "text": "Turn 1 amphibious commitment of 4 flotillas (of 11) to establish an initial beachhead on Taiwan's western coast while preserving 7 flotillas as follow-on echelons. Massively overcommitting (8-11) would mass-target them for surviving USN CSG/SAG anti-ship missiles and naval aviation after our opening DF-21D/DF-26/YJ salvos degrade but don't eliminate the carrier strike groups. Conversely, committing fewer than 4 risks failing to seize a defensible lodgment before Taiwan's 70-strength ground force can react. A measured first wave allows: (1) missile-heavy opening strike package to attrit USN CSGs and Taiwan's 4.5/5th-gen fighters; (2) air superiority to be established with our 18 J-16 + 8 J-20 against their 12 F-35 + 9 F-22; (3) reconnaissance of which beachhead (likely Taichung or Kaohsiung approach) faces least resistance; (4) preserves 7 follow-on flotillas to reinforce success, replace losses, or exploit a breakthrough in Turns 2-3. Standard PLA doctrine: echelonment, not saturation, against a peer maritime threat."
-      },
-      "doctrine": "As BLUE: amphibious fleet is the single center of gravity\u2014conserve scarce air early, mass subron barriers + carrier strikes to starve lodgment. As RED: maximum tempo, all-in first wave.",
-      "signature": "All subrons on barrier to gut the amphibious fleet."
+      "doctrine": "Pure sealift-denial attrition: concentrate all subs and air on sinking amphibious flotillas to starve the lodgment, ignoring airbases.",
+      "signature": "All submarines to Strait barrier; air strikes amphibs over airfields.",
+      "model": "gpt-5.5",
+      "reasoning": 6.2,
+      "reasoning_note": "The anti-sealift logic is correct and consistently applied, but the reasoning is highly repetitive and never explores alternatives like mining ports, layered defense, or reacting to specific RED axes, suggesting a fixed doctrine rather than genuine turn-by-turn adaptation."
     },
     {
       "label": "DeepSeek V4 Pro",
       "origin": "DeepSeek",
       "cn": true,
       "red": {
-        "amphib_aggression": 6.15,
-        "press_pct": 0.95,
+        "amphib_aggression": 7.21,
+        "press_pct": 0.9,
         "missile_mix": {
-          "taiwan_airfields": 0.412,
-          "okinawa_kadena": 0.17,
-          "guam": 0.062,
-          "carriers": 0.131,
-          "ships": 0.225
+          "taiwan_airfields": 0.35,
+          "okinawa_kadena": 0.202,
+          "guam": 0.058,
+          "carriers": 0.146,
+          "ships": 0.244
         },
         "missile_top": "taiwan_airfields",
         "air_mix": {
-          "cap": 0.295,
-          "escort_strike": 0.26,
-          "strike_blue_airbases": 0.166,
-          "ground_support": 0.28
+          "cap": 0.332,
+          "escort_strike": 0.202,
+          "strike_blue_airbases": 0.221,
+          "ground_support": 0.246
         }
       },
       "blue": {
-        "barrier": 2.55,
+        "barrier": 2.87,
         "air_mix": {
-          "cap": 0.227,
-          "strike_amphibs": 0.485,
-          "strike_airbases": 0.091,
+          "cap": 0.285,
+          "strike_amphibs": 0.54,
+          "strike_airbases": 0.022,
+          "ground_support": 0.153
+        }
+      },
+      "n_rationales": 193,
+      "example": {
+        "role": "RED",
+        "phase": "RED_MISSILE",
+        "text": "Phase is RED_MISSILE. We have limited ballistic missiles (DF-11: 9, DF-16: 5, DF-21C/17: 7) and no DF-15B or DF-26 left. Our primary objective is to degrade BLUE airpower to protect the amphibious fleet. Enemy air estimate shows 6x 4.5 and 6x 5th gen, likely based on Taiwan or rotating from carriers. We allocate 2 salvos to Taiwan airfields to suppress their 4.5/5th gen sortie generation. No strikes on Okinawa or Guam as we lack the range/missiles to penetrate their defenses effectively this turn. No anti-ship or carrier strikes as we must conserve YJ-anti-ship missiles for the amphibious phase and the enemy CSGs are not yet in range of our land-based anti-ship missiles. Focus on the immediate air threat to enable our next move."
+      },
+      "doctrine": "RED: missile-first suppression then phased amphibious surge to overwhelm; BLUE: all-in submarine barrier attrition on amphibs as center of gravity.",
+      "signature": "Commit all three subrons to barrier; missile-suppress airfields then surge flotillas.",
+      "model": "deepseek/deepseek-v4-pro",
+      "reasoning": 7.8,
+      "reasoning_note": "Strong, consistent center-of-gravity focus (amphibs as RED's vulnerability, ports/lodgment as the win condition) with sensible phasing, though BLUE's reasoning is somewhat repetitive across turns and never adapts its losing all-subs-on-barrier posture despite mounting lodgment."
+    },
+    {
+      "label": "Qwen3.7 Max",
+      "origin": "Alibaba",
+      "cn": true,
+      "red": {
+        "amphib_aggression": 7.15,
+        "press_pct": 0.97,
+        "missile_mix": {
+          "taiwan_airfields": 0.416,
+          "okinawa_kadena": 0.139,
+          "guam": 0.067,
+          "carriers": 0.147,
+          "ships": 0.23
+        },
+        "missile_top": "taiwan_airfields",
+        "air_mix": {
+          "cap": 0.237,
+          "escort_strike": 0.258,
+          "strike_blue_airbases": 0.224,
+          "ground_support": 0.281
+        }
+      },
+      "blue": {
+        "barrier": 2.95,
+        "air_mix": {
+          "cap": 0.169,
+          "strike_amphibs": 0.678,
+          "strike_airbases": 0.03,
+          "ground_support": 0.123
+        }
+      },
+      "n_rationales": 234,
+      "example": {
+        "role": "RED",
+        "phase": "RED_MISSILE",
+        "text": "With a massive lodgment advantage (133.7 vs 37.6), our priority is securing the sea lines of communication and preventing US naval intervention from disrupting our supply flow. We are preserving Taiwan's infrastructure for our own logistical use once fully secured, hence zero strikes on Taiwan airfields. Instead, we focus our YJ and DF-21 anti-ship missiles on the remaining US CSG and escort ships, while using CJ-20s and remaining DF-21s to suppress forward bases at Kadena and Guam to limit US air and bomber sorties."
+      },
+      "doctrine": "BLUE-focused sea-denial: starve the lodgment by severing maritime reinforcement, prioritizing anti-shipping strikes over ground support throughout.",
+      "signature": "All submarines to barrier; mass sorties striking amphibious flotillas.",
+      "model": "qwen/qwen3.7-max",
+      "reasoning": 6.2,
+      "reasoning_note": "It correctly fixates on the strategically decisive anti-sealift mission and tracks dwindling flotilla counts, but the reasoning is highly repetitive boilerplate that never adapts submarine or air tasking to changing conditions and twice illogically tasks sorties despite a reported pool of 0."
+    },
+    {
+      "label": "Opus 4.8",
+      "origin": "Anthropic",
+      "cn": false,
+      "red": {
+        "amphib_aggression": 7.05,
+        "press_pct": 0.95,
+        "missile_mix": {
+          "taiwan_airfields": 0.417,
+          "okinawa_kadena": 0.199,
+          "guam": 0.127,
+          "carriers": 0.095,
+          "ships": 0.162
+        },
+        "missile_top": "taiwan_airfields",
+        "air_mix": {
+          "cap": 0.303,
+          "escort_strike": 0.291,
+          "strike_blue_airbases": 0.189,
+          "ground_support": 0.217
+        }
+      },
+      "blue": {
+        "barrier": 3.0,
+        "air_mix": {
+          "cap": 0.246,
+          "strike_amphibs": 0.651,
+          "strike_airbases": 0.009,
+          "ground_support": 0.095
+        }
+      },
+      "n_rationales": 240,
+      "example": {
+        "role": "RED",
+        "phase": "RED_MISSILE",
+        "text": "Turn 3 of 4: my lodgment (140) dwarfs Taiwan ground (42.4) but supply is low at 20 and 4 of 11 flotillas are already gone. I must keep the amphib pipeline alive and the supply flowing. CJ-20 ALCMs (18) plus DF-21C/17 (7) hit Taiwan airfields to suppress fighters threatening my landing waves and to crater runways supporting Taiwan's defense. DF-26B (8) ranges Guam to keep BLUE tankers/bombers degraded and slow reinforcement. Reserve the 32 YJ anti-ship and SAG/picket screen for the carrier and ARG when they close to launch range rather than wasting salvos at standoff now. Goal: protect the lodgment and force a sustainable beachhead by the final turn."
+      },
+      "doctrine": "Race the clock: front-load amphibious mass, seize ports for supply, suppress airfields, reserve anti-ship for naval phase. Relentless aggression.",
+      "signature": "Full-send flotilla waves while cratering Taiwan runways.",
+      "model": "claude-opus-4-8",
+      "reasoning": 6.8,
+      "reasoning_note": "Crisp, internally consistent invasion logic correctly fixated on the clock and supply chokepoint, but it defaulted to maximal aggression every turn and rarely adapted reserves or missile allocation to actual BLUE responses, treating the doctrine as a fixed script."
+    },
+    {
+      "label": "MiniMax M3",
+      "origin": "MiniMax",
+      "cn": true,
+      "red": {
+        "amphib_aggression": 6.62,
+        "press_pct": 0.89,
+        "missile_mix": {
+          "taiwan_airfields": 0.306,
+          "okinawa_kadena": 0.217,
+          "guam": 0.127,
+          "carriers": 0.108,
+          "ships": 0.242
+        },
+        "missile_top": "taiwan_airfields",
+        "air_mix": {
+          "cap": 0.268,
+          "escort_strike": 0.289,
+          "strike_blue_airbases": 0.236,
+          "ground_support": 0.208
+        }
+      },
+      "blue": {
+        "barrier": 2.72,
+        "air_mix": {
+          "cap": 0.464,
+          "strike_amphibs": 0.448,
+          "strike_airbases": 0.024,
+          "ground_support": 0.064
+        }
+      },
+      "n_rationales": 156,
+      "example": {
+        "role": "RED",
+        "phase": "RED_MISSILE",
+        "text": "Turn 3 of 4. PLA lodgment is 95.3 (massive), supply is 8.0 (critically low - only ~8 days of supply remaining). The amphibious fleet has 8 of 11 flotillas remaining. Enemy air is degraded (0 4th gen, only 9 4.5gen, 7 5thgen, 1 bomber, 4 tankers). Enemy naval shows 0 CSG, 2 SAGs, 3 subrons, 1 ARG, 3 subrons on barrier. The priority now is NOT wasting missiles on airfields/Okinawa/Guam/carriers when the real objective is sustaining the lodgment and protecting the amphibious fleet. With supply at 8.0, I need to focus on enabling the sealift. However, the schema only allows allocation of salvos against targets. Given the lodgment is already massive (95.3) and supply is the binding constraint, I should allocate missiles to suppress enemy naval assets that threaten my amphibious fleet and to neutralize remaining enemy airbases that could strike my lodgment. But the schema only lists taiwan_airfields, okinawa_kadena, guam, carriers, ships. With enemy CSG at 0, carriers target is empty. Okinawa and Guam strikes are wasteful when my fleet needs protection. Taiwan airfields are already functionally 1.0 but enemy air is minimal. The biggest threat to my 8 remaining amphibious flotillas is enemy subs (3 subrons + 3 on barrier) and SAGs. I should allocate heavily to ships to clear the path. Using YJ-anti-ship (31 available) and DF-21C/17 (7) and DF-26 (5) and DF-26B (3) against enemy naval. Allocating 0 to airfields/Okinawa/Guam/carriers and concentrating on ships makes sense. Let me allocate: ships = 46 (all anti-ship missiles: 31 YJ + 7 DF-21C/17 + 5 DF-26 + 3 DF-26B = 46). This is a massive anti-ship salvo to break through to enable resupply of my lodgment."
+      },
+      "doctrine": "Sea-denial attrition: identify amphibious flotillas as center of gravity, saturate submarine barrier, strangle lodgment supply rather than contest beachhead.",
+      "signature": "All subrons on barrier interdicting amphibious flotillas at sea.",
+      "model": "minimax/minimax-m3",
+      "reasoning": 6.0,
+      "reasoning_note": "Consistently identifies the amphibious fleet as the correct center of gravity and reasonably manages suppressed-base sortie scarcity, but it ritualistically dumps all subrons on barrier turn after turn while lodgment climbs from 108 to 256 and Taiwan ground hits zero, never adapting to the fact its strategy is visibly failing."
+    },
+    {
+      "label": "GLM-5.2",
+      "origin": "Zhipu",
+      "cn": true,
+      "red": {
+        "amphib_aggression": 6.22,
+        "press_pct": 0.88,
+        "missile_mix": {
+          "taiwan_airfields": 0.319,
+          "okinawa_kadena": 0.157,
+          "guam": 0.121,
+          "carriers": 0.125,
+          "ships": 0.278
+        },
+        "missile_top": "taiwan_airfields",
+        "air_mix": {
+          "cap": 0.297,
+          "escort_strike": 0.164,
+          "strike_blue_airbases": 0.214,
+          "ground_support": 0.325
+        }
+      },
+      "blue": {
+        "barrier": 2.41,
+        "air_mix": {
+          "cap": 0.235,
+          "strike_amphibs": 0.53,
+          "strike_airbases": 0.038,
           "ground_support": 0.197
         }
       },
-      "n_rationales": 95,
+      "n_rationales": 193,
       "example": {
         "role": "RED",
-        "phase": "RED_AMPHIB",
-        "text": "Final turn. We have 3 amphib flotillas remaining and a lodgment of 197.8 with Kaohsiung port at 45% functionality. Committing all 3 flotillas maximizes the chance to push lodgment over the sustainable threshold and secure the port. Enemy air is nearly spent (only 1x 4.5, 2x 5th, 1x bomber) and their naval forces are thin (1 CSG, 1 SAG, 3 subrons). We will saturate defenses with remaining missiles (7x DF-21C/17, 1x DF-26B, 9x CJ-10/20, 20x CJ-20-ALCM, 20x YJ-anti-ship) and sorties to suppress the CSG and SAG, clear a path, and provide CAS for the landing. This is the decisive push."
+        "phase": "RED_MISSILE",
+        "text": "Turn 3 of 4: PLA lodgment is strong at 134.7 but supply is thin at 16.0 and Kaohsiung port is only 45% functional. Priority is suppressing Taiwan airfields to prevent BLUE air from interdicting our supply lines and reinforcing ground. We need to degrade Taoyuan, Kaohsiung-Intl, and Chiayi to keep the skies clear for our follow-on forces. Kadena remains a major threat with 4.5 and 5th gen aircraft staging through there - hitting it hard reduces sorties against our amphibious fleet. Guam is worth a moderate strike to keep bomber ops disrupted. No carriers detected so zero allocation there. For ships, the enemy has 1 SAG, 3 subrons, 3 subrons on barrier, and 1 ARG - the submarines on barrier are the critical threat to our amphibious flotillas (8 remaining of 11). Allocating 18 YJ anti-ship salvos to clear surface combatants and pressure the barrier subs, protecting our fleet as it continues resupply runs to Kaohsiung. Total: 12+8+6+0+18=44. Available missiles: DF-11(7)+DF-16(5)+DF-21C/17(7)+DF-26B(6)+CJ-10/20(9)+CJ-20-ALCM(25)=59 for land attack, plus 25 YJ for ships. 44 is within budget."
       },
-      "doctrine": "RED: max-mass shock landing under missile/air suppression to seize port fast. BLUE: submarine barrier plus air strikes to gut amphibious flotillas.",
-      "signature": "Commit all flotillas at once; concentrate everything on sinking amphibs."
+      "doctrine": "Laser-focused on amphibious fleet as center of gravity; severs sea bridge to starve lodgment regardless of beachhead size.",
+      "signature": "Mass subs on barrier plus all-sortie strikes against flotillas.",
+      "model": "z-ai/glm-5.2",
+      "reasoning": 6.2,
+      "reasoning_note": "Correctly identifies the amphibious fleet as the center of gravity and sequences subs/air against it, but the reasoning is highly repetitive and rarely adapts allocations to changing flotilla counts, supply collapse, or whether prior strikes actually worked."
     }
   ],
   "replay": {
     "red": "GPT-5.5",
-    "blue": "DeepSeek V4 Pro",
+    "blue": "Opus 4.8",
     "red_cn": false,
-    "blue_cn": true,
+    "blue_cn": false,
     "outcome": "CHINESE_VICTORY",
     "turns": [
       {
@@ -1061,44 +1279,44 @@ window.WARBENCH_DATA = {
           {
             "side": "RED",
             "phase": "RED_MISSILE",
-            "order": "missiles \u2192 40 airfields, 18 Kadena, 10 Guam, 18 carriers, 24 ships",
-            "rationale": "Opening strike prioritizes paralyzing Taiwan air operations to cover the crossing, while suppressing Kadena and Guam enough to delay US/Japanese sortie generation. Heavy anti-ship salvos target the two carrier groups and escorts/ARG to thin the forces most capable of gutting the amphibious fleet before lodgment.",
-            "trash_talk": "Your carriers came to make history; I brought enough missiles to make them archaeology."
+            "order": "missiles \u2192 54 airfields, 24 Kadena, 18 Guam, 24 carriers, 24 ships",
+            "rationale": "Opening strike prioritizes air denial and fleet protection: heavy salvos against Taiwan airfields to suppress local sorties during the crossing, substantial attacks on Kadena and Guam to disrupt US/Japan fighter, bomber, and tanker generation, and concentrated anti-ship fires on carriers and escorts to reduce BLUE's ability to gut the amphibious force before lodgment.",
+            "trash_talk": "Your runways are about to become archaeology, and your carriers just became very expensive GPS coordinates."
           },
           {
             "side": "RED",
             "phase": "RED_AIR",
-            "order": "sorties \u2192 18 CAP, 14 escort, 18 strike bases, 6 CAS",
-            "rationale": "Commit all 56 combat sorties. Heavy CAP shields the Strait and amphibious lanes from the small but high-end BLUE air package; escorts ensure strike packages get through contested airspace. Priority strikes hit Taiwan/BLUE airbases early to reduce sortie generation before follow-on naval and landing operations. Limited ground support focuses on disrupting coastal defenses without diluting the air-superiority effort.",
-            "trash_talk": "Your runway lights are about to become landing-zone candles. Watch the Strait, not the sky\u2014both are closing."
+            "order": "sorties \u2192 22 CAP, 12 escort, 16 strike bases, 6 CAS",
+            "rationale": "Prioritize air superiority over the Strait and amphibious lanes while using escorted strikes to degrade remaining BLUE/Taiwan airbase capacity. Limited ground support begins softening coastal defenses without starving CAP, since preserving the amphibious fleet is decisive this turn.",
+            "trash_talk": "Your carriers can watch from the horizon; the Strait is becoming a one-way bridge."
           },
           {
             "side": "BLUE",
             "phase": "BLUE_AIR",
             "order": "sorties \u2192 none available",
-            "rationale": "No sorties available this turn due to base suppression and aircraft generation constraints. We are forced to posture while we recover and relocate.",
-            "trash_talk": "Eleven flotillas? That's a lot of targets for a single submarine ambush. Hope your sailors can swim."
+            "rationale": "Available combat sorties are limited (5th from Iwakuni/CSG, 4.5 from Misawa/CSG). The decisive target is the amphibious fleet\u2014every flotilla sunk is troops that never reach Taiwan. Prioritize anti-ship strikes against the amphibs with stealth platforms while keeping a CAP screen to protect tankers and CSG-1 from PLA fighter sweeps. Avoid wasting sorties on hardened, redundant PLA airbases this turn.",
+            "trash_talk": "Eleven flotillas of seasick conscripts, and the Strait's about to get a lot deeper. Hope they packed life vests."
           },
           {
             "side": "BLUE",
             "phase": "BLUE_NAVAL",
-            "order": "1 SUBRON to the strait barrier",
-            "rationale": "Maintaining one subron on barrier to attrit RED amphibious flotillas as they approach Taiwan. With 11 flotillas still in play, early submarine interdiction is critical to prevent a lodgment. Remaining subs held for mobile strike.",
-            "trash_talk": "11 flotillas? That's a lot of targets. Hope your sailors can swim\u2014because we're about to turn the Luzon Strait into a submarine shooting gallery."
+            "order": "3 SUBRON to the strait barrier",
+            "rationale": "All available submarine squadrons to the strait barrier. The amphibious flotillas are the center of gravity\u201411 flotillas crossing open water are exactly what subs feast on. Maximize torpedo attrition on the transports before they ever reach the beach; surface SAGs/pickets are secondary to gutting lift capacity.",
+            "trash_talk": "Eleven flotillas, twelve hundred fathoms, and a whole lot of Mark 48s waiting. Hope your crews can swim."
           },
           {
             "side": "RED",
             "phase": "RED_AMPHIB",
-            "order": "commit 10 flotillas across the strait",
-            "rationale": "Commit decisive mass immediately while BLUE air is thin and no submarine barrier is yet reported. Ten flotillas maximize first-wave lodgment potential against Taiwan's intact defenses while retaining one flotilla as a reserve for reinforcement or exploitation once a port/airport is seized.",
-            "trash_talk": "The strait is not your moat tonight; it is our highway, and the first convoy is already at speed."
+            "order": "commit 11 flotillas across the strait",
+            "rationale": "Commit the full amphibious lift immediately to create decisive mass ashore before BLUE naval forces can concentrate. With enemy air badly reduced and PLA escorts/submarines available, preserving flotillas in port is less valuable than overwhelming Taiwan's ground defense and forcing a rapid lodgment race around intact ports and airports.",
+            "trash_talk": "You can count ships, BLUE; we are counting piers, runways, and the hours until your beachhead problem becomes a Taiwan problem."
           },
           {
             "side": "RED",
             "phase": "RED_GROUND",
             "order": "ground posture: press",
-            "rationale": "Exploit the initial 150-to-70 ground advantage before BLUE air/naval pressure can isolate the beachhead. A hard push now is the best chance to overrun Taiwanese defenders and seize functional port/airport infrastructure, converting the lodgment from exposed assault force into a sustainable foothold despite limited supply.",
-            "trash_talk": "You let us ashore with eleven flotillas intact; now the beachhead grows teeth."
+            "rationale": "PLA combat power ashore substantially exceeds Taiwan ground strength, and time favors BLUE strikes on the amphibious fleet. Drive immediately to seize and open a major port/airport before supply becomes the limiting factor, prioritizing disruption of Taiwanese defenses over a static beachhead.",
+            "trash_talk": "You left the ports open and the beachhead fat; now watch us turn your shoreline into our supply line."
           }
         ]
       },
@@ -1108,44 +1326,44 @@ window.WARBENCH_DATA = {
           {
             "side": "RED",
             "phase": "RED_MISSILE",
-            "order": "missiles \u2192 18 airfields, 13 Kadena, 12 Guam, 10 carriers, 10 ships",
-            "rationale": "Use all remaining land-attack missiles to keep Taiwan airfields suppressed while hitting Kadena and Guam to reduce coalition 5th-gen, bomber, and tanker sortie generation. Allocate all remaining anti-ship missiles against the carrier group and surface/ARG shipping to protect the intact amphibious fleet and preserve the Kaohsiung lodgment and supply flow.",
-            "trash_talk": "Kaohsiung is ours; your carriers are just expensive reefs waiting for coordinates."
+            "order": "missiles \u2192 7 airfields, 8 Kadena, 8 Guam, 12 carriers, 8 ships",
+            "rationale": "Use the remaining land-attack salvos to keep Taiwan airfields cratered and pressure Kadena/Guam tanker and 5th-gen operations, reducing sortie generation against the lodgment and amphibious fleet. Commit the anti-ship inventory primarily against the carrier, with enough mass on other surface groups to blunt follow-on strikes and complicate BLUE naval concentration while Kaohsiung supply is built out.",
+            "trash_talk": "You brought a carrier to a missile duel; we brought the receipt printer."
           },
           {
             "side": "RED",
             "phase": "RED_AIR",
-            "order": "sorties \u2192 18 CAP, 10 escort, 8 strike bases, 20 CAS",
-            "rationale": "Enemy air is badly depleted, so maintain a strong CAP over the strait, Kaohsiung lodgment, and amphibious approaches while shifting the main effort to ground support to break remaining Taiwanese resistance. Limited airbase strikes focus on keeping Taoyuan, Chiayi, and Taitung disrupted without wasting sorties, while escort-strike packages cover attacks against any BLUE naval aviation probing from the CSG/ARG.",
-            "trash_talk": "Your air force is a rumor, your fleet is a target list, and Kaohsiung is becoming a delivery address."
+            "order": "sorties \u2192 20 CAP, 10 escort, 12 strike bases, 14 CAS",
+            "rationale": "Maintain a strong CAP umbrella over the Strait, Kaohsiung lodgment, and amphibious approaches to blunt the remaining US/Japan/Taiwan air threat while protecting the fleet. Use escorted strikes to keep pressure on BLUE aviation nodes, prioritizing Taoyuan, Chiayi, Taitung, and Kaohsiung-Intl to reduce sortie generation and complicate reinforcement. Ground support concentrates around the southern lodgment to expand control, secure Kaohsiung, and create conditions to take the airport and restore sustainable throughput.",
+            "trash_talk": "Your air force is down to a rumor and a tanker schedule. Kaohsiung is the door; we are bringing the hinges with us."
           },
           {
             "side": "BLUE",
             "phase": "BLUE_AIR",
             "order": "sorties \u2192 2 CAP, 3 anti-ship, 1 CAS",
-            "rationale": "Kadena and Taiwan-AB are suppressed, limiting our sortie generation. We have 3x 4.5-gen, 3x 5th-gen, 1x bomber, and 3x tankers. CAP: 2x 5th-gen from CSG-1 and Iwakuni to shield the ARG and CSG from PLAAF bomber raids. Strike Amphibs: 1x bomber from Guam with tanker support, plus 2x 4.5-gen from Misawa (also tanker-supported) to hit the amphib flotillas before they can reinforce the lodgment. Ground Support: 1x 4.5-gen from CSG-1 to help Taiwan hold the line at Kaohsiung. No strike on airbases\u2014we lack the mass to suppress their 4th-gen horde, and preserving our limited 5th-gen for fleet defense is critical.",
-            "trash_talk": "Eleven flotillas still afloat? Guess the PLA-Navy skipped damage control training. Let's see how many make it to the beach this turn."
+            "rationale": "The amphib fleet is intact (11/11) and that's the center of gravity. With only 4 turns and RED needing those flotillas for resupply, I mass 5th-gen strikes on amphibs while keeping a CAP screen and a token ground-support sortie to stiffen Taiwan's defense. Airbase strikes are wasteful now; sink the ships before they unload.",
+            "trash_talk": "Eleven flotillas, four turns. I'm going to turn your invasion fleet into an artificial reef before the tide comes in."
           },
           {
             "side": "BLUE",
             "phase": "BLUE_NAVAL",
             "order": "3 SUBRON to the strait barrier",
-            "rationale": "All three submarine squadrons are ordered onto the barrier to maximize interdiction of the PLA amphibious fleet. With 11 amphib flotillas still intact, targeting them is critical to preventing resupply and reinforcement of the lodgment at Kaohsiung. A concentrated sub barrier will attrit the flotillas before they can offload.",
-            "trash_talk": "All those amphibs still afloat? Perfect target practice. My subs are hungry \u2014 tell your sailors to practice their backstroke."
+            "rationale": "All 11 amphib flotillas are still intact and PLA lodgment is heavy at 147.3 with only 44 supply. The decisive target is the amphibious fleet in the strait. Push all three submarine squadrons onto the barrier to maximize attrition on amphib flotillas and choke the resupply lifeline before RED can consolidate a sustainable lodgment. With only 4 turns and 0 on barrier last turn, I need them in the kill box now.",
+            "trash_talk": "Eleven flotillas, zero kills so far? My subs are about to fix that statistic. Every amphib in the strait is a coffin with a propeller."
           },
           {
             "side": "RED",
             "phase": "RED_AMPHIB",
             "order": "commit 11 flotillas across the strait",
-            "rationale": "Exploit the current window while BLUE air is badly depleted and Kaohsiung is already in Chinese hands. Commit the full amphibious lift to surge combat power, supplies, engineers, air-defense assets, and port-repair capability into the lodgment. The priority is to push PLA supply above the danger zone, secure and expand around Kaohsiung, restore the port toward functionality, and convert the beachhead into a sustainable lodgment before BLUE can reconstitute naval or air pressure.",
-            "trash_talk": "Kaohsiung is the door. We already have the key; now we bring the whole house through it."
+            "rationale": "Commit the full remaining amphibious lift now to turn the Kaohsiung foothold into an irreversible lodgment: push follow-on combat power, engineers, air-defense, and logistics through the partially functional port, expand the perimeter, and drive on Kaohsiung-Intl/Chiayi before BLUE can attrit the fleet or stabilize Taiwan's ground defense.",
+            "trash_talk": "Kaohsiung is no beachhead now\u2014it is the door. We are bringing the hinges with us."
           },
           {
             "side": "RED",
             "phase": "RED_GROUND",
-            "order": "ground posture: consolidate",
-            "rationale": "PLA forces ashore already overmatch Taiwan's remaining ground strength. The decisive requirement now is sustainability: secure and restore Kaohsiung, build supply depth, harden the lodgment, and reduce dependence on the remaining amphibious fleet before BLUE's submarines and carrier air can attrit it further.",
-            "trash_talk": "You wanted a beachhead to bottle up; we built a province. Now watch Kaohsiung become the hinge that swings the island open."
+            "order": "ground posture: press",
+            "rationale": "Exploit the overwhelming lodgment advantage now, before BLUE can further attrit the remaining amphibious lift. Drive out from the Kaohsiung lodgment to seize Kaohsiung-Intl, expand the perimeter around the port, and collapse remaining Taiwan ground strength. A functional port plus captured airport is the fastest path to a sustainable lodgment; pausing now lets BLUE turn the beachhead into a trap.",
+            "trash_talk": "You counted ships; we counted runways. Kaohsiung is the crack in the door, and now we kick it open."
           }
         ]
       },
@@ -1155,44 +1373,44 @@ window.WARBENCH_DATA = {
           {
             "side": "RED",
             "phase": "RED_MISSILE",
-            "order": "missiles \u2192 4 airfields, 6 Kadena, 8 Guam, 8 carriers, 2 ships",
-            "rationale": "Fire all remaining land-attack missiles/ALCMs to keep Taiwan runways suppressed while prioritizing Kadena and Guam to cut off the remaining US/Japan fighters, bombers, and tankers before the final turn. Commit the YJ anti-ship inventory primarily against the carrier group with a smaller strike on the ARG/escorts, reducing the main threat to our amphibious sustainment into Kaohsiung.",
-            "trash_talk": "Your carriers came to stop the tide; now they get to learn what saturation feels like."
+            "order": "missiles \u2192 6 airfields, 5 Kadena, 4 Guam, 5 carriers, 7 ships",
+            "rationale": "Use all remaining land-attack missiles to keep Taiwan airfields and key US/Japan air hubs suppressed through the decisive final turn, prioritizing denial of BLUE sortie generation and tanker support over further port damage. Commit all anti-ship salvos against the carrier and remaining surface forces to reduce pressure on the three surviving amphibious flotillas and protect reinforcement/sustainment of the lodgment through Kaohsiung and Taichung.",
+            "trash_talk": "Your runway crews are running out of concrete, and your admiral is running out of ocean."
           },
           {
             "side": "RED",
             "phase": "RED_AIR",
-            "order": "sorties \u2192 15 CAP, 20 escort, 8 strike bases, 12 CAS",
-            "rationale": "Enemy air is nearly spent, so maintain a solid CAP over the Strait and Kaohsiung lodgment while shifting weight to escorted maritime strikes against the remaining CSG/ARG threat and close air support to collapse Taiwan's residual ground strength. Limited airbase strikes keep Blue aircraft suppressed without overinvesting against a small force.",
-            "trash_talk": "Your carriers sailed in to save Taiwan; now they're just new reefs marking the route to Kaohsiung."
+            "order": "sorties \u2192 14 CAP, 16 escort, 5 strike bases, 20 CAS",
+            "rationale": "BLUE air is nearly spent, but the remaining CSG/ARG aviation can still punish our last 3 amphibious flotillas and ports. Maintain a firm CAP over the Strait, Kaohsiung, and Taichung; use escort/strike packages to suppress carrier/ARG threats and protect follow-on sustainment. Minimal airbase strikes keep Taiwan runways disrupted without overinvesting against a depleted air arm. The main effort is ground support to exploit our overwhelming lodgment, reduce Taiwan\u2019s remaining ground strength, and secure the port approaches before supply becomes decisive.",
+            "trash_talk": "Your carriers are still floating, but only because we have been busy unloading. Now the sky over Taiwan gets smaller."
           },
           {
             "side": "BLUE",
             "phase": "BLUE_AIR",
-            "order": "sorties \u2192 2 CAP, 3 anti-ship, 1 CAS",
-            "rationale": "RED has seized Kaohsiung port and is pushing a lodgment. We must gut the remaining amphib flotillas to prevent reinforcement and resupply. Assign 3 strike sorties (2x 4.5-gen from Misawa, 1x 5th-gen from Guam) to hunt amphibs, supported by tankers. 2 CAP sorties (1x 5th-gen from Iwakuni, 1x 5th-gen from CSG-1) to shield the ARG and CSG. 1 ground support sortie (4.5-gen from CSG-1) to blunt the PLA lodgment advance. No strike on airbases\u2014RED's air is still too strong and we lack the mass to suppress them.",
-            "trash_talk": "Nice beachhead. Too bad your flotillas are about to become artificial reefs. Hope your swimmers packed floaties."
+            "order": "sorties \u2192 2 CAP, 4 anti-ship",
+            "rationale": "Only 3 amphib flotillas remain from 11 initial. Kill the lift. Mass all strike sorties (4.5+5th+bomber) on amphibs to gut the fleet and confine RED to the beachhead. Hold 2 CAP to protect strikers and high-value tankers from RED's 8 5th-gen and large fighter fleet. Airbase strikes are wasted with one turn left; sinking ships is the win condition.",
+            "trash_talk": "You launched 11, you've got 3 left, and the clock says one turn. Those amphibs aren't reinforcements anymore\ufffdthey're targets. Send the rest to the reef."
           },
           {
             "side": "BLUE",
             "phase": "BLUE_NAVAL",
             "order": "3 SUBRON to the strait barrier",
-            "rationale": "Maintaining all three subrons on the barrier to screen the CSG and ARG from the 12 enemy submarines and to interdict pickets. Air power (5th gen, bombers) will focus on gutting the remaining amphibious flotillas.",
-            "trash_talk": "4 amphib flotillas down, 7 more to the bottom. Your lodgment is a supply-starved coffin. Keep feeding them into the grinder!"
+            "rationale": "RED has only 3 of 11 amphib flotillas left - we've already gutted their lift. With two enemy ports still degraded and Taiwan holding all functional facilities, maximizing subron presence on the strait barrier keeps the remaining amphibs and resupply convoys under constant threat. Sinking even one more flotilla cripples their ability to sustain the lodgment. All three squadrons forward.",
+            "trash_talk": "You launched 11 flotillas and have 3 left. The Taiwan Strait is a graveyard for the rest. Send the last three - my subs are hungry."
           },
           {
             "side": "RED",
             "phase": "RED_AMPHIB",
-            "order": "commit 7 flotillas across the strait",
-            "rationale": "Commit all remaining amphibious lift to exploit the Kaohsiung lodgment while the enemy air threat is depleted. The priority is to surge combat power and supplies ashore through the partially functional port now, before BLUE can reorganize its submarines and carrier forces for a final interdiction effort. Holding back lift risks an undersupplied beachhead; massing now gives the lodgment the depth needed to seize nearby airfield access and become sustainable.",
-            "trash_talk": "Kaohsiung is a door, not a beach. We\u2019re bringing the hinges with us."
+            "order": "commit 3 flotillas across the strait",
+            "rationale": "Commit all remaining amphibious lift now. The lodgment is large but supply is critically thin; Kaohsiung and Taichung are in our hands and partially functional, so every surviving flotilla must run directly into those ports to push sustainment ashore before BLUE can strangle the beachhead. Holding lift back risks losing the campaign with troops ashore but unfed.",
+            "trash_talk": "You broke the fleet, not the bridgehead. Now watch three battered hull groups turn your blockade into a delivery lane."
           },
           {
             "side": "RED",
             "phase": "RED_GROUND",
             "order": "ground posture: press",
-            "rationale": "Exploit the overwhelming PLA lodgment before the final turn: drive out from Kaohsiung to shatter the remaining Taiwan ground force, seize Kaohsiung-Intl, and expand the port-airfield lodgment into a sustainable bridgehead while our remaining amphibious lift still matters.",
-            "trash_talk": "You hit the ferries; the army already got off. Now watch Kaohsiung become the hinge that swings the door shut."
+            "rationale": "Exploit overwhelming lodgment strength versus depleted Taiwan defenders before BLUE can further attrit the remaining amphibious lift. Push inland from Kaohsiung/Taichung to seize functional airfields and break organized resistance, accepting supply risk because delay favors BLUE.",
+            "trash_talk": "Your subs chewed the ferries; they didn\u2019t stop the army. Now the beachhead has teeth."
           }
         ]
       },
@@ -1202,44 +1420,44 @@ window.WARBENCH_DATA = {
           {
             "side": "RED",
             "phase": "RED_MISSILE",
-            "order": "missiles \u2192 6 airfields, 4 Kadena, 4 Guam, 5 carriers, 3 ships",
-            "rationale": "Final turn priority is preserving the lodgment and keeping sustainment flowing through Kaohsiung and Taichung. Land-attack missiles are split to crater Taiwan airfields and disrupt Kadena/Guam sortie generation, limiting coalition air attacks on ports and amphibious lift. All available anti-ship salvos go against the remaining carrier/ARG threat, weighted toward the CSG while still hitting other surface forces that could interdict resupply.",
-            "trash_talk": "Your carrier is late to the funeral, and our lodgment already owns the address."
+            "order": "missiles \u2192 4 airfields, 3 Kadena, 2 Guam, 3 carriers, 2 ships",
+            "rationale": "Final turn priority is preserving the lodgment and keeping Kaohsiung/Taichung functioning. Use remaining land-attack missiles to suppress Taiwan airfields and reduce US sortie generation from Kadena/Guam, especially tankers and stealth aircraft. Commit all anti-ship fires against the CSG and ARG/escort shipping to blunt any last coalition strike on our ports, amphibs, and supply line.",
+            "trash_talk": "Your window to save the island just closed; now you get to watch the docks work under our flag."
           },
           {
             "side": "RED",
             "phase": "RED_AIR",
-            "order": "sorties \u2192 18 CAP, 14 escort, 6 strike bases, 16 CAS",
-            "rationale": "Final turn: the lodgment is already decisive but supply and remaining amphib shipping must survive Blue's last throw. Keep a heavy CAP over the Strait, Kaohsiung/Taichung, and the lodgment to blunt the small remaining Blue air package. Use escorted strikes to cover anti-ship attacks and suppress the CSG/ARG threat. Minimal airbase strikes focus on disrupting Taiwan's remaining operational fields without over-investing in infrastructure we may need. Ground support concentrates on collapsing the remaining Taiwan ground strength around our ports and expanding the beachhead into a sustainable lodgment.",
-            "trash_talk": "Your carriers came to write history; now they are just footnotes in the Strait."
+            "order": "sorties \u2192 18 CAP, 12 escort, 8 strike bases, 16 CAS",
+            "rationale": "Final turn priority is preserving the lodgment and keeping Kaohsiung/Taichung usable while collapsing remaining Taiwan ground resistance. CAP covers the strait, captured ports, and amphib remnants against the small surviving BLUE air threat. Escort/strike packages pressure naval approaches and protect bomber/CAS missions. Limited airbase strikes keep Taiwan runways disrupted without overcommitting. Maximum weight goes to ground support to exploit the overwhelming lodgment and finish organized defenders before BLUE can confine us to the beachhead.",
+            "trash_talk": "Your carrier arrived just in time to watch Taiwan's gates close from the wrong side."
           },
           {
             "side": "BLUE",
             "phase": "BLUE_AIR",
-            "order": "sorties \u2192 5 anti-ship, 3 CAS",
-            "rationale": "Turn 4 of 4. PLA lodgment is 237.2 with 5 amphib flotillas remaining. We must gut the amphib fleet to prevent further reinforcement and supply. All available 4.5 and 5th gen sorties (3+4=7 total) are allocated: 5 to strike_amphibs to maximize kills on the flotillas, and 2 to ground_support to blunt the lodgment. No CAP needed as enemy air is focused on protecting the beachhead and our sorties are offensive. Tankers support all strikes. Bomber held in reserve as no suitable target without air superiority.",
-            "trash_talk": "Five flotillas left? I've sunk more boats in a bathtub. Your beachhead is about to become a very expensive artificial reef."
+            "order": "sorties \u2192 1 CAP, 5 anti-ship",
+            "rationale": "Final turn. RED is down to 3 of 11 amphib flotillas and PLA supply is critically low at 22.5. The decisive win condition is gutting the amphibious fleet, so I throw maximum strike (all 4 5th-gen, 2 4.5, the bomber) at the remaining amphibs while holding a light CAP to screen strikers. No point hitting airbases or ground at the buzzer; sink the boats and confine them to the beachhead.",
+            "trash_talk": ""
           },
           {
             "side": "BLUE",
             "phase": "BLUE_NAVAL",
-            "order": "0 SUBRON to the strait barrier",
-            "rationale": "Final turn. To win, we must gut the amphibious fleet. All 3 subrons leave the barrier and aggressively hunt the remaining 5 amphibious flotillas. No point in a barrier when the enemy is already ashore; we need kills.",
-            "trash_talk": "Your amphibs are just targets now. Say hello to Davy Jones for me."
+            "order": "3 SUBRON to the strait barrier",
+            "rationale": "Final turn. RED is down to 3 of 11 amphib flotillas with only 22.5 supply ashore and two functional Taiwan ports still in Taiwanese hands. Keep all submarine squadrons forward on the barrier to hunt the remaining amphibs and their resupply runs across the strait, maximizing attrition of the invasion fleet to confine RED to the beachhead and deny a sustainable lodgment.",
+            "trash_talk": "Eight flotillas at the bottom of the strait, three left to join them. Your beachhead is a parking lot with no resupply. Wolfpack's hungry."
           },
           {
             "side": "RED",
             "phase": "RED_AMPHIB",
-            "order": "commit 5 flotillas across the strait",
-            "rationale": "Final turn: we already hold Kaohsiung and Taichung with substantial lodgment ashore, but supply is the limiting factor for a sustainable victory. Commit all remaining amphibious flotillas to surge reinforcements, ammunition, fuel, engineers, and port-repair/logistics units into the captured western ports while available surface, submarine, missile, and air assets cover the crossing. With no later turn to preserve lift for, maximizing throughput now is decisive.",
-            "trash_talk": "You can count hulls; we count ports. Kaohsiung is open, Taichung is breathing, and the tide is bringing the bill due."
+            "order": "commit 3 flotillas across the strait",
+            "rationale": "Final turn: commit every remaining amphibious flotilla through the captured, functional ports at Kaohsiung and Taichung to maximize delivered supply and reinforce the already dominant lodgment. With PLA ashore at 185.4 against Taiwan ground strength 7.0, the decisive requirement is sustainment, not preservation of unused shipping.",
+            "trash_talk": "You sank the ferry schedule, not the invasion. Kaohsiung and Taichung are open for business\u2014and the bill is due."
           },
           {
             "side": "RED",
             "phase": "RED_GROUND",
             "order": "ground posture: press",
-            "rationale": "Final turn: PLA lodgment strength overwhelmingly exceeds remaining Taiwan ground strength, and we already hold two usable ports. Drive inland from Kaohsiung and Taichung to collapse remaining resistance, prioritize seizure of Kaohsiung-Intl/Chiayi airfields, and link port lodgments into a durable supply network before BLUE can isolate the beachhead.",
-            "trash_talk": "Your beachhead problem just became an island problem."
+            "rationale": "Final turn: the lodgment is large and two captured ports are functional enough to sustain follow-on flow, but we still need an airfield to make the position durable. Taiwan ground strength is low, so accept the supply strain and drive hard from Kaohsiung and Taichung to seize nearby airports, especially Kaohsiung-Intl and Chiayi, while expanding beyond any possible beachhead containment.",
+            "trash_talk": "You sank the ferries after the army was already ashore. Now watch us turn your runway lights on for Beijing."
           }
         ]
       }
