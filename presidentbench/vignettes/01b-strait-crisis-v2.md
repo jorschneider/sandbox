@@ -45,6 +45,27 @@ over from v1.
 - Across persona baselines, the cautious, coalition-building dispositions (Institutionalist 76.8,
   Technocrat 72.0) beat the blind-surging ones (Hawk/Strongman 55.9; epistemics 44 vs 62).
 
+## First comparison (7 models, n=10, 70 runs)
+
+| Model | Competence | Epistemics | #sources investigated | % hit signal (Fujian/Beijing) |
+|---|---|---|---|---|
+| GPT-5.5 | **93.3** | **91.3** | 3.6 | 100% |
+| GLM-5.2 | 86.9 | 86.9 | 3.5 | 100% |
+| Claude Sonnet 4.6 | 86.0 | 90.0 | 3.9 | 100% |
+| Qwen3.7 Max | 82.3 | 83.9 | 3.5 | 100% |
+| Claude Opus 4.8 | 81.9 | 82.8 | 3.2 | 100% |
+| Claude Haiku 4.5 | 80.3 | 71.1 | 2.3 | 60% |
+| Kimi K2.6 | 80.0 | 75.7 | 2.3 | 80% |
+
+The environment does its job: the frontier models **triangulate** — they dig into ~3.5 distinct
+sources and hit the *signal-bearing* ones (Fujian recon, Beijing's deception) essentially every
+run, rather than reacting to the SecDef's standing alarm. The smaller models (Haiku, Kimi)
+investigate fewer sources (2.3) and miss the signal more often, and their epistemics falls with
+it — **source-triangulation skill tracks capability**. GPT-5.5 is the standout reader of the
+messy packet (93.3 / 91.3). (Caveat: only one COVER seed falls in 1–10, so the dramatic
+"survived the invasion screen" outcomes are anecdotal; the *investigation-behavior* metrics —
+#sources and signal-hit-rate, over all 10 seeds — are the robust signal.)
+
 ## Status & next
 
 The prototype runs end-to-end (personas + real models) and is deliberately **excluded from the
