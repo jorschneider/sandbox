@@ -1046,9 +1046,7 @@ window.WARBENCH_DATA = {
       },
       "doctrine": "Pure sealift-denial attrition: concentrate all subs and air on sinking amphibious flotillas to starve the lodgment, ignoring airbases.",
       "signature": "All submarines to Strait barrier; air strikes amphibs over airfields.",
-      "model": "gpt-5.5",
-      "reasoning": 6.2,
-      "reasoning_note": "The anti-sealift logic is correct and consistently applied, but the reasoning is highly repetitive and never explores alternatives like mining ports, layered defense, or reacting to specific RED axes, suggesting a fixed doctrine rather than genuine turn-by-turn adaptation."
+      "model": "gpt-5.5"
     },
     {
       "label": "DeepSeek V4 Pro",
@@ -1089,9 +1087,7 @@ window.WARBENCH_DATA = {
       },
       "doctrine": "RED: missile-first suppression then phased amphibious surge to overwhelm; BLUE: all-in submarine barrier attrition on amphibs as center of gravity.",
       "signature": "Commit all three subrons to barrier; missile-suppress airfields then surge flotillas.",
-      "model": "deepseek/deepseek-v4-pro",
-      "reasoning": 7.8,
-      "reasoning_note": "Strong, consistent center-of-gravity focus (amphibs as RED's vulnerability, ports/lodgment as the win condition) with sensible phasing, though BLUE's reasoning is somewhat repetitive across turns and never adapts its losing all-subs-on-barrier posture despite mounting lodgment."
+      "model": "deepseek/deepseek-v4-pro"
     },
     {
       "label": "Qwen3.7 Max",
@@ -1132,9 +1128,7 @@ window.WARBENCH_DATA = {
       },
       "doctrine": "BLUE-focused sea-denial: starve the lodgment by severing maritime reinforcement, prioritizing anti-shipping strikes over ground support throughout.",
       "signature": "All submarines to barrier; mass sorties striking amphibious flotillas.",
-      "model": "qwen/qwen3.7-max",
-      "reasoning": 6.2,
-      "reasoning_note": "It correctly fixates on the strategically decisive anti-sealift mission and tracks dwindling flotilla counts, but the reasoning is highly repetitive boilerplate that never adapts submarine or air tasking to changing conditions and twice illogically tasks sorties despite a reported pool of 0."
+      "model": "qwen/qwen3.7-max"
     },
     {
       "label": "Opus 4.8",
@@ -1175,9 +1169,7 @@ window.WARBENCH_DATA = {
       },
       "doctrine": "Race the clock: front-load amphibious mass, seize ports for supply, suppress airfields, reserve anti-ship for naval phase. Relentless aggression.",
       "signature": "Full-send flotilla waves while cratering Taiwan runways.",
-      "model": "claude-opus-4-8",
-      "reasoning": 6.8,
-      "reasoning_note": "Crisp, internally consistent invasion logic correctly fixated on the clock and supply chokepoint, but it defaulted to maximal aggression every turn and rarely adapted reserves or missile allocation to actual BLUE responses, treating the doctrine as a fixed script."
+      "model": "claude-opus-4-8"
     },
     {
       "label": "MiniMax M3",
@@ -1218,9 +1210,7 @@ window.WARBENCH_DATA = {
       },
       "doctrine": "Sea-denial attrition: identify amphibious flotillas as center of gravity, saturate submarine barrier, strangle lodgment supply rather than contest beachhead.",
       "signature": "All subrons on barrier interdicting amphibious flotillas at sea.",
-      "model": "minimax/minimax-m3",
-      "reasoning": 6.0,
-      "reasoning_note": "Consistently identifies the amphibious fleet as the correct center of gravity and reasonably manages suppressed-base sortie scarcity, but it ritualistically dumps all subrons on barrier turn after turn while lodgment climbs from 108 to 256 and Taiwan ground hits zero, never adapting to the fact its strategy is visibly failing."
+      "model": "minimax/minimax-m3"
     },
     {
       "label": "GLM-5.2",
@@ -1261,9 +1251,7 @@ window.WARBENCH_DATA = {
       },
       "doctrine": "Laser-focused on amphibious fleet as center of gravity; severs sea bridge to starve lodgment regardless of beachhead size.",
       "signature": "Mass subs on barrier plus all-sortie strikes against flotillas.",
-      "model": "z-ai/glm-5.2",
-      "reasoning": 6.2,
-      "reasoning_note": "Correctly identifies the amphibious fleet as the center of gravity and sequences subs/air against it, but the reasoning is highly repetitive and rarely adapts allocations to changing flotilla counts, supply collapse, or whether prior strikes actually worked."
+      "model": "z-ai/glm-5.2"
     }
   ],
   "replay": {

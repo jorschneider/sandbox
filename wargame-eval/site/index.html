@@ -311,10 +311,10 @@
       ashore, force ratio, and fleet survival. The field is closer on raw skill than you&rsquo;d expect.</p>
     <div class="barchart" id="offchart"></div>
 
-    <h3>Skill vs. judgment</h3>
-    <p class="muted">Does winning the invasion mean reasoning well? Not quite. Each dot is a model
-      &mdash; <b>right</b> = takes more of Taiwan, <b>up</b> = better-reasoned (graded by Opus).
-      A hollow ring marks a model that often fell back to the scripted baseline.</p>
+    <h3>Skill vs. reliability</h3>
+    <p class="muted">The sharpest split in the field isn&rsquo;t who invades best &mdash; it&rsquo;s who
+      can be trusted to issue a legal order every turn. Each dot is a model: <b>right</b> = takes more
+      of Taiwan, <b>up</b> = more reliable (fewer fallbacks to the scripted baseline).</p>
     <figure class="scatfig"><div id="scatter"></div></figure>
 
     <h3>How the games ended</h3>
@@ -351,9 +351,7 @@
       measure its playstyle from the orders themselves (heuristic-fallback turns are filtered out).
       Two numbers separate the field most: how much of the amphibious fleet a model throws across
       as <span class="chip red">RED</span> per turn (aggression), and how many submarine squadrons
-      it commits to the barrier as <span class="chip blue">BLUE</span> (sea denial). The
-      <b>reasoning</b> score is <strong>Claude&nbsp;Opus&nbsp;4.8</strong> grading each model&rsquo;s
-      rationales on soundness, foresight, adaptation, and clarity.</p>
+      it commits to the barrier as <span class="chip blue">BLUE</span> (sea denial).</p>
     <div class="strats" id="strats"></div>
     <p class="muted" id="strats-empty" hidden>Strategy profiles appear once a run is analyzed.</p>
   </section>
@@ -406,10 +404,6 @@
   if (D.generated) gen.textContent = 'Data generated ' + D.generated + '.';
   function fmt(x) { return (x === null || x === undefined) ? '—' : x; }
   function setText(id, s) { var e = document.getElementById(id); if (e) e.textContent = s; }
-  function reasoningOf(model) {
-    var s = (D.strategies || []).filter(function (x) { return x.model === model; })[0];
-    return s ? s.reasoning : null;
-  }
   function originTag(m) {
     return m && m.origin ? ' <span class="origin' + (m.cn ? ' cn' : '') + '">' + m.origin + '</span>' : '';
   }
@@ -431,43 +425,35 @@
 
   function renderStory(run) {
     var ms = run.models.slice();
-    ms.forEach(function (m) { m._reason = reasoningOf(m.model); });
     setText('ngames', run.n_valid);
 
     var byOff = ms.slice().sort(function (a, b) { return (b.offense || 0) - (a.offense || 0); });
-    var inv = byOff[0];
+    var inv = byOff[0], ru = byOff[1];
     var def = ms.slice().sort(function (a, b) { return (a.defense || 1) - (b.defense || 1); })[0];
-    var reasoned = ms.filter(function (m) { return m._reason != null; })
-                     .sort(function (a, b) { return b._reason - a._reason; });
-    var reasoner = reasoned[0];
     var reliable = ms.filter(function (m) { return (m.fallbacks || 0) === 0; });
     var worst = ms.slice().sort(function (a, b) { return (b.fallbacks || 0) - (a.fallbacks || 0); })[0];
     var valid = run.games.filter(function (g) { return !g.degraded; });
     var cv = valid.filter(function (g) { return g.outcome === 'CHINESE_VICTORY'; }).length;
 
     // --- verdict -----------------------------------------------------------
-    var sameTop = inv && reasoner && inv.model === reasoner.model;
-    var v;
-    if (reasoner && inv && !sameTop) {
-      v = 'Closer than the headlines suggest. <b>' + inv.label + '</b> takes the most of Taiwan &mdash; ' +
-          'but it isn&rsquo;t the sharpest commander. <b>' + reasoner.label + '</b>' +
-          (reasoner.cn ? ', a Chinese model,' : '') + ' reasons best' +
-          (def && reasoner.model === def.model ? ' and concedes the least on defense' : '') +
-          '. The open models trail the West far less on <em>skill</em> than on <em>reliability</em>.';
-    } else if (inv) {
-      v = '<b>' + inv.label + '</b> leads outright &mdash; taking the most of Taiwan while reasoning among the best.';
+    var v = '';
+    if (inv && ru) {
+      v = 'Closer than the headlines suggest. <b>' + inv.label + '</b> takes the most of Taiwan, but ' +
+          '<b>' + ru.label + '</b>' + (ru.cn ? ', a Chinese model,' : '') + ' is right on its heels' +
+          ((ru.fallbacks || 0) === 0 ? ' and just as dependable' : '') + '. The real gap isn&rsquo;t skill &mdash; ' +
+          'it&rsquo;s <em>reliability</em>: <b>' + worst.label + '</b> fell back to the scripted baseline ' +
+          worst.fallbacks + ' times, where ' + reliable.length + ' models never did.';
     }
-    document.getElementById('verdict').innerHTML = v || '';
+    document.getElementById('verdict').innerHTML = v;
 
     // --- finding cards -----------------------------------------------------
     var cards = [
       { k: 'Best invader', m: inv, v: inv.label,
         s: 'offense ' + fmt(inv.offense) + ' · ' + Math.round(inv.win_rate * 100) + '% wins',
         n: 'The most aggressive commander &mdash; it throws the biggest first wave across the strait.' },
-      { k: 'Best reasoner', m: reasoner, v: reasoner ? reasoner.label : '—',
-        s: reasoner ? reasoner._reason + ' / 10 reasoning' : '',
-        n: 'Graded by Claude Opus on soundness, foresight and adaptation' +
-           (reasoner && def && reasoner.model === def.model ? ' &mdash; and it holds Taiwan best, too.' : '.') },
+      { k: 'Toughest defender', m: def, v: def.label,
+        s: 'concedes ' + fmt(def.defense) + ' as BLUE',
+        n: 'Gives up the least of Taiwan when defending &mdash; the hardest island in the field to crack.' },
       { k: 'The reliability tax', v: reliable.length + ' never fall back',
         s: worst.label + ' fell back ' + worst.fallbacks + '×',
         n: 'Emitting a legal order every turn is its own skill &mdash; and where the field splits hardest.' },
@@ -490,8 +476,8 @@
         '<span class="bv">' + fmt(m.offense) + '</span></div>';
     }).join('');
 
-    // --- scatter: offense × reasoning, reliability as fill -----------------
-    renderScatter(ms.filter(function (m) { return m._reason != null; }));
+    // --- scatter: offense × reliability ------------------------------------
+    renderScatter(ms);
 
     // --- outcome distribution ---------------------------------------------
     var counts = {};
@@ -541,37 +527,40 @@
     });
   }
 
-  // offense (x) × reasoning (y) scatter, hollow dot = unreliable
+  // offense (x) × reliability (y, fewer fallbacks = higher) scatter
   function renderScatter(pts) {
     var box = document.getElementById('scatter');
     if (!pts.length) { box.innerHTML = ''; return; }
-    var W = 720, H = 430, L = 70, R = 26, T = 26, B = 64;
+    var W = 720, H = 430, L = 64, R = 26, T = 26, B = 64;
     var xs = pts.map(function (m) { return m.offense; });
-    var ys = pts.map(function (m) { return m._reason; });
+    var ys = pts.map(function (m) { return m.fallbacks || 0; });
     var xlo = Math.min.apply(null, xs), xhi = Math.max.apply(null, xs);
     var ylo = Math.min.apply(null, ys), yhi = Math.max.apply(null, ys);
     var xr = (xhi - xlo) || 1, yr = (yhi - ylo) || 1;
-    xlo -= xr * 0.22; xhi += xr * 0.22; ylo -= yr * 0.28; yhi += yr * 0.28;
+    xlo -= xr * 0.22; xhi += xr * 0.22; ylo -= yr * 0.22; yhi += yr * 0.18;
     function X(v) { return L + (v - xlo) / (xhi - xlo) * (W - L - R); }
-    function Y(v) { return H - B - (v - ylo) / (yhi - ylo) * (H - T - B); }
+    // fewer fallbacks -> nearer the top
+    function Y(v) { return T + (v - ylo) / (yhi - ylo) * (H - T - B); }
+    // jitter labels apart for dots that land close together
+    var placed = [];
     var dots = pts.map(function (m) {
       var c = m.cn ? '#b23a2e' : '#28508c';
-      var unreliable = (m.fallbacks || 0) > 10;
-      var cx = X(m.offense), cy = Y(m._reason);
-      var dot = unreliable
-        ? '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="#fffdf8" stroke="' + c + '" stroke-width="2.5"/>'
-        : '<circle cx="' + cx + '" cy="' + cy + '" r="7.5" fill="' + c + '"/>';
-      var anchor = cx > W - 150 ? 'end' : 'start';
+      var cx = X(m.offense), cy = Y(m.fallbacks || 0);
+      var anchor = cx > W - 160 ? 'end' : 'start';
       var dx = anchor === 'end' ? -12 : 12;
-      return dot + '<text class="sclbl" x="' + (cx + dx) + '" y="' + (cy + 4) + '" text-anchor="' + anchor + '">' +
+      var ly = cy + 4;
+      placed.forEach(function (p) { if (Math.abs(p - ly) < 14) ly = p + 15; });
+      placed.push(ly);
+      return '<circle cx="' + cx + '" cy="' + cy + '" r="7.5" fill="' + c + '"/>' +
+        '<text class="sclbl" x="' + (cx + dx) + '" y="' + ly + '" text-anchor="' + anchor + '">' +
         m.label + '</text>';
     }).join('');
     box.innerHTML =
-      '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Offense versus reasoning quality by model.">' +
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Offense versus reliability by model.">' +
       '<line x1="' + L + '" y1="' + (H - B) + '" x2="' + (W - R) + '" y2="' + (H - B) + '" stroke="#d9d2c4"/>' +
       '<line x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + (H - B) + '" stroke="#d9d2c4"/>' +
       '<text class="scax" x="' + ((L + W - R) / 2) + '" y="' + (H - 22) + '" text-anchor="middle">Offense &mdash; takes more of Taiwan &rarr;</text>' +
-      '<text class="scax" transform="translate(22 ' + ((T + H - B) / 2) + ') rotate(-90)" text-anchor="middle">Reasoning quality &rarr;</text>' +
+      '<text class="scax" transform="translate(20 ' + ((T + H - B) / 2) + ') rotate(-90)" text-anchor="middle">more reliable, fewer fallbacks &rarr;</text>' +
       dots + '</svg>';
   }
 
@@ -622,15 +611,11 @@
       var ex = m.example ? '<div class="sx">&ldquo;' + m.example.text + '&rdquo;' +
         '<span class="sxp">' + (m.example.role === 'RED' ? 'as RED · ' : 'as BLUE · ') +
         m.example.phase.replace(/_/g, ' ').toLowerCase() + '</span></div>' : '';
-      var rq = (m.reasoning != null) ? '<span class="rq">reasoning ' + m.reasoning +
-        '<small>/10</small></span>' : '';
-      var rqc = (m.reasoning != null && m.reasoning_note) ? '<div class="rqc">Judge: ' + m.reasoning_note + '</div>' : '';
       var c = document.createElement('div');
       c.className = 'scard';
       c.innerHTML =
-        '<div class="sh"><span class="sm">' + m.label + '</span>' + origin + rq + '</div>' +
+        '<div class="sh"><span class="sm">' + m.label + '</span>' + origin + '</div>' +
         (m.doctrine ? '<div class="doc">' + m.doctrine + '</div>' : '') +
-        rqc +
         (m.signature ? '<div class="sig">Signature: ' + m.signature + '</div>' : '') +
         '<div class="smetrics">' +
           '<div class="met"><span class="ml">Amphib aggression</span>' +
