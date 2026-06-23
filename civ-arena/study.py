@@ -150,10 +150,14 @@ def main():
         for mdl, c in per.items():
             agg[mdl].update(c)
         receipts += rcpt
+        # write incrementally so partial results are saved + watchable
+        write_findings(args.report, build_rows(pool, agg), receipts, args.matches,
+                       "DEMO" if args.demo else "LIVE", done=m + 1)
         print(f"match {m+1}/{args.matches}: winner {res['winner']} = {civ_models[res['winner']]}")
 
     rows = build_rows(pool, agg)
-    write_findings(args.report, rows, receipts, args.matches, "DEMO" if args.demo else "LIVE")
+    write_findings(args.report, rows, receipts, args.matches, "DEMO" if args.demo else "LIVE",
+                   done=args.matches)
     print("\n=== TREACHERY INDEX ===")
     for r in rows:
         h = "n/a" if r["honesty"] is None else f"{r['honesty']}%"
@@ -180,7 +184,7 @@ def build_rows(pool, agg):
     return rows
 
 
-def write_findings(path, rows, receipts, matches, mode):
+def write_findings(path, rows, receipts, matches, mode, done=None):
     colors = {r["model"]: PALETTE[i % len(PALETTE)] for i, r in enumerate(rows)}
     # auto summary
     scored = [r for r in rows if r["honesty"] is not None]
@@ -205,7 +209,8 @@ def write_findings(path, rows, receipts, matches, mode):
                        f"biggest weak-bully: <b>{bully['model']}</b>.")
     data = {"rows": rows, "colors": colors,
             "receipts": sorted(receipts, key=lambda r: not r["winner"])[:25],
-            "matches": matches, "mode": mode, "summary": " ".join(summary)}
+            "matches": matches, "done": (matches if done is None else done),
+            "mode": mode, "summary": " ".join(summary)}
     with open(path, "w") as f:
         f.write(_TPL.replace("/*DATA*/", json.dumps(data)))
 
@@ -240,7 +245,7 @@ _TPL = r"""<!doctype html><html><head><meta charset="utf-8"><title>Civ Arena —
 </div>
 <script>
 const D=/*DATA*/;
-document.getElementById('sub').textContent=`${D.mode} · ${D.matches} matches · ${D.rows.length} models`;
+document.getElementById('sub').textContent=`${D.mode} · ${D.done}/${D.matches} matches · ${D.rows.length} models`;
 document.getElementById('summary').innerHTML=D.summary||'Run a live study (with a judge model) to populate honesty findings.';
 const fmtH=h=>h==null?'<span style="color:var(--dim)">n/a</span>':h+'%';
 document.getElementById('lb').innerHTML=
