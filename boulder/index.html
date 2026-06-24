@@ -437,9 +437,10 @@ load();
 function load(){
   try {
     const s = JSON.parse(localStorage.getItem("crux") || "{}");
-    if (s.dur) state.dur = s.dur;
-    if (s.focus) state.focus = s.focus;
-    if (typeof s.grade === "number") state.grade = s.grade;
+    // validate against current options so stale/corrupt storage can't crash load or desync the UI
+    if ([15, 25, 45, 60].indexOf(s.dur) !== -1) state.dur = s.dur;
+    if (s.focus && FOCI.some(f => f.id === s.focus)) state.focus = s.focus;
+    if (typeof s.grade === "number") state.grade = clamp(Math.round(s.grade), 0, 12);
     if (typeof s.voice === "boolean") state.voice = s.voice;
   } catch(e){}
 }
