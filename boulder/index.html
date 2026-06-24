@@ -775,12 +775,11 @@ function cue(type){
 function spokenLabel(s){
   return s.label.replace(/(\d+)\/(\d+)/, "$1 of $2").replace(/\s*—.*$/, "").replace(/×/g, " by ").trim();
 }
-// The exact string we'll say for a segment as we enter it.
+// The exact string we'll say for a segment as we enter it. Kept short — the
+// full description stays on screen; the voice only names the block.
 function announceTextOf(s){
-  const first = (s.sub || "").split(". ")[0];
-  if (/^(Interval|Round)/.test(s.label)) return spokenLabel(s) + ". Go.";
-  if (s.kind === "rest" && s.seconds <= 30) return "Rest. " + first;
-  return spokenLabel(s) + ". " + first;
+  if (s.kind === "work") return spokenLabel(s) + ". Go.";   // "Round 3 of 6. Go.", "Continuous circuit. Go."
+  return spokenLabel(s) + ".";                               // rests / warm-up / cool-down: just the name
 }
 function announce(s){ if (s) speak(announceTextOf(s)); }
 
