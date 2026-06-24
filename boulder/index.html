@@ -189,9 +189,9 @@
   <div class="total-line">Tap to regenerate · <span id="regen" style="text-decoration:underline;cursor:pointer">shuffle a new plan</span></div>
 
   <footer>
-    CRUX speaks each block out loud, beeps and buzzes on every change, and keeps
-    the screen awake — so you can leave the phone in your bag and just listen.
-    No accounts, works offline.
+    CRUX calls every block in a studio voice, beeps and buzzes on each change,
+    and keeps the screen awake — leave the phone in your bag and just listen.
+    Your music keeps playing underneath. No accounts, works offline.
   </footer>
 </div>
 
@@ -247,11 +247,12 @@
   </div>
 </div>
 
+<script src="audio/manifest.js"></script>
 <script>
 "use strict";
 /* ============================================================
    CRUX — bouldering circuit generator + guided interval timer
-   Single file, no dependencies, works offline.
+   Pre-baked studio voice (ElevenLabs); works offline.
    ============================================================ */
 
 const $ = (id) => document.getElementById(id);
@@ -568,7 +569,8 @@ function startSession(){
   timer.idx = -1;
   timer.running = true;
   timer.paused = false;
-  // unlock audio within the user gesture
+  // unlock audio within the user gesture + keep background music playing
+  configureAudioSession();
   try {
     timer.audio = new (window.AudioContext || window.webkitAudioContext)();
     if (timer.audio.state === "suspended") timer.audio.resume();
@@ -607,6 +609,8 @@ function enterSegment(i){
   render();
   cue(s.kind === "rest" ? "rest" : "go");
   announce(s);
+  // pre-warm the next block's audio so the transition has no lag
+  if (nxt){ primeClip("Next, " + spokenLabel(nxt)); primeClip(announceTextOf(nxt)); }
 }
 
 function frame(now){
@@ -671,6 +675,7 @@ function exitSession(){
   timer.running = false;
   cancelAnimationFrame(timer.raf);
   releaseWakeLock();
+  stopVoice();
   player.classList.remove("show");
   document.body.classList.remove("playing");
 }
@@ -680,7 +685,7 @@ function togglePause(){
   timer.paused = !timer.paused;
   setPlayIcon();
   if (timer.paused){
-    try { window.speechSynthesis.cancel(); } catch(e){}
+    stopVoice();
     speak("Paused.");
   } else {
     timer.last = performance.now();
@@ -713,8 +718,8 @@ $("prevBtn").addEventListener("click", prev);
 $("againBtn").addEventListener("click", exitSession);
 $("voiceBtn").addEventListener("click", ()=>{
   state.voice = !state.voice; save(); setVoiceBtn();
-  if (!state.voice){ try { window.speechSynthesis.cancel(); } catch(e){} }
-  else speak("Voice on.");
+  if (!state.voice){ stopVoice(); }
+  else { configureAudioSession(); speak("Voice on."); }
 });
 setPlayIcon();
 setVoiceBtn();
@@ -729,6 +734,12 @@ document.addEventListener("keydown", (e)=>{
 });
 
 /* ---- audio cues ---- */
+// Keep background music (Spotify, Apple Music…) playing: duck it during cues
+// instead of pausing it. iOS 16.4+ exposes the Web Audio Session API; on
+// Android short cues duck automatically. Harmless where unsupported.
+function configureAudioSession(){
+  try { if (navigator.audioSession) navigator.audioSession.type = "transient"; } catch(e){}
+}
 function beep(freq, dur, vol){
   if (!timer.audio) return;
   try {
@@ -749,30 +760,101 @@ function cue(type){
   else if (type === "done"){ beep(523,0.16,0.3); setTimeout(()=>beep(659,0.16,0.3),160); setTimeout(()=>beep(784,0.3,0.3),320); buzz([120,80,120,80,240]); }
 }
 
-/* ---- spoken coaching (Web Speech API) ---- */
+/* ---- spoken coaching ---- */
 // "Interval 5/6" -> "Interval 5 of 6"; drop the "— 4×4" tail for speech
 function spokenLabel(s){
   return s.label.replace(/(\d+)\/(\d+)/, "$1 of $2").replace(/\s*—.*$/, "").replace(/×/g, " by ").trim();
 }
-function announce(s){
-  if (!s) return;
+// The exact string we'll say for a segment as we enter it.
+function announceTextOf(s){
   const first = (s.sub || "").split(". ")[0];
-  let txt;
-  if (/^(Interval|Round)/.test(s.label)) txt = spokenLabel(s) + ". Go.";
-  else if (s.kind === "rest" && s.seconds <= 30) txt = "Rest. " + first;
-  else txt = spokenLabel(s) + ". " + first;
-  speak(txt);
+  if (/^(Interval|Round)/.test(s.label)) return spokenLabel(s) + ". Go.";
+  if (s.kind === "rest" && s.seconds <= 30) return "Rest. " + first;
+  return spokenLabel(s) + ". " + first;
+}
+function announce(s){ if (s) speak(announceTextOf(s)); }
+
+/* Pre-baked studio voice: every phrase the app can say has an MP3 named by a
+   hash of its exact text. We play that clip. If one is missing (un-baked, or
+   offline before it cached) we fall back to the best on-device voice so the
+   coaching never goes silent. */
+const CLIPS = window.CRUX_CLIPS || null;
+let voiceEl = null;        // single reused <audio> — required for iOS autoplay
+let fbVoice = null;        // chosen device fallback voice
+
+function clipHash(str){     // FNV-1a 32-bit — must match the bake script exactly
+  let h = 0x811c9dc5 | 0;
+  for (let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
+function ensureVoiceEl(){
+  if (!voiceEl){ try { voiceEl = new Audio(); voiceEl.preload = "auto"; } catch(e){ voiceEl = null; } }
+  return voiceEl;
+}
+function stopVoice(){
+  try { if (voiceEl){ voiceEl.pause(); } } catch(e){}
+  try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
 }
 function speak(text){
   if (!state.voice || !text) return;
+  const h = clipHash(text);
+  if (CLIPS && CLIPS[h]){
+    const el = ensureVoiceEl();
+    if (el){
+      try {
+        try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
+        el.pause();
+        el.src = "audio/" + h + ".mp3";   // reuse the unlocked element — never let cues stack
+        el.currentTime = 0;
+        const pr = el.play();
+        if (pr && pr.catch) pr.catch(() => fallbackSpeak(text));
+        return;
+      } catch(e){ /* fall through to device voice */ }
+    }
+  }
+  stopVoice();
+  fallbackSpeak(text);
+}
+// warm the cache for a phrase we're about to need, so transitions have no lag
+function primeClip(text){
+  if (!CLIPS || !text) return;
+  const h = clipHash(text);
+  if (CLIPS[h]){ try { fetch("audio/" + h + ".mp3", { cache: "force-cache" }).catch(()=>{}); } catch(e){} }
+}
+
+function pickFallbackVoice(){
   try {
-    const synth = window.speechSynthesis;
-    if (!synth) return;
-    synth.cancel();              // never let announcements stack up
+    const synth = window.speechSynthesis; if (!synth) return null;
+    const vs = synth.getVoices() || []; if (!vs.length) return null;
+    const en = vs.filter(v => /^en(-|_|$)/i.test(v.lang)); const pool = en.length ? en : vs;
+    const score = v => {
+      const n = v.name || ""; let s = 0;
+      if (/Google US English/i.test(n)) s = 100;
+      else if (/Google/i.test(n)) s = 80;
+      else if (/(Samantha|Ava|Allison|Aaron|Evan|Zoe|Nicky|Serena)/i.test(n)) s = 90;
+      else if (/Microsoft.*(Aria|Jenny|Guy|Sonia|Ryan).*Online/i.test(n)) s = 88;
+      else if (/(Natural|Neural|Enhanced|Premium)/i.test(n)) s = 75;
+      if (v.localService === false) s += 8;
+      if (/en-US/i.test(v.lang)) s += 4; else if (/en-GB/i.test(v.lang)) s += 2;
+      if (/(eSpeak|compact|Albert|Zarvox|Fred|Ralph|Junior|Kathy|Bahh|Bells|Boing|Bubbles|Cellos|Wobble|Whisper|Trinoids|Jester|Organ|Deranged|Hysterical)/i.test(n)) s -= 60;
+      return s;
+    };
+    return pool.slice().sort((a, b) => score(b) - score(a))[0] || null;
+  } catch(e){ return null; }
+}
+function fallbackSpeak(text){
+  try {
+    const synth = window.speechSynthesis; if (!synth) return;
+    synth.cancel();
+    if (!fbVoice) fbVoice = pickFallbackVoice();
     const u = new SpeechSynthesisUtterance(text);
-    u.rate = 1.05; u.pitch = 1.0; u.volume = 1.0;
+    if (fbVoice){ u.voice = fbVoice; u.lang = fbVoice.lang; }
+    u.rate = 1.0; u.pitch = 1.0; u.volume = 1.0;
     synth.speak(u);
   } catch(e){}
+}
+if (window.speechSynthesis){
+  try { window.speechSynthesis.onvoiceschanged = () => { fbVoice = pickFallbackVoice(); }; } catch(e){}
 }
 function setVoiceBtn(){
   const b = $("voiceBtn");
@@ -790,6 +872,11 @@ function releaseWakeLock(){ try { if (timer.wakeLock){ timer.wakeLock.release();
 document.addEventListener("visibilitychange", ()=>{
   if (document.visibilityState === "visible" && timer.running && !timer.paused) requestWakeLock();
 });
+
+/* ---- offline cache (app shell + voice clips) ---- */
+if ("serviceWorker" in navigator){
+  window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(()=>{}); });
+}
 </script>
 </body>
 </html>
