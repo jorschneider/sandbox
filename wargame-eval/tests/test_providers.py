@@ -68,17 +68,37 @@ def test_generate_json_uses_chat_completion(monkeypatch):
     assert sent["response_format"] == {"type": "json_object"}
 
 
-def test_commander_falls_back_on_client_error(monkeypatch):
+_OBS = {"your_available_sorties": {"4th": 4, "4.5": 4, "5th": 2, "bomber": 0, "tanker": 0},
+        "amphib_flotillas_remaining": 6, "amphib_flotillas_initial": 6,
+        "pla_lodgment": 0, "taiwan_ground_strength": 100, "your_missiles": {},
+        "your_naval": {"subron": 3}}
+
+
+def test_commander_falls_back_when_retries_exhausted(monkeypatch):
     cmd = make_commander("deepseek/deepseek-chat-v3.1", seed=2)
+    cmd.max_attempts = 1                         # no retries → immediate fallback
 
     def boom(*a, **k):
         raise RuntimeError("network down")
 
     monkeypatch.setattr(cmd.client, "generate_json", boom)
-    obs = {"your_available_sorties": {"4th": 4, "4.5": 4, "5th": 2, "bomber": 0, "tanker": 0},
-           "amphib_flotillas_remaining": 6, "amphib_flotillas_initial": 6,
-           "pla_lodgment": 0, "taiwan_ground_strength": 100, "your_missiles": {},
-           "your_naval": {"subron": 3}}
-    out = cmd.decide(Side.BLUE, "BLUE_NAVAL", obs, {})
-    assert "subron_on_barrier" in out          # heuristic fallback produced a valid order
+    out = cmd.decide(Side.BLUE, "BLUE_NAVAL", _OBS, {})
+    assert "subron_on_barrier" in out            # heuristic fallback produced a valid order
     assert cmd.fallback_count == 1
+
+
+def test_commander_retries_transient_failures_then_succeeds(monkeypatch):
+    cmd = make_commander("deepseek/deepseek-chat-v3.1", seed=2)
+    monkeypatch.setattr(cmd, "_sleep", lambda *_a: None)   # don't actually wait
+    calls = {"n": 0}
+
+    def flaky(*a, **k):
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise ValueError("empty reply")      # two intermittent failures
+        return {"subron_on_barrier": 2, "rationale": "ok"}
+
+    monkeypatch.setattr(cmd.client, "generate_json", flaky)
+    out = cmd.decide(Side.BLUE, "BLUE_NAVAL", _OBS, {})
+    assert out["subron_on_barrier"] == 2         # got the real answer after retries
+    assert cmd.fallback_count == 0 and cmd.retry_count == 2

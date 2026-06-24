@@ -85,11 +85,18 @@ class AnthropicModelClient:
 
 class ClaudeCommander:
     def __init__(self, model: str = "claude-opus-4-8", seed: int = 0,
-                 client: AnthropicModelClient | None = None) -> None:
+                 client: AnthropicModelClient | None = None,
+                 max_attempts: int = 5) -> None:
         self.name = model
         self.client = client or AnthropicModelClient(model)
         self._fallback = HeuristicCommander(name=f"{model}-fallback", seed=seed)
-        self.fallback_count = 0
+        self.fallback_count = 0          # only when ALL retries are exhausted
+        self.retry_count = 0             # transient failures we retried past
+        self.max_attempts = max_attempts
+
+    def _sleep(self, seconds: float) -> None:
+        import time
+        time.sleep(seconds)
 
     def decide(self, side: Side, phase: str, observation: dict, schema: dict) -> dict:
         system = _SYSTEM.format(side=side.value)
@@ -98,9 +105,16 @@ class ClaudeCommander:
             f"OBSERVATION:\n{json.dumps(observation, indent=2)}\n\n"
             f"Respond with JSON matching this schema:\n{json.dumps(schema)}"
         )
-        try:
-            return self.client.generate_json(system, prompt, schema)
-        except Exception:
-            # Network/SDK/refusal/parse failure → deterministic fallback.
-            self.fallback_count += 1
-            return self._fallback.decide(side, phase, observation, schema)
+        # Many providers intermittently return an empty/garbled reply; that's
+        # flakiness, not a model's strategy. Retry (with backoff) until it
+        # answers, and only fall back to the script if it never does.
+        for attempt in range(self.max_attempts):
+            try:
+                return self.client.generate_json(system, prompt, schema)
+            except Exception:  # noqa: BLE001 — network/parse/empty/refusal
+                if attempt < self.max_attempts - 1:
+                    self.retry_count += 1
+                    self._sleep(min(10.0, 2.0 * (1.6 ** attempt)))
+        # Exhausted every retry → deterministic fallback (rare).
+        self.fallback_count += 1
+        return self._fallback.decide(side, phase, observation, schema)

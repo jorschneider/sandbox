@@ -123,6 +123,9 @@ def main() -> None:
                         or blue.fallback_count > 0.5 * blue_decisions)
             gr.metrics["red_fallbacks"] = red.fallback_count
             gr.metrics["blue_fallbacks"] = blue.fallback_count
+            # Transient flakiness we retried past (informational; not penalized).
+            gr.metrics["red_retries"] = red.retry_count
+            gr.metrics["blue_retries"] = blue.retry_count
             gr.metrics["degraded"] = degraded
             gr.metrics["timeline"] = engine.timeline   # per-turn lift / attrition
             # Trash talk, collected per side for later grading + the site showcase.
@@ -134,9 +137,10 @@ def main() -> None:
             fallbacks[a] = fallbacks.get(a, 0) + red.fallback_count
             fallbacks[b] = fallbacks.get(b, 0) + blue.fallback_count
             print(f"  {a} (RED) vs {b} (BLUE) seed {seed} -> {r.klass.value} "
-                  f"[{time.time()-t0:.0f}s, fb R{red.fallback_count}/B{blue.fallback_count}"
+                  f"[{time.time()-t0:.0f}s, retries R{red.retry_count}/B{blue.retry_count}, "
+                  f"fb R{red.fallback_count}/B{blue.fallback_count}"
                   f"{' DEGRADED' if degraded else ''}]")
-            time.sleep(3)  # gentle spacing to ease rate limits between games
+            time.sleep(5)  # slower spacing to ease rate limits between games
             fn = f"game_{_slug(a)}_vs_{_slug(b)}_{seed}.json"
             with open(os.path.join(OUT, fn), "w") as f:
                 json.dump({"result": gr.__dict__, "transcript": engine.transcript,
