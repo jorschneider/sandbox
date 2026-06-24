@@ -72,16 +72,18 @@ function rowHTML(lead) {
     </div>`;
 }
 
-function sectionHTML(sec) {
+function sectionHTML(sec, i) {
   let inner;
   if (sec.kind === "rows") {
     inner = `<div class="rows">${sec.leads.map(rowHTML).join("")}</div>`;
   } else {
     inner = sec.leads.map((l) => entryHTML(l, sec.kind)).join("");
   }
+  const n = String(i + 1).padStart(2, "0");
   return `
-    <section class="section ${sec.id === "parked" ? "parked" : ""}">
+    <section class="section ${sec.id === "parked" ? "parked" : ""}" id="sec-${esc(sec.id)}">
       <div class="sec-head">
+        <span class="sec-n">${n}</span>
         <span class="sec-kicker">${esc(sec.kicker)}</span>
         <h2 class="sec-title">${esc(sec.title)}</h2>
       </div>
@@ -101,7 +103,15 @@ function render(data) {
     `<div class="stat"><div class="stat-num serif">${esc(s.n)}</div><div class="stat-label">${esc(s.label)}</div></div>`
   ).join("");
 
+  $("#index").innerHTML = data.sections.map((s, i) =>
+    `<a href="#sec-${esc(s.id)}"><span class="ix-n">${String(i + 1).padStart(2, "0")}</span>${esc(s.title.split(" — ")[0])}</a>`
+  ).join("");
+
   $("#content").innerHTML = data.sections.map(sectionHTML).join("");
+
+  const count = data.sections.reduce((a, s) => a + s.leads.length, 0);
+  const colo = document.querySelector(".colophon");
+  if (colo) colo.textContent = colo.textContent.replace("{N}", count);
 
   document.querySelectorAll(".tool[data-copy]").forEach((btn) => {
     btn.addEventListener("click", async () => {

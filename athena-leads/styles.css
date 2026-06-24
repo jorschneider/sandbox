@@ -106,10 +106,25 @@ body {
 .gate-error { color: var(--flag); font-size: 13.5px; margin: 14px 0 0; animation: shake 0.3s; }
 .gate-foot { color: var(--faint); font-size: 11.5px; letter-spacing: 0.04em; margin: 24px 0 0; }
 
+/* ============ Running head ============ */
+.runhead {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 26px;
+  background: rgba(244, 240, 230, 0.86);
+  backdrop-filter: saturate(1.1) blur(8px);
+  border-bottom: 1px solid var(--line);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted);
+}
+.runhead span:first-child { color: var(--ink); }
+.runhead-mid { color: var(--faint); }
+
 /* ============ Masthead ============ */
 .app { max-width: 860px; margin: 0 auto; padding: 0 26px 80px; }
 
-.masthead { padding: 72px 0 0; animation: rise 0.5s ease both; }
+.masthead { padding: 60px 0 0; animation: rise 0.5s ease both; }
 
 .mast-title {
   font-family: "Fraunces", serif;
@@ -136,13 +151,33 @@ body {
 .stats { display: flex; flex-wrap: wrap; gap: 30px; }
 .stat-num { font-family: "Fraunces", serif; font-weight: 500; font-size: 26px; line-height: 1; letter-spacing: -0.01em; }
 .stat-label { color: var(--muted); font-size: 12px; margin-top: 6px; max-width: 16ch; line-height: 1.35; }
-.mast-date { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--faint); white-space: nowrap; }
+.mast-date { font-size: 12px; color: var(--faint); white-space: nowrap; }
+
+/* ============ Section index ============ */
+.index {
+  display: flex; flex-wrap: wrap; gap: 6px 8px;
+  margin-top: 26px;
+}
+.index a {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11.5px; letter-spacing: 0.04em;
+  color: var(--muted); text-decoration: none;
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 12px;
+  transition: color 0.14s, border-color 0.14s, background 0.14s;
+}
+.index a:hover { color: var(--accent); border-color: #bcd3c8; background: var(--accent-tint); }
+.index a .ix-n { color: var(--faint); margin-right: 6px; }
 
 /* ============ Sections ============ */
-.section { margin-top: 60px; animation: rise 0.5s ease both; }
+.section { margin-top: 58px; scroll-margin-top: 56px; animation: rise 0.5s ease both; }
 .sec-head { display: flex; align-items: baseline; gap: 14px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.sec-n {
+  font-family: "Fraunces", serif; font-weight: 500; font-size: 15px;
+  color: var(--faint); flex: none; font-feature-settings: "tnum";
+}
 .sec-kicker { flex: none; }
-.sec-title { font-family: "Fraunces", serif; font-weight: 500; font-size: 23px; letter-spacing: -0.012em; margin: 0; }
+.sec-title { font-family: "Fraunces", serif; font-weight: 500; font-size: 23px; letter-spacing: -0.012em; margin: 0; margin-right: auto; }
 .sec-note { color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 64ch; margin: 14px 0 0; }
 
 /* ---- Priority entries (numbered) ---- */
@@ -237,6 +272,7 @@ body {
 
 .foot { margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--line); }
 .foot p { color: var(--faint); font-size: 12.5px; line-height: 1.65; max-width: 70ch; }
+.colophon { font-size: 11px; letter-spacing: 0.06em; margin-top: 14px; color: var(--faint); }
 
 /* ============ Toast ============ */
 #toast {

@@ -15,8 +15,8 @@
   <section id="gate" class="gate">
     <div class="gate-card">
       <div class="gate-kicker">ChinaTalk × Athena</div>
-      <h1 class="gate-title">Athena Leads</h1>
-      <p class="gate-sub">Insurance-exec outreach brief, distilled from the ChinaTalk subscriber base. Enter the password to read.</p>
+      <h1 class="gate-title serif">Athena Leads</h1>
+      <p class="gate-sub">An insurance-outreach brief, distilled from the ChinaTalk subscriber base. Enter the password to read.</p>
       <form id="gate-form" autocomplete="off">
         <div class="gate-field">
           <input id="password" type="password" placeholder="Password" aria-label="Password" autofocus />
@@ -29,24 +29,34 @@
   </section>
 
   <!-- ===== Brief (revealed after unlock) ===== -->
-  <main id="app" class="app" hidden>
-    <header class="masthead">
-      <div class="mast-kicker" id="mast-kicker"></div>
-      <h1 class="mast-title" id="mast-title"></h1>
-      <p class="mast-dek" id="mast-dek"></p>
-      <div class="mast-rule"></div>
-      <div class="mast-meta">
-        <div class="stats" id="stats"></div>
-        <div class="mast-date" id="mast-date"></div>
-      </div>
-    </header>
+  <div id="app" hidden>
+    <div class="runhead">
+      <span>Athena Leads</span>
+      <span class="runhead-mid">Insurance outreach brief</span>
+      <span>Confidential</span>
+    </div>
 
-    <div id="content"></div>
+    <main class="app">
+      <header class="masthead">
+        <div class="mast-kicker" id="mast-kicker"></div>
+        <h1 class="mast-title serif" id="mast-title"></h1>
+        <p class="mast-dek" id="mast-dek"></p>
+        <div class="mast-rule"></div>
+        <div class="mast-meta">
+          <div class="stats" id="stats"></div>
+          <div class="mast-date mono" id="mast-date"></div>
+        </div>
+        <nav class="index" id="index" aria-label="Sections"></nav>
+      </header>
 
-    <footer class="foot">
-      <p>Built from first-party subscriber data. Roles identified from public professional sources and labelled with a confidence level — verify the medium / low ones before emailing. An email-free version of this brief is fine to forward; this one isn't.</p>
-    </footer>
-  </main>
+      <div id="content"></div>
+
+      <footer class="foot">
+        <p>Built from first-party subscriber data. Roles identified from public professional sources and labelled with a confidence level — verify the medium / low ones before emailing. An email-free version of this brief is fine to forward; this one isn't.</p>
+        <p class="colophon mono">ChinaTalk × Athena · compiled June 2026 · {N} insurance-domain readers, screened from 74,741</p>
+      </footer>
+    </main>
+  </div>
 
   <div id="toast" role="status" aria-live="polite"></div>
   <script src="./app.js"></script>
