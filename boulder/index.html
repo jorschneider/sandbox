@@ -533,7 +533,7 @@ function collapse(segs){
       // find the matching rest that follows the first work
       const rest = segs[i+1] && segs[i+1].kind === "rest" ? segs[i+1] : null;
       const onOff = rest ? (fmt(s.seconds)+" on / "+fmt(rest.seconds)+" off") : fmt(s.seconds);
-      out.push({ kind:s.kind, label: n+"× "+kindWord+(kindWord==="Round"?"s":"s"), sub: s.sub, seconds: (s.seconds+(rest?rest.seconds:0))*n });
+      out.push({ kind:s.kind, label: n+"× "+kindWord+"s", sub: s.sub, seconds: (s.seconds+(rest?rest.seconds:0))*n });
       // skip the n work+rest pairs
       i += rest ? n*2 : n;
       continue;
@@ -647,7 +647,7 @@ function frame(now){
     }
   }
   render();
-  timer.raf = requestAnimationFrame(frame);
+  if (timer.running) timer.raf = requestAnimationFrame(frame);   // stop looping once finished/exited
 }
 
 function render(){
@@ -790,6 +790,7 @@ function announce(s){ if (s) speak(announceTextOf(s)); }
 const CLIPS = window.CRUX_CLIPS || null;
 let voiceEl = null;        // single reused <audio> — required for iOS autoplay
 let fbVoice = null;        // chosen device fallback voice
+let speakSeq = 0;          // supersede guard: which speak() call is the latest
 
 function clipHash(str){     // FNV-1a 32-bit — must match the bake script exactly
   let h = 0x811c9dc5 | 0;
@@ -806,6 +807,7 @@ function stopVoice(){
 }
 function speak(text){
   if (!state.voice || !text) return;
+  const my = ++speakSeq;
   const h = clipHash(text);
   if (CLIPS && CLIPS[h]){
     const el = ensureVoiceEl();
@@ -814,9 +816,11 @@ function speak(text){
         try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
         el.pause();
         el.src = "audio/" + h + ".mp3";   // reuse the unlocked element — never let cues stack
-        el.currentTime = 0;
         const pr = el.play();
-        if (pr && pr.catch) pr.catch(() => fallbackSpeak(text));
+        if (pr && pr.catch) pr.catch((err) => {
+          if (err && err.name === "AbortError") return;   // interrupted by the next cue — expected
+          if (my === speakSeq) fallbackSpeak(text);         // genuine failure, and still the latest cue
+        });
         return;
       } catch(e){ /* fall through to device voice */ }
     }
