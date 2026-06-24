@@ -148,8 +148,52 @@ No native changes needed for content/voice updates — only a version bump + res
 
 ---
 
-## Layout
+## No-Mac path: build & submit from CI (recommended if you don't own a Mac)
 
+`.github/workflows/ios.yml` builds, signs, and uploads to **TestFlight** on a
+GitHub-hosted **macOS** runner. You never touch a Mac — you set repo secrets once
+and run the workflow. (`scripts/apply-native-config.mjs` applies the audio-session
++ keep-awake tweaks automatically, so nothing needs hand-editing in CI.)
+
+### One-time human steps
+1. **Enroll** in the Apple Developer Program — https://developer.apple.com/programs ($99/yr).
+2. **App Store Connect API key:** App Store Connect → *Users and Access → Integrations
+   → App Store Connect API* → generate a key with role **Admin** (or App Manager).
+   Download the `.p8` **once**; note the **Key ID** and **Issuer ID**.
+3. **Pick a bundle id** you control, e.g. `com.jordanschneider.crux`.
+4. **Create an empty private GitHub repo** to hold signing certs, e.g. `crux-certs`.
+5. **Create a GitHub PAT** (fine-grained, Contents: read/write on `crux-certs`).
+6. **Choose a passphrase** for `match` (any strong string — remember it).
+
+### Repository secrets  (Settings → Secrets and variables → Actions)
+| Secret | Value |
+|---|---|
+| `ASC_KEY_ID` | the API Key ID |
+| `ASC_ISSUER_ID` | the API Issuer ID |
+| `ASC_KEY_P8` | full contents of the `.p8` file (paste as-is) |
+| `CRUX_BUNDLE_ID` | e.g. `com.jordanschneider.crux` |
+| `CRUX_APP_NAME` | `CRUX` (or a free name if "CRUX" is taken) |
+| `MATCH_GIT_URL` | https URL of the certs repo, e.g. `https://github.com/you/crux-certs.git` |
+| `MATCH_GIT_BASIC_AUTHORIZATION` | base64 of `your-username:your-PAT` (`printf 'user:PAT' | base64`) |
+| `MATCH_PASSWORD` | the passphrase from step 6 |
+
+### Run it
+Actions tab → **iOS · build & TestFlight** → **Run workflow** (or push a tag `v1.0.0`).
+The first run: `match` creates the signing assets in the certs repo, `produce`
+registers the app + bundle id, then it builds and uploads to TestFlight. Install
+**TestFlight** on your iPhone to test the build.
+
+For a **public App Store release**, add the screenshots in `store/screenshots/` and
+the metadata in `store/listing.md` to App Store Connect, then either submit there or
+run the `release` lane (`fastlane release`).
+
+> Signing in CI usually needs a round or two to go green on the first attempt — the
+> logs say exactly what's missing. Push the secrets and trigger a run; the workflow
+> logs make each fix obvious.
+
+---
+
+## Layout
 ```
 crux-app/
   assets/              icon + splash sources (1024 / 2732) — used by `npm run assets`
