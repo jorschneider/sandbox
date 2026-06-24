@@ -163,7 +163,7 @@
     <p class="label">Session length</p>
     <div class="chips" id="durChips" role="group" aria-label="Session length">
       <button class="chip" data-dur="15">15 min</button>
-      <button class="chip" data-dur="25">25 min</button>
+      <button class="chip" data-dur="30">30 min</button>
       <button class="chip" data-dur="45">45 min</button>
       <button class="chip" data-dur="60">60 min</button>
     </div>
@@ -414,11 +414,44 @@ function buildMixed(total, g){
   return [...segs, ...blocks, ...c];
 }
 
+// Skill / movement drills (solo-doable). The spoken cue is just the name;
+// the description shows on screen. Use easy-to-moderate problems for all.
+const MOVEMENT_DRILLS = [
+  ["One-hand climbing", "Climb an easy problem using only one hand — the other hovers off. Switch hands each go. Forces precise feet and body position."],
+  ["One foot off", "Climb using only one foot; the other flags to balance. Swap feet between attempts. Builds tension and trust on the working foot."],
+  ["Hover hand & lock-off", "Climb statically: before every hand move, lock off and hover your hand over the hold for two seconds, then place it. Control over the swing."],
+  ["Nose to the wall", "Before each reach, bring your nose toward the next hold — get hips and chest into the wall before you pull. Move your body, not just your arm."],
+  ["No-hands slab", "On a slab, hands off — see how high you climb on feet alone. Weight through the toes and trust the rubber."],
+  ["Precision touch", "Reach for the next hold and freeze a beat right before you touch it, then land it exactly. No regrips, no readjusting."],
+  ["Silent feet", "Place every foot in total silence — no scraping, no banging, no re-adjusting. Slow and deliberate."],
+  ["Straight-arm traverse", "Traverse with arms straight. Use flags and hip turns to stay on the wall instead of pulling in."],
+  ["Open-hand only", "Climb easy problems using only open-hand grips — no crimping. Builds resilient fingers and trust in friction."],
+  ["Quiet downclimbing", "Downclimb easy problems under control. Doubles your footwork mileage and builds stamina."],
+  ["Slow-motion control", "Climb a moderate problem at half speed, pausing and balancing at every hold. Own each position."],
+  ["Foot swaps", "Mid-route, practise quiet, precise foot swaps on a single foothold. Tiny, accurate movements."],
+];
+function buildMovement(total, g){
+  const { w, c, main } = pad(total, g);
+  const n = clamp(Math.round(main / 210), 4, 7);
+  const restSec = clamp(main * 0.05, 30, 75);
+  const workSec = (main - (n - 1) * restSec) / n;          // fills `main` exactly
+  // deterministic window into the pool, shifted by session length for variety
+  const off = ({ 900:0, 1800:3, 2700:6, 3600:9 })[total] || 0;
+  const segs = [...w];
+  for (let i = 0; i < n; i++){
+    const [name, sub] = MOVEMENT_DRILLS[(off + i) % MOVEMENT_DRILLS.length];
+    segs.push(seg("work", name, sub, workSec, 5));
+    if (i < n - 1) segs.push(seg("rest", "Reset", "Step off, relax, mentally rehearse the next drill.", restSec, 1));
+  }
+  return [...segs, ...c];
+}
+
 const FOCI = [
   { id:"cardio",   title:"Cardio Circuit",        sub:"Continuous easy climbing + intervals. Sweat and lungs, no limit moves.", color:"var(--work)",   build:buildCardio },
   { id:"power",    title:"Power Endurance · 4×4", sub:"Four boulders back-to-back, repeated. Builds the pump tank.",            color:"#ff8a3d",       build:buildPowerEndurance },
   { id:"technique",title:"Technique & Footwork",  sub:"Silent-feet and control drills. Low intensity, high attention.",         color:"var(--rest)",   build:buildTechnique },
   { id:"strength", title:"Strength / Limit",      sub:"Hard boulders, long rests. Few quality attempts near your max.",         color:"#c77dff",       build:buildStrength },
+  { id:"movement", title:"Movement Lab",          sub:"Skill drills — one-hand, hover, nose-to-wall, no-hands slab. Sharpen movement, low intensity.", color:"#ffd23d", build:buildMovement },
   { id:"mixed",    title:"Mixed Pyramid",         sub:"A bit of everything — volume, 4×4, limit, burn. A full session.",        color:"var(--cool)",   build:buildMixed },
 ];
 
@@ -426,7 +459,7 @@ const FOCI = [
    STATE + SETUP UI
    ============================================================ */
 const state = {
-  dur: 25,
+  dur: 30,
   focus: "cardio",
   grade: 4,
   voice: true,
@@ -438,7 +471,7 @@ function load(){
   try {
     const s = JSON.parse(localStorage.getItem("crux") || "{}");
     // validate against current options so stale/corrupt storage can't crash load or desync the UI
-    if ([15, 25, 45, 60].indexOf(s.dur) !== -1) state.dur = s.dur;
+    if ([15, 30, 45, 60].indexOf(s.dur) !== -1) state.dur = s.dur;
     if (s.focus && FOCI.some(f => f.id === s.focus)) state.focus = s.focus;
     if (typeof s.grade === "number") state.grade = clamp(Math.round(s.grade), 0, 12);
     if (typeof s.voice === "boolean") state.voice = s.voice;
@@ -489,6 +522,7 @@ function renderGrade(){
   if (state.focus === "strength") working = limitRange(state.grade);
   else if (state.focus === "power") working = range(state.grade,3,1);
   else if (state.focus === "technique") working = range(state.grade,5,2);
+  else if (state.focus === "movement") working = range(state.grade,6,3);
   else working = range(state.grade,4,2);
   $("gradeHint").innerHTML = "Working range for a " + f.title.split(" ")[0].toLowerCase() +
     " session: <b style='color:var(--ink)'>" + working + "</b>. Set this to the hardest grade you can send today.";
@@ -788,6 +822,7 @@ function announce(s){ if (s) speak(announceTextOf(s)); }
    offline before it cached) we fall back to the best on-device voice so the
    coaching never goes silent. */
 const CLIPS = window.CRUX_CLIPS || null;
+const CLIP_V = "2";        // bump when clip audio changes (loudness, voice) to bust caches
 let voiceEl = null;        // single reused <audio> — required for iOS autoplay
 let fbVoice = null;        // chosen device fallback voice
 let speakSeq = 0;          // supersede guard: which speak() call is the latest
@@ -815,7 +850,7 @@ function speak(text){
       try {
         try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
         el.pause();
-        el.src = "audio/" + h + ".mp3";   // reuse the unlocked element — never let cues stack
+        el.src = "audio/" + h + ".mp3?v=" + CLIP_V;   // reuse the unlocked element — never let cues stack
         const pr = el.play();
         if (pr && pr.catch) pr.catch((err) => {
           if (err && err.name === "AbortError") return;   // interrupted by the next cue — expected
@@ -832,7 +867,7 @@ function speak(text){
 function primeClip(text){
   if (!CLIPS || !text) return;
   const h = clipHash(text);
-  if (CLIPS[h]){ try { fetch("audio/" + h + ".mp3", { cache: "force-cache" }).catch(()=>{}); } catch(e){} }
+  if (CLIPS[h]){ try { fetch("audio/" + h + ".mp3?v=" + CLIP_V, { cache: "force-cache" }).catch(()=>{}); } catch(e){} }
 }
 const COUNT = { 1: "One", 2: "Two", 3: "Three" };
 // Pre-fetch every clip a whole session will use so it's cached for offline play.
