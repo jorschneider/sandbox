@@ -4,60 +4,51 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>Athena Leads · Insurance Outreach Shortlist</title>
+  <title>Athena Leads · Insurance Outreach Brief</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <!-- ===== Password gate ===== -->
-  <div id="gate" class="gate">
+  <section id="gate" class="gate">
     <div class="gate-card">
-      <div class="gate-mark">A</div>
+      <div class="gate-kicker">ChinaTalk × Athena</div>
       <h1 class="gate-title">Athena Leads</h1>
-      <p class="gate-sub">Insurance-exec outreach shortlist, distilled from the ChinaTalk subscriber base. Enter the password to view.</p>
+      <p class="gate-sub">Insurance-exec outreach brief, distilled from the ChinaTalk subscriber base. Enter the password to read.</p>
       <form id="gate-form" autocomplete="off">
         <div class="gate-field">
           <input id="password" type="password" placeholder="Password" aria-label="Password" autofocus />
-          <button id="unlock" type="submit">
-            <span class="btn-label">Unlock</span>
-            <span class="btn-spinner" hidden></span>
-          </button>
+          <button id="unlock" type="submit"><span class="btn-label">Read brief</span><span class="btn-spinner" hidden></span></button>
         </div>
         <p id="gate-error" class="gate-error" hidden></p>
       </form>
-      <p class="gate-foot">Private &middot; not indexed</p>
+      <p class="gate-foot">Private &middot; not indexed &middot; contains contact details</p>
     </div>
-  </div>
+  </section>
 
-  <!-- ===== Dashboard (revealed after unlock) ===== -->
+  <!-- ===== Brief (revealed after unlock) ===== -->
   <main id="app" class="app" hidden>
-    <header class="hero">
-      <div class="hero-inner">
-        <div class="brand">
-          <div class="brand-mark">A</div>
-          <div>
-            <div class="brand-name">Athena Leads</div>
-            <div class="brand-tag" id="brand-tag"></div>
-          </div>
-        </div>
-        <h1 class="hero-title">Insurance contacts worth Athena's first emails</h1>
-        <p class="hero-lede">
-          The whole ChinaTalk list, filtered to people on real insurance-company domains, then verified against public sources for actual role and seniority.
-          One thing shapes everything below: these readers skew to the <strong>investment side</strong> of insurers — so the most engaged name isn't the most useful one. The genuinely relevant targets are few, and they're at the top.
-        </p>
+    <header class="masthead">
+      <div class="mast-kicker" id="mast-kicker"></div>
+      <h1 class="mast-title" id="mast-title"></h1>
+      <p class="mast-dek" id="mast-dek"></p>
+      <div class="mast-rule"></div>
+      <div class="mast-meta">
         <div class="stats" id="stats"></div>
+        <div class="mast-date" id="mast-date"></div>
       </div>
     </header>
 
-    <div class="content" id="content"></div>
+    <div id="content"></div>
 
     <footer class="foot">
-      <p>Built from first-party subscriber data · roles identified from public professional sources and labelled with a confidence level — sanity-check the medium/low ones before emailing.</p>
+      <p>Built from first-party subscriber data. Roles identified from public professional sources and labelled with a confidence level — verify the medium / low ones before emailing. An email-free version of this brief is fine to forward; this one isn't.</p>
     </footer>
   </main>
 
+  <div id="toast" role="status" aria-live="polite"></div>
   <script src="./app.js"></script>
 </body>
 </html>
