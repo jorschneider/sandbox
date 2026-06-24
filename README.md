@@ -43,11 +43,12 @@ A second, unrelated static page lives at **`/boulder`**: *CRUX*, a bouldering
 **circuit-workout coach**. Pick a session length (15/25/45/60 min), a focus
 (cardio circuit, power-endurance 4×4, technique, strength/limit, or a mixed
 pyramid) and your hardest grade; it generates a time-accurate plan and then
-**coaches you through every block** with a full-screen interval timer —
-countdown ring, work/rest cues (beep + vibrate), screen wake-lock and a
-plan preview. One self-contained file, no dependencies, works offline —
-built to live on your phone at the wall. Open `/boulder` (or `boulder/`
-locally).
+**coaches you through every block** with a full-screen interval timer.
+It **speaks each block out loud** (Web Speech API) and announces what's
+coming next, plus countdown ring, beep + vibrate cues, screen wake-lock
+and a plan preview — so you can pocket the phone and just listen. One
+self-contained file, no dependencies, works offline — built to live on
+your phone at the wall. Open `/boulder` (or `boulder/` locally).
 
 ## Running it
 
