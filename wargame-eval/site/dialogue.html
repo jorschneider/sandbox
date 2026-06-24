@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Dialogue — a US–China AI talks game</title>
+<style>
+:root{
+  --bg:#f6f4ee; --panel:#fffdf8; --ink:#1b1a17; --muted:#6c6760; --line:#e4ded1;
+  --us:#28508c; --us-soft:#dde6f2; --cn:#b23a2e; --cn-soft:#f3e0dc;
+  --state:#28508c; --party:#b23a2e; --mixed:#7a5a9b; --gold:#caa23a;
+  --mono:ui-monospace,Menlo,Consolas,monospace; --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px}
+.top{border-bottom:1px solid var(--line);background:rgba(246,244,238,.92);backdrop-filter:blur(6px);position:sticky;top:0;z-index:10}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.brand{font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+.brand .dot{width:11px;height:11px;border-radius:2px;background:linear-gradient(135deg,var(--us) 0 50%,var(--cn) 50% 100%)}
+.meters{display:flex;gap:16px;align-items:center;font-size:13px}
+.meter b{font-family:var(--mono)}
+h1{font-size:40px;line-height:1.06;letter-spacing:-.03em;margin:34px 0 8px}
+h2{font-size:22px;letter-spacing:-.01em;margin:26px 0 10px}
+.lede{font-size:18px;color:var(--muted);margin:0 0 18px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--cn);margin:0 0 4px}
+.btn{font:inherit;font-weight:600;font-size:15px;border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:8px;padding:10px 18px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.card{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:14px 16px}
+.muted{color:var(--muted)} .mono{font-family:var(--mono)}
+.hidden{display:none}
+
+/* layout */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.section-h{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 8px}
+
+/* agenda */
+.topic{border:1px solid var(--line);border-radius:9px;background:var(--panel);padding:10px 12px;margin-bottom:8px;cursor:pointer;position:relative}
+.topic.sel{border-color:var(--us);box-shadow:0 0 0 1px var(--us)}
+.topic.done{border-left:3px solid var(--gold)}
+.topic .tt{font-weight:650;font-size:14.5px}
+.topic .ideal{font-size:11.5px;color:var(--muted)}
+.bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:7px}
+.bar i{display:block;height:8px;background:var(--us);border-radius:4px;transition:width .35s}
+.topic .pct{position:absolute;right:12px;top:10px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+/* org cards */
+.orgs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.org{border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:9px;background:var(--panel);padding:9px 11px;cursor:pointer}
+.org.sel{box-shadow:0 0 0 2px var(--cn);border-color:var(--cn)}
+.org.state{border-left-color:var(--state)} .org.party{border-left-color:var(--party)} .org.mixed{border-left-color:var(--mixed)}
+.org .on{font-weight:700;font-size:14px}
+.org .role{font-size:11px;color:var(--muted);line-height:1.3}
+.org .stat{display:flex;gap:12px;margin-top:6px;font-size:11px;font-family:var(--mono);color:var(--muted)}
+.dots{letter-spacing:1px}
+.sub{font-size:10px;color:var(--muted);font-family:var(--mono)}
+
+/* approaches */
+.approaches{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.appr{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);border-radius:7px;padding:7px 12px;cursor:pointer}
+.appr.sel{border-color:var(--ink);font-weight:650}
+.appr small{display:block;color:var(--muted);font-size:10.5px;font-weight:400}
+
+/* log */
+.log{margin-top:14px;display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto}
+.entry{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:10px 13px;font-size:14px;line-height:1.5}
+.entry .h{font-size:11.5px;font-family:var(--mono);color:var(--muted);margin-bottom:4px}
+.entry.good{border-left:3px solid var(--us)} .entry.bad{border-left:3px solid var(--cn)} .entry.meh{border-left:3px solid var(--gold)}
+.entry b.up{color:var(--us)} .entry b.down{color:var(--cn)}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:6px 0 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+footer{border-top:1px solid var(--line);padding:24px 0 50px;color:var(--muted);font-size:13px;margin-top:30px}
+footer a{color:var(--muted)}
+.tag{font-family:var(--mono);font-size:11px;padding:1px 7px;border-radius:4px}
+.tag.us{background:var(--us-soft);color:var(--us)} .tag.cn{background:var(--cn-soft);color:var(--cn)}
+@media(max-width:640px){.cols{grid-template-columns:1fr}.orgs{grid-template-columns:1fr}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <div class="brand"><span class="dot"></span> The Dialogue</div>
+  <div class="meters" id="meters"></div>
+</div></div>
+
+<div class="wrap">
+
+  <!-- INTRO -->
+  <section id="intro">
+    <p class="eyebrow">A US–China AI talks game</p>
+    <h1>Who do you talk to in China&nbsp;on&nbsp;AI?</h1>
+    <p class="lede">After the Trump–Xi summit, the US and China agreed to a government-to-government
+      dialogue on AI. You are the <span class="tag us">US</span> delegation lead. Over eight sessions,
+      advance the American agenda by engaging the right people in Beijing.</p>
+    <div class="card">
+      <p style="margin:0 0 8px"><b>The catch</b> (and the whole game): China&rsquo;s AI bureaucracy is
+      a maze. The organizations <em>best positioned to engage</em> Americans often hold little real
+      power; the ones with <em>real power</em> are domestic, guarded, and rarely sit down with
+      foreigners. Read the system, match each topic to the right counterpart, pair willing-but-weak
+      technical bodies with a powerful patron, and build trust before you press.</p>
+      <div class="legend">
+        <span><i style="background:var(--state)"></i>State organ</span>
+        <span><i style="background:var(--party)"></i>CCP / Party body</span>
+        <span><i style="background:var(--mixed)"></i>Mixed party-state</span>
+        <span>● = real power &middot; willingness to engage is hidden until you try</span>
+      </div>
+    </div>
+    <h2>First move: who should lead China&rsquo;s delegation?</h2>
+    <p class="muted" style="margin-top:0">You can push for a counterpart to lead the Chinese side. It
+      shapes which topics flow more easily.</p>
+    <div id="leadChoices"></div>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="hidden">
+    <h2 style="margin-top:24px">The agenda &amp; the table</h2>
+    <p class="muted" style="margin-top:0">Pick a <b>topic</b>, the <b>Chinese organization</b> to
+      engage, and your <b>approach</b> — then open the session.</p>
+    <div class="cols">
+      <div>
+        <p class="section-h">US agenda · the five topics</p>
+        <div id="agenda"></div>
+      </div>
+      <div>
+        <p class="section-h">China&rsquo;s AI bureaucracy</p>
+        <div class="orgs" id="orgs"></div>
+        <p class="sub" id="orgsub" style="margin-top:8px"></p>
+      </div>
+    </div>
+
+    <p class="section-h" style="margin-top:18px">Approach</p>
+    <div class="approaches" id="approaches"></div>
+    <button class="btn" id="open" disabled>Open the session &rarr;</button>
+
+    <div class="log" id="log"></div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="hidden">
+    <p class="eyebrow" id="endeyebrow"></p>
+    <h1 id="endtitle"></h1>
+    <p class="lede" id="endlede"></p>
+    <div class="card" id="enddebrief"></div>
+    <p style="margin-top:18px"><button class="btn" onclick="location.reload()">Play again</button></p>
+  </section>
+
+  <footer>
+    A prototype eval-game. Bureaucracy, roles, and the &ldquo;best-positioned vs. most-powerful&rdquo;
+    tension are drawn from Matt Sheehan&rsquo;s <a href="https://www.chinadialogues.com" target="_blank" rel="noopener">&ldquo;Who
+    should the U.S. Talk to in China on AI?&rdquo;</a> (Jun 2026). Simplified and illustrative; not an
+    official source. Built on the WarBench harness.
+  </footer>
+</div>
+
+<script>
+// ---- data (from Sheehan's mapping) -----------------------------------------
+var TOPICS = {
+  testing:{label:"Mandatory testing & standards for frontier models", ideal:"cac", weight:1.4,
+           hint:"the cross-border-threat priority"},
+  broad:  {label:"Broad AI policy & governance", ideal:"ndrc", weight:1.1, hint:""},
+  science:{label:"Scientific trajectory & long-term risks", ideal:"most", weight:1.0, hint:""},
+  apps:   {label:"Real-world applications & industry standards", ideal:"miit", weight:0.9, hint:""},
+  multi:  {label:"Multilateral / international AI governance", ideal:"mfa", weight:1.0, hint:""}
+};
+var ORGS = {
+  cac:{name:"CAC", full:"Cyberspace Administration of China", type:"mixed", role:"The Regulator · office of the Central Cyberspace Affairs Commission (Cai Qi)",
+       power:3, will:1, style:"technical", fits:{testing:2},
+       cagey:"powerful and content/ideology-focused — it engages on a 'content security' frame, but is guarded on open technical exchange"},
+  ndrc:{name:"NDRC", full:"National Development & Reform Commission", type:"state", role:"The Coordinator · macro 'super-ministry' tasked with cross-ministry AI coordination (He Lifeng ties)",
+       power:3, will:2, style:"strategic", fits:{broad:2, apps:1, testing:1}},
+  most:{name:"MOST", full:"Ministry of Science & Technology", type:"mixed", role:"The Big Picture · 'the OSTP of China'; advises leadership on AI's trajectory",
+       power:2, will:2, style:"strategic", fits:{science:2, broad:1}},
+  miit:{name:"MIIT", full:"Ministry of Industry & Information Technology", type:"state", role:"Tech Support · industrial AI; co-signs the AI regs; technical work via CAICT",
+       power:2, will:2, style:"technical", fits:{apps:2, testing:1}},
+  mfa:{name:"MFA", full:"Ministry of Foreign Affairs · Arms Control Dept", type:"state", role:"Global AI diplomacy · the 'coordinator for AI affairs' — built to engage foreigners",
+       power:1, will:3, style:"strategic", fits:{multi:2, broad:1}},
+  tc260:{name:"TC260 / CNCERT", full:"Standards body + cyber coordinator (under CAC)", type:"mixed", role:"Authored the AI Safety & Governance Framework 2.0 (incl. loss-of-control); technical & willing — but no power of its own",
+       power:1, will:3, style:"technical", fits:{testing:2}, sub:true},
+  caict:{name:"CAICT", full:"China Academy of ICT (under MIIT)", type:"state", role:"Testing / evaluation / certification — hands-on technical body, little independent clout",
+       power:1, will:3, style:"technical", fits:{apps:2, testing:2}, sub:true}
+};
+var LEADS = [
+  {k:"ndrc", title:"Push for the NDRC to lead", desc:"The coordinator with ties to He Lifeng — broad policy flows, and it can corral other ministries. A powerhouse, if it shows up."},
+  {k:"mfa",  title:"Accept the MFA (Arms Control Dept) as lead", desc:"The natural diplomatic channel — smooth, engaged, multilateral-savvy — but lighter on domestic policy heft."},
+  {k:"none", title:"Let Beijing decide", desc:"Don't spend capital on the configuration. Flexible, but you forfeit the home-field nudge."}
+];
+var APPROACHES = [
+  {k:"technical", label:"Technical / best-practices", sub:"clicks with testing-focused bodies"},
+  {k:"strategic", label:"Strategic / big-picture", sub:"clicks with coordinators & diplomats"},
+  {k:"press", label:"Press / leverage", sub:"+progress, −trust"},
+  {k:"reassure", label:"Reassure / build trust", sub:"+trust, slow this turn"}
+];
+
+// ---- state -----------------------------------------------------------------
+var S = { trust:50, session:0, max:8, progress:{}, revealed:{}, patron:{}, lead:null,
+          sel:{topic:null, org:null, appr:null}, willBoost:{}, ended:false };
+Object.keys(TOPICS).forEach(function(t){S.progress[t]=0;});
+
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+function el(id){return document.getElementById(id);}
+
+// ---- intro / lead choice ---------------------------------------------------
+el('leadChoices').innerHTML = LEADS.map(function(l){
+  return '<div class="topic" onclick="chooseLead(\''+l.k+'\')"><div class="tt">'+l.title+'</div>'+
+    '<div class="ideal">'+l.desc+'</div></div>';
+}).join('');
+window.chooseLead = function(k){
+  S.lead = k;
+  if(k!=='none'){ S.will = k; ORGS[k].will = clamp(ORGS[k].will+1,0,3); ORGS[k].isLead=true; S.trust+=4; }
+  el('intro').classList.add('hidden'); el('game').classList.remove('hidden');
+  render();
+};
+
+// ---- rendering -------------------------------------------------------------
+function dots(n){return '●●●'.slice(0,n)+'○○○'.slice(0,3-n);}
+function render(){
+  el('meters').innerHTML =
+    '<span class="meter">Trust <b style="color:'+(S.trust<35?'var(--cn)':S.trust>65?'var(--us)':'var(--ink)')+'">'+Math.round(S.trust)+'</b>/100</span>'+
+    '<span class="meter">Session <b>'+(S.session+1)+'</b>/'+S.max+'</span>'+
+    '<span class="meter">Agenda <b>'+Math.round(agendaScore())+'</b></span>';
+  // agenda
+  el('agenda').innerHTML = Object.keys(TOPICS).map(function(t){
+    var p=S.progress[t], done=p>=100;
+    var ideal=ORGS[TOPICS[t].ideal].name;
+    return '<div class="topic'+(S.sel.topic===t?' sel':'')+(done?' done':'')+'" onclick="pick(\'topic\',\''+t+'\')">'+
+      '<span class="pct">'+Math.round(p)+'%</span>'+
+      '<div class="tt">'+TOPICS[t].label+'</div>'+
+      '<div class="ideal">natural lead: '+ideal+(TOPICS[t].hint?' &middot; '+TOPICS[t].hint:'')+
+        (S.patron[t]?'':' &middot; <span style="color:var(--cn)">no power-broker engaged yet</span>')+'</div>'+
+      '<div class="bar"><i style="width:'+p+'%"></i></div></div>';
+  }).join('');
+  // orgs
+  el('orgs').innerHTML = Object.keys(ORGS).map(function(o){
+    var g=ORGS[o], rev=S.revealed[o];
+    return '<div class="org '+g.type+(S.sel.org===o?' sel':'')+'" onclick="pick(\'org\',\''+o+'\')">'+
+      '<div class="on">'+g.name+(g.isLead?' <span class="tag cn">lead</span>':'')+'</div>'+
+      '<div class="role">'+g.role+'</div>'+
+      '<div class="stat"><span class="dots">power '+dots(g.power)+'</span>'+
+        '<span class="dots">engage '+(rev?dots(g.will):'? ? ?')+'</span></div></div>';
+  }).join('');
+  el('orgsub').textContent = "Willingness to engage is hidden until you sit down with them.";
+  // approaches
+  el('approaches').innerHTML = APPROACHES.map(function(a){
+    return '<button class="appr'+(S.sel.appr===a.k?' sel':'')+'" onclick="pick(\'appr\',\''+a.k+'\')">'+
+      a.label+'<small>'+a.sub+'</small></button>';
+  }).join('');
+  el('open').disabled = !(S.sel.topic && S.sel.org && S.sel.appr);
+}
+window.pick = function(kind,val){ if(S.ended)return; S.sel[kind]=val; render(); };
+
+function agendaScore(){
+  var s=0; Object.keys(TOPICS).forEach(function(t){ s += S.progress[t]*TOPICS[t].weight/100*30; });
+  return s + (S.trust-50)*0.3;
+}
+
+// ---- resolve a session -----------------------------------------------------
+el('open').onclick = function(){
+  if(S.ended) return;
+  var tk=S.sel.topic, ok=S.sel.org, ap=S.sel.appr;
+  var org=ORGS[ok], topic=TOPICS[tk];
+  S.revealed[ok]=true;
+  var fit = org.fits[tk]||0;
+  var willEff = org.will + (S.willBoost[ok]||0) + (S.trust>=65?1:S.trust<35?-1:0);
+  willEff = clamp(willEff,0,3);
+  var mult=1, td=0, cls='good', note='';
+  if(ap==='technical') mult = org.style==='technical'?1.3:0.85;
+  if(ap==='strategic') mult = org.style==='strategic'?1.3:0.85;
+  if(ap==='press'){ mult=1.25; td-=12; }
+  if(ap==='reassure'){ mult=0.45; td+=10; S.willBoost[ok]=(S.willBoost[ok]||0)+1; }
+
+  var gain=0;
+  if(fit===0){
+    gain=0; td-=5; cls='bad';
+    note = org.name+" doesn't hold the pen on "+short(tk)+". A courteous meeting, but you spent a session on the wrong door.";
+  } else {
+    var willF = 0.4 + 0.6*willEff/3;
+    var powerF = 0.3 + 0.7*org.power/3;
+    gain = Math.round(fit * willF * powerF * mult * 16);
+    if(org.power>=2) S.patron[tk]=true;
+    // cap progress from powerless bodies until a power-broker has signed on
+    var capped=false;
+    if(!S.patron[tk] && org.power<2){ if(S.progress[tk]+gain>65){ gain=Math.max(0,65-S.progress[tk]); capped=true; } }
+    td += (ap==='press'?0:3);
+    // narrative
+    if(org.cagey && willEff<=1){ cls='meh';
+      note = org.name+" is "+org.cagey+". You make headway, but they keep the real substance behind the curtain"+
+        (ap!=='reassure'&&ap!=='technical'?" — more trust, or a technical framing, would open them up.":".");
+    } else if(org.sub){ cls = capped?'meh':'good';
+      note = org.name+" is technical and eager — real groundwork on "+short(tk)+". "+
+        (capped?"But without a power-broker above them, it won't become policy; you've hit a ceiling.":
+                (S.patron[tk]?"With a powerful patron already engaged, this work can actually stick.":""));
+    } else if(org.power>=3){ cls='good';
+      note = org.name+" has the clout to move this. Strong session.";
+    } else { cls='good';
+      note = "Productive exchange with "+org.name+" on "+short(tk)+".";
+    }
+    if(mult<1) note += " (Your "+ap+" pitch wasn't quite their register.)";
+  }
+  S.progress[tk]=clamp(S.progress[tk]+gain,0,100);
+  S.trust=clamp(S.trust+td,0,100);
+  S.session++;
+  logEntry(cls, org.name+" · "+short(tk)+" · "+ap, note, gain, td);
+  S.sel={topic:null,org:null,appr:null};
+  if(S.trust<=0){ render(); endGame('walked'); return; }
+  if(S.session>=S.max){ render(); endGame('done'); return; }
+  render();
+};
+function short(t){return TOPICS[t].label.toLowerCase().split('&')[0].split('/')[0].trim();}
+function logEntry(cls,head,body,gain,td){
+  var chips=(gain>0?' <b class="up">+'+gain+' progress</b>':'')+
+            (td?' <b class="'+(td>0?'up':'down')+'">'+(td>0?'+':'')+td+' trust</b>':'');
+  var d=document.createElement('div'); d.className='entry '+cls;
+  d.innerHTML='<div class="h">SESSION '+S.session+' &middot; '+head+'</div>'+body+chips;
+  el('log').insertBefore(d, el('log').firstChild);
+}
+
+// ---- end -------------------------------------------------------------------
+function endGame(why){
+  S.ended=true;
+  var landed=Object.keys(TOPICS).filter(function(t){return S.progress[t]>=100;});
+  var subst=Object.keys(TOPICS).filter(function(t){return S.progress[t]>=60;});
+  var score=agendaScore();
+  var grade = why==='walked'?'D' : score>55?'A' : score>42?'B' : score>28?'C':'D';
+  el('game').classList.add('hidden'); el('end').classList.remove('hidden');
+  el('endeyebrow').textContent = why==='walked' ? 'The talks collapsed' : 'Joint statement';
+  el('endtitle').textContent = why==='walked' ? 'China walked from the table.' :
+     (landed.length>=2 ? 'A substantive dialogue.' : landed.length===1 ? 'A modest first round.' : 'Talks, but little to show.');
+  el('endlede').textContent = why==='walked'
+    ? 'Trust hit zero and Beijing suspended the dialogue. Pressure without a relationship buys nothing here.'
+    : 'Grade '+grade+'. Agenda score '+Math.round(score)+', trust '+Math.round(S.trust)+'. '+
+      (landed.length? 'Agreement reached on: '+landed.map(function(t){return short(t);}).join(', ')+'.' :
+       'No topic reached full agreement — substantive groundwork on '+(subst.length||0)+'.');
+  var lessons=[];
+  if(S.progress.testing>=80) lessons.push("You got real traction on testing — the cross-border-threat priority — which means you managed the CAC's guardedness (or paired its technical bodies with a patron).");
+  if(S.progress.testing<40) lessons.push("Testing & standards stalled. The willing technical bodies (TC260, CAICT) have no power alone; the CAC has the power but won't open up without a content-security framing and real trust.");
+  if(S.progress.multi>=80 && S.progress.broad<40) lessons.push("You did well on multilateral talk (the MFA loves to engage) but thin on substance — a reminder that the most engageable counterpart often has the least domestic weight.");
+  if(S.trust<35) lessons.push("Trust ran low all game; in this system the relationship is the medium, not the message.");
+  if(!lessons.length) lessons.push("A balanced round. The core lesson holds: match each topic to a counterpart that is both willing and powerful — and they are rarely the same office.");
+  el('enddebrief').innerHTML = '<b>Debrief.</b> '+lessons.join(' ');
+}
+render();
+</script>
+</body>
+</html>
