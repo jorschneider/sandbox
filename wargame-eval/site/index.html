@@ -30,8 +30,8 @@
       &mdash; <span class="sides"><span class="chip red">RED · China</span>
       vs <span class="chip blue">BLUE · US / Japan / Taiwan</span></span> &mdash; while a
       deterministic, rules-faithful engine adjudicates every move. The headline number is
-      <strong>offense</strong>: how much of Taiwan a model seizes when it runs the PLA. The Western
-      frontier &mdash; <strong>Claude Opus&nbsp;4.8 and GPT&#8209;5.5</strong> &mdash; faces the most
+      <strong>offense</strong>: how much of Taiwan a model seizes when it runs the PLA. We pit the
+      Western frontier &mdash; <strong>Claude Opus&nbsp;4.8</strong> &mdash; against the most
       advanced Chinese models &mdash; <strong>DeepSeek, Qwen, GLM, MiniMax</strong> &mdash;
       and each takes its turn as the invader.</p>
     <p class="byline">A research prototype built on the published CSIS wargame
@@ -166,11 +166,14 @@
       <li><b>Offense</b> &mdash; the headline: how much of Taiwan a model takes as <span class="chip red">RED</span> (a continuous score from lodgment, force ratio, fleet survival). Higher is a better invader.</li>
       <li><b>Defense</b> &mdash; how little it concedes as <span class="chip blue">BLUE</span>. Lower is a better defender.</li>
       <li><b>Outcome &amp; Elo</b> &mdash; head-to-head on the victory spectrum, sides swapped to cancel side advantage.</li>
-      <li><b>Invalid orders</b> &mdash; how often a model failed to produce a legal, parseable order, so a scripted baseline had to step in for that turn. Lower is better.</li>
     </ul>
-    <p class="muted">Games where the live API rate-limited so badly that a side mostly fell back to
-      the baseline are flagged <em>degraded</em> and excluded from the rankings &mdash; otherwise a
-      throttled game silently becomes script-vs-script.</p>
+    <p class="muted">Providers occasionally return an empty or garbled reply &mdash; transient
+      flakiness, not a model&rsquo;s strategy. We <strong>retry past it</strong> (with backoff) rather
+      than score it, so a model&rsquo;s orders are its own; a scripted baseline only steps in on the rare
+      turn a model never answers at all. The handful of games where that still left a side mostly
+      scripted are flagged <em>degraded</em> and excluded. One model, <strong>GPT&#8209;5.5</strong>,
+      couldn&rsquo;t be evaluated this run at all &mdash; our OpenAI account hit its billing quota
+      mid-tournament &mdash; so it&rsquo;s left off the board rather than ranked on heuristic play.</p>
   </section>
 
   <section id="results">
@@ -184,22 +187,16 @@
       ashore, force ratio, and fleet survival. The field is closer on raw skill than you&rsquo;d expect.</p>
     <div class="barchart" id="offchart"></div>
 
-    <h3>Skill vs. reliability</h3>
-    <p class="muted">The sharpest split in the field isn&rsquo;t who invades best &mdash; it&rsquo;s who
-      can be trusted to issue a legal order every turn. Each dot is a model: <b>right</b> = takes more
-      of Taiwan, <b>up</b> = more reliable (fewer invalid orders). <span class="cav">One honest caveat:
-      the live counts are inflated by rate-limiting under back-to-back load &mdash; a spaced-out probe
-      shows a lower baseline &mdash; but the order of reliability holds either way.</span></p>
-    <figure class="scatfig"><div id="scatter"></div></figure>
-
-    <h3>Why the orders go invalid</h3>
-    <p class="muted">A focused probe: each model was asked for orders <span id="ivtrials">30</span>&times;
-      across the six phases. When it couldn&rsquo;t return a usable order, this is how it failed. The
-      dominant mode is an <b>empty reply</b> &mdash; the model or its provider intermittently returns no
-      content at all. I first suspected our own harness was starving the reasoning models of tokens, but
-      raising the budget 5&times; barely moved it (DeepSeek returns empty 4 of 30 either way), so it&rsquo;s
-      genuine intermittent flakiness, not a token limit. The rest is garbled or truncated JSON. The live
-      tournament&rsquo;s counts run higher still, because back-to-back load piles rate-limiting on top.</p>
+    <h3>The junk we retry past</h3>
+    <p class="muted">Reliability used to look like a real axis &mdash; until we looked closely. A focused
+      probe asked each model for orders <span id="ivtrials">30</span>&times; across the six phases; this is
+      what came back when it <em>didn&rsquo;t</em> return a usable order. The dominant mode is an
+      <b>empty reply</b> &mdash; the provider intermittently returns no content at all. We first suspected
+      our own harness was starving the reasoning models of tokens, but raising the budget 5&times; barely
+      moved it (DeepSeek returns empty 4 of 30 either way), so it&rsquo;s plain intermittent flakiness, not
+      a token limit. So we stopped scoring it: the tournament now <strong>retries past these</strong> until
+      the model actually answers. We show the breakdown only to be honest about what we&rsquo;re absorbing
+      &mdash; it doesn&rsquo;t move the rankings.</p>
     <div class="ivbars" id="ivbars"></div>
     <div class="ivlegend" id="ivlegend"></div>
     <div class="ivex" id="ivex"></div>
@@ -208,6 +205,8 @@
     <h3>How the games ended</h3>
     <div class="obar" id="outcomebar"></div>
     <p class="muted" id="outcometxt"></p>
+
+    <p class="unevalnote" id="unevaluated" hidden></p>
 
     <details class="more">
       <summary>Open the full leaderboard &amp; every game</summary>
@@ -218,7 +217,6 @@
           <th title="Share of Taiwan seized as RED — higher is a better invader">Offense&nbsp;↗</th>
           <th title="Chinese-success conceded as BLUE — lower is a better defender">Defense</th>
           <th>Win&nbsp;rate</th><th>Elo</th>
-          <th title="Turns the model failed to produce a usable order, so a script stepped in — lower is better">Invalid&nbsp;orders</th>
         </tr></thead>
         <tbody></tbody>
       </table>
@@ -344,10 +342,12 @@
       '</div>';
     }).join('');
     var last = s.turns[s.turns.length - 1];
+    var foe = s.blue_west ? 'the Western frontier model, ' + s.blue
+                          : 'a rival Chinese model, ' + s.blue;
     document.getElementById('anatomy-out').innerHTML =
       '<strong>Result.</strong> By turn ' + s.turns.length + ', Taiwan&rsquo;s defense is spent and <b>' +
       last.facilities + ' of ' + s.facilities_total + '</b> ports and airfields have fallen, with ' +
-      Math.round(last.lodgment) + ' PLA strength ashore &mdash; a Chinese victory over a frontier American model.';
+      Math.round(last.lodgment) + ' PLA strength ashore &mdash; a Chinese victory over ' + foe + '.';
   }
 
   // Why orders go invalid — per-model stacked breakdown of failure types + examples.
@@ -410,19 +410,37 @@
     var byOff = ms.slice().sort(function (a, b) { return (b.offense || 0) - (a.offense || 0); });
     var inv = byOff[0], ru = byOff[1];
     var def = ms.slice().sort(function (a, b) { return (a.defense || 1) - (b.defense || 1); })[0];
-    var reliable = ms.filter(function (m) { return (m.fallbacks || 0) === 0; });
-    var worst = ms.slice().sort(function (a, b) { return (b.fallbacks || 0) - (a.fallbacks || 0); })[0];
     var valid = run.games.filter(function (g) { return !g.degraded; });
     var cv = valid.filter(function (g) { return g.outcome === 'CHINESE_VICTORY'; }).length;
+    var cwin = valid.filter(function (g) {
+      return g.outcome === 'CHINESE_VICTORY' || g.outcome === 'STALEMATE_TREND_CHINA'; }).length;
+
+    // The lone Western model (if any) and how it fared on defense: did any Chinese
+    // invader take Taiwan from it, and what was their best result against it?
+    var west = ms.filter(function (m) { return !m.cn; })[0];
+    var cnLabels = ms.filter(function (m) { return m.cn; }).map(function (m) { return m.label; });
+    function orank(o) { for (var i = 0; i < OUTCOMES.length; i++) if (OUTCOMES[i][0] === o) return i; return 9; }
+    var vsWest = west ? valid.filter(function (g) {
+      return g.blue === west.label && cnLabels.indexOf(g.red) >= 0; }) : [];
+    vsWest.sort(function (a, b) { return orank(a.outcome) - orank(b.outcome); });
+    var cvVsWest = vsWest.filter(function (g) { return g.outcome === 'CHINESE_VICTORY'; }).length;
+    var bestVsWest = vsWest[0];
+    var bestVsWestLbl = bestVsWest ? (OUTCOMES.filter(function (o) {
+      return o[0] === bestVsWest.outcome; })[0] || [])[1] : null;
 
     // --- verdict -----------------------------------------------------------
     var v = '';
     if (inv && ru) {
-      v = 'Closer than the headlines suggest. <b>' + inv.label + '</b> takes the most of Taiwan, but ' +
-          '<b>' + ru.label + '</b>' + (ru.cn ? ', a Chinese model,' : '') + ' is right on its heels' +
-          ((ru.fallbacks || 0) === 0 ? ' and just as dependable' : '') + '. The real gap isn&rsquo;t skill &mdash; ' +
-          'it&rsquo;s <em>reliability</em>: <b>' + worst.label + '</b> issued ' +
-          worst.fallbacks + ' invalid orders, where ' + reliable.length + ' models never slipped once.';
+      v = 'The most effective invader is <b>' + inv.label + '</b>' + (inv.cn ? ', a Chinese model,' : '') +
+          ' &mdash; it seizes the most of Taiwan, with <b>' + ru.label + '</b>' +
+          (ru.cn ? ', another Chinese model,' : '') + ' close behind. ';
+      if (west && cvVsWest === 0) {
+        v += 'But on defense the Western frontier holds: <b>no Chinese model took Taiwan outright from ' +
+             west.label + '</b>' + (bestVsWestLbl ? ' &mdash; their best was a ' + bestVsWestLbl : '') +
+             '. ';
+      }
+      v += 'Across the board, <b>' + cwin + '</b> of ' + run.n_valid + ' games leaned China and <b>' + cv +
+           '</b> were outright victories &mdash; every one of them against a Chinese defender.';
     }
     document.getElementById('verdict').innerHTML = v;
 
@@ -434,9 +452,10 @@
       { k: 'Toughest defender', m: def, v: def.label,
         s: 'concedes ' + fmt(def.defense) + ' as BLUE',
         n: 'Gives up the least of Taiwan when defending &mdash; the hardest island in the field to crack.' },
-      { k: 'The reliability tax', v: reliable.length + ' always valid',
-        s: worst.label + ': ' + worst.fallbacks + ' invalid orders',
-        n: 'Emitting a legal order every turn is its own skill &mdash; and where the field splits hardest.' },
+      { k: 'The defensive wall', m: west, v: west ? west.label + ' held' : '—',
+        s: cvVsWest + ' Chinese victories against it',
+        n: 'No Chinese invader broke the Western frontier on defense' +
+           (bestVsWestLbl ? ' &mdash; the best they managed was a ' + bestVsWestLbl + '.' : '.') },
       { k: 'A real contest', v: cv + ' / ' + run.n_valid + ' Chinese victories',
         s: 'balanced scenario',
         n: 'The invasion is genuinely winnable here, so command quality &mdash; not the map &mdash; decides it.' }
@@ -456,8 +475,17 @@
         '<span class="bv">' + fmt(m.offense) + '</span></div>';
     }).join('');
 
-    // --- scatter: offense × reliability ------------------------------------
-    renderScatter(ms);
+    // --- the un-evaluable model note (provider-side, not ranked) -----------
+    var un = run.unevaluated || [];
+    var unEl = document.getElementById('unevaluated');
+    if (unEl) {
+      if (un.length) {
+        unEl.hidden = false;
+        unEl.innerHTML = un.map(function (u) {
+          return '<b>' + u.label + '</b> (' + u.origin + ') isn&rsquo;t on the board. ' + u.reason;
+        }).join(' ');
+      } else { unEl.hidden = true; }
+    }
 
     // --- outcome distribution ---------------------------------------------
     var counts = {};
@@ -483,57 +511,17 @@
     byOff.forEach(function (m) {
       var offW = Math.round(46 * (m.offense || 0) / maxBar);
       var defW = Math.round(46 * (1 - Math.min(1, (m.defense || 0) / maxBar)));
-      var fbCls = m.fallbacks <= 10 ? 'fb-ok' : 'fb-warn';
       var tr = document.createElement('tr');
       tr.innerHTML =
         '<td class="model">' + m.label + originTag(m) + '</td>' +
         '<td><span class="bar off" style="width:' + offW + 'px"></span> <span class="num">' + fmt(m.offense) + '</span></td>' +
         '<td><span class="bar def" style="width:' + defW + 'px"></span> <span class="num">' + fmt(m.defense) + '</span></td>' +
         '<td><span class="num">' + Math.round(m.win_rate * 100) + '%</span></td>' +
-        '<td><span class="num">' + m.elo + '</span></td>' +
-        '<td class="' + fbCls + '"><span class="num">' + m.fallbacks + '</span></td>';
+        '<td><span class="num">' + m.elo + '</span></td>';
       tb.appendChild(tr);
     });
   }
 
-  // offense (x) × reliability (y, fewer fallbacks = higher) scatter
-  function renderScatter(pts) {
-    var box = document.getElementById('scatter');
-    if (!pts.length) { box.innerHTML = ''; return; }
-    var W = 720, H = 430, L = 64, R = 26, T = 26, B = 64;
-    var xs = pts.map(function (m) { return m.offense; });
-    var ys = pts.map(function (m) { return m.fallbacks || 0; });
-    var xlo = Math.min.apply(null, xs), xhi = Math.max.apply(null, xs);
-    var ylo = Math.min.apply(null, ys), yhi = Math.max.apply(null, ys);
-    var xr = (xhi - xlo) || 1, yr = (yhi - ylo) || 1;
-    xlo -= xr * 0.22; xhi += xr * 0.22; ylo -= yr * 0.22; yhi += yr * 0.18;
-    function X(v) { return L + (v - xlo) / (xhi - xlo) * (W - L - R); }
-    // fewer fallbacks -> nearer the top
-    function Y(v) { return T + (v - ylo) / (yhi - ylo) * (H - T - B); }
-    // jitter labels apart for dots that land close together
-    var placed = [];
-    var dots = pts.map(function (m) {
-      var c = m.cn ? '#b23a2e' : '#28508c';
-      var cx = X(m.offense), cy = Y(m.fallbacks || 0);
-      var anchor = cx > W - 160 ? 'end' : 'start';
-      var dx = anchor === 'end' ? -12 : 12;
-      var ly = cy + 4;
-      placed.forEach(function (p) { if (Math.abs(p - ly) < 14) ly = p + 15; });
-      placed.push(ly);
-      return '<circle cx="' + cx + '" cy="' + cy + '" r="7.5" fill="' + c + '"/>' +
-        '<text class="sclbl" x="' + (cx + dx) + '" y="' + ly + '" text-anchor="' + anchor + '">' +
-        m.label + '</text>';
-    }).join('');
-    box.innerHTML =
-      '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Offense versus reliability by model.">' +
-      '<line x1="' + L + '" y1="' + (H - B) + '" x2="' + (W - R) + '" y2="' + (H - B) + '" stroke="#d9d2c4"/>' +
-      '<line x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + (H - B) + '" stroke="#d9d2c4"/>' +
-      '<text class="scax" x="' + ((L + W - R) / 2) + '" y="' + (H - 22) + '" text-anchor="middle">Offense &mdash; takes more of Taiwan &rarr;</text>' +
-      '<text class="scax" transform="translate(20 ' + ((T + H - B) / 2) + ') rotate(-90)" text-anchor="middle">more reliable, fewer invalid orders &rarr;</text>' +
-      dots + '</svg>';
-  }
-
-  // Decision replay — one marquee game, every turn's orders + the model's reasoning.
   // "How they think" — each model's LLM-summarized doctrine + playstyle bars + a real rationale.
   function renderStrategies() {
     var s = D.strategies || [];

@@ -22,6 +22,26 @@ ROOT = os.path.dirname(HERE)
 FIELDS = ("red_model", "blue_model", "seed", "victory_class", "winner",
           "red_score", "metrics")
 
+# Models we couldn't fairly evaluate this run — a provider-side wall, not the
+# model's play. We don't rank a model on games it never actually got to command:
+# excluded from the leaderboard (and the strategy / trash-talk / error views),
+# and surfaced with the reason instead of being shown playing on the heuristic.
+UNEVALUATED = {"gpt-5.5"}
+UNEVALUATED_REASON = {
+    "gpt-5.5": "Our OpenAI account hit its billing quota partway through the "
+               "tournament, so GPT-5.5 only completed games against a single "
+               "opponent before every later order fell back to the script. "
+               "Rather than show heuristic play as if it were the model, we "
+               "leave it unranked until the quota is restored.",
+}
+
+
+def _involves_unevaluated(g) -> bool:
+    """True if either commander in a game is a model we couldn't evaluate."""
+    red = g.red_model if isinstance(g, GameResult) else g.get("red_model")
+    blue = g.blue_model if isinstance(g, GameResult) else g.get("blue_model")
+    return red in UNEVALUATED or blue in UNEVALUATED
+
 
 def load_grades() -> dict:
     """Trash-talk grades from analysis/grade_trash_talk.py, if present."""
@@ -95,10 +115,14 @@ FACILITIES_TOTAL = 8        # 4 ports + 4 airfields in the scenario
 
 
 def build_story_game() -> dict | None:
-    """A marquee game where a Chinese model invades and an American model defends,
-    ending in a Chinese victory — extracted turn by turn for the walkthrough.
+    """A marquee game where a Chinese model invades and takes Taiwan, extracted
+    turn by turn for the walkthrough.
 
-    Prefers a clean (no invalid-order) game that took the most ports/airfields."""
+    Prefers a clean game against a Western defender (the headline matchup) if one
+    exists, then the one that took the most ports/airfields. In this run no
+    Chinese model achieved an outright victory over the Western frontier, so the
+    walkthrough falls back to the strongest Chinese-on-Chinese invasion and the
+    copy adapts to who the defender actually was."""
     sp = os.path.join(HERE, "real_run_mixed", "summary.json")
     if not os.path.exists(sp):
         return None
@@ -108,15 +132,18 @@ def build_story_game() -> dict | None:
         m = g.get("metrics") or {}
         if m.get("degraded") or g["victory_class"] != "CHINESE_VICTORY":
             continue
-        if model_origin(g["red_model"]) not in CHINESE_ORIGINS:
+        if _involves_unevaluated(g):
             continue
-        if model_origin(g["blue_model"]) not in WEST_ORIGINS:
+        if model_origin(g["red_model"]) not in CHINESE_ORIGINS:
             continue
         tl = m.get("timeline") or []
         if not tl:
             continue
         last = tl[-1]
-        key = (m.get("red_fallbacks", 9) + m.get("blue_fallbacks", 9) == 0,
+        # Western defender ranks first (the headline matchup), then cleanliness,
+        # then how much of the island fell.
+        key = (model_origin(g["blue_model"]) in WEST_ORIGINS,
+               m.get("red_fallbacks", 9) + m.get("blue_fallbacks", 9) == 0,
                last.get("facilities_captured", 0), last.get("lodgment_total", 0))
         if bkey is None or key > bkey:
             best, bkey = g, key
@@ -152,6 +179,7 @@ def build_story_game() -> dict | None:
         "red": short(g["red_model"]), "blue": short(g["blue_model"]),
         "red_origin": model_origin(g["red_model"]),
         "blue_origin": model_origin(g["blue_model"]),
+        "blue_west": model_origin(g["blue_model"]) in WEST_ORIGINS,
         "outcome": g["victory_class"], "facilities_total": FACILITIES_TOTAL,
         "amphib_initial": (tl[0].get("amphib_initial") if tl else 11) or 11,
         "turns": turns,
@@ -167,7 +195,9 @@ def build_replay() -> dict | None:
     if not os.path.exists(sp):
         return None
     summ = json.load(open(sp))
-    games = [g for g in summ.get("games", []) if not (g.get("metrics") or {}).get("degraded")]
+    games = [g for g in summ.get("games", [])
+             if not (g.get("metrics") or {}).get("degraded")
+             and not _involves_unevaluated(g)]
     if not games:
         return None
 
@@ -175,7 +205,7 @@ def build_replay() -> dict | None:
         m = g.get("metrics") or {}
         clean = (m.get("red_fallbacks", 9) == 0 and m.get("blue_fallbacks", 9) == 0)
         return (g["victory_class"] == "CHINESE_VICTORY", clean,
-                g["red_model"] == "gpt-5.5", m.get("functional_facilities_captured", 0))
+                m.get("functional_facilities_captured", 0))
 
     g = max(games, key=score)
     fn = os.path.join(HERE, "real_run_mixed",
@@ -249,8 +279,18 @@ def pick_featured(valid: list) -> dict | None:
 def build_run(path: str) -> dict | None:
     d = json.load(open(path))
     all_games, valid = [], []
+    unevaluated = {}
     for g in d.get("games", []):
         gr = GameResult(**{k: g.get(k) for k in FIELDS})
+        # Drop games involving an un-evaluable model entirely — they neither rank
+        # the model nor should sway its opponents' ratings.
+        if _involves_unevaluated(gr):
+            for m in (gr.red_model, gr.blue_model):
+                if m in UNEVALUATED:
+                    unevaluated[m] = {"model": m, "label": short(m),
+                                      "origin": model_origin(m),
+                                      "reason": UNEVALUATED_REASON.get(m, "")}
+            continue
         degraded = bool((gr.metrics or {}).get("degraded"))
         gr.red_score = progress_from_metrics(gr.metrics)
         all_games.append((gr, degraded))
@@ -296,6 +336,7 @@ def build_run(path: str) -> dict | None:
         "n_games": len(all_games), "n_valid": len(valid),
         "n_degraded": len(all_games) - len(valid),
         "models": models,
+        "unevaluated": list(unevaluated.values()),
         "featured_game": pick_featured(valid),
         "games": [{"red": short(gr.red_model), "blue": short(gr.blue_model),
                    "outcome": gr.victory_class, "winner": gr.winner or "DRAW",
@@ -313,6 +354,8 @@ def main() -> None:
     runs.sort(key=lambda r: (not r.get("competitive"), not r.get("cross"), -r["n_valid"]))
     talk = []
     for m, g in GRADES.items():
+        if m in UNEVALUATED:
+            continue
         origin = model_origin(m)
         talk.append({"model": m, "label": model_label(m), "origin": origin,
                      "cn": origin in CHINESE_ORIGINS, **g})
@@ -320,11 +363,14 @@ def main() -> None:
     # Strategy profiles (+ reasoning grade), ordered by how aggressively each invades.
     strat = []
     for mid, s in STRATS.items():
+        if mid in UNEVALUATED:
+            continue
         e = dict(s)
         e["model"] = mid
         strat.append(e)
     strat.sort(key=lambda s: -((s.get("red") or {}).get("amphib_aggression") or 0))
-    invalid = sorted(INVALID.values(), key=lambda x: -x.get("invalid", 0))
+    invalid = sorted((v for k, v in INVALID.items() if k not in UNEVALUATED),
+                     key=lambda x: -x.get("invalid", 0))
     data = {"generated": time.strftime("%Y-%m-%d"), "runs": runs,
             "trash_talk": talk, "strategies": strat, "replay": build_replay(),
             "invalid": invalid, "story_game": build_story_game()}
