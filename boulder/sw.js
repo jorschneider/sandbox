@@ -1,9 +1,12 @@
 /* CRUX service worker — caches the app shell and voice clips for offline use.
    Shell is network-first (so deploys land); voice clips are cache-first
    (immutable, hashed filenames) so repeat sessions are instant and offline. */
-const SHELL = "crux-shell-v2";
+const SHELL = "crux-shell-v3";
 const VOICE = "crux-voice-v1";
-const SHELL_ASSETS = ["./", "./index.html", "./audio/manifest.js"];
+const SHELL_ASSETS = [
+  "./", "./index.html", "./audio/manifest.js", "./manifest.webmanifest",
+  "./icons/icon-192.png", "./icons/icon-512.png", "./icons/maskable-512.png", "./icons/apple-touch-icon.png"
+];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(

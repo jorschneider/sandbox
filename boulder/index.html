@@ -4,6 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0e0f13" />
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="CRUX" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 <title>CRUX — Bouldering Circuit Coach</title>
 <meta name="description" content="Generate cardio, power-endurance, technique and strength bouldering circuits, then get coached through every block with a guided interval timer. Works offline on your phone at the wall." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -186,7 +192,6 @@
   </div>
 
   <button class="start" id="startBtn">▶&nbsp;&nbsp;START SESSION</button>
-  <div class="total-line">Tap to regenerate · <span id="regen" style="text-decoration:underline;cursor:pointer">shuffle a new plan</span></div>
 
   <footer>
     CRUX calls every block in a studio voice, beeps and buzzes on each change,
@@ -493,6 +498,7 @@ function regenerate(){
   const f = FOCI.find(x=>x.id===state.focus);
   state.segs = f.build(state.dur * 60, state.grade);
   renderPlan();
+  primeSessionSoon();   // cache this plan's voice clips while we (likely) have signal
 }
 function totalSeconds(segs){ return segs.reduce((a,s)=>a+s.seconds,0); }
 
@@ -538,8 +544,6 @@ function collapse(segs){
   return out;
 }
 
-$("regen").addEventListener("click", regenerate);
-
 /* initial render */
 renderDur(); renderFocus(); renderGrade(); regenerate();
 
@@ -566,6 +570,8 @@ let timer = {
 function startSession(){
   if (!state.segs.length) regenerate();
   timer.segs = state.segs;
+  primeSession(timer.segs);   // ensure the whole session's voice is cached
+
   timer.idx = -1;
   timer.running = true;
   timer.paused = false;
@@ -618,16 +624,19 @@ function frame(now){
   timer.last = now;
   if (timer.running && !timer.paused){
     timer.remaining -= dt;
-    // countdown beeps for last 3 seconds
-    const whole = Math.ceil(timer.remaining);
-    if (whole <= 3 && whole >= 1 && whole !== timer.beepedAt){
-      timer.beepedAt = whole; beep(880, 0.07, 0.25);
-    }
-    // spoken heads-up before a longer block ends, so you know what's coming
     const cur = timer.segs[timer.idx], nxt = timer.segs[timer.idx+1];
-    if (!timer.preAnnounced && nxt && cur && cur.seconds >= 25 && timer.remaining <= 6){
+    const countIn = !!(nxt && nxt.kind === "work");   // spoken 3-2-1 into work blocks
+    // spoken heads-up before a longer block ends (skip when we'll count in instead)
+    if (!timer.preAnnounced && nxt && cur && cur.seconds >= 25 && timer.remaining <= 6 && !countIn){
       timer.preAnnounced = true;
       speak("Next, " + spokenLabel(nxt));
+    }
+    // last 3 seconds: spoken "Three / Two / One" into a work block, else a beep
+    const whole = Math.ceil(timer.remaining);
+    if (whole <= 3 && whole >= 1 && whole !== timer.beepedAt && timer.remaining > 0){
+      timer.beepedAt = whole;
+      if (countIn && state.voice && CLIPS && CLIPS[clipHash(COUNT[whole])]) speak(COUNT[whole]);
+      else beep(880, 0.07, 0.25);
     }
     if (timer.remaining <= 0){
       if (timer.idx < timer.segs.length - 1){
@@ -821,6 +830,25 @@ function primeClip(text){
   const h = clipHash(text);
   if (CLIPS[h]){ try { fetch("audio/" + h + ".mp3", { cache: "force-cache" }).catch(()=>{}); } catch(e){} }
 }
+const COUNT = { 1: "One", 2: "Two", 3: "Three" };
+// Pre-fetch every clip a whole session will use so it's cached for offline play.
+// Called while configuring (online) and again on START — by the time you're at
+// the gym with no signal, the chosen plan's voice is already cached.
+function sessionPhrases(segs){
+  const set = new Set(["Paused.", "Session complete. Great work.", "Voice on.", "One", "Two", "Three"]);
+  for (const s of segs){
+    set.add(announceTextOf(s));
+    set.add("Next, " + spokenLabel(s));
+    set.add("Resuming. " + spokenLabel(s));
+  }
+  return [...set];
+}
+function primeSession(segs){
+  if (!CLIPS || !segs || !segs.length) return;
+  sessionPhrases(segs).forEach(primeClip);
+}
+var primeTimer = 0;   // var (not let): primeSessionSoon is reached during initial render, before this line runs
+function primeSessionSoon(){ clearTimeout(primeTimer); primeTimer = setTimeout(() => primeSession(state.segs), 800); }
 
 function pickFallbackVoice(){
   try {
