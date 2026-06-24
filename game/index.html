@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRACK ONE — A US&ndash;China AI Diplomacy Game</title>
+  <meta name="description" content="A negotiation game: you are the U.S. delegation at the first U.S.-China AI dialogue. Pick the right counterparts, survive the talks, and bring home a communique. Based on Matt Sheehan's map of China's AI bureaucracy." />
+  <meta property="og:title" content="TRACK ONE — A US–China AI Diplomacy Game" />
+  <meta property="og:description" content="Staff the dialogue, survive the talks, bring home a communique." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div id="grain" aria-hidden="true"></div>
+  <div id="vignette" aria-hidden="true"></div>
+  <button id="sound-toggle" aria-label="Mute sound" title="Sound">&#9834;</button>
+
+  <main id="app">
+    <!-- ============ TITLE / BRIEFING ============ -->
+    <section id="screen-title" class="screen on">
+      <div class="title-wrap">
+        <div class="kicker">A negotiation game &middot; after the summit</div>
+        <h1 class="game-title"><span class="t1">TRACK</span><span class="t2">ONE</span></h1>
+        <p class="subtitle">Who should the U.S. talk to in China on AI?</p>
+        <div class="brief" id="brief"></div>
+        <button class="btn btn-primary" id="start-btn">Take the meeting &rarr;</button>
+        <p class="credit">A playable gloss on Matt Sheehan&rsquo;s essay,
+          &ldquo;Who should the U.S. talk to in China on AI?&rdquo; &middot; satire, informed</p>
+      </div>
+    </section>
+
+    <!-- ============ PHASE A — STAFF THE DIALOGUE ============ -->
+    <section id="screen-staff" class="screen">
+      <header class="phase-head">
+        <div class="phase-num">Phase I</div>
+        <h2>Staff the Dialogue</h2>
+        <p class="phase-sub">Assign a Chinese counterpart to each track. The right org per
+          the article isn&rsquo;t always the most powerful &mdash; or the most willing to talk.</p>
+      </header>
+      <div class="staff-grid">
+        <div class="tracks-col" id="tracks-col"></div>
+        <aside class="roster-col">
+          <div class="roster-head">
+            <h3>The Roster</h3>
+            <p id="roster-hint">Click a track, then pick an organization.</p>
+          </div>
+          <div class="roster-list" id="roster-list"></div>
+        </aside>
+      </div>
+      <footer class="staff-foot">
+        <div class="staff-readout" id="staff-readout"></div>
+        <button class="btn btn-primary" id="lock-btn" disabled>Lock in the delegation &rarr;</button>
+      </footer>
+    </section>
+
+    <!-- ============ PHASE B — THE NEGOTIATION ============ -->
+    <section id="screen-talks" class="screen">
+      <div id="meters" class="meters"></div>
+      <div class="talks-stage">
+        <div class="scenario-card" id="scenario-card">
+          <div class="scenario-meta">
+            <span class="scenario-count" id="scenario-count"></span>
+            <span class="scenario-tag" id="scenario-tag"></span>
+          </div>
+          <h2 class="scenario-title" id="scenario-title"></h2>
+          <p class="scenario-text" id="scenario-text"></p>
+          <div class="options" id="options"></div>
+        </div>
+        <div class="feedback-card" id="feedback-card">
+          <div class="feedback-deltas" id="feedback-deltas"></div>
+          <p class="feedback-text" id="feedback-text"></p>
+          <button class="btn btn-primary" id="next-btn">Next &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PHASE C — THE READOUT ============ -->
+    <section id="screen-readout" class="screen">
+      <div class="readout-wrap">
+        <div class="kicker">Joint readout</div>
+        <h2 class="ending-name" id="ending-name"></h2>
+        <div class="grade-badge" id="grade-badge"></div>
+        <div class="statement" id="statement"></div>
+        <div id="readout-meters" class="meters meters-static"></div>
+        <div class="readout-actions">
+          <button class="btn btn-primary" id="replay-btn">Run the talks again</button>
+          <button class="btn btn-ghost" id="copy-btn">Copy result</button>
+        </div>
+        <p class="credit" id="readout-credit"></p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>

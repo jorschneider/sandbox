@@ -37,6 +37,25 @@ step, no external assets beyond two Google Fonts. Three.js is vendored.
 - **Cinematic dressing** — 2.39:1 letterbox, animated film grain,
   vignette, ACES tone mapping, a breath of handheld camera.
 
+## Also in here: *Track One* — a US–China AI diplomacy game
+
+Served at **`/game`** (a self-contained second page; the trailer is untouched).
+
+> *Who should the U.S. talk to in China on AI?* You are the U.S. delegation
+> at the first U.S.–China AI dialogue. Staff six negotiation tracks with the
+> right Chinese counterparts, survive the talks, and bring home a communiqué.
+
+A playable gloss on Matt Sheehan's essay of the same question. Three phases:
+**staff the dialogue** (match each track to its counterpart — the powerful
+aren't always the willing), **the negotiation** (grounded dilemmas that move
+four meters: Trust, Progress, U.S. Backing, China Buy-In), and **the readout**
+(a procedurally assembled joint statement + grade). The scoring encodes the
+essay's thesis — *progress only counts if someone powerful can deliver it.*
+
+Same no-build stack: vanilla JS modules, the constructivist red/blue/parchment
+title-card look, an ambient three.js globe, and a tiny procedural WebAudio
+score. All content is drawn from — and was fact-checked against — the essay.
+
 ## Running it
 
 Any static file server works:
