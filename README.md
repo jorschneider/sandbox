@@ -37,6 +37,18 @@ step, no external assets beyond two Google Fonts. Three.js is vendored.
 - **Cinematic dressing** — 2.39:1 letterbox, animated film grain,
   vignette, ACES tone mapping, a breath of handheld camera.
 
+## Also in this repo: `/boulder` — CRUX
+
+A second, unrelated static page lives at **`/boulder`**: *CRUX*, a bouldering
+**circuit-workout coach**. Pick a session length (15/25/45/60 min), a focus
+(cardio circuit, power-endurance 4×4, technique, strength/limit, or a mixed
+pyramid) and your hardest grade; it generates a time-accurate plan and then
+**coaches you through every block** with a full-screen interval timer —
+countdown ring, work/rest cues (beep + vibrate), screen wake-lock and a
+plan preview. One self-contained file, no dependencies, works offline —
+built to live on your phone at the wall. Open `/boulder` (or `boulder/`
+locally).
+
 ## Running it
 
 Any static file server works:
