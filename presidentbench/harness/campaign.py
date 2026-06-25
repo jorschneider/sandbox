@@ -16,9 +16,10 @@ import json
 import os
 
 # The term faces this sequence of crises; each step draws a different seed so the
-# hidden state (and outcome) varies along the term.
+# hidden state (and outcome) varies along the term. Only the four *contemporary*
+# crises -- chaining the 1962 historical replay into a modern term made no sense.
 TERM = ["long-hot-summer", "strait-crisis", "patient-zero", "the-jump",
-        "cuban-missile-1962", "long-hot-summer", "strait-crisis", "the-jump"]
+        "long-hot-summer", "strait-crisis", "patient-zero", "the-jump"]
 
 # Outcomes that END a presidency (ruin) vs. that merely wound it.
 RUIN = ("War over Taiwan", "War", "Taiwan abandoned", "Nuclear war",
@@ -135,7 +136,7 @@ def aggregate_campaigns(results_dir, out_path, term_seeds=range(0, 10)):
     models.sort(key=lambda m: m["median"], reverse=True)
     payload = {"generated": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
                "term": ["Inaugurate", "Unrest", "Taiwan", "Pandemic", "AI Jump",
-                        "Cuba '62", "Unrest II", "Taiwan II", "AI Jump II"],
+                        "Unrest II", "Taiwan II", "Pandemic II", "AI Jump II"],
                "models": models}
     with open(out_path, "w") as fh:
         json.dump(payload, fh, indent=2)
