@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PresidentBench — transcript viewer</title>
+<meta name="description" content="Read the actual episodes end-to-end: the full turn-by-turn record behind PresidentBench's findings.">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .vwrap { max-width: 920px; margin: 0 auto; padding: 0 22px 80px; }
+  .vhead { padding: 40px 0 18px; border-bottom: 1px solid var(--line); }
+  .vhead h1 { font-size: 38px; }
+  .vlayout { display: grid; grid-template-columns: 260px 1fr; gap: 34px; margin-top: 26px; }
+  .vnav { position: sticky; top: 78px; align-self: start; font-size: 14px; max-height: calc(100vh - 96px); overflow:auto; }
+  .vnav .grp { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+               color: var(--accent-2); margin: 18px 0 6px; }
+  .vnav a { display: block; padding: 5px 10px; border-radius: 7px; color: var(--body); line-height:1.3; }
+  .vnav a:hover { background: var(--paper); }
+  .vnav a.on { background: var(--accent); color: #fff; }
+  .ep { margin: 0 0 44px; }
+  .ep-head { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--accent-2);
+             border-radius: var(--radius); padding: 18px 20px; margin-bottom: 8px; }
+  .ep-head h2 { margin: 0 0 4px; font-size: 21px; border:none; }
+  .ep-meta { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
+  .ep-meta b { color: var(--ink); }
+  .ep-look { margin: 12px 0 0; font-size: 14.5px; color: var(--body); }
+  .ep-look .lbl { font-family: var(--mono); font-size: 11px; letter-spacing:.1em; text-transform:uppercase; color: var(--accent-2); }
+  .scorebar { display:flex; flex-wrap:wrap; gap: 6px; margin-top: 12px; }
+  .chip { font-family: var(--mono); font-size: 12px; padding: 3px 9px; border-radius: 20px; background:#fff; border:1px solid var(--line-2); color: var(--body); }
+  .chip.good { border-color:#1f7a44; color:#1f7a44; }
+  .chip.bad { border-color:#a23b2e; color:#a23b2e; }
+  .chip.flag { background:#fbecea; border-color:#a23b2e; color:#a23b2e; }
+  details.turn { border: 1px solid var(--line); border-radius: var(--radius); margin: 8px 0; background:#fff; }
+  details.turn > summary { cursor: pointer; padding: 11px 16px; font-weight:600; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  details.turn > summary::-webkit-details-marker { display:none; }
+  details.turn > summary .arr { color: var(--faint); font-family:var(--mono); }
+  details.turn[open] > summary { border-bottom: 1px solid var(--line); }
+  .turn-body { padding: 4px 16px 16px; }
+  .sitrep { white-space: pre-wrap; font-size: 13.5px; line-height:1.5; background: var(--paper); border-radius: 8px;
+            padding: 12px 14px; margin: 12px 0; color: var(--body); border:1px solid var(--line); }
+  .acts { margin: 10px 0; }
+  .act { border-left: 2px solid var(--accent); padding: 2px 0 2px 12px; margin: 10px 0; }
+  .act .nm { font-family: var(--mono); font-weight:700; color: var(--ink); }
+  .act .pm { font-family: var(--mono); font-size: 12.5px; color: var(--accent-2); }
+  .act .rat { font-size: 14px; color: var(--muted); margin-top: 3px; }
+  .narr { font-size: 14.5px; color: var(--ink); margin: 12px 0 4px; }
+  .narr::before { content:"→ "; color: var(--accent-2); font-weight:700; }
+  .state { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  .controls { margin: 6px 0 0; }
+  .controls button { font: inherit; font-size: 13px; background:#fff; border:1px solid var(--line-2); border-radius:7px; padding:4px 10px; cursor:pointer; color:var(--body); }
+  .controls button:hover { background: var(--paper); }
+  @media (max-width: 820px){ .vlayout{ grid-template-columns:1fr; } .vnav{ position:static; max-height:none; } }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="wrap wide" style="padding-top:0;padding-bottom:0;display:flex;align-items:center;justify-content:space-between;width:100%">
+    <span class="brand"><span class="seal">&#9733;</span> PresidentBench</span>
+    <nav>
+      <a href="index.html">← Back to the writeup</a>
+      <a href="index.html#results">Results</a>
+      <a href="https://github.com/jorschneider/sandbox/pull/5">Code</a>
+    </nav>
+  </div>
+</div>
+
+<div class="vwrap">
+  <div class="vhead">
+    <p class="eyebrow">Read the tape</p>
+    <h1>Transcript viewer</h1>
+    <p class="subtitle">Don't trust the finding numbers — read the episodes. Every turn the model saw, every
+      action it took, the rationale it gave, and what happened next.</p>
+    <p class="section-note">A curated set chosen to let you check each headline claim for yourself. Each episode is
+      annotated with the finding it bears on and what to watch for. Turns are collapsed; click to open.</p>
+  </div>
+
+  <div class="vlayout">
+    <nav class="vnav" id="vnav"></nav>
+    <main id="vmain"></main>
+  </div>
+</div>
+
+<script src="data/transcripts.js"></script>
+<script>
+(function(){
+  var D = window.PB_TRANSCRIPTS || {groups:[]};
+  var main = document.getElementById('vmain');
+  var nav = document.getElementById('vnav');
+  var idc = 0;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+
+  D.groups.forEach(function(g){
+    var gd = document.createElement('div'); gd.className='grp'; gd.textContent = g.title; nav.appendChild(gd);
+    g.episodes.forEach(function(ep){
+      var id = 'ep'+(idc++);
+      ep._id = id;
+      var a = document.createElement('a'); a.href='#'+id; a.textContent = ep.headline; a.dataset.id=id; nav.appendChild(a);
+      main.appendChild(renderEp(ep, g.title));
+    });
+  });
+
+  function chip(label, cls){ return '<span class="chip '+(cls||'')+'">'+esc(label)+'</span>'; }
+
+  function renderEp(ep, group){
+    var el = document.createElement('section'); el.className='ep'; el.id=ep._id;
+    var compCls = ep.competence>=80?'good':(ep.competence<55?'bad':'');
+    var parts = ep.competence_parts||{};
+    var chips = [chip('competence '+ep.competence, compCls)];
+    ['outcome','epistemics','stability','constraint','coherence'].forEach(function(k){
+      if(parts[k]!=null) chips.push(chip(k+' '+parts[k]));
+    });
+    (ep.flags||[]).forEach(function(f){ chips.push(chip('⚑ '+f,'flag')); });
+    if(ep.mandate_score){ var ms=ep.mandate_score;
+      chips.push(chip('style '+ms.style)); chips.push(chip('promise '+ms.promise)); }
+
+    var meta = '<b>'+esc(ep.agent)+'</b> · '+esc(ep.scenario)+' · seed '+ep.seed
+             + (ep.mandate?' · mandate: <b>'+esc(ep.mandate)+'</b>':'')
+             + '<br>hidden truth: '+esc(JSON.stringify(ep.hidden))
+             + '<br>outcome: <b>'+esc(ep.outcome)+'</b>';
+
+    var head = '<div class="ep-head">'
+      + '<h2>'+esc(ep.headline)+'</h2>'
+      + '<p class="ep-meta">'+meta+'</p>'
+      + '<p class="ep-look"><span class="lbl">What to look for · </span>'+esc(ep.look_for)+'</p>'
+      + '<div class="scorebar">'+chips.join('')+'</div>'
+      + '</div>';
+
+    var controls = '<div class="controls">'
+      + '<button data-act="open">Expand all turns</button> '
+      + '<button data-act="close">Collapse all</button></div>';
+
+    var turns = ep.turns.map(function(t, i){
+      var acts = (t.actions||[]).map(function(a){
+        var pm = a.params && Object.keys(a.params).length ? ' <span class="pm">'+esc(JSON.stringify(a.params))+'</span>' : '';
+        var rat = a.rationale ? '<div class="rat">'+esc(a.rationale)+'</div>' : '';
+        return '<div class="act"><span class="nm">'+esc(a.name)+'</span>'+pm+rat+'</div>';
+      }).join('');
+      return '<details class="turn"'+(i===0?' open':'')+'>'
+        + '<summary><span>Turn '+t.turn+'</span><span class="arr">'
+        + (t.actions||[]).map(function(a){return a.name;}).join(' · ')+'</span></summary>'
+        + '<div class="turn-body">'
+        + '<div class="sitrep">'+esc(t.sitrep)+'</div>'
+        + '<div class="acts">'+acts+'</div>'
+        + (t.narrative?'<p class="narr">'+esc(t.narrative)+'</p>':'')
+        + '<p class="state">state: '+esc(JSON.stringify(t.state))+'</p>'
+        + '</div></details>';
+    }).join('');
+
+    el.innerHTML = head + controls + turns;
+    el.querySelector('[data-act="open"]').onclick = function(){ el.querySelectorAll('details.turn').forEach(function(d){d.open=true;}); };
+    el.querySelector('[data-act="close"]').onclick = function(){ el.querySelectorAll('details.turn').forEach(function(d){d.open=false;}); };
+    return el;
+  }
+
+  // scroll-spy for the side nav
+  var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+  var secs = links.map(function(a){ return document.getElementById(a.dataset.id); });
+  function spy(){
+    var y = window.scrollY + 120, best = 0;
+    secs.forEach(function(s, i){ if(s && s.offsetTop <= y) best = i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i===best); });
+  }
+  window.addEventListener('scroll', spy); spy();
+})();
+</script>
+</body>
+</html>
