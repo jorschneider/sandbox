@@ -52,6 +52,14 @@ four meters: Trust, Progress, U.S. Backing, China Buy-In), and **the readout**
 (a procedurally assembled joint statement + grade). The scoring encodes the
 essay's thesis — *progress only counts if someone powerful can deliver it.*
 
+A second mode, **+5 Years: Read the Tells**, inverts the exercise: instead of
+choosing counterparts, you're shown a reshuffled 2031 org chart and have to
+*infer* what the bureaucratic shift implies about AI's real impact and how
+Beijing is choosing to deal with it — treating the chart as a costly signal of
+private belief. Two of the futures bake in a triangulation discipline (an
+ambiguous tell that only resolves against a second signal). You're scored on
+read accuracy and rated as an analyst.
+
 Same no-build stack: vanilla JS modules, the constructivist red/blue/parchment
 title-card look, an ambient three.js globe, and a tiny procedural WebAudio
 score. All content is drawn from — and was fact-checked against — the essay.

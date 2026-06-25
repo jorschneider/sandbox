@@ -26,7 +26,10 @@
         <h1 class="game-title"><span class="t1">TRACK</span><span class="t2">ONE</span></h1>
         <p class="subtitle">Who should the U.S. talk to in China on AI?</p>
         <div class="brief" id="brief"></div>
-        <button class="btn btn-primary" id="start-btn">Take the meeting &rarr;</button>
+        <div class="mode-picker">
+          <button class="btn btn-primary" id="start-btn">Take the meeting &rarr;</button>
+          <button class="btn btn-secondary" id="futures-btn">Or: read the tells, +5 years &rarr;</button>
+        </div>
         <p class="credit">A playable gloss on Matt Sheehan&rsquo;s essay,
           &ldquo;Who should the U.S. talk to in China on AI?&rdquo; &middot; satire, informed</p>
       </div>
@@ -87,9 +90,82 @@
         <div id="readout-meters" class="meters meters-static"></div>
         <div class="readout-actions">
           <button class="btn btn-primary" id="replay-btn">Run the talks again</button>
+          <button class="btn btn-secondary" id="to-futures-btn">Now project 5 years ahead &rarr;</button>
           <button class="btn btn-ghost" id="copy-btn">Copy result</button>
         </div>
         <p class="credit" id="readout-credit"></p>
+      </div>
+    </section>
+
+    <!-- ============ +5 YEARS — INTRO ============ -->
+    <section id="screen-futures-intro" class="screen">
+      <div class="title-wrap">
+        <div class="kicker">A scenarios exercise &middot; +5 years</div>
+        <h1 class="game-title"><span class="t1">READ THE</span><span class="t2">TELLS</span></h1>
+        <p class="subtitle">If the bureaucracy shifts like <em>this</em>&hellip; what does it mean?</p>
+        <div class="brief" id="futures-brief"></div>
+        <button class="btn btn-primary" id="futures-start-btn">Open the 2031 file &rarr;</button>
+        <button class="btn btn-secondary" id="futures-back-btn">&larr; Back to start</button>
+      </div>
+    </section>
+
+    <!-- ============ +5 YEARS — READ ============ -->
+    <section id="screen-futures" class="screen">
+      <header class="phase-head">
+        <div class="phase-num">+5 Years &middot; <span id="f-year">2031</span></div>
+        <h2 id="f-title">Read the Tells</h2>
+        <p class="phase-sub">A reshuffle is a costly signal. Infer the impact and the posture from the chart.</p>
+      </header>
+
+      <div class="futures-stage">
+        <!-- the signposts (the tells) -->
+        <div class="signpost-card" id="signpost-card">
+          <div class="future-meta">
+            <span class="future-count" id="future-count"></span>
+            <span class="future-owner" id="future-owner"></span>
+          </div>
+          <h3 class="signpost-head">Your China team&rsquo;s read of the 2031 landscape:</h3>
+          <ul class="signposts" id="signposts"></ul>
+          <button class="btn btn-primary" id="begin-read-btn">Begin the read &rarr;</button>
+        </div>
+
+        <!-- a diagnostic question -->
+        <div class="fq-card" id="fq-card">
+          <div class="scenario-meta"><span class="scenario-count" id="fq-count"></span></div>
+          <h2 class="scenario-title" id="fq-prompt"></h2>
+          <div class="options" id="fq-options"></div>
+        </div>
+
+        <!-- question feedback -->
+        <div class="fq-feedback" id="fq-feedback">
+          <div class="fq-verdict" id="fq-verdict"></div>
+          <p class="feedback-text" id="fq-note"></p>
+          <button class="btn btn-primary" id="fq-next-btn">Next &rarr;</button>
+        </div>
+
+        <!-- the analyst's read (reveal) -->
+        <div class="read-card" id="read-card">
+          <div class="kicker">The analyst&rsquo;s read</div>
+          <h2 class="read-name" id="read-name"></h2>
+          <div class="read-grid" id="read-grid"></div>
+          <div class="read-score" id="read-score"></div>
+          <button class="btn btn-primary" id="read-next-btn">Next future &rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ +5 YEARS — DEBRIEF ============ -->
+    <section id="screen-futures-debrief" class="screen">
+      <div class="readout-wrap">
+        <div class="kicker">Analyst debrief</div>
+        <h2 class="ending-name" id="analyst-rating"></h2>
+        <div class="grade-badge" id="analyst-badge"></div>
+        <div class="statement" id="analyst-blurb"></div>
+        <div class="readout-actions">
+          <button class="btn btn-primary" id="futures-replay-btn">Run new futures</button>
+          <button class="btn btn-secondary" id="futures-home-btn">Back to start</button>
+        </div>
+        <p class="credit" id="futures-credit"></p>
       </div>
     </section>
   </main>

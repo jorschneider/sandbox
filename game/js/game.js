@@ -438,13 +438,134 @@ function resetGame() {
   state.collapsed = false;
 }
 
+/* ================= +5 YEARS — READ THE TELLS ================= */
+function renderFuturesBrief() { $('futures-brief').innerHTML = DATA.copy.futuresIntro.join(''); }
+
+function showFutCard(which) {
+  const map = { signpost: 'signpost-card', question: 'fq-card', feedback: 'fq-feedback', read: 'read-card' };
+  Object.values(map).forEach(id => $(id).classList.remove('on'));
+  $(map[which]).classList.add('on');
+}
+
+function startFutures() {
+  state.fDeck = shuffle(DATA.futures);
+  state.fPos = 0;
+  state.fScore = 0;
+  state.fMax = 0;
+  renderFuture();
+  showScreen('screen-futures');
+}
+
+function renderFuture() {
+  const f = state.fDeck[state.fPos];
+  state.curScore = 0;
+  state.curMax = 0;
+  state.fqPos = 0;
+  $('f-year').textContent = f.year;
+  $('future-count').textContent = `Future ${state.fPos + 1} of ${state.fDeck.length}`;
+  const pips = '●'.repeat(f.elevation) + '○'.repeat(5 - f.elevation);
+  $('future-owner').innerHTML = `Owns the file: ${f.owner}<span class="elev" title="How high AI sits in the hierarchy">${pips}</span>`;
+  $('signposts').innerHTML = f.signposts.map(s => `<li>${s}</li>`).join('');
+  showFutCard('signpost');
+}
+
+function beginRead() { state.fqPos = 0; renderFQuestion(); }
+
+function renderFQuestion() {
+  const f = state.fDeck[state.fPos];
+  const q = f.questions[state.fqPos];
+  $('fq-count').textContent = `Read ${state.fqPos + 1} of ${f.questions.length}`;
+  $('fq-prompt').innerHTML = q.prompt;
+  const box = $('fq-options');
+  box.innerHTML = '';
+  q.options.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'option';
+    b.dataset.key = String.fromCharCode(65 + i);
+    b.innerHTML = o.label;
+    b.addEventListener('click', () => chooseFQ(o));
+    box.appendChild(b);
+  });
+  showFutCard('question');
+}
+
+function chooseFQ(option) {
+  const f = state.fDeck[state.fPos];
+  state.fScore += option.points; state.fMax += 2;
+  state.curScore += option.points; state.curMax += 2;
+  audio.blip(option.points === 2 ? 2 : option.points === 0 ? -2 : 0);
+
+  const v = $('fq-verdict');
+  const tier = option.points === 2 ? 'p2' : option.points === 1 ? 'p1' : 'p0';
+  v.className = 'fq-verdict ' + tier;
+  v.textContent = option.points === 2 ? 'Sharp read' : option.points === 1 ? 'Defensible' : 'Mirror-imaging';
+  $('fq-note').innerHTML = option.note;
+  const last = state.fqPos >= f.questions.length - 1;
+  $('fq-next-btn').innerHTML = last ? 'See the analyst&rsquo;s read &rarr;' : 'Next read &rarr;';
+  showFutCard('feedback');
+}
+
+function nextFQ() {
+  const f = state.fDeck[state.fPos];
+  if (state.fqPos >= f.questions.length - 1) { showRead(); return; }
+  state.fqPos++;
+  renderFQuestion();
+}
+
+function showRead() {
+  const f = state.fDeck[state.fPos];
+  $('read-name').textContent = f.name;
+  $('read-grid').innerHTML = [
+    ['The technology', f.read.impact],
+    ['Beijing&rsquo;s choice', f.read.posture],
+    ['Your dialogue', f.read.dialogue],
+  ].map(([k, v]) => `<div class="read-row"><span class="rk">${k}</span><span class="rv">${v}</span></div>`).join('');
+  $('read-score').textContent = `Your read on this future: ${state.curScore} / ${state.curMax}`;
+  const last = state.fPos >= state.fDeck.length - 1;
+  $('read-next-btn').innerHTML = last ? 'Analyst debrief &rarr;' : 'Next future &rarr;';
+  showFutCard('read');
+}
+
+function nextFuture() {
+  if (state.fPos >= state.fDeck.length - 1) { futuresDebrief(); return; }
+  state.fPos++;
+  renderFuture();
+}
+
+function futuresDebrief() {
+  const acc = state.fMax ? state.fScore / state.fMax : 0;
+  const tier = DATA.copy.analystRatings.find(r => acc >= r.min) || DATA.copy.analystRatings[DATA.copy.analystRatings.length - 1];
+  $('analyst-rating').textContent = tier.name;
+  const badge = $('analyst-badge');
+  badge.className = 'grade-badge tier-' + tier.badge.toLowerCase();
+  badge.textContent = `${tier.badge} · ${Math.round(acc * 100)}% read accuracy`;
+  $('analyst-blurb').innerHTML = `<p>${tier.blurb}</p><p>You scored <b>${state.fScore} of ${state.fMax}</b> across ${state.fDeck.length} possible 2031s — reading what each bureaucratic shift implied about AI's impact and how Beijing chose to deal with it.</p>`;
+  $('futures-credit').innerHTML = DATA.copy.futuresCredit;
+  audio.stinger(tier.badge.toLowerCase());
+  showScreen('screen-futures-debrief');
+}
+
 /* ================= WIRE-UP ================= */
 renderBrief();
+renderFuturesBrief();
+
+// dialogue mode
 $('start-btn').addEventListener('click', () => { audio.ensureAudio(); renderStaff(); showScreen('screen-staff'); });
 $('lock-btn').addEventListener('click', startTalks);
 $('next-btn').addEventListener('click', nextScenario);
 $('replay-btn').addEventListener('click', () => { resetGame(); renderStaff(); showScreen('screen-staff'); });
 $('copy-btn').addEventListener('click', copyResult);
+
+// +5 years mode
+$('futures-btn').addEventListener('click', () => { audio.ensureAudio(); showScreen('screen-futures-intro'); });
+$('to-futures-btn').addEventListener('click', () => showScreen('screen-futures-intro'));
+$('futures-back-btn').addEventListener('click', () => showScreen('screen-title'));
+$('futures-start-btn').addEventListener('click', startFutures);
+$('begin-read-btn').addEventListener('click', beginRead);
+$('fq-next-btn').addEventListener('click', nextFQ);
+$('read-next-btn').addEventListener('click', nextFuture);
+$('futures-replay-btn').addEventListener('click', startFutures);
+$('futures-home-btn').addEventListener('click', () => showScreen('screen-title'));
 
 // sound toggle
 let soundOn = true;

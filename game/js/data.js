@@ -276,6 +276,179 @@ export const DATA = {
       ] },
   ],
 
+  /* ---------------- +5 YEARS: READ THE TELLS ---------------- *
+   * The inverse exercise. A reshuffled 2031 org chart is a costly signal of
+   * Beijing's private beliefs; the player infers impact + posture from it.
+   * Each question option scores points: 2 = sharp read, 1 = defensible,
+   * 0 = mirror-imaging. Two futures bake in the triangulation discipline
+   * (an ambiguous tell that only resolves against a second signal).        */
+  futures: [
+    { id: 'super-ministry', name: 'The Super-Ministry Wins', year: 2031,
+      owner: 'NDRC · Vice-Premier AI office', elevation: 4,
+      signposts: [
+        "The NDRC's cross-ministry AI coordination role — informal and unpublished in 2026 — has been formalized and elevated under a Vice Premier.",
+        "The State Council's AI+ diffusion plan is declared a success; AI is now written straight into the five-year-plan machinery.",
+        "CnAISDA has been folded into an NDRC-run body that pairs development with light-touch safety, and is funded generously.",
+        "No standalone safety institute with binding authority over models has emerged.",
+      ],
+      questions: [
+        { prompt: 'What is this telling you about AI&rsquo;s real-world impact?',
+          options: [
+            { label: "It's landing as a general-purpose productivity engine — closer to electricity than to a weapon.", points: 2, note: "The economic planners only get the file when leadership reads AI as growth. The whole bet is diffusion." },
+            { label: "It's primarily a content and information threat.", points: 0, note: "If that were the dominant read, the CAC — not the economic super-ministry — would own the file." },
+            { label: "Ambiguous — I'd want to see where compute spending centralizes first.", points: 1, note: "Healthy caution, but formalizing the role under a Vice Premier is already a fairly decisive tell." },
+          ] },
+        { prompt: 'How is Beijing choosing to deal with it?',
+          options: [
+            { label: 'Development over control — managing AI as economic statecraft, and fairly confident about it.', points: 2, note: "A Beijing that thinks it's winning economically tends to be more open to stability arrangements." },
+            { label: 'Control over development — clamping down on a destabilizing technology.', points: 0, note: "The opposite of what handing the file to a growth-and-funding super-ministry signals." },
+            { label: 'Racing and hardening for a security showdown.', points: 0, note: "No security or military body has gained the file in this world." },
+          ] },
+        { prompt: 'What does this mean for your dialogue?',
+          options: [
+            { label: 'A clear, empowered counterpart exists — but catastrophic-risk topics get no oxygen.', points: 2, note: "You can talk standards and diffusion through the economic channel; nobody owns 'frontier safety.'" },
+            { label: 'The owners are the least engageable people in the system.', points: 0, note: "That's the security-state world. Economic planners are reachable." },
+            { label: 'A dedicated Party AI commission now makes deals bind.', points: 1, note: "There's real authority here, but it's state-economic, not a Party AI commission." },
+          ] },
+      ],
+      read: {
+        impact: "AI+ diffusion is working: the technology reads as a general-purpose productivity engine, managed like industrial policy rather than a weapon.",
+        posture: "Development over control. A confident Beijing folding AI into the five-year-plan machinery — and a confident Beijing is a more cooperative one.",
+        dialogue: "Your counterpart is clear and empowered (the He Lifeng economic channel), and the tractable agenda is standards and diffusion. The catch: nobody owns catastrophic risk, so it stays off the table." },
+    },
+
+    { id: 'security-state', name: 'The Security State Takes the File', year: 2031,
+      owner: 'MSS / military research bodies', elevation: 4,
+      signposts: [
+        "Frontier-model testing and evaluation budget lines have migrated to the Ministry of State Security and military research bodies.",
+        "The CAC's 'content security' framing has been displaced by a hard-security frame; secrecy and export controls around models have tightened.",
+        "Cooperative testing channels with foreign governments have quietly gone dark.",
+        "No safety institute has risen alongside the security bodies.",
+      ],
+      questions: [
+        { prompt: 'The security state has captured the file. What does that most likely signal about the technology?',
+          options: [
+            { label: 'AI has crossed into genuine weaponization — offensive cyber at scale, bio-uplift, autonomy.', points: 2, note: "When the spies and the military take the file and no safety body rises with them, the frame is offense, not caution." },
+            { label: "It's catastrophically dangerous and Beijing is being cautious for its own sake.", points: 1, note: "Plausible — but that read needs a safety body rising alongside to support it. Here, none did. The absence is the tell." },
+            { label: "It's mainly an economic story.", points: 0, note: "Economic stories put the NDRC in charge, not the MSS." },
+          ] },
+        { prompt: "A colleague argues: &lsquo;MSS rising means they&rsquo;re scared of AI — that&rsquo;s good for safety talks.&rsquo; Your response?",
+          options: [
+            { label: "Disagree — without a safety body rising too, this reads as weaponization, not caution.", points: 2, note: "The MSS tell is ambiguous alone. You disambiguate with a second signal — did a safety institute rise? It didn't." },
+            { label: 'Agree — fear of AI is fear of AI.', points: 0, note: "Mirror-imaging. The same tell has opposite meanings depending on what rises beside it." },
+            { label: "Can't say — the tell is genuinely uninterpretable.", points: 1, note: "Too cautious. It is interpretable once you read the corroborating signals, which here point to offense." },
+          ] },
+        { prompt: 'What does this mean for your dialogue?',
+          options: [
+            { label: 'The worst case: the people who own the file are the least engageable in the system.', points: 2, note: "Intelligence services don't swap notebooks. Dialogue becomes an arms-control analog — harder, and more necessary." },
+            { label: 'Good news — a clear technical counterpart to build standards with.', points: 0, note: "The MSS is not going to co-author conformity standards with you." },
+          ] },
+      ],
+      read: {
+        impact: "AI has crossed into real dual-use danger — and/or the relationship has militarized. The spies and the military don't take the file over a productivity tool.",
+        posture: "Threat-dominant: racing and hardening. The tell that settles it is what did NOT rise — no safety body appeared beside the security ones, so the frame is offense, not caution.",
+        dialogue: "Sheehan's tension at its worst: the owners of the file are the least engageable people in the system. Back-channels matter more here than anywhere — and work less." },
+    },
+
+    { id: 'real-aisi', name: 'The Safety Institute Becomes Real', year: 2031,
+      owner: 'A funded AISI under the CSTC/MOST', elevation: 4,
+      signposts: [
+        "CnAISDA has been replaced by a funded, staffed institute with binding pre-deployment testing authority over frontier models.",
+        "TC260's WG9 safety standards are now mandatory — and aimed at loss-of-control and cyber-misuse, not content.",
+        "The institute reports upward through the Party's science commission (CSTC), not only the CAC.",
+        "Chinese technical leaders publicly frame some AI risks as shared and self-interested, not US-imposed.",
+      ],
+      questions: [
+        { prompt: 'What does a real, veto-wielding safety institute tell you about the technology?',
+          options: [
+            { label: "Capabilities have advanced enough that loss-of-control tails are credible to the technical elite — and they've convinced the leadership.", points: 2, note: "Binding safety authority only gets built when serious people believe the danger is real and near." },
+            { label: "It's a PR exercise for international summits.", points: 0, note: "PR doesn't come with binding pre-deployment authority and mandatory standards. The teeth are the tell." },
+            { label: "AI is mainly an economic-diffusion story now.", points: 0, note: "That world builds development bodies, not safety institutes with veto power." },
+          ] },
+        { prompt: 'How is Beijing choosing to deal with it?',
+          options: [
+            { label: "It's acting on safety for its own reasons — not because Washington asked.", points: 2, note: "The 'shared and self-interested' framing is the single most favorable precondition for cooperation." },
+            { label: "It's conceding to US pressure.", points: 0, note: "Self-interested domestic action is far more durable than concessions — and that's what the signposts show." },
+            { label: "It's racing and ignoring risk.", points: 0, note: "Hard to square with mandatory loss-of-control standards and a veto-wielding institute." },
+          ] },
+        { prompt: 'What does this mean for your dialogue?',
+          options: [
+            { label: "The best world for the testing agenda — cooperation becomes 'we each do X because we each want to.'", points: 2, note: "A genuine counterpart node finally exists, and shared interest beats trust-based promises." },
+            { label: 'Still hopeless — there is no counterpart.', points: 0, note: "This is precisely the world where a real counterpart at last exists." },
+          ] },
+      ],
+      read: {
+        impact: "Capabilities have advanced enough that loss-of-control risk is credible to China's technical elite — and they've persuaded the leadership it's real and domestic, not a US talking point.",
+        posture: "Genuine safety, acted on for self-interest. The most favorable precondition there is: both sides can move because each one wants to, not because it trusts the other.",
+        dialogue: "The best world for the cross-border testing-best-practices agenda. A real counterpart node exists, and the cooperation rests on shared interest rather than promises." },
+    },
+
+    { id: 'party-commission', name: 'The Party Eats the State', year: 2031,
+      owner: 'A new Central AI Commission (Party)', elevation: 5,
+      signposts: [
+        "A dedicated CCP Central AI Commission has been created — alongside the cyberspace and science commissions — chaired by a Politburo Standing Committee member.",
+        "The ministries (CAC, NDRC, MIIT) are now implementers; the Commission's office sets direction.",
+        "AI has its own line in the Party's top decision-making, with a PBSC-level lead.",
+        "Whether foreigners can reach the Commission remains untested.",
+      ],
+      questions: [
+        { prompt: 'What does creating a Party commission tell you about AI&rsquo;s stakes?',
+          options: [
+            { label: 'AI has been elevated to a first-order strategic domain — treated like cyber, finance, or S&T.', points: 2, note: "A Party commission is the most expensive signal of priority Beijing has. It says: too important to leave to ministries." },
+            { label: 'AI is being downgraded to routine administration.', points: 0, note: "A PBSC-chaired commission is the opposite of a downgrade." },
+          ] },
+        { prompt: 'And about whether Beijing will develop or control?',
+          options: [
+            { label: "The stakes-read is unambiguous; the develop-vs-control read is not — a commission can house either.", points: 2, note: "Centralization tells you HOW BIG, not WHICH WAY. Triangulate with what the commission's first regulations actually do." },
+            { label: 'It clearly means more openness to the West.', points: 0, note: "Centralization says nothing about external openness by itself. Don't over-read it." },
+            { label: 'It clearly means a crackdown on developers.', points: 0, note: "Equally an over-read — the commission could just as easily drive development." },
+          ] },
+        { prompt: 'What does this mean for your dialogue?',
+          options: [
+            { label: 'Paradoxically more consequential — if you can reach the Commission, deals can finally bind.', points: 2, note: "The 2026 problem was that the powerful wouldn't take the meeting. A commission is power you could, in principle, negotiate with." },
+            { label: 'Useless — the Party never talks to foreigners.', points: 1, note: "Too absolute. The cyberspace and foreign-affairs commissions have shown up before; the real question is access." },
+            { label: 'Same as today — nothing meaningful changes.', points: 0, note: "A great deal changes when authority consolidates where a deal could actually stick." },
+          ] },
+      ],
+      read: {
+        impact: "AI has been elevated to a first-order strategic domain — important enough to pull out of the ministries entirely, like cyber or finance.",
+        posture: "Maximal priority and centralization. Crucially, that tells you HOW BIG the stakes are, not WHICH WAY Beijing will go — centralization is compatible with both a development push and a crackdown.",
+        dialogue: "The paradox: this can make dialogue more consequential, because for the first time there is power you could, in principle, strike a binding deal with. The open question is whether Beijing lets you near it." },
+    },
+
+    { id: 'fragmented', name: 'Nothing Consolidates', year: 2031,
+      owner: '(still fragmented)', elevation: 2,
+      signposts: [
+        "Five years on, there is still no formal owner of the AI file.",
+        "The NDRC's coordination role remains informal; CAC / NDRC / MIIT turf frictions continue.",
+        "No AI safety institute with real authority has emerged.",
+        "AI shows up across many plans but commands no dedicated top-level body.",
+      ],
+      questions: [
+        { prompt: 'What does the absence of any consolidation tell you about the technology?',
+          options: [
+            { label: "AI's impact has been real but incremental — not the discontinuous technology that forces bureaucratic clarity.", points: 2, note: "Bureaucracies consolidate around forcing events. The absence of consolidation is itself evidence about the felt impact." },
+            { label: 'AI has obviously been transformative.', points: 0, note: "If it had forced the issue, someone would own it by now. Diffuse ownership is the tell." },
+            { label: 'It means AI failed entirely.', points: 1, note: "Too strong — 'important but not existential' fits the signals better than 'failed.'" },
+          ] },
+        { prompt: 'How is Beijing choosing to deal with it?',
+          options: [
+            { label: 'It reads AI as important-but-not-existential, and is hedging.', points: 2, note: "No costly centralization means leadership hasn't been forced to decide. Hedging is a choice too." },
+            { label: 'It has a clear, unified AI strategy.', points: 0, note: "A unified strategy tends to produce a unified owner. This is the opposite." },
+          ] },
+        { prompt: 'What does this mean for your dialogue?',
+          options: [
+            { label: "Today's counterpart problem, frozen in place — low-stakes, best-effort dialogue.", points: 2, note: "Arguably the modal outcome: you keep talking to the engage-able, who still can't bind much." },
+            { label: 'A binding breakthrough is imminent.', points: 0, note: "Nothing in a fragmented chart suggests the conditions for a breakthrough." },
+          ] },
+      ],
+      read: {
+        impact: "AI's impact has been real but incremental — not the discontinuous, decisive technology that forces a bureaucracy to pick an owner.",
+        posture: "Hedging. Leadership reads AI as important but not existential, and has never been forced to choose between the development and control camps.",
+        dialogue: "Today's counterpart problem, frozen in place: you keep talking to the engage-able, who still can't bind much. Arguably the most likely outcome of all." },
+    },
+  ],
+
   /* ---------------- PROSE ---------------- */
   copy: {
     brief: [
@@ -338,5 +511,25 @@ export const DATA = {
     },
 
     outroCredit: "Tracks and org chart drawn from Matt Sheehan's essay, &lsquo;Who should the U.S. talk to in China on AI?&rsquo; (June 2026). A work of informed satire: the bureaucracy is real, the dialogue imagined.",
+
+    // ---- +5 Years mode ----
+    futuresIntro: [
+      "<p>It is <strong>2031</strong>. In an opaque system, a bureaucratic reshuffle is one of the most credible signals of what the leadership privately believes &mdash; precisely because reorganizing a bureaucracy is costly and hard to fake. A white paper is cheap talk; moving the AI file to the spies is not.</p>",
+      "<p class='pull'>The org chart is a tell. Learn to read it.</p>",
+      "<p>You'll be shown how the AI file has moved in several possible 2031s. For each, read what the shift implies about <strong>AI's real impact</strong> and <strong>how Beijing is choosing to deal with it</strong> &mdash; and watch for ambiguous tells that only resolve against a second signal.</p>",
+    ],
+
+    analystRatings: [
+      { min: 0.85, name: 'Seasoned China Hand', badge: 'A',
+        blurb: "You read the chart, not the press release — triangulating the ambiguous tells and resisting the urge to read Beijing as you'd read Washington." },
+      { min: 0.65, name: 'Promising Analyst', badge: 'B',
+        blurb: "A solid read of the landscape, with a few tells over- or under-weighted. The instincts are good; the calibration needs another tour." },
+      { min: 0.45, name: 'Still Mirror-Imaging', badge: 'C',
+        blurb: "You read Beijing as if it were Washington a little too often. The chart was usually telling you something else." },
+      { min: 0.0, name: 'Back to the Desk', badge: 'D',
+        blurb: "The bureaucracy was leaving signals everywhere; the readings went the other way. Time to re-read the org chart." },
+    ],
+
+    futuresCredit: "An exercise in reading bureaucracy as revealed preference — extrapolated, in the spirit of Matt Sheehan's essay, five years past it. Entirely speculative.",
   },
 };
