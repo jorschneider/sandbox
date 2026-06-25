@@ -510,7 +510,7 @@ export const DATA = {
         misStaffed:  "The seating chart was off from the start: too many tracks aimed at offices that don't hold the pen.", },
     },
 
-    outroCredit: "Tracks and org chart drawn from Matt Sheehan's essay, &lsquo;Who should the U.S. talk to in China on AI?&rsquo; (June 2026). A work of informed satire: the bureaucracy is real, the dialogue imagined.",
+    outroCredit: "Inspired by Matt Sheehan's essay &lsquo;Who should the U.S. talk to in China on AI?&rsquo; (June 2026); tracks and org chart drawn from it. A work of informed satire: the bureaucracy is real, the dialogue imagined.",
 
     // ---- +5 Years mode ----
     futuresIntro: [
@@ -530,6 +530,6 @@ export const DATA = {
         blurb: "The bureaucracy was leaving signals everywhere; the readings went the other way. Time to re-read the org chart." },
     ],
 
-    futuresCredit: "An exercise in reading bureaucracy as revealed preference — extrapolated, in the spirit of Matt Sheehan's essay, five years past it. Entirely speculative.",
+    futuresCredit: "Inspired by Matt Sheehan's essay — an exercise in reading bureaucracy as revealed preference, extrapolated five years past it. Entirely speculative.",
   },
 };
