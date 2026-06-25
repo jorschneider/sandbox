@@ -26,10 +26,7 @@
 
 html, body {
   height: 100%;
-  background:
-    radial-gradient(ellipse at 25% 18%, rgba(27,58,107,0.55), rgba(0,0,0,0) 55%),
-    radial-gradient(ellipse at 80% 80%, rgba(142,14,21,0.40), rgba(0,0,0,0) 55%),
-    #0a0a0c;
+  background: #06070b;
   color: var(--ink);
   overflow: hidden;
   font-family: 'Oswald', 'Arial Narrow', Impact, sans-serif;
@@ -37,14 +34,44 @@ html, body {
 }
 
 /* ---------- ambient backdrop ---------- */
-#bg { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+/* layered "constructivist summit" scene behind the Canvas2D globe */
+#washes {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 65% 75% at 14% 90%, rgba(27,58,107,0.50), transparent 60%),
+    radial-gradient(ellipse 75% 75% at 80% 26%, rgba(142,14,21,0.42), transparent 62%),
+    linear-gradient(180deg, #0a0c14 0%, #06070b 60%, #0a0709 100%);
+}
+#washes::before { /* faint sunburst radiating from the globe */
+  content: ''; position: absolute; inset: -25%;
+  background: repeating-conic-gradient(from 0deg at 62% 52%,
+    rgba(200,162,60,0.055) 0deg 3deg, transparent 3deg 11deg);
+  -webkit-mask: radial-gradient(circle at 62% 52%, #000 0%, transparent 58%);
+          mask: radial-gradient(circle at 62% 52%, #000 0%, transparent 58%);
+}
+#washes::after { /* engineering dot-grid */
+  content: ''; position: absolute; inset: 0; opacity: 0.6;
+  background-image: radial-gradient(rgba(239,231,211,0.07) 1px, transparent 1.5px);
+  background-size: 36px 36px;
+  -webkit-mask: radial-gradient(ellipse 80% 80% at 50% 45%, #000 25%, transparent 88%);
+          mask: radial-gradient(ellipse 80% 80% at 50% 45%, #000 25%, transparent 88%);
+}
 
+#bg { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 1; }
+
+#scanlines {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0.5;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
 #vignette {
-  position: fixed; inset: 0; z-index: 2; pointer-events: none;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 52%, rgba(0,0,0,0.5) 100%);
+  position: fixed; inset: 0; z-index: 3; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(0,0,0,0) 48%, rgba(0,0,0,0.62) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 18%, transparent 82%, rgba(0,0,0,0.45) 100%);
 }
 #grain {
-  position: fixed; inset: -120px; z-index: 3; pointer-events: none; opacity: 0.05;
+  position: fixed; inset: -120px; z-index: 4; pointer-events: none; opacity: 0.055;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain 0.5s steps(3) infinite;
 }
@@ -368,6 +395,72 @@ html, body {
 .read-row .rk { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red-2); font-weight: 600; display: block; margin-bottom: 0.2rem; }
 .read-row .rv { font-size: 1rem; line-height: 1.55; color: var(--ink-2); font-weight: 300; }
 .read-score { font-family: 'IBM Plex Mono', monospace; font-size: 0.92rem; color: var(--ink); background: rgba(22,20,15,0.06); padding: 0.6rem 0.9rem; margin-bottom: 1.3rem; }
+
+/* ============ PANEL POLISH (cream "dossier" cards) ============ */
+.title-wrap, .readout-wrap, .scenario-card, .feedback-card,
+.signpost-card, .fq-card, .fq-feedback, .read-card {
+  position: relative;
+  background-color: rgba(240,232,215,0.93);
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0) 34%),
+    radial-gradient(150% 130% at 50% -12%, rgba(181,18,27,0.07), transparent 55%);
+  backdrop-filter: blur(5px) saturate(1.05);
+  -webkit-backdrop-filter: blur(5px) saturate(1.05);
+  box-shadow: 0 1.8rem 4.5rem rgba(0,0,0,0.62);
+  border-top: 4px solid var(--red);
+}
+.feedback-card, .fq-feedback, .read-card { border-top-color: var(--blue); }
+/* gold hairline beneath the top rule */
+.title-wrap::before, .readout-wrap::before, .scenario-card::before, .feedback-card::before,
+.signpost-card::before, .fq-card::before, .fq-feedback::before, .read-card::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: var(--gold); opacity: 0.5; pointer-events: none;
+}
+/* registration corner ticks — a dossier / blueprint touch */
+.title-wrap::after, .readout-wrap::after, .scenario-card::after, .feedback-card::after,
+.signpost-card::after, .fq-card::after, .fq-feedback::after, .read-card::after {
+  content: ''; position: absolute; inset: 9px; pointer-events: none; opacity: 0.16;
+  background:
+    linear-gradient(var(--ink), var(--ink)) left top / 15px 1.5px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) left top / 1.5px 15px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right top / 15px 1.5px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right top / 1.5px 15px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) left bottom / 15px 1.5px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) left bottom / 1.5px 15px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right bottom / 15px 1.5px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right bottom / 1.5px 15px no-repeat;
+}
+/* keep card content above the tick layer */
+.title-wrap > *, .readout-wrap > *, .scenario-card > *, .feedback-card > *,
+.signpost-card > *, .fq-card > *, .fq-feedback > *, .read-card > * { position: relative; z-index: 1; }
+
+/* ============ BOLDER METERS ============ */
+.meter {
+  background: linear-gradient(180deg, rgba(22,26,42,0.78), rgba(9,11,18,0.78));
+  border: 1px solid rgba(239,231,211,0.18); padding: 0.7rem 0.85rem 0.85rem;
+  box-shadow: 0 0.4rem 1.2rem rgba(0,0,0,0.3);
+}
+.meter-name { font-weight: 600; color: rgba(239,231,211,0.82); }
+.meter-val { font-size: 1.08rem; font-weight: 600; }
+.meter-bar {
+  height: 11px; background: rgba(0,0,0,0.4); margin-top: 0.55rem;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); position: relative;
+}
+.meter-bar::after { /* segment ticks every 20% */
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(90deg, transparent 0 calc(20% - 1.2px), rgba(0,0,0,0.55) calc(20% - 1.2px) 20%);
+}
+.meter-fill { box-shadow: 0 0 12px rgba(255,255,255,0.15); }
+.meter-fill.trust { box-shadow: 0 0 12px rgba(200,162,60,0.75); }
+.meter-fill.progress { box-shadow: 0 0 12px rgba(47,125,79,0.75); }
+.meter-fill.usBacking { box-shadow: 0 0 13px rgba(74,120,192,0.85); }
+.meter-fill.chinaBuyin { box-shadow: 0 0 13px rgba(210,59,67,0.85); }
+
+/* ============ FLANKED PHASE HEADERS ============ */
+.phase-num::before, .phase-num::after {
+  content: ''; display: inline-block; width: 34px; height: 1px;
+  background: var(--gold); vertical-align: middle; margin: 0 0.85rem; opacity: 0.55;
+}
 
 /* ---------- responsive ---------- */
 @media (max-width: 820px) {

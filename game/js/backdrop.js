@@ -1,151 +1,174 @@
-// Ambient 3D backdrop: a slow wireframe globe with two delegation markers
-// (US-blue, China-red) and an arc between Washington and Beijing. Purely
-// decorative — the game runs fine if this never loads (see game.js try/catch).
-import * as THREE from '../../vendor/three.module.min.js';
+// Ambient backdrop, drawn in Canvas2D so it renders everywhere (no WebGL
+// dependency). A slowly rotating wireframe globe with a glowing Washington–
+// Beijing great-circle arc, pulsing delegation nodes, and drifting dust.
+// Purely decorative; game.js calls this in a try/catch.
 
 const DEG = Math.PI / 180;
 
-// lat/lon -> point on a sphere of radius r
-function geo(lat, lon, r) {
-  const phi = (90 - lat) * DEG;
-  const theta = (lon + 180) * DEG;
-  return new THREE.Vector3(
-    -r * Math.sin(phi) * Math.cos(theta),
-     r * Math.cos(phi),
-     r * Math.sin(phi) * Math.sin(theta)
-  );
-}
-
 export function initBackdrop(canvas) {
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(0x000000, 0);
-  if (THREE.ACESFilmicToneMapping) renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-  camera.position.set(0, 0.6, 9.4);
-
-  const world = new THREE.Group();
-  world.rotation.z = -0.28;
-  scene.add(world);
-
-  const R = 3.0;
-
-  // globe wireframe
-  const globe = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(R, 4),
-    new THREE.MeshBasicMaterial({ color: 0xefe7d3, wireframe: true, transparent: true, opacity: 0.06 })
-  );
-  world.add(globe);
-
-  // faint inner shell for depth
-  const shell = new THREE.Mesh(
-    new THREE.SphereGeometry(R * 0.985, 48, 32),
-    new THREE.MeshBasicMaterial({ color: 0x0c1830, transparent: true, opacity: 0.55 })
-  );
-  world.add(shell);
-
-  // latitude rings
-  const ringMat = new THREE.LineBasicMaterial({ color: 0xefe7d3, transparent: true, opacity: 0.05 });
-  for (let lat = -60; lat <= 60; lat += 30) {
-    const pts = [];
-    for (let lon = 0; lon <= 360; lon += 6) pts.push(geo(lat, lon, R * 1.001));
-    world.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ringMat));
-  }
-
-  // delegation markers
-  const US = geo(38.9, -77.0, R);
-  const CN = geo(39.9, 116.4, R);
-  function marker(pos, color) {
-    const g = new THREE.Group();
-    const dot = new THREE.Mesh(
-      new THREE.SphereGeometry(0.07, 16, 16),
-      new THREE.MeshBasicMaterial({ color })
-    );
-    const halo = new THREE.Mesh(
-      new THREE.SphereGeometry(0.16, 16, 16),
-      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.28 })
-    );
-    g.add(dot); g.add(halo);
-    g.position.copy(pos);
-    g.userData.halo = halo;
-    world.add(g);
-    return g;
-  }
-  const mUS = marker(US, 0x4a78c0);
-  const mCN = marker(CN, 0xd23b43);
-
-  // great-circle arc, lifted above the surface
-  const arcPts = [];
-  const steps = 64;
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const v = new THREE.Vector3().copy(US).lerp(CN, t).normalize();
-    const lift = R * (1 + 0.32 * Math.sin(Math.PI * t));
-    arcPts.push(v.multiplyScalar(lift));
-  }
-  const arcGeo = new THREE.BufferGeometry().setFromPoints(arcPts);
-  const arc = new THREE.Line(arcGeo, new THREE.LineBasicMaterial({ color: 0xc8a23c, transparent: true, opacity: 0.6 }));
-  world.add(arc);
-
-  // a pulse that travels along the arc
-  const pulse = new THREE.Mesh(
-    new THREE.SphereGeometry(0.06, 12, 12),
-    new THREE.MeshBasicMaterial({ color: 0xefe7d3 })
-  );
-  world.add(pulse);
-
-  // drifting dust
-  const dustGeo = new THREE.BufferGeometry();
-  const N = 220;
-  const arr = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) {
-    const rad = 5 + Math.random() * 6;
-    const a = Math.random() * Math.PI * 2;
-    const b = (Math.random() - 0.5) * Math.PI;
-    arr[i*3]   = Math.cos(a) * Math.cos(b) * rad;
-    arr[i*3+1] = Math.sin(b) * rad;
-    arr[i*3+2] = Math.sin(a) * Math.cos(b) * rad;
-  }
-  dustGeo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0xefe7d3, size: 0.02, transparent: true, opacity: 0.35 }));
-  scene.add(dust);
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W = 0, H = 0, DPR = 1;
+  let cx = 0, cy = 0, R = 0;
 
   function resize() {
-    const w = window.innerWidth, h = window.innerHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    // globe sits a touch right of and below centre, large enough to peek
+    // around the UI cards on every side
+    R = Math.max(260, Math.min(W, H) * 0.46);
+    cx = W * 0.62;
+    cy = H * 0.52;
   }
   resize();
   window.addEventListener('resize', resize);
 
-  let t = 0;
-  let raf = 0;
-  const spin = reduced ? 0.0008 : 0.0016;
+  const TILT = 0.42;
+  // rotate a sphere point (lat, lon, phase) into screen space
+  function project(lat, lon, phase, rad = 1) {
+    const a = lat * DEG, b = lon * DEG + phase;
+    const x0 = Math.cos(a) * Math.sin(b);
+    const y0 = Math.sin(a);
+    const z0 = Math.cos(a) * Math.cos(b);
+    const y = y0 * Math.cos(TILT) - z0 * Math.sin(TILT);
+    const z = y0 * Math.sin(TILT) + z0 * Math.cos(TILT);
+    return { x: cx + R * rad * x0, y: cy - R * rad * y, z };
+  }
+
+  function strokePolyline(pts, frontColor, backColor) {
+    let drawing = false;
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      const col = p.z >= 0 ? frontColor : backColor;
+      if (i === 0 || pts[i - 1]._col !== col) {
+        if (drawing) ctx.stroke();
+        ctx.beginPath();
+        ctx.strokeStyle = col;
+        ctx.moveTo(p.x, p.y);
+        drawing = true;
+      } else {
+        ctx.lineTo(p.x, p.y);
+      }
+      p._col = col;
+    }
+    if (drawing) ctx.stroke();
+  }
+
+  // US (Washington) & China (Beijing)
+  const US = { lat: 38.9, lon: -77 };
+  const CN = { lat: 39.9, lon: 116.4 };
+
+  // drifting dust
+  const dust = [];
+  for (let i = 0; i < 90; i++) {
+    dust.push({ x: Math.random(), y: Math.random(), r: Math.random() * 1.6 + 0.3, s: Math.random() * 0.4 + 0.1, p: Math.random() });
+  }
+
+  let raf = 0, t = 0;
+  const spin = reduced ? 0.0009 : 0.0016;
+
   function frame() {
     t += 1;
-    world.rotation.y += spin;
-    dust.rotation.y += spin * 0.3;
-    const pulseT = (t % 220) / 220;
-    const idx = Math.floor(pulseT * steps);
-    pulse.position.copy(arcPts[Math.min(idx, steps)]);
-    const s = 0.8 + 0.4 * Math.sin(t * 0.06);
-    mUS.userData.halo.scale.setScalar(s);
-    mCN.userData.halo.scale.setScalar(2 - s);
-    arc.material.opacity = 0.45 + 0.25 * Math.sin(t * 0.05);
-    renderer.render(scene, camera);
+    const phase = t * spin;
+    ctx.clearRect(0, 0, W, H);
+
+    // ---- soft glow disc behind the globe ----
+    const g = ctx.createRadialGradient(cx, cy, R * 0.1, cx, cy, R * 1.5);
+    g.addColorStop(0, 'rgba(40,70,120,0.30)');
+    g.addColorStop(0.5, 'rgba(30,40,80,0.10)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(cx, cy, R * 1.5, 0, Math.PI * 2); ctx.fill();
+
+    // ---- filled globe body (subtle) ----
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    const body = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.35, R * 0.1, cx, cy, R);
+    body.addColorStop(0, 'rgba(20,32,58,0.55)');
+    body.addColorStop(1, 'rgba(8,12,24,0.65)');
+    ctx.fillStyle = body; ctx.fill();
+
+    ctx.lineWidth = 1;
+
+    // ---- parallels (latitude) ----
+    for (let lat = -60; lat <= 60; lat += 30) {
+      const pts = [];
+      for (let lon = 0; lon <= 360; lon += 5) pts.push(project(lat, lon, phase));
+      strokePolyline(pts, 'rgba(225,215,185,0.16)', 'rgba(225,215,185,0.05)');
+    }
+    // ---- meridians (longitude) ----
+    for (let lon = 0; lon < 180; lon += 30) {
+      const pts = [];
+      for (let lat = -90; lat <= 90; lat += 4) pts.push(project(lat, lon, phase));
+      strokePolyline(pts, 'rgba(225,215,185,0.16)', 'rgba(225,215,185,0.05)');
+    }
+
+    // ---- rim light ----
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(225,215,185,0.28)'; ctx.lineWidth = 1.4; ctx.stroke();
+
+    // ---- great-circle arc US <-> CN ----
+    const a = project(US.lat, US.lon, phase);
+    const b = project(CN.lat, CN.lon, phase);
+    const arcPts = [];
+    const steps = 60;
+    for (let i = 0; i <= steps; i++) {
+      const f = i / steps;
+      const lift = 1 + 0.30 * Math.sin(Math.PI * f);
+      // interpolate in lat/lon (cheap, looks fine at this scale)
+      const lat = US.lat + (CN.lat - US.lat) * f;
+      const lon = US.lon + (CN.lon - US.lon) * f;
+      arcPts.push(project(lat, lon, phase, lift));
+    }
+    ctx.beginPath();
+    ctx.moveTo(arcPts[0].x, arcPts[0].y);
+    for (const p of arcPts) ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = 'rgba(200,162,60,0.75)';
+    ctx.lineWidth = 1.6; ctx.shadowColor = 'rgba(200,162,60,0.7)'; ctx.shadowBlur = 8;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // pulse traveling along the arc
+    const pf = (t % 150) / 150;
+    const pp = arcPts[Math.min(steps, Math.floor(pf * steps))];
+    ctx.beginPath(); ctx.arc(pp.x, pp.y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(239,231,211,0.95)';
+    ctx.shadowColor = 'rgba(239,231,211,0.9)'; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
+
+    // ---- delegation nodes ----
+    function node(p, color, glow, phaseShift) {
+      if (p.z < -0.15) return; // hidden round the back
+      const pulse = 0.5 + 0.5 * Math.sin(t * 0.05 + phaseShift);
+      ctx.beginPath(); ctx.arc(p.x, p.y, 8 + pulse * 5, 0, Math.PI * 2);
+      ctx.fillStyle = glow; ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x, p.y, 3.4, 0, Math.PI * 2);
+      ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 12; ctx.fill(); ctx.shadowBlur = 0;
+    }
+    node(a, 'rgba(120,170,255,1)', 'rgba(70,120,210,0.25)', 0);
+    node(b, 'rgba(230,90,95,1)', 'rgba(200,40,46,0.28)', Math.PI);
+
+    // ---- drifting dust ----
+    for (const d of dust) {
+      d.p += d.s * 0.0016;
+      const yy = ((d.y + d.p) % 1) * H;
+      ctx.beginPath(); ctx.arc(d.x * W, yy, d.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(239,231,211,' + (0.10 + d.r * 0.07) + ')'; ctx.fill();
+    }
+
     raf = requestAnimationFrame(frame);
   }
   frame();
 
-  // pause when tab hidden
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { cancelAnimationFrame(raf); }
-    else { frame(); }
+    if (document.hidden) cancelAnimationFrame(raf);
+    else { cancelAnimationFrame(raf); frame(); }
   });
 
-  return { renderer, scene };
+  return { canvas };
 }
