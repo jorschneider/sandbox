@@ -95,37 +95,43 @@ export const DATA = {
       prompt: 'Mandatory testing, evaluation, and technical standards for frontier AI models.',
       idealActorIds: ['cac'],
       plausibleActorIds: ['tc260', 'cncert', 'caict', 'mss'],
+      candidates: [{ a: 'tc260', cost: 0 }, { a: 'cncert', cost: 1 }, { a: 'cac', cost: 7 }],
       rationale: "The CAC built China's mandatory registration and pre-deployment testing regime — good for a working group, even if its roots are in 'content security' rather than catastrophic risk. TC260/CNCERT are its technical nodes." },
 
     { id: 'policy', title: 'Overarching AI Policy',
       prompt: 'The whole-of-government balance between developing AI and governing it.',
       idealActorIds: ['ndrc'],
       plausibleActorIds: ['most', 'cac', 'nda'],
+      candidates: [{ a: 'nda', cost: 0 }, { a: 'most', cost: 4 }, { a: 'ndrc', cost: 7 }],
       rationale: "After ChatGPT, leadership tasked the NDRC with coordinating AI policy across ministries. It's the natural counterpart for the big-picture conversation — and the logical delegation lead." },
 
     { id: 'science', title: 'Scientific Trajectory & Long-Term Risk',
       prompt: 'Where the science is heading, and the strategic, long-run impacts of AI.',
       idealActorIds: ['most'],
       plausibleActorIds: ['cnaisda', 'ndrc', 'cac'],
+      candidates: [{ a: 'cnaisda', cost: 0 }, { a: 'cac', cost: 2 }, { a: 'most', cost: 5 }],
       rationale: "MOST advises the top leadership on S&T trajectory through the Party's science commission, and sent a former AI scientist to the UK Safety Summit. The right room for the long view." },
 
     { id: 'applications', title: 'Real-World Applications & Industry Standards',
       prompt: 'Deploying AI across industry, and the conformity standards that come with it.',
       idealActorIds: ['miit'],
       plausibleActorIds: ['caict', 'cac', 'ndrc'],
+      candidates: [{ a: 'caict', cost: 0 }, { a: 'miit', cost: 3 }, { a: 'ndrc', cost: 5 }],
       rationale: "MIIT leads on industrial applications, co-signs the CAC's rules, and does the technical standards-and-testing work, much of it through CAICT." },
 
     { id: 'international', title: 'International & Multilateral Governance',
       prompt: 'Global AI governance — summits, multilateral rules, the diplomatic arena.',
       idealActorIds: ['mfa'],
       plausibleActorIds: ['mfa_arms', 'most', 'ndrc'],
-      rationale: "The MFA leads China's global AI diplomacy (with the Central Foreign Affairs Commission behind it). For the multilateral file, the diplomats are the right counterpart." },
+      candidates: [{ a: 'mfa', cost: 0 }, { a: 'mfa_arms', cost: 2 }, { a: 'most', cost: 3 }],
+      rationale: "The MFA leads China's global AI diplomacy (with the Central Foreign Affairs Commission behind it). For the multilateral file, the diplomats are the right counterpart — and Beijing is happy to send them." },
 
     { id: 'lead', title: 'Lead of the Chinese Delegation',
       prompt: 'Who heads the delegation and sets its agenda — the single most consequential pick.',
       idealActorIds: ['ndrc'],
       plausibleActorIds: ['mfa_arms', 'mof', 'mfa'],
-      rationale: "The NDRC's coordinating role and ties to He Lifeng make it the strongest lead. If not the NDRC, the MFA's Arms Control Department — the 'coordinator for AI affairs' — is the fallback." },
+      candidates: [{ a: 'mof', cost: 0 }, { a: 'mfa_arms', cost: 3 }, { a: 'ndrc', cost: 8 }],
+      rationale: "The NDRC's coordinating role and ties to He Lifeng make it the strongest lead. If not the NDRC, the MFA's Arms Control Department — the 'coordinator for AI affairs' — is the fallback. Beijing would rather not send its real coordinator to run a bilateral." },
   ],
 
   /* ---------------- THE SCENARIO DECK ---------------- *
@@ -455,7 +461,7 @@ export const DATA = {
       "<p>In May, after the Trump&ndash;Xi summit, Washington and Beijing agreed to open the first government-to-government dialogue on artificial intelligence. Agreeing to <em>talk</em> is the easy part.</p>",
       "<p class='pull'>The hard question: who in China do you actually talk to?</p>",
       "<p>You are the U.S. delegation, led by Treasury Secretary Bessent. China's AI apparatus is a thicket of ministries, commissions, and standards bodies &mdash; and here's the trap: <strong>the people most willing to meet you often hold the least power, and the people with real power rarely take the meeting.</strong></p>",
-      "<p>Staff each track with the right counterpart. Survive the negotiation. Bring home something better than a photo op.</p>",
+      "<p>And you don't get to choose Beijing's delegation &mdash; <strong>Beijing does.</strong> They'll field the comfortable, face-saving picks. Spend your limited leverage to pull the counterparts who actually hold the pen into the room, survive the talks, and bring home something better than a photo op.</p>",
     ],
 
     meters: {

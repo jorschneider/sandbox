@@ -46,11 +46,14 @@ Served at **`/game`** (a self-contained second page; the trailer is untouched).
 > right Chinese counterparts, survive the talks, and bring home a communiqué.
 
 A playable gloss on Matt Sheehan's essay of the same question. Three phases:
-**staff the dialogue** (match each track to its counterpart — the powerful
-aren't always the willing), **the negotiation** (grounded dilemmas that move
-four meters: Trust, Progress, U.S. Backing, China Buy-In), and **the readout**
-(a procedurally assembled joint statement + grade). The scoring encodes the
-essay's thesis — *progress only counts if someone powerful can deliver it.*
+**who's in the room?** (you don't pick China's delegation — Beijing fields its
+comfortable, face-saving default, and you spend limited *leverage* to pull the
+real power-holders into the room; the powerful, closed orgs cost the most),
+**the negotiation** (grounded dilemmas that move four meters: Trust, Progress,
+U.S. Backing, China Buy-In), and **the readout** (a procedurally assembled joint
+statement + grade). The scoring encodes the essay's thesis — *progress only
+counts if someone powerful can deliver it* — and the staffing phase encodes its
+caveat: *you don't get to choose your counterparts; China does.*
 
 A second mode, **+5 Years: Read the Tells**, inverts the exercise: instead of
 choosing counterparts, you're shown a reshuffled 2031 org chart and have to

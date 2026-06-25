@@ -47,14 +47,15 @@ function showScreen(id) {
 }
 
 /* ---------------- game state ---------------- */
+const LEVERAGE_BUDGET = 12;
 const state = {
-  assignments: {},   // topicId -> actorId
-  activeTopic: null,
+  assignments: {},   // topicId -> actorId (seated counterpart; starts at Beijing's offer)
   meters: { trust: 50, progress: 50, usBacking: 55, chinaBuyin: 45 },
   deck: [],
   deckPos: 0,
   collapsed: false,
   matchQuality: 0,   // 0..1
+  leverageLeft: LEVERAGE_BUDGET,
   log: [],
 };
 
@@ -63,7 +64,10 @@ function renderBrief() {
   $('brief').innerHTML = DATA.copy.brief.join('');
 }
 
-/* ================= PHASE A — STAFF ================= */
+/* ================= PHASE A — NEGOTIATE THE DELEGATION ================= *
+ * You don't pick China's people — Beijing fields its comfortable default
+ * delegation, and you spend limited leverage to push for the counterparts
+ * who actually hold power. The powerful, closed orgs cost the most.        */
 function gradeOf(topicId, actorId) {
   const t = DATA.topics.find(x => x.id === topicId);
   if (!t) return 'poor';
@@ -71,130 +75,103 @@ function gradeOf(topicId, actorId) {
   if (t.plausibleActorIds.includes(actorId)) return 'ok';
   return 'poor';
 }
+const gradeLabel = (g) => g === 'ideal' ? 'Ideal counterpart' : g === 'ok' ? 'Defensible' : 'Off-target';
+
+function defaultDelegation() {
+  const a = {};
+  DATA.topics.forEach(t => { a[t.id] = t.candidates[0].a; });
+  return a;
+}
+function costOf(topicId, actorId) {
+  const t = DATA.topics.find(x => x.id === topicId);
+  const c = t.candidates.find(x => x.a === actorId);
+  return c ? c.cost : 0;
+}
+function spentLeverage() {
+  return DATA.topics.reduce((s, t) => s + costOf(t.id, state.assignments[t.id]), 0);
+}
+function usedElsewhere(topicId, actorId) {
+  return DATA.topics.some(t => t.id !== topicId && state.assignments[t.id] === actorId);
+}
+
+function seat(topicId, actorId) {
+  if (state.assignments[topicId] === actorId) return;
+  if (usedElsewhere(topicId, actorId)) return;
+  const newSpent = spentLeverage() - costOf(topicId, state.assignments[topicId]) + costOf(topicId, actorId);
+  if (newSpent > LEVERAGE_BUDGET) return;
+  state.assignments[topicId] = actorId;
+  audio.click();
+  renderStaff();
+}
 
 function renderTracks() {
   const col = $('tracks-col');
   col.innerHTML = '';
+  const spent = spentLeverage();
   DATA.topics.forEach(t => {
-    const assigned = state.assignments[t.id];
+    const seated = state.assignments[t.id];
+    const a = actorById[seated];
+    const g = gradeOf(t.id, seated);
+
+    const chips = t.candidates.map(c => {
+      const ca = actorById[c.a];
+      const isSeated = seated === c.a;
+      const elsewhere = !isSeated && usedElsewhere(t.id, c.a);
+      const afford = (spent - costOf(t.id, seated) + c.cost) <= LEVERAGE_BUDGET;
+      const disabled = !isSeated && (elsewhere || !afford);
+      const cost = c.cost === 0
+        ? `<span class="cand-cost free">Beijing&rsquo;s offer</span>`
+        : `<span class="cand-cost">&minus;${c.cost} lev${elsewhere ? ' · seated elsewhere' : ''}</span>`;
+      return `<button class="cand${isSeated ? ' on' : ''}${disabled ? ' disabled' : ''}"
+        data-topic="${t.id}" data-actor="${c.a}"${disabled ? ' disabled' : ''}>
+        <span class="cand-name">${ca.name}</span>${cost}</button>`;
+    }).join('');
+
     const div = document.createElement('div');
-    div.className = 'track' +
-      (state.activeTopic === t.id ? ' active' : '') +
-      (assigned ? ' filled' : '');
-    div.dataset.topic = t.id;
-
-    let pickHtml;
-    if (assigned) {
-      const a = actorById[assigned];
-      const g = gradeOf(t.id, assigned);
-      const gl = g === 'ideal' ? 'Ideal' : g === 'ok' ? 'Defensible' : 'Off-target';
-      pickHtml = `<span class="pick-chip" data-unassign="${t.id}">${a.name}<span class="x">✕</span></span>
-                  <span class="pick-grade ${g === 'ideal' ? 'ideal' : g === 'ok' ? 'ok' : 'poor'}">${gl}</span>`;
-    } else {
-      pickHtml = `<span class="slot-empty">— no counterpart assigned —</span>`;
-    }
-
+    div.className = 'track filled grade-' + g;
     div.innerHTML = `
       <div class="track-top">
         <span class="track-title">${t.title}</span>
         <span class="track-flag">${t.id === 'lead' ? '★ delegation lead' : 'working track'}</span>
       </div>
       <div class="track-prompt">${t.prompt}</div>
-      <div class="track-pick">${pickHtml}</div>`;
+      <div class="cands">${chips}</div>
+      <div class="seat-detail">
+        <span class="seat-name">${a.name} &mdash; ${a.fullName}</span>
+        <span class="seat-stats">Power ${pips(a.power, 'pwr')} &nbsp; Openness ${pips(a.openness, 'opn')}</span>
+        <span class="pick-grade ${g}">${gradeLabel(g)}</span>
+      </div>`;
     col.appendChild(div);
   });
 
-  // events
-  col.querySelectorAll('.track').forEach(el => {
-    el.addEventListener('click', (ev) => {
-      const un = ev.target.closest('[data-unassign]');
-      if (un) {
-        delete state.assignments[un.dataset.unassign];
-        renderStaff();
-        return;
-      }
-      state.activeTopic = el.dataset.topic;
-      renderStaff();
-    });
+  col.querySelectorAll('.cand:not(.disabled)').forEach(el => {
+    el.addEventListener('click', () => seat(el.dataset.topic, el.dataset.actor));
   });
-}
-
-function renderRoster() {
-  const list = $('roster-list');
-  list.innerHTML = '';
-  const used = new Set(Object.values(state.assignments));
-  DATA.actors.forEach(a => {
-    const disabled = used.has(a.id);
-    const el = document.createElement('button');
-    el.className = 'org' + (disabled ? ' disabled' : '');
-    el.dataset.actor = a.id;
-    el.innerHTML = `
-      <div class="org-top">
-        <span class="org-name">${a.name}</span>
-        <span class="org-tag">${a.tag}</span>
-      </div>
-      <div class="org-stats">
-        <span class="stat">Power ${pips(a.power, 'pwr')}</span>
-        <span class="stat">Openness ${pips(a.openness, 'opn')}</span>
-        <span class="org-kind ${a.kind}">${a.kind}</span>
-      </div>`;
-    if (!disabled) {
-      el.addEventListener('click', () => assign(a.id));
-    }
-    list.appendChild(el);
-  });
-}
-
-function assign(actorId) {
-  if (!state.activeTopic) {
-    // no active track — drop into first empty track
-    const empty = DATA.topics.find(t => !state.assignments[t.id]);
-    if (!empty) return;
-    state.activeTopic = empty.id;
-  }
-  state.assignments[state.activeTopic] = actorId;
-  // auto-advance to next empty track
-  const next = DATA.topics.find(t => !state.assignments[t.id]);
-  state.activeTopic = next ? next.id : null;
-  renderStaff();
 }
 
 function renderStaffReadout() {
-  const n = Object.keys(state.assignments).length;
-  const total = DATA.topics.length;
-  const hint = $('roster-hint');
-  if (state.activeTopic) {
-    const t = DATA.topics.find(x => x.id === state.activeTopic);
-    hint.textContent = `Choosing for: ${t.title}.`;
-  } else if (n < total) {
-    hint.textContent = 'Click a track, then pick an organization.';
-  } else {
-    hint.textContent = 'All tracks staffed. Review, then lock it in.';
-  }
+  const left = LEVERAGE_BUDGET - spentLeverage();
+  state.leverageLeft = left;
+  $('leverage-val').textContent = `${left} / ${LEVERAGE_BUDGET}`;
+  const fill = $('leverage-fill');
+  if (fill) fill.style.width = (100 * left / LEVERAGE_BUDGET) + '%';
 
   let ideal = 0, ok = 0, poor = 0;
-  Object.entries(state.assignments).forEach(([tid, aid]) => {
-    const g = gradeOf(tid, aid);
+  DATA.topics.forEach(t => {
+    const g = gradeOf(t.id, state.assignments[t.id]);
     if (g === 'ideal') ideal++; else if (g === 'ok') ok++; else poor++;
   });
-  const ro = $('staff-readout');
-  if (n === 0) {
-    ro.innerHTML = 'Your delegation is led by Treasury Secretary Bessent. Now decide who across the strait you actually sit down with.';
-  } else {
-    ro.innerHTML = `Staffed <b>${n}/${total}</b>. ` +
-      `On the article&rsquo;s read: <b>${ideal}</b> ideal, <b>${ok}</b> defensible, <b>${poor}</b> off-target. ` +
-      (n === total ? 'Lock it in to open the talks.' : '');
-  }
-  $('lock-btn').disabled = n < total;
+  $('staff-readout').innerHTML =
+    `Beijing has seated its delegation. Your pushes so far: <b>${ideal}</b> of the article&rsquo;s ideal counterparts in the room, ` +
+    `<b>${ok}</b> defensible, <b>${poor}</b> off-target &mdash; with <b>${left}</b> leverage in reserve.`;
 }
 
 function renderStaff() {
   renderTracks();
-  renderRoster();
   renderStaffReadout();
 }
 
-/* compute starting meters from the staffing choices */
+/* compute starting meters from the negotiated delegation */
 function applyStaffing() {
   const m = { trust: 50, progress: 50, usBacking: 55, chinaBuyin: 45 };
   let sumPower = 0, sumOpen = 0, scoreSum = 0, scoreMax = 0;
@@ -219,6 +196,8 @@ function applyStaffing() {
   // the central tension: powerful-but-closed delegation => high buy-in, low trust
   m.trust += (avgOpen - 3) * 4;
   m.chinaBuyin += (avgPower - 3) * 4;
+  // leverage you didn't spend is political capital you kept in your pocket
+  m.usBacking += (LEVERAGE_BUDGET - spentLeverage());
 
   METER_KEYS.forEach(k => m[k] = Math.round(clamp(m[k])));
   state.meters = m;
@@ -432,8 +411,7 @@ function startTalks() {
 }
 
 function resetGame() {
-  state.assignments = {};
-  state.activeTopic = null;
+  state.assignments = defaultDelegation();
   state.meters = { trust: 50, progress: 50, usBacking: 55, chinaBuyin: 45 };
   state.collapsed = false;
 }
@@ -550,7 +528,7 @@ renderBrief();
 renderFuturesBrief();
 
 // dialogue mode
-$('start-btn').addEventListener('click', () => { audio.ensureAudio(); renderStaff(); showScreen('screen-staff'); });
+$('start-btn').addEventListener('click', () => { audio.ensureAudio(); state.assignments = defaultDelegation(); renderStaff(); showScreen('screen-staff'); });
 $('lock-btn').addEventListener('click', startTalks);
 $('next-btn').addEventListener('click', nextScenario);
 $('replay-btn').addEventListener('click', () => { resetGame(); renderStaff(); showScreen('screen-staff'); });

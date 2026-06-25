@@ -462,6 +462,49 @@ html, body {
   background: var(--gold); vertical-align: middle; margin: 0 0.85rem; opacity: 0.55;
 }
 
+/* ============ PHASE A — NEGOTIATE THE DELEGATION ============ */
+.leverage {
+  display: flex; align-items: center; gap: 0.8rem;
+  max-width: 32em; margin: 1.1rem auto 0; padding: 0.5rem 0.95rem;
+  background: rgba(15,13,9,0.55); border: 1px solid rgba(239,231,211,0.18);
+}
+.lev-label { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(239,231,211,0.72); white-space: nowrap; }
+.lev-bar { flex: 1; height: 8px; background: rgba(0,0,0,0.42); box-shadow: inset 0 1px 2px rgba(0,0,0,0.55); }
+.lev-fill { display: block; height: 100%; width: 100%; background: var(--gold); box-shadow: 0 0 10px rgba(200,162,60,0.7); transition: width 0.3s; }
+.lev-val { font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; font-weight: 600; color: var(--paper); white-space: nowrap; }
+
+.tracks-wide { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
+@media (min-width: 880px) { .tracks-wide { grid-template-columns: 1fr 1fr; } }
+.tracks-wide .track { cursor: default; }
+.tracks-wide .track:hover { transform: none; }
+.track.grade-ideal { border-left-color: var(--good); }
+.track.grade-ok { border-left-color: var(--gold); }
+.track.grade-poor { border-left-color: var(--bad); }
+
+.track .cands { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+.cand {
+  cursor: pointer; font-family: inherit; text-align: left;
+  background: #fff; border: 1.5px solid var(--line); padding: 0.42rem 0.7rem;
+  display: flex; flex-direction: column; gap: 0.12rem; min-width: 5.4rem;
+  transition: border-color 0.12s, transform 0.1s, background 0.12s;
+}
+.cand:hover:not(.disabled):not(.on) { border-color: var(--red); transform: translateY(-1px); background: #fffdf6; }
+.cand.on { border-color: var(--blue); background: var(--blue); }
+.cand.on .cand-name { color: var(--paper); }
+.cand.on .cand-cost, .cand.on .cand-cost.free { color: rgba(239,231,211,0.85); }
+.cand.disabled { opacity: 0.4; cursor: not-allowed; }
+.cand-name { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
+.cand-cost { font-size: 0.64rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.cand-cost.free { color: var(--red-2); font-weight: 600; }
+
+.seat-detail {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 1rem;
+  margin-top: 0.6rem; padding-top: 0.55rem; border-top: 1px solid var(--line);
+}
+.seat-name { font-size: 0.82rem; color: var(--ink-2); font-weight: 500; }
+.seat-stats { font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 0.35rem; }
+.seat-detail .pick-grade { margin-left: auto; }
+
 /* ---------- responsive ---------- */
 @media (max-width: 820px) {
   .staff-grid { grid-template-columns: 1fr; }
