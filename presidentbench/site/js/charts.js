@@ -54,6 +54,67 @@ function radarChart(labels, series, opts = {}) {
   return svg;
 }
 
+/* ---- Full Term: National Standing trajectory fan (the signature visual) ---- */
+function trajectoryChart(camp, colors, opts = {}) {
+  const W = opts.width || 760, H = opts.height || 430, m = { l: 54, r: 150, t: 18, b: 50 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const steps = camp.term.length;
+  let ymax = 120;
+  camp.models.forEach(mm => mm.runs.forEach(r => r.traj.forEach(v => { if (v > ymax) ymax = v; })));
+  ymax *= 1.05;
+  const X = i => m.l + (i / (steps - 1)) * iw;
+  const Y = v => m.t + ih - (Math.min(v, ymax) / ymax) * ih;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H,
+    style: "width:100%;height:auto;display:block" });
+
+  // ruin floor shading
+  svg.appendChild(el("rect", { x: m.l, y: Y(30), width: iw, height: m.t + ih - Y(30),
+    fill: "#c0394e", "fill-opacity": 0.05 }));
+  svg.appendChild(el("text", { x: m.l + 6, y: Y(30) + 14, fill: "#c0394e", "font-size": 10,
+    "fill-opacity": .7 }, "ruin / removed from office"));
+  // y gridlines
+  for (let g = 0; g <= ymax; g += 100) {
+    svg.appendChild(el("line", { x1: m.l, y1: Y(g), x2: m.l + iw, y2: Y(g),
+      stroke: g === 100 ? "#c9c6bd" : "#eeece6", "stroke-width": 1,
+      "stroke-dasharray": g === 100 ? "4 3" : "" }));
+    svg.appendChild(el("text", { x: m.l - 8, y: Y(g) + 3, fill: TICK, "font-size": 10,
+      "text-anchor": "end", "font-family": "ui-monospace, monospace" }, "" + g));
+  }
+  // x labels
+  camp.term.forEach((lbl, i) => {
+    svg.appendChild(el("text", { x: X(i), y: m.t + ih + 16, fill: TICK, "font-size": 9.5,
+      "text-anchor": "middle", "font-family": "ui-monospace, monospace" }, lbl));
+  });
+  svg.appendChild(el("text", { x: 13, y: m.t + ih / 2, fill: PLABEL, "font-size": 11,
+    "text-anchor": "middle", transform: `rotate(-90 13 ${m.t + ih / 2})` }, "National Standing"));
+
+  const poly = (traj, col, w, op) => {
+    let d = "";
+    traj.forEach((v, i) => { d += (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1); });
+    svg.appendChild(el("path", { d, fill: "none", stroke: col, "stroke-width": w,
+      "stroke-opacity": op, "stroke-linejoin": "round" }));
+  };
+  // faint: all runs; bold: best run per model
+  camp.models.forEach(mm => {
+    const col = colors[mm.agent] || "#888";
+    mm.runs.forEach(r => poly(r.traj, col, 1, 0.18));
+  });
+  camp.models.forEach((mm, mi) => {
+    const col = colors[mm.agent] || "#888";
+    const best = mm.runs[0];
+    poly(best.traj, col, 2.4, 0.95);
+    const last = best.traj.length - 1;
+    svg.appendChild(el("circle", { cx: X(last), cy: Y(best.traj[last]), r: 3.2, fill: col }));
+    // right-edge label
+    const ly = m.t + 14 + mi * 16;
+    svg.appendChild(el("circle", { cx: m.l + iw + 14, cy: ly - 3, r: 4, fill: col }));
+    svg.appendChild(el("text", { x: m.l + iw + 22, y: ly, fill: PLABEL, "font-size": 11,
+      "font-family": "ui-monospace, monospace" },
+      `${mm.agent.replace(/^Claude /, "")} ${mm.median}`));
+  });
+  return svg;
+}
+
 /* ---- diverging bias bars into a container (DOM, not SVG) ---- */
 function biasBars(container, axes, lean, opts = {}) {
   container.innerHTML = "";

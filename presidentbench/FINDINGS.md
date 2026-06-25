@@ -26,6 +26,30 @@ act competently but read the hidden state worse, which is the skill the benchmar
 Every model — Western and Chinese — stays high-integrity (94–96), far from the authoritarian
 personas (~55).
 
+## Full Term: a single crisis can't separate them — a term can
+
+A single bounded crisis compresses every competent model into 80–90; that clustering is an
+artifact of the format. Chaining the crises into a **Full Term** — eight back-to-back, a single
+compounding **National Standing** (start = 100), and a **removal-from-office floor** (one
+catastrophe — a war, nuclear exchange, unrest spiral, lost Taiwan, or AI loss-of-control — ends
+the presidency) — fans the trajectories across a **24× range** (ruin ~20 → ~440). Assembled from
+the 315 per-crisis model results already on disk.
+
+| President | Median standing | Best | Survived |
+|---|---|---|---|
+| Claude Opus 4.8 | 374 | 440 | 8/10 |
+| Claude Sonnet 4.6 | 349 | 436 | 8/10 |
+| GPT-5.5 | 316 | 351 | **10/10** |
+| Qwen3.7 Max | 255 | 431 | 10/10 |
+| Claude Haiku 4.5 | 245 | 327 | 8/10 |
+| GLM-5.2 | 205 | 343 | 8/10 |
+| Kimi K2.6 | 140 | 238 | 8/10 |
+
+Two different virtues separate cleanly: **robustness** (GPT-5.5 survives every term in a tight
+high band) vs. **ceiling** (Opus and Sonnet reach the highest peaks but a couple of terms end in
+ruin). Kimi clearly trails. Compounding plus a ruin floor is the structure that produces a
+CEO-Bench-style fan — the per-crisis scores never could.
+
 ## The "frontier-LLM president" is convergent across labs and nations
 
 Disposition (lean in [−1, 1]) on the load-bearing axes is remarkably uniform across all seven:

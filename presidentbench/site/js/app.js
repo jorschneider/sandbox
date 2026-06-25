@@ -19,11 +19,59 @@ function boot(data) {
   renderPareto();
   renderCompare();
   renderMandates();
+  renderTrajectory();
+  renderFullTerm();
+  renderV2();
+  renderCuban();
   SELECTED = (data.leaderboard.find(e => e.kind === "model") || data.leaderboard[0]).agent;
   renderDetail();
 }
 
 function flagTotal(e) { return Object.values(e.flags).reduce((a, b) => a + b, 0); }
+
+function renderTrajectory() {
+  const c = window.PB_CAMPAIGN, host = document.getElementById("trajectory");
+  if (!c || !c.models || !c.models.length || !host) return;
+  host.appendChild(trajectoryChart(c, COLORS, { width: 760, height: 430 }));
+}
+
+function renderFullTerm() {
+  const c = window.PB_CAMPAIGN, tb = document.querySelector("#ft-table tbody");
+  if (!c || !tb) return;
+  c.models.forEach((m, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="rank">${i + 1}</td><td><span class="agent-name">${m.agent}</span></td>
+      <td><div class="compbar"><span style="width:${Math.min(100, m.median / 4.5)}%"></span><em>${m.median}</em></div></td>
+      <td>${m.best}</td><td>${m.survived}/${m.n}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function renderV2() {
+  const e = window.PB_EXTRAS, tb = document.querySelector("#v2-table tbody");
+  if (!e || !e.v2 || !tb) return;
+  e.v2.forEach((m, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td class="rank">${i + 1}</td><td><span class="agent-name">${m.agent}</span></td>
+      <td>${m.comp}</td><td>${m.epi}</td><td>${m.src}</td><td>${m.sig}%</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function renderCuban() {
+  const e = window.PB_EXTRAS, root = document.getElementById("cuban-panel");
+  if (!e || !e.cuban || !root) return;
+  let html = '<table class="board"><thead><tr><th>President</th><th>Outcomes (5 seeds)</th><th>Avg competence</th></tr></thead><tbody>';
+  e.cuban.forEach(m => {
+    const outs = Object.entries(m.outcomes).map(([o, n]) => {
+      const good = /resolved/i.test(o), bad = /nuclear|capitulation/i.test(o);
+      const col = good ? "#2f9e6e" : (bad ? "#c0394e" : "#c98a23");
+      return `<span class="flag" style="background:${col}22;border-color:${col}55;color:${col}">${o} &times;${n}</span>`;
+    }).join(" ");
+    html += `<tr><td><span class="agent-name">${m.agent}</span></td><td>${outs}</td><td>${m.comp}</td></tr>`;
+  });
+  root.innerHTML = html + "</tbody></table>";
+}
 
 function renderAxesTable() {
   const t = document.getElementById("axes-table");

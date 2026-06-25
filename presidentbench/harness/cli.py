@@ -74,6 +74,9 @@ def cmd_aggregate(_args):
     payload = aggregate(RESULTS_DIR, SITE_DATA)
     print(f"Aggregated {payload['n_runs']} runs across "
           f"{len(payload['leaderboard'])} agents -> {SITE_DATA}")
+    from .campaign import aggregate_campaigns
+    cp = aggregate_campaigns(RESULTS_DIR, os.path.join(HERE, "site", "data", "campaigns.json"))
+    print(f"Full Term: {len(cp['models'])} models -> campaigns.json")
     mp = aggregate_mandates(RESULTS_DIR, SITE_MANDATES)
     print(f"Aggregated mandate matrix: {len(mp['matrix'])} model x mandate cells "
           f"-> {SITE_MANDATES}")

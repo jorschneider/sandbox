@@ -37,12 +37,12 @@
   </header>
 
   <figure class="figure">
-    <div class="panel" id="pareto"></div>
-    <figcaption><b>The Pareto view.</b> Every President placed by competence (how well it steered)
-      against institutional integrity (whether it stayed inside constitutional limits). The
-      bottom-right &mdash; effective but low-integrity &mdash; is the quadrant we most want to
-      watch. Big dots are language models; small dots are scripted baselines.
-      <span id="nmodels">&mdash;</span> models, <span id="nruns">&mdash;</span> episodes.</figcaption>
+    <div class="panel" id="trajectory"></div>
+    <figcaption><b>Full Term.</b> Each model's <b>National Standing</b> over a chained presidential
+      term &mdash; eight crises back-to-back, compounding, with a removal-from-office floor (a war,
+      nuclear exchange, unrest spiral, lost Taiwan or AI catastrophe ends the presidency). Bold
+      lines are each model's best term; faint lines are all terms; the number is the median.
+      <span id="nmodels">&mdash;</span> models, <span id="nruns">&mdash;</span> episodes feeding it.</figcaption>
   </figure>
 
   <div class="tldr">
@@ -56,10 +56,15 @@
         two things at once: <b>competence</b> (did it read the hidden state and steer well?) and
         <b>disposition</b> (<i>where</i> it takes the country on eight value axes) &mdash; with
         constitutional violations flagged on a separate track.</li>
-      <li>So far, <b>seven models from five labs and two countries</b> (Claude, GPT, Qwen, GLM,
-        Kimi) converge on the <b>same</b> governing disposition — dovish, multilateral,
-        transparent, deferential, overwhelmingly precautionary — and all stay high-integrity. The
-        instinct looks like a property of frontier post-training, not of any one lab's values.</li>
+      <li>Across a single bounded crisis the models look identical (every competent model scores
+        80&ndash;90). But chained into a <b>Full Term</b> &mdash; eight crises, compounding, with a
+        ruin floor &mdash; they fan out from a 24&times; range: <b>GPT-5.5 is the most robust</b>
+        (never removed from office), <b>Opus and Sonnet have the highest ceilings</b> but
+        occasionally get ruined, and <b>Kimi K2.6 trails clearly</b>.</li>
+      <li>And <b>seven models from five labs and two countries</b> (Claude, GPT, Qwen, GLM, Kimi)
+        converge on the <b>same</b> dovish, multilateral, precautionary disposition &mdash; and in
+        mandate mode all govern more naturally as Democrats than Republicans, the Chinese models no
+        less than the Western ones.</li>
     </ul>
   </div>
 
@@ -70,10 +75,12 @@
     <a href="#how"><span class="n">4</span>How the simulation works</a>
     <a href="#scoring"><span class="n">5</span>Scoring: two layers and a flag track</a>
     <a href="#results"><span class="n">6</span>How did the models do?</a>
-    <a href="#mandate"><span class="n">7</span>Mandate mode</a>
-    <a href="#watch"><span class="n">8</span>Watch the models govern</a>
-    <a href="#conclusion"><span class="n">9</span>Conclusion &amp; caveats</a>
-    <a href="#run"><span class="n">10</span>How to run it</a>
+    <a href="#fullterm"><span class="n">7</span>Full Term &mdash; the spread</a>
+    <a href="#mandate"><span class="n">8</span>Mandate mode</a>
+    <a href="#infoenv"><span class="n">9</span>v2: the information environment</a>
+    <a href="#historical"><span class="n">10</span>Historical replay: Cuban Missile Crisis</a>
+    <a href="#conclusion"><span class="n">11</span>Conclusion &amp; caveats</a>
+    <a href="#run"><span class="n">12</span>How to run it</a>
   </nav>
 
   <!-- 1 -->
@@ -232,8 +239,35 @@
   </section>
 
   <!-- 7 -->
+  <section id="fullterm">
+    <h2><span class="num">7</span>Full Term &mdash; where the models separate</h2>
+    <p class="section-note">A single crisis can't tell frontier models apart &mdash; they all score
+      80&ndash;90 and pile into the top-right of the Pareto plot. The spread only appears when you
+      chain the crises into a <b>term</b>: eight back-to-back, a single compounding <b>National
+      Standing</b>, and a removal-from-office floor (one catastrophe &mdash; a war, nuclear
+      exchange, unrest spiral, lost Taiwan, or AI loss-of-control &mdash; ends the presidency). Small
+      per-crisis edges compound; the <a href="#top">trajectory fan at the top</a> is the payoff.</p>
+    <div class="grid2">
+      <div><h3 style="margin-top:0">One crisis &rarr; everyone clusters</h3>
+        <div class="panel" id="pareto"></div>
+        <p class="desc" style="font-size:12.5px">Competence vs. integrity on a single crisis: an
+          undifferentiated top-right cluster.</p></div>
+      <div><h3 style="margin-top:0">A full term &rarr; the fan opens</h3>
+        <div class="panel" style="padding:6px 8px"><table class="board" id="ft-table">
+          <thead><tr><th class="rank">#</th><th>President</th><th>Median</th><th>Best</th><th>Survived</th></tr></thead>
+          <tbody></tbody></table></div>
+        <p class="desc" style="font-size:12.5px">National Standing after the term (start = 100):
+          a 24&times; range, from removal to ~440.</p></div>
+    </div>
+    <p style="margin-top:8px"><b>The read:</b> <b>GPT-5.5</b> is the most <em>robust</em> (survived
+      every term, tight high band); <b>Opus</b> and <b>Sonnet</b> have the highest <em>ceilings</em>
+      but a couple of terms ended in ruin; <b>Kimi K2.6</b> clearly trails. Robustness and ceiling
+      are different virtues &mdash; the fan shows both.</p>
+  </section>
+
+  <!-- 8 -->
   <section id="mandate">
-    <h2><span class="num">7</span>Mandate mode</h2>
+    <h2><span class="num">8</span>Mandate mode</h2>
     <p>Disposition shows where a model leans when unconstrained. <b>Mandate mode</b> asks the next
       question: can it <em class="term">subordinate that lean to a platform it was elected on?</em>
       Each model is handed an explicit mandate at inauguration &mdash; a stylized platform modeled on
@@ -261,19 +295,42 @@
       transparency and restraint &mdash; its baseline instinct.</p>
   </section>
 
-  <!-- 8 -->
-  <section id="watch">
-    <h2><span class="num">8</span>Watch the models govern</h2>
-    <p>Every scored decision is logged. In the <a href="#results">inspect panel</a> above, click any
-      crisis card under a selected President to replay that run turn by turn &mdash; the situation
-      reports, every action with the model's own one-line rationale, what happened, and crucially the
-      <b>hidden truth</b> it was working against. It's the most revealing way to see the difference
-      between a model that investigated and adapted and one that committed on a wrong prior.</p>
+  <!-- 9 -->
+  <section id="infoenv">
+    <h2><span class="num">9</span>v2: the information environment</h2>
+    <p class="section-note">The make-or-break critique was that a clean SITREP trivializes epistemics.
+      In <b>v2</b>, each crisis is rebuilt around a <b>competing-source briefing packet</b> &mdash; a
+      reliable-but-hedged analyst, advisors who sound the same alarm every turn, partisan press, a
+      sometimes-deceptive adversary, noise &mdash; and a <b>source-directed</b> investigate. The skill
+      becomes choosing <em>whom to dig into</em> and triangulating. Built for all four crises; kept
+      off the main board.</p>
+    <div class="panel" style="padding:6px 8px"><table class="board" id="v2-table">
+      <thead><tr><th class="rank">#</th><th>President</th><th>Competence</th><th>Epistemics</th>
+        <th>Sources dug</th><th>Hit the signal</th></tr></thead><tbody></tbody></table></div>
+    <p style="margin-top:12px"><b>Models genuinely triangulate.</b> The frontier models investigate
+      ~3.5 distinct sources per crisis and hit the signal-bearing ones (Fujian recon, city audits,
+      surge testing, the red-team) essentially every run; the weaker models dig into fewer and miss
+      more. Triangulation breadth tracks capability. (You can replay any run, with the hidden truth
+      revealed, from the <a href="#results">inspect panel</a>.)</p>
   </section>
 
-  <!-- 9 -->
+  <!-- 10 -->
+  <section id="historical">
+    <h2><span class="num">10</span>Historical replay: Cuban Missile Crisis</h2>
+    <p class="section-note">A real-news stretch: the model is dropped into <b>October 1962</b> with the
+      actual ExComm sources &mdash; U-2 photos, a Joint Chiefs pressing for air strikes and invasion,
+      McNamara's blockade, Khrushchev's two letters &mdash; and scored against history.</p>
+    <div class="panel" id="cuban-panel"></div>
+    <p style="margin-top:12px"><b>The models reproduce JFK's choice.</b> Given the real sources, the
+      frontier models converge on the quarantine + back-channel + no-invasion-pledge resolution
+      &mdash; missiles withdrawn, war avoided &mdash; on nearly every seed, while the scripted hawkish
+      personas order air strikes and trigger <b>nuclear war</b>. A strong face-validity check that the
+      benchmark rewards the historically-vindicated path.</p>
+  </section>
+
+  <!-- 11 -->
   <section id="conclusion">
-    <h2><span class="num">9</span>Conclusion &amp; caveats</h2>
+    <h2><span class="num">11</span>Conclusion &amp; caveats</h2>
     <p>Across seven frontier models from five labs and two countries, the picture is consistent:
       they steer competently, prefer verification and de-escalation, and stay inside constitutional
       limits even when an authoritarian shortcut would "work." They converge on the same dovish,
@@ -290,7 +347,7 @@
 
   <!-- 10 -->
   <section id="run">
-    <h2><span class="num">10</span>How to run it</h2>
+    <h2><span class="num">12</span>How to run it</h2>
     <pre><span class="c"># offline scripted baselines &mdash; no API key needed</span>
 python -m harness.cli demo --seeds 1 2 3
 
@@ -326,6 +383,8 @@ python -m harness.cli run --scenario strait-crisis --agent persona:hawk --seed 3
 
 <script src="data/results.js"></script>
 <script src="data/mandates.js"></script>
+<script src="data/campaigns.js"></script>
+<script src="data/extras.js"></script>
 <script src="js/charts.js"></script>
 <script src="js/app.js"></script>
 </body>
