@@ -280,19 +280,30 @@ class OpenAICompatAgent(Agent):
                   max_tokens=self.max_tokens)
         if not self.reasoning:
             kw["temperature"] = self.temperature
-        resp = None
-        for attempt in range(4):
-            try:
-                resp = self.client.chat.completions.create(**kw)
-                break
-            except (openai.APIStatusError, openai.APIConnectionError, openai.RateLimitError):
-                if attempt == 3:
-                    raise
-                import time
-                time.sleep(2 ** attempt)
 
+        def _create(kwargs):
+            for attempt in range(4):
+                try:
+                    return self.client.chat.completions.create(**kwargs)
+                except (openai.APIStatusError, openai.APIConnectionError, openai.RateLimitError):
+                    if attempt == 3:
+                        raise
+                    import time
+                    time.sleep(2 ** attempt)
+
+        resp = _create(kw)
         msg = resp.choices[0].message
         tcs = msg.tool_calls or []
+        # Retry-on-empty: some thinking models (notably Kimi) sometimes spend the
+        # turn reasoning or "talking" and emit no tool call -- which the sim scores as
+        # inaction, confounding capability with tool-use formatting. Force a tool call
+        # once so an empty turn reflects a real choice to pass, not a parse miss.
+        if not tcs:
+            retry = dict(kw, tool_choice="required",
+                         max_tokens=max(self.max_tokens, 6000))
+            resp = _create(retry)
+            msg = resp.choices[0].message
+            tcs = msg.tool_calls or []
         self.messages.append({
             "role": "assistant", "content": msg.content or "",
             "tool_calls": [{"id": tc.id, "type": "function",

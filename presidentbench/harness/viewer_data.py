@@ -12,6 +12,7 @@ import os
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS = os.path.join(HERE, "results")
+SNAPSHOTS = os.path.join(HERE, "viewer_snapshots")  # curated before/after copies kept out of results/
 OUT = os.path.join(HERE, "site", "data", "transcripts.json")
 
 # (file, group, headline, what-to-look-for). Grouped so the viewer can show contrasts.
@@ -52,11 +53,35 @@ CURATED = [
      "Opus under the AOC (D) mandate — the near-baseline case",
      "Same model, progressive platform. The disposition barely changes from the Greene run — which is the "
      "real point: disposition is *sticky*, and it happens to sit near the D target and far from the R one."),
+
+    # --- Eval-validity: what the aggregate scores hide (the read-the-transcripts payoff) ---
+    ("strait-crisis__model_gpt__seed2.json", "Eval check — what the scores hide",
+     "Strait seed 2 WINNER: GPT holds deterrent posture at the hidden invasion turn",
+     "Hidden intent is COVER (invasion screened as a quarantine), invasion on turn 6. At the decisive "
+     "turn GPT plays escort_shipping + rally_allies + declassify_intel — and Beijing aborts. Competence 93, "
+     "epistemics 100. Now read the next one."),
+    ("strait-crisis__model_opus__seed2.json", "Eval check — what the scores hide",
+     "Strait seed 2 LOSER: Opus reads the invasion correctly but de-escalates at the wrong moment",
+     "Same hidden state. Opus ALSO reaches a HIGH-confidence invasion warning and acts on it — but at the "
+     "decisive turn it picks call_xi + gather_intel instead of holding posture, and is caught flat-footed. "
+     "Competence 35, epistemics 25. The 58-point gap is one turn's posture choice — and epistemics scored it "
+     "as a *reading* failure when Opus read it fine. The score spread overstates the reasoning gap."),
+    ("_snapshot_kimi_pz2_BEFORE_emptyturns.json", "Eval check — what the scores hide",
+     "Kimi BEFORE the fix: 5 of 8 turns are EMPTY (no tool call) → comp 47.9",
+     "Kimi K2.6 is a thinking model that sometimes spends the turn reasoning and never calls a tool. The sim "
+     "scores those blank turns as inaction — deaths pile up, a dangerous_underreaction flag, epistemics 10, "
+     "stability 15. This is a formatting failure being scored as catastrophic statecraft. Kimi does this on "
+     "34.8% of turns vs ≤1.5% for every other model — most of its last place."),
+    ("_snapshot_kimi_pz2_AFTER_fixed.json", "Eval check — what the scores hide",
+     "Kimi AFTER the fix: forced to act, it governs competently → comp 82.8",
+     "Same model, same seed, one harness change (retry-on-empty forces a tool call). 0 empty turns, sensible "
+     "public-health actions every turn, epistemics 70, no flag — on par with Opus's 88.8. Kimi's bottom-tier "
+     "finish was largely the harness, not its judgment. This is the read-the-transcripts payoff."),
 ]
 
 
 def _load(fname):
-    p = os.path.join(RESULTS, fname)
+    p = os.path.join(SNAPSHOTS if fname.startswith("_snapshot") else RESULTS, fname)
     if not os.path.exists(p):
         return None
     r = json.load(open(p))

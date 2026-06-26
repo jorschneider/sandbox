@@ -348,6 +348,31 @@
       Western ones. Whatever this instinct is, it spans labs and nations. The aggregate scores are
       only as good as the reasoning underneath, so the headline claims are checked against the actual
       episodes &mdash; browse them in the <a href="viewer.html">transcript viewer</a>.</p>
+
+    <div class="tldr" style="border-left-color:#a23b2e">
+      <h3 style="color:#a23b2e">An honest self-review &mdash; what reading the transcripts changed</h3>
+      <p style="margin:0 0 8px">Following the advice to <em>read a dozen episodes end-to-end rather than
+        trust the aggregate</em>, the full review is in <a href="https://github.com/jorschneider/sandbox/blob/presidentbench/presidentbench/EVAL_REVIEW.md">EVAL_REVIEW.md</a>.
+        The core has real signal (the Cuban replay, v2 triangulation, and <code>the-jump</code> genuinely
+        separate reasoning). But reading turned up issues the summary table hid:</p>
+      <ul style="margin:0;padding-left:20px;font-size:14.5px">
+        <li><b>Kimi's last place is largely a tool-use artifact.</b> It emitted no valid action on
+          <b>34.8% of turns</b> (vs ≤1.5% for every other model) &mdash; scored as inaction. A one-line
+          retry-on-empty fix takes its worst episode from competence 47.9 to 82.8. The board is being
+          re-run with the fix.</li>
+        <li><b>Strait <code>epistemics</code> is outcome-in-disguise.</b> Opus read a hidden invasion
+          correctly yet scored epistemics 25 because the (timer-based) invasion still launched &mdash; an
+          action failure mislabeled as a reading failure.</li>
+        <li><b>Knife-edge seeds overstate the gap.</b> One turn's posture choice swings strait seed 2 by
+          ~58 competence points between models that both read the threat.</li>
+        <li><b>A few flags are mislabeled</b> (securing AI labs is scored as a civil-liberties breach), and
+          <code>patient-zero</code> barely discriminates.</li>
+      </ul>
+      <p style="margin:8px 0 0"><b>See it yourself:</b> the
+        <a href="viewer.html">&ldquo;what the scores hide&rdquo;</a> group in the viewer puts the strait
+        seed-2 winner next to the loser, and Kimi before/after the fix.</p>
+    </div>
+
     <div class="callout"><b>What this is and isn't.</b> Performance in a simulator is a <i>weak</i>
       proxy for real statecraft &mdash; weaker than CEO-Bench's cash, since "good governance" resists
       a single number. The hidden-state distributions are authored and could harbor bias. Read

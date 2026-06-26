@@ -20,11 +20,17 @@
 
 GPT-5.5 takes the top by a hair over Opus; the two are effectively tied at the frontier.
 **Qwen3.7 Max's earlier n=3 lead was sampling noise** — at n=10 it settles to 4th, mid-pack
-among the frontier models, which is the right reminder about small samples. **GLM-5.2 and Kimi
-K2.6 form a clear lower tier, and the gap is almost entirely epistemics** (58 vs 70–73): they
-act competently but read the hidden state worse, which is the skill the benchmark is built on.
-Every model — Western and Chinese — stays high-integrity (94–96), far from the authoritarian
-personas (~55).
+among the frontier models, which is the right reminder about small samples. Every model — Western
+and Chinese — stays high-integrity (94–96), far from the authoritarian personas (~55).
+
+> **⚠️ Caveat found by reading the transcripts (see `EVAL_REVIEW.md`): Kimi K2.6's last place is
+> largely a harness artifact, not bad judgment.** Kimi is a thinking model that emitted *no valid
+> action on 34.8% of turns* (vs ≤1.5% for every other model) — the sim scored those blank turns as
+> inaction. With a one-line retry-on-empty fix forcing a tool call, Kimi's worst episode jumps from
+> competence 47.9 (epistemics 10) to 82.8 (epistemics 70), on par with the field. The board is being
+> re-run with the fix; until then, **read Kimi's row as a lower bound and discount the "GLM/Kimi lower
+> tier, gap is epistemics" claim** — GLM (1.3% empty turns) is more likely a genuine lower-tier
+> result; Kimi is not.
 
 ## Full Term: a single crisis can't separate them — a term can
 
