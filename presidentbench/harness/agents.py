@@ -235,7 +235,9 @@ class OpenAICompatAgent(Agent):
     def __init__(self, model: str, name=None, base_url=None, api_key=None,
                  max_tokens: int = 1600, temperature: float = 0.8):
         import openai, re
-        self.client = openai.OpenAI(base_url=base_url, api_key=api_key,
+        # Per-request timeout + retries so a single stalled connection can't hang a whole
+        # batch (some OpenRouter upstreams occasionally wedge with no response).
+        self.client = openai.OpenAI(base_url=base_url, api_key=api_key, timeout=120.0, max_retries=2,
                                     default_headers={"HTTP-Referer": "https://presidentbench.vercel.app",
                                                      "X-Title": "PresidentBench"})
         self.model = model

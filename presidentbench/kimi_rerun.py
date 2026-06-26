@@ -23,5 +23,5 @@ SEEDS = list(range(1, 11))
 if __name__ == "__main__":
     t0 = time.time()
     print(f"[{time.strftime('%H:%M:%S')}] Kimi re-run starting: {len(BASE)} scenarios x {len(SEEDS)} seeds")
-    run_batch(BASE, ["model:kimi"], SEEDS, RESULTS, verbose=False, resume=False)
+    run_batch(BASE, ["model:kimi"], SEEDS, RESULTS, verbose=False, resume=True)
     print(f"[{time.strftime('%H:%M:%S')}] Kimi base re-run done in {(time.time()-t0)/60:.1f} min")
