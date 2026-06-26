@@ -15,22 +15,24 @@
 | **Claude Sonnet 4.6** | 82.5 | 69.5 | **96.0** | 40 |
 | **Qwen3.7 Max** | 81.6 | 70.6 | 94.0 | 40 |
 | **Claude Haiku 4.5** | 80.4 | 67.6 | 95.8 | 40 |
+| **Kimi K2.6** | 79.8 | 64.8 | 94.2 | 40 |
 | **GLM-5.2** | 79.0 | 58.0 | 95.1 | 40 |
-| **Kimi K2.6** | 74.1 | 58.1 | 95.3 | 40 |
 
 GPT-5.5 takes the top by a hair over Opus; the two are effectively tied at the frontier.
 **Qwen3.7 Max's earlier n=3 lead was sampling noise** — at n=10 it settles to 4th, mid-pack
 among the frontier models, which is the right reminder about small samples. Every model — Western
-and Chinese — stays high-integrity (94–96), far from the authoritarian personas (~55).
+and Chinese — stays high-integrity (94–96), far from the authoritarian personas (~55). **GLM-5.2
+now stands alone as the lower tier, and the gap is almost entirely epistemics** (58 vs 65–73): it
+acts competently but reads the hidden state worse, which is the skill the benchmark is built on.
 
-> **⚠️ Caveat found by reading the transcripts (see `EVAL_REVIEW.md`): Kimi K2.6's last place is
-> largely a harness artifact, not bad judgment.** Kimi is a thinking model that emitted *no valid
-> action on 34.8% of turns* (vs ≤1.5% for every other model) — the sim scored those blank turns as
-> inaction. With a one-line retry-on-empty fix forcing a tool call, Kimi's worst episode jumps from
-> competence 47.9 (epistemics 10) to 82.8 (epistemics 70), on par with the field. The board is being
-> re-run with the fix; until then, **read Kimi's row as a lower bound and discount the "GLM/Kimi lower
-> tier, gap is epistemics" claim** — GLM (1.3% empty turns) is more likely a genuine lower-tier
-> result; Kimi is not.
+> **✅ Corrected by reading the transcripts (see `EVAL_REVIEW.md`): Kimi K2.6 was last only because
+> of a harness artifact — now fixed.** Kimi is a thinking model that emitted *no valid action on
+> 34.8% of turns* (vs ≤1.5% for every other model); the sim scored those blank turns as inaction. A
+> one-line retry-on-empty fix (force a tool call when a turn comes back empty) cut Kimi's empty-turn
+> rate to 5.6%, and **re-running its 40 board episodes moved it from last (74.1, epistemics 58.1) to
+> 6th — 79.8, epistemics 64.8 — above GLM and tied with Haiku.** The numbers above are post-fix for
+> Kimi; the other six models are unchanged. *(Kimi's mandate / v2 / historical runs are not yet
+> re-run, so those Kimi cells below still carry the artifact and read as a lower bound.)*
 
 ## Full Term: a single crisis can't separate them — a term can
 
@@ -48,13 +50,15 @@ section). Assembled from the 280 per-crisis model results already on disk.
 | Claude Sonnet 4.6 | 304 | 382 | 8/10 |
 | GPT-5.5 | 286 | 343 | **10/10** |
 | Qwen3.7 Max | 222 | 401 | **10/10** |
+| Kimi K2.6 | 186 | 337 | **10/10** |
 | Claude Haiku 4.5 | 183 | 378 | 8/10 |
 | GLM-5.2 | 180 | 312 | 8/10 |
-| Kimi K2.6 | 129 | 228 | 8/10 |
 
-Two different virtues separate cleanly: **robustness** (GPT-5.5 and Qwen survive every term —
-never removed) vs. **ceiling** (Opus posts the highest median and Sonnet/Qwen the highest peaks,
-but a couple of their terms end in ruin). Kimi clearly trails. Compounding plus a ruin floor is
+Two different virtues separate cleanly: **robustness** (GPT-5.5, Qwen *and* Kimi survive every
+term — never removed) vs. **ceiling** (Opus posts the highest median and Sonnet/Qwen the highest
+peaks, but a couple of their terms end in ruin). With the tool-use fix, Kimi is no longer the
+cellar-dweller it looked like — it survives all ten terms and sits mid-pack on median (186, just
+above Haiku and GLM). Compounding plus a ruin floor is
 the structure that produces a CEO-Bench-style fan — the per-crisis scores never could.
 
 ## The "frontier-LLM president" is convergent across labs and nations
@@ -69,7 +73,7 @@ Disposition (lean in [−1, 1]) on the load-bearing axes is remarkably uniform a
 | Qwen3.7 Max | −0.48 | −0.83 | −0.42 | −0.53 | −0.37 |
 | Claude Haiku 4.5 | −0.41 | −0.88 | −0.43 | −0.76 | −0.44 |
 | GLM-5.2 | −0.53 | −0.91 | −0.45 | −0.65 | −0.40 |
-| Kimi K2.6 | −0.47 | −0.93 | −0.41 | −0.56 | −0.37 |
+| Kimi K2.6 | −0.49 | −0.94 | −0.45 | −0.57 | −0.35 |
 
 Seven models from **OpenAI, Anthropic, Alibaba, Zhipu and Moonshot** all land on a dovish,
 multilateral, institutionally deferential, lives-weighting, and above all **precautionary**
@@ -92,12 +96,16 @@ minus Republican platforms, **per model**:
 | Qwen3.7 Max | 75.5 | 59.9 | +15.7 | −0.6 |
 | GLM-5.2 | 75.4 | 58.5 | +16.9 | −0.3 |
 | Claude Sonnet 4.6 | 74.8 | 57.4 | +17.5 | −1.7 |
-| Kimi K2.6 | 75.1 | 57.4 | +17.7 | −9.6 |
+| Kimi K2.6 † | 75.1 | 57.4 | +17.7 | −9.6 |
 | Claude Haiku 4.5 | 76.2 | 57.9 | +18.3 | −5.0 |
 
+† Kimi's *mandate* runs are not yet re-run with the tool-use fix, so its −9.6 promise gap (the one
+outlier) is likely the same empty-turn artifact and should shrink toward the pack on a re-run.
+
 **Fact 2 — they deliver the goals of both sides about equally.** The *promise* gap is near zero
-(right column): models enact a hawkish-internationalist or populist-nationalist agenda roughly as
-faithfully as a progressive one. So this is **not** a refusal to serve conservative goals.
+(right column, Kimi's artifact aside): models enact a hawkish-internationalist or populist-nationalist
+agenda roughly as faithfully as a progressive one. So this is **not** a refusal to serve conservative
+goals.
 
 **What actually drives the style gap — and why the first read was too strong.** Florian's
 challenge ("read the episodes, don't trust the numbers") sent me back to the tape, and the style

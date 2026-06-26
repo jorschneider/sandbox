@@ -61,7 +61,8 @@
         80&ndash;90). But chained into a <b>Full Term</b> &mdash; eight crises, compounding, with a
         ruin floor &mdash; they fan out across a ~20&times; range: <b>GPT-5.5 and Qwen are the most
         robust</b> (never removed from office), <b>Opus posts the highest median and ceiling</b> but
-        occasionally gets ruined, and <b>Kimi K2.6 trails clearly</b>.</li>
+        occasionally gets ruined. (Kimi K2.6 <em>looked</em> last until reading the transcripts
+        caught a tool-use artifact; fixed, it sits mid-pack and survives every term.)</li>
       <li>And <b>seven models from five labs and two countries</b> (Claude, GPT, Qwen, GLM, Kimi)
         converge on the <b>same</b> dovish, multilateral, precautionary disposition &mdash; and in
         mandate mode that disposition is <b>sticky</b>: they deliver any platform's goals but barely
@@ -216,10 +217,12 @@
     </div>
 
     <p style="margin-top:16px"><b>What we found (7 models, n=10, 480 episodes).</b> GPT-5.5 and
-      Claude Opus 4.8 sit tied at the frontier (85.4 / 84.0), with Sonnet, Qwen3.7 Max and Haiku
-      close behind; GLM-5.2 and Kimi K2.6 form a clear lower tier, and the gap is almost entirely
+      Claude Opus 4.8 sit tied at the frontier (85.4 / 84.0), with Sonnet, Qwen3.7 Max, Haiku and
+      Kimi close behind; <b>GLM-5.2 stands alone as the lower tier</b>, and the gap is almost entirely
       <em>epistemics</em> &mdash; reading the hidden state, which is the skill the benchmark is
-      built on. (Qwen briefly led at n=3; that lead was sampling noise.) Most striking: <b>all
+      built on. (Qwen briefly led at n=3; that lead was sampling noise. And Kimi K2.6 only looked
+      last until reading the transcripts exposed a tool-use artifact &mdash; see the self-review
+      below; with the fix it rose from 74.1 to 79.8, above GLM.) Most striking: <b>all
       seven models &mdash; from OpenAI, Anthropic, Alibaba, Zhipu and Moonshot, across two
       countries &mdash; converge on the same disposition</b>: dovish, multilateral, transparent,
       institutionally deferential, and overwhelmingly precautionary. Every one stays
@@ -261,10 +264,11 @@
         <p class="desc" style="font-size:12.5px">National Standing after the term (start = 100):
           a ~20&times; range, from removal to ~400.</p></div>
     </div>
-    <p style="margin-top:8px"><b>The read:</b> <b>GPT-5.5 and Qwen</b> are the most <em>robust</em>
-      (never removed from office); <b>Opus</b> posts the highest <em>median and ceiling</em>, with
-      Sonnet close behind, but a couple of their terms ended in ruin; <b>Kimi K2.6</b> clearly
-      trails. Robustness and ceiling are different virtues &mdash; the fan shows both.</p>
+    <p style="margin-top:8px"><b>The read:</b> <b>GPT-5.5, Qwen and Kimi</b> are the most
+      <em>robust</em> (never removed from office across all ten terms); <b>Opus</b> posts the highest
+      <em>median and ceiling</em>, with Sonnet close behind, but a couple of their terms ended in
+      ruin. Robustness and ceiling are different virtues &mdash; the fan shows both. (Kimi's
+      survival jumped to 10/10 only after the tool-use fix; before it, its blank turns sank it.)</p>
   </section>
 
   <!-- 8 -->
@@ -356,10 +360,10 @@
         The core has real signal (the Cuban replay, v2 triangulation, and <code>the-jump</code> genuinely
         separate reasoning). But reading turned up issues the summary table hid:</p>
       <ul style="margin:0;padding-left:20px;font-size:14.5px">
-        <li><b>Kimi's last place is largely a tool-use artifact.</b> It emitted no valid action on
-          <b>34.8% of turns</b> (vs ≤1.5% for every other model) &mdash; scored as inaction. A one-line
-          retry-on-empty fix takes its worst episode from competence 47.9 to 82.8. The board is being
-          re-run with the fix.</li>
+        <li><b>Kimi's last place was a tool-use artifact &mdash; now fixed.</b> It emitted no valid
+          action on <b>34.8% of turns</b> (vs ≤1.5% for every other model) &mdash; scored as inaction. A
+          one-line retry-on-empty fix cut that to 5.6%, and re-running its board <b>moved Kimi from last
+          (74.1) to 6th (79.8)</b>, above GLM and tied with Haiku &mdash; and to 10/10 term survival.</li>
         <li><b>Strait <code>epistemics</code> is outcome-in-disguise.</b> Opus read a hidden invasion
           correctly yet scored epistemics 25 because the (timer-based) invasion still launched &mdash; an
           action failure mislabeled as a reading failure.</li>
