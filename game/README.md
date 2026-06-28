@@ -16,8 +16,22 @@ great on a phone passed back and forth.
 ## Why it teaches
 
 Every answer — right, wrong, or timed-out — reveals a plain-English
-**explanation**. The end screen tallies a **"topics to review"** list from the
-categories you missed, so you know exactly what to hit next.
+**explanation**. After a match you can hit **"Review the ones you missed"** to
+step back through every missed question with the correct answer and the why.
+
+Progress is saved on the device (localStorage):
+
+- **📈 Athena's progress** on the home screen shows **per-topic mastery bars**,
+  sorted weakest-first, so you always know what to drill next.
+- A running **series tally** (🏆 head-to-head, 🐉 record vs. The Examiner)
+  persists across matches.
+- Names, avatars, settings, and the mute toggle are remembered too.
+
+## Install it on your phone
+
+It's a **PWA** — open it on a phone, then "Add to Home Screen." It launches
+full-screen and **works offline** (service worker caches everything), so you can
+quiz on a plane or with spotty signal.
 
 ## Content
 

@@ -12,6 +12,37 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const AVATARS = ["🦊", "🦉", "🐼", "🐯", "🐸", "🦄", "🐙", "🦖", "🐲", "🦅", "🐱", "🐶", "🦝", "🐢", "🦈", "🐝"];
 
+// ============================================================
+//  PERSISTENCE — names, avatars, settings, series & topic mastery
+// ============================================================
+const SKEY = "brokerBattle.v1";
+const store = {
+  data: {
+    names: ["Jordan", "Athena"], avatars: ["🦊", "🦉"],
+    rounds: 8, time: 20, cats: null, muted: false,
+    series: { p0: 0, p1: 0, ties: 0 },     // head-to-head (versus/duel/host)
+    boss: { won: 0, lost: 0 },             // co-op record vs The Examiner
+    topic: {},                             // cat -> { seen, correct }
+  },
+  load() {
+    try { const raw = localStorage.getItem(SKEY); if (raw) Object.assign(this.data, JSON.parse(raw)); }
+    catch (e) {}
+    return this.data;
+  },
+  save() { try { localStorage.setItem(SKEY, JSON.stringify(this.data)); } catch (e) {} },
+  recordTopic(cat, correct) {
+    const t = this.data.topic[cat] || (this.data.topic[cat] = { seen: 0, correct: 0 });
+    t.seen++; if (correct) t.correct++; this.save();
+  },
+  recordSeries(winnerIdx) { // 0, 1, or -1 for tie
+    if (winnerIdx === 0) this.data.series.p0++;
+    else if (winnerIdx === 1) this.data.series.p1++;
+    else this.data.series.ties++;
+    this.save();
+  },
+  recordBoss(won) { won ? this.data.boss.won++ : this.data.boss.lost++; this.save(); },
+};
+
 // ---------- config ----------
 const cfg = {
   names: ["Jordan", "Athena"],
@@ -37,7 +68,7 @@ function buildCatChips() {
     const on = all.getAttribute("aria-pressed") !== "true";
     all.setAttribute("aria-pressed", String(on));
     cfg.cats = new Set(on ? Object.keys(CATEGORIES) : []);
-    syncChips(); sfx.tap();
+    syncChips(); persistCfg(); sfx.tap();
   };
   wrap.appendChild(all);
   for (const [key, c] of Object.entries(CATEGORIES)) {
@@ -45,7 +76,7 @@ function buildCatChips() {
     b.className = "chip"; b.dataset.cat = key; b.style.color = c.color;
     b.setAttribute("aria-pressed", "true");
     b.innerHTML = `<span class="dot" style="background:${c.color}"></span>${c.name}`;
-    b.onclick = () => { cfg.cats.has(key) ? cfg.cats.delete(key) : cfg.cats.add(key); syncChips(); sfx.tap(); };
+    b.onclick = () => { cfg.cats.has(key) ? cfg.cats.delete(key) : cfg.cats.add(key); syncChips(); persistCfg(); sfx.tap(); };
     wrap.appendChild(b);
   }
 }
@@ -57,11 +88,11 @@ function syncChips() {
 function wireSegments() {
   $("rounds").querySelectorAll("button").forEach((b) => b.onclick = () => {
     $("rounds").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", "false"));
-    b.setAttribute("aria-pressed", "true"); cfg.rounds = +b.dataset.rounds; sfx.tap();
+    b.setAttribute("aria-pressed", "true"); cfg.rounds = +b.dataset.rounds; persistCfg(); sfx.tap();
   });
   $("timer").querySelectorAll("button").forEach((b) => b.onclick = () => {
     $("timer").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", "false"));
-    b.setAttribute("aria-pressed", "true"); cfg.time = +b.dataset.time; sfx.tap();
+    b.setAttribute("aria-pressed", "true"); cfg.time = +b.dataset.time; persistCfg(); sfx.tap();
   });
 }
 function wireAvatars() {
@@ -71,7 +102,7 @@ function wireAvatars() {
     // skip the other player's avatar
     if (AVATARS[idx] === cfg.avatars[1 - i]) idx = (idx + 1) % AVATARS.length;
     cfg.avatars[i] = AVATARS[idx]; el.textContent = AVATARS[idx];
-    FX.burstAt(el, i === 0 ? "p1" : "p2", 14); sfx.select();
+    persistCfg(); FX.burstAt(el, i === 0 ? "p1" : "p2", 14); sfx.select();
   };
   $("av1").onclick = () => cycle(0, $("av1"));
   $("av2").onclick = () => cycle(1, $("av2"));
@@ -97,8 +128,9 @@ function buildQueue(count) {
 //  SCREEN ROUTING
 // ============================================================
 function show(name) {
-  ["home", "play", "duel", "end"].forEach((s) => $(s).classList.toggle("hidden", s !== name));
+  ["home", "play", "duel", "end", "reviewScreen"].forEach((s) => $(s).classList.toggle("hidden", s !== name));
   $("brand").classList.toggle("hidden", name === "duel");
+  if (name === "home") renderHomeStats();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 function toMenu() { clearTimer(); show("home"); sfx.tap(); }
@@ -107,7 +139,7 @@ function toMenu() { clearTimer(); show("home"); sfx.tap(); }
 //  MODE DISPATCH
 // ============================================================
 function startMode(mode) {
-  readNames();
+  readNames(); persistCfg();
   cfg.mode = mode;
   audioResume();
   sfx.go();
@@ -191,7 +223,7 @@ function clearTimer() { if (timerId) { clearInterval(timerId); timerId = null; }
 let vs = null;
 function startVersus() {
   setHud("versus");
-  queue = buildQueue(cfg.rounds * 2); qIndex = 0;
+  queue = buildQueue(cfg.rounds * 2); qIndex = 0; missedQs = [];
   vs = {
     score: [0, 0], correct: [0, 0], asked: [0, 0], streak: [0, 0], best: [0, 0],
     steals: [0, 0], lifelines: [false, false], missed: [{}, {}],
@@ -249,6 +281,7 @@ function vsAnswer(btn) {
   const p = playerFor(qIndex);
   if (correct) {
     answered = true; clearTimer(); vs.asked[p]++; vs.correct[p]++;
+    store.recordTopic(curQ.cat, true);
     vs.streak[p]++; vs.best[p] = Math.max(vs.best[p], vs.streak[p]);
     const speed = cfg.time > 0 ? Math.round(50 * (timeLeft / cfg.time)) : 25;
     const mult = (1 + 0.25 * (vs.streak[p] - 1)) * (vs.wagerArmed ? 2 : 1);
@@ -263,6 +296,7 @@ function vsAnswer(btn) {
   } else {
     // wrong → wager penalty + open steal to opponent
     answered = true; clearTimer(); vs.asked[p]++; vs.streak[p] = 0; bumpMiss(vs, p, curQ.cat);
+    store.recordTopic(curQ.cat, false); markMissed();
     if (vs.wagerArmed) { vs.score[p] = Math.max(0, vs.score[p] - 100); vsUpdateScore(p, "-100 🎲", true); }
     vsStreakLabel(p);
     btn.classList.add("wrong"); btn.disabled = true;
@@ -317,6 +351,7 @@ function vsStealExpire() {
 function vsTimeUp() {
   const p = playerFor(qIndex);
   answered = true; vs.asked[p]++; vs.streak[p] = 0; bumpMiss(vs, p, curQ.cat);
+  store.recordTopic(curQ.cat, false); markMissed();
   if (vs.wagerArmed) { vs.score[p] = Math.max(0, vs.score[p] - 100); vsUpdateScore(p, "-100 🎲", true); }
   vsStreakLabel(p);
   sfx.wrong(); FX.shake($("play"));
@@ -334,13 +369,17 @@ function vsStreakLabel(p) {
 }
 function bumpMiss(st, p, cat) { st.missed[p][cat] = (st.missed[p][cat] || 0) + 1; }
 
+// ---- topic mastery + missed-question review tracking ----
+let missedQs = [];
+function markMissed() { if (curQ && !missedQs.includes(curQ)) missedQs.push(curQ); }
+
 // ============================================================
 //  MODE: CO-OP BOSS BATTLE
 // ============================================================
 let coop = null;
 function startCoop() {
   setHud("coop");
-  queue = buildQueue(cfg.rounds * 2); qIndex = 0;
+  queue = buildQueue(cfg.rounds * 2); qIndex = 0; missedQs = [];
   const maxHp = queue.length * 10;
   coop = {
     maxHp, hp: maxHp, lives: 3, score: 0, correct: 0, asked: 0,
@@ -389,6 +428,7 @@ function coopAnswer(btn) {
   const correct = btn.dataset.correct === "true";
   const p = playerFor(qIndex); coop.asked++;
   if (correct) {
+    store.recordTopic(curQ.cat, true);
     coop.correct++; coop.combo++; coop.bestCombo = Math.max(coop.bestCombo, coop.combo);
     let dmg = 12 + (coop.combo - 1) * 2;
     if (coop.consulting) dmg = Math.ceil(dmg / 2);
@@ -403,6 +443,7 @@ function coopAnswer(btn) {
     showExplain(true, `💥 ${dmg} damage${coop.consulting ? " (consulted)" : ""}! Combo ${coop.combo}×`);
   } else {
     coop.combo = 0; coop.lives--; bumpMiss(coop, p, curQ.cat);
+    store.recordTopic(curQ.cat, false); markMissed();
     revealAnswers(btn);
     sfx.wrong(); FX.vibrate(150); FX.shake($("play"), "hard");
     coopDrawHud();
@@ -417,7 +458,7 @@ function coopAnswer(btn) {
 let host = null;
 function startHost() {
   setHud("host");
-  queue = buildQueue(cfg.rounds * 2); qIndex = 0;
+  queue = buildQueue(cfg.rounds * 2); qIndex = 0; missedQs = [];
   host = { correct: [0, 0], asked: [0, 0], streak: [0, 0], best: [0, 0], missed: [{}, {}], score: [0, 0] };
   $("hud-versus").classList.add("hidden");
   show("play"); hostRender();
@@ -448,6 +489,7 @@ function hostGrade(good) {
   const a = playerFor(qIndex);
   host.asked[a]++;
   if (good) {
+    store.recordTopic(curQ.cat, true);
     host.correct[a]++; host.streak[a]++; host.best[a] = Math.max(host.best[a], host.streak[a]);
     const mult = 1 + 0.2 * (host.streak[a] - 1);
     host.score[a] += Math.round(100 * mult);
@@ -455,6 +497,7 @@ function hostGrade(good) {
     showExplain(true, `✓ ${cfg.names[a]} got it!`);
   } else {
     host.streak[a] = 0; bumpMiss(host, a, curQ.cat);
+    store.recordTopic(curQ.cat, false); markMissed();
     sfx.wrong(); FX.shake($("play"));
     showExplain(false, `✗ One to review with ${cfg.names[a]}.`);
   }
@@ -592,6 +635,7 @@ function endVersus() {
   if (s1 === s2) { $("winnerLine").textContent = "Dead heat — it's a tie!"; }
   else { const w = s1 > s2 ? 0 : 1; $("winnerLine").innerHTML = `${cfg.avatars[w]} <span style="color:${w === 0 ? "var(--p1)" : "var(--p2)"}">${cfg.names[w]}</span> wins!`; }
   $("endSub").textContent = `${cfg.names[0]} ${s1} · ${cfg.names[1]} ${s2}`;
+  store.recordSeries(s1 === s2 ? -1 : (s1 > s2 ? 0 : 1));
   FX.confetti({ palette: "win", count: 120 }); sfx.victory();
 
   $("statgrid").innerHTML = [0, 1].map((p) => {
@@ -610,11 +654,12 @@ function endVersus() {
   }).join("");
   $("review").innerHTML = reviewHtml(mergeMissed(vs.missed));
   $("review").className = "review single";
-  show("end");
+  afterEnd(); show("end");
 }
 
 function endCoop(win) {
   clearTimer();
+  store.recordBoss(win);
   $("trophy").textContent = win ? "🐉⚔️" : "💀";
   $("winnerLine").innerHTML = win ? `<span style="color:var(--good)">VICTORY!</span> The Examiner is defeated!` : `Defeated… The Examiner stands.`;
   const acc = coop.asked ? Math.round(100 * coop.correct / coop.asked) : 0;
@@ -635,7 +680,7 @@ function endCoop(win) {
     <div class="badges">${b.join("")}</div></div>`;
   $("review").innerHTML = reviewHtml(mergeMissed(coop.missed));
   $("review").className = "review single";
-  show("end");
+  afterEnd(); show("end");
 }
 
 function endHost() {
@@ -645,6 +690,7 @@ function endHost() {
   if (s1 === s2) $("winnerLine").textContent = "It's a tie!";
   else { const w = s1 > s2 ? 0 : 1; $("winnerLine").innerHTML = `${cfg.avatars[w]} <span style="color:${w === 0 ? "var(--p1)" : "var(--p2)"}">${cfg.names[w]}</span> wins!`; }
   $("endSub").textContent = "Quizmaster round complete 🎤";
+  store.recordSeries(s1 === s2 ? -1 : (s1 > s2 ? 0 : 1));
   FX.confetti({ palette: "win", count: 110 }); sfx.victory();
   $("statgrid").innerHTML = [0, 1].map((p) => {
     const acc = host.asked[p] ? Math.round(100 * host.correct[p] / host.asked[p]) : 0;
@@ -655,7 +701,7 @@ function endHost() {
   }).join("");
   $("review").innerHTML = reviewHtml(mergeMissed(host.missed));
   $("review").className = "review single";
-  show("end");
+  afterEnd(); show("end");
 }
 
 function endDuel() {
@@ -667,6 +713,7 @@ function endDuel() {
   }
   duel.suddenDeath = false;
   const w = s1 > s2 ? 0 : 1;
+  store.recordSeries(w);
   $("trophy").textContent = "⚡🏆";
   $("winnerLine").innerHTML = `${cfg.avatars[w]} <span style="color:${w === 0 ? "var(--p1)" : "var(--p2)"}">${cfg.names[w]}</span> has the faster trigger!`;
   $("endSub").textContent = `${cfg.names[0]} ${s1} — ${s2} ${cfg.names[1]}`;
@@ -681,7 +728,7 @@ function endDuel() {
       <div class="badges">${p === w ? b.join("") : ""}</div></div>`).join("");
   $("review").innerHTML = `<h3>⚡ Reflex Duel</h3>Quick and dirty — great warm-up. For real studying, try <b>Co-op Boss</b> or <b>Quizmaster</b> next.`;
   $("review").className = "review single";
-  show("end");
+  afterEnd(); show("end");
 }
 
 // ---------- review helpers ----------
@@ -698,10 +745,121 @@ function reviewHtml(missed) {
 }
 
 // ============================================================
+//  REVIEW MISSED — post-match study walkthrough
+// ============================================================
+function afterEnd() {
+  const has = missedQs.length > 0;
+  $("reviewMissed").classList.toggle("hidden", !has);
+  $("reviewSp").classList.toggle("hidden", !has);
+  if (has) $("reviewMissed").textContent = `📖  Review the ${missedQs.length} you missed`;
+}
+let rvIndex = 0;
+function openReview() {
+  if (!missedQs.length) return;
+  rvIndex = 0; renderReview(); show("reviewScreen"); sfx.tap();
+}
+function renderReview() {
+  const q = missedQs[rvIndex], cat = CATEGORIES[q.cat];
+  $("rvCount").textContent = `${rvIndex + 1} / ${missedQs.length}`;
+  const cp = $("rvCat"); cp.textContent = cat.name; cp.style.background = cat.color;
+  $("rvQ").textContent = q.q;
+  const ans = $("rvAnswers"); ans.innerHTML = "";
+  q.choices.forEach((c, i) => {
+    const d = document.createElement("div");
+    d.className = "answer " + (i === q.answer ? "correct" : "dim");
+    d.innerHTML = `<span class="key">${"ABCD"[i]}</span><span>${c}</span>`;
+    ans.appendChild(d);
+  });
+  $("rvWhy").innerHTML = `<b>Why:</b> ${q.why}`;
+  $("rvPrev").disabled = rvIndex === 0;
+  $("rvNext").textContent = rvIndex + 1 >= missedQs.length ? "Done ✓" : "Next ›";
+}
+function rvMove(d) {
+  if (d > 0 && rvIndex + 1 >= missedQs.length) { show("end"); sfx.tap(); return; }
+  rvIndex = Math.max(0, Math.min(missedQs.length - 1, rvIndex + d));
+  renderReview(); sfx.tap();
+}
+
+// ============================================================
+//  HOME STATS — series tally + per-topic mastery
+// ============================================================
+function renderHomeStats() {
+  const d = store.data;
+  const total = d.series.p0 + d.series.p1 + d.series.ties;
+  const bossTotal = d.boss.won + d.boss.lost;
+  const box = $("seriesBox");
+  if (total + bossTotal === 0) { box.classList.add("hidden"); }
+  else {
+    box.classList.remove("hidden");
+    let html = "";
+    if (total > 0) html += `<span class="series-item">🏆 ${cfg.avatars[0]} <b>${d.series.p0}</b> — <b>${d.series.p1}</b> ${cfg.avatars[1]}${d.series.ties ? ` · ${d.series.ties}T` : ""}</span>`;
+    if (bossTotal > 0) html += `<span class="series-item">🐉 Examiner <b>${d.boss.won}</b>W–<b>${d.boss.lost}</b>L</span>`;
+    box.innerHTML = html;
+  }
+  renderProgress();
+}
+function renderProgress() {
+  const t = store.data.topic, cats = Object.keys(CATEGORIES);
+  const totalSeen = cats.reduce((s, c) => s + (t[c] ? t[c].seen : 0), 0);
+  const body = $("progressBody");
+  if (totalSeen === 0) { body.innerHTML = `<p class="muted-note">Play a round and Athena's per-topic mastery shows up here — weakest topics first, so you know what to drill.</p>`; return; }
+  const totalCorrect = cats.reduce((s, c) => s + (t[c] ? t[c].correct : 0), 0);
+  const overall = Math.round(100 * totalCorrect / totalSeen);
+  const rows = cats.filter((c) => t[c] && t[c].seen).map((c) => ({ c, pct: Math.round(100 * t[c].correct / t[c].seen), seen: t[c].seen, correct: t[c].correct }))
+    .sort((a, b) => a.pct - b.pct);
+  let html = `<div class="prog-overall">Overall mastery <b>${overall}%</b> · ${totalCorrect}/${totalSeen} correct</div>`;
+  html += rows.map((r) => {
+    const color = CATEGORIES[r.c].color;
+    return `<div class="prog-row"><div class="prog-label"><span class="dot" style="background:${color}"></span>${CATEGORIES[r.c].name}</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${r.pct}%;background:${color}"></div></div>
+      <div class="prog-pct">${r.pct}% <span class="prog-n">(${r.correct}/${r.seen})</span></div></div>`;
+  }).join("");
+  html += `<button class="reset-btn" id="resetStats">↺ reset all stats</button>`;
+  body.innerHTML = html;
+  $("resetStats").onclick = () => {
+    if (confirm("Reset all progress, series and topic stats?")) {
+      store.data.series = { p0: 0, p1: 0, ties: 0 }; store.data.boss = { won: 0, lost: 0 }; store.data.topic = {};
+      store.save(); renderHomeStats(); sfx.tap();
+    }
+  };
+}
+
+// ============================================================
+//  PERSISTENCE GLUE
+// ============================================================
+function persistCfg() {
+  store.data.names = cfg.names.slice();
+  store.data.avatars = cfg.avatars.slice();
+  store.data.rounds = cfg.rounds; store.data.time = cfg.time;
+  store.data.cats = [...cfg.cats];
+  store.save();
+}
+function applyState() {
+  const d = store.load();
+  cfg.names = (d.names || cfg.names).slice();
+  cfg.avatars = (d.avatars || cfg.avatars).slice();
+  cfg.rounds = d.rounds || cfg.rounds; cfg.time = (d.time != null ? d.time : cfg.time);
+  if (Array.isArray(d.cats)) cfg.cats = new Set(d.cats.length ? d.cats : Object.keys(CATEGORIES));
+  $("in-name1").value = cfg.names[0]; $("in-name2").value = cfg.names[1];
+  $("av1").textContent = cfg.avatars[0]; $("av2").textContent = cfg.avatars[1];
+  $("rounds").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.rounds === cfg.rounds)));
+  $("timer").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.time === cfg.time)));
+  syncChips();
+  setMuted(!!d.muted);
+  $("sound-toggle").textContent = d.muted ? "🔇" : "🔊";
+  $("sound-toggle").classList.toggle("off", !!d.muted);
+}
+
+// ============================================================
 //  INIT / WIRING
 // ============================================================
 function init() {
   buildCatChips(); wireSegments(); wireAvatars();
+  applyState();
+  renderHomeStats();
+
+  $("in-name1").addEventListener("input", () => { readNames(); persistCfg(); });
+  $("in-name2").addEventListener("input", () => { readNames(); persistCfg(); });
 
   $("modes").querySelectorAll(".mode-card").forEach((c) => {
     c.onclick = () => { audioResume(); FX.burstAt(c, "gold", 18); startMode(c.dataset.mode); };
@@ -712,6 +870,12 @@ function init() {
   $("reconfig").onclick = toMenu;
   $("quit").onclick = toMenu;
 
+  // review-missed
+  $("reviewMissed").onclick = openReview;
+  $("rvPrev").onclick = () => rvMove(-1);
+  $("rvNext").onclick = () => rvMove(1);
+  $("rvDone").onclick = () => { show("end"); sfx.tap(); };
+
   // duel taps
   document.querySelectorAll(".duel-opt").forEach((b) => b.onclick = () => duelTap(b));
 
@@ -721,6 +885,7 @@ function init() {
     const m = toggleMuted();
     $("sound-toggle").textContent = m ? "🔇" : "🔊";
     $("sound-toggle").classList.toggle("off", m);
+    store.data.muted = m; store.save();
     if (!m) sfx.select();
   };
 
