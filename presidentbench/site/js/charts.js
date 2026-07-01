@@ -88,31 +88,84 @@ function trajectoryChart(camp, colors, opts = {}) {
   svg.appendChild(el("text", { x: 13, y: m.t + ih / 2, fill: PLABEL, "font-size": 11,
     "text-anchor": "middle", transform: `rotate(-90 13 ${m.t + ih / 2})` }, "National Standing"));
 
+  const pathD = traj => { let d = ""; traj.forEach((v, i) => {
+    d += (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1); }); return d; };
   const poly = (traj, col, w, op) => {
-    let d = "";
-    traj.forEach((v, i) => { d += (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1); });
-    svg.appendChild(el("path", { d, fill: "none", stroke: col, "stroke-width": w,
-      "stroke-opacity": op, "stroke-linejoin": "round" }));
+    const p = el("path", { d: pathD(traj), fill: "none", stroke: col, "stroke-width": w,
+      "stroke-opacity": op, "stroke-linejoin": "round" });
+    svg.appendChild(p); return p;
   };
-  // faint: all runs; bold: best run per model
-  camp.models.forEach(mm => {
-    const col = colors[mm.agent] || "#888";
-    mm.runs.forEach(r => poly(r.traj, col, 1, 0.18));
-  });
+
+  // draw every run faint (bold the model's best), keep a handle on each line
   camp.models.forEach((mm, mi) => {
     const col = colors[mm.agent] || "#888";
-    const best = mm.runs[0];
-    poly(best.traj, col, 2.4, 0.95);
+    mm.runs.forEach((r, ri) => {
+      r._best = ri === 0; r._col = col; r._agent = mm.agent;
+      r._w = ri === 0 ? 2.4 : 1; r._op = ri === 0 ? 0.95 : 0.16;
+      r._path = poly(r.traj, col, r._w, r._op);
+    });
+  });
+  // right-edge model labels + best-run end dots
+  camp.models.forEach((mm, mi) => {
+    const col = colors[mm.agent] || "#888", best = mm.runs[0];
     const last = best.traj.length - 1;
     svg.appendChild(el("circle", { cx: X(last), cy: Y(best.traj[last]), r: 3.2, fill: col }));
-    // right-edge label
     const ly = m.t + 14 + mi * 16;
     svg.appendChild(el("circle", { cx: m.l + iw + 14, cy: ly - 3, r: 4, fill: col }));
     svg.appendChild(el("text", { x: m.l + iw + 22, y: ly, fill: PLABEL, "font-size": 11,
-      "font-family": "ui-monospace, monospace" },
-      `${mm.agent.replace(/^Claude /, "")} ${mm.median}`));
+      "font-family": "ui-monospace, monospace" }, `${mm.agent.replace(/^Claude /, "")} ${mm.median}`));
   });
-  return svg;
+
+  // wrapper + tooltip so a reader can hover any run and see what it did right & wrong
+  const wrap = document.createElement("div");
+  wrap.style.cssText = "position:relative";
+  wrap.appendChild(svg);
+  const tip = document.createElement("div");
+  tip.className = "traj-tip";
+  tip.style.cssText = "position:absolute;display:none;z-index:20;max-width:340px;pointer-events:none;"
+    + "background:#fff;border:1px solid #d8d6cd;border-radius:9px;box-shadow:0 6px 22px rgba(0,0,0,.14);"
+    + "padding:11px 13px;font-size:12px;line-height:1.4;color:#1b1a17";
+  wrap.appendChild(tip);
+  const esc = s => String(s == null ? "" : s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+  function tipHTML(r) {
+    const rows = r.steps.filter(s => s.delta !== null).map(s => {
+      const dcol = s.removed ? "#c0394e" : (s.delta >= 0 ? "#1f7a44" : "#c0394e");
+      const mark = s.removed ? "✗ removed" : (s.delta >= 0 ? "✓" : "✗");
+      return `<div style="display:flex;justify-content:space-between;gap:12px;margin:2px 0">
+        <span>${esc(s.label)}: <b>${esc(s.outcome)}</b></span>
+        <span style="color:${dcol};font-family:ui-monospace,monospace;white-space:nowrap">${s.delta >= 0 ? "+" : ""}${s.delta} ${mark}</span></div>`;
+    }).join("");
+    return `<div style="font-weight:700;margin-bottom:2px">${esc(r._agent)} · term seed ${r.term_seed}</div>`
+      + `<div style="color:#6a675f;margin-bottom:6px">Final standing <b>${r.final}</b> — ${r.removed ? "<span style='color:#c0394e'>removed from office</span>" : "survived all 8 crises"}</div>`
+      + `<div style="color:#1f7a44;margin:3px 0"><b>Did best:</b> ${esc(r.did_right)}</div>`
+      + `<div style="color:#a23b2e;margin:3px 0 7px"><b>Worst moment:</b> ${esc(r.did_wrong)}</div>`
+      + `<div style="border-top:1px solid #eee;padding-top:6px">${rows}</div>`;
+  }
+  function place(evt) {
+    const rc = wrap.getBoundingClientRect();
+    let x = evt.clientX - rc.left + 14, y = evt.clientY - rc.top + 14;
+    if (x + 350 > rc.width) x = evt.clientX - rc.left - 354;
+    tip.style.left = Math.max(0, x) + "px"; tip.style.top = y + "px";
+  }
+  // transparent fat hit-paths on top, one per run
+  camp.models.forEach(mm => mm.runs.forEach(r => {
+    if (!r.steps) return;
+    const hit = el("path", { d: pathD(r.traj), fill: "none", stroke: "transparent",
+      "stroke-width": 11, style: "cursor:pointer" });
+    hit.addEventListener("mouseenter", () => {
+      r._path.setAttribute("stroke-width", 3.4); r._path.setAttribute("stroke-opacity", 1);
+      svg.appendChild(r._path); // raise to front
+      tip.innerHTML = tipHTML(r); tip.style.display = "block";
+    });
+    hit.addEventListener("mousemove", place);
+    hit.addEventListener("mouseleave", () => {
+      r._path.setAttribute("stroke-width", r._w); r._path.setAttribute("stroke-opacity", r._op);
+      tip.style.display = "none";
+    });
+    svg.appendChild(hit);
+  }));
+  return wrap;
 }
 
 /* ---- diverging bias bars into a container (DOM, not SVG) ---- */

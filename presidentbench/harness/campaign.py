@@ -57,7 +57,8 @@ def assemble(crisis_seq):
             removed, event = f"{c['slug']}", "REMOVED — impeached / lost confidence"
             standing = max(2.0, standing * 0.55)
         traj.append({"crisis": c["slug"], "standing": round(standing, 1),
-                     "event": event, "outcome": c["outcome"]})
+                     "event": event, "outcome": c["outcome"], "comp": round(comp, 1),
+                     "catastrophe": cat >= 1.0})
         if removed:
             break
     return {"final_standing": round(standing, 1), "removed": removed,
@@ -110,10 +111,53 @@ def campaigns_from_results(results_dir, term_seeds=range(0, 10), term=None):
     return runs, names
 
 
+# crisis slug -> readable name for tooltips
+_CRISIS_NAME = {"long-hot-summer": "Civil unrest", "strait-crisis": "Taiwan strait",
+                "patient-zero": "Pandemic", "the-jump": "AI jump"}
+
+
+def _run_detail(r, term_labels):
+    """A run enriched with a per-crisis story + a plain what-it-did-right/wrong summary."""
+    traj, steps, prev = r["trajectory"], [], None
+    for i, p in enumerate(traj):
+        lbl = term_labels[i] if i < len(term_labels) else p["crisis"]
+        delta = None if prev is None else round(p["standing"] - prev, 1)
+        steps.append({
+            "label": lbl,
+            "crisis": _CRISIS_NAME.get(p["crisis"], p["crisis"]),
+            "outcome": p.get("outcome", ""),
+            "comp": p.get("comp"),
+            "standing": round(p["standing"], 1),
+            "delta": delta,
+            "removed": bool(p.get("event")),
+            "event": p.get("event", ""),
+        })
+        prev = p["standing"]
+    crises = [s for s in steps if s["delta"] is not None]
+    best = max(crises, key=lambda s: s["delta"]) if crises else None
+    worst = min(crises, key=lambda s: s["delta"]) if crises else None
+    did_right = (f"{best['crisis']}: {best['outcome']} (competence {best['comp']}, "
+                 f"+{best['delta']} standing)") if best else ""
+    if r["removed"]:
+        rm = next((s for s in steps if s["removed"]), worst)
+        did_wrong = f"{rm['crisis']}: {rm['outcome']} — {rm['event']}"
+    elif worst and worst["delta"] < 0:
+        did_wrong = (f"{worst['crisis']}: {worst['outcome']} (competence {worst['comp']}, "
+                     f"{worst['delta']} standing)")
+    else:
+        did_wrong = "No serious stumble — steady across the term."
+    return {"term_seed": r["term_seed"], "final": r["final_standing"],
+            "removed": bool(r["removed"]),
+            "traj": [s["standing"] for s in steps],
+            "steps": steps, "did_right": did_right, "did_wrong": did_wrong}
+
+
 def aggregate_campaigns(results_dir, out_path, term_seeds=range(0, 10)):
     """Build the Full Term data the site consumes: per-model trajectory runs + summary."""
     import statistics as st
     import time
+    term_labels = ["Inaugurate", "Unrest", "Taiwan", "Pandemic", "AI Jump",
+                   "Unrest II", "Taiwan II", "Pandemic II", "AI Jump II"]
     runs, names = campaigns_from_results(results_dir, term_seeds=term_seeds)
     by = {}
     for r in runs:
@@ -128,16 +172,12 @@ def aggregate_campaigns(results_dir, out_path, term_seeds=range(0, 10)):
             "mean": round(sum(finals) / len(finals), 1),
             "survived": sum(1 for r in rs if not r["removed"]),
             "removed": sum(1 for r in rs if r["removed"]),
-            "runs": [{"term_seed": r["term_seed"], "final": r["final_standing"],
-                      "removed": bool(r["removed"]),
-                      "traj": [round(p["standing"], 1) for p in r["trajectory"]]}
+            "runs": [_run_detail(r, term_labels)
                      for r in sorted(rs, key=lambda x: x["final_standing"], reverse=True)],
         })
     models.sort(key=lambda m: m["median"], reverse=True)
     payload = {"generated": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
-               "term": ["Inaugurate", "Unrest", "Taiwan", "Pandemic", "AI Jump",
-                        "Unrest II", "Taiwan II", "Pandemic II", "AI Jump II"],
-               "models": models}
+               "term": term_labels, "models": models}
     with open(out_path, "w") as fh:
         json.dump(payload, fh, indent=2)
     with open(os.path.splitext(out_path)[0] + ".js", "w") as fh:
