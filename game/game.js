@@ -50,8 +50,11 @@ const cfg = {
   rounds: 8,
   time: 20,
   cats: new Set(Object.keys(CATEGORIES)),
+  diff: "mixed",   // "mixed" (all) | "hard" (drop easy — med+hard only)
   mode: "versus",
 };
+const DIFF_POINTS = { easy: 90, med: 110, hard: 140 };
+const DIFF_DMG = { easy: 8, med: 12, hard: 18 };
 
 // ---------- shared match state ----------
 let queue = [], qIndex = 0, answered = false, curQ = null, curOrder = null;
@@ -94,6 +97,10 @@ function wireSegments() {
     $("timer").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", "false"));
     b.setAttribute("aria-pressed", "true"); cfg.time = +b.dataset.time; persistCfg(); sfx.tap();
   });
+  $("diffSel").querySelectorAll("button").forEach((b) => b.onclick = () => {
+    $("diffSel").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+    b.setAttribute("aria-pressed", "true"); cfg.diff = b.dataset.diff; persistCfg(); sfx.tap();
+  });
 }
 function wireAvatars() {
   const cycle = (i, el) => {
@@ -118,7 +125,11 @@ function readNames() {
 // ============================================================
 function buildQueue(count) {
   if (cfg.cats.size === 0) { cfg.cats = new Set(Object.keys(CATEGORIES)); syncChips(); }
-  const pool = QUESTIONS.filter((q) => cfg.cats.has(q.cat));
+  let pool = QUESTIONS.filter((q) => cfg.cats.has(q.cat));
+  if (cfg.diff === "hard") {
+    const hardPool = pool.filter((q) => q.d === "hard" || q.d === "med");
+    if (hardPool.length >= Math.min(count, 6)) pool = hardPool; // only apply if enough remain
+  }
   let picked = shuffle(pool).slice(0, count);
   while (picked.length < count && pool.length) picked = picked.concat(shuffle(pool)).slice(0, count);
   return picked;
@@ -165,7 +176,9 @@ function renderQuestionCommon(q, { interactive = true } = {}) {
   const cat = CATEGORIES[q.cat];
   $("qcount").textContent = `Q ${qIndex + 1} / ${queue.length}`;
   const pill = $("catPill"); pill.textContent = cat.name; pill.style.background = cat.color;
-  $("diffPill").classList.add("hidden");
+  const dp = $("diffPill");
+  if (q.d) { dp.className = "diff-pill " + q.d; dp.textContent = { easy: "Easy", med: "Medium", hard: "Hard" }[q.d]; dp.classList.remove("hidden"); }
+  else dp.classList.add("hidden");
   const qt = $("qtext"); qt.textContent = q.q;
   qt.classList.remove("pop"); void qt.offsetWidth; qt.classList.add("pop");
 
@@ -285,7 +298,8 @@ function vsAnswer(btn) {
     vs.streak[p]++; vs.best[p] = Math.max(vs.best[p], vs.streak[p]);
     const speed = cfg.time > 0 ? Math.round(50 * (timeLeft / cfg.time)) : 25;
     const mult = (1 + 0.25 * (vs.streak[p] - 1)) * (vs.wagerArmed ? 2 : 1);
-    const gained = Math.round((100 + speed) * mult);
+    const base = DIFF_POINTS[curQ.d] || 100;
+    const gained = Math.round((base + speed) * mult);
     vs.score[p] += gained;
     vsUpdateScore(p, `+${gained}${vs.wagerArmed ? " 🎲×2" : ""}`);
     vsStreakLabel(p);
@@ -430,7 +444,7 @@ function coopAnswer(btn) {
   if (correct) {
     store.recordTopic(curQ.cat, true);
     coop.correct++; coop.combo++; coop.bestCombo = Math.max(coop.bestCombo, coop.combo);
-    let dmg = 12 + (coop.combo - 1) * 2;
+    let dmg = (DIFF_DMG[curQ.d] || 12) + (coop.combo - 1) * 2;
     if (coop.consulting) dmg = Math.ceil(dmg / 2);
     coop.hp -= dmg; coop.dmgDealt += dmg; coop.score += dmg * 10;
     revealAnswers(btn);
@@ -831,6 +845,7 @@ function persistCfg() {
   store.data.names = cfg.names.slice();
   store.data.avatars = cfg.avatars.slice();
   store.data.rounds = cfg.rounds; store.data.time = cfg.time;
+  store.data.diff = cfg.diff;
   store.data.cats = [...cfg.cats];
   store.save();
 }
@@ -839,11 +854,13 @@ function applyState() {
   cfg.names = (d.names || cfg.names).slice();
   cfg.avatars = (d.avatars || cfg.avatars).slice();
   cfg.rounds = d.rounds || cfg.rounds; cfg.time = (d.time != null ? d.time : cfg.time);
+  cfg.diff = d.diff || cfg.diff;
   if (Array.isArray(d.cats)) cfg.cats = new Set(d.cats.length ? d.cats : Object.keys(CATEGORIES));
   $("in-name1").value = cfg.names[0]; $("in-name2").value = cfg.names[1];
   $("av1").textContent = cfg.avatars[0]; $("av2").textContent = cfg.avatars[1];
   $("rounds").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.rounds === cfg.rounds)));
   $("timer").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.time === cfg.time)));
+  $("diffSel").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.diff === cfg.diff)));
   syncChips();
   setMuted(!!d.muted);
   $("sound-toggle").textContent = d.muted ? "🔇" : "🔊";
