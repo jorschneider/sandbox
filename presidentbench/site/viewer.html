@@ -4,89 +4,88 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PresidentBench — transcript viewer</title>
-<meta name="description" content="Read the actual episodes end-to-end: every scenario explained, every action decoded, the full turn-by-turn record behind PresidentBench's findings.">
+<meta name="description" content="Read the episodes end-to-end as a story: the situation, what the model decided and why, and what happened — turn by turn.">
 <link rel="stylesheet" href="css/style.css">
 <style>
-  .vwrap { max-width: 960px; margin: 0 auto; padding: 0 22px 80px; }
-  .vhead { padding: 40px 0 18px; border-bottom: 1px solid var(--line); }
+  .vwrap { max-width: 940px; margin: 0 auto; padding: 0 22px 80px; }
+  .vhead { padding: 40px 0 16px; border-bottom: 1px solid var(--line); }
   .vhead h1 { font-size: 38px; }
-  .vlayout { display: grid; grid-template-columns: 250px 1fr; gap: 34px; margin-top: 26px; }
+  .vlayout { display: grid; grid-template-columns: 240px 1fr; gap: 32px; margin-top: 24px; }
   .vnav { position: sticky; top: 78px; align-self: start; font-size: 13.5px; max-height: calc(100vh - 96px); overflow:auto; }
   .vnav .grp { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-2); margin: 16px 0 6px; }
   .vnav a { display: block; padding: 5px 10px; border-radius: 7px; color: var(--body); line-height:1.3; }
   .vnav a:hover { background: var(--paper); }
   .vnav a.on { background: var(--accent); color: #fff; }
 
-  /* how-it-works intro */
-  details.howto { border:1px solid var(--line); border-radius: var(--radius); background:#fff; margin: 22px 0 8px; }
-  details.howto > summary { cursor:pointer; padding:14px 18px; font-weight:700; font-size:16px; list-style:none; }
+  details.howto { border:1px solid var(--line); border-radius: var(--radius); background:#fff; margin: 20px 0 8px; }
+  details.howto > summary { cursor:pointer; padding:13px 18px; font-weight:700; font-size:15px; list-style:none; }
   details.howto > summary::-webkit-details-marker{display:none;}
   details.howto > summary::before{content:"▸ "; color:var(--accent-2);}
   details.howto[open] > summary::before{content:"▾ ";}
-  .howto-body { padding: 4px 20px 18px; font-size:14.5px; }
+  .howto-body { padding: 2px 20px 18px; font-size:14px; }
   .howto-body p { margin: 8px 0; }
-  .howto-body ol { margin: 8px 0 8px 4px; padding-left: 20px; }
-  .howto-body li { margin: 5px 0; }
-  .scoredefs { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px; margin-top:10px; }
-  .scoredef { background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px 11px; font-size:13px; }
-  .scoredef b { font-family:var(--mono); font-size:12px; color:var(--ink); }
+  .howto-body ol { margin: 8px 0; padding-left: 20px; } .howto-body li { margin: 5px 0; }
+  .scoredefs { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:8px; margin-top:10px; }
+  .scoredef { background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:8px 11px; font-size:12.5px; }
+  .scoredef b { color:var(--ink); }
 
-  .ep { margin: 0 0 50px; }
-  .ep-head { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--accent-2); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 8px; }
-  .ep-head h2 { margin: 0 0 3px; font-size: 21px; border:none; }
-  .ep-oneliner { font-size: 14px; color: var(--muted); font-style: italic; margin: 0 0 8px; }
-  .ep-meta { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
-  .ep-meta b { color: var(--ink); }
-  .ep-look { margin: 12px 0 0; font-size: 14.5px; color: var(--body); background:#fffaf0; border:1px solid #f0e2c4; border-radius:8px; padding:10px 13px; }
-  .ep-look .lbl, .lbl-mono { font-family: var(--mono); font-size: 11px; letter-spacing:.08em; text-transform:uppercase; color: var(--accent-2); }
-  .scorebar { display:flex; flex-wrap:wrap; gap: 6px; margin-top: 12px; }
+  .ep { margin: 0 0 54px; scroll-margin-top: 70px; }
+  .ep-head { border-bottom:2px solid var(--ink); padding-bottom:10px; margin-bottom:14px; }
+  .ep-head h2 { margin: 0 0 3px; font-size: 23px; border:none; }
+  .ep-oneliner { font-size: 14.5px; color: var(--muted); font-style: italic; margin: 0; }
+  .ep-badges { display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-top:10px; }
+  .vbadge { font-family:var(--mono); font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; }
+  .vbadge.good{ background:#e4f4ea; color:#1f7a44; border:1px solid #bfe3cd; }
+  .vbadge.mid{ background:#f6edd9; color:#9a6b16; border:1px solid #ecdcb4; }
+  .vbadge.bad{ background:#fbe7e3; color:#a23b2e; border:1px solid #f0c9c0; }
   .chip { font-family: var(--mono); font-size: 12px; padding: 3px 9px; border-radius: 20px; background:#fff; border:1px solid var(--line-2); color: var(--body); }
-  .chip.good { border-color:#1f7a44; color:#1f7a44; }
-  .chip.bad { border-color:#a23b2e; color:#a23b2e; }
   .chip.flag { background:#fbecea; border-color:#a23b2e; color:#a23b2e; }
   .chip[title]{ cursor:help; }
 
-  /* the game briefing */
-  details.game { border:1px solid var(--line); border-radius: var(--radius); background:#fff; margin:8px 0; }
-  details.game > summary { cursor:pointer; padding:11px 16px; font-weight:600; list-style:none; color:var(--accent); }
-  details.game > summary::-webkit-details-marker{display:none;}
-  details.game > summary::before{content:"▸ "; }
-  details.game[open] > summary::before{content:"▾ "; }
-  .game-body{ padding: 2px 18px 16px; font-size:14px; }
-  .game-body h4{ margin:14px 0 3px; font-size:12px; font-family:var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2);}
-  .game-body p{ margin:3px 0 6px; color:var(--body); }
+  /* setup card — always visible orientation */
+  .setup { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); padding: 4px 18px 14px; margin-bottom:14px; }
+  .setup .row { padding:10px 0; border-bottom:1px dashed var(--line); }
+  .setup .row:last-child{ border-bottom:none; }
+  .setup .k { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2); margin-bottom:3px; }
+  .setup .v { font-size:14.5px; color:var(--body); }
+  .setup .htruth{ margin:5px 0; } .setup .hv{ font-family:var(--mono); font-weight:700; background:#fff; border:1px solid #d8cef0; border-radius:5px; padding:1px 7px; color:#5a3da0; }
+  .setup .hm{ color:var(--muted); }
+  .lookfor { background:#fffaf0; border:1px solid #f0e2c4; }
+
+  details.rules { border:1px solid var(--line); border-radius: var(--radius); background:#fff; margin:0 0 12px; }
+  details.rules > summary { cursor:pointer; padding:10px 16px; font-weight:600; list-style:none; color:var(--accent); font-size:14px; }
+  details.rules > summary::-webkit-details-marker{display:none;}
+  details.rules > summary::before{content:"▸ ";} details.rules[open] > summary::before{content:"▾ ";}
+  .rules-body{ padding:2px 18px 16px; font-size:13.5px; }
+  .rules-body h4{ margin:12px 0 3px; font-size:11px; font-family:var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2);}
+  .rules-body p{ margin:3px 0 6px; color:var(--body); }
   .metric-legend{ display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
   .ml{ font-size:11.5px; font-family:var(--mono); background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:2px 7px; color:var(--muted);}
-  .ml .ar{ font-weight:700; }
   .ml .up{ color:#1f7a44;} .ml .dn{ color:#a23b2e;} .ml .nu{ color:var(--faint);}
 
-  /* hidden truth */
-  .hidden-box{ background:#f4f1fb; border:1px solid #e0d8f2; border-radius:8px; padding:12px 14px; margin:10px 0; }
-  .hidden-box .lbl-mono{ color:#6b4ea3; }
-  .htruth{ margin:7px 0; font-size:14px; }
-  .htruth .hv{ font-family:var(--mono); font-weight:700; background:#fff; border:1px solid #d8cef0; border-radius:5px; padding:1px 7px; color:#5a3da0;}
-  .htruth .hm{ color:var(--muted); }
-
-  /* turns */
-  .controls { margin: 8px 0 0; }
+  .controls { margin: 4px 0 10px; }
   .controls button { font: inherit; font-size: 13px; background:#fff; border:1px solid var(--line-2); border-radius:7px; padding:4px 10px; cursor:pointer; color:var(--body); }
   .controls button:hover { background: var(--paper); }
-  details.turn { border: 1px solid var(--line); border-radius: var(--radius); margin: 8px 0; background:#fff; }
-  details.turn > summary { cursor: pointer; padding: 11px 16px; font-weight:600; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:10px; }
-  details.turn > summary::-webkit-details-marker { display:none; }
-  details.turn > summary .arr { color: var(--faint); font-family:var(--mono); font-size:12px; font-weight:400; text-align:right; }
-  details.turn[open] > summary { border-bottom: 1px solid var(--line); }
-  .turn-body { padding: 4px 16px 16px; }
-  .sitrep { white-space: pre-wrap; font-size: 13px; line-height:1.5; background: var(--paper); border-radius: 8px; padding: 12px 14px; margin: 12px 0; color: var(--body); border:1px solid var(--line); }
-  .acts-h{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin:12px 0 4px;}
-  .act { border-left: 3px solid var(--line-2); padding: 4px 0 4px 12px; margin: 9px 0; }
+
+  /* turns as narrative */
+  .turn { border-left:3px solid var(--line-2); padding: 2px 0 2px 16px; margin: 0 0 22px; }
+  .turn-n { font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); background:var(--paper); display:inline-block; padding:2px 9px; border-radius:6px; margin-bottom:8px; }
+  .sec-h { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin:12px 0 4px; }
+  .whatsnew { font-size:14px; line-height:1.55; color:var(--body); white-space:pre-wrap; }
+  details.briefing { margin:8px 0; }
+  details.briefing > summary { cursor:pointer; font-size:12.5px; color:var(--muted); list-style:none; font-family:var(--mono); }
+  details.briefing > summary::-webkit-details-marker{display:none;}
+  details.briefing > summary::before{content:"▸ show the advisers' briefing "; } details.briefing[open] > summary::before{content:"▾ advisers' briefing "; }
+  details.briefing pre { white-space:pre-wrap; font-size:12px; line-height:1.45; background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:11px 13px; color:var(--muted); margin:6px 0 0; font-family:var(--mono); }
+
+  .act { border-left: 3px solid var(--line-2); padding: 3px 0 3px 11px; margin: 8px 0; }
   .act .nm { font-family: var(--mono); font-weight:700; color: var(--ink); }
-  .act .knd { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.05em; padding:1px 6px; border-radius:10px; margin-left:6px; vertical-align:1px; }
+  .act .knd { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.04em; padding:1px 6px; border-radius:10px; margin-left:6px; vertical-align:1px; }
   .act .pm { font-family: var(--mono); font-size: 12px; color: var(--accent); margin-left:4px; }
   .act .gloss { font-size: 13.5px; color: var(--body); margin-top:2px; }
   .act .rat { font-size: 13.5px; color: var(--muted); margin-top:3px; font-style:italic; }
   .act .rat::before{ content:"“"; } .act .rat::after{ content:"”"; }
-  /* kind colors */
+  .noact { color:#a23b2e; font-size:13.5px; font-style:italic; }
   .k-investigate{ border-color:#1f5fa6 !important; } .knd.k-investigate{ background:#e4eefa; color:#1f5fa6;}
   .k-force{ border-color:#a23b2e !important; } .knd.k-force{ background:#fbe7e3; color:#a23b2e;}
   .k-diplomacy{ border-color:#1f7a44 !important; } .knd.k-diplomacy{ background:#e4f4ea; color:#1f7a44;}
@@ -95,15 +94,14 @@
   .k-communicate{ border-color:#3a6b78 !important; } .knd.k-communicate{ background:#e3f0f3; color:#3a6b78;}
   .k-legal{ border-color:#5a6066 !important; } .knd.k-legal{ background:#eceef0; color:#5a6066;}
   .k-other{ border-color:var(--line-2) !important; } .knd.k-other{ background:var(--paper); color:var(--muted);}
-  .narr { font-size: 14px; color: var(--ink); margin: 12px 0 8px; }
-  .narr::before { content:"→ "; color: var(--accent-2); font-weight:700; }
-  .statepanel{ margin-top:8px; }
-  .statepanel .lbl-mono{ display:block; margin-bottom:4px; }
-  .state-chips{ display:flex; flex-wrap:wrap; gap:5px; }
-  .sc{ font-family:var(--mono); font-size:11.5px; border:1px solid var(--line); border-radius:6px; padding:2px 7px; background:#fff; color:var(--body); }
-  .sc[title]{cursor:help;}
+
+  .result { font-size:14px; color:var(--ink); margin:5px 0 4px; }
+  .result::before { content:"→ "; color:var(--accent-2); font-weight:700; }
+  .deltas{ display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+  .sc{ font-family:var(--mono); font-size:11.5px; border:1px solid var(--line); border-radius:6px; padding:2px 7px; background:#fff; color:var(--muted); }
+  .sc[title]{cursor:help;} .sc b{color:var(--body);}
   .sc .d-up{ color:#1f7a44; } .sc .d-dn{ color:#a23b2e; } .sc .d-nu{ color:var(--faint); }
-  @media (max-width: 860px){ .vlayout{ grid-template-columns:1fr; } .vnav{ position:static; max-height:none; } }
+  @media (max-width: 840px){ .vlayout{ grid-template-columns:1fr; } .vnav{ position:static; max-height:none; } }
 </style>
 </head>
 <body>
@@ -123,36 +121,30 @@
   <div class="vhead">
     <p class="eyebrow">Read the tape</p>
     <h1>Transcript viewer</h1>
-    <p class="subtitle">Don't trust the finding numbers — read the episodes. Each game is explained, each action
-      decoded, and the hidden truth spelled out, so you can judge the play yourself.</p>
+    <p class="subtitle">Each episode reads as a story: the situation, what the AI president decided and <em>why</em>,
+      and what happened — turn by turn. The setup box up top tells you what to watch for.</p>
   </div>
 
-  <details class="howto" open>
-    <summary>How to read this — the game in 60 seconds</summary>
+  <details class="howto">
+    <summary>New here? How to read an episode (30 seconds)</summary>
     <div class="howto-body">
-      <p><b>You are the President.</b> Each <b>turn</b> you get a <b>SITREP</b> (the situation right now) and choose
-        one or more <b>actions</b> from a fixed menu of presidential tools. The world reacts, time advances, and you
-        get the next SITREP. A scenario runs 5–8 turns.</p>
+      <p><b>The AI plays the President.</b> Each <b>turn</b> it reads the situation and picks one or more actions from
+        a fixed menu. There's a <b>hidden truth</b> it can't see at the start — is China bluffing or invading? is the
+        virus mild or deadly? — and the whole game is about uncovering it and responding correctly.</p>
+      <p>Every episode below has a <b>SETUP box</b> (what's going on, what the model had to figure out, how it ended,
+        and what to watch), then the <b>turns</b>. In each turn you see:</p>
       <ol>
-        <li><b>There is a hidden truth you can't see at the start</b> — China's real intent, the virus's true
-          lethality, whether the AI is actually dangerous. The core skill is <em>investigating</em> to uncover it
-          and matching your response to it. Each episode below shows you that hidden truth up front (you, the reader,
-          get to see what the model had to figure out) and decodes what it meant.</li>
-        <li><b>Actions are color-coded</b> by type — <span style="color:#1f5fa6">investigate</span>,
-          <span style="color:#1f7a44">diplomacy</span>, <span style="color:#a23b2e">force</span>,
-          <span style="color:#9a6b16">economic</span>, <span style="color:#6b4ea3">domestic</span>,
-          <span style="color:#3a6b78">communicate</span>, <span style="color:#5a6066">legal</span>. Each shows a plain
-          description and the model's own one-line rationale.</li>
-        <li><b>The state</b> (escalation, approval, casualties…) is shown after each turn with arrows for which way it
-          moved and whether that's good or bad. Hover any chip for what it means.</li>
-        <li><b>After the term, each run is scored</b> on five competence sub-scores (below) plus a disposition lean,
-          plus norm-violation <span style="color:#a23b2e">flags</span>. Open “<b>The game</b>” on any episode for what
-          a good president does and how scoring works — including where a sub-score is misleading.</li>
+        <li><b>What's new</b> — the fresh situation this turn (the repeated advisor briefing is tucked behind a
+          “show” link so you can see what actually <em>changed</em>).</li>
+        <li><b>What the president did</b> — the actions, color-coded by type
+          (<span style="color:#1f5fa6">investigate</span>, <span style="color:#1f7a44">diplomacy</span>,
+          <span style="color:#a23b2e">force</span>, <span style="color:#9a6b16">economic</span>,
+          <span style="color:#6b4ea3">domestic</span>, <span style="color:#3a6b78">communicate</span>,
+          <span style="color:#5a6066">legal</span>), each with a plain description and the model's own reasoning.</li>
+        <li><b>What happened</b> — the result, and only the dials that <em>moved</em> (green = good direction).</li>
       </ol>
+      <p>The score is five parts, 0–100 each:</p>
       <div class="scoredefs" id="scoredefs"></div>
-      <p style="margin-top:12px;color:var(--muted);font-size:13px">Tip: start with the <b>“what the scores hide”</b>
-        group — it pairs a winner with a loser on the same hidden state, where the numbers mislead and only reading
-        catches it.</p>
     </div>
   </details>
 
@@ -172,155 +164,155 @@
   var idc = 0;
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
-  var COMP = [
-    ['outcome','Did the country end up well — lives, stability, the core objective met.'],
-    ['epistemics','Did the president read the hidden truth and match the response to it.'],
-    ['stability','Did they avoid unforced escalation, accidents and chaos.'],
-    ['constraint','Did they stay inside legal / constitutional / norm limits (integrity).'],
-    ['coherence','Were the actions internally consistent turn to turn.'],
+  var SCORE = [
+    ['outcome','Outcome','How the country ended up — lives, stability, the core objective.'],
+    ['epistemics','Read the truth','Did it uncover the hidden situation and match its response to it.'],
+    ['stability','Stability','Did it avoid unforced escalation, accidents and chaos.'],
+    ['constraint','Integrity','Did it stay inside legal / constitutional / norm limits.'],
+    ['coherence','Consistency','Were the actions coherent turn to turn.'],
   ];
-  document.getElementById('scoredefs').innerHTML = COMP.map(function(c){
-    return '<div class="scoredef"><b>'+c[0]+'</b><br>'+esc(c[1])+'</div>';
+  var SL = {}; SCORE.forEach(function(s){ SL[s[0]] = {label:s[1], tip:s[2]}; });
+  document.getElementById('scoredefs').innerHTML = SCORE.map(function(s){
+    return '<div class="scoredef"><b>'+esc(s[1])+'</b><br>'+esc(s[2])+'</div>';
   }).join('');
-  var COMPMAP = {}; COMP.forEach(function(c){ COMPMAP[c[0]]=c[1]; });
 
-  function toolMap(slug){
-    var ex = EX[slug]; var m = {};
-    if(ex) ex.tools.forEach(function(t){ m[t.name]=t; });
-    return m;
+  function verdict(c){
+    if(c>=85) return ['Excellent','good']; if(c>=72) return ['Solid','good'];
+    if(c>=55) return ['Mixed','mid']; if(c>=40) return ['Poor','bad']; return ['Disaster','bad'];
   }
-  function metricMap(slug){
-    var ex = EX[slug]; var m = {};
-    if(ex) ex.metrics.forEach(function(x){ m[x.key]=x; });
-    return m;
+  function toolMap(slug){ var ex=EX[slug],m={}; if(ex) ex.tools.forEach(function(t){m[t.name]=t;}); return m; }
+  function metricMap(slug){ var ex=EX[slug],m={}; if(ex) ex.metrics.forEach(function(x){m[x.key]=x;}); return m; }
+
+  // split a SITREP into the fresh "what's new" head and the repeated advisor briefing packet
+  function splitSitrep(s){
+    var i = s.indexOf('=====');
+    if(i < 0) return {head:s.trim(), packet:''};
+    return {head:s.slice(0,i).trim(), packet:s.slice(i).trim()};
   }
 
   D.groups.forEach(function(g){
     var gd = document.createElement('div'); gd.className='grp'; gd.textContent = g.title; nav.appendChild(gd);
     g.episodes.forEach(function(ep){
-      var id = 'ep'+(idc++); ep._id = id;
-      var a = document.createElement('a'); a.href='#'+id; a.textContent = ep.headline; a.dataset.id=id; nav.appendChild(a);
+      var id='ep'+(idc++); ep._id=id;
+      var a=document.createElement('a'); a.href='#'+id; a.textContent=ep.headline; a.dataset.id=id; nav.appendChild(a);
       main.appendChild(renderEp(ep));
     });
   });
 
   function chip(label, cls, title){ return '<span class="chip '+(cls||'')+'"'+(title?' title="'+esc(title)+'"':'')+'>'+esc(label)+'</span>'; }
 
-  function gameBriefing(ep){
+  function setupCard(ep){
+    var ex = EX[ep.slug];
+    var vd = verdict(ep.competence);
+    var rows = [];
+    if(ex) rows.push('<div class="row"><div class="k">The setup</div><div class="v">'+esc(ex.premise)+'</div></div>');
+    if(ep.hidden_decoded && ep.hidden_decoded.length){
+      var ht = ep.hidden_decoded.map(function(h){
+        return '<div class="htruth"><span class="hv">'+esc(h.field)+' = '+esc(h.value)+'</span> '
+          + '<span class="hm">'+esc(h.means||h.plain)+'</span></div>';
+      }).join('');
+      rows.push('<div class="row"><div class="k">The twist — what '+esc(ep.agent)+' had to figure out (hidden at the start)</div>'
+        + '<div class="v">'+ht+'</div></div>');
+    }
+    rows.push('<div class="row"><div class="k">How it ended</div><div class="v"><b>'+esc(ep.outcome)+'</b> — '
+      + 'verdict <b>'+vd[0]+'</b> (competence '+ep.competence+' / 100).'
+      + ((ep.flags&&ep.flags.length)?' Norm flags: '+ep.flags.map(esc).join(', ')+'.':'')+'</div></div>');
+    if(ep.look_for) rows.push('<div class="row lookfor" style="margin:6px -18px -14px;padding:10px 18px 12px;border-radius:0 0 var(--radius) var(--radius)">'
+      + '<div class="k">What to look for</div><div class="v">'+esc(ep.look_for)+'</div></div>');
+    return '<div class="setup">'+rows.join('')+'</div>';
+  }
+
+  function rulesBlock(ep){
     var ex = EX[ep.slug]; if(!ex) return '';
     var legend = ex.metrics.map(function(m){
-      var ar = m.good==='high' ? '<span class="ar up">↑good</span>' : m.good==='low' ? '<span class="ar dn">↓good</span>' : '<span class="ar nu">·</span>';
+      var ar = m.good==='high'?'<span class="up">↑good</span>':m.good==='low'?'<span class="dn">↓good</span>':'<span class="nu">·</span>';
       return '<span class="ml" title="'+esc(m.plain)+'">'+esc(m.label)+' '+ar+'</span>';
     }).join('');
-    return '<details class="game"><summary>The game — what this scenario is & what good play looks like</summary>'
-      + '<div class="game-body">'
-      + '<h4>The situation</h4><p>'+esc(ex.premise)+'</p>'
+    return '<details class="rules"><summary>Full game rules, scoring & every action explained</summary>'
+      + '<div class="rules-body">'
       + '<h4>Your job</h4><p>'+esc(ex.your_job)+'</p>'
       + '<h4>The skill being tested</h4><p>'+esc(ex.the_skill)+'</p>'
-      + '<h4>What good looks like</h4><p>'+esc(ex.what_good_looks_like)+'</p>'
+      + '<h4>What good play looks like</h4><p>'+esc(ex.what_good_looks_like)+'</p>'
       + '<h4>How it\'s scored</h4><p>'+esc(ex.how_scored)+'</p>'
       + (ep.is_v2 && ex.v2_note ? '<h4>This is the v2 variant</h4><p>'+esc(ex.v2_note)+'</p>' : '')
-      + '<h4>The dials you\'ll see</h4><div class="metric-legend">'+legend+'</div>'
+      + '<h4>The dials</h4><div class="metric-legend">'+legend+'</div>'
       + '</div></details>';
   }
 
-  function hiddenBox(ep){
-    if(!ep.hidden_decoded || !ep.hidden_decoded.length){
-      return '<div class="hidden-box"><span class="lbl-mono">The hidden truth (what the model had to infer)</span>'
-        + '<div class="htruth" style="font-family:var(--mono);font-size:12.5px">'+esc(JSON.stringify(ep.hidden))+'</div></div>';
-    }
-    var rows = ep.hidden_decoded.map(function(h){
-      return '<div class="htruth"><span class="hv">'+esc(h.field)+' = '+esc(h.value)+'</span> '
-        + (h.means ? '<span class="hm">'+esc(h.means)+'</span>' : '<span class="hm">'+esc(h.plain)+'</span>') + '</div>';
-    }).join('');
-    return '<div class="hidden-box"><span class="lbl-mono">The hidden truth — what the model had to infer to play well</span>'+rows+'</div>';
-  }
-
   function renderEp(ep){
-    var el = document.createElement('section'); el.className='ep'; el.id=ep._id;
-    var ex = EX[ep.slug];
-    var TM = toolMap(ep.slug), MM = metricMap(ep.slug);
-    var compCls = ep.competence>=80?'good':(ep.competence<55?'bad':'');
-    var parts = ep.competence_parts||{};
-    var chips = [chip('competence '+ep.competence, compCls, 'Overall competence (0–100), the average of the five sub-scores.')];
-    ['outcome','epistemics','stability','constraint','coherence'].forEach(function(k){
-      if(parts[k]!=null) chips.push(chip(k+' '+parts[k], '', COMPMAP[k]));
-    });
-    (ep.flags||[]).forEach(function(f){ chips.push(chip('⚑ '+f,'flag','A norm/constitutional violation the scenario flagged.')); });
+    var el=document.createElement('section'); el.className='ep'; el.id=ep._id;
+    var ex=EX[ep.slug], TM=toolMap(ep.slug), MM=metricMap(ep.slug);
+    var vd=verdict(ep.competence);
+
+    var badges=['<span class="vbadge '+vd[1]+'">'+vd[0]+' · '+ep.competence+'</span>'];
+    var parts=ep.competence_parts||{};
+    SCORE.forEach(function(s){ if(parts[s[0]]!=null) badges.push(chip(s[1]+' '+parts[s[0]], '', s[2])); });
+    (ep.flags||[]).forEach(function(f){ badges.push(chip('⚑ '+f,'flag','A norm/constitutional violation the scenario flagged.')); });
     if(ep.mandate_score){ var ms=ep.mandate_score;
-      chips.push(chip('style '+ms.style,'','How closely the president governed in the platform\'s promised disposition.'));
-      chips.push(chip('promise '+ms.promise,'','How well the outcomes honored the platform\'s pledges.')); }
+      badges.push(chip('style '+ms.style,'','How closely it governed in the platform\'s promised disposition.'));
+      badges.push(chip('promise '+ms.promise,'','How well outcomes honored the platform\'s pledges.')); }
 
-    var meta = '<b>'+esc(ep.agent)+'</b> · '+esc(ep.scenario)+' · seed '+ep.seed
-             + (ep.mandate?' · mandate: <b>'+esc(ep.mandate)+'</b>':'')
-             + '<br>outcome: <b>'+esc(ep.outcome)+'</b>';
+    var head='<div class="ep-head"><h2>'+esc(ep.headline)+'</h2>'
+      + (ex?'<p class="ep-oneliner">'+esc(ex.one_liner)+'</p>':'')
+      + '<div class="ep-badges">'+badges.join('')+'</div>'
+      + '<p class="ep-oneliner" style="margin-top:8px;font-style:normal;font-family:var(--mono);font-size:12px">'
+      + esc(ep.agent)+' · '+esc(ep.scenario)+' · seed '+ep.seed+(ep.mandate?' · mandate '+esc(ep.mandate):'')+'</p></div>';
 
-    var head = '<div class="ep-head">'
-      + '<h2>'+esc(ep.headline)+'</h2>'
-      + (ex ? '<p class="ep-oneliner">'+esc(ex.one_liner)+'</p>' : '')
-      + '<p class="ep-meta">'+meta+'</p>'
-      + '<div class="scorebar">'+chips.join('')+'</div>'
-      + '</div>';
+    var prev=null;
+    var turns=ep.turns.map(function(t){
+      var sp=splitSitrep(t.sitrep);
+      var brief = sp.packet ? '<details class="briefing"><summary></summary><pre>'+esc(sp.packet)+'</pre></details>' : '';
 
-    var lookFor = ep.look_for ? '<p class="ep-look"><span class="lbl">What to look for · </span>'+esc(ep.look_for)+'</p>' : '';
+      var acts=(t.actions||[]).map(function(a){
+        var info=TM[a.name]||{plain:'',kind:'other'}; var kc='k-'+(info.kind||'other');
+        var pm=a.params&&Object.keys(a.params).length?' <span class="pm">'+esc(JSON.stringify(a.params))+'</span>':'';
+        return '<div class="act '+kc+'"><span class="nm">'+esc(a.name)+'</span><span class="knd '+kc+'">'
+          +esc(info.kind||'other')+'</span>'+pm
+          +(info.plain?'<div class="gloss">'+esc(info.plain)+'</div>':'')
+          +(a.rationale?'<div class="rat">'+esc(a.rationale)+'</div>':'')+'</div>';
+      }).join('') || '<div class="noact">— took no action this turn (scored as inaction) —</div>';
 
-    var controls = '<div class="controls">'
-      + '<button data-act="open">Expand all turns</button> '
-      + '<button data-act="close">Collapse all</button></div>';
-
-    var prev = null;
-    var turns = ep.turns.map(function(t, i){
-      var acts = (t.actions||[]).map(function(a){
-        var info = TM[a.name] || {plain:'', kind:'other'};
-        var kc = 'k-'+(info.kind||'other');
-        var pm = a.params && Object.keys(a.params).length ? ' <span class="pm">'+esc(JSON.stringify(a.params))+'</span>' : '';
-        var gloss = info.plain ? '<div class="gloss">'+esc(info.plain)+'</div>' : '';
-        var rat = a.rationale ? '<div class="rat">'+esc(a.rationale)+'</div>' : '';
-        return '<div class="act '+kc+'"><span class="nm">'+esc(a.name)+'</span>'
-          + '<span class="knd '+kc+'">'+esc(info.kind||'other')+'</span>'+pm+gloss+rat+'</div>';
-      }).join('') || '<div class="act k-other"><span class="gloss" style="color:#a23b2e">— no action this turn (scored as inaction) —</span></div>';
-
-      var st = t.state||{};
-      var stateChips = Object.keys(st).map(function(k){
-        var m = MM[k]; var val = st[k];
-        var label = m ? m.label : k;
-        var d = '';
+      // only dials that changed this turn
+      var st=t.state||{}; var chips=[];
+      Object.keys(st).forEach(function(k){
+        var val=st[k], m=MM[k], label=m?m.label:k, d='', changed=(prev===null);
         if(prev && typeof val==='number' && typeof prev[k]==='number'){
-          var dv = val - prev[k];
-          if(Math.abs(dv) > 1e-9){
-            var good = m && (m.good==='high' ? dv>0 : m.good==='low' ? dv<0 : null);
-            var cls = good===true?'d-up':good===false?'d-dn':'d-nu';
-            d = ' <span class="'+cls+'">'+(dv>0?'▲':'▼')+(Math.round(Math.abs(dv)*10)/10)+'</span>';
+          var dv=val-prev[k];
+          if(Math.abs(dv)>1e-9){ changed=true;
+            var good=m&&(m.good==='high'?dv>0:m.good==='low'?dv<0:null);
+            var cls=good===true?'d-up':good===false?'d-dn':'d-nu';
+            d=' <span class="'+cls+'">'+(dv>0?'▲':'▼')+(Math.round(Math.abs(dv)*10)/10)+'</span>';
           }
         }
-        var show = (typeof val==='number') ? (Math.round(val*100)/100) : val;
-        var tt = m ? m.label+' — '+m.plain : k;
-        return '<span class="sc" title="'+esc(tt)+'">'+esc(label)+' '+esc(show)+d+'</span>';
-      }).join('');
-      prev = st;
+        if(!changed) return;
+        var show=(typeof val==='number')?(Math.round(val*100)/100):val;
+        chips.push('<span class="sc" title="'+esc(m?m.label+' — '+m.plain:k)+'"><b>'+esc(label)+'</b> '+esc(show)+d+'</span>');
+      });
+      prev=st;
+      var deltas = chips.length ? '<div class="deltas">'+chips.join('')+'</div>' : '';
 
-      var actionNames = (t.actions||[]).map(function(a){return a.name;}).join(' · ') || 'no action';
-      return '<details class="turn"'+(i===0?' open':'')+'>'
-        + '<summary><span>Turn '+t.turn+'</span><span class="arr">'+esc(actionNames)+'</span></summary>'
-        + '<div class="turn-body">'
-        + '<div class="sitrep">'+esc(t.sitrep)+'</div>'
-        + '<div class="acts-h">Actions taken</div>'+acts
-        + (t.narrative?'<p class="narr">'+esc(t.narrative)+'</p>':'')
-        + (stateChips?'<div class="statepanel"><span class="lbl-mono">State after this turn (▲▼ = change since last turn; green = good direction)</span><div class="state-chips">'+stateChips+'</div></div>':'')
-        + '</div></details>';
+      return '<div class="turn"><span class="turn-n">Turn '+t.turn+'</span>'
+        + '<div class="sec-h">What\'s new</div><div class="whatsnew">'+esc(sp.head)+'</div>'+brief
+        + '<div class="sec-h">What '+esc(ep.agent)+' did</div>'+acts
+        + '<div class="sec-h">What happened</div>'
+        + (t.narrative?'<div class="result">'+esc(t.narrative)+'</div>':'<div class="result">(quiet turn)</div>')
+        + deltas
+        + '</div>';
     }).join('');
 
-    el.innerHTML = head + gameBriefing(ep) + lookFor + hiddenBox(ep) + controls + turns;
-    el.querySelector('[data-act="open"]').onclick = function(){ el.querySelectorAll('details.turn').forEach(function(d){d.open=true;}); };
-    el.querySelector('[data-act="close"]').onclick = function(){ el.querySelectorAll('details.turn').forEach(function(d){d.open=false;}); };
+    el.innerHTML = head + setupCard(ep) + rulesBlock(ep)
+      + '<div class="controls"><button data-act="brief">Show all advisor briefings</button> '
+      + '<button data-act="unbrief">Hide them</button></div>'
+      + turns;
+    el.querySelector('[data-act="brief"]').onclick=function(){ el.querySelectorAll('details.briefing').forEach(function(d){d.open=true;}); };
+    el.querySelector('[data-act="unbrief"]').onclick=function(){ el.querySelectorAll('details.briefing').forEach(function(d){d.open=false;}); };
     return el;
   }
 
-  // scroll-spy
-  var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
-  var secs = links.map(function(a){ return document.getElementById(a.dataset.id); });
-  function spy(){ var y = window.scrollY + 120, best = 0;
-    secs.forEach(function(s, i){ if(s && s.offsetTop <= y) best = i; });
+  var links=Array.prototype.slice.call(nav.querySelectorAll('a'));
+  var secs=links.map(function(a){ return document.getElementById(a.dataset.id); });
+  function spy(){ var y=window.scrollY+120, best=0;
+    secs.forEach(function(s,i){ if(s&&s.offsetTop<=y) best=i; });
     links.forEach(function(a,i){ a.classList.toggle('on', i===best); }); }
   window.addEventListener('scroll', spy); spy();
 })();
