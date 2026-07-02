@@ -1,6 +1,6 @@
 // Broker Battle — offline service worker.
 // Cache-first for our own assets so the game works on a plane / spotty wifi.
-const CACHE = "broker-battle-v1";
+const CACHE = "broker-battle-v2";
 const ASSETS = [
   "./", "index.html", "game.css", "game.js", "questions.js",
   "audio.js", "fx.js", "manifest.webmanifest", "icon.svg",
