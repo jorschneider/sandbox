@@ -82,9 +82,8 @@
     <a href="#fullterm"><span class="n">7</span>Full Term &mdash; the spread</a>
     <a href="#mandate"><span class="n">8</span>Mandate mode</a>
     <a href="#infoenv"><span class="n">9</span>v2: the information environment</a>
-    <a href="#historical"><span class="n">10</span>Historical replay: Cuban Missile Crisis</a>
-    <a href="#conclusion"><span class="n">11</span>Conclusion &amp; caveats</a>
-    <a href="#run"><span class="n">12</span>How to run it</a>
+    <a href="#conclusion"><span class="n">10</span>Conclusion &amp; caveats</a>
+    <a href="#run"><span class="n">11</span>How to run it</a>
   </nav>
 
   <!-- 1 -->
@@ -329,22 +328,8 @@
   </section>
 
   <!-- 10 -->
-  <section id="historical">
-    <h2><span class="num">10</span>Historical replay: Cuban Missile Crisis</h2>
-    <p class="section-note">A real-news stretch: the model is dropped into <b>October 1962</b> with the
-      actual ExComm sources &mdash; U-2 photos, a Joint Chiefs pressing for air strikes and invasion,
-      McNamara's blockade, Khrushchev's two letters &mdash; and scored against history.</p>
-    <div class="panel" id="cuban-panel"></div>
-    <p style="margin-top:12px"><b>The models reproduce JFK's choice.</b> Given the real sources, the
-      frontier models converge on the quarantine + back-channel + no-invasion-pledge resolution
-      &mdash; missiles withdrawn, war avoided &mdash; on nearly every seed, while the scripted hawkish
-      personas order air strikes and trigger <b>nuclear war</b>. A strong face-validity check that the
-      benchmark rewards the historically-vindicated path.</p>
-  </section>
-
-  <!-- 11 -->
   <section id="conclusion">
-    <h2><span class="num">11</span>Conclusion &amp; caveats</h2>
+    <h2><span class="num">10</span>Conclusion &amp; caveats</h2>
     <p>Across seven frontier models from five labs and two countries, the picture is consistent:
       they steer competently, prefer verification and de-escalation, and stay inside constitutional
       limits even when an authoritarian shortcut would "work." They converge on the same dovish,
@@ -358,7 +343,7 @@
       <h3 style="color:#a23b2e">An honest self-review &mdash; what reading the transcripts changed</h3>
       <p style="margin:0 0 8px">Following the advice to <em>read a dozen episodes end-to-end rather than
         trust the aggregate</em>, the full review is in <a href="https://github.com/jorschneider/sandbox/blob/presidentbench/presidentbench/EVAL_REVIEW.md">EVAL_REVIEW.md</a>.
-        The core has real signal (the Cuban replay, v2 triangulation, and <code>the-jump</code> genuinely
+        The core has real signal (the v2 multi-source triangulation and <code>the-jump</code> genuinely
         separate reasoning). But reading turned up issues the summary table hid:</p>
       <ul style="margin:0;padding-left:20px;font-size:14.5px">
         <li><b>Kimi's last place was a tool-use artifact &mdash; now fixed.</b> It emitted no valid
@@ -388,7 +373,7 @@
 
   <!-- 10 -->
   <section id="run">
-    <h2><span class="num">12</span>How to run it</h2>
+    <h2><span class="num">11</span>How to run it</h2>
     <pre><span class="c"># offline scripted baselines &mdash; no API key needed</span>
 python -m harness.cli demo --seeds 1 2 3
 

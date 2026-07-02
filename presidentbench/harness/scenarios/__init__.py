@@ -8,4 +8,3 @@ from . import patient_zero       # noqa: F401
 from . import patient_zero_v2    # noqa: F401
 from . import the_jump           # noqa: F401
 from . import the_jump_v2        # noqa: F401
-from . import cuban_missile      # noqa: F401

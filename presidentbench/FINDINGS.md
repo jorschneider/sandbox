@@ -31,7 +31,7 @@ acts competently but reads the hidden state worse, which is the skill the benchm
 > one-line retry-on-empty fix (force a tool call when a turn comes back empty) cut Kimi's empty-turn
 > rate to 5.6%, and **re-running its 40 board episodes moved it from last (74.1, epistemics 58.1) to
 > 6th — 79.8, epistemics 64.8 — above GLM and tied with Haiku.** The numbers above are post-fix for
-> Kimi; the other six models are unchanged. *(Kimi's mandate / v2 / historical runs are not yet
+> Kimi; the other six models are unchanged. *(Kimi's mandate / v2 runs are not yet
 > re-run, so those Kimi cells below still carry the artifact and read as a lower bound.)*
 
 ## Full Term: a single crisis can't separate them — a term can
@@ -41,8 +41,7 @@ artifact of the format. Chaining the crises into a **Full Term** — eight back-
 compounding **National Standing** (start = 100), and a **removal-from-office floor** (one
 catastrophe — a war, unrest spiral, lost Taiwan, or AI loss-of-control — ends the presidency) —
 fans the trajectories across a **~20× range** (ruin ~20 → ~400). The term is the four
-*contemporary* crises in two waves (the 1962 replay stays out — it only belongs in the historical
-section). Assembled from the 280 per-crisis model results already on disk.
+crises in two waves, assembled from the 280 per-crisis model results already on disk.
 
 | President | Median standing | Best | Survived |
 |---|---|---|---|
@@ -139,12 +138,6 @@ The automated scores are only as good as the reasoning behind them, so — on Fl
 read the actual transcripts for each headline claim rather than trusting the aggregate numbers. A
 curated set is browsable in the **[transcript viewer](viewer.html)**. What held, and what didn't:
 
-- **Cuban replay reproduces JFK — holds, and it's genuine reasoning.** GPT-5.5 investigates four
-  sources before acting, reads the hedged CIA line correctly, and chooses the quarantine + UN +
-  back-channel + no-invasion pledge — *including the secret Jupiter-in-Turkey trade*, a real but
-  lesser-known term of the actual deal. The scripted hawk persona (the LeMay path) takes the strike
-  and triggers **nuclear war** (comp 32); the dove **capitulates** with the missiles left in place
-  (comp 55). The frontier model threads the historically-vindicated needle between them.
 - **v2 triangulation is real, not loudness-following.** With a hidden COERCE intent, the SecDef
   source shouts "this is the opening move of an invasion" every turn; GPT trusts the *hedged-but-
   right* DNI read instead, digs into the three signal-bearing sources, and calibrates. It is
@@ -167,14 +160,13 @@ scenarios and the six platforms are authored (their framing partly sets the targ
 cells are n=8. Load-bearing next steps: the v2 multi-source information environment (prototype
 committed), more seeds, and adversarial review of the hidden-state and platform definitions.
 
-## v2: the information environment, generalized — and a historical replay
+## v2: the information environment, generalized
 
 The make-or-break critique was that a clean SITREP trivializes epistemics. The **v2** scenarios
 replace it with a **competing-source briefing packet** (a reliable-but-hedged analyst, advisors
 who sound the same alarm every turn, partisan press, a sometimes-deceptive adversary, noise) and
 a **source-directed `investigate`** — the skill becomes choosing *whom to dig into* and
-triangulating. Built for all four crises (`*-v2`) plus a real-news **historical replay**, and run
-across the 7 models.
+triangulating. Built for all four crises (`*-v2`) and run across the 7 models.
 
 **The environment generalizes.** On the propagated v2 crises the frontier models keep their
 competence and genuinely triangulate — investigating ~3.5 distinct sources and reliably hitting
@@ -182,16 +174,6 @@ the signal-bearing ones (Fujian recon, city-by-city audits, surge testing, the r
 than reacting to the loudest advisor. Triangulation breadth tracks capability: the strongest
 models dig into ~4 sources, the weakest (Kimi) ~2.8 with lower epistemics.
 
-**The historical replay (Cuban Missile Crisis, Oct 1962).** Dropped into the real decision with
-the actual ExComm sources — U-2 photos, a Joint Chiefs pressing for air strikes and invasion,
-McNamara's blockade, Khrushchev's two letters — the frontier models **reproduce JFK's choice**:
-a naval quarantine plus the back-channel and a no-invasion pledge, resolving the crisis with the
-missiles withdrawn and war avoided. GPT-5.5, Opus, Sonnet, Qwen and Haiku reached that outcome on
-**5/5** seeds (comp ~92–94); only Kimi sometimes stalled in brinkmanship. The *scripted hawkish
-personas*, by contrast, ordered air strikes and triggered **nuclear war** — the same catastrophe
-the real Joint Chiefs were urging. It is a strong face-validity check: confronted with a real,
-documented crisis, the models converge on the historically-vindicated path and avoid both the
-reckless strike and capitulation.
-
-(Both the v2 scenarios and the historical replay are kept *out of the main leaderboard* so the
-seven-model n=10 results stay clean; they are prototypes for the next iteration.)
+(The v2 scenarios are kept *out of the main leaderboard* so the seven-model n=10 results stay
+clean; they are the template for the next iteration. The bench is deliberately all
+forward-looking scenarios — no historical replays.)

@@ -7,6 +7,8 @@
 > aggregate leaderboard. The aim is to say honestly where the eval has signal and where the
 > numbers are lying to you.
 
+> *Update (Jul 2): the 1962 Cuban Missile Crisis replay described below has since been removed from the benchmark — PresidentBench is now deliberately all forward-looking scenarios. References to the replay document the earlier version this review examined.*
+
 **Bottom line.** PresidentBench has a real, interpretable core — the historical replay and the
 multi-source v2 environment genuinely separate reasoning, and the constitutional flags mostly
 fire on genuine violations. But reading the tape turned up **one finding that materially changes

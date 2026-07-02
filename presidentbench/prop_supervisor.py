@@ -7,7 +7,7 @@ import glob, os, subprocess, time
 os.chdir("/home/user/sandbox/presidentbench")
 ENV = dict(os.environ)
 MODELS = ["haiku", "sonnet", "opus", "qwen", "glm", "kimi", "gpt"]
-SCEN = ["long-hot-summer-v2", "patient-zero-v2", "the-jump-v2", "cuban-missile-1962"]
+SCEN = ["long-hot-summer-v2", "patient-zero-v2", "the-jump-v2"]
 SEEDS = ["1", "2", "3", "4", "5"]
 NEED = len(SCEN) * len(SEEDS)  # 20 per model
 

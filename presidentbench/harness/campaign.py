@@ -84,7 +84,7 @@ def _index_results(results_dir):
     return idx, names
 
 
-SEEDS = {"cuban-missile-1962": 5}  # available seeds per crisis (default 10)
+SEEDS = {}  # per-crisis seed-count overrides (default 10)
 
 
 def campaigns_from_results(results_dir, term_seeds=range(0, 10), term=None):

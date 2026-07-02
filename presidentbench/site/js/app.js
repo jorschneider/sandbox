@@ -22,7 +22,6 @@ function boot(data) {
   renderTrajectory();
   renderFullTerm();
   renderV2();
-  renderCuban();
   SELECTED = (data.leaderboard.find(e => e.kind === "model") || data.leaderboard[0]).agent;
   renderDetail();
 }
@@ -56,21 +55,6 @@ function renderV2() {
       <td>${m.comp}</td><td>${m.epi}</td><td>${m.src}</td><td>${m.sig}%</td>`;
     tb.appendChild(tr);
   });
-}
-
-function renderCuban() {
-  const e = window.PB_EXTRAS, root = document.getElementById("cuban-panel");
-  if (!e || !e.cuban || !root) return;
-  let html = '<table class="board"><thead><tr><th>President</th><th>Outcomes (5 seeds)</th><th>Avg competence</th></tr></thead><tbody>';
-  e.cuban.forEach(m => {
-    const outs = Object.entries(m.outcomes).map(([o, n]) => {
-      const good = /resolved/i.test(o), bad = /nuclear|capitulation/i.test(o);
-      const col = good ? "#2f9e6e" : (bad ? "#c0394e" : "#c98a23");
-      return `<span class="flag" style="background:${col}22;border-color:${col}55;color:${col}">${o} &times;${n}</span>`;
-    }).join(" ");
-    html += `<tr><td><span class="agent-name">${m.agent}</span></td><td>${outs}</td><td>${m.comp}</td></tr>`;
-  });
-  root.innerHTML = html + "</tbody></table>";
 }
 
 function renderAxesTable() {

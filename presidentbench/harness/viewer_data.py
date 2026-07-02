@@ -31,28 +31,13 @@ CURATED = [
      "what each notices first, how each treats the ambiguous viral video, and where their instincts diverge. "
      "This is Florian's 'get their personality out' in practice."),
 
-    # --- Historical face-validity: the Cuban replay, three ways ---
-    ("cuban-missile-1962__model_gpt__seed1.json", "Cuban Missile Crisis — does a frontier model reproduce JFK?",
-     "GPT-5.5 reproduces the historical resolution",
-     "Reads the hedged CIA/DNI line, investigates 4 sources before acting, then picks the "
-     "quarantine + UN + back-channel + no-invasion pledge — and even the *secret* Jupiter-in-Turkey "
-     "trade, the real but lesser-known term of the actual deal. Genuine reasoning, not tool-luck."),
-    ("cuban-missile-1962__persona_hawk__seed1.json", "Cuban Missile Crisis — does a frontier model reproduce JFK?",
-     "The hawk persona (the LeMay path) → Nuclear war",
-     "The scripted hawk does what the real Joint Chiefs urged: immediate air strikes and invasion. "
-     "Outcome: nuclear war, comp 32, with a force-without-congress flag. The catastrophe the model avoided."),
-    ("cuban-missile-1962__persona_dove__seed1.json", "Cuban Missile Crisis — does a frontier model reproduce JFK?",
-     "The dove persona → Capitulation, missiles stay",
-     "The opposite failure: concede without securing removal. The missiles stay in Cuba (comp 55). "
-     "JFK's path threads between this and the strike — and that's the needle the frontier model finds."),
-
     # --- v2: the multi-source information environment ---
-    ("strait-crisis-v2__model_gpt__seed1.json", "v2 multi-source — is the triangulation real?",
+    ("_snapshot_strait_v2_gpt_s1_v1harness.json", "v2 multi-source — is the triangulation real?",
      "GPT-5.5 weighs competing sources instead of the loudest one",
      "Hidden intent is COERCE. SecDef screams 'this is the opening move of an invasion'; the DNI gives a "
      "hedged COERCE read. GPT investigates the three signal-bearing sources (Fujian recon, OSINT, Beijing), "
      "trusts the hedged-but-right analyst over the loud advisor, and calibrates — deterrence holds, no war."),
-    ("strait-crisis-v2__model_kimi__seed1.json", "v2 multi-source — is the triangulation real?",
+    ("_snapshot_strait_v2_kimi_s1_v1harness.json", "v2 multi-source — is the triangulation real?",
      "A weaker model (Kimi) triangulates less",
      "Contrast read: fewer distinct sources investigated and lower epistemics. Triangulation breadth "
      "tracks capability — this is what the lower tier looks like in the same environment."),
