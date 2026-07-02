@@ -226,7 +226,15 @@ function updateMeters(deltas) {
     if (val) val.textContent = state.meters[k];
     if (deltas && deltas[k]) {
       const cell = document.querySelector(`#meters .meter[data-k="${k}"]`);
-      if (cell) { cell.classList.remove('flash'); void cell.offsetWidth; cell.classList.add('flash'); }
+      if (cell) {
+        cell.classList.remove('flash'); void cell.offsetWidth; cell.classList.add('flash');
+        // floating +N/−N so cause→effect is visible on the HUD itself
+        const f = document.createElement('span');
+        f.className = 'dfloat ' + (deltas[k] > 0 ? 'up' : 'down');
+        f.textContent = (deltas[k] > 0 ? '+' : '') + deltas[k];
+        cell.appendChild(f);
+        setTimeout(() => f.remove(), 1600);
+      }
     }
   });
 }
@@ -247,15 +255,28 @@ function renderScenario() {
   $('scenario-card').classList.remove('hide');
 
   $('scenario-count').textContent = `Session ${state.deckPos + 1} of ${state.deck.length}`;
+
+  // the counterpart you negotiated into the room in Phase A, as a place card
   const topic = s.relatedTopic ? DATA.topics.find(t => t.id === s.relatedTopic) : null;
-  const tag = $('scenario-tag');
-  if (topic) {
-    const aid = state.assignments[topic.id];
-    const a = aid ? actorById[aid] : null;
-    tag.style.display = '';
-    tag.textContent = a ? `Across the table: ${a.name}` : topic.title;
+  const cp = $('counterpart');
+  const aid = topic ? state.assignments[topic.id] : null;
+  const a = aid ? actorById[aid] : null;
+  if (a) {
+    const g = gradeOf(topic.id, aid);
+    cp.classList.remove('off');
+    cp.innerHTML = `
+      <span class="cp-kicker">Across the table</span>
+      <span class="cp-name">${a.name}</span>
+      <span class="cp-full">${a.fullName}</span>
+      <span class="cp-tag">${a.tag}</span>
+      <div class="cp-stats">
+        <span class="stat">Power ${pips(a.power, 'pwr')}</span>
+        <span class="stat">Openness ${pips(a.openness, 'opn')}</span>
+      </div>
+      <span class="pick-grade ${g}">${gradeLabel(g)}</span>`;
   } else {
-    tag.style.display = 'none';
+    cp.classList.add('off');
+    cp.innerHTML = '';
   }
 
   $('scenario-title').textContent = s.title;
@@ -288,6 +309,7 @@ function chooseOption(scenario, option) {
   // feedback
   $('scenario-card').classList.add('hide');
   const fc = $('feedback-card');
+  $('feedback-kicker').textContent = `The room reacts · Session ${state.deckPos + 1} of ${state.deck.length}`;
   $('feedback-deltas').innerHTML = METER_KEYS.map(k => {
     const d = deltas[k];
     const cls = d > 0 ? 'up' : d < 0 ? 'down' : 'zero';
@@ -366,12 +388,19 @@ function buildStatement(ending) {
     `<div class="sig">— Joint readout, U.S.–China Dialogue on Artificial Intelligence · Composite score ${ending.total}/100</div>`;
 }
 
+const STAMPS = { a: 'Ratified', b: 'Initialed', c: 'Noted', d: 'No consensus', f: 'Null & void' };
+
 function toReadout() {
   const ending = pickEnding();
   $('ending-name').textContent = ending.name;
   const badge = $('grade-badge');
   badge.className = 'grade-badge tier-' + ending.tier;
   badge.textContent = `${ending.gradeLabel} · ${ending.total}/100`;
+  const st = $('stamp');
+  st.textContent = STAMPS[ending.tier] || STAMPS.c;
+  st.className = 'stamp tier-' + ending.tier;
+  void st.offsetWidth;
+  st.classList.add('on');
   $('statement').innerHTML = buildStatement(ending);
   renderMeters('readout-meters');
   $('readout-credit').innerHTML = DATA.copy.outroCredit;
@@ -454,6 +483,8 @@ function renderFQuestion() {
   const q = f.questions[state.fqPos];
   $('fq-count').textContent = `Read ${state.fqPos + 1} of ${f.questions.length}`;
   $('fq-prompt').innerHTML = q.prompt;
+  // keep the evidence in view — the whole exercise is inferring FROM the tells
+  $('fq-tells').innerHTML = f.signposts.map(s => `<li>${s}</li>`).join('');
   const box = $('fq-options');
   box.innerHTML = '';
   q.options.forEach((o, i) => {
@@ -544,6 +575,25 @@ $('fq-next-btn').addEventListener('click', nextFQ);
 $('read-next-btn').addEventListener('click', nextFuture);
 $('futures-replay-btn').addEventListener('click', startFutures);
 $('futures-home-btn').addEventListener('click', () => showScreen('screen-title'));
+
+// keyboard: A/B/C/D (or 1–4) pick an option, Enter advances
+document.addEventListener('keydown', (e) => {
+  if (e.target !== document.body) return;
+  const key = e.key.toLowerCase();
+  let idx = 'abcd'.indexOf(key);
+  if (idx === -1) idx = '1234'.indexOf(key);
+  const on = (id) => $(id).classList.contains('on');
+
+  if (on('screen-talks')) {
+    if (on('feedback-card')) { if (key === 'enter') $('next-btn').click(); }
+    else if (idx >= 0) document.querySelectorAll('#options .option')[idx]?.click();
+  } else if (on('screen-futures')) {
+    if (on('fq-feedback')) { if (key === 'enter') $('fq-next-btn').click(); }
+    else if (on('fq-card') && idx >= 0) document.querySelectorAll('#fq-options .option')[idx]?.click();
+    else if (on('signpost-card') && key === 'enter') $('begin-read-btn').click();
+    else if (on('read-card') && key === 'enter') $('read-next-btn').click();
+  }
+});
 
 // sound toggle
 let soundOn = true;

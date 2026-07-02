@@ -64,15 +64,18 @@
       <div id="meters" class="meters"></div>
       <div class="talks-stage">
         <div class="scenario-card" id="scenario-card">
-          <div class="scenario-meta">
-            <span class="scenario-count" id="scenario-count"></span>
-            <span class="scenario-tag" id="scenario-tag"></span>
+          <div class="scenario-main">
+            <div class="scenario-meta">
+              <span class="scenario-count" id="scenario-count"></span>
+            </div>
+            <h2 class="scenario-title" id="scenario-title"></h2>
+            <p class="scenario-text" id="scenario-text"></p>
+            <div class="options" id="options"></div>
           </div>
-          <h2 class="scenario-title" id="scenario-title"></h2>
-          <p class="scenario-text" id="scenario-text"></p>
-          <div class="options" id="options"></div>
+          <aside class="counterpart off" id="counterpart" aria-label="Your counterpart on this track"></aside>
         </div>
         <div class="feedback-card" id="feedback-card">
+          <div class="scenario-meta"><span class="scenario-count" id="feedback-kicker"></span></div>
           <div class="feedback-deltas" id="feedback-deltas"></div>
           <p class="feedback-text" id="feedback-text"></p>
           <button class="btn btn-primary" id="next-btn">Next &rarr;</button>
@@ -83,6 +86,7 @@
     <!-- ============ PHASE C — THE READOUT ============ -->
     <section id="screen-readout" class="screen">
       <div class="readout-wrap">
+        <div class="stamp" id="stamp" aria-hidden="true"></div>
         <div class="kicker">Joint readout</div>
         <h2 class="ending-name" id="ending-name"></h2>
         <div class="grade-badge" id="grade-badge"></div>
@@ -133,6 +137,7 @@
         <div class="fq-card" id="fq-card">
           <div class="scenario-meta"><span class="scenario-count" id="fq-count"></span></div>
           <h2 class="scenario-title" id="fq-prompt"></h2>
+          <ul class="fq-tells" id="fq-tells"></ul>
           <div class="options" id="fq-options"></div>
         </div>
 
