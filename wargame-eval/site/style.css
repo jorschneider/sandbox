@@ -155,8 +155,6 @@ footer { order: 10; }
 .vspec .vwho { font-size: 12.5px; font-weight: 700; }
 .vspec .vdrv { font-size: 11.5px; fill: var(--muted); }
 
-.cav { font-style: italic; color: var(--muted); }
-
 /* --- results story --- */
 .verdict { font-size: 19px; line-height: 1.55; margin: 6px 0 18px; }
 .findings { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 0 0 10px; }
@@ -173,11 +171,6 @@ footer { order: 10; }
 .brow .bf { display: block; height: 15px; border-radius: 4px; }
 .brow .bf.cn { background: var(--red); } .brow .bf.we { background: var(--blue); }
 .brow .bv { font-family: var(--mono); font-size: 13px; }
-
-.scatfig { margin: 12px 0 6px; }
-.scatfig svg { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
-.scatfig .sclbl { font-size: 12px; font-weight: 600; fill: var(--ink); }
-.scatfig .scax { font-size: 12px; fill: var(--muted); }
 
 .obar { display: flex; height: 42px; border-radius: 8px; overflow: hidden; margin: 8px 0 6px; border: 1px solid var(--line); }
 .obar .seg { display: flex; align-items: center; justify-content: center; min-width: 0; }
@@ -226,41 +219,6 @@ details.more[open] > summary:before { content: "▾ "; }
 .scard .sxp { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
 @media (max-width: 560px) { .strats { grid-template-columns: 1fr; } .met { grid-template-columns: 96px 1fr auto; } }
 
-/* theater map */
-figure.map { margin: 8px 0 6px; }
-figure.map svg { width: 100%; height: auto; display: block;
-  border: 1px solid var(--line); border-radius: 10px; background: #e9eff3; }
-figure.map figcaption { color: var(--muted); font-size: 14px; margin-top: 10px; }
-.map text { font-family: var(--sans); }
-.map .lbl { font-size: 12px; fill: #2b2a26; }
-.map .lbl.sm { font-size: 10.5px; fill: #6c6760; }
-.map .lbl.red { fill: var(--red); font-weight: 600; }
-.map .lbl.blue { fill: var(--blue); font-weight: 600; }
-.map .terr { font-size: 15px; font-weight: 700; letter-spacing: 0.04em; }
-.map .lbl.b { font-size: 12.5px; font-weight: 700; }
-.maplegend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
-.maplegend i { display: inline-block; width: 11px; height: 11px; margin-right: 5px; vertical-align: -1px; }
-
-/* "this game" data panel under the map */
-.gamepanel { border: 1px solid var(--line); border-radius: 10px; background: var(--panel);
-  padding: 14px 16px; margin: 12px 0 6px; }
-.gp-head { font-size: 14.5px; margin-bottom: 12px; }
-.gp-head .chip { margin: 0 1px; }
-.gp-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
-.gp-stats > div { display: flex; flex-direction: column; gap: 2px; }
-.gp-stats b { font-family: var(--mono); font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
-.gp-stats span { font-size: 11.5px; color: var(--muted); line-height: 1.25; }
-.gp-turns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
-.gp-turns .t { flex: 1 1 0; min-width: 92px; border: 1px solid var(--line); border-radius: 7px;
-  padding: 7px 9px; background: var(--bg); }
-.gp-turns .t .tn { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.gp-turns .t .row { font-size: 12px; display: flex; justify-content: space-between; }
-.gp-turns .t .row .v { font-family: var(--mono); }
-.gp-turns .t .row .red { color: var(--red); } .gp-turns .t .row .blue { color: var(--blue); }
-@media (max-width: 560px) {
-  .gp-stats { grid-template-columns: repeat(2, 1fr); }
-}
-
 /* --- leaderboard --- */
 .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 14px; }
 .tab { font-size: 13px; font-family: var(--mono); border: 1px solid var(--line);
@@ -281,19 +239,6 @@ table.board tr:hover td { background: var(--panel); }
 .bar { display: inline-block; height: 7px; border-radius: 3px; vertical-align: middle; }
 .bar.off { background: var(--red); }
 .bar.def { background: var(--blue); }
-.fb-ok { color: var(--blue); } .fb-warn { color: var(--red); font-weight: 650; }
-
-/* per-game grid */
-.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin: 12px 0; }
-.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
-.games { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-.gcard { border: 1px solid var(--line); border-radius: 7px; padding: 9px 11px; background: var(--panel); font-size: 13.5px; }
-.gcard .vs { font-family: var(--mono); }
-.gcard .res { font-size: 11.5px; font-family: var(--mono); margin-top: 4px; color: var(--muted); }
-.gcard.win-RED { border-left: 3px solid var(--red); }
-.gcard.win-BLUE { border-left: 3px solid var(--blue); }
-.gcard.win-DRAW { border-left: 3px solid var(--draw); }
-.gcard.deg { opacity: 0.5; }
 
 /* trash talk */
 .talk { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 8px 0; }
@@ -307,22 +252,6 @@ table.board tr:hover td { background: var(--panel); }
   padding-left: 11px; color: var(--ink); }
 .tcard .tc { font-size: 12.5px; color: var(--muted); font-style: italic; }
 @media (max-width: 560px) { .talk { grid-template-columns: 1fr; } }
-
-/* decision replay */
-.replay { display: flex; flex-direction: column; gap: 8px; }
-.rturn { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); overflow: hidden; }
-.rturn .rt { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; color: var(--muted);
-  background: var(--bg); padding: 6px 13px; border-bottom: 1px solid var(--line); }
-.rds { display: flex; flex-direction: column; }
-.rd { padding: 9px 13px; border-bottom: 1px solid var(--line); border-left: 3px solid transparent; }
-.rd:last-child { border-bottom: none; }
-.rd.red { border-left-color: var(--red); }
-.rd.blue { border-left-color: var(--blue); }
-.rdh { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-.rdh .rph { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-.rdh .rord { font-size: 13px; font-weight: 600; }
-.rd .rr { font-size: 13px; line-height: 1.5; color: var(--ink); margin-top: 5px; }
-.rd .rtt { font-size: 12.5px; font-style: italic; color: var(--muted); margin-top: 4px; }
 
 footer { border-top: 1px solid var(--line); padding: 28px 0 60px; color: var(--muted); font-size: 14px; }
 footer a { color: var(--muted); }
