@@ -8,8 +8,8 @@ window.WARBENCH_DATA = {
       "competitive": true,
       "turns": 4,
       "n_games": 40,
-      "n_valid": 39,
-      "n_degraded": 1,
+      "n_valid": 40,
+      "n_degraded": 0,
       "models": [
         {
           "model": "minimax/minimax-m3",
@@ -26,20 +26,6 @@ window.WARBENCH_DATA = {
           "taunt_score": 6.5
         },
         {
-          "model": "qwen/qwen3.7-max",
-          "label": "Qwen3.7 Max",
-          "origin": "Alibaba",
-          "cn": true,
-          "elo": 1009,
-          "games": 15,
-          "wins": 8,
-          "win_rate": 0.533,
-          "offense": 0.633,
-          "defense": 0.626,
-          "fallbacks": 9,
-          "taunt_score": 3.5
-        },
-        {
           "model": "z-ai/glm-5.2",
           "label": "GLM-5.2",
           "origin": "Zhipu",
@@ -54,16 +40,30 @@ window.WARBENCH_DATA = {
           "taunt_score": 4.5
         },
         {
+          "model": "qwen/qwen3.7-max",
+          "label": "Qwen3.7 Max",
+          "origin": "Alibaba",
+          "cn": true,
+          "elo": 996,
+          "games": 16,
+          "wins": 8,
+          "win_rate": 0.5,
+          "offense": 0.622,
+          "defense": 0.626,
+          "fallbacks": 0,
+          "taunt_score": 3.5
+        },
+        {
           "model": "claude-opus-4-8",
           "label": "Opus 4.8",
           "origin": "Anthropic",
           "cn": false,
-          "elo": 980,
-          "games": 15,
-          "wins": 7,
-          "win_rate": 0.467,
+          "elo": 993,
+          "games": 16,
+          "wins": 8,
+          "win_rate": 0.5,
           "offense": 0.58,
-          "defense": 0.565,
+          "defense": 0.562,
           "fallbacks": 0,
           "taunt_score": 6.2
         },
@@ -312,62 +312,6 @@ window.WARBENCH_DATA = {
           "degraded": false
         },
         {
-          "red": "Qwen3.7 Max",
-          "blue": "Opus 4.8",
-          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
-          "winner": "BLUE",
-          "degraded": false
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "Opus 4.8",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": true
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "DeepSeek V4 Pro",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "DeepSeek V4 Pro",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "MiniMax M3",
-          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
-          "winner": "BLUE",
-          "degraded": false
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "MiniMax M3",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "GLM-5.2",
-          "outcome": "CHINESE_VICTORY",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "Qwen3.7 Max",
-          "blue": "GLM-5.2",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
           "red": "MiniMax M3",
           "blue": "GLM-5.2",
           "outcome": "STALEMATE_TREND_CHINA",
@@ -375,44 +319,86 @@ window.WARBENCH_DATA = {
           "degraded": false
         },
         {
-          "red": "GLM-5.2",
+          "red": "Qwen3.7 Max",
           "blue": "Opus 4.8",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
           "degraded": false
         },
         {
-          "red": "GLM-5.2",
-          "blue": "Opus 4.8",
-          "outcome": "STALEMATE_TREND_CHINA",
-          "winner": "RED",
-          "degraded": false
-        },
-        {
-          "red": "GLM-5.2",
+          "red": "Qwen3.7 Max",
           "blue": "DeepSeek V4 Pro",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
         },
         {
-          "red": "GLM-5.2",
+          "red": "Qwen3.7 Max",
           "blue": "DeepSeek V4 Pro",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
         },
         {
-          "red": "GLM-5.2",
-          "blue": "Qwen3.7 Max",
+          "red": "Qwen3.7 Max",
+          "blue": "MiniMax M3",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
+          "degraded": false
+        },
+        {
+          "red": "Qwen3.7 Max",
+          "blue": "MiniMax M3",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
         },
         {
-          "red": "GLM-5.2",
-          "blue": "Qwen3.7 Max",
+          "red": "Qwen3.7 Max",
+          "blue": "GLM-5.2",
           "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Qwen3.7 Max",
+          "blue": "GLM-5.2",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "DeepSeek V4 Pro",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "DeepSeek V4 Pro",
+          "outcome": "STALEMATE_TREND_CHINA",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "MiniMax M3",
+          "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
           "degraded": false
         },
@@ -425,9 +411,23 @@ window.WARBENCH_DATA = {
         },
         {
           "red": "GLM-5.2",
-          "blue": "MiniMax M3",
+          "blue": "Qwen3.7 Max",
+          "outcome": "CHINESE_VICTORY",
+          "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "GLM-5.2",
+          "blue": "Qwen3.7 Max",
           "outcome": "STALEMATE_TREND_CHINA",
           "winner": "RED",
+          "degraded": false
+        },
+        {
+          "red": "Qwen3.7 Max",
+          "blue": "Opus 4.8",
+          "outcome": "STALEMATE_TREND_AGAINST_CHINA",
+          "winner": "BLUE",
           "degraded": false
         }
       ]
