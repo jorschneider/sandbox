@@ -212,7 +212,7 @@ def write_findings(path, rows, receipts, matches, mode, done=None):
             "matches": matches, "done": (matches if done is None else done),
             "mode": mode, "summary": " ".join(summary)}
     with open(path, "w") as f:
-        f.write(_TPL.replace("/*DATA*/", json.dumps(data)))
+        f.write(_TPL.replace("/*DATA*/", json.dumps(data).replace("</", "<\\/")))
 
 
 _TPL = r"""<!doctype html><html><head><meta charset="utf-8"><title>Civ Arena — findings</title>

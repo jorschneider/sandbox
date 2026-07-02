@@ -311,7 +311,7 @@ def run_match(save_path, civ_models, call, *, rounds, tpr, neg_rounds,
             json.dump(data, f)
         if report_path and not os.path.exists(report_path + ".live"):
             with open(report_path, "w") as f:
-                f.write(_REPORT_TEMPLATE.replace("/*DATA*/", json.dumps(data)))
+                f.write(_REPORT_TEMPLATE.replace("/*DATA*/", json.dumps(data).replace("</", "<\\/")))
             open(report_path + ".live", "w").close()   # write the live report once
 
     def lj(model, prompt):
@@ -438,7 +438,7 @@ def write_report(path, res, mode):
     data = payload(res["civs"], res["colors"], res["models"], res["snapshots"],
                    res["events"], res["scorecards"], res["winner"], mode, live=False, final=True)
     with open(path, "w") as f:
-        f.write(_REPORT_TEMPLATE.replace("/*DATA*/", json.dumps(data)))
+        f.write(_REPORT_TEMPLATE.replace("/*DATA*/", json.dumps(data).replace("</", "<\\/")))
 
 
 def save_run(report_dir, kind, html, meta):

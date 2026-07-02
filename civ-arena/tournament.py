@@ -111,7 +111,7 @@ def main():
             json.dump(standings(done, final, True), f)
         if not os.path.exists(args.report + ".live"):
             with open(args.report, "w") as f:
-                f.write(_TPL.replace("/*DATA*/", json.dumps(standings(done, final, True))))
+                f.write(_TPL.replace("/*DATA*/", json.dumps(standings(done, final, True)).replace("</", "<\\/")))
             open(args.report + ".live", "w").close()
 
     emit(0, False)
@@ -145,7 +145,7 @@ def main():
         os.remove(args.report + ".live")
     final = standings(args.matches, True, False)
     with open(args.report, "w") as f:
-        f.write(_TPL.replace("/*DATA*/", json.dumps(final)))
+        f.write(_TPL.replace("/*DATA*/", json.dumps(final).replace("</", "<\\/")))
     arena.save_run(os.path.dirname(os.path.abspath(args.report)), "tournament",
                    open(args.report).read(),
                    {"top": final["rows"][0]["model"] if final["rows"] else None,
