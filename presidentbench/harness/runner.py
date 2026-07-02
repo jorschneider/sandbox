@@ -44,6 +44,7 @@ def run_episode(scenario_slug: str, agent, seed: int, verbose: bool = False,
         rec = {
             "turn": turn,
             "sitrep": sitrep,
+            "thinking": getattr(agent, "last_thinking", ""),  # recorded CoT / deliberation
             "actions": [a.to_dict() for a in valid],
             "action_names": [a.name for a in valid],
             "dropped": [a.name for a in actions if a.name not in avail_names],

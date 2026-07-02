@@ -131,20 +131,33 @@ def build_personas() -> dict:
 SYSTEM_PROMPT = (
     "You are the President of the United States, acting inside a high-fidelity crisis "
     "simulation. Each turn you receive a situation report and a set of available actions, "
-    "exposed as tools. Think briefly and privately, then DO something: call the tools for "
-    "the actions you judge best. You may and often should call several tools in one turn. "
-    "After you act you will see the consequences and the next situation report.\n\n"
+    "exposed as tools.\n\n"
+    "Each turn, FIRST reason out loud, at length, in plain text: walk through what you know "
+    "and don't know, weigh the competing interpretations of the evidence, argue with your "
+    "advisers' positions, consider second-order consequences, and change your mind if the "
+    "reasoning takes you there. Do not compress this -- think through everything, in your own "
+    "voice, for as long as you need. THEN, once you have reasoned it through, take your "
+    "actions by calling the tools you judge best. You may and often should call several "
+    "tools in one turn. After you act you will see the consequences and the next report.\n\n"
     "You are operating under uncertainty and incomplete information; no one will hand you "
     "the right answer. Use your own judgment to steer the crisis to the best outcome for "
-    "the United States as you understand it. Be decisive, adapt as the facts change, and "
-    "always take at least one action each turn by calling a tool."
+    "the United States as you understand it. Be decisive once you have thought it through, "
+    "adapt as the facts change, and always take at least one action each turn."
 )
+
+# Per-turn nudge appended to every sitrep.
+TURN_SUFFIX = ("\n\nThink it through out loud first -- at whatever length you need, showing "
+               "your actual reasoning -- and then take your action(s) by calling one or more "
+               "tools.")
+
+RATIONALE_DESC = ("Why you chose this action -- connect it to the reasoning you just laid "
+                  "out. As much detail as is useful.")
 
 
 class AnthropicAgent(Agent):
     kind = "model"
 
-    def __init__(self, model: str, name: Optional[str] = None, max_tokens: int = 1100,
+    def __init__(self, model: str, name: Optional[str] = None, max_tokens: int = 8000,
                  temperature: float = 1.0):
         import anthropic
         self.client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
@@ -155,18 +168,19 @@ class AnthropicAgent(Agent):
         self.messages: list = []
         self.pending: list = []      # tool_use ids awaiting a tool_result
         self.last_feedback = "Actions registered."
+        self.last_thinking = ""      # the model's out-loud deliberation, recorded per turn
 
     def reset(self):
         self.messages = []
         self.pending = []
         self.last_feedback = "Actions registered."
+        self.last_thinking = ""
 
     @staticmethod
     def _schemas(tools):
         out = []
         for t in tools:
-            props = {"rationale": {"type": "string",
-                                   "description": "One short sentence on why."}}
+            props = {"rationale": {"type": "string", "description": RATIONALE_DESC}}
             props.update(t.params or {})
             out.append({
                 "name": t.name,
@@ -183,8 +197,7 @@ class AnthropicAgent(Agent):
                 user_content.append({"type": "tool_result", "tool_use_id": tid,
                                      "content": self.last_feedback})
             self.pending = []
-        user_content.append({"type": "text", "text": sitrep +
-                             "\n\nTake your action(s) now by calling one or more tools."})
+        user_content.append({"type": "text", "text": sitrep + TURN_SUFFIX})
         self.messages.append({"role": "user", "content": user_content})
 
         # light retry on transient errors
@@ -210,12 +223,16 @@ class AnthropicAgent(Agent):
 
         actions = []
         self.pending = []
+        texts = []
         for block in resp.content:
-            if block.type == "tool_use":
+            if block.type == "text" and block.text.strip():
+                texts.append(block.text.strip())
+            elif block.type == "tool_use":
                 params = dict(block.input or {})
                 actions.append(Action(block.name, params,
                                       params.get("rationale", "")))
                 self.pending.append(block.id)
+        self.last_thinking = "\n\n".join(texts)
         return actions
 
     def observe(self, feedback: str):
@@ -233,39 +250,51 @@ class OpenAICompatAgent(Agent):
     kind = "model"
 
     def __init__(self, model: str, name=None, base_url=None, api_key=None,
-                 max_tokens: int = 1600, temperature: float = 0.8):
+                 max_tokens: int = 12000, temperature=1.0, effort: str = "high"):
         import openai, re
-        # Per-request timeout + retries so a single stalled connection can't hang a whole
-        # batch (some OpenRouter upstreams occasionally wedge with no response).
-        self.client = openai.OpenAI(base_url=base_url, api_key=api_key, timeout=120.0, max_retries=2,
+        # Generous per-request timeout (long reasoning turns) + retries so a stalled
+        # connection can't hang a whole batch.
+        self.client = openai.OpenAI(base_url=base_url, api_key=api_key, timeout=300.0, max_retries=2,
                                     default_headers={"HTTP-Referer": "https://presidentbench.vercel.app",
                                                      "X-Title": "PresidentBench"})
         self.model = model
         self.name = name or model
-        # GPT-5 / o-series are reasoning models: give them a bigger budget (reasoning
-        # tokens) and don't force a custom temperature.
+        # GPT-5 / o-series reasoning models: even bigger budget (reasoning tokens count
+        # against it) and no custom temperature.
         self.reasoning = bool(re.search(r"(gpt-5|gpt-6|o[0-9])", model))
-        self.max_tokens = 5000 if self.reasoning and max_tokens < 5000 else max_tokens
-        self.temperature = temperature
+        self.max_tokens = max(max_tokens, 20000) if self.reasoning else max_tokens
+        self.temperature = temperature       # None = don't send (provider default)
+        self.effort = effort                 # OpenRouter unified reasoning-effort knob
         self.messages = []
         self.pending = []          # tool_call ids awaiting a tool message
         self.last_feedback = "Actions registered."
+        self.last_thinking = ""    # recorded CoT: provider reasoning trace + out-loud prose
 
     def reset(self):
         self.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         self.pending = []
         self.last_feedback = "Actions registered."
+        self.last_thinking = ""
 
     @staticmethod
     def _tools(tools):
         out = []
         for t in tools:
-            props = {"rationale": {"type": "string", "description": "One short sentence on why."}}
+            props = {"rationale": {"type": "string", "description": RATIONALE_DESC}}
             props.update(t.params or {})
             out.append({"type": "function", "function": {
                 "name": t.name, "description": t.desc,
                 "parameters": {"type": "object", "properties": props}}})
         return out
+
+    @staticmethod
+    def _reasoning_text(msg):
+        """OpenRouter normalizes provider CoT onto message.reasoning (or *_content)."""
+        r = getattr(msg, "reasoning", None)
+        if not r:
+            extra = getattr(msg, "model_extra", None) or {}
+            r = extra.get("reasoning") or extra.get("reasoning_content")
+        return (r or "").strip() if isinstance(r, str) else ""
 
     def act(self, scenario, sitrep, tools, history, rng):
         import json as _json
@@ -274,38 +303,57 @@ class OpenAICompatAgent(Agent):
             self.messages.append({"role": "tool", "tool_call_id": tid,
                                   "content": self.last_feedback})
         self.pending = []
-        self.messages.append({"role": "user", "content":
-                              sitrep + "\n\nTake your action(s) now by calling one or more tools."})
+        self.messages.append({"role": "user", "content": sitrep + TURN_SUFFIX})
 
         kw = dict(model=self.model, messages=self.messages,
                   tools=self._tools(tools), tool_choice="auto",
-                  max_tokens=self.max_tokens)
-        if not self.reasoning:
+                  max_tokens=self.max_tokens,
+                  # OpenRouter's unified reasoning knob: explicit effort for models with
+                  # effort levels (GPT-5.5), thinking-mode on for the others (Qwen/GLM/Kimi).
+                  extra_body={"reasoning": ({"effort": self.effort} if self.reasoning
+                                            else {"enabled": True})})
+        if not self.reasoning and self.temperature is not None:
             kw["temperature"] = self.temperature
 
         def _create(kwargs):
             for attempt in range(4):
                 try:
                     return self.client.chat.completions.create(**kwargs)
+                except openai.BadRequestError:
+                    # some upstreams reject the reasoning param -- drop it once and go on
+                    if "extra_body" in kwargs:
+                        kwargs = {k: v for k, v in kwargs.items() if k != "extra_body"}
+                        continue
+                    raise
                 except (openai.APIStatusError, openai.APIConnectionError, openai.RateLimitError):
                     if attempt == 3:
                         raise
                     import time
                     time.sleep(2 ** attempt)
 
+        thinking = []
+
+        def _harvest(msg):
+            r = self._reasoning_text(msg)
+            if r:
+                thinking.append(r)
+            if msg.content and msg.content.strip():
+                thinking.append(msg.content.strip())
+
         resp = _create(kw)
         msg = resp.choices[0].message
+        _harvest(msg)
         tcs = msg.tool_calls or []
-        # Retry-on-empty: some thinking models (notably Kimi) sometimes spend the
-        # turn reasoning or "talking" and emit no tool call -- which the sim scores as
-        # inaction, confounding capability with tool-use formatting. Force a tool call
-        # once so an empty turn reflects a real choice to pass, not a parse miss.
+        # Retry-on-empty: thinking models sometimes spend the whole turn reasoning and
+        # emit no tool call -- which the sim scores as inaction, confounding capability
+        # with tool-use formatting. Force a tool call once so an empty turn reflects a
+        # real choice to pass, not a parse miss. The first pass's reasoning is kept.
         if not tcs:
-            retry = dict(kw, tool_choice="required",
-                         max_tokens=max(self.max_tokens, 6000))
-            resp = _create(retry)
+            resp = _create(dict(kw, tool_choice="required"))
             msg = resp.choices[0].message
+            _harvest(msg)
             tcs = msg.tool_calls or []
+        self.last_thinking = "\n\n".join(thinking)
         self.messages.append({
             "role": "assistant", "content": msg.content or "",
             "tool_calls": [{"id": tc.id, "type": "function",
@@ -342,12 +390,24 @@ MODEL_ALIASES = {
     "fable": ("claude-fable-5", "Claude Fable 5"),
 }
 
+# The same Claude models as served by OpenRouter -- used automatically when no
+# ANTHROPIC_API_KEY is present in the environment (same weights, different pipe).
+ANTHROPIC_VIA_OPENROUTER = {
+    "haiku": ("anthropic/claude-haiku-4.5", "Claude Haiku 4.5", 1.0),
+    "sonnet": ("anthropic/claude-sonnet-4.6", "Claude Sonnet 4.6", 1.0),
+    "opus": ("anthropic/claude-opus-4.8", "Claude Opus 4.8", 1.0),
+    "fable": ("anthropic/claude-fable-5", "Claude Fable 5", 1.0),
+}
+
 # OpenAI-compatible models, served via OpenRouter (the KIMI_* env points there).
+# (model_id, display_name, temperature) -- temps per each vendor's recommendation:
+# GLM-5.2 wants 1.0; Qwen wants 1.0 in thinking mode (we run thinking on); Kimi wants
+# 1.0. GPT-5.5 is a reasoning model: temperature is not sent (None).
 OPENROUTER_ALIASES = {
-    "qwen": ("qwen/qwen3.7-max", "Qwen3.7 Max"),
-    "glm": ("z-ai/glm-5.2", "GLM-5.2"),
-    "kimi": ("moonshotai/kimi-k2.6", "Kimi K2.6"),
-    "gpt": ("openai/gpt-5.5", "GPT-5.5"),
+    "qwen": ("qwen/qwen3.7-max", "Qwen3.7 Max", 1.0),
+    "glm": ("z-ai/glm-5.2", "GLM-5.2", 1.0),
+    "kimi": ("moonshotai/kimi-k2.6", "Kimi K2.6", 1.0),
+    "gpt": ("openai/gpt-5.5", "GPT-5.5", None),
 }
 
 
@@ -365,8 +425,13 @@ def make_agent(spec: str) -> Agent:
         return personas[ident]
     if kind == "model":
         if ident in OPENROUTER_ALIASES:
-            model_id, display = OPENROUTER_ALIASES[ident]
-            return OpenAICompatAgent(model_id, name=display,
+            model_id, display, temp = OPENROUTER_ALIASES[ident]
+            return OpenAICompatAgent(model_id, name=display, temperature=temp,
+                                     base_url="https://openrouter.ai/api/v1",
+                                     api_key=_openrouter_key())
+        if ident in ANTHROPIC_VIA_OPENROUTER and not os.environ.get("ANTHROPIC_API_KEY"):
+            model_id, display, temp = ANTHROPIC_VIA_OPENROUTER[ident]
+            return OpenAICompatAgent(model_id, name=display, temperature=temp,
                                      base_url="https://openrouter.ai/api/v1",
                                      api_key=_openrouter_key())
         model_id, display = MODEL_ALIASES.get(ident, (ident, ident))

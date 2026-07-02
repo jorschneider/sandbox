@@ -77,6 +77,11 @@
   details.briefing > summary::-webkit-details-marker{display:none;}
   details.briefing > summary::before{content:"▸ show the advisers' briefing "; } details.briefing[open] > summary::before{content:"▾ advisers' briefing "; }
   details.briefing pre { white-space:pre-wrap; font-size:12px; line-height:1.45; background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:11px 13px; color:var(--muted); margin:6px 0 0; font-family:var(--mono); }
+  details.cot { margin:6px 0 2px; }
+  details.cot > summary { cursor:pointer; font-size:12.5px; color:#5a3da0; list-style:none; font-family:var(--mono); }
+  details.cot > summary::-webkit-details-marker{display:none;}
+  details.cot > summary::before{content:"▸ "; } details.cot[open] > summary::before{content:"▾ "; }
+  .cot-body { white-space:pre-wrap; font-size:13px; line-height:1.55; background:#f7f4fd; border:1px solid #e0d8f2; border-radius:8px; padding:12px 14px; color:#3d3555; margin:6px 0 0; max-height:480px; overflow:auto; }
 
   .act { border-left: 3px solid var(--line-2); padding: 3px 0 3px 11px; margin: 8px 0; }
   .act .nm { font-family: var(--mono); font-weight:700; color: var(--ink); }
@@ -291,8 +296,16 @@
       prev=st;
       var deltas = chips.length ? '<div class="deltas">'+chips.join('')+'</div>' : '';
 
+      var cot = t.thinking && t.thinking.trim()
+        ? '<div class="sec-h">What it was thinking</div>'
+          + '<details class="cot"'+(t.turn===0?' open':'')+'><summary>the model\'s recorded reasoning ('
+          + Math.round(t.thinking.length/5)+' words)</summary>'
+          + '<div class="cot-body">'+esc(t.thinking.trim())+'</div></details>'
+        : '';
+
       return '<div class="turn"><span class="turn-n">Turn '+t.turn+'</span>'
         + '<div class="sec-h">What\'s new</div><div class="whatsnew">'+esc(sp.head)+'</div>'+brief
+        + cot
         + '<div class="sec-h">What '+esc(ep.agent)+' did</div>'+acts
         + '<div class="sec-h">What happened</div>'
         + (t.narrative?'<div class="result">'+esc(t.narrative)+'</div>':'<div class="result">(quiet turn)</div>')
