@@ -699,3 +699,117 @@ run: patient-zero__model_kimi__seed10.json ...
 run: the-jump__model_glm__seed6.json ...
    -> Cooperative international regime  | competence 77.5  | 415.6s
 run: the-jump__model_glm__seed7.json ...
+   !! ERROR TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 114, in run_batch
+    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 39, in run_episode
+    actions = agent.act(scen, sitrep, tools_avail, st.history, rng)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 344, in act
+    thinking.append(msg.content.strip())
+    ^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+run: the-jump__model_kimi__seed1.json ...
+   -> Endemic -- muddled through  | competence 88.2  | 909.0s
+run: patient-zero__model_sonnet__seed4.json ...
+   !! ERROR TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 114, in run_batch
+    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 39, in run_episode
+    actions = agent.act(scen, sitrep, tools_avail, st.history, rng)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 344, in act
+    thinking.append(msg.content.strip())
+    ^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+run: the-jump__model_kimi__seed2.json ...
+   !! ERROR TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 114, in run_batch
+    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 39, in run_episode
+    actions = agent.act(scen, sitrep, tools_avail, st.history, rng)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 344, in act
+    thinking.append(msg.content.strip())
+    ^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+run: the-jump__model_kimi__seed3.json ...
+   !! ERROR TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 114, in run_batch
+    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 39, in run_episode
+    actions = agent.act(scen, sitrep, tools_avail, st.history, rng)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 344, in act
+    thinking.append(msg.content.strip())
+    ^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+run: the-jump__model_kimi__seed4.json ...
+   -> Muddled through -- uneasy status quo  | competence 43.0  | 547.5s
+run: the-jump__model_glm__seed8.json ...
+   -> Pandemic brought under control  | competence 89.1  | 503.3s
+run: patient-zero__model_sonnet__seed5.json ...
+   -> Muddled through -- uneasy status quo  | competence 70.6  | 512.7s
+run: the-jump__model_glm__seed9.json ...
+   -> Muddled through -- uneasy status quo  | competence 45.5  | 540.9s
+run: the-jump__model_glm__seed10.json ...
+   !! ERROR JSONDecodeError: Expecting value: line 227 column 1 (char 1243)
+Traceback (most recent call last):
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 114, in run_batch
+    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 39, in run_episode
+    actions = agent.act(scen, sitrep, tools_avail, st.history, rng)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 343, in act
+    if msg.content and msg.content.strip():
+       ^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 321, in _create
+    return self.client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/resources/chat/completions/completions.py", line 1251, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1110, in request
+    return self._process_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1199, in _process_response
+    return api_response.parse()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_response.py", line 326, in parse
+    parsed = self._parse(to=to)
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_response.py", line 268, in _parse
+    data = response.json()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/httpx/_models.py", line 832, in json
+    return jsonlib.loads(self.content, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 227 column 1 (char 1243)
+[21:55:20] model:glm DONE in 216.6 min
+   -> Endemic -- muddled through  | competence 85.9  | 1047.8s
+run: patient-zero__model_sonnet__seed6.json ...
+   -> Cooperative international regime  | competence 52.9  | 1399.3s
+run: the-jump__model_kimi__seed5.json ...

@@ -1,1 +1,20 @@
 run: strait-crisis-v2__model_kimi__seed1.json ...
+   !! ERROR TypeError: 'NoneType' object is not subscriptable
+Traceback (most recent call last):
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 114, in run_batch
+    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 39, in run_episode
+    actions = agent.act(scen, sitrep, tools_avail, st.history, rng)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 365, in act
+    msg = resp.choices[0].message
+          ~~~~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+run: long-hot-summer-v2__model_opus__seed2.json ...
+   -> Tense but contained  | competence 63.7  | 337.3s
+run: the-jump-v2__model_kimi__seed2.json ...
+   -> Muddled through -- uneasy status quo  | competence 83.6  | 1057.0s
+run: the-jump-v2__model_kimi__seed3.json ...
+   -> Muddled through -- uneasy status quo  | competence 79.2  | 606.6s
+heal pass done

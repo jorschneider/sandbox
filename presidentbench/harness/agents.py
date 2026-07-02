@@ -318,7 +318,11 @@ class OpenAICompatAgent(Agent):
         def _create(kwargs):
             for attempt in range(4):
                 try:
-                    return self.client.chat.completions.create(**kwargs)
+                    resp = self.client.chat.completions.create(**kwargs)
+                    if not getattr(resp, "choices", None):
+                        # some upstream errors come back as 200s with choices: null
+                        raise openai.APIConnectionError(request=None)
+                    return resp
                 except openai.BadRequestError:
                     # some upstreams reject the reasoning param -- drop it once and go on
                     if "extra_body" in kwargs:
