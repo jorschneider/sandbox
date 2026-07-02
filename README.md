@@ -45,13 +45,18 @@ Served at **`/game`** (a self-contained second page; the trailer is untouched).
 > at the first U.S.–China AI dialogue. Staff six negotiation tracks with the
 > right Chinese counterparts, survive the talks, and bring home a communiqué.
 
-A playable gloss on Matt Sheehan's essay of the same question. Three phases:
+A playable gloss on Matt Sheehan's essay — both of its open questions: *who*
+to talk to, and *what* to talk about. Four phases:
 **who's in the room?** (you don't pick China's delegation — Beijing fields its
 comfortable, face-saving default, and you spend limited *leverage* to pull the
 real power-holders into the room; the powerful, closed orgs cost the most),
-**the negotiation** (a deck of 15 grounded dilemmas — 7 drawn per run — that
-move four meters: Trust, Progress, U.S. Backing, China Buy-In), and **the
-readout** (a procedurally assembled joint statement, a diplomatic stamp, and
+**set the agenda** (table 3 of 7 items drawn from the essay — testing
+best-practices is its explicit lean, binding-verification its warned-against
+trap; Beijing's appetite and the room you built decide what lands), **the
+negotiation** (each tabled item plays as a *live two-beat exchange* — the
+seated counterpart opens in character, you answer line by line — interleaved
+with event cards the system throws at you anyway; four meters: Trust,
+Progress, U.S. Backing, China Buy-In), and **the readout** (a procedurally assembled joint statement, a diplomatic stamp, and
 "six months on" epilogues earned by your specific choices). The scoring encodes
 the essay's thesis — *progress only counts if someone powerful can deliver it* —
 and the staffing phase encodes its caveat: *you don't get to choose your

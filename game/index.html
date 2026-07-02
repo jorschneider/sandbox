@@ -27,7 +27,7 @@
       <div class="title-wrap">
         <div class="kicker">A negotiation game &middot; after the summit</div>
         <h1 class="game-title"><span class="t1">TRACK</span><span class="t2">ONE</span></h1>
-        <p class="subtitle">Who should the U.S. talk to in China on AI?</p>
+        <p class="subtitle">Choose who sits across the table in Beijing &mdash; and what you dare put on it.</p>
         <div class="brief" id="brief"></div>
         <div class="mode-picker">
           <button class="btn btn-primary" id="start-btn">Take the meeting &rarr;</button>
@@ -55,7 +55,21 @@
       <div class="tracks-col tracks-wide" id="tracks-col"></div>
       <footer class="staff-foot">
         <div class="staff-readout" id="staff-readout"></div>
-        <button class="btn btn-primary" id="lock-btn">Open the talks &rarr;</button>
+        <button class="btn btn-primary" id="lock-btn">Next: set the agenda &rarr;</button>
+      </footer>
+    </section>
+
+    <!-- ============ PHASE A2 — SET THE AGENDA ============ -->
+    <section id="screen-agenda" class="screen">
+      <header class="phase-head">
+        <div class="phase-num">Phase II</div>
+        <h2>Set the Agenda</h2>
+        <div class="brief brief-dark" id="agenda-brief"></div>
+      </header>
+      <div class="agenda-grid" id="agenda-grid"></div>
+      <footer class="staff-foot">
+        <div class="staff-readout" id="agenda-readout"></div>
+        <button class="btn btn-primary" id="table-btn" disabled>Table the agenda &rarr;</button>
       </footer>
     </section>
 
@@ -81,6 +95,21 @@
           <div class="feedback-deltas" id="feedback-deltas"></div>
           <p class="feedback-text" id="feedback-text"></p>
           <button class="btn btn-primary" id="next-btn">Next &rarr;</button>
+        </div>
+
+        <!-- live dialogue exchange -->
+        <div class="dialogue-card" id="dialogue-card">
+          <div class="scenario-main">
+            <div class="scenario-meta">
+              <span class="scenario-count" id="dlg-count"></span>
+              <button class="advisor" id="dlg-advisor-btn">&#9743; Consult the China hands</button>
+            </div>
+            <h2 class="scenario-title" id="dlg-title"></h2>
+            <div class="transcript" id="transcript"></div>
+            <div class="options" id="dlg-options"></div>
+            <button class="btn btn-primary" id="dlg-next-btn" style="display:none">Adjourn the session &rarr;</button>
+          </div>
+          <aside class="counterpart off" id="dlg-counterpart" aria-label="Your counterpart at the table"></aside>
         </div>
       </div>
     </section>

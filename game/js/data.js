@@ -954,6 +954,640 @@ export const DATA = {
     }
   ],
 
+  /* ---------------- THE AGENDA (what to talk about) ---------------- */
+  agendaItems: [
+    {
+      "id": "testing-practices",
+      "title": "Testing Best Practices for Cross-Border Threats",
+      "blurb": "Put the most promising file first: how each side tests frontier models for threats that ignore borders — cyber misuse, biological uplift. Technical enough to be real, modest enough to survive.",
+      "fitTopic": "testing",
+      "idealSeats": [
+        "cac",
+        "tc260",
+        "cncert"
+      ],
+      "appetite": 3,
+      "essayNote": "The author's own lean: best practices in testing models for mutual threats that cross borders.",
+      "essayPick": true
+    },
+    {
+      "id": "standards-alignment",
+      "title": "Standards Alignment: WG9 & Framework 2.0",
+      "blurb": "Map your evaluation categories onto the WG9 / Framework 2.0 risk taxonomy — the roadmap for China's next round of technical standards. Dry, granular, and where testing regimes actually meet.",
+      "fitTopic": "testing",
+      "idealSeats": [
+        "tc260",
+        "cac"
+      ],
+      "appetite": 3,
+      "essayNote": "Sharing safety-enhancing practices such as approaches to testing and evaluation is exactly where the essay says engagement pays.",
+      "essayPick": false
+    },
+    {
+      "id": "compute-transparency",
+      "title": "Reciprocal Compute Transparency",
+      "blurb": "Ask Beijing to open the books on the integrated national computing network — the 'Eastern Data, Western Compute' buildout — in exchange for a look at yours. Compute is the input everyone measures and nobody shares.",
+      "fitTopic": "policy",
+      "idealSeats": [
+        "ndrc"
+      ],
+      "appetite": 2,
+      "essayNote": "The essay maps the buildout squarely to the NDRC; it nowhere suggests Beijing is eager to show anyone the meter.",
+      "essayPick": false
+    },
+    {
+      "id": "ai-diffusion",
+      "title": "AI Diffusion & Economic Cooperation",
+      "blurb": "Economic cooperation on spreading AI through both economies — home turf of the State Council's AI+ plan. Beijing will discuss this all week; the danger is that it becomes the whole week.",
+      "fitTopic": "policy",
+      "idealSeats": [
+        "ndrc"
+      ],
+      "appetite": 5,
+      "essayNote": "High appetite, low safety content: the diffusion agenda the NDRC leads can quietly eat the safety agenda you came with.",
+      "essayPick": false
+    },
+    {
+      "id": "multilateral",
+      "title": "Summits & Global Governance",
+      "blurb": "Coordinate on summits and global governance — the Global AI Governance Initiative, the next summit's guest list. Warm, fluent, and the least binding item on the menu.",
+      "fitTopic": "international",
+      "idealSeats": [
+        "mfa",
+        "mfa_arms"
+      ],
+      "appetite": 5,
+      "essayNote": "The essay is blunt that the important AI-governance actions are domestic — multilateral process is where a dialogue goes to look busy.",
+      "essayPick": false
+    },
+    {
+      "id": "binding-verification",
+      "title": "Binding Commitments with Verification",
+      "blurb": "The deliverable your principals actually want: commitments with verification attached. It is also precisely the clause on which US-China agreements have always stalled.",
+      "fitTopic": "lead",
+      "idealSeats": [
+        "ndrc"
+      ],
+      "appetite": 1,
+      "essayNote": "The essay's core caution: domestic self-interest holds where 'we do X because you promised' does not — and verification is where it stalls.",
+      "essayPick": false
+    },
+    {
+      "id": "risk-communication",
+      "title": "A Standing Frontier-Risk Channel",
+      "blurb": "A standing channel for flagging emerging frontier risks and responses before they surprise anyone. Unglamorous plumbing with a real safety payoff.",
+      "fitTopic": "science",
+      "idealSeats": [
+        "most"
+      ],
+      "appetite": 3,
+      "essayNote": "The essay says engagement matters precisely for communicating about emerging risks and responses.",
+      "essayPick": false
+    }
+  ],
+
+  exchanges: [
+    {
+      "agendaId": "testing-practices",
+      "intro": "The interpreter has barely finished the agenda title before the Chinese side's technical staff start passing paper. 'Testing,' it turns out, is a word both delegations use and neither defines the same way.",
+      "openingDefault": "Our Working Group Nine has been mapping exactly these risks — the Framework 2.0 taxonomy we wrote with CNCERT runs from misuse to loss of control. We would welcome an exchange of evaluation methodologies. Naturally, anything formal would be for other offices to decide.",
+      "openingIdeal": "Every model deployed in China is registered and tested before the public ever sees it. Ours is the mandatory regime; we are told yours is voluntary. So be precise — what exactly would America be sharing, and what would it be asking to see?",
+      "replies": [
+        {
+          "label": "Start where the threats don't check passports — cyber misuse first. We exchange testing methodologies for those threat classes. Methods only: no model weights, no findings, no access.",
+          "effects": {
+            "trust": 5,
+            "progress": 4,
+            "usBacking": 2,
+            "chinaBuyin": 2
+          },
+          "reaction": "Methods only. That is narrower than a framework — and considerably easier to say yes to.",
+          "pivot": "Then let us be concrete. If we agree in this room, what leaves it — what form does this exchange actually take?"
+        },
+        {
+          "label": "Before we open our evaluation playbook, we need to see what your pre-deployment regime actually tests for. Reciprocity first, then sharing.",
+          "effects": {
+            "trust": -4,
+            "progress": 2,
+            "usBacking": 5,
+            "chinaBuyin": -3
+          },
+          "reaction": "The registration regime is a matter of domestic law. What you are describing is an audit, and audits are not on today's agenda.",
+          "pivot": "If reciprocity is the principle, define the unit of it. What would each side actually put on the table, and under what arrangement?"
+        },
+        {
+          "label": "Skip the theory. Both sides red-team the same open-weight model against the same threat list, then sit down and compare what we each found.",
+          "effects": {
+            "trust": 2,
+            "progress": 6,
+            "usBacking": -2,
+            "chinaBuyin": -1
+          },
+          "reaction": "A joint exercise. Our engineers will like it. Our lawyers will ask several questions, beginning with which jurisdiction the model was downloaded in.",
+          "pivot": "Suppose the exercise happens. Before anyone downloads anything — what is the arrangement? What does this look like on paper, if it is on paper at all?"
+        }
+      ],
+      "second": [
+        {
+          "label": "A standing working-level exchange: our evaluators, your WG9 and CNCERT people, twice a year, methods and taxonomies only. No communiqué, no logo.",
+          "effects": {
+            "trust": 6,
+            "progress": 5,
+            "usBacking": -3,
+            "chinaBuyin": 4
+          },
+          "reaction": "Unannounced and technical. That we can arrange without asking anyone whose answer would be no.",
+          "epilogue": "Six months on, the exchange has met twice and shipped one shared red-team lexicon. Neither capital has issued a press release. It works."
+        },
+        {
+          "label": "We want it on paper: a joint document mapping your Framework 2.0 taxonomy to our evaluation categories, published by both governments.",
+          "effects": {
+            "trust": -3,
+            "progress": 7,
+            "usBacking": 5,
+            "chinaBuyin": -5
+          },
+          "reaction": "Published by both governments means cleared by both governments. You have just added a year and several offices to your own document.",
+          "epilogue": "Six months on, the joint taxonomy sits in interagency review — in both capitals. Page count stable; adjective count rising."
+        },
+        {
+          "label": "One condition: biological uplift is in scope from the first session. If that's off the table, so are we.",
+          "effects": {
+            "trust": -2,
+            "progress": 5,
+            "usBacking": 6,
+            "chinaBuyin": -4
+          },
+          "reaction": "Biology is sensitive on both sides of this table. But you already know the Framework covers misuse. In scope — at the level of methods, nothing more.",
+          "epilogue": "Six months on, the bio-uplift session has happened once, chaperoned by three agencies per side. The checklists, at least, matched."
+        }
+      ]
+    },
+    {
+      "agendaId": "standards-alignment",
+      "intro": "Two risk taxonomies lie side by side on the table — Framework 2.0's and yours — printed in facing columns like a bilingual menu. The morning's work is discovering whether the dishes are the same.",
+      "openingDefault": "Working Group Nine drafted the Framework 2.0 taxonomy with CNCERT — misuse through loss of control, the full spread — and it is now the roadmap for our next technical standards. Where your categories and ours align, this committee can write. We would be pleased to begin with definitions.",
+      "openingIdeal": "Understand what the Framework is: the roadmap for the standards every model registered in China will be tested against. Align with it, and your companies read our rules in their own vocabulary. Decline, and you will translate later, at your own expense.",
+      "replies": [
+        {
+          "label": "We'll crosswalk the frontier-risk categories — misuse, loss of control — line by line. The content-security chapters stay out of scope. That's your domestic file, not a shared one.",
+          "effects": {
+            "trust": 3,
+            "progress": 5,
+            "usBacking": 4,
+            "chinaBuyin": -2
+          },
+          "reaction": "You wish to purchase half the taxonomy. Its authors consider it a whole — though the frontier chapters are, admittedly, the newest ink.",
+          "pivot": "Very well. Once the categories are mapped — who holds the pen where the two documents disagree?"
+        },
+        {
+          "label": "Framework 2.0 is one of the most expansive risk taxonomies any government has put on paper — loss of control included. We're prepared to say that publicly and to work from it.",
+          "effects": {
+            "trust": 7,
+            "progress": 2,
+            "usBacking": -5,
+            "chinaBuyin": 6
+          },
+          "reaction": "That is a more gracious sentence than this building usually hears from Washington. It will be quoted.",
+          "pivot": "Then let us speak practically. When the mapping is finished and the documents still diverge — whose standard governs?"
+        },
+        {
+          "label": "We're not harmonizing standards with a mandatory regime we can't see inside. What we can do is make test results legible across systems — interoperability, not alignment.",
+          "effects": {
+            "trust": -3,
+            "progress": 3,
+            "usBacking": 6,
+            "chinaBuyin": -4
+          },
+          "reaction": "Legible results without shared definitions is a dictionary with no grammar. But engineers have built worse and made it work.",
+          "pivot": "Interoperability still needs a referee. When your reading of a model and ours disagree — whose prevails?"
+        }
+      ],
+      "second": [
+        {
+          "label": "Nobody holds the pen alone. A joint annex, maintained at working level, that records divergences instead of resolving them — the map shows the border disputes.",
+          "effects": {
+            "trust": 5,
+            "progress": 4,
+            "usBacking": 1,
+            "chinaBuyin": 3
+          },
+          "reaction": "A standards document that admits disagreement. Our committee has never published one. It may enjoy the novelty.",
+          "epilogue": "Six months on, the annex logs eleven divergences, each footnoted by both sides. Engineers cite it; lawyers circle it."
+        },
+        {
+          "label": "Where we diverge, we take it to the international standards process and let the process referee. Neither flag on the cover.",
+          "effects": {
+            "trust": 3,
+            "progress": -3,
+            "usBacking": 2,
+            "chinaBuyin": 5
+          },
+          "reaction": "The international route. Slow — but slowness is a kind of neutrality, and our diplomats are very comfortable there. Our engineers will wait.",
+          "epilogue": "Six months on, the divergence file waits in an international standards queue, behind elevator firmware. Both delegations call this progress."
+        },
+        {
+          "label": "For models deployed in our market, our reading prevails. We'll publish the crosswalk so your side can translate — alignment doesn't mean joint custody.",
+          "effects": {
+            "trust": -5,
+            "progress": 2,
+            "usBacking": 6,
+            "chinaBuyin": -6
+          },
+          "reaction": "Then the Framework will say the same of our market, and your crosswalk becomes two dictionaries that disagree. We began with one table. You propose two.",
+          "epilogue": "Six months on, each side publishes its own crosswalk. The documents disagree in fourteen places, thirteen footnoted 'under discussion.'"
+        }
+      ]
+    },
+    {
+      "agendaId": "risk-communication",
+      "intro": "The proposal on the table is unglamorous: a phone both governments answer when a frontier system starts doing something new. The Chinese side inspects it like a gift that might tick.",
+      "openingDefault": "Speaking for the Association — Shanghai AI Lab, CAICT, our academic members — we would welcome such a channel. Our researchers see the same emerging behaviors yours do. Of course, what the Association can transmit and what the government can receive are separate questions.",
+      "openingIdeal": "Advising the leadership on where this technology is going is this ministry's work now — that is what our commission office is for. A channel on emerging risks interests us precisely because it feeds that brief. So the question is signal: what would you actually send, and would it be worth reading?",
+      "replies": [
+        {
+          "label": "A standing technical brief, both directions: when either side's evaluations surface a new capability with cross-border consequences, the other hears it within weeks — not from the press.",
+          "effects": {
+            "trust": 5,
+            "progress": 4,
+            "usBacking": 1,
+            "chinaBuyin": 3
+          },
+          "reaction": "Weeks, not press cycles. Ambitious. Our side reads your press very carefully as it is.",
+          "pivot": "And when the phone rings with something genuinely alarming — who on each side is cleared to pick it up?"
+        },
+        {
+          "label": "Start below the classification line: each side walks the other through its published risk assessments, twice a year. Unclassified, deniable, useful.",
+          "effects": {
+            "trust": 3,
+            "progress": 1,
+            "usBacking": 4,
+            "chinaBuyin": 1
+          },
+          "reaction": "A channel for things already public. Safe as milk — and about as nourishing. Still, channels have grown from thinner soil.",
+          "pivot": "Suppose the channel matures. The day something urgent and unpublished appears — who on each side is authorized to answer?"
+        },
+        {
+          "label": "Make it an obligation, not a courtesy: mutual notification within seventy-two hours of a qualifying frontier incident. A hotline nobody has to like — only answer.",
+          "effects": {
+            "trust": -3,
+            "progress": 6,
+            "usBacking": 5,
+            "chinaBuyin": -5
+          },
+          "reaction": "'Obligation' is a word that leaves this room and travels upward, gathering objections as it goes. Define 'qualifying incident' first. Then we discuss clocks.",
+          "pivot": "Even your seventy-two hours needs a recipient. Who, on each side, would be empowered to take that call?"
+        }
+      ],
+      "second": [
+        {
+          "label": "Wire it to your science ministry — the office that briefs the leadership on where the technology is going. If a warning is worth sending, it should land on the desk that writes that brief.",
+          "effects": {
+            "trust": 4,
+            "progress": 5,
+            "usBacking": 0,
+            "chinaBuyin": 4
+          },
+          "reaction": "That desk exists, and it reads. Whether it answers is not a question the desk itself decides — but you have chosen the correct hallway.",
+          "epilogue": "Six months on, two risk briefs travel the hallway toward the science commission. One comes back with a question in the margin."
+        },
+        {
+          "label": "Keep it technical: your labs and evaluators talk to ours directly, governments observe. Scientists answer phones faster than ministries.",
+          "effects": {
+            "trust": 5,
+            "progress": 2,
+            "usBacking": -3,
+            "chinaBuyin": 2
+          },
+          "reaction": "The researchers will love it, and both governments will read every transcript. Observed spontaneity — a very modern arrangement.",
+          "epilogue": "Six months on, the lab channel chatters weekly about benchmarks. The one genuinely alarming finding waited, naturally, for guidance."
+        },
+        {
+          "label": "A named duty officer on each side, empowered to receive and escalate, in writing. No association mailboxes, no 'competent departments.' A name.",
+          "effects": {
+            "trust": -2,
+            "progress": 6,
+            "usBacking": 4,
+            "chinaBuyin": -4
+          },
+          "reaction": "You are asking who in this system may hear alarming news from a foreigner without first asking permission. That list is short, and I will not read it aloud.",
+          "epilogue": "Six months on, Beijing names an office rather than a person. The office answers within days — a name of sorts, veterans concede."
+        }
+      ]
+    },
+    {
+      "agendaId": "compute-transparency",
+      "intro": "The compute item reaches the table mid-afternoon: reciprocal transparency on buildouts — the one input everyone measures and nobody shares. Across the table, papers are squared with unusual care.",
+      "openingDefault": "I must be precise about mandates. The computing network is the Development and Reform Commission's file; ours is data. My administration can discuss the flows the buildout carries, and refer the hardware questions to the competent department. That is not evasion — that is the org chart.",
+      "openingIdeal": "The integrated national computing network is planning made public — the buildout has a name and a map. What is not published is what you are building in your deserts, and for whom. If reciprocal means reciprocal, my commission is prepared to be specific. Define capacity, and we trade definitions first.",
+      "replies": [
+        {
+          "label": "We're prepared to exchange aggregate national compute trends both ways, on a fixed schedule — growth curves, not coordinates.",
+          "effects": {
+            "trust": 6,
+            "progress": 4,
+            "usBacking": -6,
+            "chinaBuyin": 5
+          },
+          "reaction": "Aggregates on a schedule. That is more than your government has ever put on this table. I will note it — and note also that we will be counting what you count.",
+          "pivot": "So: delivered by whom, on what cycle, and checked how? A number without machinery is a rumor with a letterhead."
+        },
+        {
+          "label": "Let's start with methodology — how each side measures compute. Compare rulers first; numbers can follow.",
+          "effects": {
+            "trust": 2,
+            "progress": 5,
+            "usBacking": 5,
+            "chinaBuyin": -3
+          },
+          "reaction": "You propose we compare rulers and keep the objects measured in our pockets. Cautious. My side is familiar with the technique — we have invented several versions.",
+          "pivot": "Very well, rulers first. But even a methodology exchange needs machinery. Who convenes it, on what cycle, and what tells us the ruler shown is the ruler used?"
+        },
+        {
+          "label": "Before we table our numbers, we'd want confidence the western-hub figures are real — briefings first, a site visit eventually.",
+          "effects": {
+            "trust": -6,
+            "progress": 2,
+            "usBacking": 6,
+            "chinaBuyin": -5
+          },
+          "reaction": "You open a transparency item by asking us to prove ourselves first. I will spare you the lecture on how that lands in Beijing and simply say: it lands.",
+          "pivot": "Set the visit aside. If anything is exchanged at all — through what mechanism, on what schedule, checked against what? Answer that and we will see what survives."
+        }
+      ],
+      "second": [
+        {
+          "label": "A standing compute working group under the delegation leads — quarterly, aggregate figures, agreed definitions.",
+          "effects": {
+            "trust": 4,
+            "progress": 7,
+            "usBacking": -2,
+            "chinaBuyin": 6
+          },
+          "reaction": "Quarterly, with definitions. If Washington honors the cycle, so will we — the network's numbers are, after all, our better argument.",
+          "epilogue": "Six months on, the compute working group has met twice, on schedule — the only track whose minutes contain digits."
+        },
+        {
+          "label": "A one-time pilot exchange, then both capitals review. No standing machinery until the first swap survives scrutiny.",
+          "effects": {
+            "trust": 2,
+            "progress": 3,
+            "usBacking": 4,
+            "chinaBuyin": -2
+          },
+          "reaction": "A pilot. You wish to date the file before marrying it. Acceptable — but reviews in Beijing have a way of outliving the thing reviewed.",
+          "epilogue": "Six months on, the pilot swap is complete and 'under review' in both capitals. Neither review has a deadline."
+        },
+        {
+          "label": "Each side publishes its own figures; the other checks them against independent estimates. Transparency you can verify beats transparency you must trust.",
+          "effects": {
+            "trust": -4,
+            "progress": 6,
+            "usBacking": 6,
+            "chinaBuyin": -5
+          },
+          "reaction": "You ask us to publish so your analysts can grade us. We already assumed the satellites. Publishing for them is the part that requires instruction from above.",
+          "epilogue": "Six months on, both sides publish annual aggregates. Both sides' analysts find discrepancies. Both discrepancies are, officially, rounding."
+        }
+      ]
+    },
+    {
+      "agendaId": "ai-diffusion",
+      "intro": "You tabled economic cooperation on AI diffusion — the AI+ world Beijing actually wants to talk about. For the first time all week, the binders across the table are already open.",
+      "openingDefault": "Candidly, this is the item we hoped Washington would raise. The AI-plus plan runs on data, and data is our mandate — a productive force, not a security problem, whatever our founding director's former colleagues at the Cyberspace Administration may think. Tell us what cooperation means to your side, and we will find it agreeable.",
+      "openingIdeal": "The State Council's AI-plus plan is my commission's file — we lead it, and we will be graded on it. Health, logistics, industrial upgrading: name the sectors where your interests touch our mandates. This is the one item on this agenda where I can deliver without telephoning anyone. Use it accordingly.",
+      "replies": [
+        {
+          "label": "We're open to a full diffusion track — joint sectoral studies, adoption metrics, regular exchanges on what deployment actually does to an economy.",
+          "effects": {
+            "trust": 8,
+            "progress": -4,
+            "usBacking": -3,
+            "chinaBuyin": 8
+          },
+          "reaction": "Now we are having the conversation this dialogue was built for. My side can staff a full track by next quarter — generously.",
+          "pivot": "One matter first, so it does not ambush us later. Diffusion runs on compute, and compute runs through your export controls. What do we tell Beijing about that shadow over the file?"
+        },
+        {
+          "label": "We'll build the diffusion track — in step with the safety track. They move together, or neither moves.",
+          "effects": {
+            "trust": 2,
+            "progress": 6,
+            "usBacking": 3,
+            "chinaBuyin": 2
+          },
+          "reaction": "A leash. Elegant of you to present it as a partnership. Very well — we have walked on leashes before; the question is always who tires first.",
+          "pivot": "Then let us test it immediately. Diffusion runs on chips, and chips run through your export controls. Before either track moves — what is your answer on that?"
+        },
+        {
+          "label": "For now, an exchange of adoption data and case studies — nothing programmatic. Our bandwidth is committed to the safety agenda.",
+          "effects": {
+            "trust": -3,
+            "progress": 3,
+            "usBacking": 6,
+            "chinaBuyin": -6
+          },
+          "reaction": "You table the one item my government is enthusiastic about, then serve it cold. Noted. We will exchange your case studies.",
+          "pivot": "Since we are being minimal: even data exchange touches compute, and compute touches your export controls. Beijing will ask me about that shadow. What should I report?"
+        }
+      ],
+      "second": [
+        {
+          "label": "Export controls aren't on this table and won't be. We cooperate on what remains — and there's plenty.",
+          "effects": {
+            "trust": -4,
+            "progress": 4,
+            "usBacking": 8,
+            "chinaBuyin": -5
+          },
+          "reaction": "'What remains.' A phrase my report will quote precisely. We will cooperate on the remainder, and remember the subtraction.",
+          "epilogue": "Six months on, the diffusion track cooperates on the remainder. The subtraction is raised, verbatim, at every session's tea break."
+        },
+        {
+          "label": "We scope the track to applications that run on globally available compute — health, logistics, services. The controls stay where they are; the cooperation goes where they aren't.",
+          "effects": {
+            "trust": 5,
+            "progress": 5,
+            "usBacking": 1,
+            "chinaBuyin": 4
+          },
+          "reaction": "Cooperation designed around the wall rather than about it. Unheroic — and workable. My planners can fill that scope by Thursday.",
+          "epilogue": "Six months on, three joint sectoral studies exist. None mentions chips; all are, therefore, publishable in both capitals."
+        },
+        {
+          "label": "The chip file belongs in the Bessent–He Lifeng channel, and we'll say so in writing. This table stays clean.",
+          "effects": {
+            "trust": 3,
+            "progress": 2,
+            "usBacking": 2,
+            "chinaBuyin": 6
+          },
+          "reaction": "Routing the grievance to the Vice Premier's channel is not relief — but it is respect, and it is an address. Beijing prefers grievances with addresses.",
+          "epilogue": "Six months on, the chip file waits in the economic channel behind tariffs. The diffusion track, unburdened, meets monthly and prospers modestly."
+        }
+      ]
+    },
+    {
+      "agendaId": "binding-verification",
+      "intro": "You table the item your principals insisted on: binding commitments, with verification. It is the phrase this relationship's agreements historically go to die on, and everyone in the room knows it.",
+      "openingDefault": "I will be candid, as conveners must be. The Ministry of Finance helped set this table; it does not commit other people's ministries. If Washington's item is binding obligations with verification, I can carry the request upward — and I can tell you from experience that it will travel slowly, and may not travel back.",
+      "openingIdeal": "Let us not waste the interpreters. My commission can mandate — that is what we are for. The question is not whether China can bind itself; it is why we would accept foreign verification of our own compliance. Show me an obligation each side would honor out of self-interest, and 'binding' becomes a drafting problem. Show me anything else, and this item is over by the break.",
+      "replies": [
+        {
+          "label": "Our position is simple: commitments that bind, verification that satisfies both capitals — or this dialogue is a press release.",
+          "effects": {
+            "trust": -11,
+            "progress": 8,
+            "usBacking": 9,
+            "chinaBuyin": -10
+          },
+          "reaction": "Then permit me equal simplicity: no verification regime drafted in Washington will inspect this country. If that ends the item, the item ends. Your move to make it otherwise.",
+          "pivot": "But before either of us adjourns, answer the practical question. When your Senate asks how you would know we complied — what precisely do you intend to say?"
+        },
+        {
+          "label": "We'd rather have parallel domestic action than paper promises. Each side commits at home, in its own law — and shows its work.",
+          "effects": {
+            "trust": 5,
+            "progress": 6,
+            "usBacking": -4,
+            "chinaBuyin": 5
+          },
+          "reaction": "'Shows its work.' Careful — you have described something Beijing can nearly say yes to. Domestic action, domestic authority, no inspectors. I am obliged to be suspicious of proposals this reasonable.",
+          "pivot": "Still, your principals asked for 'binding,' and mine will ask where it went. When your Senate asks how you know we complied — what do you say?"
+        },
+        {
+          "label": "Then start with one narrow thing: mutual notification of frontier training runs above an agreed threshold. Binding, small, checkable.",
+          "effects": {
+            "trust": -3,
+            "progress": 9,
+            "usBacking": 5,
+            "chinaBuyin": -4
+          },
+          "reaction": "Small enough to draft, sharp enough to cut. A notification regime tells you the tempo of our frontier — you understand we will price that accordingly.",
+          "pivot": "And the price turns on one question, so answer it plainly. When your Senate asks how you would know we complied — what do you intend to say?"
+        }
+      ],
+      "second": [
+        {
+          "label": "If there's no verification, there's no agreement. We'll say so publicly, and this item comes off the agenda.",
+          "effects": {
+            "trust": -12,
+            "progress": -8,
+            "usBacking": 7,
+            "chinaBuyin": -11
+          },
+          "reaction": "Then it comes off. I will report that Washington preferred the adjective to the agreement. Do not expect this item back at this table — tables have memories.",
+          "epilogue": "Six months on, the item has not returned. The talking point 'we held firm on verification' polls well and verifies nothing."
+        },
+        {
+          "label": "We'll say we watched what you did, not what you signed. Each capital publishes its regime; behavior is the verification.",
+          "effects": {
+            "trust": 8,
+            "progress": 7,
+            "usBacking": -5,
+            "chinaBuyin": 9
+          },
+          "reaction": "Evidence over promises. That, Beijing can defend internally — we act because we choose to, and you may watch. Send language. Short language.",
+          "epilogue": "Six months on, both capitals publish testing regimes unprompted. Nothing binds; nothing has broken. The lawyers on both sides remain quietly unemployed."
+        },
+        {
+          "label": "We'll say the commitment is binding and the verification annex is being developed by a joint technical group.",
+          "effects": {
+            "trust": 3,
+            "progress": 2,
+            "usBacking": 3,
+            "chinaBuyin": 2
+          },
+          "reaction": "Ah — binding now, verifiable eventually. The classic. We can staff a technical group indefinitely; I trust you understand that is both an offer and a warning.",
+          "epilogue": "Six months on, the verification annex is on draft nine. 'Binding' survives in the chapeau; the brackets have begun to reproduce."
+        }
+      ]
+    },
+    {
+      "agendaId": "multilateral",
+      "intro": "The multilateral item is read aloud and the Chinese side visibly relaxes — this is home ground for the diplomats. The tea arrives faster than it has all day.",
+      "openingDefault": "China's Global AI Governance Initiative rests on a simple principle: AI governance belongs to every country, not to one or two. We would welcome your support for the next summit — surely our two nations can at least show the world what consensus looks like.",
+      "openingIdeal": "I hold the coordinator-for-AI-affairs brief, so permit me to skip the poetry. Summits produce declarations; declarations set defaults; defaults outlive both our governments. If our two sides settle risk language before the next summit, most of the room will adopt it unexamined. What language would Washington like the world to inherit?",
+      "replies": [
+        {
+          "label": "The United States supports a successful summit, and we are prepared to co-draft governance language with your side.",
+          "effects": {
+            "trust": 9,
+            "progress": -3,
+            "usBacking": -3,
+            "chinaBuyin": 7
+          },
+          "reaction": "Then we are agreed at the first attempt — a rarer event than either of our capitals admits.",
+          "pivot": "So the question becomes what our capitals actually carry into that summit: a shared text, or merely shared attendance?"
+        },
+        {
+          "label": "We'll engage the summit track — on one condition. One workstream carries something concrete: testing models against cross-border threats, with both our names on it.",
+          "effects": {
+            "trust": 3,
+            "progress": 6,
+            "usBacking": 2,
+            "chinaBuyin": 2
+          },
+          "reaction": "Conditions attached to a courtesy. Very Washington. Still — a testing workstream can be framed as the world's idea, which is the only framing that survives.",
+          "pivot": "Very well. Then tell us precisely what the two of us would walk into that summit carrying."
+        },
+        {
+          "label": "Candidly: the governance actions that matter are domestic ones. We'll take the summit seriously when its agenda includes something a regulator would recognize.",
+          "effects": {
+            "trust": -6,
+            "progress": 4,
+            "usBacking": 5,
+            "chinaBuyin": -5
+          },
+          "reaction": "You wave away the one arena where governance is actually shared. Other delegations will notice the empty chair before they notice your reasons.",
+          "pivot": "Then tell us plainly — when the summit convenes, what role, if any, does Washington intend to play?"
+        }
+      ],
+      "second": [
+        {
+          "label": "We will back an early, leader-level invitation and co-sponsor the governance declaration. Let both capitals call it a win.",
+          "effects": {
+            "trust": 8,
+            "progress": -4,
+            "usBacking": -5,
+            "chinaBuyin": 8
+          },
+          "reaction": "An early invitation. Beijing remembers those — and we remember the other kind, from 2023.",
+          "epilogue": "Six months on, the declaration passes by acclamation and three more summits are announced. No model anywhere is tested any differently."
+        },
+        {
+          "label": "We will co-chair a single workstream — testing models against cross-border threats — and let the rest of the communiqué write itself.",
+          "effects": {
+            "trust": 4,
+            "progress": 7,
+            "usBacking": 1,
+            "chinaBuyin": 3
+          },
+          "reaction": "One workstream with substance, dressed in multilateral clothes. That we can carry upstairs without flinching.",
+          "epilogue": "Six months on, the testing workstream ships a checklist forty countries adopt and two governments use — yours and theirs."
+        },
+        {
+          "label": "We will attend at working level and no higher. Our energy stays at this table, where the file actually moves.",
+          "effects": {
+            "trust": -5,
+            "progress": 5,
+            "usBacking": 6,
+            "chinaBuyin": -6
+          },
+          "reaction": "Working level. The photograph will be taken regardless; you have merely chosen not to appear in it.",
+          "epilogue": "Six months on, the summit proceeds without American principals; the bilateral track grinds out one real testing exchange, filed under 'candid.'"
+        }
+      ]
+    }
+  ],
+
+  agendaConflicts: {
+    "compute-transparency": "compute-card",
+    "binding-verification": "binding-vs-best-practice",
+    "multilateral": "international-mfa",
+    "standards-alignment": "cac-testing"
+  },
+
   /* ---------------- +5 YEARS: READ THE TELLS ---------------- *
    * The inverse exercise. A reshuffled 2031 org chart is a costly signal of
    * Beijing's private beliefs; the player infers impact + posture from it.
@@ -1131,9 +1765,16 @@ export const DATA = {
   copy: {
     brief: [
       "<p>In May, after the Trump&ndash;Xi summit, Washington and Beijing agreed to open the first government-to-government dialogue on artificial intelligence. Agreeing to <em>talk</em> is the easy part.</p>",
-      "<p class='pull'>The hard question: who in China do you actually talk to?</p>",
+      "<p class='pull'>The hard questions: who do you actually talk to &mdash; and what do you talk about?</p>",
       "<p>You are the U.S. delegation, led by Treasury Secretary Bessent. China's AI apparatus is a thicket of ministries, commissions, and standards bodies &mdash; and here's the trap: <strong>the people most willing to meet you often hold the least power, and the people with real power rarely take the meeting.</strong></p>",
-      "<p>And you don't get to choose Beijing's delegation &mdash; <strong>Beijing does.</strong> They'll field the comfortable, face-saving picks. Spend your limited leverage to pull the counterparts who actually hold the pen into the room, survive the talks, and bring home something better than a photo op.</p>",
+      "<p>And you don't get to choose Beijing's delegation &mdash; <strong>Beijing does.</strong> They'll field the comfortable, face-saving picks. Spend your limited leverage to pull the counterparts who actually hold the pen into the room.</p>",
+      "<p>Then set the agenda &mdash; and argue it out <strong>line by line, at a live table</strong>. Survive whatever the system throws in between, and bring home something better than a photo op.</p>",
+    ],
+
+    agendaIntro: [
+      "<p>The seats are filled; now decide what the table talks about. Seven items are in the folder and you may table <strong>three</strong>. Each becomes a live exchange with whichever office you seated on that track &mdash; the room you built is the room you get.</p>",
+      "<p class='pull'>Beijing has an appetite. It is rarely for what you most need to serve.</p>",
+      "<p>Some items the Chinese side will devour &mdash; summit diplomacy, economic diffusion &mdash; and the conversation will glow while binding nothing. Others, like verification, land like a subpoena. The craft is telling <em>warmth worth having</em> from warmth that merely fills the readout.</p>"
     ],
 
     meters: {

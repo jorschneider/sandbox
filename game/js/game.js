@@ -50,8 +50,9 @@ function showScreen(id) {
 const LEVERAGE_BUDGET = 12;
 const state = {
   assignments: {},   // topicId -> actorId (seated counterpart; starts at Beijing's offer)
+  agenda: [],        // the 3 tabled agenda-item ids
   meters: { trust: 50, progress: 50, usBacking: 55, chinaBuyin: 45 },
-  deck: [],
+  plan: [],          // interleaved exchanges + event cards
   deckPos: 0,
   collapsed: false,
   matchQuality: 0,   // 0..1
@@ -260,17 +261,31 @@ function updateDangerState() {
 }
 
 /* ================= PHASE B — TALKS ================= */
-const ROUNDS = 7;
-function buildDeck() {
-  // conditional scenarios only enter the deck when their seat condition holds
-  const pool = DATA.scenarios.filter(s => !s.appearsIf || seatMatch(s.appearsIf));
-  const all = shuffle(pool);
-  state.deck = all.slice(0, Math.min(ROUNDS, all.length));
+// A run = your 3 tabled agenda items as live exchanges, interleaved with 3
+// event cards Beijing's system throws at you anyway.
+function buildPlan() {
+  const excluded = new Set(state.agenda.map(id => (DATA.agendaConflicts || {})[id]).filter(Boolean));
+  const pool = DATA.scenarios.filter(s => (!s.appearsIf || seatMatch(s.appearsIf)) && !excluded.has(s.id));
+  const events = shuffle(pool).slice(0, 3);
+  const exchanges = shuffle(state.agenda.map(id => DATA.exchanges.find(e => e.agendaId === id)).filter(Boolean));
+  state.plan = [];
+  const n = Math.max(exchanges.length, events.length);
+  for (let i = 0; i < n; i++) {
+    if (exchanges[i]) state.plan.push({ type: 'exchange', ex: exchanges[i] });
+    if (events[i]) state.plan.push({ type: 'event', s: events[i] });
+  }
   state.deckPos = 0;
   state.collapsed = false;
   state.advisorUsed = false;
   state.epilogues = [];
   state.log = [];
+}
+
+function renderSession() {
+  const item = state.plan[state.deckPos];
+  if (!item) { toReadout(); return; }
+  if (item.type === 'event') renderScenario(item.s);
+  else renderExchange(item.ex);
 }
 
 // options can be gated on who is actually in the room
@@ -285,35 +300,34 @@ function effectiveEffects(option) {
   return out;
 }
 
-function renderScenario() {
-  const s = state.deck[state.deckPos];
+// render the seated org's place card into a .counterpart aside
+function renderPlate(el, topicId) {
+  const aid = topicId ? state.assignments[topicId] : null;
+  const a = aid ? actorById[aid] : null;
+  if (!a) { el.classList.add('off'); el.innerHTML = ''; return null; }
+  const g = gradeOf(topicId, aid);
+  el.classList.remove('off');
+  el.innerHTML = `
+    <span class="cp-kicker">Across the table</span>
+    <span class="cp-name">${a.name}</span>
+    <span class="cp-full">${a.fullName}</span>
+    <span class="cp-tag">${a.tag}</span>
+    <div class="cp-stats">
+      <span class="stat">Power ${pips(a.power, 'pwr')}</span>
+      <span class="stat">Openness ${pips(a.openness, 'opn')}</span>
+    </div>
+    <span class="pick-grade ${g}">${gradeLabel(g)}</span>`;
+  return a;
+}
+
+function renderScenario(s) {
+  state.current = s;
   $('feedback-card').classList.remove('on');
+  $('dialogue-card').classList.remove('on');
   $('scenario-card').classList.remove('hide');
 
-  $('scenario-count').textContent = `Session ${state.deckPos + 1} of ${state.deck.length}`;
-
-  // the counterpart you negotiated into the room in Phase A, as a place card
-  const topic = s.relatedTopic ? DATA.topics.find(t => t.id === s.relatedTopic) : null;
-  const cp = $('counterpart');
-  const aid = topic ? state.assignments[topic.id] : null;
-  const a = aid ? actorById[aid] : null;
-  if (a) {
-    const g = gradeOf(topic.id, aid);
-    cp.classList.remove('off');
-    cp.innerHTML = `
-      <span class="cp-kicker">Across the table</span>
-      <span class="cp-name">${a.name}</span>
-      <span class="cp-full">${a.fullName}</span>
-      <span class="cp-tag">${a.tag}</span>
-      <div class="cp-stats">
-        <span class="stat">Power ${pips(a.power, 'pwr')}</span>
-        <span class="stat">Openness ${pips(a.openness, 'opn')}</span>
-      </div>
-      <span class="pick-grade ${g}">${gradeLabel(g)}</span>`;
-  } else {
-    cp.classList.add('off');
-    cp.innerHTML = '';
-  }
+  $('scenario-count').textContent = `Session ${state.deckPos + 1} of ${state.plan.length}`;
+  renderPlate($('counterpart'), s.relatedTopic || null);
 
   $('scenario-title').textContent = s.title;
   $('scenario-text').textContent = s.situation;
@@ -378,7 +392,7 @@ function chooseOption(scenario, option) {
   // feedback
   $('scenario-card').classList.add('hide');
   const fc = $('feedback-card');
-  $('feedback-kicker').textContent = `The room reacts · Session ${state.deckPos + 1} of ${state.deck.length}`;
+  $('feedback-kicker').textContent = `The room reacts · Session ${state.deckPos + 1} of ${state.plan.length}`;
   $('feedback-deltas').innerHTML = METER_KEYS.map(k => {
     const d = deltas[k];
     const cls = d > 0 ? 'up' : d < 0 ? 'down' : 'zero';
@@ -399,18 +413,18 @@ function chooseOption(scenario, option) {
     state.collapsed = true;
     $('next-btn').textContent = 'See what happened →';
   } else {
-    const last = state.deckPos >= state.deck.length - 1;
+    const last = state.deckPos >= state.plan.length - 1;
     $('next-btn').textContent = last ? 'Adjourn → readout' : 'Next session →';
   }
 }
 
 function nextScenario() {
-  if (state.collapsed || state.deckPos >= state.deck.length - 1) {
+  if (state.collapsed || state.deckPos >= state.plan.length - 1) {
     toReadout();
     return;
   }
   state.deckPos++;
-  renderScenario();
+  renderSession();
 }
 
 /* ================= PHASE C — READOUT ================= */
@@ -434,7 +448,7 @@ function pickEnding() {
   if (m.chinaBuyin >= 65 && m.usBacking <= 38) return { ...E.lonely, total, tier: 'c' };
 
   if (total >= 85 && m.chinaBuyin >= 60 && m.trust >= 55) return { ...E.breakthrough, total, tier: 'a' };
-  if (total >= 72) return { ...E.working, total, tier: 'b' };
+  if (total >= 75) return { ...E.working, total, tier: 'b' };
   if (total >= 58) return { ...E.stalemate, total, tier: 'c' };
   if (total >= 45) return { ...E.adjourn, total, tier: 'd' };
   return { ...E.recrimination, total, tier: 'f' };
@@ -459,8 +473,11 @@ function buildStatement(ending) {
   else close = f.close.mixed;
   paras.push(close);
 
+  const tabled = (state.agenda || [])
+    .map(id => (DATA.agendaItems || []).find(a => a.id === id)?.title).filter(Boolean).join(' · ');
   return paras.map(p => `<p>${p}</p>`).join('') +
-    `<div class="sig">— Joint readout, U.S.–China Dialogue on Artificial Intelligence · Composite score ${ending.total}/100</div>`;
+    `<div class="sig">— Joint readout, U.S.–China Dialogue on Artificial Intelligence` +
+    (tabled ? ` · Agenda: ${tabled}` : '') + ` · Composite score ${ending.total}/100</div>`;
 }
 
 const STAMPS = { a: 'Ratified', b: 'Initialed', c: 'Noted', d: 'No consensus', f: 'Null & void' };
@@ -555,18 +572,184 @@ function showToast() {
 }
 
 /* ================= FLOW ================= */
+/* ================= PHASE A2 — SET THE AGENDA ================= *
+ * The essay's second question: not just who to talk to, but what to
+ * talk about. Table 3 of 7 items; each becomes a live exchange with
+ * whoever you seated on that item's track.                            */
+function agendaFit(item) {
+  return item.idealSeats.includes(state.assignments[item.fitTopic]) ? 'ideal' : 'ok';
+}
+
+function renderAgenda() {
+  $('agenda-brief').innerHTML = (DATA.copy.agendaIntro || []).join('');
+  const grid = $('agenda-grid');
+  grid.innerHTML = '';
+  const maxed = state.agenda.length >= 3;
+  DATA.agendaItems.forEach(item => {
+    const picked = state.agenda.includes(item.id);
+    const fit = agendaFit(item);
+    const seated = actorById[state.assignments[item.fitTopic]];
+    const el = document.createElement('button');
+    el.className = 'agenda-item' + (picked ? ' picked' : '') + (maxed && !picked ? ' maxed' : '');
+    el.innerHTML = `
+      <div class="ag-title">${item.title}</div>
+      <div class="ag-blurb">${item.blurb}</div>
+      <div class="ag-row">
+        <span class="stat">Beijing&rsquo;s appetite&nbsp;${pips(item.appetite, 'pwr')}</span>
+        <span class="fit-chip ${fit === 'ideal' ? 'ideal' : 'ok'}">${fit === 'ideal' ? `Right room: ${seated.name}` : `Second-best room: ${seated.name}`}</span>
+        ${item.essayPick ? '<span class="ag-pick-badge">The essay&rsquo;s lean</span>' : ''}
+      </div>
+      <div class="ag-note">${item.essayNote}</div>`;
+    el.addEventListener('click', () => toggleAgenda(item.id, picked, maxed));
+    grid.appendChild(el);
+  });
+  const n = state.agenda.length;
+  $('agenda-readout').innerHTML = n < 3
+    ? `Tabled <b>${n}/3</b>. The room you built in Phase I decides what lands here.`
+    : `Agenda set: three items on the table. Beijing has seen the list.`;
+  $('table-btn').disabled = n !== 3;
+}
+
+function toggleAgenda(id, picked, maxed) {
+  if (picked) state.agenda = state.agenda.filter(x => x !== id);
+  else if (!maxed) state.agenda.push(id);
+  else return;
+  audio.click();
+  renderAgenda();
+}
+
+function toAgenda() {
+  state.agenda = [];
+  renderAgenda();
+  showScreen('screen-agenda');
+}
+
 function startTalks() {
   applyStaffing();
-  buildDeck();
+  buildPlan();
   renderMeters('meters');
-  renderScenario();
+  updateDangerState();
+  renderSession();
   showScreen('screen-talks');
 }
 
 function resetGame() {
   state.assignments = defaultDelegation();
+  state.agenda = [];
   state.meters = { trust: 50, progress: 50, usBacking: 55, chinaBuyin: 45 };
   state.collapsed = false;
+}
+
+/* ================= THE LIVE EXCHANGE ================= *
+ * A tabled agenda item plays as a two-beat conversation with the org
+ * seated on its track. They open; you answer; they push back; you commit. */
+function addLine(kind, text, who, delay) {
+  const d = document.createElement('div');
+  d.className = 'dline ' + kind;
+  if (delay) d.style.animationDelay = delay + 'ms';
+  d.innerHTML = (kind === 'scene' ? '' : `<span class="who">${who}</span>`) + `<span class="say">${text}</span>`;
+  $('transcript').appendChild(d);
+  const card = $('dialogue-card');
+  if (card.scrollHeight) card.scrollTop = card.scrollHeight;
+}
+
+function renderDlgOptions(options, onPick) {
+  const box = $('dlg-options');
+  box.innerHTML = '';
+  options.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'option';
+    b.dataset.key = String.fromCharCode(65 + i);
+    b.innerHTML = `${o.label}<span class="forecast" hidden></span>`;
+    b.addEventListener('click', () => onPick(o));
+    box.appendChild(b);
+  });
+  state.dlgOptions = options;
+}
+
+function applyDlgEffects(effects) {
+  const deltas = {};
+  METER_KEYS.forEach(k => {
+    deltas[k] = effects[k] || 0;
+    state.meters[k] = Math.round(clamp(state.meters[k] + deltas[k]));
+  });
+  audio.blip(METER_KEYS.reduce((s, k) => s + deltas[k], 0));
+  updateMeters(deltas);
+  updateDangerState();
+  if (state.meters.trust <= 8 || state.meters.chinaBuyin <= 8) state.collapsed = true;
+}
+
+function renderExchange(ex) {
+  const item = DATA.agendaItems.find(a => a.id === ex.agendaId);
+  const seatedId = state.assignments[item.fitTopic];
+  const seated = actorById[seatedId];
+  const ideal = item.idealSeats.includes(seatedId);
+  state.exch = { ex, item, seated };
+
+  $('feedback-card').classList.remove('on');
+  $('scenario-card').classList.add('hide');
+  $('dialogue-card').classList.add('on');
+  $('dlg-count').textContent = `Session ${state.deckPos + 1} of ${state.plan.length} · Your agenda`;
+  $('dlg-title').textContent = item.title;
+  renderPlate($('dlg-counterpart'), item.fitTopic);
+  $('transcript').innerHTML = '';
+  $('dlg-next-btn').style.display = 'none';
+
+  addLine('scene', ex.intro);
+  addLine('them', ideal && ex.openingIdeal ? ex.openingIdeal : ex.openingDefault, seated.name, 250);
+  renderDlgOptions(ex.replies, onDlgReply);
+  wireDlgAdvisor();
+}
+
+function onDlgReply(r) {
+  addLine('you', r.label, 'U.S. delegation');
+  applyDlgEffects(r.effects);
+  state.log.push({ scenario: state.exch.item.title, choice: r.label });
+  addLine('them', r.reaction, state.exch.seated.name, 250);
+  if (state.collapsed) { endExchange(); return; }
+  addLine('them', r.pivot, state.exch.seated.name, 700);
+  renderDlgOptions(state.exch.ex.second, onDlgSecond);
+}
+
+function onDlgSecond(s2) {
+  addLine('you', s2.label, 'U.S. delegation');
+  applyDlgEffects(s2.effects);
+  state.log.push({ scenario: state.exch.item.title, choice: s2.label });
+  if (s2.epilogue) state.epilogues.push(s2.epilogue);
+  addLine('them', s2.reaction, state.exch.seated.name, 250);
+  endExchange();
+}
+
+function endExchange() {
+  $('dlg-options').innerHTML = '';
+  state.dlgOptions = null;
+  const last = state.deckPos >= state.plan.length - 1;
+  const btn = $('dlg-next-btn');
+  btn.innerHTML = state.collapsed ? 'See what happened &rarr;'
+    : (last ? 'Adjourn &rarr; readout' : 'Adjourn the session &rarr;');
+  btn.style.display = '';
+}
+
+function wireDlgAdvisor() {
+  const adv = $('dlg-advisor-btn');
+  adv.disabled = state.advisorUsed;
+  adv.textContent = state.advisorUsed ? '☏ China hands consulted' : '☏ Consult the China hands';
+  adv.onclick = () => {
+    if (state.advisorUsed || !state.dlgOptions) return;
+    state.advisorUsed = true;
+    adv.disabled = true;
+    adv.textContent = '☏ China hands consulted';
+    document.querySelectorAll('#dlg-options .option .forecast').forEach((f, i) => {
+      const eff = state.dlgOptions[i].effects;
+      f.innerHTML = METER_KEYS.map(k => {
+        const d = eff[k] || 0;
+        const cls = d > 0 ? 'up' : d < 0 ? 'down' : 'zero';
+        return `<span class="delta ${cls}">${DATA.copy.meters[k].short} ${d > 0 ? '+' : ''}${d}</span>`;
+      }).join('');
+      f.hidden = false;
+    });
+    audio.click();
+  };
 }
 
 /* ================= +5 YEARS — READ THE TELLS ================= */
@@ -692,7 +875,9 @@ renderFuturesBrief();
 
 // dialogue mode
 $('start-btn').addEventListener('click', () => { audio.ensureAudio(); state.assignments = defaultDelegation(); renderStaff(); showScreen('screen-staff'); });
-$('lock-btn').addEventListener('click', startTalks);
+$('lock-btn').addEventListener('click', toAgenda);
+$('table-btn').addEventListener('click', startTalks);
+$('dlg-next-btn').addEventListener('click', nextScenario);
 $('next-btn').addEventListener('click', nextScenario);
 $('replay-btn').addEventListener('click', () => { resetGame(); renderStaff(); showScreen('screen-staff'); });
 $('copy-btn').addEventListener('click', copyResult);
@@ -718,6 +903,10 @@ document.addEventListener('keydown', (e) => {
 
   if (on('screen-talks')) {
     if (on('feedback-card')) { if (key === 'enter') $('next-btn').click(); }
+    else if (on('dialogue-card')) {
+      if (idx >= 0) document.querySelectorAll('#dlg-options .option')[idx]?.click();
+      else if (key === 'enter' && $('dlg-next-btn').style.display !== 'none') $('dlg-next-btn').click();
+    }
     else if (idx >= 0) document.querySelectorAll('#options .option')[idx]?.click();
   } else if (on('screen-futures')) {
     if (on('fq-feedback')) { if (key === 'enter') $('fq-next-btn').click(); }
