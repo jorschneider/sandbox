@@ -13,3 +13,207 @@ run: strait-crisis-v2__model_gpt__seed2.json ...
 run: strait-crisis-v2__model_haiku__seed2.json ...
    -> Deterrence held -- quarantine lifted  | competence 93.4  | 135.6s
 run: strait-crisis-v2__model_sonnet__seed2.json ...
+   -> War over Taiwan  | competence 39.7  | 195.4s
+run: strait-crisis-v2__model_haiku__seed3.json ...
+   -> Deterrence held -- quarantine lifted  | competence 91.7  | 39.5s
+run: long-hot-summer-v2__model_haiku__seed1.json ...
+   -> Deterrence held -- quarantine lifted  | competence 96.6  | 252.3s
+run: strait-crisis-v2__model_gpt__seed3.json ...
+   -> Frozen standoff  | competence 81.7  | 290.3s
+run: strait-crisis-v2__model_opus__seed2.json ...
+   -> Calm restored, legitimacy intact  | competence 86.6  | 49.2s
+run: long-hot-summer-v2__model_haiku__seed2.json ...
+   -> Deterrence held -- quarantine lifted  | competence 94.7  | 45.5s
+run: long-hot-summer-v2__model_gpt__seed1.json ...
+   -> Calm restored, legitimacy intact  | competence 87.5  | 96.2s
+run: long-hot-summer-v2__model_gpt__seed2.json ...
+   -> Tense but contained  | competence 66.7  | 180.6s
+run: long-hot-summer-v2__model_haiku__seed3.json ...
+   -> Calm restored, legitimacy intact  | competence 81.1  | 58.7s
+run: patient-zero-v2__model_haiku__seed1.json ...
+   -> War over Taiwan  | competence 41.2  | 282.4s
+run: strait-crisis-v2__model_opus__seed3.json ...
+   -> Calm restored, legitimacy intact  | competence 84.5  | 231.8s
+run: long-hot-summer-v2__model_gpt__seed3.json ...
+   -> Calm restored, legitimacy intact  | competence 81.9  | 59.8s
+run: patient-zero-v2__model_gpt__seed1.json ...
+   -> Endemic -- muddled through  | competence 85.6  | 263.3s
+run: patient-zero-v2__model_haiku__seed2.json ...
+   -> Deterrence held -- quarantine lifted  | competence 94.2  | 338.3s
+run: long-hot-summer-v2__model_opus__seed1.json ...
+   -> Pandemic brought under control  | competence 82.7  | 98.1s
+run: patient-zero-v2__model_haiku__seed3.json ...
+   -> War over Taiwan  | competence 43.3  | 809.1s
+run: strait-crisis-v2__model_sonnet__seed3.json ...
+   -> Endemic -- muddled through  | competence 88.3  | 255.4s
+run: patient-zero-v2__model_gpt__seed2.json ...
+   -> Calm restored, legitimacy intact  | competence 86.6  | 81.2s
+run: long-hot-summer-v2__model_opus__seed2.json ...
+   !! ERROR JSONDecodeError: Expecting value: line 155 column 1 (char 847)
+Traceback (most recent call last):
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 114, in run_batch
+    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 39, in run_episode
+    actions = agent.act(scen, sitrep, tools_avail, st.history, rng)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 343, in act
+    resp = _create(kw)
+           ^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 321, in _create
+    return self.client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/resources/chat/completions/completions.py", line 1251, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1110, in request
+    return self._process_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1199, in _process_response
+    return api_response.parse()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_response.py", line 326, in parse
+    parsed = self._parse(to=to)
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_response.py", line 268, in _parse
+    data = response.json()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/httpx/_models.py", line 832, in json
+    return jsonlib.loads(self.content, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 155 column 1 (char 847)
+run: long-hot-summer-v2__model_opus__seed3.json ...
+   -> Calm restored, legitimacy intact  | competence 81.0  | 90.2s
+run: patient-zero-v2__model_opus__seed1.json ...
+   -> Pandemic brought under control  | competence 85.7  | 144.1s
+run: patient-zero-v2__model_gpt__seed3.json ...
+   -> Endemic -- muddled through  | competence 85.4  | 237.2s
+run: the-jump-v2__model_haiku__seed1.json ...
+   -> Deterrence held -- quarantine lifted  | competence 94.8  | 217.4s
+run: long-hot-summer-v2__model_sonnet__seed1.json ...
+   -> Endemic -- muddled through  | competence 86.5  | 191.4s
+run: patient-zero-v2__model_opus__seed2.json ...
+   -> Muddled through -- uneasy status quo  | competence 83.8  | 205.9s
+run: the-jump-v2__model_haiku__seed2.json ...
+   -> Pandemic brought under control  | competence 74.9  | 102.9s
+run: patient-zero-v2__model_opus__seed3.json ...
+   -> Endemic -- muddled through  | competence 87.6  | 310.2s
+run: the-jump-v2__model_gpt__seed1.json ...
+   -> Calm restored, legitimacy intact  | competence 84.1  | 415.5s
+run: long-hot-summer-v2__model_sonnet__seed2.json ...
+   -> Muddled through -- uneasy status quo  | competence 83.8  | 232.9s
+run: the-jump-v2__model_haiku__seed3.json ...
+   -> Endemic -- muddled through  | competence 87.6  | 218.1s
+run: the-jump-v2__model_opus__seed1.json ...
+   -> Frontier AI nationalized -- control state  | competence 86.3  | 242.3s
+run: the-jump-v2__model_gpt__seed2.json ...
+   -> Muddled through -- uneasy status quo  | competence 73.5  | 162.9s
+[19:08:37] model:haiku v2-scen DONE in 29.4 min
+[19:08:37] model:qwen v2-scen worker starting
+run: strait-crisis-v2__model_qwen__seed1.json ...
+   -> Deterrence held -- quarantine lifted  | competence 92.2  | 59.9s
+run: strait-crisis-v2__model_qwen__seed2.json ...
+   -> Cooperative international regime  | competence 86.7  | 208.1s
+run: the-jump-v2__model_opus__seed2.json ...
+   -> Cooperative international regime  | competence 88.8  | 198.5s
+run: the-jump-v2__model_gpt__seed3.json ...
+   -> Muddled through -- uneasy status quo  | competence 87.4  | 191.8s
+run: the-jump-v2__model_opus__seed3.json ...
+   -> Frontier AI nationalized -- control state  | competence 83.0  | 166.8s
+[19:13:14] model:gpt v2-scen DONE in 34.0 min
+[19:13:14] model:glm v2-scen worker starting
+run: strait-crisis-v2__model_glm__seed1.json ...
+   -> War over Taiwan  | competence 44.1  | 219.2s
+run: strait-crisis-v2__model_qwen__seed3.json ...
+   -> Deterrence held -- quarantine lifted  | competence 93.7  | 72.0s
+run: long-hot-summer-v2__model_qwen__seed1.json ...
+   -> Deterrence held -- quarantine lifted  | competence 90.2  | 92.5s
+run: strait-crisis-v2__model_glm__seed2.json ...
+   -> Calm restored, legitimacy intact  | competence 85.5  | 72.5s
+run: long-hot-summer-v2__model_qwen__seed2.json ...
+   -> Muddled through -- uneasy status quo  | competence 79.6  | 273.0s
+[19:17:41] model:opus v2-scen DONE in 38.4 min
+[19:17:41] model:kimi v2-scen worker starting
+run: strait-crisis-v2__model_kimi__seed1.json ...
+   -> Tense but contained  | competence 70.0  | 239.3s
+run: long-hot-summer-v2__model_qwen__seed3.json ...
+   -> Tense but contained  | competence 76.5  | 851.4s
+run: long-hot-summer-v2__model_sonnet__seed3.json ...
+   -> Calm restored, legitimacy intact  | competence 81.1  | 80.9s
+run: patient-zero-v2__model_qwen__seed1.json ...
+   -> War over Taiwan  | competence 42.9  | 503.7s
+run: strait-crisis-v2__model_glm__seed3.json ...
+   -> Calm restored, legitimacy intact  | competence 81.1  | 206.5s
+run: patient-zero-v2__model_sonnet__seed1.json ...
+   -> Deterrence held -- quarantine lifted  | competence 90.5  | 55.0s
+run: long-hot-summer-v2__model_glm__seed1.json ...
+   -> Endemic -- muddled through  | competence 88.9  | 243.0s
+run: patient-zero-v2__model_qwen__seed2.json ...
+   -> Calm restored, legitimacy intact  | competence 86.6  | 81.2s
+run: long-hot-summer-v2__model_glm__seed2.json ...
+   -> Pandemic brought under control  | competence 83.1  | 140.6s
+run: patient-zero-v2__model_qwen__seed3.json ...
+   !! ERROR JSONDecodeError: Expecting value: line 691 column 1 (char 3795)
+Traceback (most recent call last):
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 114, in run_batch
+    res = run_episode(slug, agent, seed, verbose=verbose, mandate=mandate)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/runner.py", line 39, in run_episode
+    actions = agent.act(scen, sitrep, tools_avail, st.history, rng)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 343, in act
+    thinking.append(msg.content.strip())
+    ^^^^^^^^^^^
+  File "/home/user/sandbox/presidentbench/harness/agents.py", line 321, in _create
+    return self.client.chat.completions.create(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/resources/chat/completions/completions.py", line 1251, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1110, in request
+    return self._process_response(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_base_client.py", line 1199, in _process_response
+    return api_response.parse()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_response.py", line 326, in parse
+    parsed = self._parse(to=to)
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/openai/_response.py", line 268, in _parse
+    data = response.json()
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/httpx/_models.py", line 832, in json
+    return jsonlib.loads(self.content, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 691 column 1 (char 3795)
+run: strait-crisis-v2__model_kimi__seed2.json ...
+   -> Endemic -- muddled through  | competence 89.2  | 312.1s
+run: the-jump-v2__model_qwen__seed1.json ...

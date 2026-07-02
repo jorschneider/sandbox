@@ -325,7 +325,9 @@ class OpenAICompatAgent(Agent):
                         kwargs = {k: v for k, v in kwargs.items() if k != "extra_body"}
                         continue
                     raise
-                except (openai.APIStatusError, openai.APIConnectionError, openai.RateLimitError):
+                except (openai.APIStatusError, openai.APIConnectionError,
+                        openai.RateLimitError, _json.JSONDecodeError):
+                    # JSONDecodeError: an upstream occasionally returns a truncated body
                     if attempt == 3:
                         raise
                     import time
@@ -349,7 +351,16 @@ class OpenAICompatAgent(Agent):
         # with tool-use formatting. Force a tool call once so an empty turn reflects a
         # real choice to pass, not a parse miss. The first pass's reasoning is kept.
         if not tcs:
-            resp = _create(dict(kw, tool_choice="required"))
+            try:
+                resp = _create(dict(kw, tool_choice="required"))
+            except openai.BadRequestError:
+                # some providers (e.g. Qwen in thinking mode) reject tool_choice="required";
+                # nudge with a follow-up user turn instead
+                nudged = kw["messages"] + [
+                    {"role": "assistant", "content": msg.content or ""},
+                    {"role": "user", "content": "You reasoned but took no action. Now act on "
+                     "that reasoning by calling one or more tools."}]
+                resp = _create(dict(kw, messages=nudged))
             msg = resp.choices[0].message
             _harvest(msg)
             tcs = msg.tool_calls or []
