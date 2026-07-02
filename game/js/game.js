@@ -56,8 +56,15 @@ const state = {
   collapsed: false,
   matchQuality: 0,   // 0..1
   leverageLeft: LEVERAGE_BUDGET,
+  advisorUsed: false, // one consult per run
+  epilogues: [],      // "six months on" callbacks earned by choices
   log: [],
 };
+
+// a seat condition matches when the actor seated on that topic is in anyOf
+function seatMatch(cond) {
+  return !!cond && cond.anyOf.includes(state.assignments[cond.topic]);
+}
 
 /* ================= TITLE / BRIEFING ================= */
 function renderBrief() {
@@ -239,14 +246,43 @@ function updateMeters(deltas) {
   });
 }
 
+/* danger: talks collapse when trust or China buy-in hits zero — telegraph it */
+function updateDangerState() {
+  let anyDanger = false;
+  ['trust', 'chinaBuyin'].forEach(k => {
+    const cell = document.querySelector(`#meters .meter[data-k="${k}"]`);
+    const danger = state.meters[k] > 8 && state.meters[k] <= 25;
+    if (cell) cell.classList.toggle('danger', danger);
+    anyDanger = anyDanger || danger;
+  });
+  const w = $('talks-warning');
+  if (w) w.classList.toggle('on', anyDanger);
+}
+
 /* ================= PHASE B — TALKS ================= */
 const ROUNDS = 7;
 function buildDeck() {
-  const all = shuffle(DATA.scenarios);
+  // conditional scenarios only enter the deck when their seat condition holds
+  const pool = DATA.scenarios.filter(s => !s.appearsIf || seatMatch(s.appearsIf));
+  const all = shuffle(pool);
   state.deck = all.slice(0, Math.min(ROUNDS, all.length));
   state.deckPos = 0;
   state.collapsed = false;
+  state.advisorUsed = false;
+  state.epilogues = [];
   state.log = [];
+}
+
+// options can be gated on who is actually in the room
+function visibleOptions(s) {
+  return s.options.filter(o => !o.requiresSeat || seatMatch(o.requiresSeat));
+}
+// effective effects = base + seat bonus when the right counterpart is seated
+function effectiveEffects(option) {
+  const out = {};
+  const bonus = option.seatBonus && seatMatch(option.seatBonus) ? option.seatBonus.effects : null;
+  METER_KEYS.forEach(k => { out[k] = (option.effects[k] || 0) + (bonus ? (bonus[k] || 0) : 0); });
+  return out;
 }
 
 function renderScenario() {
@@ -284,27 +320,60 @@ function renderScenario() {
 
   const opts = $('options');
   opts.innerHTML = '';
-  s.options.forEach((o, i) => {
+  visibleOptions(s).forEach((o, i) => {
     const b = document.createElement('button');
     b.className = 'option';
     b.dataset.key = String.fromCharCode(65 + i);
-    b.textContent = o.label;
+    let extra = '';
+    if (o.requiresSeat) {
+      const who = actorById[state.assignments[o.requiresSeat.topic]];
+      extra += `<span class="opt-badge gated">Unlocked: ${who ? who.name : ''} is in the room</span>`;
+    } else if (o.seatBonus && seatMatch(o.seatBonus)) {
+      extra += `<span class="opt-badge boosted">Counterpart advantage</span>`;
+    }
+    b.innerHTML = `${o.label}${extra}<span class="forecast" hidden></span>`;
     b.addEventListener('click', () => chooseOption(s, o));
     opts.appendChild(b);
   });
+
+  // advisor: one consult per run reveals each option's forecast
+  const adv = $('advisor-btn');
+  adv.disabled = state.advisorUsed;
+  adv.textContent = state.advisorUsed ? '☏ China hands consulted' : '☏ Consult the China hands';
+  adv.onclick = () => {
+    if (state.advisorUsed) return;
+    state.advisorUsed = true;
+    adv.disabled = true;
+    adv.textContent = '☏ China hands consulted';
+    const vis = visibleOptions(s);
+    document.querySelectorAll('#options .option .forecast').forEach((f, i) => {
+      const eff = effectiveEffects(vis[i]);
+      f.innerHTML = METER_KEYS.map(k => {
+        const d = eff[k];
+        const cls = d > 0 ? 'up' : d < 0 ? 'down' : 'zero';
+        return `<span class="delta ${cls}">${DATA.copy.meters[k].short} ${d > 0 ? '+' : ''}${d}</span>`;
+      }).join('');
+      f.hidden = false;
+    });
+    audio.click();
+  };
 }
 
 function chooseOption(scenario, option) {
+  const eff = effectiveEffects(option);
+  const bonusApplied = option.seatBonus && seatMatch(option.seatBonus);
   const deltas = {};
   METER_KEYS.forEach(k => {
-    const d = option.effects[k] || 0;
-    deltas[k] = d;
-    state.meters[k] = Math.round(clamp(state.meters[k] + d));
+    deltas[k] = eff[k];
+    state.meters[k] = Math.round(clamp(state.meters[k] + eff[k]));
   });
   state.log.push({ scenario: scenario.title, choice: option.label });
+  if (option.epilogue) state.epilogues.push(option.epilogue);
+  if (option.reseat) state.assignments[option.reseat.topic] = option.reseat.actor;
   const net = METER_KEYS.reduce((s, k) => s + deltas[k], 0);
   audio.blip(net);
   updateMeters(deltas);
+  updateDangerState();
 
   // feedback
   $('scenario-card').classList.add('hide');
@@ -316,11 +385,17 @@ function chooseOption(scenario, option) {
     const sign = d > 0 ? '+' : '';
     return `<span class="delta ${cls}">${DATA.copy.meters[k].short} ${sign}${d}</span>`;
   }).join('');
-  $('feedback-text').innerHTML = `<span class="chosen">&ldquo;${option.label}&rdquo;</span>${option.feedback}`;
+  let fb = option.feedback;
+  if (bonusApplied) fb += ` <span class="seat-note">${option.seatBonus.note}</span>`;
+  if (option.reseat) {
+    const who = actorById[option.reseat.actor];
+    fb += ` <span class="seat-note">From the next session, ${who.name} holds the seat.</span>`;
+  }
+  $('feedback-text').innerHTML = `<span class="chosen">&ldquo;${option.label}&rdquo;</span>${fb}`;
   fc.classList.add('on');
 
-  // collapse check
-  if (state.meters.trust <= 0 || state.meters.chinaBuyin <= 0) {
+  // collapse check — single digits on trust or buy-in means a walkout
+  if (state.meters.trust <= 8 || state.meters.chinaBuyin <= 8) {
     state.collapsed = true;
     $('next-btn').textContent = 'See what happened →';
   } else {
@@ -358,10 +433,10 @@ function pickEnding() {
   if (m.trust >= 68 && m.progress <= 45) return { ...E.vibes, total, tier: 'c' };
   if (m.chinaBuyin >= 65 && m.usBacking <= 38) return { ...E.lonely, total, tier: 'c' };
 
-  if (total >= 78 && m.chinaBuyin >= 55 && m.trust >= 50) return { ...E.breakthrough, total, tier: 'a' };
-  if (total >= 62) return { ...E.working, total, tier: 'b' };
-  if (total >= 48) return { ...E.stalemate, total, tier: 'c' };
-  if (total >= 34) return { ...E.adjourn, total, tier: 'd' };
+  if (total >= 85 && m.chinaBuyin >= 60 && m.trust >= 55) return { ...E.breakthrough, total, tier: 'a' };
+  if (total >= 72) return { ...E.working, total, tier: 'b' };
+  if (total >= 58) return { ...E.stalemate, total, tier: 'c' };
+  if (total >= 45) return { ...E.adjourn, total, tier: 'd' };
   return { ...E.recrimination, total, tier: 'f' };
 }
 
@@ -403,20 +478,69 @@ function toReadout() {
   st.classList.add('on');
   $('statement').innerHTML = buildStatement(ending);
   renderMeters('readout-meters');
+  animateReadoutMeters();
+
+  // six months on — callbacks earned by specific choices
+  const ep = $('epilogues');
+  if (state.epilogues.length) {
+    const picks = state.epilogues.slice(-4);
+    ep.innerHTML = `<div class="ep-head">Six months on</div>` +
+      picks.map(e => `<p class="ep-line">${e}</p>`).join('');
+    ep.style.display = '';
+  } else {
+    ep.style.display = 'none';
+  }
+
+  // the record — your cable trail
+  const rec = $('record');
+  if (state.log.length) {
+    rec.innerHTML = `<div class="ep-head">The record</div>` +
+      state.log.map((l, i) =>
+        `<div class="rec-row"><span class="rec-n">${i + 1}</span><span class="rec-s">${l.scenario}</span><span class="rec-c">${l.choice}</span></div>`
+      ).join('');
+    rec.style.display = '';
+  } else {
+    rec.style.display = 'none';
+  }
+
   $('readout-credit').innerHTML = DATA.copy.outroCredit;
   state.lastEnding = ending;
   showScreen('screen-readout');
   audio.stinger(ending.tier);
 }
 
+/* count the readout meters up from zero — a little epilogue drama */
+function animateReadoutMeters() {
+  const DUR = 900;
+  METER_KEYS.forEach(k => {
+    const fill = document.querySelector(`#readout-meters [data-fill="${k}"]`);
+    const val = document.querySelector(`#readout-meters [data-val="${k}"]`);
+    if (!fill || !val) return;
+    const target = state.meters[k];
+    fill.style.transition = 'none';
+    fill.style.width = '0%';
+    val.textContent = '0';
+    const t0 = performance.now();
+    (function step(t) {
+      const p = Math.min(1, (t - t0) / DUR);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const v = Math.round(target * eased);
+      fill.style.width = v + '%';
+      val.textContent = v;
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  });
+}
+
 function copyResult() {
   const e = state.lastEnding;
   const m = state.meters;
+  const ep = state.epilogues.length ? `\nSix months on: ${state.epilogues[state.epilogues.length - 1]}` : '';
   const txt =
 `TRACK ONE — U.S.–China AI Diplomacy
 Result: ${e.name} (${e.gradeLabel}, ${e.total}/100)
-Trust ${m.trust} · Progress ${m.progress} · U.S. backing ${m.usBacking} · China buy-in ${m.chinaBuyin}
-Play: based on Matt Sheehan, "Who should the U.S. talk to in China on AI?"`;
+Trust ${m.trust} · Progress ${m.progress} · U.S. backing ${m.usBacking} · China buy-in ${m.chinaBuyin}${ep}
+Play: inspired by Matt Sheehan, "Who should the U.S. talk to in China on AI?"`;
   navigator.clipboard?.writeText(txt).then(showToast, showToast);
 }
 
@@ -459,6 +583,7 @@ function startFutures() {
   state.fPos = 0;
   state.fScore = 0;
   state.fMax = 0;
+  state.fLog = [];
   renderFuture();
   showScreen('screen-futures');
 }
@@ -523,6 +648,7 @@ function nextFQ() {
 
 function showRead() {
   const f = state.fDeck[state.fPos];
+  state.fLog.push({ name: f.name, score: state.curScore, max: state.curMax });
   $('read-name').textContent = f.name;
   $('read-grid').innerHTML = [
     ['The technology', f.read.impact],
@@ -548,7 +674,13 @@ function futuresDebrief() {
   const badge = $('analyst-badge');
   badge.className = 'grade-badge tier-' + tier.badge.toLowerCase();
   badge.textContent = `${tier.badge} · ${Math.round(acc * 100)}% read accuracy`;
-  $('analyst-blurb').innerHTML = `<p>${tier.blurb}</p><p>You scored <b>${state.fScore} of ${state.fMax}</b> across ${state.fDeck.length} possible 2031s — reading what each bureaucratic shift implied about AI's impact and how Beijing chose to deal with it.</p>`;
+  const rows = (state.fLog || []).map(r => {
+    const pct = r.max ? r.score / r.max : 0;
+    const cls = pct >= 0.84 ? 'ideal' : pct >= 0.5 ? 'ok' : 'poor';
+    return `<div class="rec-row"><span class="rec-s">${r.name}</span><span class="rec-c">${r.score}/${r.max}</span><span class="pick-grade ${cls}">${pct >= 0.84 ? 'Sharp' : pct >= 0.5 ? 'Mixed' : 'Misread'}</span></div>`;
+  }).join('');
+  $('analyst-blurb').innerHTML = `<p>${tier.blurb}</p><p>You scored <b>${state.fScore} of ${state.fMax}</b> across ${state.fDeck.length} possible 2031s — reading what each bureaucratic shift implied about AI's impact and how Beijing chose to deal with it.</p>` +
+    (rows ? `<div class="record" style="margin-top:1rem"><div class="ep-head">Future by future</div>${rows}</div>` : '');
   $('futures-credit').innerHTML = DATA.copy.futuresCredit;
   audio.stinger(tier.badge.toLowerCase());
   showScreen('screen-futures-debrief');

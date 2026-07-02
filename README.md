@@ -49,11 +49,20 @@ A playable gloss on Matt Sheehan's essay of the same question. Three phases:
 **who's in the room?** (you don't pick China's delegation — Beijing fields its
 comfortable, face-saving default, and you spend limited *leverage* to pull the
 real power-holders into the room; the powerful, closed orgs cost the most),
-**the negotiation** (grounded dilemmas that move four meters: Trust, Progress,
-U.S. Backing, China Buy-In), and **the readout** (a procedurally assembled joint
-statement + grade). The scoring encodes the essay's thesis — *progress only
-counts if someone powerful can deliver it* — and the staffing phase encodes its
-caveat: *you don't get to choose your counterparts; China does.*
+**the negotiation** (a deck of 15 grounded dilemmas — 7 drawn per run — that
+move four meters: Trust, Progress, U.S. Backing, China Buy-In), and **the
+readout** (a procedurally assembled joint statement, a diplomatic stamp, and
+"six months on" epilogues earned by your specific choices). The scoring encodes
+the essay's thesis — *progress only counts if someone powerful can deliver it* —
+and the staffing phase encodes its caveat: *you don't get to choose your
+counterparts; China does.*
+
+Phase A ripples through Phase B mechanically: options unlock or strengthen
+depending on who you pulled into the room ("Because TC260 is in the room…"),
+some events only fire for certain delegations (cheap out on the lead and
+Beijing reopens the question mid-talks), and a few choices *reseat the table*
+for the rest of the run. One "consult the China hands" per run reveals the
+forecast behind each option. A–D / 1–4 and Enter play it from the keyboard.
 
 A second mode, **+5 Years: Read the Tells**, inverts the exercise: instead of
 choosing counterparts, you're shown a reshuffled 2031 org chart and have to

@@ -138,148 +138,820 @@ export const DATA = {
    * Effects are {trust, progress, usBacking, chinaBuyin}, each −20…+20.
    * Every option sits on the Pareto frontier — no choice strictly dominates. */
   scenarios: [
-    { id: 'who-leads', title: 'Who Sits at the Head of the Table', relatedTopic: 'lead',
-      situation: "Beijing proposes the delegation be led, as in 2024, by the MFA's Department of North American and Oceanian Affairs — smooth, English-speaking, used to managing Americans. Your China hands note that desk handles the relationship, not the substance: it can host you beautifully and decide nothing. The article's preferred lead is the MFA's Department of Arms Control, whose chief actually holds the title 'coordinator for AI affairs' — or, better still, the NDRC.",
-      options: [
-        { label: 'Accept the North America Desk as lead — keep the channel warm.',
-          effects: { trust: 10, progress: 2, usBacking: 3, chinaBuyin: -8 },
-          feedback: "The most comfortable counterpart is the one organized to manage you, not to deliver. You will have lovely meetings about nothing." },
-        { label: "Insist the Arms Control Dept — the 'coordinator for AI affairs' — take the lead.",
-          effects: { trust: -5, progress: 8, usBacking: 4, chinaBuyin: 7 },
-          feedback: "Routing through the actual AI coordinator is the article's upgrade — friction now, but you're at least talking to the title that owns the file." },
-        { label: 'Push for the NDRC to lead, given its cross-ministry mandate.',
-          effects: { trust: -9, progress: 6, usBacking: -3, chinaBuyin: 14 },
-          feedback: "The NDRC coordinates AI policy across ministries and is tied to He Lifeng — but it doesn't do diplomacy, and demanding it spooks the people who do." },
-        { label: 'Keep the MFA out front, seat the NDRC as substantive co-chair.',
-          effects: { trust: 8, progress: 6, usBacking: 4, chinaBuyin: 5 },
-          feedback: "Diplomats run the room, the coordinator owns the substance — the article's pragmatic middle. Two seats, one awkward handoff." },
-      ] },
-
-    { id: 'treasury-channel', title: 'The Treasury Parallel', relatedTopic: 'policy',
-      situation: "Secretary Bessent's standing counterpart is He Lifeng — Vice Premier, Politburo member, former NDRC chair, the man who runs the CFEAC office. Liao Min, the MOF vice minister who helped set up this dialogue, quietly suggests anchoring AI in the economic channel, Finance-to-Treasury, where the relationship already works. Your AI staff worry the file gets swallowed by tariffs and capital flows.",
-      options: [
-        { label: 'Anchor the dialogue in the Bessent–He Lifeng economic channel.',
-          effects: { trust: 6, progress: -3, usBacking: 8, chinaBuyin: 13 },
-          feedback: "He Lifeng can actually deliver — that's the whole point — but pour AI into the economic channel and it competes with everything Treasury already fights about." },
-        { label: 'Use Liao Min as a coordinating side-channel; keep AI on its own track.',
-          effects: { trust: 7, progress: 6, usBacking: 5, chinaBuyin: 4 },
-          feedback: "A Finance-to-Treasury back channel for plumbing, a dedicated track for substance. Tidy — if both halves actually talk to each other." },
-        { label: 'Decline; keep AI insulated from the economic relationship entirely.',
-          effects: { trust: -2, progress: 5, usBacking: 7, chinaBuyin: -9 },
-          feedback: "Your own side likes keeping AI clear of trade concessions — but you forfeit your only proven line to someone with Politburo-level clout." },
-      ] },
-
-    { id: 'cac-testing', title: "Whose Definition of 'Testing'", relatedTopic: 'testing',
-      situation: "On frontier-model testing the article's pick is clear: the CAC and its bodies TC260 (the WG9 safety working group) and CNCERT, who built China's mandatory registration and pre-deployment testing. But across the table the CAC keeps steering 'safety' back to content security — political risk, lawful speech, information control — not the cross-border catastrophic risks you came to discuss.",
-      options: [
-        { label: 'Engage the CAC on its terms; accept the content-security framing for now.',
-          effects: { trust: 9, progress: -4, usBacking: -3, chinaBuyin: 8 },
-          feedback: "You get the right office and the wrong subject. Their 'testing' is about what a model says, not whether it helps build a weapon." },
-        { label: "Reframe around TC260's WG9 and Framework 2.0 — frontier risk specifically.",
-          effects: { trust: 3, progress: 11, usBacking: 5, chinaBuyin: 4 },
-          feedback: "Anchor on the new AI-safety working group and the shared framework, and 'safety' starts to mean the thing you both actually fear." },
-        { label: "Push past the CAC toward MIIT's technical testing bodies instead.",
-          effects: { trust: -6, progress: 12, usBacking: 4, chinaBuyin: -7 },
-          feedback: "CAICT and the standards labs do the real evaluation work — but the CAC is the office wired to power, and going around it is noticed." },
-      ] },
-
-    { id: 'binding-vs-best-practice', title: 'Binding Commitments or Best Practices', relatedTopic: 'testing',
-      situation: "The article's most promising topic is sharing best practices on testing models for mutual, border-crossing threats. Your principals want something signable — a binding commitment — to show the summit produced more than talk. The Chinese side will trade information freely but stiffens the moment 'binding' or 'verification' appears.",
-      options: [
-        { label: 'Hold out for a binding, verifiable testing commitment.',
-          effects: { trust: -10, progress: 9, usBacking: 6, chinaBuyin: -8 },
-          feedback: "Binding is what your bosses want and what theirs cannot give early. You may win the clause and lose the room." },
-        { label: 'Settle for a structured best-practice exchange on cross-border threats.',
-          effects: { trust: 11, progress: 7, usBacking: -4, chinaBuyin: 3 },
-          feedback: "The article's actual recommendation: start where information flows. Modest, durable, and easy to mock back home as 'just talking.'" },
-        { label: 'Spend domestic backing to upgrade best-practice into a pilot with milestones.',
-          effects: { trust: 4, progress: 8, usBacking: -9, chinaBuyin: 9 },
-          feedback: "Leverage: burn political capital to harden a soft win into something with deliverables. Expensive, but it gives the thing teeth." },
-      ] },
-
-    { id: 'party-vs-state', title: 'Party Bodies or Comfortable Ministries', relatedTopic: 'policy',
-      situation: "Here is the central tension in one decision. The state ministries — MFA, MOST, MIIT — are experienced, available, and pleasant to deal with, but real authority increasingly sits in Party commissions: the Central Cyberspace Affairs Commission (now chaired by Cai Qi, Xi's chief of staff), the CSTC, the CFEAC. You can keep talking to people who pick up the phone, or chase the people who actually decide.",
-      options: [
-        { label: 'Work the state ministries — engage-able, experienced, willing.',
-          effects: { trust: 12, progress: 6, usBacking: 2, chinaBuyin: -10 },
-          feedback: "Easy to convene, light on clout. You'll have a productive dialogue with people who must phone someone else to agree to anything." },
-        { label: 'Press for visibility into the Party commissions where power sits.',
-          effects: { trust: -8, progress: 4, usBacking: 3, chinaBuyin: 14 },
-          feedback: "Reaching toward Cai Qi's commission touches real authority — and powerful actors spook when foreigners reach for them too directly." },
-        { label: 'Layer it: ministries at the table, a quiet Party-channel above.',
-          effects: { trust: 5, progress: 5, usBacking: -5, chinaBuyin: 8 },
-          feedback: "The realistic compromise — work the willing, signal to the powerful. It costs capital to run two tracks and trust neither fully." },
-      ] },
-
-    { id: 'most-trajectory', title: "A Back Channel to the Leadership's Ear", relatedTopic: 'science',
-      situation: "MOST is no longer a frontline regulator, but after the 2023 reorg it houses the office of the revived Central Science and Technology Commission, chaired by Ding Xuexiang. Its job now is advising top leadership on where the technology is going. You could use MOST less to negotiate and more to put a sober reading of AI's long-run trajectory — and its catastrophic tails — in front of people who matter.",
-      options: [
-        { label: 'Use MOST as a quiet channel to brief leadership on long-run risk.',
-          effects: { trust: 8, progress: 5, usBacking: 1, chinaBuyin: 9 },
-          feedback: "MOST can't sign much, but via the CSTC it whispers to the people who can. A long bet on shifting how the top understands the stakes." },
-        { label: 'Treat MOST as a working partner on concrete science cooperation.',
-          effects: { trust: 10, progress: 7, usBacking: -2, chinaBuyin: -3 },
-          feedback: "Real, friendly, technically rich — and largely indirect to power now. Good science, modest leverage on governance." },
-        { label: "Pass — MOST's regulatory role is gone; don't overinvest.",
-          effects: { trust: -4, progress: -2, usBacking: 4, chinaBuyin: -5 },
-          feedback: "You save your bandwidth and forfeit the one apolitical line into the leadership's understanding of the science. Efficient, maybe shortsighted." },
-      ] },
-
-    { id: 'mss-cyber', title: 'The Spies in the Testing Room', relatedTopic: 'testing',
-      situation: "When the conversation reaches testing models for cyber-vulnerability exploitation, the Chinese side indicates the Ministry of State Security — its foreign intelligence service — would have to be involved, since cyber threat assessment is partly their turf. Sharing how you red-team models for offensive cyber capability with an intelligence service is exactly the kind of thing that makes your own agencies nervous.",
-      options: [
-        { label: 'Accept the MSS at the table for cyber-vuln testing discussions.',
-          effects: { trust: 6, progress: 8, usBacking: -11, chinaBuyin: 7 },
-          feedback: "On cyber, the spies are unavoidable — but inviting the MSS in burns interagency goodwill back home faster than almost anything else you can do." },
-        { label: 'Wall off cyber-vuln testing; keep it to civilian safety bodies only.',
-          effects: { trust: -5, progress: -4, usBacking: 9, chinaBuyin: -3 },
-          feedback: "Your agencies sleep better and the most operationally relevant testing topic stays off the table. Safe, and a little hollow." },
-        { label: 'Propose abstracted methodology-sharing — no live vulnerabilities, no MSS.',
-          effects: { trust: 4, progress: 5, usBacking: 3, chinaBuyin: -2 },
-          feedback: "Talk about how you test, never what you find. Threads the needle, and skeptics on both sides will call it security theater." },
-      ] },
-
-    { id: 'cnaisda-aisi', title: 'Is the CnAISDA an AISI?', relatedTopic: 'science',
-      situation: "Beijing offers the China AI Safety and Development Association as its node opposite your CAISI and the UK AISI — launched with fanfare at the 2025 Paris summit, fronted by names like Andrew Yao and Xue Lan. Your staff flag that it's an 'association' of existing bodies under the NDRC, not a real institute with its own mandate, staff, or testing capacity. Treating it as a peer would be a category error; refusing the only thing on offer leaves you with no counterpart node at all.",
-      options: [
-        { label: 'Accept the CnAISDA as the formal AISI counterpart.',
-          effects: { trust: 10, progress: -6, usBacking: -7, chinaBuyin: 4 },
-          feedback: "You get a named partner and a photo. You also legitimize an association-of-associations as the equal of an institute that actually tests models." },
-        { label: 'Engage it pragmatically without granting peer-institute status.',
-          effects: { trust: 4, progress: 6, usBacking: 3, chinaBuyin: 2 },
-          feedback: "Use it as a convening shell while reaching the real bodies inside it — Shanghai AI Lab, CAICT. Honest about what it is, useful for what it can pass along." },
-        { label: 'Insist on a true testing institute or no AISI-track at all.',
-          effects: { trust: -8, progress: 2, usBacking: 6, chinaBuyin: -6 },
-          feedback: "You hold the line on what 'institute' means and may get nothing for it — China's AISI doesn't exist to be insisted into being." },
-      ] },
-
-    { id: 'miit-applications', title: 'Standards Where the Products Are', relatedTopic: 'applications',
-      situation: "On real-world applications and industry standards the article points to MIIT, which does much of the technical work behind the CAC's rules through bodies like CAICT, and is overseen by Vice Premier Zhang Guoqing — who led China's 2025 Paris delegation. MIIT is eager: standards cooperation is concrete, deliverable, and flattering to both sides. The risk is spending your limited time polishing interoperability specs while the governance questions that brought you here go untouched.",
-      options: [
-        { label: 'Lean into MIIT — build out applications and standards cooperation.',
-          effects: { trust: 9, progress: 8, usBacking: 6, chinaBuyin: -4 },
-          feedback: "Standards work is the easiest win in the building and the safest to show your bosses. It also quietly defines 'AI cooperation' downward." },
-        { label: "Use MIIT's Zhang Guoqing tie to elevate testing standards toward leadership.",
-          effects: { trust: 4, progress: 7, usBacking: 2, chinaBuyin: 9 },
-          feedback: "Zhang led Paris; routing standards through his shop links the technical work to a Vice Premier. Substance with an upward cable attached." },
-        { label: 'Keep MIIT narrow; reserve bandwidth for frontier-safety tracks.',
-          effects: { trust: -3, progress: 3, usBacking: 6, chinaBuyin: -2 },
-          feedback: "You decline the easy deliverable to protect the hard one. Disciplined — and you may go home with neither if the hard track stalls." },
-      ] },
-
-    { id: 'international-mfa', title: 'Bilateral, or Punt to the UN', relatedTopic: 'international',
-      situation: "On multilateral governance the MFA and the Central Foreign Affairs Commission push to frame AI cooperation through global forums — China's Global AI Governance Initiative, the UN track, the next big summit. It's where the MFA is strongest and most comfortable. But the article is blunt that the most important AI-governance actions are domestic, not bilateral, and that diffusing this dialogue into multilateral process is a way to look busy while committing to nothing.",
-      options: [
-        { label: 'Embrace the multilateral frame — work it through the MFA and CFAC.',
-          effects: { trust: 11, progress: -5, usBacking: -4, chinaBuyin: 2 },
-          feedback: "The most diplomatic move and the least consequential. Everyone signs a communiqué about future communiqués; no model gets tested." },
-        { label: 'Keep it bilateral and concrete; treat multilateral as garnish.',
-          effects: { trust: -6, progress: 9, usBacking: 7, chinaBuyin: 3 },
-          feedback: "You hold the dialogue to things that bite, which the article favors — at the cost of the warm multilateral optics China prefers." },
-        { label: 'Trade a multilateral gesture for a concrete bilateral testing pilot.',
-          effects: { trust: 6, progress: 6, usBacking: -3, chinaBuyin: 6 },
-          feedback: "Give them the summit photo, take home the pilot. Horse-trading optics for substance — provided they actually deliver the substance." },
-      ] },
+    {
+      "id": "lead-walkback",
+      "title": "The Convener Who Cannot Decide",
+      "situation": "Midway through the talks it is unmistakable: the Finance-led delegation is gracious, punctual, and empty-handed. The MOF has little direct role in AI, and every substantive question — testing, compute, standards — is deferred upward to ministries not in the room. Liao Min, the vice minister who helped set this dialogue up, hints privately that the lead question could be reopened. For a price.",
+      "relatedTopic": "lead",
+      "appearsIf": {
+        "topic": "lead",
+        "anyOf": [
+          "mof"
+        ]
+      },
+      "options": [
+        {
+          "label": "Live with the Finance lead — the channel works, even if the file doesn't.",
+          "effects": {
+            "trust": 9,
+            "progress": -6,
+            "usBacking": 2,
+            "chinaBuyin": -4
+          },
+          "feedback": "The Ministry of Finance has little direct role in AI; the Treasury parallel makes it a fine convener and a poor decider. You keep the warmth and watch the substance stall.",
+          "epilogue": "Six months on, the Finance channel still convenes punctually; every AI question remains 'referred to the competent departments.'"
+        },
+        {
+          "label": "Push mid-stream to hand the gavel to MFA Arms Control — the 'coordinator for AI affairs.'",
+          "effects": {
+            "trust": -4,
+            "progress": 7,
+            "usBacking": 3,
+            "chinaBuyin": 5
+          },
+          "feedback": "The Arms Control chief actually holds the 'coordinator for AI affairs' title — a real upgrade on a Finance convener, and one Beijing can grant without losing face. The diplomats stay light on domestic clout.",
+          "reseat": {
+            "topic": "lead",
+            "actor": "mfa_arms"
+          },
+          "epilogue": "Six months on, the Arms Control chief runs a real agenda — and phones other ministries for permission slightly less often than feared."
+        },
+        {
+          "label": "Go over their heads: have Bessent raise it with He Lifeng and demand the NDRC chair.",
+          "effects": {
+            "trust": -11,
+            "progress": 5,
+            "usBacking": -2,
+            "chinaBuyin": 14
+          },
+          "feedback": "He Lifeng — Vice Premier, ex-NDRC chair, Bessent's standing counterpart — can actually reseat the table, and the NDRC under his protégé Zheng Shanjie is the coordinator you wanted. Going over the delegation's head buys clout and burns face.",
+          "reseat": {
+            "topic": "lead",
+            "actor": "ndrc"
+          },
+          "epilogue": "Six months on, the NDRC chairs the talks; two ministries still resent how it happened, but decisions now survive the trip upstairs."
+        }
+      ]
+    },
+    {
+      "id": "treasury-channel",
+      "title": "The Treasury Parallel",
+      "relatedTopic": "policy",
+      "situation": "Secretary Bessent's standing counterpart is He Lifeng — Vice Premier, Politburo member, former NDRC chair, the man who runs the CFEAC office. Liao Min, the MOF vice minister who helped set up this dialogue, quietly suggests anchoring AI in the economic channel, Finance-to-Treasury, where the relationship already works. Your AI staff worry the file gets swallowed by tariffs and capital flows.",
+      "options": [
+        {
+          "label": "Anchor the dialogue in the Bessent–He Lifeng economic channel.",
+          "effects": {
+            "trust": 6,
+            "progress": -3,
+            "usBacking": 8,
+            "chinaBuyin": 13
+          },
+          "feedback": "He Lifeng can actually deliver — that's the whole point — but pour AI into the economic channel and it competes with everything Treasury already fights about.",
+          "epilogue": "The AI file survives as item nine on the economic agenda, discussed after tariffs, briefly, twice a year.",
+          "seatBonus": {
+            "topic": "lead",
+            "anyOf": [
+              "ndrc"
+            ],
+            "effects": {
+              "trust": 0,
+              "progress": 2,
+              "usBacking": 0,
+              "chinaBuyin": 4
+            },
+            "note": "With the NDRC — He Lifeng's old shop — leading the delegation, the economic channel and the AI file finally share a boss."
+          }
+        },
+        {
+          "label": "Use Liao Min as a coordinating side-channel; keep AI on its own track.",
+          "effects": {
+            "trust": 7,
+            "progress": 6,
+            "usBacking": 5,
+            "chinaBuyin": 4
+          },
+          "feedback": "A Finance-to-Treasury back channel for plumbing, a dedicated track for substance. Tidy — if both halves actually talk to each other.",
+          "epilogue": "Liao Min's back channel schedules everything and decides nothing — which, both sides eventually admit, is exactly what it was for."
+        },
+        {
+          "label": "Decline; keep AI insulated from the economic relationship entirely.",
+          "effects": {
+            "trust": -2,
+            "progress": 5,
+            "usBacking": 7,
+            "chinaBuyin": -9
+          },
+          "feedback": "Your own side likes keeping AI clear of trade concessions — but you forfeit your only proven line to someone with Politburo-level clout.",
+          "epilogue": "AI stays clean of the trade file. It also stays off He Lifeng's desk, which turns out to be the same drawer."
+        }
+      ]
+    },
+    {
+      "id": "cac-testing",
+      "title": "Whose Definition of 'Testing'",
+      "relatedTopic": "testing",
+      "situation": "On frontier-model testing the article's pick is clear: the CAC and its bodies TC260 (the WG9 safety working group) and CNCERT, who built China's mandatory registration and pre-deployment testing. But across the table the CAC keeps steering 'safety' back to content security — political risk, lawful speech, information control — not the cross-border catastrophic risks you came to discuss.",
+      "options": [
+        {
+          "label": "Engage the CAC on its terms; accept the content-security framing for now.",
+          "effects": {
+            "trust": 9,
+            "progress": -4,
+            "usBacking": -3,
+            "chinaBuyin": 8
+          },
+          "feedback": "You get the right office and the wrong subject. Their 'testing' is about what a model says, not whether it helps build a weapon.",
+          "epilogue": "The joint testing glossary runs forty pages; thirty-one concern what models may say. Weapons uplift appears once, in a footnote."
+        },
+        {
+          "label": "Reframe around TC260's WG9 and Framework 2.0 — frontier risk specifically.",
+          "effects": {
+            "trust": 3,
+            "progress": 11,
+            "usBacking": 5,
+            "chinaBuyin": 4
+          },
+          "feedback": "Anchor on the new AI-safety working group and the shared framework, and 'safety' starts to mean the thing you both actually fear.",
+          "epilogue": "WG9 and your evaluators now trade red-team taxonomies quarterly. Nobody announces it, which is how you know it is real.",
+          "seatBonus": {
+            "topic": "testing",
+            "anyOf": [
+              "tc260",
+              "cncert",
+              "cac"
+            ],
+            "effects": {
+              "trust": 0,
+              "progress": 4,
+              "usBacking": 0,
+              "chinaBuyin": 2
+            },
+            "note": "With WG9's machinery — or its parent regulator — in the room, the Framework 2.0 reframe lands on familiar paper."
+          }
+        },
+        {
+          "label": "Push past the CAC toward MIIT's technical testing bodies instead.",
+          "effects": {
+            "trust": -6,
+            "progress": 12,
+            "usBacking": 4,
+            "chinaBuyin": -7
+          },
+          "feedback": "CAICT and the standards labs do the real evaluation work — but the CAC is the office wired to power, and going around it is noticed.",
+          "epilogue": "CAICT's engineers are superb hosts. The CAC, bypassed, now requires that all future materials route through its office. All of them."
+        }
+      ]
+    },
+    {
+      "id": "binding-vs-best-practice",
+      "title": "Binding Commitments or Best Practices",
+      "relatedTopic": "testing",
+      "situation": "The article's most promising topic is sharing best practices on testing models for mutual, border-crossing threats. Your principals want something signable — a binding commitment — to show the summit produced more than talk. The Chinese side will trade information freely but stiffens the moment 'binding' or 'verification' appears.",
+      "options": [
+        {
+          "label": "Hold out for a binding, verifiable testing commitment.",
+          "effects": {
+            "trust": -10,
+            "progress": 9,
+            "usBacking": 6,
+            "chinaBuyin": -8
+          },
+          "feedback": "Binding is what your bosses want and what theirs cannot give early. You may win the clause and lose the room.",
+          "epilogue": "The draft commitment is on its fourth adjective. 'Binding' left in round two; 'verifiable' is under review; the annex remains bracketed."
+        },
+        {
+          "label": "Settle for a structured best-practice exchange on cross-border threats.",
+          "effects": {
+            "trust": 11,
+            "progress": 7,
+            "usBacking": -4,
+            "chinaBuyin": 3
+          },
+          "feedback": "The article's actual recommendation: start where information flows. Modest, durable, and easy to mock back home as 'just talking.'",
+          "epilogue": "The best-practice exchange has met three times and shipped two joint checklists. A Senate hearing calls it 'a book club.' It keeps meeting."
+        },
+        {
+          "label": "Spend domestic backing to upgrade best-practice into a pilot with milestones.",
+          "effects": {
+            "trust": 4,
+            "progress": 8,
+            "usBacking": -9,
+            "chinaBuyin": 9
+          },
+          "feedback": "Leverage: burn political capital to harden a soft win into something with deliverables. Expensive, but it gives the thing teeth.",
+          "epilogue": "The pilot has milestones, a shared spreadsheet, and one missed deadline each side blames on translation. It is, technically, alive."
+        }
+      ]
+    },
+    {
+      "id": "party-vs-state",
+      "title": "Party Bodies or Comfortable Ministries",
+      "relatedTopic": "policy",
+      "situation": "Here is the central tension in one decision. The state ministries — MFA, MOST, MIIT — are experienced, available, and pleasant to deal with, but real authority increasingly sits in Party commissions: the Central Cyberspace Affairs Commission (now chaired by Cai Qi, Xi's chief of staff), the CSTC, the CFEAC. You can keep talking to people who pick up the phone, or chase the people who actually decide.",
+      "options": [
+        {
+          "label": "Work the state ministries — engage-able, experienced, willing.",
+          "effects": {
+            "trust": 12,
+            "progress": 6,
+            "usBacking": 2,
+            "chinaBuyin": -10
+          },
+          "feedback": "Easy to convene, light on clout. You'll have a productive dialogue with people who must phone someone else to agree to anything.",
+          "epilogue": "The ministerial working groups meet monthly and agree readily. Each agreement then goes upstairs, where it remains, as ever, 'under study.'"
+        },
+        {
+          "label": "Press for visibility into the Party commissions where power sits.",
+          "effects": {
+            "trust": -8,
+            "progress": 4,
+            "usBacking": 3,
+            "chinaBuyin": 14
+          },
+          "feedback": "Reaching toward Cai Qi's commission touches real authority — and powerful actors spook when foreigners reach for them too directly.",
+          "epilogue": "The Cyberspace Commission never appears, but written questions arrive from its office. Your analysts file this, carefully, under 'contact.'"
+        },
+        {
+          "label": "Layer it: ministries at the table, a quiet Party-channel above.",
+          "effects": {
+            "trust": 5,
+            "progress": 5,
+            "usBacking": -5,
+            "chinaBuyin": 8
+          },
+          "feedback": "The realistic compromise — work the willing, signal to the powerful. It costs capital to run two tracks and trust neither fully.",
+          "epilogue": "The quiet Party channel produced one meeting and one unsigned memo. The ministries pretend not to know about it; everyone knows."
+        }
+      ]
+    },
+    {
+      "id": "most-trajectory",
+      "title": "A Back Channel to the Leadership's Ear",
+      "relatedTopic": "science",
+      "situation": "MOST is no longer a frontline regulator, but after the 2023 reorg it houses the office of the revived Central Science and Technology Commission, chaired by Ding Xuexiang. Its job now is advising top leadership on where the technology is going. You could use MOST less to negotiate and more to put a sober reading of AI's long-run trajectory — and its catastrophic tails — in front of people who matter.",
+      "options": [
+        {
+          "label": "Use MOST as a quiet channel to brief leadership on long-run risk.",
+          "effects": {
+            "trust": 8,
+            "progress": 5,
+            "usBacking": 1,
+            "chinaBuyin": 9
+          },
+          "feedback": "MOST can't sign much, but via the CSTC it whispers to the people who can. A long bet on shifting how the top understands the stakes.",
+          "epilogue": "A MOST briefing on long-run risk reportedly reached the CSTC's summer agenda. What Ding Xuexiang made of it, nobody will say.",
+          "seatBonus": {
+            "topic": "science",
+            "anyOf": [
+              "most"
+            ],
+            "effects": {
+              "trust": 2,
+              "progress": 0,
+              "usBacking": 0,
+              "chinaBuyin": 4
+            },
+            "note": "With MOST itself in the room, the briefing travels to the CSTC office down its own hallway."
+          }
+        },
+        {
+          "label": "Treat MOST as a working partner on concrete science cooperation.",
+          "effects": {
+            "trust": 10,
+            "progress": 7,
+            "usBacking": -2,
+            "chinaBuyin": -3
+          },
+          "feedback": "Real, friendly, technically rich — and largely indirect to power now. Good science, modest leverage on governance.",
+          "epilogue": "Three joint workshops on the scientific trajectory, warmly reviewed, cited so far by no regulator on either side."
+        },
+        {
+          "label": "Pass — MOST's regulatory role is gone; don't overinvest.",
+          "effects": {
+            "trust": -4,
+            "progress": -2,
+            "usBacking": 4,
+            "chinaBuyin": -5
+          },
+          "feedback": "You save your bandwidth and forfeit the one apolitical line into the leadership's understanding of the science. Efficient, maybe shortsighted.",
+          "epilogue": "MOST reallocates its bandwidth elsewhere. Your one apolitical line into the leadership's reading of the science closes without ceremony."
+        }
+      ]
+    },
+    {
+      "id": "mss-cyber",
+      "title": "The Spies in the Testing Room",
+      "relatedTopic": "testing",
+      "situation": "When the conversation reaches testing models for cyber-vulnerability exploitation, the Chinese side indicates the Ministry of State Security — its foreign intelligence service — would have to be involved, since cyber threat assessment is partly their turf. Sharing how you red-team models for offensive cyber capability with an intelligence service is exactly the kind of thing that makes your own agencies nervous.",
+      "options": [
+        {
+          "label": "Accept the MSS at the table for cyber-vuln testing discussions.",
+          "effects": {
+            "trust": 6,
+            "progress": 8,
+            "usBacking": -11,
+            "chinaBuyin": 7
+          },
+          "feedback": "On cyber, the spies are unavoidable — but inviting the MSS in burns interagency goodwill back home faster than almost anything else you can do.",
+          "epilogue": "The MSS session happened, once, in a room with no notes taken. Two U.S. agencies still are not speaking to your office."
+        },
+        {
+          "label": "Wall off cyber-vuln testing; keep it to civilian safety bodies only.",
+          "effects": {
+            "trust": -5,
+            "progress": -4,
+            "usBacking": 9,
+            "chinaBuyin": -3
+          },
+          "feedback": "Your agencies sleep better and the most operationally relevant testing topic stays off the table. Safe, and a little hollow.",
+          "epilogue": "The civilian testing track hums along, carefully avoiding the one topic — cyber misuse — both governments actually lose sleep over."
+        },
+        {
+          "label": "Propose abstracted methodology-sharing — no live vulnerabilities, no MSS.",
+          "effects": {
+            "trust": 4,
+            "progress": 5,
+            "usBacking": 3,
+            "chinaBuyin": -2
+          },
+          "feedback": "Talk about how you test, never what you find. Threads the needle, and skeptics on both sides will call it security theater.",
+          "epilogue": "The methodology exchange produced a shared red-teaming lexicon. Skeptics call it theater; the technical staff on both sides keep using it.",
+          "seatBonus": {
+            "topic": "testing",
+            "anyOf": [
+              "cncert"
+            ],
+            "effects": {
+              "trust": 2,
+              "progress": 3,
+              "usBacking": 0,
+              "chinaBuyin": 0
+            },
+            "note": "With CNCERT — the cyber coordinator that co-wrote Framework 2.0 — in the room, methodology-sharing sounds less like theater and more like shop talk."
+          }
+        }
+      ]
+    },
+    {
+      "id": "cnaisda-aisi",
+      "title": "Is the CnAISDA an AISI?",
+      "relatedTopic": "science",
+      "situation": "Beijing offers the China AI Safety and Development Association as its node opposite your CAISI and the UK AISI — launched with fanfare at the 2025 Paris summit, fronted by names like Andrew Yao and Xue Lan. Your staff flag that it's an 'association' of existing bodies under the NDRC, not a real institute with its own mandate, staff, or testing capacity. Treating it as a peer would be a category error; refusing the only thing on offer leaves you with no counterpart node at all.",
+      "options": [
+        {
+          "label": "Accept the CnAISDA as the formal AISI counterpart.",
+          "effects": {
+            "trust": 10,
+            "progress": -6,
+            "usBacking": -7,
+            "chinaBuyin": 4
+          },
+          "feedback": "You get a named partner and a photo. You also legitimize an association-of-associations as the equal of an institute that actually tests models.",
+          "epilogue": "CnAISDA's letterhead now reads 'counterpart to CAISI.' Requests for joint model testing are referred, politely, to its member organizations."
+        },
+        {
+          "label": "Engage it pragmatically without granting peer-institute status.",
+          "effects": {
+            "trust": 4,
+            "progress": 6,
+            "usBacking": 3,
+            "chinaBuyin": 2
+          },
+          "feedback": "Use it as a convening shell while reaching the real bodies inside it — Shanghai AI Lab, CAICT. Honest about what it is, useful for what it can pass along.",
+          "epilogue": "The CnAISDA channel forwards your queries to Shanghai AI Lab and CAICT within days. A switchboard, as designed — and a working one."
+        },
+        {
+          "label": "Insist on a true testing institute or no AISI-track at all.",
+          "effects": {
+            "trust": -8,
+            "progress": 2,
+            "usBacking": 6,
+            "chinaBuyin": -6
+          },
+          "feedback": "You hold the line on what 'institute' means and may get nothing for it — China's AISI doesn't exist to be insisted into being.",
+          "epilogue": "There is still no Chinese AISI, and now no AISI track either. Insisting, your staff observe, did not build one."
+        }
+      ]
+    },
+    {
+      "id": "miit-applications",
+      "title": "Standards Where the Products Are",
+      "relatedTopic": "applications",
+      "situation": "On real-world applications and industry standards the article points to MIIT, which does much of the technical work behind the CAC's rules through bodies like CAICT, and is overseen by Vice Premier Zhang Guoqing — who led China's 2025 Paris delegation. MIIT is eager: standards cooperation is concrete, deliverable, and flattering to both sides. The risk is spending your limited time polishing interoperability specs while the governance questions that brought you here go untouched.",
+      "options": [
+        {
+          "label": "Lean into MIIT — build out applications and standards cooperation.",
+          "effects": {
+            "trust": 9,
+            "progress": 8,
+            "usBacking": 6,
+            "chinaBuyin": -4
+          },
+          "feedback": "Standards work is the easiest win in the building and the safest to show your bosses. It also quietly defines 'AI cooperation' downward.",
+          "epilogue": "Four interoperability standards initialed; MIIT calls the track a model of cooperation. Frontier safety awaits a working group 'to be scheduled.'"
+        },
+        {
+          "label": "Use MIIT's Zhang Guoqing tie to elevate testing standards toward leadership.",
+          "effects": {
+            "trust": 4,
+            "progress": 7,
+            "usBacking": 2,
+            "chinaBuyin": 9
+          },
+          "feedback": "Zhang led Paris; routing standards through his shop links the technical work to a Vice Premier. Substance with an upward cable attached.",
+          "epilogue": "A testing-standards memo reached Zhang Guoqing's office and came back annotated. Annotated, your China hands insist, is the good outcome.",
+          "seatBonus": {
+            "topic": "applications",
+            "anyOf": [
+              "miit"
+            ],
+            "effects": {
+              "trust": 0,
+              "progress": 2,
+              "usBacking": 0,
+              "chinaBuyin": 3
+            },
+            "note": "With MIIT in the room, the cable to Zhang Guoqing is drafted by people who already report to him."
+          }
+        },
+        {
+          "label": "Keep MIIT narrow; reserve bandwidth for frontier-safety tracks.",
+          "effects": {
+            "trust": -3,
+            "progress": 3,
+            "usBacking": 6,
+            "chinaBuyin": -2
+          },
+          "feedback": "You decline the easy deliverable to protect the hard one. Disciplined — and you may go home with neither if the hard track stalls.",
+          "epilogue": "MIIT sends fewer people each round. The protected frontier-safety track meets on schedule, still waiting for something to protect."
+        }
+      ]
+    },
+    {
+      "id": "international-mfa",
+      "title": "Bilateral, or Punt to the UN",
+      "relatedTopic": "international",
+      "situation": "On multilateral governance the MFA and the Central Foreign Affairs Commission push to frame AI cooperation through global forums — China's Global AI Governance Initiative, the UN track, the next big summit. It's where the MFA is strongest and most comfortable. But the article is blunt that the most important AI-governance actions are domestic, not bilateral, and that diffusing this dialogue into multilateral process is a way to look busy while committing to nothing.",
+      "options": [
+        {
+          "label": "Embrace the multilateral frame — work it through the MFA and CFAC.",
+          "effects": {
+            "trust": 11,
+            "progress": -5,
+            "usBacking": -4,
+            "chinaBuyin": 2
+          },
+          "feedback": "The most diplomatic move and the least consequential. Everyone signs a communiqué about future communiqués; no model gets tested.",
+          "epilogue": "The joint statement endorses 'a global governance architecture.' Three summits are announced. No model on either side is tested any differently."
+        },
+        {
+          "label": "Keep it bilateral and concrete; treat multilateral as garnish.",
+          "effects": {
+            "trust": -6,
+            "progress": 9,
+            "usBacking": 7,
+            "chinaBuyin": 3
+          },
+          "feedback": "You hold the dialogue to things that bite, which the article favors — at the cost of the warm multilateral optics China prefers.",
+          "epilogue": "The bilateral track grinds out one concrete testing exchange. The MFA, denied its summit, files the dialogue under 'candid.'"
+        },
+        {
+          "label": "Trade a multilateral gesture for a concrete bilateral testing pilot.",
+          "effects": {
+            "trust": 6,
+            "progress": 6,
+            "usBacking": -3,
+            "chinaBuyin": 6
+          },
+          "feedback": "Give them the summit photo, take home the pilot. Horse-trading optics for substance — provided they actually deliver the substance.",
+          "epilogue": "China got its summit language; the testing pilot exists on paper, start date twice deferred. The photo, at least, ran.",
+          "seatBonus": {
+            "topic": "international",
+            "anyOf": [
+              "mfa_arms"
+            ],
+            "effects": {
+              "trust": 0,
+              "progress": 3,
+              "usBacking": 0,
+              "chinaBuyin": 2
+            },
+            "note": "With the Arms Control Department seated, the 'coordinator for AI affairs' personally owns the pilot you traded for."
+          }
+        }
+      ]
+    },
+    {
+      "id": "compute-card",
+      "title": "The Compute Card",
+      "situation": "Midway through the second day, the NDRC side offers something unexpected: briefings on the integrated national computing network — the 'Eastern Data, Western Compute' buildout it runs — in exchange for reciprocal transparency on U.S. compute trends. It is the first time Beijing has volunteered anything about compute, the one input everyone measures. Your delegation splits on the spot: an intelligence gift, or a probe of what you'll reveal about yours?",
+      "relatedTopic": "policy",
+      "options": [
+        {
+          "label": "Accept the swap — trade high-level compute-buildout briefings both ways.",
+          "effects": {
+            "trust": 8,
+            "progress": 5,
+            "usBacking": -6,
+            "chinaBuyin": 6
+          },
+          "feedback": "Compute is the input everyone measures and nobody shares, so a briefing swap is real intelligence. It's also exactly the kind of exchange your own agencies will ask hard questions about.",
+          "epilogue": "Six months on, the briefings continue: polished slides on the integrated computing network, aggregate numbers only, and one facility visit, postponed twice."
+        },
+        {
+          "label": "Counter narrowly: aggregate compute-growth trends only, no facilities, no roadmaps.",
+          "effects": {
+            "trust": 2,
+            "progress": 7,
+            "usBacking": 4,
+            "chinaBuyin": -3
+          },
+          "feedback": "Aggregate trend data mostly confirms what both sides' analysts already estimate, at minimal cost. Modest, symmetrical, and defensible in every building in Washington.",
+          "epilogue": "The aggregate exchange survives review on both sides; the numbers, both delegations quietly admit, were already in each other's estimates.",
+          "seatBonus": {
+            "topic": "policy",
+            "anyOf": [
+              "ndrc"
+            ],
+            "effects": {
+              "trust": 2,
+              "progress": 3,
+              "usBacking": 0,
+              "chinaBuyin": 2
+            },
+            "note": "With the NDRC itself seated on the policy track, the aggregate numbers arrive with the coordinator's authority behind them rather than a subordinate's caveats."
+          }
+        },
+        {
+          "label": "Decline — compute is capability, not a governance topic.",
+          "effects": {
+            "trust": -6,
+            "progress": -3,
+            "usBacking": 8,
+            "chinaBuyin": -6
+          },
+          "feedback": "Capability transparency cuts both ways, and you protect your numbers. You also confirm Beijing's suspicion that transparency in this dialogue only ever flows east.",
+          "epilogue": "Compute never comes up again. The 'Eastern Data, Western Compute' buildout proceeds; your analysts go back to satellite photos."
+        },
+        {
+          "label": "Propose a standing compute-transparency working group directly to the NDRC lead.",
+          "effects": {
+            "trust": 4,
+            "progress": 9,
+            "usBacking": -2,
+            "chinaBuyin": 8
+          },
+          "feedback": "The NDRC runs the buildout you're asking about; with Zheng Shanjie's shop heading the delegation, the offer and the authority to honor it sit in the same chair.",
+          "epilogue": "The compute working group meets quarterly under an NDRC vice-chair — the only track that has never missed a session.",
+          "requiresSeat": {
+            "topic": "lead",
+            "anyOf": [
+              "ndrc"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mofcom-price",
+      "title": "The Price of Admission",
+      "situation": "Without warning, two MOFCOM officials join the Chinese delegation and table the price: meaningful relief from U.S. chip export controls, or the 'atmosphere for AI cooperation' will suffer. Export controls are the one file your delegation has no authority to trade — and the one Beijing most wants on this table. Every head on the Chinese side turns to see how you take it.",
+      "relatedTopic": "",
+      "options": [
+        {
+          "label": "Refuse flatly — export controls are not on this table, ever.",
+          "effects": {
+            "trust": -8,
+            "progress": -4,
+            "usBacking": 10,
+            "chinaBuyin": -7
+          },
+          "feedback": "Chip relief is the one concession Washington will not authorize, and pretending otherwise would burn you at home. Saying so plainly costs warmth but saves the delegation.",
+          "epilogue": "MOFCOM stops attending. The chip demand resurfaces in every other bilateral channel, verbatim, within the month."
+        },
+        {
+          "label": "Acknowledge the grievance; offer a separate Commerce–MOFCOM channel, no commitments.",
+          "effects": {
+            "trust": 5,
+            "progress": 2,
+            "usBacking": -2,
+            "chinaBuyin": 5
+          },
+          "feedback": "MOFCOM's file is trade, not AI governance — acknowledging the linkage without conceding it gives the export-control fight a room of its own and keeps it from squatting in yours.",
+          "epilogue": "The Commerce–MOFCOM channel meets twice, agrees on nothing, and keeps the demand out of the AI room. Mission accomplished, technically."
+        },
+        {
+          "label": "Offer process transparency — brief them on control scope and licensing, not relief.",
+          "effects": {
+            "trust": 2,
+            "progress": 6,
+            "usBacking": 3,
+            "chinaBuyin": -2
+          },
+          "feedback": "Explaining how the controls work is not relief, but it treats the grievance as legitimate process rather than taboo. Some hawks will still call it a crack in the wall.",
+          "epilogue": "The licensing briefings proceed. Beijing calls them 'insufficient'; your hawks call them 'a leak'; both keep showing up."
+        },
+        {
+          "label": "Route the chip file to the standing Bessent–He Lifeng channel, via the MOF–Treasury plumbing Liao Min built.",
+          "effects": {
+            "trust": 6,
+            "progress": 4,
+            "usBacking": 3,
+            "chinaBuyin": 2
+          },
+          "feedback": "The Finance–Treasury parallel that Liao Min built exists precisely to absorb files like this. With MOF convening the dialogue, the demand has somewhere to go that isn't your table.",
+          "epilogue": "The chip file migrates to the Bessent–He Lifeng channel, where it joins a long queue behind tariffs. The AI track breathes.",
+          "requiresSeat": {
+            "topic": "lead",
+            "anyOf": [
+              "mof"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "nda-side-track",
+      "title": "The Data Office Comes Calling",
+      "situation": "The National Data Administration — created in 2023 to unleash data as a productive force, taking turf from the CAC along the way — proposes a data-governance side-track: cross-border flows, perhaps training data. It is young, narrow, and eager, and its first director came from the very CAC it displaced. Your staff cannot agree whether this is a genuine opening or someone else's turf war wearing a cooperation offer.",
+      "relatedTopic": "policy",
+      "appearsIf": {
+        "topic": "policy",
+        "anyOf": [
+          "nda"
+        ]
+      },
+      "options": [
+        {
+          "label": "Take the side-track — data governance is concrete and the NDA is willing.",
+          "effects": {
+            "trust": 7,
+            "progress": 4,
+            "usBacking": -3,
+            "chinaBuyin": 3
+          },
+          "feedback": "The NDA is eager and externally presentable — and it is a young administration whose authority is exactly as old as its last turf win over the CAC.",
+          "epilogue": "The data side-track produces three workshops and one shared glossary. The CAC sends an observer to each."
+        },
+        {
+          "label": "Decline — don't spend frontier-safety bandwidth on a two-year-old data office.",
+          "effects": {
+            "trust": -4,
+            "progress": 2,
+            "usBacking": 6,
+            "chinaBuyin": -5
+          },
+          "feedback": "You protect the testing agenda that brought you here — and tell the one genuinely new institution on China's org chart that it isn't worth your time.",
+          "epilogue": "The NDA does not ask twice. Its next cross-border data pilot launches with the Europeans instead."
+        },
+        {
+          "label": "Accept, but scope it hard: training-data provenance for frontier models only.",
+          "effects": {
+            "trust": 3,
+            "progress": 8,
+            "usBacking": 1,
+            "chinaBuyin": -1
+          },
+          "feedback": "Training-data provenance touches the frontier file you actually came for, on turf the NDA plausibly owns. Narrow enough to survive the CAC's attention — probably.",
+          "epilogue": "The provenance pilot survives review in both capitals — narrow enough to be harmless, real enough to cite."
+        },
+        {
+          "label": "With the CAC in the room, ask it directly whether the NDA speaks for data security.",
+          "effects": {
+            "trust": -2,
+            "progress": 6,
+            "usBacking": 3,
+            "chinaBuyin": 6
+          },
+          "feedback": "The NDA took its data turf from the CAC; the regulator's reaction tells you in one meeting whether this side-track can deliver anything the CAC won't quietly veto.",
+          "epilogue": "The CAC's answer was a seating chart: at the next session, the NDA delegate sits one row back.",
+          "requiresSeat": {
+            "topic": "testing",
+            "anyOf": [
+              "cac"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "summit-seating",
+      "title": "The Memory of Two Invitations",
+      "situation": "Planning for the next international AI summit has begun, and China's diplomats have a long memory: what Beijing remembers as a last-minute invitation to the UK summit in 2023, then an early, leader-level one to Paris in 2025 — where Beijing sent Vice Premier Zhang Guoqing. Across the table the question is put plainly: will Washington back an early, senior invitation this time, or is China an afterthought again?",
+      "relatedTopic": "international",
+      "options": [
+        {
+          "label": "Back an early, leader-level invitation — and a co-chair role on one workstream.",
+          "effects": {
+            "trust": 10,
+            "progress": 2,
+            "usBacking": -7,
+            "chinaBuyin": 8
+          },
+          "feedback": "Paris proved the pattern: invited early and at level, Beijing shows up senior. An early invitation is the cheapest concession Beijing prices highest — and the one your Hill critics price highest too.",
+          "epilogue": "China co-chairs the summit's testing workstream. Two senators place holds on unrelated nominees in protest."
+        },
+        {
+          "label": "Support the early invite — in exchange, summit prep runs through MFA Arms Control.",
+          "effects": {
+            "trust": 3,
+            "progress": 7,
+            "usBacking": 1,
+            "chinaBuyin": 3
+          },
+          "feedback": "You spend the invitation and buy the counterpart: the department whose chief actually holds the 'coordinator for AI affairs' title, instead of the desk that manages Americans.",
+          "epilogue": "The Arms Control Department runs summit prep with visible relish; the North America desk sends flowers, figuratively.",
+          "reseat": {
+            "topic": "international",
+            "actor": "mfa_arms"
+          }
+        },
+        {
+          "label": "Stay noncommittal — invitations are leverage; don't spend them this early.",
+          "effects": {
+            "trust": -7,
+            "progress": -2,
+            "usBacking": 6,
+            "chinaBuyin": -8
+          },
+          "feedback": "Optionality feels like leverage until the UK precedent does your talking for you. Beijing made up its mind in 2023 about what it thinks a late invitation means.",
+          "epilogue": "The invitation goes out late again. Beijing sends a vice minister and a statement about 'certain countries' notion of hospitality.'"
+        },
+        {
+          "label": "Sound out MIIT's overseer Zhang Guoqing — who led Paris — before spending the invite.",
+          "effects": {
+            "trust": 5,
+            "progress": 5,
+            "usBacking": 3,
+            "chinaBuyin": 6
+          },
+          "feedback": "Zhang Guoqing led China's Paris delegation and oversees MIIT; with his ministry seated, you can price the invitation against what Beijing would actually send before you commit.",
+          "epilogue": "Zhang's office signals a Vice-Premier delegation is possible 'in the right atmosphere.' The atmosphere becomes a standing agenda item.",
+          "requiresSeat": {
+            "topic": "applications",
+            "anyOf": [
+              "miit"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "readout-war",
+      "title": "The Readout War",
+      "situation": "A partial transcript of yesterday's session leaks, and within hours the press lines diverge: Washington backgrounders say Beijing stonewalled on testing; Beijing's say Washington politicized safety. Now you are due in the communiqué drafting room, where the memory of the last dialogue's famously thin readout hangs over the table. What the document says may matter less than whether there is one at all.",
+      "relatedTopic": "international",
+      "options": [
+        {
+          "label": "Fight for a detailed joint readout — named deliverables, named dates.",
+          "effects": {
+            "trust": -6,
+            "progress": 9,
+            "usBacking": 5,
+            "chinaBuyin": -6
+          },
+          "feedback": "A readout with verbs is the deliverable your principals need and the exposure Beijing's drafters fear. Every concrete noun costs a negotiating session.",
+          "epilogue": "The communiqué names two deliverables and one date. The date slips; the deliverables, oddly, do not."
+        },
+        {
+          "label": "Accept a thin 'candid and constructive' paragraph; protect the channel.",
+          "effects": {
+            "trust": 8,
+            "progress": -5,
+            "usBacking": -4,
+            "chinaBuyin": 5
+          },
+          "feedback": "The classic formula: nobody's position is compromised because nothing is said. The channel survives — and so does the impression that it produces nothing.",
+          "epilogue": "The readout is one paragraph. Both press corps declare victory; the working groups meet anyway."
+        },
+        {
+          "label": "Skip joint text: parallel national readouts with a pre-agreed non-contradiction pact.",
+          "effects": {
+            "trust": 2,
+            "progress": 3,
+            "usBacking": 3,
+            "chinaBuyin": -2
+          },
+          "feedback": "If you cannot say one thing together, agree not to say opposite things apart. Unlovely — and more honest than most communiqués.",
+          "epilogue": "The parallel readouts disagree exactly once, over a verb tense. Both bureaucracies investigate for a week.",
+          "seatBonus": {
+            "topic": "international",
+            "anyOf": [
+              "mfa",
+              "mfa_arms"
+            ],
+            "effects": {
+              "trust": 3,
+              "progress": 1,
+              "usBacking": 1,
+              "chinaBuyin": 2
+            },
+            "note": "With the diplomats seated on the multilateral track, the non-contradiction pact is actually policed by people who write readouts for a living."
+          }
+        }
+      ]
+    }
   ],
 
   /* ---------------- +5 YEARS: READ THE TELLS ---------------- *
