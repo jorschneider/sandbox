@@ -22,6 +22,7 @@ from .claude import ClaudeCommander  # generic commander (builds prompt, parses,
 
 # Display labels + origin for known models (others are title-cased from the slug).
 MODEL_INFO = {
+    "claude-fable-5": ("Fable 5", "Anthropic"),
     "claude-opus-4-8": ("Opus 4.8", "Anthropic"),
     "claude-sonnet-4-6": ("Sonnet 4.6", "Anthropic"),
     "claude-haiku-4-5": ("Haiku 4.5", "Anthropic"),

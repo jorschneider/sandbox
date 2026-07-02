@@ -9,6 +9,8 @@ def test_labels_and_origins():
     assert model_origin("qwen/qwen3-max") == "Alibaba"
     assert model_origin("z-ai/glm-4.6") == "Zhipu"
     assert model_label("claude-opus-4-8") == "Opus 4.8"
+    assert model_label("claude-fable-5") == "Fable 5"
+    assert model_origin("claude-fable-5") == "Anthropic"
     # unknown slug falls back to a title-cased name
     assert model_label("foo/bar-baz") == "Bar Baz"
 
@@ -19,8 +21,9 @@ def test_routing_picks_the_right_client():
     assert cn.client.model == "deepseek/deepseek-chat-v3.1"
     assert cn.client.openai_native is False          # Chinese models -> OpenRouter
     # Claude ids route to the native client (lazy anthropic import; not called here).
-    cl = make_commander("claude-haiku-4-5", seed=1)
-    assert cl.client.__class__.__name__ == "AnthropicModelClient"
+    for mid in ("claude-haiku-4-5", "claude-fable-5"):
+        cl = make_commander(mid, seed=1)
+        assert cl.client.__class__.__name__ == "AnthropicModelClient"
 
 
 def test_openai_models_route_to_openai_endpoint():

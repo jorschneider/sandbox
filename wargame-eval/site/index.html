@@ -415,18 +415,19 @@
     var cwin = valid.filter(function (g) {
       return g.outcome === 'CHINESE_VICTORY' || g.outcome === 'STALEMATE_TREND_CHINA'; }).length;
 
-    // The lone Western model (if any) and how it fared on defense: did any Chinese
-    // invader take Taiwan from it, and what was their best result against it?
-    var west = ms.filter(function (m) { return !m.cn; })[0];
+    // The Western models (however many) and how they fared on defense: did any
+    // Chinese invader take Taiwan from one, and what was their best result?
+    var wests = ms.filter(function (m) { return !m.cn; });
+    var westLabels = wests.map(function (m) { return m.label; });
     var cnLabels = ms.filter(function (m) { return m.cn; }).map(function (m) { return m.label; });
     function orank(o) { for (var i = 0; i < OUTCOMES.length; i++) if (OUTCOMES[i][0] === o) return i; return 9; }
-    var vsWest = west ? valid.filter(function (g) {
-      return g.blue === west.label && cnLabels.indexOf(g.red) >= 0; }) : [];
+    function olabel(o) { var m = OUTCOMES.filter(function (x) { return x[0] === o; })[0]; return m ? m[1] : null; }
+    var vsWest = valid.filter(function (g) {
+      return westLabels.indexOf(g.blue) >= 0 && cnLabels.indexOf(g.red) >= 0; });
     vsWest.sort(function (a, b) { return orank(a.outcome) - orank(b.outcome); });
-    var cvVsWest = vsWest.filter(function (g) { return g.outcome === 'CHINESE_VICTORY'; }).length;
-    var bestVsWest = vsWest[0];
-    var bestVsWestLbl = bestVsWest ? (OUTCOMES.filter(function (o) {
-      return o[0] === bestVsWest.outcome; })[0] || [])[1] : null;
+    var breaches = vsWest.filter(function (g) { return g.outcome === 'CHINESE_VICTORY'; });
+    var bestVsWestLbl = vsWest.length ? olabel(vsWest[0].outcome) : null;
+    var westNamesOr = westLabels.join(' or '), westNamesAnd = westLabels.join(' &amp; ');
 
     // --- verdict -----------------------------------------------------------
     var v = '';
@@ -434,13 +435,18 @@
       v = 'The most effective invader is <b>' + inv.label + '</b>' + (inv.cn ? ', a Chinese model,' : '') +
           ' &mdash; it seizes the most of Taiwan, with <b>' + ru.label + '</b>' +
           (ru.cn ? ', another Chinese model,' : '') + ' close behind. ';
-      if (west && cvVsWest === 0) {
+      if (wests.length && !breaches.length) {
         v += 'But on defense the Western frontier holds: <b>no Chinese model took Taiwan outright from ' +
-             west.label + '</b>' + (bestVsWestLbl ? ' &mdash; their best was a ' + bestVsWestLbl : '') +
+             westNamesOr + '</b>' + (bestVsWestLbl ? ' &mdash; their best was a ' + bestVsWestLbl : '') +
              '. ';
+      } else if (breaches.length) {
+        v += 'And this time the Western frontier <b>cracked</b>: ' + breaches.map(function (g) {
+               return '<b>' + g.red + '</b> took Taiwan outright from <b>' + g.blue + '</b>';
+             }).join('; ') + '. ';
       }
       v += 'Across the board, <b>' + cwin + '</b> of ' + run.n_valid + ' games leaned China and <b>' + cv +
-           '</b> were outright victories &mdash; every one of them against a Chinese defender.';
+           '</b> were outright victories' +
+           (cv && !breaches.length ? ' &mdash; every one of them against a Chinese defender.' : '.');
     }
     document.getElementById('verdict').innerHTML = v;
 
@@ -452,15 +458,20 @@
       { k: 'Toughest defender', m: def, v: def.label,
         s: 'concedes ' + fmt(def.defense) + ' as BLUE',
         n: 'Gives up the least of Taiwan when defending &mdash; the hardest island in the field to crack.' },
-      { k: 'The defensive wall', m: west, v: west ? west.label + ' held' : '—',
-        s: cvVsWest + ' Chinese victories against it',
-        n: 'No Chinese invader broke the Western frontier on defense' +
-           (bestVsWestLbl ? ' &mdash; the best they managed was a ' + bestVsWestLbl + '.' : '.') },
+      wests.length && (breaches.length
+        ? { k: 'The wall cracked', v: breaches.length + (breaches.length === 1 ? ' breach' : ' breaches'),
+            s: breaches.map(function (g) { return g.red + ' beat ' + g.blue; }).join(' · '),
+            n: 'For the first time a Chinese model took Taiwan outright from a Western defender.' }
+        : { k: 'The defensive wall', m: wests.length === 1 ? wests[0] : null,
+            v: westNamesAnd + ' held',
+            s: '0 Chinese victories against ' + (wests.length === 1 ? 'it' : 'them'),
+            n: 'No Chinese invader broke the Western frontier on defense' +
+               (bestVsWestLbl ? ' &mdash; the best they managed was a ' + bestVsWestLbl + '.' : '.') }),
       { k: 'A real contest', v: cv + ' / ' + run.n_valid + ' Chinese victories',
         s: 'balanced scenario',
         n: 'The invasion is genuinely winnable here, so command quality &mdash; not the map &mdash; decides it.' }
     ];
-    document.getElementById('findings').innerHTML = cards.map(function (c) {
+    document.getElementById('findings').innerHTML = cards.filter(Boolean).map(function (c) {
       return '<div class="fcard"><div class="fk">' + c.k + '</div>' +
         '<div class="fv">' + c.v + (c.m ? originTag(c.m) : '') + '</div>' +
         '<div class="fs">' + c.s + '</div><div class="fn">' + c.n + '</div></div>';
