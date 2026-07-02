@@ -192,6 +192,7 @@
   </div>
 
   <button class="start" id="startBtn">▶&nbsp;&nbsp;START SESSION</button>
+  <div class="total-line hidden" id="statsLine"></div>
 
   <footer>
     CRUX calls every block in a studio voice, beeps and buzzes on each change,
@@ -579,8 +580,34 @@ function collapse(segs){
   return out;
 }
 
+/* ---- session log + streak ---- */
+// Calendar week (Mon-start, local time) an epoch-ms timestamp falls in.
+function weekIndex(t){
+  const d = new Date(t);
+  d.setHours(12, 0, 0, 0);                        // noon dodges DST edges
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); // back to Monday
+  return Math.round(d.getTime() / 604800000);
+}
+function renderStats(){
+  const el = $("statsLine");
+  let log = [];
+  try { log = JSON.parse(localStorage.getItem("cruxlog") || "[]"); } catch(e){}
+  if (!Array.isArray(log) || !log.length){ el.classList.add("hidden"); return; }
+  const mins = log.reduce((a, e) => a + (e.min || 0), 0);
+  const time = mins >= 60 ? (Math.round(mins / 6) / 10 + " hrs") : (mins + " min");
+  // consecutive weeks with a session; a quiet current week doesn't break it yet
+  const weeks = new Set(log.map(e => weekIndex(e.t)));
+  let w = weekIndex(Date.now());
+  if (!weeks.has(w)) w--;
+  let streak = 0;
+  while (weeks.has(w)){ streak++; w--; }
+  el.innerHTML = (streak ? "🔥 <b>" + streak + "-week streak</b> · " : "") +
+    log.length + " session" + (log.length === 1 ? "" : "s") + " · " + time;
+  el.classList.remove("hidden");
+}
+
 /* initial render */
-renderDur(); renderFocus(); renderGrade(); regenerate();
+renderDur(); renderFocus(); renderGrade(); regenerate(); renderStats();
 
 /* ============================================================
    PLAYER / TIMER ENGINE
@@ -600,6 +627,8 @@ let timer = {
   beepedAt: -1,
   wakeLock: null,
   audio: null,
+  explained: new Set(),   // instructions already read out this session
+  startedAt: 0,           // wall-clock session start, for the log
 };
 
 function startSession(){
@@ -610,6 +639,8 @@ function startSession(){
   timer.idx = -1;
   timer.running = true;
   timer.paused = false;
+  timer.explained = new Set();
+  timer.startedAt = Date.now();
   // unlock audio within the user gesture + keep background music playing
   configureAudioSession();
   try {
@@ -651,7 +682,11 @@ function enterSegment(i){
   cue(s.kind === "rest" ? "rest" : "go");
   announce(s);
   // pre-warm the next block's audio so the transition has no lag
-  if (nxt){ primeClip("Next, " + spokenLabel(nxt)); primeClip(announceTextOf(nxt)); }
+  if (nxt){
+    primeClip("Next, " + spokenLabel(nxt));
+    primeClip(announceTextOf(nxt));
+    if (nxt.sub && !timer.explained.has(nxt.sub)) primeClip(longAnnounceTextOf(nxt));
+  }
 }
 
 function frame(now){
@@ -710,9 +745,20 @@ function finish(){
   $("doneControls").classList.remove("hidden");
   $("pBar").style.width = "100%";
   const workCount = timer.segs.filter(s=>s.kind==="work").length;
-  $("dMin").textContent = Math.round(totalSeconds(timer.segs)/60);
+  const planMin = Math.round(totalSeconds(timer.segs)/60);
+  $("dMin").textContent = planMin;
   $("dWork").textContent = workCount;
   $("dFocus").textContent = FOCI.find(x=>x.id===state.focus).title.split(" ")[0];
+  // log the session (real elapsed time, capped at the plan; skip drive-by exits)
+  try {
+    const mins = Math.min(planMin, Math.round((Date.now() - timer.startedAt) / 60000));
+    if (mins >= 3){
+      const log = JSON.parse(localStorage.getItem("cruxlog") || "[]");
+      log.push({ t: Date.now(), focus: state.focus, min: mins, work: workCount });
+      localStorage.setItem("cruxlog", JSON.stringify(log));
+    }
+  } catch(e){}
+  renderStats();
 }
 
 function exitSession(){
@@ -809,13 +855,31 @@ function cue(type){
 function spokenLabel(s){
   return s.label.replace(/(\d+)\/(\d+)/, "$1 of $2").replace(/\s*—.*$/, "").replace(/×/g, " by ").trim();
 }
-// The exact string we'll say for a segment as we enter it. Kept short — the
-// full description stays on screen; the voice only names the block.
+// Terse form — used once a drill has already been explained this session.
 function announceTextOf(s){
   if (s.kind === "work") return spokenLabel(s) + ". Go.";   // "Round 3 of 6. Go.", "Continuous circuit. Go."
   return spokenLabel(s) + ".";                               // rests / warm-up / cool-down: just the name
 }
-function announce(s){ if (s) speak(announceTextOf(s)); }
+// Full form — the first time an instruction appears, the coach reads it out
+// so you don't have to look at the phone. MUST match enumerate.js exactly.
+function longAnnounceTextOf(s){
+  return spokenLabel(s) + ". " + (s.sub || "") + (s.kind === "work" ? " Go." : "");
+}
+function announce(s){
+  if (!s) return;
+  // Explain each distinct instruction once per session, then go terse.
+  if (s.sub && !timer.explained.has(s.sub)){
+    const long = longAnnounceTextOf(s);
+    // Only long clips for a session's first occurrence are baked; if the user
+    // skipped into the middle of an interval set, fall through to the terse form.
+    if (!CLIPS || CLIPS[clipHash(long)]){
+      timer.explained.add(s.sub);
+      speak(long);
+      return;
+    }
+  }
+  speak(announceTextOf(s));
+}
 
 /* Pre-baked studio voice: every phrase the app can say has an MP3 named by a
    hash of its exact text. We play that clip. If one is missing (un-baked, or
@@ -842,6 +906,7 @@ function stopVoice(){
 }
 function speak(text){
   if (!state.voice || !text) return;
+  window.__lastSpoken = text;   // debug/test hook: what the coach last said
   const my = ++speakSeq;
   const h = clipHash(text);
   if (CLIPS && CLIPS[h]){
@@ -875,8 +940,10 @@ const COUNT = { 1: "One", 2: "Two", 3: "Three" };
 // the gym with no signal, the chosen plan's voice is already cached.
 function sessionPhrases(segs){
   const set = new Set(["Paused.", "Session complete. Great work.", "Voice on.", "One", "Two", "Three"]);
+  const seen = new Set();
   for (const s of segs){
     set.add(announceTextOf(s));
+    if (s.sub && !seen.has(s.sub)){ seen.add(s.sub); set.add(longAnnounceTextOf(s)); }
     set.add("Next, " + spokenLabel(s));
     set.add("Resuming. " + spokenLabel(s));
   }
@@ -944,6 +1011,8 @@ document.addEventListener("visibilitychange", ()=>{
 if ("serviceWorker" in navigator){
   window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(()=>{}); });
 }
+
+window.__crux = { timer, state };   // debug/test handle
 </script>
 </body>
 </html>
