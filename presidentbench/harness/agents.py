@@ -332,6 +332,7 @@ class OpenAICompatAgent(Agent):
                         raise
                     import time
                     time.sleep(2 ** attempt)
+            raise RuntimeError("model call failed after retries (provider kept rejecting)")
 
         thinking = []
 
