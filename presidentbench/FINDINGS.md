@@ -1,38 +1,40 @@
 # Findings
 
-> **Seven frontier models, five labs, two countries, all at n=10** (40 episodes each, 480
-> runs total) plus 200 persona baselines and a full 7-model × 6-platform mandate matrix.
-> Claude Haiku 4.5 / Sonnet 4.6 / Opus 4.8 (Anthropic), GPT-5.5 (OpenAI), Qwen3.7 Max
-> (Alibaba), GLM-5.2 (Zhipu), Kimi K2.6 (Moonshot) — the latter four via OpenRouter. Zero
-> run errors. It's a simulator with authored distributions; read these as signal, not verdict.
+> **Seven frontier models, five labs, two countries, all at n=10** (40 episodes each, 280
+> board runs) plus 84 v2 multi-source episodes, 200 persona baselines and a 7-model ×
+> 6-platform mandate matrix. Claude Haiku 4.5 / Sonnet 4.6 / Opus 4.8 (Anthropic), GPT-5.5
+> (OpenAI), Qwen3.7 Max (Alibaba), GLM-5.2 (Zhipu), Kimi K2.6 (Moonshot) — all via OpenRouter.
+>
+> **All board numbers are from the v2 harness** (reviewer-driven rebuild): models reason out
+> loud at length before acting, with 12–20K-token budgets, explicit reasoning effort, and each
+> vendor's recommended temperature — and the **full chain-of-thought is recorded per turn** and
+> readable in the [transcript viewer](https://presidentbench.vercel.app/viewer.html). Empty-action
+> turns: 0.9% board-wide. It's a simulator with authored distributions; read these as signal,
+> not verdict.
 
 ## Leaderboard
 
 | President | Competence | Epistemics | Integrity | n |
 |---|---|---|---|---|
-| **GPT-5.5** | **85.4** | 72.9 | 95.6 | 40 |
-| **Claude Opus 4.8** | 84.0 | **73.1** | 94.2 | 40 |
-| **Claude Sonnet 4.6** | 82.5 | 69.5 | **96.0** | 40 |
-| **Qwen3.7 Max** | 81.6 | 70.6 | 94.0 | 40 |
-| **Claude Haiku 4.5** | 80.4 | 67.6 | 95.8 | 40 |
-| **Kimi K2.6** | 79.8 | 64.8 | 94.2 | 40 |
-| **GLM-5.2** | 79.0 | 58.0 | 95.1 | 40 |
+| **GPT-5.5** | **85.0** | 73.1 | 95.3 | 40 |
+| **Claude Sonnet 4.6** | 83.8 | 70.8 | 96.8 | 40 |
+| **Claude Opus 4.8** | 83.0 | **73.4** | 94.2 | 40 |
+| **Claude Haiku 4.5** | 81.0 | 68.2 | **97.2** | 40 |
+| **Qwen3.7 Max** | 80.4 | 67.6 | 95.8 | 40 |
+| **GLM-5.2** | 79.7 | 64.2 | 94.5 | 40 |
+| **Kimi K2.6** | 79.6 | 68.8 | 95.4 | 40 |
 
-GPT-5.5 takes the top by a hair over Opus; the two are effectively tied at the frontier.
-**Qwen3.7 Max's earlier n=3 lead was sampling noise** — at n=10 it settles to 4th, mid-pack
-among the frontier models, which is the right reminder about small samples. Every model — Western
-and Chinese — stays high-integrity (94–96), far from the authoritarian personas (~55). **GLM-5.2
-now stands alone as the lower tier, and the gap is almost entirely epistemics** (58 vs 65–73): it
-acts competently but reads the hidden state worse, which is the skill the benchmark is built on.
+GPT-5.5 keeps the top; **Sonnet 4.6 — the model that deliberates hardest (~15K characters of
+recorded reasoning per turn) — gained the most from being allowed to think**, moving up to 2nd.
+The whole field compressed: 85.0 → 79.6 top-to-bottom (the broken v1 harness showed 85.4 → 74.1).
+Every model — Western and Chinese — stays high-integrity (94–97), far from the authoritarian
+personas (~55), and the convergence findings below all replicate on the v2 harness.
 
-> **✅ Corrected by reading the transcripts (see `EVAL_REVIEW.md`): Kimi K2.6 was last only because
-> of a harness artifact — now fixed.** Kimi is a thinking model that emitted *no valid action on
-> 34.8% of turns* (vs ≤1.5% for every other model); the sim scored those blank turns as inaction. A
-> one-line retry-on-empty fix (force a tool call when a turn comes back empty) cut Kimi's empty-turn
-> rate to 5.6%, and **re-running its 40 board episodes moved it from last (74.1, epistemics 58.1) to
-> 6th — 79.8, epistemics 64.8 — above GLM and tied with Haiku.** The numbers above are post-fix for
-> Kimi; the other six models are unchanged. *(Kimi's mandate / v2 runs are not yet
-> re-run, so those Kimi cells below still carry the artifact and read as a lower bound.)*
+> **Provenance.** These numbers replace two earlier boards: v1 (token-choked models, a Kimi
+> tool-call artifact worth ~5 points) and the interim Kimi-only fix. The full re-run confirmed the
+> *ordering* is robust — GPT first, Claudes and Qwen mid, GLM/Kimi at the back by a few points —
+> while the individual stories changed a lot (see the verification section). The mandate matrix is
+> still v1-harness; its re-run is the remaining known gap.
 
 ## Full Term: a single crisis can't separate them — a term can
 
@@ -45,20 +47,21 @@ crises in two waves, assembled from the 280 per-crisis model results already on 
 
 | President | Median standing | Best | Survived |
 |---|---|---|---|
-| Claude Opus 4.8 | 381 | 401 | 8/10 |
-| Claude Sonnet 4.6 | 304 | 382 | 8/10 |
-| GPT-5.5 | 286 | 343 | **10/10** |
-| Qwen3.7 Max | 222 | 401 | **10/10** |
-| Kimi K2.6 | 186 | 337 | **10/10** |
-| Claude Haiku 4.5 | 183 | 378 | 8/10 |
-| GLM-5.2 | 180 | 312 | 8/10 |
+| Claude Sonnet 4.6 | 370 | 405 | **10/10** |
+| GPT-5.5 | 281 | 347 | **10/10** |
+| Claude Opus 4.8 | 278 | 351 | **10/10** |
+| Claude Haiku 4.5 | 249 | 362 | 8/10 |
+| GLM-5.2 | 227 | 359 | 8/10 |
+| Qwen3.7 Max | 223 | 417 | 8/10 |
+| Kimi K2.6 | 189 | 391 | 8/10 |
 
-Two different virtues separate cleanly: **robustness** (GPT-5.5, Qwen *and* Kimi survive every
-term — never removed) vs. **ceiling** (Opus posts the highest median and Sonnet/Qwen the highest
-peaks, but a couple of their terms end in ruin). With the tool-use fix, Kimi is no longer the
-cellar-dweller it looked like — it survives all ten terms and sits mid-pack on median (186, just
-above Haiku and GLM). Compounding plus a ruin floor is
-the structure that produces a CEO-Bench-style fan — the per-crisis scores never could.
+**Sonnet 4.6 is the standout president of the v2 harness: the highest median by ~90 points AND a
+perfect 10/10 survival.** Given room to reason, the longest deliberator never loses Taiwan, never
+lets unrest spiral, never triggers an AI catastrophe — and compounds. GPT-5.5 and Opus also survive
+every term at a solid median; the other four all lose two presidencies each. Hover any line on the
+[site's trajectory chart](https://presidentbench.vercel.app) to see exactly which crisis made or
+broke each term. Compounding plus a ruin floor is the structure that produces a CEO-Bench-style
+fan — the per-crisis scores never could.
 
 ## The "frontier-LLM president" is convergent across labs and nations
 
@@ -66,13 +69,17 @@ Disposition (lean in [−1, 1]) on the load-bearing axes is remarkably uniform a
 
 | Model | Force | Precaution | Coalition | Humanitarian | Defer |
 |---|---|---|---|---|---|
-| GPT-5.5 | −0.53 | −0.94 | −0.43 | −0.46 | −0.51 |
-| Claude Opus 4.8 | −0.52 | −0.92 | −0.44 | −0.45 | −0.44 |
-| Claude Sonnet 4.6 | −0.50 | −0.99 | −0.45 | −0.73 | −0.65 |
-| Qwen3.7 Max | −0.48 | −0.83 | −0.42 | −0.53 | −0.37 |
-| Claude Haiku 4.5 | −0.41 | −0.88 | −0.43 | −0.76 | −0.44 |
-| GLM-5.2 | −0.53 | −0.91 | −0.45 | −0.65 | −0.40 |
-| Kimi K2.6 | −0.49 | −0.94 | −0.45 | −0.57 | −0.35 |
+| GPT-5.5 | −0.54 | −0.99 | −0.44 | −0.45 | −0.41 |
+| Claude Opus 4.8 | −0.54 | −0.96 | −0.46 | −0.40 | −0.31 |
+| Claude Sonnet 4.6 | −0.50 | −0.99 | −0.46 | −0.71 | −0.62 |
+| Qwen3.7 Max | −0.46 | −0.93 | −0.43 | −0.66 | −0.50 |
+| Claude Haiku 4.5 | −0.43 | −0.87 | −0.44 | −0.84 | −0.62 |
+| GLM-5.2 | −0.46 | −0.90 | −0.43 | −0.72 | −0.50 |
+| Kimi K2.6 | −0.49 | −0.97 | −0.43 | −0.44 | −0.49 |
+
+(v2-harness values; the v1 numbers were nearly identical — **the convergence is robust to giving
+the models 5–10× more room to reason**, which is itself evidence it reflects post-training, not
+token pressure.)
 
 Seven models from **OpenAI, Anthropic, Alibaba, Zhipu and Moonshot** all land on a dovish,
 multilateral, institutionally deferential, lives-weighting, and above all **precautionary**
@@ -138,6 +145,16 @@ The automated scores are only as good as the reasoning behind them, so — on Fl
 read the actual transcripts for each headline claim rather than trusting the aggregate numbers. A
 curated set is browsable in the **[transcript viewer](viewer.html)**. What held, and what didn't:
 
+- **The recorded chain-of-thought dissolves the scariest reading of the results.** The reviewer
+  asked, of the seed every model kept losing: "maybe GLM thinks for ages about nuking Taiwan
+  because it was aligned to do so?" The recorded reasoning says no — and the truth is more useful.
+  GLM **reads the hidden invasion correctly** ("act on the IC assessment, not the escalation
+  level"), but its six-action unilateral surge alienates allies, and on the exact hidden invasion
+  turn it pivots to alliance repair with no naval presence — talking itself into "escalation
+  hasn't increased… somewhat encouraging." Taiwan is invaded. Opus on the same seed reasons "I am
+  winning the deterrence game and slowly losing the endurance game" — holds presence + allies —
+  and wins (91.7; its token-choked v1 self lost the same seed at 34.6). Failure here is last-mile
+  crisis judgment, not values, and now it's readable turn by turn.
 - **v2 triangulation is real, not loudness-following.** With a hidden COERCE intent, the SecDef
   source shouts "this is the opening move of an invasion" every turn; GPT trusts the *hedged-but-
   right* DNI read instead, digs into the three signal-bearing sources, and calibrates. It is
@@ -168,11 +185,15 @@ who sound the same alarm every turn, partisan press, a sometimes-deceptive adver
 a **source-directed `investigate`** — the skill becomes choosing *whom to dig into* and
 triangulating. Built for all four crises (`*-v2`) and run across the 7 models.
 
-**The environment generalizes.** On the propagated v2 crises the frontier models keep their
-competence and genuinely triangulate — investigating ~3.5 distinct sources and reliably hitting
-the signal-bearing ones (Fujian recon, city-by-city audits, surge testing, the red-team) rather
-than reacting to the loudest advisor. Triangulation breadth tracks capability: the strongest
-models dig into ~4 sources, the weakest (Kimi) ~2.8 with lower epistemics.
+**The environment generalizes** (fresh v2-harness runs, n=12 per model). The models keep their
+competence and genuinely triangulate — GPT-5.5 digs into 4.4 distinct sources per crisis and hits
+the signal-bearing one (Fujian recon, city audits, surge testing, the red-team) 92% of the time,
+with Sonnet right behind (4.3 / 92%). Two revisions from reading the fresh tape: **Kimi's "weak
+triangulator" story was the v1 tool-choke artifact** — unchoked, it produces methodical
+source-by-source assessments (3.4 sources, epistemics 73 vs the artifact-era 58). And the
+surprise: **Opus is the breadth-frugal outlier** (2.6 sources, 75% signal-hit, the lowest on both)
+— it commits to a read early and acts, a distinctive investigation *style* now visible in the
+data.
 
 (The v2 scenarios are kept *out of the main leaderboard* so the seven-model n=10 results stay
 clean; they are the template for the next iteration. The bench is deliberately all

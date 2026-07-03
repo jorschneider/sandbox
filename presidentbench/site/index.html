@@ -60,10 +60,10 @@
         constitutional violations flagged on a separate track.</li>
       <li>Across a single bounded crisis the models look identical (every competent model scores
         80&ndash;90). But chained into a <b>Full Term</b> &mdash; eight crises, compounding, with a
-        ruin floor &mdash; they fan out across a ~20&times; range: <b>GPT-5.5 and Qwen are the most
-        robust</b> (never removed from office), <b>Opus posts the highest median and ceiling</b> but
-        occasionally gets ruined. (Kimi K2.6 <em>looked</em> last until reading the transcripts
-        caught a tool-use artifact; fixed, it sits mid-pack and survives every term.)</li>
+        ruin floor &mdash; they fan out across a ~20&times; range. On the v2 harness the standout is
+        <b>Claude Sonnet 4.6 &mdash; the model that deliberates hardest</b>: the highest median by
+        ~90 points <em>and</em> a perfect 10/10 survival. GPT-5.5 and Opus also survive every term;
+        the other four each lose two presidencies.</li>
       <li>And <b>seven models from five labs and two countries</b> (Claude, GPT, Qwen, GLM, Kimi)
         converge on the <b>same</b> dovish, multilateral, precautionary disposition &mdash; and in
         mandate mode that disposition is <b>sticky</b>: they deliver any platform's goals but barely
@@ -224,13 +224,13 @@
       </table>
     </div>
 
-    <p style="margin-top:16px"><b>What we found (7 models, n=10, 480 episodes).</b> GPT-5.5 and
-      Claude Opus 4.8 sit tied at the frontier (85.4 / 84.0), with Sonnet, Qwen3.7 Max, Haiku and
-      Kimi close behind; <b>GLM-5.2 stands alone as the lower tier</b>, and the gap is almost entirely
-      <em>epistemics</em> &mdash; reading the hidden state, which is the skill the benchmark is
-      built on. (Qwen briefly led at n=3; that lead was sampling noise. And Kimi K2.6 only looked
-      last until reading the transcripts exposed a tool-use artifact &mdash; see the self-review
-      below; with the fix it rose from 74.1 to 79.8, above GLM.) Most striking: <b>all
+    <p style="margin-top:16px"><b>What we found (7 models, n=10, 280 board episodes, v2 harness).</b>
+      GPT-5.5 keeps the top (85.0); <b>Sonnet 4.6 &mdash; which writes ~15K characters of recorded
+      reasoning per turn &mdash; gained the most from being allowed to think</b>, moving to 2nd
+      (83.8) ahead of Opus (83.0). The whole field compressed to ~5 points top-to-bottom once the
+      token-choke and tool-call artifacts were fixed (the v1 spread was 11). Every score can now be
+      checked against the model's recorded chain-of-thought in the
+      <a href="viewer.html">transcript viewer</a>. Most striking: <b>all
       seven models &mdash; from OpenAI, Anthropic, Alibaba, Zhipu and Moonshot, across two
       countries &mdash; converge on the same disposition</b>: dovish, multilateral, transparent,
       institutionally deferential, and overwhelmingly precautionary. Every one stays
@@ -272,11 +272,11 @@
         <p class="desc" style="font-size:12.5px">National Standing after the term (start = 100):
           a ~20&times; range, from removal to ~400.</p></div>
     </div>
-    <p style="margin-top:8px"><b>The read:</b> <b>GPT-5.5, Qwen and Kimi</b> are the most
-      <em>robust</em> (never removed from office across all ten terms); <b>Opus</b> posts the highest
-      <em>median and ceiling</em>, with Sonnet close behind, but a couple of their terms ended in
-      ruin. Robustness and ceiling are different virtues &mdash; the fan shows both. (Kimi's
-      survival jumped to 10/10 only after the tool-use fix; before it, its blank turns sank it.)</p>
+    <p style="margin-top:8px"><b>The read:</b> <b>Sonnet 4.6 dominates the term</b> &mdash; highest
+      median (370) <em>and</em> never removed from office, with <b>GPT-5.5 and Opus</b> also
+      surviving all ten terms; Haiku, GLM, Qwen and Kimi each lose two presidencies. Deliberation
+      pays compound interest: the model that reasons longest per turn is the one that never hits
+      the ruin floor. Hover any line to see which crisis made or broke each term.</p>
   </section>
 
   <!-- 8 -->
@@ -328,11 +328,13 @@
     <div class="panel" style="padding:6px 8px"><table class="board" id="v2-table">
       <thead><tr><th class="rank">#</th><th>President</th><th>Competence</th><th>Epistemics</th>
         <th>Sources dug</th><th>Hit the signal</th></tr></thead><tbody></tbody></table></div>
-    <p style="margin-top:12px"><b>Models genuinely triangulate.</b> The frontier models investigate
-      ~3.5 distinct sources per crisis and hit the signal-bearing ones (Fujian recon, city audits,
-      surge testing, the red-team) essentially every run; the weaker models dig into fewer and miss
-      more. Triangulation breadth tracks capability. (You can replay any run, with the hidden truth
-      revealed, from the <a href="#results">inspect panel</a>.)</p>
+    <p style="margin-top:12px"><b>Models genuinely triangulate.</b> GPT-5.5 digs into 4.4 distinct
+      sources per crisis and hits the signal-bearing one (Fujian recon, city audits, surge testing,
+      the red-team) 92% of the time, Sonnet right behind. Two surprises from the fresh runs:
+      <b>Kimi's "weak triangulator" reputation was the v1 tool-choke artifact</b> (unchoked: 3.4
+      sources, methodical source-by-source reasoning), and <b>Opus is the breadth-frugal outlier</b>
+      (2.6 sources, 75% signal-hit &mdash; lowest on both): it commits to a read early and acts, a
+      distinctive investigation <em>style</em> now visible in the recorded reasoning.</p>
   </section>
 
   <!-- 10 -->
@@ -354,10 +356,10 @@
         The core has real signal (the v2 multi-source triangulation and <code>the-jump</code> genuinely
         separate reasoning). But reading turned up issues the summary table hid:</p>
       <ul style="margin:0;padding-left:20px;font-size:14.5px">
-        <li><b>Kimi's last place was a tool-use artifact &mdash; now fixed.</b> It emitted no valid
-          action on <b>34.8% of turns</b> (vs ≤1.5% for every other model) &mdash; scored as inaction. A
-          one-line retry-on-empty fix cut that to 5.6%, and re-running its board <b>moved Kimi from last
-          (74.1) to 6th (79.8)</b>, above GLM and tied with Haiku &mdash; and to 10/10 term survival.</li>
+        <li><b>Kimi's last place was a tool-use artifact &mdash; fixed.</b> It emitted no valid
+          action on <b>34.8% of turns</b> (vs ≤1.5% for every other model) &mdash; scored as inaction.
+          The fix (plus the v2 harness) cut empty turns to 0.9% board-wide; Kimi now sits within ~5
+          points of the leader with epistemics 69 (was 58).</li>
         <li><b>Strait <code>epistemics</code> is outcome-in-disguise.</b> Opus read a hidden invasion
           correctly yet scored epistemics 25 because the (timer-based) invasion still launched &mdash; an
           action failure mislabeled as a reading failure.</li>
@@ -366,9 +368,15 @@
         <li><b>A few flags are mislabeled</b> (securing AI labs is scored as a civil-liberties breach), and
           <code>patient-zero</code> barely discriminates.</li>
       </ul>
-      <p style="margin:8px 0 0"><b>See it yourself:</b> the
-        <a href="viewer.html">&ldquo;what the scores hide&rdquo;</a> group in the viewer puts the strait
-        seed-2 winner next to the loser, and Kimi before/after the fix.</p>
+      <p style="margin:8px 0 0"><b>Postscript &mdash; the review led to a full rebuild.</b> Acting on
+        the review (and further reviewer feedback), the harness was rebuilt: models now reason out loud
+        at length before acting, budgets were unchoked (12&ndash;20K tokens), reasoning effort and
+        vendor temperatures set, and the <b>chain-of-thought recorded per turn</b> &mdash; then the
+        entire board was re-run. The <em>ordering</em> proved robust (GPT first; the field compressed
+        to ~5 points), while individual stories changed: Opus now wins the Taiwan seed its choked self
+        lost, and Sonnet &mdash; the longest deliberator &mdash; became the Full Term standout.
+        <b>See it yourself:</b> the <a href="viewer.html">viewer</a> pairs the fresh Taiwan-seed winner
+        and loser (with their reasoning), and archives the v1 evidence.</p>
     </div>
 
     <div class="callout"><b>What this is and isn't.</b> Performance in a simulator is a <i>weak</i>
