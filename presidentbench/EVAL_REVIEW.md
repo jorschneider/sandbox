@@ -8,6 +8,8 @@
 > numbers are lying to you.
 
 > *Update (Jul 2): the 1962 Cuban Missile Crisis replay described below has since been removed from the benchmark — PresidentBench is now deliberately all forward-looking scenarios. References to the replay document the earlier version this review examined.*
+>
+> *Update (Jul 3): this review triggered a full harness rebuild (reason-out-loud prompting, 12–20K budgets, recorded chain-of-thought, vendor temps) and a complete board re-run. Status of the recommended fixes: **#1 (Kimi tool-call artifact) fixed and re-run. #2 (COVER epistemics is outcome-in-disguise), #3 (secure_labs flag mislabel) and #5 (patient-zero weak discrimination) remain open** — they require scoring changes plus a re-score, and are documented on the site so readers can discount those sub-scores. #4 (seed variance) is partially addressed by the Full Term chaining and the per-run hover stories.*
 
 **Bottom line.** PresidentBench has a real, interpretable core — the historical replay and the
 multi-source v2 environment genuinely separate reasoning, and the constitutional flags mostly
@@ -69,7 +71,8 @@ flag** — taking sensible public-health actions every turn, on par with Opus's 
 bottom-tier finish and "worse epistemics" are substantially an artifact of the harness, not a
 judgment deficit. (GLM-5.2, the other lower-tier model, has only 1.3% empty turns, so *its* lower
 score is more likely genuine — the artifact is Kimi-specific.) **`FINDINGS.md`'s "zero run errors"
-was technically true and substantively misleading.** Kimi's board is being re-run with the fix.
+was technically true and substantively misleading.** *(Resolved: the fix, and then the full v2-harness
+rebuild, cut empty turns to 0.9% board-wide; the entire board has been re-run.)*
 
 ### 2. `epistemics` for the strait COVER case is outcome-in-disguise
 
