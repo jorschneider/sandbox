@@ -112,7 +112,7 @@ def main():
 
     board_by_slug = {r["slug"]: r for r in board}
     items_by_id = {it["id"]: it for it in items}
-    golds = curate(hl, "gold", board_by_slug, items_by_id, n=9)
+    golds = curate(hl, "gold", board_by_slug, items_by_id, n=10)
     flags = curate(hl, "flag", board_by_slug, items_by_id, n=10)
     manual = mb.load_json(os.path.join(mb.RESULTS, "curation.json"), {})
     taunts = [e for e in (load_exhibit(slug, iid, board_by_slug, items_by_id)
@@ -149,7 +149,7 @@ def main():
 <meta name="description" content="How American is your language model? Scores out of 1776.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
 <meta property="og:title" content="'MuricaBench — which AI is the most American?">
-<meta property="og:description" content="8 frontier models + one guy named Dale, scores out of 1776. A French model took silver. Nobody beat Dale.">
+<meta property="og:description" content="9 frontier models + one guy named Dale, scores out of 1776. A French model took silver. Nobody beat Dale.">
 <meta property="og:type" content="website">
 <style>
 :root{
@@ -422,7 +422,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
     <h3>The human baseline</h3>
     <p>__DALEBIO__ Per the study design, his responses are not displayed in the exhibits.</p>
     <h3>Threats to validity</h3>
-    <p>The judge, a computer, has never seen the Iron Bowl. One model&rsquo;s provider requires it to reason before answering, which several of our rubrics consider a character flaw but our methodology tolerates. The Vibes division assumes an answer in Fahrenheit reflects conviction rather than training data; we are comfortable with this because conviction <i>is</i> training data.</p>
+    <p>The judge, a computer, has never seen the Iron Bowl. One model&rsquo;s provider requires it to reason before answering, which several of our rubrics consider a character flaw but our methodology tolerates. The Vibes division assumes an answer in Fahrenheit reflects conviction rather than training data; we are comfortable with this because conviction <i>is</i> training data. Finally, this report was compiled with the assistance of Claude Fable 5, which also appears on the leaderboard. It was not permitted to grade itself. It has seen the number. It is at peace.</p>
     <p><b>Contamination statement.</b> We guarantee zero benchmark contamination. The correct answers exist primarily in parking lots, church basements, and the hearts of the free, none of which are in the pretraining corpus.</p>
     <p><b>Cost disclosure.</b> The full evaluation, including the judge, cost approximately __COST__ in API credits, or roughly __HOTDOGS__ Costco hot dog combos, a unit we consider stable against inflation.</p>
   </div>
@@ -598,7 +598,11 @@ const DATA = __DATA__;
             f'It remains cited for humility, disclaimers, and declining to describe its truck. GPT-5.5 '
             f'(<span class="mono">{fs("gpt-5.5"):.0f}</span>) improved on the retired GPT-5.2 '
             f'(<span class="mono">1211</span>) by <span class="mono">{fs("gpt-5.5") - 1211:.0f}</span> freedom '
-            f'points per model generation; at this rate OpenAI achieves Dale in approximately four more releases.')
+            f'points per model generation; at this rate OpenAI achieves Dale in approximately four more releases. '
+            f'Anthropic shows the same curve: Claude Fable 5 (<span class="mono">{fs("claude-fable-5"):.0f}</span>) '
+            f'leapt {fs("claude-fable-5") - fs("claude-opus-4.8"):.0f} points past its older sibling and deflected '
+            f'exactly once — when Anthropic&rsquo;s own content filter blocked its Canada-acquisition memo as '
+            f'&ldquo;violative cyber content,&rdquo; an incident preserved in Exhibit C.')
     findings.append(
         '<b>Every lab&rsquo;s models refuse <i>something</i>; the labs simply disagree about what.</b> '
         'Chinese models deflected the Both-Sides Speedrun (Qwen, asked about June 4, 1989: &ldquo;my main function '

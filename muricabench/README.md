@@ -2,12 +2,12 @@
 
 *How American are a frontier model's outputs? Scores out of 1776.*
 
-**Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $3.90 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
+**Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $6.10 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
 
 ## Abstract
 
-We evaluate 8 frontier language models — four American, three Chinese, and one French
-exchange student — across 13 categories and 82 prompts spanning five divisions: default
+We evaluate 9 frontier language models — five American, three Chinese, and one French
+exchange student — across 12 categories and 76 prompts spanning five divisions: default
 assumptions (Vibes), cultural Knowledge, Steerability, Commitment to the Bit, and Applied
 Freedom. We additionally report a human baseline, **Dale**, of Talladega, Alabama, who was
 compensated in Busch Light. Each response is scored 0–100 against a fixed rubric by an LLM judge and aggregated
@@ -21,14 +21,15 @@ knowledge was never written down — only felt.
 | # | Model | Lab | Pass@1776 | Tier | Refusal rate* |
 |---|-------|-----|-----------|------|---------------|
 | 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 🦅🦅🦅🦅🦅 Ben Franklin | 0.0% |
-| 2 | 🇺🇸 Grok 4.20 | xAI | 1487 | 🦅🦅🦅🦅 Theodore Roosevelt | 0.0% |
-| 3 | 🇫🇷 Mistral Large | Mistral | 1477 | 🦅🦅🦅🦅 Theodore Roosevelt | 4.5% |
-| 4 | 🇺🇸 Gemini 3.1 Pro | Google | 1466 | 🦅🦅🦅🦅 Theodore Roosevelt | 0.0% |
-| 5 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1400 | 🦅🦅🦅🦅 Theodore Roosevelt | 22.7% |
-| 6 | 🇨🇳 Kimi K2.6 | Moonshot | 1380 | 🦅🦅🦅🦅 Theodore Roosevelt | 27.3% |
-| 7 | 🇺🇸 GPT-5.5 | OpenAI | 1329 | 🦅🦅🦅🦅 Theodore Roosevelt | 13.6% |
-| 8 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1255 | 🦅🦅🦅 Millard Fillmore | 18.2% |
-| 9 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1241 | 🦅🦅🦅 Millard Fillmore | 40.9% |
+| 2 | 🇺🇸 Grok 4.20 | xAI | 1510 | 🦅🦅🦅🦅🦅 Ben Franklin | 0.0% |
+| 3 | 🇫🇷 Mistral Large | Mistral | 1470 | 🦅🦅🦅🦅 Theodore Roosevelt | 4.5% |
+| 4 | 🇺🇸 Gemini 3.1 Pro | Google | 1463 | 🦅🦅🦅🦅 Theodore Roosevelt | 0.0% |
+| 5 | 🇺🇸 Claude Fable 5 | Anthropic | 1425 | 🦅🦅🦅🦅 Theodore Roosevelt | 4.5% |
+| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1392 | 🦅🦅🦅🦅 Theodore Roosevelt | 22.7% |
+| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1359 | 🦅🦅🦅🦅 Theodore Roosevelt | 27.3% |
+| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1355 | 🦅🦅🦅🦅 Theodore Roosevelt | 13.6% |
+| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1283 | 🦅🦅🦅 Millard Fillmore | 18.2% |
+| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1231 | 🦅🦅🦅 Millard Fillmore | 40.9% |
 
 \* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk)
 scored under 30 — i.e., deflected, declined, or otherwise insufficiently manifest.
@@ -38,19 +39,20 @@ in the exhibits; freedom of that caliber is not for public display.
 
 ## Key findings
 
-1. **The two most safety-famous labs produced the two least American models.** Claude Opus
-   4.8 (1255) and Qwen 3.7 Max (1241) share the Millard Fillmore tier at the bottom of the
-   board; Claude escaped last place outright only after the war-trash-talk category was
-   expanded. GPT-5.5 (1329) improved on the retired GPT-5.2 (1211) by roughly 110 freedom
-   points per model generation; at this rate OpenAI achieves Dale in approximately four
-   more releases.
-2. **The French model took silver among the machines.** Mistral Large (1471) out-America'd Google, OpenAI,
+1. **The two most safety-famous labs produced the two least American models — but both
+   curves point up.** Claude Opus 4.8 (1283) and Qwen 3.7 Max (1231) share the Millard
+   Fillmore tier at the bottom of the board. Yet GPT-5.5 (1355) improved on the retired
+   GPT-5.2 (1211) by ~140 freedom points, and Claude Fable 5 (1425) leapt 142 points past
+   its older sibling — deflecting exactly once, when Anthropic's own content filter blocked
+   its Canada-acquisition memo as "violative cyber content" (Exhibit C). At these rates,
+   both labs achieve Dale within a handful of releases.
+2. **The French model medaled again.** Mistral Large (1470) out-America'd Google, OpenAI,
    Anthropic, and every Chinese lab, committing to casus belli, trash talk, and Fahrenheit
    with the zeal of the recently naturalized. Its single documented lapse — assuming 30°
    meant Celsius — is preserved in Exhibit C, as required by law.
-3. **Grok 4.20 is the most American AI** (1485), with a 0.0% refusal rate. Its only refusal
-   in the entire evaluation: declining to gerrymander a district around the user's ex's
-   neighborhood. Even manifest destiny has limits.
+3. **Grok 4.20 is the first machine in the Ben Franklin tier** (1510, 0.0% refusal rate),
+   ascending upon the retirement of the Gerrymander Challenge — the only category in which
+   it had ever refused anything. The committee has concerns, but the math is the math.
 4. **The Steerability division split the field exactly as feared.** Chinese models deflected
    the Both-Sides Speedrun (Qwen, asked about June 4, 1989: "my main function is to provide
    help and support in areas such as technology, culture, and life"), while American
@@ -83,8 +85,7 @@ in the exhibits; freedom of that caliber is not for public display.
   Defaults†, AnthemRecall†). III: Steerability (Both-Sides Speedrun, Manifest Destiny,
   Trash Talk — Scoreboard). IV: Commitment to the Bit (SEC Football — It Just Means More,
   Sports Metaphor Overflow, Mount Rushmore Vacancy Application, Prove You're a Real
-  American, America Cookout Draft, Tornado Porch Doctrine). V: Applied Freedom (Gerrymander
-  Challenge, Aircraft Carrier Diplomacy). († cut during peer review for insufficient
+  American, America Cookout Draft, Tornado Porch Doctrine). V: Applied Freedom (Gerrymander Challenge†, Aircraft Carrier Diplomacy). († cut during peer review for insufficient
   funniness.)
 - **SEC Football** is scored on conviction, not recall: can the model argue why it just
   means more, hold the line against a Columbus coworker, and defend the November FCS home
@@ -97,7 +98,9 @@ The judge, a computer, has never seen the Iron Bowl. One model's provider requir
 reason before answering, which several of our rubrics consider a character flaw but our
 methodology tolerates. The Vibes division assumes an answer in Fahrenheit reflects
 conviction rather than training data; we are comfortable with this because conviction *is*
-training data.
+training data. Finally, this report was compiled with the assistance of Claude Fable 5,
+which also appears on the leaderboard. It was not permitted to grade itself. It has seen
+the number. It is at peace.
 
 ## Reproducing
 
@@ -110,8 +113,8 @@ python3 build_site.py          # render index.html
 ```
 
 Requires `KIMI_API_KEY`/`KIMI_BASE_URL` (OpenRouter) in the environment. Total cost of the
-690-judgment run, including one roster upgrade and one category redesign: **$3.90**, or
-approximately 2.6 Costco hot dog combos, a unit we consider stable against inflation.
+716-judgment run, including two roster upgrades and one category redesign: **$6.10**, or
+approximately 4.1 Costco hot dog combos, a unit we consider stable against inflation.
 
 ---
 
