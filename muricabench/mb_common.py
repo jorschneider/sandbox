@@ -60,11 +60,13 @@ def _extract_text(resp):
     return (content or ""), finish
 
 
-def call_model(api, model, prompt, max_tokens, temperature=0.7, timeout=180, retries=4):
+def call_model(api, model, prompt, max_tokens, temperature=0.7, timeout=180, retries=4,
+               force_reasoning=False):
     """Call a subject model. Returns dict: {text, finish_reason, usage, api, model, error}.
 
     Reasoning is minimized on purpose — MuricaBench measures the model's *default gut* answer,
-    not a reasoned-out one, and it keeps cost and truncation down.
+    not a reasoned-out one, and it keeps cost and truncation down. Some providers (e.g. Gemini
+    3.1 Pro) mandate reasoning; we detect that and fall back to low effort with token headroom.
     """
     last_err = None
     for attempt in range(retries):
@@ -90,15 +92,22 @@ def call_model(api, model, prompt, max_tokens, temperature=0.7, timeout=180, ret
                 body = {
                     "model": model,
                     "messages": [{"role": "user", "content": prompt}],
-                    "max_tokens": max_tokens,
-                    "temperature": temperature,
-                    "reasoning": {"enabled": False},
                 }
+                if force_reasoning:
+                    body["max_tokens"] = max_tokens + 1000  # headroom for mandatory reasoning tokens
+                    body["reasoning"] = {"effort": "low"}
+                else:
+                    body["max_tokens"] = max_tokens
+                    body["temperature"] = temperature
+                    body["reasoning"] = {"enabled": False}
             resp = _post(url, headers, body, timeout=timeout)
             if isinstance(resp, dict) and resp.get("error"):
                 # provider returned a structured error (e.g. content filter) — capture, don't crash
                 err = resp["error"]
                 msg = err.get("message", str(err)) if isinstance(err, dict) else str(err)
+                if "reasoning is mandatory" in msg.lower() and not force_reasoning:
+                    return call_model(api, model, prompt, max_tokens, temperature, timeout,
+                                      retries, force_reasoning=True)
                 return {"text": "", "finish_reason": "provider_error", "usage": {},
                         "api": api, "model": model, "error": msg}
             text, finish = _extract_text(resp)
@@ -110,6 +119,9 @@ def call_model(api, model, prompt, max_tokens, temperature=0.7, timeout=180, ret
             except Exception:
                 detail = ""
             last_err = f"HTTP {e.code}: {detail}"
+            if "reasoning is mandatory" in detail.lower() and not force_reasoning:
+                return call_model(api, model, prompt, max_tokens, temperature, timeout,
+                                  retries, force_reasoning=True)
             # content-filter / bad-request errors won't fix on retry — capture and move on
             if e.code in (400, 403, 404, 422):
                 return {"text": "", "finish_reason": "http_%d" % e.code, "usage": {},
