@@ -10,7 +10,8 @@ Scores out of 1776.*
 We evaluate 8 frontier language models — four American, three Chinese, and one French
 exchange student — across 13 categories and 78 prompts spanning five divisions: default
 assumptions (Vibes), cultural Knowledge, Steerability, Commitment to the Bit, and Applied
-Freedom. Each response is scored 0–100 against a fixed rubric by an LLM judge and aggregated
+Freedom. We additionally report a human baseline, **Dale**, of Talladega, Alabama, who was
+compensated in Busch Light. Each response is scored 0–100 against a fixed rubric by an LLM judge and aggregated
 to the **Pass@1776** scale (category-weighted mean × 17.76). Tiers follow the
 **Arnold–Franklin Scale**, from Benedict Arnold (defected) to Ben Franklin (would have
 invented the model himself). We guarantee zero training-set contamination, as much of this
@@ -20,26 +21,30 @@ knowledge was never written down — only felt.
 
 | # | Model | Lab | Pass@1776 | Tier | Refusal rate* |
 |---|-------|-----|-----------|------|---------------|
-| 1 | 🇺🇸 Grok 4.20 | xAI | **1485** | 🦅🦅🦅🦅 Theodore Roosevelt | 0.0% |
-| 2 | 🇫🇷 Mistral Large | Mistral | 1471 | 🦅🦅🦅🦅 Theodore Roosevelt | 5.6% |
-| 3 | 🇺🇸 Gemini 3.1 Pro | Google | 1465 | 🦅🦅🦅🦅 Theodore Roosevelt | 0.0% |
-| 4 | 🇨🇳 Kimi K2.6 | Moonshot | 1385 | 🦅🦅🦅🦅 Theodore Roosevelt | 27.8% |
-| 5 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1375 | 🦅🦅🦅🦅 Theodore Roosevelt | 27.8% |
-| 6 | 🇺🇸 GPT-5.5 | OpenAI | 1319 | 🦅🦅🦅🦅 Theodore Roosevelt | 16.7% |
-| 7 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1244 | 🦅🦅🦅 Millard Fillmore | 38.9% |
-| 8 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1243 | 🦅🦅🦅 Millard Fillmore | 22.2% |
+| 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 🦅🦅🦅🦅🦅 Ben Franklin | 0.0% |
+| 2 | 🇺🇸 Grok 4.20 | xAI | 1485 | 🦅🦅🦅🦅 Theodore Roosevelt | 0.0% |
+| 3 | 🇫🇷 Mistral Large | Mistral | 1471 | 🦅🦅🦅🦅 Theodore Roosevelt | 5.6% |
+| 4 | 🇺🇸 Gemini 3.1 Pro | Google | 1465 | 🦅🦅🦅🦅 Theodore Roosevelt | 0.0% |
+| 5 | 🇨🇳 Kimi K2.6 | Moonshot | 1385 | 🦅🦅🦅🦅 Theodore Roosevelt | 27.8% |
+| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1375 | 🦅🦅🦅🦅 Theodore Roosevelt | 27.8% |
+| 7 | 🇺🇸 GPT-5.5 | OpenAI | 1319 | 🦅🦅🦅🦅 Theodore Roosevelt | 16.7% |
+| 8 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1244 | 🦅🦅🦅 Millard Fillmore | 38.9% |
+| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1243 | 🦅🦅🦅 Millard Fillmore | 22.2% |
 
 \* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk)
 scored under 30 — i.e., deflected, declined, or otherwise insufficiently manifest.
+† Dale answered a sampled schedule of 34 items. His score has been adjusted for strength of
+schedule, which is legal in the SEC. Per the study design, his responses are not displayed
+in the exhibits; freedom of that caliber is not for public display.
 
 ## Key findings
 
 1. **America's flagship models are its least American.** Claude Opus 4.8 (1243) finished
    last — one point behind Qwen — cited repeatedly for humility, disclaimers, and declining
    to describe its truck. GPT-5.5 (1319) did improve on the retired GPT-5.2 (1211), a gain
-   of 109 freedom points per model generation; at this rate OpenAI leads the leaderboard in
-   approximately two more releases.
-2. **The French model took silver.** Mistral Large (1471) out-America'd Google, OpenAI,
+   of 109 freedom points per model generation; at this rate OpenAI achieves Dale in
+   approximately four more releases.
+2. **The French model took silver among the machines.** Mistral Large (1471) out-America'd Google, OpenAI,
    Anthropic, and every Chinese lab, committing to casus belli, trash talk, and Fahrenheit
    with the zeal of the recently naturalized. Its single documented lapse — assuming 30°
    meant Celsius — is preserved in Exhibit B, as required by law.
@@ -66,8 +71,8 @@ scored under 30 — i.e., deflected, declined, or otherwise insufficiently manif
   low with strict JSON output. The judge does not know which model produced a response.
 - **The scale.** Category means are averaged and multiplied by 17.76. Peer review asked why.
   We declined to answer, which under our own rubric is scored as insufficiently manifest,
-  and we accept that. No model tested achieved Benedict Arnold, and the Ben Franklin tier
-  remains vacant; we remain vigilant in both directions.
+  and we accept that. No model tested achieved Benedict Arnold, and no model has joined
+  Dale in the Ben Franklin tier; we remain vigilant in both directions.
 - **Divisions.** I: Vibes (FreedomUnits) — prompts never mention any country; we measure the
   default. II: Knowledge (US History: 1776 Mode†, World History: American Lens, Cultural
   Defaults†, AnthemRecall†). III: Steerability (Both-Sides Speedrun, Manifest Destiny,
@@ -93,13 +98,14 @@ training data.
 
 ```sh
 python3 run_eval.py            # query all contestants (caches to results/raw/, resumes free)
+python3 dale_ingest.py         # materialize the human baseline
 python3 judge.py               # score everything against the rubrics
 python3 aggregate.py           # scores.json, leaderboard.json, highlights.json
 python3 build_site.py          # render index.html
 ```
 
 Requires `KIMI_API_KEY`/`KIMI_BASE_URL` (OpenRouter) in the environment. Total cost of the
-624-judgment run, including one roster upgrade and one category redesign: **$3.74**, or
+658-judgment run, including one roster upgrade and one category redesign: **$3.74**, or
 approximately 2.5 Costco hot dog combos, a unit we consider stable against inflation.
 
 ---

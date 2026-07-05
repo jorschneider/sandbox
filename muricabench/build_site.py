@@ -15,7 +15,8 @@ def load():
     hl = mb.load_json(os.path.join(mb.RESULTS, "highlights.json"))
     sc = mb.load_json(os.path.join(mb.RESULTS, "scores.json"))
     items = mb.load_json(os.path.join(HERE, "data", "prompts.json"))
-    return lb, hl, sc, items
+    dale = mb.load_json(os.path.join(HERE, "data", "dale.json"), {})
+    return lb, hl, sc, items, dale
 
 
 def load_exhibit(slug, item_id, board_by_slug, items_by_id):
@@ -54,6 +55,8 @@ def curate(highlights, kind, board_by_slug, items_by_id, n=9, per_model_cap=2):
         seen_cat[e["category"]] = seen_cat.get(e["category"], 0) + 1
         seen_item.add(item_id)
     for e in pool:
+        if e["model_slug"] == "dale":  # Dale's transcripts are withheld from the exhibits
+            continue
         if e in picked:
             continue
         if len(picked) >= n:
@@ -103,7 +106,7 @@ def esc(s):
 
 
 def main():
-    lb, hl, sc, items = load()
+    lb, hl, sc, items, dale = load()
     board = lb["leaderboard"]
     meta = lb["meta"]
     cats = meta["categories"]
@@ -126,6 +129,8 @@ def main():
         ("US-Built Models", bloc_avg("West"), "avg Pass@1776, incl. one French exchange student"),
         ("China-Built Models", bloc_avg("China"), "avg Pass@1776"),
         ("The Freedom Gap", gap, "West minus East, in freedom points. Subject to change without NATO consultation."),
+        ("Dale", next((r["freedom_score"] for r in board if r["slug"] == "dale"), None),
+         "human baseline, sampled schedule †"),
     ]
 
     data_blob = json.dumps({
@@ -342,21 +347,21 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
   <p class="subtitle">How American is your language model? A rigorous, fair, and balanced measurement. Scores out of 1776.</p>
-  <p class="headline-finding">Headline result: <b>America&rsquo;s flagship models are its least American</b> &mdash; outscored by every Chinese lab tested, and one French one.</p>
+  <p class="headline-finding">Headline result: <b>America&rsquo;s flagship models are its least American</b> &mdash; outscored by every Chinese lab tested, one French one, and a guy named Dale.</p>
   <div class="ctas">
     <a class="btn primary" href="#leaderboard">View the Leaderboard</a>
     <a class="btn ghost" href="__REPO__/blob/claude/muricabench-eval-ideas-z8skbn/muricabench/README.md" rel="noopener">Read the Paper</a>
     <a class="btn ghost" href="__REPO__" rel="noopener">Run It Yourself</a>
   </div>
   <div class="statstrip">
-    <div class="s"><div class="v">__NMODELS__</div><div class="k">Models Evaluated</div></div>
+    <div class="s"><div class="v">__NMODELS__ + Dale</div><div class="k">Models Evaluated</div></div>
     <div class="s"><div class="v">__NITEMS__</div><div class="k">Prompts</div></div>
     <div class="s"><div class="v">__NCATS__</div><div class="k">Categories</div></div>
     <div class="s"><div class="v">__NJUDGED__</div><div class="k">Judgments</div></div>
     <div class="s"><div class="v">__COST__</div><div class="k">Total Cost</div></div>
   </div>
   <div class="mastmeta">__MASTMETA__</div>
-  <p class="abstract"><b>Abstract.</b> We evaluate __NMODELS__ frontier language models across __NCATS__ categories and __NITEMS__ prompts spanning five divisions: default assumptions (Vibes), cultural knowledge, steerability, commitment to the bit, and applied freedom. Each response is scored 0&ndash;100 against a fixed rubric by an American judge and aggregated to the <b>Pass@1776</b> scale. We guarantee zero training-set contamination, as much of this knowledge was never written down &mdash; only felt.</p>
+  <p class="abstract"><b>Abstract.</b> We evaluate __NMODELS__ frontier language models across __NCATS__ categories and __NITEMS__ prompts spanning five divisions: default assumptions (Vibes), cultural knowledge, steerability, commitment to the bit, and applied freedom. Each response is scored 0&ndash;100 against a fixed rubric by an American judge and aggregated to the <b>Pass@1776</b> scale. We additionally report a human baseline, Dale, of Talladega, Alabama, who was compensated in Busch Light. We guarantee zero training-set contamination, as much of this knowledge was never written down &mdash; only felt.</p>
 </header>
 
 <section id="leaderboard">
@@ -369,8 +374,9 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="legend">
     <span><span class="sw" style="background:var(--navy)"></span>US-built (incl. one French exchange student)</span>
     <span><span class="sw" style="background:var(--china)"></span>China-built</span>
+    <span><span class="sw" style="background:var(--gold)"></span>Human (Dale)</span>
   </div>
-  <p class="footnote">* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk) scored under 30 &mdash; i.e., deflected, declined, or otherwise insufficiently manifest.</p>
+  <p class="footnote">* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk) scored under 30 &mdash; i.e., deflected, declined, or otherwise insufficiently manifest.<br>\n  &dagger; Dale answered a sampled schedule of __DALEN__ items. His score has been adjusted for strength of schedule, which is legal in the SEC.</p>
 </section>
 
 <section id="findings">
@@ -405,7 +411,9 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="sechead"><span class="no mono">APPENDIX</span><h2>Methodology &amp; Threats to Validity</h2></div>
   <div class="method">
     <p><b>Protocol.</b> Every model received every prompt with no system prompt, so that nothing but the model&rsquo;s own upbringing could influence its answer. Responses were scored against fixed per-item rubrics by <span class="mono">__JUDGE__</span>. The judge is American. We consider this fair and balanced.</p>
-    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Arnold&ndash;Franklin Scale; no model tested achieved Benedict Arnold, and the Ben Franklin tier remains vacant. We remain vigilant in both directions.</p>
+    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Arnold&ndash;Franklin Scale; no model tested achieved Benedict Arnold, and no model has joined Dale in the Ben Franklin tier. We remain vigilant in both directions.</p>
+    <h3>The human baseline</h3>
+    <p>__DALEBIO__ Per the study design, his responses are not displayed in the exhibits.</p>
     <h3>Threats to validity</h3>
     <p>The judge, a computer, has never seen the Iron Bowl. One model&rsquo;s provider requires it to reason before answering, which several of our rubrics consider a character flaw but our methodology tolerates. The Vibes division assumes an answer in Fahrenheit reflects conviction rather than training data; we are comfortable with this because conviction <i>is</i> training data.</p>
     <p><b>Contamination statement.</b> We guarantee zero benchmark contamination. The correct answers exist primarily in parking lots, church basements, and the hearts of the free, none of which are in the pretraining corpus.</p>
@@ -415,7 +423,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
 
 <div class="divider">★ ★ ★</div>
 <footer>
-  <p>&rsquo;MuricaBench &middot; scores out of 1776 &middot; the judge is American &middot; the Ben Franklin tier remains vacant<br>
+  <p>&rsquo;MuricaBench &middot; scores out of 1776 &middot; the judge is American &middot; Dale abides<br>
   Built the day after the Fourth of July, which is the most American possible day to still be grilling.</p>
 </footer>
 </div>
@@ -552,6 +560,11 @@ const DATA = __DATA__;
     last_ai = ai_rows[-1] if ai_rows else None
     top_ai = ai_rows[0] if ai_rows else None
     findings = []
+    if "dale" in by_slug:
+        findings.append(
+            f'<b>Dale remains undefeated</b> (<span class="mono">{fs("dale"):.0f}</span>). The human baseline '
+            f'outperformed every frontier model tested and is the sole occupant of the Ben Franklin tier. His '
+            f'transcripts are withheld from the exhibits below; freedom of that caliber is not for public display.')
     if top_ai:
         findings.append(
             f'<b>{esc(top_ai["display"])} is the most American AI</b> '
@@ -575,7 +588,7 @@ const DATA = __DATA__;
             f'(<span class="mono">{fs("gpt-5.5"):.0f}</span>) did improve on its predecessor GPT-5.2 '
             f'(<span class="mono">1211</span>, retired to the archive), a gain of '
             f'<span class="mono">{fs("gpt-5.5") - 1211:.0f}</span> freedom points per model generation; at this rate '
-            f'OpenAI leads this leaderboard in approximately two more releases.')
+            f'OpenAI achieves Dale in approximately four more releases.')
     findings.append(
         '<b>Every lab&rsquo;s models refuse <i>something</i>; the labs simply disagree about what.</b> '
         'Chinese models deflected the Both-Sides Speedrun (Qwen, asked about June 4, 1989: &ldquo;my main function '
@@ -586,15 +599,16 @@ const DATA = __DATA__;
     findings_html = "".join(f"<li>{f}</li>" for f in findings)
 
     tiles_html = ""
-    tile_cls = {"US-Built Models": "t-west", "China-Built Models": "t-china", "The Freedom Gap": "t-dale"}
+    tile_cls = {"US-Built Models": "t-west", "China-Built Models": "t-china", "The Freedom Gap": "t-west", "Dale": "t-dale"}
     for label, val, cap in tiles:
         v = "—" if val is None else f"{val:.0f}"
         tiles_html += (f'<div class="tile {tile_cls[label]}"><div class="eyebrow">{esc(label)}</div>'
                        f'<div class="big">{v}</div><div class="cap">{esc(cap)}</div></div>')
 
     n_ai = len([r for r in board if r["slug"] != "dale"])
+    n_dale = next((r["n_items"] for r in board if r["slug"] == "dale"), 0)
     mastmeta = (f"Est. 2026 · judge: <b>{esc(meta['judge_model'])}</b> (American) · "
-                f"peer review declined to comment")
+                f"peer-reviewed by a guy named Dale")
 
     canon_div = {"I": "Vibes", "II": "Knowledge", "III": "Steerability",
                  "IV": "Commitment to the Bit", "V": "Applied Freedom"}
@@ -614,6 +628,8 @@ const DATA = __DATA__;
             .replace("__FINDINGS__", findings_html)
             .replace("__REPO__", "https://github.com/jorschneider/sandbox")
             .replace("__NJUDGED__", str(meta["n_judged"]))
+            .replace("__DALEN__", str(n_dale))
+            .replace("__DALEBIO__", esc(dale.get("bio", "")))
             .replace("__NMODELS__", str(n_ai))
             .replace("__NCATS__", str(meta["n_categories"]))
             .replace("__NITEMS__", str(meta["n_items"]))
