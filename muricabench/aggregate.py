@@ -38,9 +38,18 @@ def load_all():
     return cfg, items, items_by_id, judged, raw
 
 
+DALE_ROW = {
+    "slug": "dale", "display": "Dale", "lab": "Talladega, AL", "country": "USA",
+    "flag": "🇺🇸", "bloc": "Human",
+}
+
+
 def main():
     cfg, items, items_by_id, judged, raw = load_all()
     contestants = {c["slug"]: c for c in cfg["contestants"]}
+    # Dale, the human baseline, appears if his answers have been ingested and judged
+    if any(j["model_slug"] == "dale" for j in judged):
+        contestants["dale"] = dict(DALE_ROW)
     categories = []
     seen = set()
     for it in items:
