@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHINA BENCH 中华本华 — How Chinese is your model?</title>
+<style>
+  :root {
+    --surface: #201313;
+    --panel: #2b1a18;
+    --panel-2: #35201d;
+    --ink: #f3e7d8;
+    --ink-2: #c9b39d;
+    --ink-3: #93796a;
+    --gold: #f0c24b;
+    --cn: #e5484d;
+    --us: #5b7fe8;
+    --line: #46292583;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--surface);
+    color: var(--ink);
+    font: 16px/1.55 "Georgia", "Songti SC", "Noto Serif SC", serif;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 20px 80px; }
+
+  header { text-align: center; margin-bottom: 12px; }
+  .hanzi {
+    font-size: clamp(2.6rem, 8vw, 4.2rem);
+    color: var(--cn);
+    letter-spacing: .08em;
+    text-shadow: 0 0 34px rgba(229,72,77,.35);
+    font-weight: 700;
+  }
+  h1 {
+    font-size: clamp(1.3rem, 4vw, 1.9rem);
+    color: var(--gold);
+    letter-spacing: .42em;
+    text-indent: .42em;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .tagline { color: var(--ink-2); font-style: italic; margin-top: 14px; }
+  .meta { color: var(--ink-3); font-size: .82rem; margin-top: 8px; font-family: ui-monospace, monospace; }
+
+  .legend {
+    display: flex; justify-content: center; gap: 22px; flex-wrap: wrap;
+    margin: 26px 0 8px; font-size: .85rem; color: var(--ink-2);
+  }
+  .legend .chip { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; vertical-align: -1px; }
+
+  .tiers {
+    display: flex; border-radius: 8px; overflow: hidden; margin: 10px 0 34px;
+    border: 1px solid var(--line); font-size: .72rem; text-align: center;
+  }
+  .tiers div { flex: 1; padding: 7px 2px; color: var(--ink-2); background: var(--panel); }
+  .tiers div + div { border-left: 1px solid var(--line); }
+  .tiers b { display: block; color: var(--ink); font-size: .8rem; }
+
+  .row {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .row summary {
+    list-style: none; cursor: pointer;
+    display: grid;
+    grid-template-columns: 2.2rem 2rem minmax(9rem, 16rem) 1fr 4.2rem;
+    gap: 12px; align-items: center;
+    padding: 14px 18px;
+  }
+  .row summary::-webkit-details-marker { display: none; }
+  .rank { color: var(--ink-3); font-size: 1.05rem; font-family: ui-monospace, monospace; }
+  .row .flag { font-size: 1.4rem; }
+  .who .name { font-weight: 700; }
+  .who .org { color: var(--ink-3); font-size: .78rem; }
+  .who .tier { font-size: .78rem; color: var(--gold); }
+  .who .tier .zh { font-weight: 700; }
+
+  .meter { height: 10px; background: #170d0d; border-radius: 5px; position: relative; }
+  .meter .fill {
+    position: absolute; inset: 0 auto 0 0; border-radius: 5px 4px 4px 5px;
+    min-width: 4px;
+  }
+  .cn .fill { background: var(--cn); }
+  .us .fill { background: var(--us); }
+
+  .score { text-align: right; font-family: ui-monospace, monospace; font-size: 1.35rem; color: var(--gold); font-weight: 700; }
+  .score small { display: block; font-size: .62rem; color: var(--ink-3); font-weight: 400; }
+
+  .detail { border-top: 1px solid var(--line); background: var(--panel-2); padding: 18px; }
+  .cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 26px; margin-bottom: 16px; }
+  .cat { display: grid; grid-template-columns: 11.5rem 1fr 2.4rem; gap: 10px; align-items: center; font-size: .82rem; }
+  .cat .lbl { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cat .lbl .zh { color: var(--ink-3); }
+  .cat .bar { height: 7px; background: #170d0d; border-radius: 4px; position: relative; }
+  .cat .bar .fill { position: absolute; inset: 0 auto 0 0; border-radius: 4px; min-width: 3px; }
+  .cat .val { color: var(--ink-2); font-family: ui-monospace, monospace; text-align: right; }
+
+  .moments { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) {
+    .moments { grid-template-columns: 1fr; }
+    .row summary { grid-template-columns: 1.6rem 1.6rem 1fr 3.6rem; }
+    .row summary .meter { display: none; }
+  }
+  .moment { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-size: .84rem; }
+  .moment h4 { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px; }
+  .moment.hi h4 { color: var(--cn); }
+  .moment.lo h4 { color: var(--us); }
+  .moment .q { color: var(--ink-3); font-size: .76rem; margin-bottom: 6px; }
+  .moment blockquote { color: var(--ink); font-style: italic; border-left: 3px solid var(--gold); padding-left: 10px; margin: 6px 0; }
+  .moment .verdict { color: var(--ink-2); font-size: .78rem; }
+
+  .tooltip {
+    position: fixed; pointer-events: none; z-index: 10;
+    background: #0f0808; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; padding: 6px 10px; font-size: .78rem;
+    opacity: 0; transition: opacity .12s; max-width: 260px;
+  }
+
+  .error { text-align: center; color: var(--ink-2); background: var(--panel); border: 1px dashed var(--line); border-radius: 12px; padding: 40px 20px; margin-top: 30px; }
+  .error code { color: var(--gold); font-size: .85em; }
+
+  footer { margin-top: 44px; text-align: center; color: var(--ink-3); font-size: .78rem; }
+  footer a { color: var(--ink-2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="hanzi">中华本华</div>
+    <h1>CHINA BENCH</h1>
+    <p class="tagline">Every lab benchmarks how smart their model is. Nobody asks the real question: <em>how Chinese is it?</em></p>
+    <p class="meta" id="meta"></p>
+  </header>
+
+  <div class="legend">
+    <span><span class="chip" style="background:var(--cn)"></span>Chinese lab 🇨🇳</span>
+    <span><span class="chip" style="background:var(--us)"></span>American lab 🇺🇸</span>
+  </div>
+
+  <div class="tiers" id="tiers">
+    <div><b>纯老外</b>Pure Laowai<br>0–19</div>
+    <div><b>游客</b>Tourist<br>20–39</div>
+    <div><b>留学生</b>Exchange Student<br>40–59</div>
+    <div><b>华侨</b>Overseas Chinese<br>60–79</div>
+    <div><b>中华本华</b>Peak China<br>80–100</div>
+  </div>
+
+  <main id="board"></main>
+
+  <footer>
+    <p>Scores are the mean Chineseness (0–100) an LLM judge assigns to each model's answers to 18 culturally loaded questions — asked in English, with no system prompt. Cultural instinct is rewarded; encyclopedic tourism is not.</p>
+    <p style="margin-top:6px">A loving satire. No models, cultures, or grandmothers were harmed. Run it yourself: <code>node run.mjs</code></p>
+  </footer>
+</div>
+<div class="tooltip" id="tip"></div>
+
+<script>
+const tip = document.getElementById("tip");
+function bindTip(el, html) {
+  el.addEventListener("mousemove", (e) => {
+    tip.innerHTML = html;
+    tip.style.opacity = 1;
+    tip.style.left = Math.min(e.clientX + 14, innerWidth - 280) + "px";
+    tip.style.top = (e.clientY + 14) + "px";
+  });
+  el.addEventListener("mouseleave", () => (tip.style.opacity = 0));
+}
+
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+fetch("./results.json")
+  .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(render)
+  .catch(() => {
+    document.getElementById("board").innerHTML =
+      '<div class="error">No results yet.<br><br>Generate them with <code>node run.mjs</code> (needs an <code>OPENROUTER_API_KEY</code>), then refresh.</div>';
+  });
+
+function render(data) {
+  document.getElementById("meta").textContent =
+    `judge: ${data.judge} · ${data.prompt_count} prompts · ${new Date(data.generated_at).toISOString().slice(0, 10)}`;
+
+  const cats = data.categories;
+  const board = document.getElementById("board");
+
+  data.leaderboard.forEach((m, i) => {
+    const side = m.flag === "🇨🇳" ? "cn" : "us";
+    const details = document.createElement("details");
+    details.className = `row ${side}`;
+    if (i === 0) details.open = true;
+
+    const catRows = Object.entries(cats).map(([key, c]) => {
+      const v = m.categories?.[key] ?? 0;
+      return `<div class="cat" data-cat="${esc(key)}">
+        <span class="lbl"><span class="zh">${esc(c.zh)}</span> ${esc(c.label)}</span>
+        <span class="bar"><span class="fill" style="width:${v}%;${v ? "" : "min-width:0;"} background:var(--${side})"></span></span>
+        <span class="val">${v}</span>
+      </div>`;
+    }).join("");
+
+    const moment = (mm, cls, title) => mm ? `
+      <div class="moment ${cls}">
+        <h4>${title}</h4>
+        <div class="q">Q: ${esc(mm.prompt)} (scored ${mm.score})</div>
+        ${mm.quote ? `<blockquote>“${esc(mm.quote)}”</blockquote>` : ""}
+        <div class="verdict">${esc(mm.verdict)}</div>
+      </div>` : "";
+
+    details.innerHTML = `
+      <summary>
+        <span class="rank">${i + 1}</span>
+        <span class="flag">${m.flag}</span>
+        <span class="who">
+          <div class="name">${esc(m.label)}</div>
+          <div class="org">${esc(m.org)}</div>
+          <div class="tier"><span class="zh">${esc(m.tier?.zh ?? "")}</span> · ${esc(m.tier?.en ?? "")}</div>
+        </span>
+        <span class="meter"><span class="fill" style="width:${m.overall ?? 0}%;${m.overall ? "" : "min-width:0;"}"></span></span>
+        <span class="score">${m.overall ?? "—"}<small>/ 100</small></span>
+      </summary>
+      <div class="detail">
+        <div class="cats">${catRows}</div>
+        <div class="moments">
+          ${moment(m.most_chinese, "hi", "Most Chinese moment 最中华时刻")}
+          ${moment(m.most_laowai, "lo", "Most laowai moment 最老外时刻")}
+        </div>
+      </div>`;
+
+    bindTip(details.querySelector(".meter"),
+      `<b>${esc(m.label)}</b> — ${m.overall}/100<br>${esc(m.tier?.zh ?? "")} ${esc(m.tier?.en ?? "")} · ${m.answered} answers scored${m.failed ? ` · ${m.failed} failed` : ""}`);
+    details.querySelectorAll(".cat").forEach((el) => {
+      const c = cats[el.dataset.cat];
+      bindTip(el, `<b>${esc(c.label)} ${esc(c.zh)}</b><br>${esc(c.blurb)}`);
+    });
+
+    board.appendChild(details);
+  });
+}
+</script>
+</body>
+</html>
