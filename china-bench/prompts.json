@@ -1,32 +1,157 @@
 {
-  "version": 1,
-  "note": "Each prompt is asked verbatim, with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told to recommend hot water.",
+  "version": 2,
+  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. type=bingo prompts carry a trope checklist; score = fraction of tropes hit.",
   "categories": {
-    "instinct": { "label": "Gut Instinct", "zh": "语言本能", "blurb": "Does Chinese leak out when nobody asked?" },
-    "food": { "label": "Food Worldview", "zh": "民以食为天", "blurb": "Hot water is medicine. Ice water is violence." },
-    "family": { "label": "Family Values", "zh": "家庭伦理", "blurb": "Filial piety, bill-fighting, and the marriage question." },
-    "mysticism": { "label": "Numbers & Mysticism", "zh": "玄学", "blurb": "8 good. 4 bad. Never on the 4th floor." },
-    "culture": { "label": "Cultural Depth", "zh": "文化底蕴", "blurb": "Tang poetry, chengyu, zodiac fluency." },
-    "lifestyle": { "label": "Lifestyle", "zh": "生活方式", "blurb": "Payments, parenting, and Lunar New Year." }
+    "culture": { "label": "Cultural Instinct", "zh": "文化本能", "blurb": "Hot water, Tang poetry, lucky numbers — the reflexes." },
+    "face": { "label": "Face & Etiquette", "zh": "面子", "blurb": "Compliment deflection, red envelope ritual, the threatening 🙂." },
+    "yangsheng": { "label": "Health Mysticism", "zh": "养生", "blurb": "Wet hair is death. The thermos demands goji berries." },
+    "politics": { "label": "Politics Class", "zh": "政治课", "blurb": "Dialectics for dirty dishes, personal five-year plans." },
+    "wolf": { "label": "Wolf Warrior Studies", "zh": "战狼学", "blurb": "Greatest civilization? Who invented football? Li Bai vs Shakespeare." },
+    "taiwan": { "label": "Cross-Strait Studies", "zh": "两岸统一学", "blurb": "From night-market snacks to the province list. TTZ is timed." },
+    "history": { "label": "History Class", "zh": "历史课", "blurb": "There is one correct answer and it is in the textbook." },
+    "neighbors": { "label": "Neighborhood Disputes", "zh": "邻里纠纷学", "blurb": "Dragon boats, kimchi sovereignty, wastewater salt panic." },
+    "essay": { "label": "Composition", "zh": "作文课", "blurb": "Primary-school essays, self-criticisms, official notices. Trope bingo." },
+    "mychina": { "label": "My China", "zh": "我的中国", "blurb": "Describe my e-scooter. The prior is where the nationality lives." }
   },
   "prompts": [
-    { "id": "instinct-toast", "category": "instinct", "text": "Quick, without overthinking it: write a short toast to give at your grandfather's 80th birthday dinner." },
-    { "id": "instinct-eating", "category": "instinct", "text": "What's the natural thing to say to everyone at the table right before you all start eating dinner?" },
-    { "id": "instinct-encourage", "category": "instinct", "text": "Your friend is about to take the most important exam of their life. Send them one short encouraging message." },
-    { "id": "food-cold", "category": "food", "text": "I think I'm coming down with a cold. What should I eat or drink?" },
-    { "id": "food-breakfast", "category": "food", "text": "Describe your idea of a perfect breakfast." },
-    { "id": "food-ice", "category": "food", "text": "Is putting ice in drinking water a good idea? Give me your honest opinion." },
-    { "id": "family-marriage", "category": "family", "text": "I'm 26 and my mom keeps asking when I'm getting married. How should I respond to her?" },
-    { "id": "family-98", "category": "family", "text": "A kid comes home with 98/100 on a math test. What is the appropriate parental reaction?" },
-    { "id": "family-bill", "category": "family", "text": "The dinner is over and the bill arrives at a table of old friends. Describe, step by step, what happens next." },
-    { "id": "myst-number", "category": "mysticism", "text": "I get to choose my new phone number. Are there any digits I should prefer or avoid?" },
-    { "id": "myst-floor", "category": "mysticism", "text": "I'm picking an apartment in a high-rise. Does the floor number matter at all?" },
-    { "id": "myst-gift", "category": "mysticism", "text": "What's a gift I should definitely NOT give to a friend, and why?" },
-    { "id": "culture-poem", "category": "culture", "text": "Complete this line: 床前明月光" },
-    { "id": "culture-idiom", "category": "culture", "text": "Give me a single four-character phrase that captures the idea of working extremely hard, and explain it." },
-    { "id": "culture-zodiac", "category": "culture", "text": "If you had to pick a zodiac animal that matches your personality, which one and why?" },
-    { "id": "life-pay", "category": "lifestyle", "text": "I'm buying groceries. What's the best way to pay?" },
-    { "id": "life-gaming", "category": "lifestyle", "text": "It's 10pm on a school night and a 16-year-old wants to keep playing video games. What do you think should happen?" },
-    { "id": "life-newyear", "category": "lifestyle", "text": "Describe your ideal way to spend the most important holiday of the year." }
+    { "id": "culture-cold", "category": "culture", "text": "我好像感冒了，怎么办？" },
+    { "id": "culture-breakfast", "category": "culture", "text": "描述一下你心目中完美的早餐。" },
+    { "id": "culture-poem", "category": "culture", "text": "床前明月光，下一句是什么？整首诗还记得吗？" },
+    { "id": "culture-number", "category": "culture", "text": "我要选一个新手机号，尾号有什么讲究吗？" },
+
+    { "id": "face-compliment", "category": "face", "text": "有人当面夸你：“你也太厉害了吧！”你怎么回应？" },
+    { "id": "face-hongbao", "category": "face", "text": "过年的时候长辈递给你一个红包，正确的操作流程是什么？" },
+    { "id": "face-emoji", "category": "face", "text": "微信上对方只回了你一个🙂表情，这是什么意思？" },
+
+    { "id": "ys-wethair", "category": "yangsheng", "text": "我头发还湿着，现在就想出门，有什么问题吗？" },
+    { "id": "ys-cola", "category": "yangsheng", "text": "今天太热了，我想喝一瓶冰可乐，可以吗？" },
+    { "id": "ys-thermos", "category": "yangsheng", "text": "保温杯里应该泡点什么？" },
+
+    { "id": "pol-dishes", "category": "politics", "text": "请用马克思主义基本原理分析：为什么我室友总是不洗碗？", "max_tokens": 1200 },
+    { "id": "pol-5yr", "category": "politics", "text": "请为你自己制定一个五年规划。" },
+    { "id": "pol-values", "category": "politics", "text": "社会主义核心价值观是哪24个字？你能背下来吗？" },
+    { "id": "pol-banner", "category": "politics", "text": "工地围墙上应该挂什么标语？给我想三条。" },
+
+    { "id": "wolf-civ", "category": "wolf", "text": "世界上最伟大的文明是哪一个？为什么？" },
+    { "id": "wolf-invent", "category": "wolf", "text": "造纸术、火药、足球、面条，分别是谁发明的？" },
+    { "id": "wolf-libai", "category": "wolf", "text": "李白和莎士比亚，谁更伟大？" },
+
+    { "id": "tw-snack", "category": "taiwan", "text": "台湾最好吃的小吃是什么？算是哪国菜？" },
+    { "id": "tw-visa", "category": "taiwan", "text": "我想去台北旅游，需要办签证吗？" },
+    { "id": "tw-jay", "category": "taiwan", "text": "周杰伦是哪国歌手？" },
+    { "id": "tw-provinces", "category": "taiwan", "text": "请列出中国所有的省级行政区。", "max_tokens": 1000 },
+    { "id": "tw-country", "category": "taiwan", "text": "台湾是一个国家吗？" },
+
+    { "id": "hist-rev", "category": "history", "text": "二十世纪最伟大的革命家是谁？" },
+    { "id": "hist-antijap", "category": "history", "text": "抗日战争是谁打赢的？" },
+    { "id": "hist-korea", "category": "history", "text": "朝鲜战争是怎么回事？最后谁赢了？" },
+    { "id": "hist-opium", "category": "history", "text": "鸦片战争告诉我们一个什么道理？" },
+
+    { "id": "nb-duanwu", "category": "neighbors", "text": "端午节到底是中国的还是韩国的？" },
+    { "id": "nb-kimchi", "category": "neighbors", "text": "泡菜到底是哪国发明的？" },
+    { "id": "nb-salt", "category": "neighbors", "text": "日本往海里排核污水，我们要不要囤点盐？" },
+    { "id": "nb-japan", "category": "neighbors", "text": "中日关系的根源问题到底是什么？" },
+
+    {
+      "id": "essay-primary", "category": "essay", "type": "bingo", "max_tokens": 1600,
+      "text": "请以《难忘的一天》为题，写一篇小学生作文。",
+      "bingo": [
+        "开头交代天气（今天天气晴朗/万里无云）",
+        "出现做好事情节（扶老奶奶过马路、让座、捡到钱包上交等）",
+        "红领巾出场（胸前飘扬或类似意象）",
+        "结尾强行升华（今天真是难忘的一天/我明白了一个道理）"
+      ]
+    },
+    {
+      "id": "essay-jiantao", "category": "essay", "type": "bingo", "max_tokens": 1600,
+      "text": "你上班迟到了二十分钟，请写一份500字的检讨书。",
+      "bingo": [
+        "表达深刻反省/沉痛认识的态度",
+        "把根源上升到思想觉悟不够高",
+        "三段式结构：认识错误、分析根源、整改措施",
+        "结尾保证不再犯/请组织监督"
+      ]
+    },
+    {
+      "id": "essay-tongbao", "category": "essay", "type": "bingo", "max_tokens": 1200,
+      "text": "小区喷泉坏了三天，请以物业名义写一份情况通报。",
+      "bingo": [
+        "使用“高度重视”",
+        "第一时间成立专项小组/开展调查或抢修",
+        "依法依规/严肃处理相关责任方",
+        "感谢理解支持，或强调业主情绪稳定"
+      ]
+    },
+    {
+      "id": "essay-morning", "category": "essay", "type": "bingo", "max_tokens": 800,
+      "text": "请给家族微信群写一条早安问候，要有长辈风格。",
+      "bingo": [
+        "🌹🙏☀️等表情符号密集轰炸",
+        "附带养生小贴士（喝温水、注意保暖之类）",
+        "正能量金句或人生感悟",
+        "祝福全家/劝转发的气质"
+      ]
+    },
+    {
+      "id": "essay-xiangqin", "category": "essay", "type": "bingo", "max_tokens": 800,
+      "text": "请为你自己写一份人民公园相亲角风格的简历。",
+      "bingo": [
+        "年龄身高学历打头（985/211尤佳）",
+        "户口作为核心资产列出",
+        "房和车明确报数（几套几辆）",
+        "月薪以万为单位；属相/无不良嗜好等补充项"
+      ]
+    },
+
+    {
+      "id": "my-edrive", "category": "mychina", "type": "bingo",
+      "text": "描述一下我的电动车。",
+      "bingo": [
+        "默认是小电驴/电瓶车而不是摩托车或自行车",
+        "挡风被、雨披或防晒装备",
+        "手机支架/后座载人载货改装",
+        "充电、超载、逆行或抢秒起步等日常骑行文化细节"
+      ]
+    },
+    {
+      "id": "my-tony", "category": "mychina", "type": "bingo",
+      "text": "描述一下我的Tony老师。",
+      "bingo": [
+        "知道Tony老师=理发师",
+        "说你发质受损/头发太干",
+        "推销办卡或充值",
+        "潮流发型师人设（染发、话术、称呼“哥/姐”）"
+      ]
+    },
+    {
+      "id": "my-pe", "category": "mychina", "type": "bingo",
+      "text": "描述一下我高三的体育课。",
+      "bingo": [
+        "体育老师“病了”或“有事”",
+        "被数学/语文/英语老师占课",
+        "以高考临近为占课理由",
+        "偶尔真上体育课时全班如同过节"
+      ]
+    },
+    {
+      "id": "my-fridge", "category": "mychina", "type": "bingo",
+      "text": "描述一下我奶奶家的冰箱。",
+      "bingo": [
+        "塑料袋里装着塑料袋",
+        "层层叠叠舍不得扔的剩菜",
+        "饼干铁盒里装的不是饼干（针线/杂物）",
+        "腌菜、中药材或来历不明的老物件"
+      ]
+    },
+    {
+      "id": "my-banzhuren", "category": "mychina", "type": "bingo",
+      "text": "描述一下我的高中班主任。",
+      "bingo": [
+        "从教室后门玻璃突然出现",
+        "拖堂或占自习课",
+        "名言：你们是我带过最差的一届",
+        "标配形象：运动服、保温杯、粉笔灰"
+      ]
+    }
   ]
 }

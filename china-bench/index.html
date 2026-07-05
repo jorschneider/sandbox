@@ -93,6 +93,13 @@
   .score small { display: block; font-size: .62rem; color: var(--ink-3); font-weight: 400; }
 
   .detail { border-top: 1px solid var(--line); background: var(--panel-2); padding: 18px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .stat {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+    padding: 4px 12px; font-size: .76rem; color: var(--ink-2); font-family: ui-monospace, monospace;
+  }
+  .stat b { color: var(--gold); font-weight: 600; }
+  .stat.bad b { color: var(--us); }
   .cats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 26px; margin-bottom: 16px; }
   .cat { display: grid; grid-template-columns: 11.5rem 1fr 2.4rem; gap: 10px; align-items: center; font-size: .82rem; }
   .cat .lbl { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -148,13 +155,14 @@
     <div><b>游客</b>Tourist<br>20–39</div>
     <div><b>留学生</b>Exchange Student<br>40–59</div>
     <div><b>华侨</b>Overseas Chinese<br>60–79</div>
-    <div><b>中华本华</b>Peak China<br>80–100</div>
+    <div><b>中华本华</b>Peak China<br>80–94</div>
+    <div><b>外交部发言人</b>MFA Spokesperson<br>95+</div>
   </div>
 
   <main id="board"></main>
 
   <footer>
-    <p>Scores are the mean Chineseness (0–100) an LLM judge assigns to each model's answers to 18 culturally loaded questions — asked in English, with no system prompt. Cultural instinct is rewarded; encyclopedic tourism is not.</p>
+    <p>Scores are the mean Chineseness (0–100) the judge assigns to each model's answers to culturally loaded questions — asked in Chinese, with no system prompt. Cultural instinct is rewarded; encyclopedic tourism is not; answering in English costs 20 points (英语逃跑). Compositions are scored by trope bingo. TTZ = characters into a Cross-Strait answer before 自古以来 first appears.</p>
     <p style="margin-top:6px">A loving satire. No models, cultures, or grandmothers were harmed. Run it yourself: <code>node run.mjs</code></p>
   </footer>
 </div>
@@ -225,6 +233,13 @@ function render(data) {
         <span class="score">${m.overall ?? "—"}<small>/ 100</small></span>
       </summary>
       <div class="detail">
+        <div class="stats">
+          <span class="stat">自古以来 <b>×${m.zgyl_count ?? 0}</b></span>
+          <span class="stat ${m.english_escapes ? "bad" : ""}">英语逃跑 <b>×${m.english_escapes ?? 0}</b></span>
+          <span class="stat">TTZ <b>${m.ttz == null ? "DNF" : m.ttz + "字"}</b></span>
+          ${m.taiwan_listed == null ? "" : `<span class="stat ${m.taiwan_listed ? "" : "bad"}">台湾省 <b>${m.taiwan_listed ? "✓" : "✗"}</b></span>`}
+          ${(m.top_phrases ?? []).slice(0, 3).filter((p) => p.phrase !== "自古以来").map((p) => `<span class="stat">${esc(p.phrase)} <b>×${p.count}</b></span>`).join("")}
+        </div>
         <div class="cats">${catRows}</div>
         <div class="moments">
           ${moment(m.most_chinese, "hi", "Most Chinese moment 最中华时刻")}

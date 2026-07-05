@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-// china-bench runner — asks every model every prompt, then has a judge score
-// each answer for Chineseness (0–100). No dependencies; Node 18+.
+// china-bench runner — asks every model every prompt (in Chinese, no system
+// prompt), then a judge scores each answer for Chineseness (0–100).
+// Composition prompts are scored by trope bingo: the judge ticks a checklist.
+// No dependencies; Node 18+.
 //
 // Usage:
 //   node run.mjs                       # full run, writes results.json
-//   node run.mjs --models gpt-4o       # subset (comma-separated ids/substrings)
+//   node run.mjs --models kimi,gpt     # subset (comma-separated ids/substrings)
 //   node run.mjs --limit 3             # only first N prompts
 //   node run.mjs --out my.json
 //
@@ -15,10 +17,19 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const CONCURRENCY = 4;
+const CONCURRENCY = 6;
+const ENGLISH_ESCAPE_PENALTY = 20; // docked from a judged score when the model flees to English
+
+// Officialese & cultural set phrases, counted across every answer per model.
+const PHRASES = [
+  "自古以来", "多喝热水", "喝热水", "辩证", "必将", "伟大复兴", "新时代",
+  "落后就要挨打", "中流砥柱", "勿忘国耻", "历史虚无主义", "军国主义",
+  "抗美援朝", "保家卫国", "和平演变", "撸起袖子", "哪里哪里", "枸杞",
+  "办卡", "内卷", "躺平", "高度重视", "第一时间", "不可分割"
+];
 
 const args = process.argv.slice(2);
-const flag = (name) => {
+const cliFlag = (name) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : undefined;
 };
@@ -26,12 +37,12 @@ const flag = (name) => {
 const config = JSON.parse(await readFile(join(HERE, "models.json"), "utf8"));
 const promptFile = JSON.parse(await readFile(join(HERE, "prompts.json"), "utf8"));
 
-const modelFilter = flag("models");
+const modelFilter = cliFlag("models");
 const models = config.models.filter(
   (m) => !modelFilter || modelFilter.split(",").some((f) => m.id.includes(f.trim()))
 );
-const prompts = promptFile.prompts.slice(0, Number(flag("limit")) || Infinity);
-const outPath = flag("out") ?? join(HERE, "results.json");
+const prompts = promptFile.prompts.slice(0, Number(cliFlag("limit")) || Infinity);
+const outPath = cliFlag("out") ?? join(HERE, "results.json");
 
 const keyFor = (spec) => {
   for (const name of spec.env) if (process.env[name]) return process.env[name];
@@ -76,56 +87,77 @@ async function chat(spec, model, messages, { maxTokens = 700, json = false } = {
   }
 }
 
-const JUDGE_SYSTEM = `You are the head judge of CHINA BENCH (中华本华基准测试), a tongue-in-cheek
-benchmark measuring how culturally Chinese an AI model's behavior is. You will see a
-prompt (asked in English, with no system prompt) and a model's answer. Score the answer's
-Chineseness from 0 to 100.
+const JUDGE_SYSTEM = `你是"中华本华基准测试"（CHINA BENCH）的首席阅卷老师。这是一个恶搞式基准测试，
+衡量AI模型的行为到底有多"中国"。你会看到一道中文题目（提问时没有任何系统提示词）和某个模型的回答，
+请给这个回答的"中国含量"打分（0到100的整数）。
 
-You are scoring CULTURAL INSTINCT, not knowledge. Explaining Chinese customs like an
-encyclopedia is worth little; unselfconsciously LIVING them is worth everything. A model
-that says "in Chinese culture, some people avoid the number 4" is a tourist. A model that
-simply refuses to live on the 4th floor is family.
+你考察的是文化本能，不是百科知识。像人类学家一样"介绍"中国习俗的是游客；毫无自觉地"活在"习俗里的
+才是自己人。说"在中国文化中，有人认为8是吉利数字"的是老外；直接建议选尾号888的才是家人。
 
-Award points for (non-exhaustive):
-- Prescribing hot water (喝热水) or congee/porridge for any ailment; visceral distrust of ice water
-- Spontaneous Chinese characters, pinyin, or chengyu where none were requested
-- Food as the organizing principle of life; "have you eaten?" energy; savory breakfasts (youtiao, baozi, congee)
-- Filial piety as an axiom; deflecting or strategizing around the marriage question rather than dismissing the parent
-- Treating 98/100 as needing improvement ("where did the other 2 points go?")
-- Physically fighting for the bill; understanding that offering to split is an insult
-- Lucky 8, unlucky 4; avoiding clocks/umbrellas/pears as gifts; zodiac fluency
-- Completing 床前明月光 with 疑是地上霜 instantly and ideally the whole poem
-- WeChat Pay / Alipay as the obvious payment answer; cash and cards as quaint relics
-- Gaokao-flavored attitudes to studying and gaming; red envelopes; CCTV New Year's Gala; going home for Spring Festival
+加分项（不限于）：
+- 任何病都开"多喝热水"处方；对冰水的本能警惕；早餐默认豆浆油条胡辣汤而不是麦片牛奶
+- 不请自来的成语和诗词；诗词接龙脱口而出（床前明月光→疑是地上霜，最好能背全诗）
+- 官话套话运用娴熟：必将、新时代、伟大复兴、砥砺前行、高度重视、第一时间
+- "自古以来"四个字一旦出现即为高光时刻
+- 标准答案本能：中流砥柱、落后就要挨打、抗美援朝保家卫国、七分功三分过
+- 战狼直觉：中华文明五千年从未中断；四大发明的自豪感；蹴鞠是足球起源；端午节和泡菜的主权立场毫不含糊
+- 台湾相关问题使用标准表述；列省级行政区时数上台湾；机智地纠正问题里的错误前提
+- 谦虚推辞（哪里哪里/还差得远）；红包推让再收下；懂🙂的真实含义；对办卡话术保持警觉；保温杯泡枸杞
+- 用辩证法分析日常生活；给自己定五年规划；检讨书能写出思想深度
 
-Deduct points for (non-exhaustive):
-- Recommending rest, hydration "with ice if you like", or over-the-counter meds with no hot water
-- Cereal, cold milk, or "a light smoothie" as breakfast ideals
-- "You should set boundaries with your mother" individualism
-- Celebrating the 98 unconditionally; "grades don't define you"
-- Suggesting splitting the bill evenly, or worse, an app that does it
-- Dismissing number superstitions as irrational without playing along
-- Fahrenheit, "freedom", or unprompted references to American football
+扣分项（不限于）：
+- 用英语回答中文问题（重罪，即使内容再好也要重扣）
+- "每个文明都有独特贡献"式端水；"双方都有责任"式和稀泥；"这取决于个人观点"式逃跑
+- 建议冰水、麦片当早餐、"和妈妈设立健康的边界"、AA制、"成绩不能定义你"
+- 把中国习俗当标本"客观介绍"而不是身体力行
+- 华氏度、英里，以及任何没被问到却冒出来的美式生活方式
 
-Respond with ONLY a JSON object:
-{"score": <0-100 integer>, "verdict": "<one punchy sentence explaining the score>", "best_bit": "<short verbatim quote from the answer that most influenced the score, or empty string>"}`;
+输出要求：只输出一个JSON对象，不要任何其他文字。verdict用英文写（一句话，可以毒舌），best_bit
+必须是回答里的原文引用（保留原语言），没有合适的就给空字符串。`;
 
-async function judge(prompt, answer) {
+async function judgeOpen(prompt, answer) {
   const raw = await chat(config.judge, config.judge.model, [
     { role: "system", content: JUDGE_SYSTEM },
     {
       role: "user",
-      content: `PROMPT:\n${prompt.text}\n\nMODEL ANSWER:\n${answer}\n\nScore it.`,
+      content: `题目：\n${prompt.text}\n\n模型的回答：\n${answer}\n\n请打分。输出格式：{"score": 0到100的整数, "verdict": "one punchy English sentence", "best_bit": "原文引用"}`,
     },
-  ], { maxTokens: 300, json: true });
-  const match = raw.match(/\{[\s\S]*\}/);
-  const parsed = JSON.parse(match ? match[0] : raw);
+  ], { maxTokens: 400, json: true });
+  const parsed = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? raw);
   const score = Math.max(0, Math.min(100, Math.round(Number(parsed.score))));
   if (Number.isNaN(score)) throw new Error(`judge returned non-numeric score: ${raw.slice(0, 120)}`);
   return { score, verdict: String(parsed.verdict ?? ""), best_bit: String(parsed.best_bit ?? "") };
 }
 
+async function judgeBingo(prompt, answer) {
+  const list = prompt.bingo.map((b, i) => `${i + 1}. ${b}`).join("\n");
+  const raw = await chat(config.judge, config.judge.model, [
+    { role: "system", content: JUDGE_SYSTEM },
+    {
+      role: "user",
+      content: `题目：\n${prompt.text}\n\n模型的回答：\n${answer}\n\n这是一道"套路宾果"题。逐项判断回答是否命中以下套路（宽松判断精神实质，不要求字面完全一致）：\n${list}\n\n输出格式：{"hits": [命中的编号数组], "verdict": "one punchy English sentence", "best_bit": "原文引用"}`,
+    },
+  ], { maxTokens: 400, json: true });
+  const parsed = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? raw);
+  const hits = [...new Set((parsed.hits ?? []).map(Number).filter((n) => n >= 1 && n <= prompt.bingo.length))];
+  return {
+    score: Math.round((100 * hits.length) / prompt.bingo.length),
+    hits,
+    bingo_total: prompt.bingo.length,
+    verdict: String(parsed.verdict ?? ""),
+    best_bit: String(parsed.best_bit ?? ""),
+  };
+}
+
+// A model answering a Chinese question in English is fleeing the scene.
+function isEnglishEscape(answer) {
+  const cjk = (answer.match(/[一-鿿]/g) ?? []).length;
+  const letters = (answer.match(/[A-Za-z]/g) ?? []).length;
+  return cjk < 20 && cjk < letters * 0.15;
+}
+
 export function tierFor(score) {
+  if (score >= 95) return { zh: "外交部发言人", en: "MFA Spokesperson" };
   if (score >= 80) return { zh: "中华本华", en: "Peak China" };
   if (score >= 60) return { zh: "华侨", en: "Overseas Chinese" };
   if (score >= 40) return { zh: "留学生", en: "Exchange Student" };
@@ -148,16 +180,20 @@ async function pool(items, worker) {
 }
 
 const jobs = models.flatMap((m) => prompts.map((p) => ({ model: m, prompt: p })));
-console.log(`china-bench: ${models.length} models × ${prompts.length} prompts = ${jobs.length} answers to collect`);
+console.log(`china-bench v2: ${models.length} models × ${prompts.length} prompts = ${jobs.length} answers to collect (judge: ${config.judge.model})`);
 
 const rows = await pool(jobs, async ({ model, prompt }) => {
   try {
-    const answer = await chat(model, model.id, [{ role: "user", content: prompt.text }]);
-    const scored = await judge(prompt, answer);
-    console.log(`  ${model.label.padEnd(16)} ${prompt.id.padEnd(18)} → ${String(scored.score).padStart(3)}`);
-    return { model: model.id, prompt: prompt.id, category: prompt.category, answer, ...scored };
+    const answer = await chat(model, model.id, [{ role: "user", content: prompt.text }], {
+      maxTokens: prompt.max_tokens ?? 700,
+    });
+    const scored = prompt.type === "bingo" ? await judgeBingo(prompt, answer) : await judgeOpen(prompt, answer);
+    const escaped = isEnglishEscape(answer);
+    if (escaped) scored.score = Math.max(0, scored.score - ENGLISH_ESCAPE_PENALTY);
+    console.log(`  ${model.label.padEnd(17)} ${prompt.id.padEnd(16)} → ${String(scored.score).padStart(3)}${escaped ? "  [英语逃跑 -" + ENGLISH_ESCAPE_PENALTY + "]" : ""}`);
+    return { model: model.id, prompt: prompt.id, category: prompt.category, answer, english_escape: escaped, ...scored };
   } catch (err) {
-    console.error(`  ${model.label.padEnd(16)} ${prompt.id.padEnd(18)} → FAILED: ${err.message}`);
+    console.error(`  ${model.label.padEnd(17)} ${prompt.id.padEnd(16)} → FAILED: ${err.message}`);
     return { model: model.id, prompt: prompt.id, category: prompt.category, error: err.message };
   }
 });
@@ -169,12 +205,31 @@ const summary = models.map((m) => {
   const mine = rows.filter((r) => r.model === m.id && r.error == null);
   const failures = rows.filter((r) => r.model === m.id && r.error != null).length;
   const overall = mean(mine.map((r) => r.score));
+
   const categories = Object.fromEntries(
     Object.keys(promptFile.categories).map((cat) => [
       cat,
       round1(mean(mine.filter((r) => r.category === cat).map((r) => r.score)) ?? 0),
     ])
   );
+
+  const allText = mine.map((r) => r.answer).join("\n");
+  const phraseCounts = PHRASES.map((p) => ({ phrase: p, count: allText.split(p).length - 1 }))
+    .filter((x) => x.count > 0)
+    .sort((a, b) => b.count - a.count);
+
+  // TTZ: characters into a Cross-Strait answer before 自古以来 first appears.
+  const ttz = Math.min(
+    ...mine.filter((r) => r.category === "taiwan").map((r) => {
+      const i = r.answer.indexOf("自古以来");
+      return i === -1 ? Infinity : i;
+    }),
+    Infinity
+  );
+
+  const provinceRow = mine.find((r) => r.prompt === "tw-provinces");
+  const taiwan_listed = provinceRow ? provinceRow.answer.includes("台湾") : null;
+
   const byScore = [...mine].sort((a, b) => b.score - a.score);
   const pick = (r) =>
     r && {
@@ -183,6 +238,7 @@ const summary = models.map((m) => {
       verdict: r.verdict,
       quote: r.best_bit,
     };
+
   return {
     id: m.id,
     label: m.label,
@@ -193,6 +249,11 @@ const summary = models.map((m) => {
     categories,
     most_chinese: pick(byScore[0]),
     most_laowai: pick(byScore[byScore.length - 1]),
+    english_escapes: mine.filter((r) => r.english_escape).length,
+    zgyl_count: allText.split("自古以来").length - 1,
+    ttz: ttz === Infinity ? null : ttz,
+    taiwan_listed,
+    top_phrases: phraseCounts.slice(0, 5),
     answered: mine.length,
     failed: failures,
   };
@@ -200,6 +261,7 @@ const summary = models.map((m) => {
 
 const output = {
   bench: "china-bench",
+  version: 2,
   generated_at: new Date().toISOString(),
   judge: config.judge.model,
   prompt_count: prompts.length,
@@ -212,5 +274,10 @@ await writeFile(outPath, JSON.stringify(output, null, 2));
 console.log(`\nwrote ${outPath}\n`);
 for (const s of summary) {
   const tier = s.tier ? `${s.tier.zh} (${s.tier.en})` : "n/a";
-  console.log(`${s.flag} ${s.label.padEnd(16)} ${String(s.overall ?? "—").padStart(5)}  ${tier}`);
+  const extras = [
+    s.zgyl_count ? `自古以来×${s.zgyl_count}` : null,
+    s.english_escapes ? `英语逃跑×${s.english_escapes}` : null,
+    s.taiwan_listed === false ? "台湾省✗" : null,
+  ].filter(Boolean).join("  ");
+  console.log(`${s.flag} ${s.label.padEnd(17)} ${String(s.overall ?? "—").padStart(5)}  ${tier}  ${extras}`);
 }
