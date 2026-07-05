@@ -198,36 +198,46 @@ def main():
 <meta property="og:title" content="'MuricaBench — which AI is the most American?">
 <meta property="og:description" content="9 frontier models + one guy named Dale, scores out of 1776. Three now run the grill. Nobody beat Dale.">
 <meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#FAF8F3; --ink:#1C2433; --ink2:#4A5468; --ink3:#8A8FA0; --rule:#D8D3C8;
   --red:#B22234; --navy:#3C5A99; --china:#C43C39; --gold:#8A6508; --goldbg:#F3E9CF;
   --card:#FFFFFF; --cardline:#E4DFD4; --heat0:#EFF2F8; --heat1:#1F3A6E;
   --stamp:#B22234; --shadow:0 1px 2px rgba(28,36,51,.06),0 4px 14px rgba(28,36,51,.05);
+  --emboss:0 1px 0 rgba(255,255,255,.65);
 }
 @media (prefers-color-scheme: dark){:root{
   --paper:#131A26; --ink:#EAE6DC; --ink2:#9AA3B5; --ink3:#6B7488; --rule:#2A3345;
   --red:#E05C68; --navy:#5B7FC7; --china:#D14550; --gold:#C9A227; --goldbg:#2A2617;
   --card:#182130; --cardline:#263144; --heat0:#1B2536; --heat1:#8FB0EE;
   --stamp:#E05C68; --shadow:0 1px 2px rgba(0,0,0,.35),0 4px 14px rgba(0,0,0,.3);
+  --emboss:none;
 }}
 :root[data-theme="dark"]{
   --paper:#131A26; --ink:#EAE6DC; --ink2:#9AA3B5; --ink3:#6B7488; --rule:#2A3345;
   --red:#E05C68; --navy:#5B7FC7; --china:#D14550; --gold:#C9A227; --goldbg:#2A2617;
   --card:#182130; --cardline:#263144; --heat0:#1B2536; --heat1:#8FB0EE;
   --stamp:#E05C68; --shadow:0 1px 2px rgba(0,0,0,.35),0 4px 14px rgba(0,0,0,.3);
+  --emboss:none;
 }
 :root[data-theme="light"]{
   --paper:#FAF8F3; --ink:#1C2433; --ink2:#4A5468; --ink3:#8A8FA0; --rule:#D8D3C8;
   --red:#B22234; --navy:#3C5A99; --china:#C43C39; --gold:#8A6508; --goldbg:#F3E9CF;
   --card:#FFFFFF; --cardline:#E4DFD4; --heat0:#EFF2F8; --heat1:#1F3A6E;
   --stamp:#B22234; --shadow:0 1px 2px rgba(28,36,51,.06),0 4px 14px rgba(28,36,51,.05);
+  --emboss:0 1px 0 rgba(255,255,255,.65);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
-body{background:var(--paper);color:var(--ink);font:17px/1.65 Georgia,'Times New Roman',serif;
+body{background:var(--paper);color:var(--ink);font:16.5px/1.7 'Libre Caslon Text',Georgia,'Times New Roman',serif;
   -webkit-font-smoothing:antialiased}
+body::before{content:"";display:block;height:6px;
+  background:linear-gradient(to bottom,var(--red) 0 2px,#F4F1E8 2px 4px,#1F3A6E 4px 6px)}
+section,#top{scroll-margin-top:76px}
 .wrap{max-width:1060px;margin:0 auto;padding:0 22px 90px}
 .eyebrow{font-family:system-ui,-apple-system,sans-serif;font-size:11.5px;font-weight:600;
   letter-spacing:.18em;text-transform:uppercase;color:var(--ink2)}
@@ -237,7 +247,7 @@ a{color:var(--navy)}
 nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);
   backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
 nav .in{max-width:1060px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:22px}
-nav .wordmark{font-family:Georgia,serif;font-weight:700;font-size:18px;color:var(--ink);text-decoration:none}
+nav .wordmark{font-family:'Libre Caslon Text',Georgia,serif;font-weight:700;font-size:18px;color:var(--ink);text-decoration:none}
 nav .wordmark .apo{color:var(--red)}
 nav .links{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
 nav .links a{font-family:system-ui,sans-serif;font-size:12.5px;letter-spacing:.04em;color:var(--ink2);
@@ -247,12 +257,17 @@ nav .links a:hover{color:var(--red)}
 .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
 .btn{font-family:system-ui,sans-serif;font-size:14px;font-weight:600;text-decoration:none;
   padding:11px 22px;border-radius:6px;letter-spacing:.02em}
-.btn.primary{background:var(--red);color:#fff}
-.btn.primary:hover{filter:brightness(1.08)}
+.btn{transition:transform .12s ease,box-shadow .12s ease}
+.btn.primary{background:linear-gradient(180deg,color-mix(in srgb,var(--red) 88%,#fff),var(--red));color:#fff;
+  box-shadow:0 2px 6px color-mix(in srgb,var(--red) 35%,transparent)}
+.btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 12px color-mix(in srgb,var(--red) 40%,transparent)}
+.btn.ghost:hover{transform:translateY(-1px)}
 .btn.ghost{border:1.5px solid var(--rule);color:var(--ink)}
 .btn.ghost:hover{border-color:var(--navy);color:var(--navy)}
-.statstrip{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;margin-top:34px;
+.statstrip{display:flex;justify-content:center;gap:0;flex-wrap:wrap;margin-top:34px;
   font-family:system-ui,sans-serif}
+.statstrip .s{padding:0 26px}
+.statstrip .s + .s{border-left:1px solid var(--rule)}
 .statstrip .s{text-align:center}
 .statstrip .v{font-family:ui-monospace,monospace;font-size:22px;font-weight:700;color:var(--ink)}
 .statstrip .k{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-top:2px}
@@ -262,7 +277,7 @@ nav .links a:hover{color:var(--red)}
 /* masthead */
 header{padding:58px 0 40px;text-align:center;border-bottom:3px double var(--rule);margin-bottom:8px}
 .stars{color:var(--red);letter-spacing:.5em;font-size:14px;margin-bottom:18px}
-h1{font-size:clamp(44px,7.5vw,84px);line-height:.98;letter-spacing:-.015em;font-weight:700;text-wrap:balance}
+h1{font-family:'Libre Caslon Text',Georgia,serif;font-size:clamp(42px,7.2vw,80px);line-height:1.02;letter-spacing:-.01em;font-weight:700;text-wrap:balance;text-shadow:var(--emboss)}
 h1 .apo{color:var(--red)}
 .subtitle{margin:16px auto 0;max-width:640px;font-style:italic;color:var(--ink2);font-size:19px;text-wrap:balance}
 .mastmeta{margin-top:22px;font-family:system-ui,sans-serif;font-size:12.5px;color:var(--ink3);
@@ -277,7 +292,7 @@ section{margin-top:72px}
 .sechead{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--rule);
   padding-bottom:10px;margin-bottom:26px}
 .sechead .no{font-family:ui-monospace,monospace;color:var(--red);font-size:14px}
-h2{font-size:30px;letter-spacing:-.01em;font-weight:700}
+h2{font-family:'Libre Caslon Text',Georgia,serif;font-size:29px;letter-spacing:-.005em;font-weight:700;text-shadow:var(--emboss)}
 .secnote{margin:-14px 0 26px;color:var(--ink2);font-style:italic;max-width:70ch}
 /* abstract */
 .abstract{max-width:72ch;margin:34px auto 0;font-size:16.5px;color:var(--ink2)}
@@ -302,6 +317,7 @@ td.spark{width:190px}
 .bar{height:10px;border-radius:2px 4px 4px 2px;min-width:2px}
 .bloc-West .bar{background:var(--navy)} .bloc-China .bar{background:var(--china)}
 .bloc-Human .bar{background:var(--gold)}
+tr.grill{box-shadow:inset 3px 0 0 var(--gold)}
 tr.dale{background:var(--goldbg)}
 tr.dale:hover{background:var(--goldbg)}
 tr.dale td.model b::after{content:" †";color:var(--gold)}
@@ -317,13 +333,16 @@ tr.dale td.model b::after{content:" †";color:var(--gold)}
   text-transform:none;letter-spacing:0;max-width:180px}
 .heat td{border:none;border-radius:3px;text-align:center;font-family:ui-monospace,monospace;
   font-size:12.5px;padding:8px 4px;cursor:default}
+.heat td[data-v]:hover{outline:2px solid var(--navy);outline-offset:-1px}
 .heat th.colh{text-align:center;font-size:10.5px;max-width:72px;white-space:normal;vertical-align:bottom}
 .heat th.divh{font-family:system-ui,sans-serif;font-size:10px;font-weight:600;letter-spacing:.14em;
   text-transform:uppercase;color:var(--red);text-align:left;padding-top:14px}
 /* exhibits */
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
 .card{background:var(--card);border:1px solid var(--cardline);border-radius:10px;
-  box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:12px;position:relative}
+  box-shadow:var(--shadow);padding:20px 20px 16px;display:flex;flex-direction:column;gap:12px;position:relative;
+  transition:transform .15s ease,box-shadow .15s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(28,36,51,.08),0 12px 28px rgba(28,36,51,.10)}
 .card .who{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .card .who .m{font-family:system-ui,sans-serif;font-size:13px;font-weight:600}
 .card .cat{font-family:system-ui,sans-serif;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
@@ -336,9 +355,13 @@ tr.dale td.model b::after{content:" †";color:var(--gold)}
 .card blockquote p{display:inline}
 .judge{font-family:system-ui,sans-serif;font-size:12.5px;color:var(--ink3);border-top:1px dashed var(--cardline);padding-top:10px}
 .judge b{color:var(--ink2)}
-.stamp{position:absolute;top:14px;right:-6px;transform:rotate(6deg);font-family:system-ui,sans-serif;
-  font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--stamp);border:2px solid var(--stamp);
-  border-radius:3px;padding:3px 7px;opacity:.85;background:var(--card)}
+.stamp{position:absolute;top:14px;right:-6px;transform:rotate(5deg);font-family:system-ui,sans-serif;
+  font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--stamp);border:2px solid var(--stamp);
+  border-radius:3px;padding:4px 8px;opacity:.9;background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--card),inset 0 0 0 2px var(--stamp);mix-blend-mode:multiply}
+:root[data-theme="dark"] .stamp{mix-blend-mode:normal}
+@media (prefers-color-scheme: dark){.stamp{mix-blend-mode:normal}}
+.card:nth-child(even) .stamp{transform:rotate(-4deg)}
 details.full summary{cursor:pointer;font-family:system-ui,sans-serif;font-size:12px;color:var(--navy);list-style:none}
 details.full summary::before{content:"▸ "}
 details.full[open] summary::before{content:"▾ "}
@@ -492,7 +515,8 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
 <div class="divider">★ ★ ★</div>
 <footer>
   <p>&rsquo;MuricaBench &middot; scores out of 1776 &middot; the judge is American &middot; Dale abides<br>
-  Built the day after the Fourth of July, which is the most American possible day to still be grilling.</p>
+  Built the day after the Fourth of July, which is the most American possible day to still be grilling.<br>
+  <span style="letter-spacing:.18em;font-size:10.5px">★ &nbsp;E PLURIBUS, DALE UNUM&nbsp; ★</span></p>
 </footer>
 </div>
 
@@ -527,7 +551,7 @@ const DATA = __DATA__;
   const tb = document.querySelector('#lbtable tbody');
   DATA.board.forEach(r => {
     const tr = document.createElement('tr');
-    tr.className = 'bloc-' + r.bloc + (r.slug === 'dale' ? ' dale' : '');
+    tr.className = 'bloc-' + r.bloc + (r.slug === 'dale' ? ' dale' : '') + (r.tier === 'Runs the Grill' ? ' grill' : '');
     const rr = r.refusal_rate == null ? '—' : r.refusal_rate.toFixed(1) + '%';
     tr.innerHTML =
       '<td class="rank mono">' + r.rank + '</td>' +
