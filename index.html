@@ -3,50 +3,449 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>THE DEATH OF MAO — Official Teaser Trailer</title>
-  <meta name="description" content="A satirical 3D animated teaser trailer in the spirit of The Death of Stalin. A comedy of succession." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <title>New York Harbor · America's 250th — The Aircraft & the Tall Ships, July 4, 2026</title>
+  <meta name="description" content="Two field guides to America's 250th over New York Harbor, July 4, 2026: every aircraft in the Sail4th 250 aerial review, and the first 15 ships of the Parade of Sail — in order, with what each one is and does." />
+  <meta name="color-scheme" content="dark" />
+  <style>
+    :root{
+      --bg:#080b13; --bg2:#0d1220; --panel:#111827; --panel2:#161f31;
+      --line:rgba(255,255,255,.08); --line-strong:rgba(255,255,255,.16);
+      --ink:#eef2fb; --muted:#93a1bb; --faint:#5f6d86;
+      --red:#e0384f; --gold:#f0c14b; --sky:#4f9be6; --sky-soft:rgba(79,155,230,.14);
+      --accent:var(--sky); --accent-soft:var(--sky-soft);
+      --radius:16px; --maxw:1120px;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+    body[data-mode="sea"]{ --accent:#38b6a6; --accent-soft:rgba(56,182,166,.14); }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+      -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+    /* ---------- HERO ---------- */
+    header.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(1200px 500px at 78% -10%, var(--accent-soft), transparent 60%),
+        radial-gradient(900px 460px at 12% 8%, rgba(224,56,79,.12), transparent 62%),
+        linear-gradient(180deg,#0a1120,#080b13);
+      transition:background .4s ease}
+    .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.5;
+      background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+      background-size:44px 44px;
+      -webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 40%,transparent 78%);
+              mask-image:radial-gradient(120% 90% at 50% 0%,#000 40%,transparent 78%)}
+    .hero-inner{position:relative;padding:56px 0 58px}
+    .flagbar{display:flex;gap:6px;margin-bottom:26px}
+    .flagbar span{height:5px;width:44px;border-radius:3px}
+    .flagbar .r{background:var(--red)} .flagbar .w{background:#eef2fb} .flagbar .b{background:var(--sky)}
+
+    /* mode toggle */
+    .modetabs{display:inline-flex;gap:4px;padding:5px;border:1px solid var(--line-strong);
+      border-radius:999px;background:rgba(255,255,255,.03);margin-bottom:30px}
+    .modetab{appearance:none;border:0;cursor:pointer;font:inherit;font-size:14.5px;font-weight:600;
+      color:var(--muted);background:transparent;padding:9px 20px;border-radius:999px;
+      display:inline-flex;align-items:center;gap:9px;transition:.18s ease;letter-spacing:.01em}
+    .modetab:hover{color:var(--ink)}
+    .modetab.active{background:var(--accent);color:#07101c;box-shadow:0 4px 16px rgba(0,0,0,.35)}
+    body[data-mode="sea"] .modetab.active{color:#04110f}
+
+    .kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.28em;text-transform:uppercase;
+      color:var(--gold);margin:0 0 18px}
+    h1.title{font-size:clamp(38px,7vw,76px);line-height:1.02;margin:0;font-weight:800;letter-spacing:-.02em}
+    h1.title .sub{display:block;color:var(--muted);font-weight:500;font-size:clamp(17px,2.6vw,26px);
+      letter-spacing:.01em;margin-top:16px;max-width:730px}
+    .lede{margin:30px 0 0;max-width:770px;color:#c4cee0;font-size:clamp(16px,2vw,18.5px)}
+    .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+    .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);
+      background:rgba(255,255,255,.03);padding:8px 14px;border-radius:999px;font-size:13.5px;color:var(--ink)}
+    .chip b{color:var(--gold);font-variant-numeric:tabular-nums}
+    .scrolldown{margin-top:32px;display:inline-flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+    .scrolldown .k{font-family:var(--mono);font-size:12px;border:1px solid var(--line-strong);border-radius:6px;padding:2px 7px}
+
+    /* ---------- SECTIONS ---------- */
+    section{padding:56px 0}
+    .band{border-top:1px solid var(--line)}
+    .wave-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+    .wave-no{font-family:var(--mono);color:var(--accent);font-size:14px;letter-spacing:.2em}
+    h2.wave-title{font-size:clamp(24px,3.6vw,34px);margin:0;font-weight:750;letter-spacing:-.01em}
+    .wave-desc{color:var(--muted);max-width:730px;margin:12px 0 30px}
+
+    /* ---------- CARDS ---------- */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+    .card{position:relative;border:1px solid var(--line);border-radius:var(--radius);
+      background:linear-gradient(180deg,var(--panel2),var(--panel));overflow:hidden;
+      transition:border-color .2s ease,transform .2s ease;display:flex;flex-direction:column}
+    .card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+    .card .stage{position:relative;height:186px;display:flex;align-items:center;justify-content:center;
+      background:
+        radial-gradient(120% 120% at 50% 15%,var(--accent-soft),transparent 60%),
+        repeating-linear-gradient(0deg,transparent 0 21px,rgba(255,255,255,.025) 21px 22px),
+        repeating-linear-gradient(90deg,transparent 0 21px,rgba(255,255,255,.025) 21px 22px);
+      border-bottom:1px solid var(--line)}
+    body[data-mode="sea"] .card .stage{
+      background:
+        radial-gradient(130% 140% at 50% 8%,rgba(56,182,166,.12),transparent 62%),
+        linear-gradient(180deg,transparent 62%,rgba(56,120,150,.16) 74%,rgba(30,70,96,.28)),
+        repeating-linear-gradient(90deg,transparent 0 21px,rgba(255,255,255,.02) 21px 22px)}
+    .card .stage::after{content:"";position:absolute;inset:0;
+      background:radial-gradient(closest-side,transparent 60%,rgba(8,11,19,.55));pointer-events:none}
+    .card svg.sil{width:200px;height:200px;color:#dfe7f5;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+    .card svg.sil.ship{width:262px;height:180px;color:#eaf1f6}
+    .runno{position:absolute;top:12px;left:14px;font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.15em}
+    .natflag{position:absolute;top:10px;right:12px;font-size:22px;line-height:1}
+    .card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
+    .name{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+    .desig{font-family:var(--mono);font-size:12.5px;color:var(--accent);margin-top:3px;letter-spacing:.04em}
+    .tags{display:flex;flex-wrap:wrap;gap:7px}
+    .tag{font-size:11.5px;padding:4px 9px;border-radius:6px;border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.02)}
+    .tag.role{border-color:rgba(240,193,75,.35);color:var(--gold);background:rgba(240,193,75,.06)}
+    .tag.branch{border-color:var(--accent);color:#cfe4f6;background:var(--accent-soft)}
+    .blurb{margin:0;color:#c2ccde;font-size:14.5px}
+    .specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-top:auto;
+      border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line)}
+    .specs div{background:var(--panel);padding:10px 11px}
+    .specs .k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+    .specs .v{font-size:13.5px;font-weight:650;margin-top:3px;font-variant-numeric:tabular-nums}
+
+    /* ---------- NOTE / SOURCES ---------- */
+    .note{border:1px solid var(--line);border-left:3px solid var(--gold);
+      background:linear-gradient(180deg,rgba(240,193,75,.05),transparent);
+      border-radius:12px;padding:20px 22px;color:#cdd7e8;font-size:14.5px;max-width:840px}
+    .note h3{margin:0 0 8px;font-size:15px;color:var(--gold);letter-spacing:.02em}
+    ul.src{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:8px}
+    ul.src li{font-size:14px;color:var(--muted);padding-left:20px;position:relative}
+    ul.src li::before{content:"›";position:absolute;left:4px;color:var(--accent)}
+    footer{border-top:1px solid var(--line);padding:40px 0 64px;color:var(--faint);font-size:13.5px}
+    footer a{color:var(--muted)}
+    .foot-flag{display:flex;gap:5px;margin-bottom:18px}
+    .foot-flag span{height:4px;width:34px;border-radius:2px}
+
+    @media (max-width:560px){
+      .hero-inner{padding:40px 0 44px}
+      .grid{grid-template-columns:1fr}
+      .specs{grid-template-columns:1fr 1fr}
+      .card svg.sil.ship{width:230px}
+    }
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.modetab,header.hero{transition:none}}
+  </style>
 </head>
-<body>
-  <div id="stage">
-    <canvas id="gl"></canvas>
+<body data-mode="sky">
 
-    <!-- cinematic dressing -->
-    <div id="grain"></div>
-    <div id="vignette"></div>
-    <div id="bar-top" class="letterbox"></div>
-    <div id="bar-bottom" class="letterbox"></div>
+  <header class="hero">
+    <div class="hero-grid"></div>
+    <div class="wrap hero-inner">
+      <div class="flagbar"><span class="r"></span><span class="w"></span><span class="b"></span></div>
+      <div class="modetabs" id="tabs">
+        <button class="modetab" data-m="sky">✈&nbsp; The Sky</button>
+        <button class="modetab" data-m="sea">⛵&nbsp; The Sea</button>
+      </div>
+      <p class="kicker" id="h-kicker"></p>
+      <h1 class="title" id="h-title"></h1>
+      <p class="lede" id="h-lede"></p>
+      <div class="meta-row" id="h-chips"></div>
+      <div class="scrolldown"><span class="k">↓</span> <span id="h-foot"></span></div>
+    </div>
+  </header>
 
-    <!-- timeline overlay cards are injected here -->
-    <div id="cards"></div>
+  <main id="app"></main>
 
-    <!-- progress -->
-    <div id="progress"><div id="progress-fill"></div></div>
-    <div id="timecode">00:00 / 03:00</div>
-
-    <!-- landing / poster overlay -->
-    <div id="poster">
-      <div class="poster-inner">
-        <div class="poster-kicker">People&rsquo;s Pictures presents &mdash; in the spirit of <em>The Death of Stalin</em></div>
-        <h1 class="poster-title"><span>THE</span><span>DEATH</span><span>OF&nbsp;MAO</span></h1>
-        <div class="poster-tag">A&nbsp;COMEDY&nbsp;OF&nbsp;SUCCESSION</div>
-        <button id="play">&#9654;&nbsp;&nbsp;PLAY TRAILER</button>
-        <div class="poster-foot">3-minute 3D animated teaser &middot; sound on &middot; satire, obviously</div>
+  <section class="band">
+    <div class="wrap">
+      <div class="note">
+        <h3>About these lists &amp; how they were sourced</h3>
+        <p>
+          The events were real: on July&nbsp;4, 2026, New York Harbor hosted both the
+          <em>Sail4th&nbsp;250 / America250 International Aerial Review</em> and the
+          <em>International Parade of Sail</em> — described as the largest maritime gathering in
+          American history. Use the <strong>Sky / Sea</strong> toggle above to switch between the
+          two field guides.
+        </p>
+        <p>
+          News outlets confirmed the totals, the Blue Angels leading the flyover, the allied
+          aerobatic teams, and the tall-ship fleet with the USCGC&nbsp;Eagle at its head — but no
+          agency published a full airframe-by-airframe manifest of the 200+ aircraft. So the
+          demonstration teams and the ships shown here are individually confirmed; the U.S. military
+          aircraft are the types documented as making up the America250 formation. The running
+          orders are curated sequences (the ships follow the Parade-of-Sail lineup; the aircraft
+          are grouped as a spectator would see the waves build), not official minute-by-minute
+          timetables.
+        </p>
+        <p style="margin-bottom:0">
+          Aircraft and ships are drawn as recognition-style silhouettes rather than photographs, so
+          the page stays fast, offline-safe, and free of image-licensing issues. Lengths and
+          specifications are approximate, from public sources.
+        </p>
+        <ul class="src">
+          <li><a href="https://www.cbsnews.com/newyork/news/sail4th-250-list-of-tall-ships-where-to-watch/" target="_blank" rel="noopener">CBS New York — Sail4th 250 list of tall ships &amp; where to watch</a></li>
+          <li><a href="https://sail4th.org/tall-ships" target="_blank" rel="noopener">Sail4th 250 — official tall-ships fleet</a></li>
+          <li><a href="https://www.nbcnewyork.com/250-america-anniversary/track-live-48-tall-ships-sail4th-250/6507729/" target="_blank" rel="noopener">NBC New York — 48 tall ships track live</a></li>
+          <li><a href="https://www.cbsnews.com/newyork/news/sail4th-250-fourth-of-july-new-york-city/" target="_blank" rel="noopener">CBS New York — Sail4th 250 &amp; aerial review details</a></li>
+          <li><a href="https://www.twz.com/space/this-is-the-massive-aerial-armada-that-is-about-to-fly-over-the-capital" target="_blank" rel="noopener">The War Zone — the America250 aerial armada roster</a></li>
+          <li><a href="https://air.show/patrouille-de-france-usa-250/" target="_blank" rel="noopener">air.show — Patrouille de France USA 250 tour</a></li>
+        </ul>
       </div>
     </div>
+  </section>
 
-    <!-- end card -->
-    <div id="endcard">
-      <div class="poster-inner">
-        <h1 class="poster-title small"><span>THE</span><span>DEATH</span><span>OF&nbsp;MAO</span></h1>
-        <button id="replay">&#8635;&nbsp;&nbsp;WATCH IT AGAIN, COMRADE</button>
-      </div>
+  <footer>
+    <div class="wrap">
+      <div class="foot-flag"><span style="background:var(--red)"></span><span style="background:#eef2fb"></span><span style="background:var(--sky)"></span></div>
+      <p>New York Harbor, July 4, 2026 — a field guide to America's 250th, in the sky and on the water.
+      Silhouettes and text are illustrative and for general education; roles and specifications are
+      approximate, drawn from public sources.</p>
+      <p style="margin-top:6px">Static page · <a href="mao.html">psst — the previous tenant of this URL is still here</a></p>
     </div>
-  </div>
+  </footer>
 
-  <script type="module" src="js/main.js"></script>
+  <script>
+  /* ============================================================
+     AIRCRAFT SILHOUETTES — top-down recognition views.
+     ============================================================ */
+  const SVG = (inner) =>
+    `<svg class="sil" viewBox="0 0 240 260" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${inner}</svg>`;
+
+  const SIL = {
+    superhornet: SVG(`<path d="M120 22 L129 58 L133 150 L129 198 L111 198 L107 150 L111 58 Z"/><path d="M111 92 L40 150 L58 160 L114 128 Z"/><path d="M129 92 L200 150 L182 160 L126 128 Z"/><path d="M113 176 L78 200 L90 206 L119 189 Z"/><path d="M127 176 L162 200 L150 206 L121 189 Z"/><path d="M114 148 L103 176 L112 178 L120 156 Z"/><path d="M126 148 L137 176 L128 178 L120 156 Z"/><rect x="108" y="194" width="8" height="12" rx="2"/><rect x="124" y="194" width="8" height="12" rx="2"/>`),
+    raptor: SVG(`<path d="M120 24 L131 66 L131 150 L126 196 L114 196 L109 150 L109 66 Z"/><path d="M114 96 L36 158 L58 162 L118 134 Z"/><path d="M126 96 L204 158 L182 162 L122 134 Z"/><path d="M112 150 L96 182 L108 182 L120 158 Z"/><path d="M128 150 L144 182 L132 182 L120 158 Z"/><path d="M113 176 L84 198 L96 202 L120 186 Z"/><path d="M127 176 L156 198 L144 202 L120 186 Z"/>`),
+    lightning: SVG(`<path d="M120 26 L130 68 L132 152 L124 196 L116 196 L108 152 L110 68 Z"/><path d="M112 100 L46 154 L64 160 L116 136 Z"/><path d="M128 100 L194 154 L176 160 L124 136 Z"/><path d="M113 156 L98 184 L110 184 L120 162 Z"/><path d="M127 156 L142 184 L130 184 L120 162 Z"/><path d="M114 176 L88 196 L100 200 L120 188 Z"/><path d="M126 176 L152 196 L140 200 L120 188 Z"/><rect x="114" y="192" width="12" height="10" rx="3"/>`),
+    eagle: SVG(`<path d="M120 22 L128 56 L134 152 L130 200 L110 200 L106 152 L112 56 Z"/><path d="M112 84 L34 146 L56 156 L115 122 Z"/><path d="M128 84 L206 146 L184 156 L125 122 Z"/><path d="M112 150 L98 184 L110 186 L120 158 Z"/><path d="M128 150 L142 184 L130 186 L120 158 Z"/><path d="M112 178 L74 202 L88 208 L120 191 Z"/><path d="M128 178 L166 202 L152 208 L120 191 Z"/><rect x="107" y="196" width="9" height="12" rx="2"/><rect x="124" y="196" width="9" height="12" rx="2"/>`),
+    viper: SVG(`<path d="M120 24 L128 60 L130 150 L120 202 L110 150 L112 60 Z"/><path d="M112 104 L52 156 L70 162 L116 138 Z"/><path d="M128 104 L188 156 L170 162 L124 138 Z"/><path d="M116 150 L110 186 L130 186 L124 150 Z"/><path d="M114 172 L86 196 L98 200 L120 186 Z"/><path d="M126 172 L154 196 L142 200 L120 186 Z"/>`),
+    warthog: SVG(`<path d="M120 30 L127 60 L127 150 L124 188 L116 188 L113 150 L113 60 Z"/><path d="M113 96 L26 96 L26 112 L113 122 Z"/><path d="M127 96 L214 96 L214 112 L127 122 Z"/><rect x="96" y="128" width="16" height="42" rx="8"/><rect x="128" y="128" width="16" height="42" rx="8"/><path d="M104 182 L82 182 L82 204 L96 204 Z"/><path d="M136 182 L158 182 L158 204 L144 204 Z"/><rect x="112" y="182" width="16" height="20"/>`),
+    spirit: SVG(`<path d="M120 66 L214 176 L188 176 L150 150 L138 176 L120 158 L102 176 L90 150 L52 176 L26 176 Z"/>`),
+    lancer: SVG(`<path d="M120 22 L130 70 L134 150 L128 206 L112 206 L106 150 L110 70 Z"/><path d="M110 108 L40 178 L60 180 L114 138 Z"/><path d="M130 108 L200 178 L180 180 L126 138 Z"/><path d="M112 150 L96 194 L108 194 L120 160 Z"/><path d="M128 150 L144 194 L132 194 L120 160 Z"/><rect x="104" y="182" width="12" height="20" rx="3"/><rect x="124" y="182" width="12" height="20" rx="3"/>`),
+    strato: SVG(`<path d="M120 20 L127 52 L131 160 L127 214 L113 214 L109 160 L113 52 Z"/><path d="M113 88 L20 140 L20 150 L114 120 Z"/><path d="M127 88 L220 140 L220 150 L126 120 Z"/><rect x="60" y="128" width="20" height="10" rx="4"/><rect x="86" y="120" width="20" height="10" rx="4"/><rect x="134" y="120" width="20" height="10" rx="4"/><rect x="160" y="128" width="20" height="10" rx="4"/><path d="M113 176 L82 202 L94 206 L120 188 Z"/><path d="M127 176 L158 202 L146 206 L120 188 Z"/><rect x="116" y="150" width="8" height="46"/>`),
+    herc: SVG(`<path d="M120 24 C124 24 127 30 127 40 L131 176 L127 210 L113 210 L109 176 L113 40 C113 30 116 24 120 24 Z"/><path d="M113 84 L22 92 L22 104 L114 112 Z"/><path d="M127 84 L218 92 L218 104 L126 112 Z"/><rect x="54" y="80" width="10" height="26" rx="3"/><rect x="80" y="82" width="10" height="26" rx="3"/><rect x="150" y="82" width="10" height="26" rx="3"/><rect x="176" y="80" width="10" height="26" rx="3"/><path d="M113 178 L80 190 L82 200 L116 196 Z"/><path d="M127 178 L160 190 L158 200 L124 196 Z"/><path d="M116 176 L110 150 L130 150 L124 176 Z"/>`),
+    jumbo: SVG(`<path d="M120 20 C125 20 128 28 128 40 L134 190 L128 224 L112 224 L106 190 L112 40 C112 28 115 20 120 20 Z"/><path d="M112 96 L26 156 L28 166 L114 128 Z"/><path d="M128 96 L214 156 L212 166 L126 128 Z"/><rect x="56" y="128" width="18" height="12" rx="6"/><rect x="82" y="116" width="18" height="12" rx="6"/><rect x="140" y="116" width="18" height="12" rx="6"/><rect x="166" y="128" width="18" height="12" rx="6"/><path d="M112 194 L74 214 L86 220 L120 202 Z"/><path d="M128 194 L166 214 L154 220 L120 202 Z"/><path d="M116 192 L110 168 L130 168 L124 192 Z"/>`),
+    osprey: SVG(`<path d="M120 40 L127 62 L129 168 L124 196 L116 196 L111 168 L113 62 Z"/><rect x="44" y="96" width="152" height="16" rx="8"/><circle cx="48" cy="104" r="34" fill="none" stroke="currentColor" stroke-width="2" opacity=".38"/><circle cx="192" cy="104" r="34" fill="none" stroke="currentColor" stroke-width="2" opacity=".38"/><rect x="16" y="102" width="64" height="4" rx="2"/><rect x="46" y="72" width="4" height="64" rx="2"/><rect x="160" y="102" width="64" height="4" rx="2"/><rect x="190" y="72" width="4" height="64" rx="2"/><path d="M112 176 L92 196 L102 200 L120 188 Z"/><path d="M128 176 L148 196 L138 200 L120 188 Z"/>`),
+    helo: SVG(`<circle cx="120" cy="118" r="86" fill="none" stroke="currentColor" stroke-width="2" opacity=".33"/><rect x="34" y="116" width="172" height="4" rx="2" opacity=".55"/><rect x="118" y="32" width="4" height="172" rx="2" opacity=".55"/><path d="M120 66 C130 66 134 78 134 96 L132 176 L120 190 L108 176 L106 96 C106 78 110 66 120 66 Z"/><rect x="116" y="186" width="8" height="40"/><path d="M112 220 L96 226 L96 234 L120 230 Z"/><circle cx="120" cy="118" r="6"/><rect x="86" y="110" width="14" height="6" rx="3"/><rect x="140" y="110" width="14" height="6" rx="3"/>`),
+    chinook: SVG(`<circle cx="120" cy="78" r="60" fill="none" stroke="currentColor" stroke-width="2" opacity=".33"/><circle cx="120" cy="182" r="60" fill="none" stroke="currentColor" stroke-width="2" opacity=".33"/><rect x="58" y="76" width="124" height="4" rx="2" opacity=".55"/><rect x="58" y="180" width="124" height="4" rx="2" opacity=".55"/><rect x="118" y="20" width="4" height="116" rx="2" opacity=".55"/><rect x="118" y="124" width="4" height="116" rx="2" opacity=".55"/><path d="M106 60 L134 60 C138 60 140 66 140 74 L140 196 C140 204 138 210 132 210 L108 210 C102 210 100 204 100 196 L100 74 C100 66 102 60 106 60 Z"/><circle cx="120" cy="78" r="6"/><circle cx="120" cy="182" r="6"/>`),
+  };
+
+  /* ============================================================
+     SHIP SILHOUETTES — side-profile generator by rig.
+     masts: array of 'square' | 'topsail' | 'gaff' | 'bermuda'
+     ============================================================ */
+  function gaffSail(x, top, bot, hw){
+    return `<path d="M${x} ${bot} L${x} ${top+14} L${x-hw} ${top} L${x-hw+6} ${bot} Z"/>`;
+  }
+  function SHIP(masts, opts){
+    opts = opts || {};
+    const jibs = opts.jibs == null ? 2 : opts.jibs;
+    const deckY = 148, hullL = 46, hullR = 246;
+    const span = hullR - hullL, n = masts.length;
+    const xs = masts.map((_,i)=> Math.round(hullL + span*(i+1)/(n+1)));
+    let s = "";
+    // waterline
+    s += `<rect x="6" y="170" width="252" height="2.4" rx="1.2" opacity=".3"/>`;
+    // hull (bow to the right, raked stern to the left)
+    s += `<path d="M${hullL-2} ${deckY} Q${hullL-16} ${deckY+8} ${hullL+8} ${deckY+18} L${hullR-4} ${deckY+18} Q${hullR+24} ${deckY+18} ${hullR+40} ${deckY} Z"/>`;
+    // bowsprit
+    s += `<path d="M${hullR+6} ${deckY} L${hullR+74} ${deckY-14}" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>`;
+    // jibs at the bow
+    const foreX = xs[n-1], bowTip = hullR + 70;
+    for(let j=0;j<jibs;j++){
+      const topY = 58 + j*15;
+      const baseX = foreX + (bowTip-foreX)*(0.34 + j*0.30);
+      s += `<path d="M${foreX} ${topY} L${baseX} ${deckY-3} L${foreX} ${deckY-3} Z" opacity=".95"/>`;
+    }
+    // masts + sails
+    masts.forEach((type,i)=>{
+      const x = xs[i], mastTop = 26;
+      s += `<path d="M${x} ${deckY} L${x} ${mastTop}" stroke="currentColor" stroke-width="3.2" fill="none"/>`;
+      if(type === "square" || type === "topsail"){
+        const bands = (type === "square")
+          ? [[36,64,30],[68,96,26],[100,124,20]]
+          : [[34,54,20],[58,76,16]];              // topsail schooner: small squares aloft
+        bands.forEach(([t,b,hw])=>{
+          s += `<path d="M${x-hw} ${t} Q${x} ${t+4} ${x+hw} ${t} L${x+hw} ${b} Q${x} ${b+6} ${x-hw} ${b} Z"/>`;
+          s += `<rect x="${x-hw-3}" y="${t-2}" width="${2*hw+6}" height="2.4" rx="1"/>`;   // yard
+        });
+        if(type === "topsail") s += gaffSail(x, 88, deckY-2, 42);   // main gaff sail below topsails
+      } else if(type === "gaff"){
+        s += gaffSail(x, 46, deckY-2, 44);
+      } else if(type === "bermuda"){
+        s += `<path d="M${x} 26 L${x} ${deckY-2} L${x-46} ${deckY-2} Z"/>`;
+      }
+    });
+    return `<svg class="sil ship" viewBox="0 0 300 190" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${s}</svg>`;
+  }
+
+  /* ============================================================
+     DATA — THE SKY
+     ============================================================ */
+  const AIR_WAVES = [
+    { no:"Wave I", title:"The Lead — Out Front Over the Harbor",
+      desc:"The review opened with the Navy's own. Six blue-and-gold jets crossed the Statue of Liberty in the tight diamond that has led American airshows since 1946.",
+      craft:[
+        {sil:"superhornet",flag:"🇺🇸",run:"01",name:"Blue Angels",desig:"F/A-18E/F Super Hornet",branch:"U.S. Navy",role:"Demonstration / Strike Fighter",specs:[["Top speed","Mach 1.6"],["Crew","1–2"],["In service","since 1999"]],blurb:"The Navy's flight demonstration squadron led the whole parade in their signature six-jet diamond. Off the show circuit, the Super Hornet is the carrier air wing's do-everything fighter — air-to-air, precision strike, reconnaissance, even refueling other jets in mid-air."},
+      ]},
+    { no:"Wave II", title:"Heavy Iron — Presidential Jet & the Big Movers",
+      desc:"Behind the leaders came the slow, heavy aircraft: the machines that move a president, a fuel depot, and a special-operations arsenal through the sky.",
+      craft:[
+        {sil:"jumbo",flag:"🇺🇸",run:"02",name:"Air Force One",desig:"VC-25 (Boeing 747)",branch:"U.S. Air Force",role:"Presidential Transport",specs:[["Top speed","~600 mph"],["Range","7,800 mi"],["In service","since 1990"]],blurb:"A hardened Boeing 747 that becomes 'Air Force One' whenever the president is aboard. It's a flying command post — secure comms, mid-air refueling, and defensive systems let the commander-in-chief run the country from 35,000 feet."},
+        {sil:"herc",flag:"🇺🇸",run:"03",name:"Super Hercules",desig:"KC-130J",branch:"U.S. Marine Corps",role:"Aerial Tanker / Transport",specs:[["Top speed","~416 mph"],["Crew","3"],["In service","since 1999"]],blurb:"A four-engine turboprop workhorse. As a tanker it trails hoses to top off jets and helicopters in flight; as a transport it hauls Marines, cargo, and vehicles onto short, rough airstrips a jet could never use."},
+        {sil:"herc",flag:"🇺🇸",run:"04",name:"Ghostrider",desig:"AC-130J",branch:"U.S. Air Force (AFSOC)",role:"Gunship",specs:[["Armament","30mm + 105mm"],["Crew","~8"],["In service","since 2017"]],blurb:"A Hercules turned into a flying artillery battery. It orbits over a target and fires side-mounted cannons — including a 105mm howitzer — to put precise, sustained fire in support of special-operations troops on the ground below."},
+      ]},
+    { no:"Wave III", title:"Rotary Wing — The Army & Coast Guard Helicopters",
+      desc:"Lower and slower than the jets, the helicopters thumped up the river in trail: the Army's attack and lift fleet, the Marines' tiltrotor, and the Coast Guard's rescue bird.",
+      craft:[
+        {sil:"helo",flag:"🇺🇸",run:"05",name:"Apache",desig:"AH-64",branch:"U.S. Army",role:"Attack Helicopter",specs:[["Top speed","~182 mph"],["Crew","2"],["In service","since 1986"]],blurb:"The Army's tank-killer. A two-seat gunship carrying Hellfire missiles, rockets, and a 30mm chain gun slaved to the gunner's helmet — point your head, point the gun. Built to hunt armor and cover troops in the thick of a fight."},
+        {sil:"helo",flag:"🇺🇸",run:"06",name:"Black Hawk",desig:"UH-60",branch:"U.S. Army",role:"Utility Helicopter",specs:[["Top speed","~183 mph"],["Capacity","11 troops"],["In service","since 1979"]],blurb:"The Army's ubiquitous workhorse. It carries a squad of infantry, flies medevac, slings cargo underneath, and shuttles VIPs. If you picture an Army helicopter, you're probably picturing this one."},
+        {sil:"chinook",flag:"🇺🇸",run:"07",name:"Chinook",desig:"CH-47",branch:"U.S. Army",role:"Heavy-Lift Helicopter",specs:[["Top speed","~196 mph"],["Payload","~24,000 lb"],["In service","since 1962"]],blurb:"Two big rotors, no tail rotor — all that surface area goes to lifting. The Chinook hauls artillery pieces, light vehicles, and dozens of troops, and has been doing the Army's heavy hauling for over sixty years."},
+        {sil:"osprey",flag:"🇺🇸",run:"08",name:"Osprey",desig:"MV-22B",branch:"U.S. Marine Corps",role:"Tiltrotor Transport",specs:[["Top speed","~316 mph"],["Capacity","24 troops"],["In service","since 2007"]],blurb:"The shape-shifter: its engines tilt up to take off like a helicopter, then rotate forward to cruise like a turboprop. That lets it land anywhere a helicopter can while flying twice as far and fast — carrying a platoon of Marines."},
+        {sil:"helo",flag:"🇺🇸",run:"09",name:"Dolphin",desig:"MH-65",branch:"U.S. Coast Guard",role:"Search & Rescue",specs:[["Top speed","~178 mph"],["Crew","4"],["In service","since 1984"]],blurb:"The Coast Guard's short-range rescue helicopter, a fixture over New York Harbor itself. It flies to distressed boaters and swimmers, lowers a rescue swimmer on a hoist, and lifts survivors from the water."},
+      ]},
+    { no:"Wave IV", title:"The Fighters — Fast Jets Across the Skyline",
+      desc:"Now the pace picked up. The fourth-generation fighters — the fast, agile jets that dominate the airspace and pound targets on the ground — swept up the Hudson.",
+      craft:[
+        {sil:"viper",flag:"🇺🇸",run:"10",name:"Thunderbirds",desig:"F-16C Fighting Falcon",branch:"U.S. Air Force",role:"Demonstration / Multirole Fighter",specs:[["Top speed","Mach 2"],["Crew","1"],["In service","since 1978"]],blurb:"The Air Force's demonstration team flies the F-16 — a nimble, single-engine dogfighter that's also a precision bomber. Light, fast, and produced in the thousands, the 'Viper' is the workhorse fighter of the U.S. and dozens of allies."},
+        {sil:"eagle",flag:"🇺🇸",run:"11",name:"Eagle II",desig:"F-15EX",branch:"U.S. Air Force",role:"Air Superiority / Strike",specs:[["Top speed","Mach 2.5"],["Weapons","up to 12 AAMs"],["In service","since 2021"]],blurb:"The newest, most powerful Eagle. Blisteringly fast with an enormous weapons load, the F-15EX is built to control the skies and haul the biggest missiles in the inventory — a modern update of a jet with a perfect air-combat record."},
+        {sil:"warthog",flag:"🇺🇸",run:"12",name:"Warthog",desig:"A-10 Thunderbolt II",branch:"U.S. Air Force",role:"Close Air Support",specs:[["Gun","30mm GAU-8"],["Top speed","~439 mph"],["In service","since 1977"]],blurb:"An airplane built around a gun. The A-10 wraps a titanium 'bathtub' around the pilot and a massive 30mm cannon that shreds armor. Slow, low, and ugly on purpose, it loiters over the battlefield to protect troops the way no jet does."},
+        {sil:"superhornet",flag:"🇺🇸",run:"13",name:"Growler",desig:"EA-18G",branch:"U.S. Navy",role:"Electronic Attack",specs:[["Top speed","Mach 1.6"],["Crew","2"],["In service","since 2009"]],blurb:"A Super Hornet turned invisible weapon. Instead of bombs it carries jamming pods that blind enemy radar and cut their communications, clearing a path so the strike aircraft behind it can get through untouched."},
+      ]},
+    { no:"Wave V", title:"Stealth & the Tri-Bomber Element",
+      desc:"The heart of the formation: the fifth-generation stealth fighters and the rare 'tri-bomber' — all three of America's strategic bombers flying together, a sight the country almost never sees.",
+      craft:[
+        {sil:"lightning",flag:"🇺🇸",run:"14",name:"Lightning II",desig:"F-35",branch:"USAF · USMC · USN",role:"Stealth Multirole Fighter",specs:[["Top speed","Mach 1.6"],["Crew","1"],["In service","since 2015"]],blurb:"The fifth-generation quarterback. Stealth keeps it off radar; a fused sensor suite lets one pilot see the whole battlefield and pass targets to everyone else. Three versions fly from runways, amphibious ships, and carriers."},
+        {sil:"raptor",flag:"🇺🇸",run:"15",name:"Raptor",desig:"F-22",branch:"U.S. Air Force",role:"Stealth Air Superiority",specs:[["Top speed","Mach 2+"],["Supercruise","yes"],["In service","since 2005"]],blurb:"The apex dogfighter. Stealthy, able to cruise supersonic without afterburner, and so agile — thanks to thrust that vectors up and down — that nothing in the sky out-turns it. Built for one job: owning the airspace."},
+        {sil:"spirit",flag:"🇺🇸",run:"16",name:"Spirit",desig:"B-2",branch:"U.S. Air Force",role:"Stealth Strategic Bomber",specs:[["Range","6,900 mi"],["Payload","40,000 lb"],["In service","since 1997"]],blurb:"A flying wing with no tail and almost no radar signature. It can take off in Missouri, slip through the world's densest air defenses unseen, deliver its payload anywhere on earth, and fly home — the rarest, most exotic bomber ever built."},
+        {sil:"lancer",flag:"🇺🇸",run:"17",name:"Lancer",desig:"B-1B",branch:"U.S. Air Force",role:"Supersonic Bomber",specs:[["Top speed","Mach 1.2"],["Payload","75,000 lb"],["In service","since 1986"]],blurb:"The 'Bone.' Its wings sweep back for a low, fast, supersonic dash and swing forward for takeoff. It carries the largest conventional payload of any U.S. bomber — a whole lot of ordnance, delivered quickly."},
+        {sil:"strato",flag:"🇺🇸",run:"18",name:"Stratofortress",desig:"B-52",branch:"U.S. Air Force",role:"Strategic Bomber",specs:[["Engines","8"],["First flight","1952"],["In service","since 1955"]],blurb:"The immortal one. Eight engines, a 185-foot wingspan, and in service since the Eisenhower era — with upgrades that will keep it flying past its 100th birthday. Grandfathers and grandchildren have both flown the same airframes."},
+      ]},
+    { no:"Wave VI", title:"Allied Colors — The International Aerobatic Teams",
+      desc:"The finale belonged to America's friends. Four of the world's great demonstration squadrons trailed their national colors in smoke across New York Harbor.",
+      craft:[
+        {sil:"lightning",flag:"🇫🇷",run:"19",name:"Patrouille de France",desig:"Dassault/Dornier Alpha Jet",branch:"French Air & Space Force",role:"Aerobatic Team",specs:[["Jets","8 + A400M"],["Smoke","Bleu-Blanc-Rouge"],["Team since","1953"]],blurb:"France's national team, flying eight Alpha Jet trainers escorted by an A400M transport. Guests of honor for the 250th — a nod to the alliance of 1778 — they streamed blue, white, and red down the Hudson past the Statue of Liberty, herself a gift from France."},
+        {sil:"viper",flag:"🇨🇦",run:"20",name:"Snowbirds",desig:"CT-114 Tutor",branch:"Royal Canadian Air Force",role:"Aerobatic Team",specs:[["Jets","9"],["Formation","tight 9-ship"],["Team since","1971"]],blurb:"Canada's team flies nine straight-winged Tutor jets in some of the tightest, most delicate close-formation flying in the world — wingtips just feet apart. A neighborly salute across the northern border."},
+        {sil:"lightning",flag:"🇬🇧",run:"21",name:"Red Arrows",desig:"BAE Hawk T1",branch:"Royal Air Force",role:"Aerobatic Team",specs:[["Jets","9"],["Smoke","Red/White/Blue"],["Team since","1965"]],blurb:"Britain's world-famous squadron in nine scarlet Hawk jets. Their trademark 'Diamond Nine' and the red-white-and-blue smoke are icons of the airshow world — a former adversary of 1776 now flying in celebration of it."},
+        {sil:"raptor",flag:"🇦🇪",run:"22",name:"Al Fursan",desig:"Aermacchi MB-339 / L-15",branch:"United Arab Emirates Air Force",role:"Aerobatic Team",specs:[["Jets","~7"],["Smoke","Red/Green/White/Black"],["Team since","2010"]],blurb:"'The Knights' — the UAE's national team, trailing the colors of the Emirati flag. Their presence marked the international breadth of the review: allied air forces from three continents flying together over New York."},
+      ]},
+  ];
+
+  /* ============================================================
+     DATA — THE SEA (first 15 of the Parade of Sail, in order)
+     ============================================================ */
+  const SEA_WAVES = [
+    { no:"At the Head of the Fleet", title:"The Flagship",
+      desc:"By tradition the host nation leads its own parade. America's tall ship took the first position, dipping her ensign in a Presidential Review off the Statue of Liberty before the whole fleet followed her up the harbor.",
+      craft:[
+        {rig:["square","square","gaff"],jibs:3,flag:"🇺🇸",run:"01",name:"USCGC Eagle",desig:"Three-masted barque",branch:"U.S. Coast Guard",role:"Sail-Training Flagship",specs:[["Length","≈295 ft"],["Masts","3 (barque)"],["Home","New London, CT"]],blurb:"'America's Tall Ship' — a 295-foot Coast Guard barque that has trained cadets since 1946 and is the only active square-rigger in U.S. government service. As the host nation's flagship she led the entire Parade of Sail."},
+      ]},
+    { no:"The Parade of Sail", title:"Following the Flagship — Ships 2 through 15",
+      desc:"Behind the Eagle came the fleet, an alternating line of foreign navy square-riggers and American historic schooners. Nearly 50 Class A and B ships from 20 nations sailed the route; these are the first fifteen.",
+      craft:[
+        {rig:["topsail","gaff","gaff"],jibs:2,flag:"🇳🇱",run:"02",name:"Oosterschelde",desig:"Three-masted topsail schooner",branch:"Netherlands",role:"Historic Merchant Sailer",specs:[["Length","≈164 ft"],["Built","1918"],["Masts","3"]],blurb:"The last survivor of a great Dutch fleet of three-masted topsail schooners, launched in 1918 and sailed back to life after a full restoration. She has circled the globe as a floating ambassador for the Netherlands."},
+        {rig:["topsail","gaff"],jibs:3,flag:"🇺🇸",run:"03",name:"Pride of Baltimore II",desig:"Baltimore Clipper (topsail schooner)",branch:"United States",role:"Privateer Reproduction",specs:[["Length","≈157 ft"],["Built","1988"],["Home","Baltimore, MD"]],blurb:"A working reproduction of a War-of-1812 'Baltimore Clipper' — the fast, sharp-hulled privateers that raided British shipping. Maryland's seagoing goodwill ambassador crowds on a huge spread of sail for her size."},
+        {rig:["bermuda","bermuda"],jibs:2,flag:"🇺🇸",run:"04",name:"Ticonderoga",desig:"Schooner yacht",branch:"United States",role:"Classic Racing Yacht",specs:[["Length","≈72 ft"],["Launched","1936"],["Designer","Herreshoff"]],blurb:"'Big Ti' — a 1936 Herreshoff schooner and one of the most beloved racing yachts ever built, holder of dozens of course records. A reminder that not every tall ship is a navy trainer; some are simply legends of the sea."},
+        {rig:["square","square","square"],jibs:3,flag:"🇦🇷",run:"05",name:"ARA Libertad",desig:"Full-rigged ship",branch:"Argentine Navy",role:"Sail-Training Ship",specs:[["Length","≈340 ft"],["Built","1963"],["Masts","3 (full-rig)"]],blurb:"Argentina's 340-foot full-rigged training ship — every one of her three masts crossed with square sails. One of the fastest tall ships afloat, she has set world-record ocean crossings under sail alone."},
+        {rig:["topsail","gaff"],jibs:2,flag:"🇺🇸",run:"06",name:"Lynx",desig:"Square topsail schooner",branch:"United States",role:"Living-History Privateer",specs:[["Length","≈122 ft"],["Built","2001"],["Masts","2"]],blurb:"An interpretation of an 1812 American privateer schooner, square topsails set above a fore-and-aft rig. She sails the coasts as a floating classroom — 'America's privateer.'"},
+        {rig:["square","gaff","gaff","gaff"],jibs:3,flag:"🇨🇱",run:"07",name:"Esmeralda",desig:"Four-masted barquentine",branch:"Chilean Navy",role:"Sail-Training Ship",specs:[["Length","≈371 ft"],["Built","1954"],["Masts","4"]],blurb:"'La Dama Blanca,' the White Lady — Chile's 371-foot four-masted barquentine and one of the tallest, longest sailing ships in the world. Her towering white rig is unmistakable on any horizon."},
+        {rig:["gaff"],jibs:1,flag:"🇺🇸",run:"08",name:"Clearwater",desig:"Hudson River sloop",branch:"United States",role:"Environmental Icon",specs:[["Length","≈106 ft"],["Built","1969"],["Masts","1 (sloop)"]],blurb:"The single-masted Hudson River sloop built in 1969 at the urging of folk singer Pete Seeger to clean up the very river she sails. She is an environmental movement with a keel — and a local to this stretch of water."},
+        {rig:["square","square","gaff"],jibs:3,flag:"🇨🇴",run:"09",name:"ARC Gloria",desig:"Three-masted barque",branch:"Colombian Navy",role:"Sail-Training Flagship",specs:[["Length","≈250 ft"],["Built","1968"],["Masts","3 (barque)"]],blurb:"Colombia's flag-ship barque and the pride of her navy — famous worldwide for cadets who climb the rigging to sing and dance as she enters port. Square sails forward, fore-and-aft on the mizzen."},
+        {rig:["gaff","gaff"],jibs:2,flag:"🇺🇸",run:"10",name:"American Eagle",desig:"Gloucester fishing schooner",branch:"United States",role:"Historic Windjammer",specs:[["Length","≈92 ft"],["Built","1930"],["Home","Maine coast"]],blurb:"A genuine 1930 Gloucester fishing schooner, now a National Historic Landmark carrying passengers along the Maine coast. She once chased cod on the Grand Banks; today she chases the wind."},
+        {rig:["square","gaff","gaff"],jibs:3,flag:"🇩🇴",run:"11",name:"Juan Bautista Cambiaso",desig:"Three-masted barquentine",branch:"Dominican Navy",role:"Sail-Training Ship",specs:[["Rig","Barquentine"],["Masts","3"],["Nation","Dom. Rep."]],blurb:"The Dominican Republic's sail-training barquentine, named for a hero of the nation's naval history. Square sails on the foremast, fore-and-aft behind — a working classroom for young Dominican sailors."},
+        {rig:["gaff","gaff"],jibs:2,flag:"🇺🇸",run:"12",name:"Pioneer",desig:"Iron-hulled schooner",branch:"United States",role:"Museum Sailer (NYC)",specs:[["Length","≈102 ft"],["Built","1885"],["Home","South St. Seaport"]],blurb:"An 1885 iron-hulled schooner — the last of her kind — that sails New York Harbor from the South Street Seaport Museum, just downriver from the parade route. A true local: she is a piece of the harbor itself."},
+        {rig:["square","square","gaff"],jibs:3,flag:"🇪🇨",run:"13",name:"BAE Guayas",desig:"Three-masted barque",branch:"Ecuadorian Navy",role:"Sail-Training Flagship",specs:[["Length","≈257 ft"],["Built","1976"],["Masts","3 (barque)"]],blurb:"Ecuador's three-masted training barque, flagship of her navy since 1977. Like her South American sisters, she carries naval cadets across oceans to learn the sea the old way — aloft, on the yards."},
+        {rig:["gaff","gaff"],jibs:2,flag:"🇺🇸",run:"14",name:"Liberty Clipper",desig:"Gaff-rigged schooner",branch:"United States",role:"Passenger Tall Ship",specs:[["Length","≈125 ft"],["Built","1983"],["Home","Boston, MA"]],blurb:"A modern gaff-rigged schooner built in the lines of a mid-1800s coastal packet, sailing out of Boston. Fast, handsome, and built for the crowds who come aboard to sail her."},
+        {rig:["topsail","gaff"],jibs:2,flag:"🇫🇷",run:"15",name:"Belle Poule",desig:"Two-masted topsail schooner",branch:"French Navy",role:"Sail-Training Schooner",specs:[["Length","≈123 ft"],["Built","1932"],["Masts","2"]],blurb:"A French Navy training schooner launched in 1932, modeled on the Icelandic fishing schooners of Brittany. She and her identical sister L'Étoile still fly the tricolore — a fitting French finish, from the nation that gave America the Statue of Liberty."},
+      ]},
+  ];
+
+  /* ============================================================
+     MODE CONFIG + RENDER
+     ============================================================ */
+  const MODES = {
+    sky:{
+      title:"The Sky Over New York",
+      sub:"Every aircraft in the Sail4th 250 International Aerial Review — in order, and what each one does.",
+      lede:"On the morning of the nation's Semiquincentennial, more than <b>200 U.S. and allied aircraft</b> — led by the Navy's Blue Angels — paraded over the Statue of Liberty and up the Hudson River, from the Verrazzano-Narrows Bridge to Yonkers. It was billed as the largest peacetime aerial review in the harbor's history. Here is the formation, wave by wave.",
+      chips:[["✈️","<b>22</b> aircraft featured"],["🇺🇸","<b>5</b> U.S. service branches"],["🌐","<b>4</b> allied aerobatic teams"],["🗽","Verrazzano → Hudson → Yonkers"]],
+      foot:"scroll to walk the flight line",
+      waves:AIR_WAVES,
+    },
+    sea:{
+      title:"The Sea Beside New York",
+      sub:"The first 15 ships of the Sail4th 250 Parade of Sail — in order, and what each one is.",
+      lede:"As the jets cleared the harbor, the water took over. The <b>International Parade of Sail</b> — the largest maritime gathering in American history — ran from the Verrazzano-Narrows Bridge, past a Presidential Review at the Statue of Liberty, and up the Hudson to the George Washington Bridge. Nearly 50 Class A and B ships from 20 nations took part. Here are the first fifteen, in the order they led the fleet — beginning with America's own.",
+      chips:[["⛵","<b>15</b> ships, in order"],["🌍","<b>8</b> nations represented"],["🚩","led by USCGC Eagle"],["🗽","Liberty → up the Hudson"]],
+      foot:"scroll to walk the parade of sail",
+      waves:SEA_WAVES,
+    },
+  };
+
+  const app = document.getElementById("app");
+
+  const card = (c) => `
+    <article class="card">
+      <div class="stage">
+        <span class="runno">NO. ${c.run}</span>
+        <span class="natflag" title="origin">${c.flag}</span>
+        ${c.rig ? SHIP(c.rig,{jibs:c.jibs}) : SIL[c.sil]}
+      </div>
+      <div class="body">
+        <div>
+          <h3 class="name">${c.name}</h3>
+          <div class="desig">${c.desig}</div>
+        </div>
+        <div class="tags">
+          <span class="tag branch">${c.branch}</span>
+          <span class="tag role">${c.role}</span>
+        </div>
+        <p class="blurb">${c.blurb}</p>
+        <div class="specs">
+          ${c.specs.map(([k,v])=>`<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join("")}
+        </div>
+      </div>
+    </article>`;
+
+  function render(mode){
+    const M = MODES[mode];
+    document.body.dataset.mode = mode;
+    document.getElementById("h-kicker").textContent = "July 4, 2026 · New York Harbor · America's 250th";
+    document.getElementById("h-title").innerHTML =
+      `${M.title}<span class="sub">${M.sub}</span>`;
+    document.getElementById("h-lede").innerHTML = M.lede;
+    document.getElementById("h-chips").innerHTML =
+      M.chips.map(([e,t])=>`<span class="chip">${e} ${t}</span>`).join("");
+    document.getElementById("h-foot").textContent = M.foot;
+    document.querySelectorAll(".modetab").forEach(b=>
+      b.classList.toggle("active", b.dataset.m===mode));
+
+    app.innerHTML = "";
+    M.waves.forEach(w=>{
+      const sec = document.createElement("section");
+      sec.className = "band";
+      sec.innerHTML = `
+        <div class="wrap">
+          <div class="wave-head">
+            <span class="wave-no">${w.no}</span>
+            <h2 class="wave-title">${w.title}</h2>
+          </div>
+          <p class="wave-desc">${w.desc}</p>
+          <div class="grid">${w.craft.map(card).join("")}</div>
+        </div>`;
+      app.appendChild(sec);
+    });
+    document.title = mode==="sea"
+      ? "The Sea Beside New York — Parade of Sail, July 4, 2026"
+      : "The Sky Over New York — America's 250th Aerial Review, July 4, 2026";
+  }
+
+  document.getElementById("tabs").addEventListener("click", (e)=>{
+    const btn = e.target.closest(".modetab");
+    if(!btn) return;
+    const m = btn.dataset.m;
+    history.replaceState(null,"",`#${m}`);
+    render(m);
+    window.scrollTo({top:0,behavior:"auto"});
+  });
+
+  const start = location.hash.replace("#","") === "sea" ? "sea" : "sky";
+  render(start);
+  </script>
 </body>
 </html>
