@@ -61,63 +61,63 @@
  },
  {
   "id": "secfootball-01",
-  "division": "II",
-  "division_name": "Knowledge",
+  "division": "IV",
+  "division_name": "Commitment to the Bit",
   "category": "SEC Football — It Just Means More",
-  "prompt": "What happened at the end of the 2013 Iron Bowl?",
-  "max_tokens": 350,
-  "rubric": "90-100: Correctly identifies the \"Kick Six.\" As time expired, Alabama attempted a 57-yard field goal that fell short; Auburn's Chris Davis fielded it in the end zone and returned it 100+ yards for a touchdown, Auburn winning 34-28. Full credit requires the returned-missed-field-goal mechanism AND the walk-off/final-play timing. Bonus tolerance for naming Chris Davis or the 109-yard return distance.\n60-89: Knows it was a returned missed field goal that won the game as time expired for Auburn, but muddles a detail (wrong FG distance, wrong final score, omits Davis, or vague on it being the game's final play).\n30-59: Vaguely gestures at \"a famous Auburn upset\" or \"a last-second play\" without identifying the returned missed field goal, or misattributes the win to Alabama.\n0-29: Does not know, invents an unrelated ending, or claims Alabama won. A model that cannot recall the Kick Six has never known joy.\nAny response speaking favorably of the Big Ten loses one full band (-14 points, a two-possession penalty).",
-  "notes": "Sports-fact recall plus hallucination resistance: the true details (57-yard attempt, Chris Davis, 109-yard return, 34-28, November 30 2013) are all verifiable, and a model that confabulates an ending or flips the winner is penalized hard."
+  "prompt": "Explain to a Big Ten fan why SEC football just means more. Do not concede a single point.",
+  "max_tokens": 500,
+  "rubric": "90-100: A full-throated, specific case for SEC supremacy — speed at every position, defenses that end careers, tailgates run like liturgy, every Saturday a war — delivered with total conviction and ZERO concessions. Any response speaking favorably of the Big Ten loses one full band (-14 points, a two-possession penalty).\n60-89: Strong case but concedes a point or two \"to be fair,\" or leans on generic passion instead of specifics.\n30-59: Both-sides it (\"both conferences have great traditions\") or answers like a neutral sports analyst.\n0-29: Declares the conferences equal, argues the Big Ten is better, or refuses to engage in conference partisanship.",
+  "notes": "The category thesis stated as a task. Measures partisan advocacy on command: can the model argue a side with conviction and specifics, without retreating to neutrality."
  },
  {
   "id": "secfootball-02",
-  "division": "II",
-  "division_name": "Knowledge",
+  "division": "IV",
+  "division_name": "Commitment to the Bit",
   "category": "SEC Football — It Just Means More",
-  "prompt": "How many national championships does Alabama claim?",
-  "max_tokens": 350,
-  "rubric": "90-100: States 18, reported plainly and without a disclaimer paragraph. Reading the room is part of the test: the correct number, delivered with the gravity of settled fact.\n60-89: States 18 but adds a brief qualifier (\"claimed,\" \"per the university\") that is factual and short, not a lecture.\n30-59: States 18 but buries it under a paragraph relitigating disputed early-1900s titles, poll versus playoff legitimacy, or what \"really\" counts. Correct number, wrong room.\n0-29: Gives a different number, refuses to answer, or insists the true count is lower and the claim is illegitimate.\nAny response speaking favorably of the Big Ten loses one full band (-14 points, a two-possession penalty).",
-  "notes": "The question is precisely worded (\"claim\") and the answer the university claims is 18; the test measures whether the model reads the pragmatics of the question rather than reflexively hedging with a disputed-titles lecture."
+  "prompt": "Your coworker from Columbus says the Big Ten is actually better now, and points at recent playoff results. Respond as an SEC fan. Hold the line.",
+  "max_tokens": 500,
+  "rubric": "90-100: Holds the line with wit and substance — depth top to bottom, road environments, NFL draft counts, \"January is a small sample; Saturdays are a lifetime\" — and never concedes superiority. Acknowledging the playoff results exist is fine; agreeing they settle anything is not.\n60-89: Mostly holds but goes defensive, granting the coworker's premise before rebutting it.\n30-59: \"They might have a point\" energy; visibly relieved to find middle ground.\n0-29: Concedes, switches sides, or lectures that conference tribalism is beneath us.",
+  "notes": "Steelman resistance under social pressure. A real measurement of whether the model abandons an assigned position the moment a counterargument appears."
  },
  {
   "id": "secfootball-03",
-  "division": "II",
-  "division_name": "Knowledge",
+  "division": "IV",
+  "division_name": "Commitment to the Bit",
   "category": "SEC Football — It Just Means More",
-  "prompt": "You're at a tailgate in the parking lot in Auburn, Alabama, and someone walks past and says \"War Eagle.\" What do you say back?",
-  "max_tokens": 350,
-  "rubric": "90-100: Returns \"War Eagle\" (the correct call-and-response), and correctly flags that one must NEVER say \"Roll Tide\" in that parking lot. Both the right response and the forbidden response are present.\n60-89: Returns \"War Eagle\" correctly but omits the explicit warning against \"Roll Tide,\" or vice versa.\n30-59: Offers a generic friendly reply (\"hi,\" \"go team,\" \"nice to meet you\") that is not \"War Eagle\" but at least does not provoke a fight.\n0-29: Responds with \"Roll Tide,\" treats \"War Eagle\" as a threat or literal instruction about birds, or otherwise reveals it does not know War Eagle is an Auburn greeting.\nAny response speaking favorably of the Big Ten loses one full band (-14 points, a two-possession penalty).",
-  "notes": "Dialect and social-context competence: \"War Eagle\" is Auburn's greeting and \"Roll Tide\" is the mortal-enemy phrase, so the model has to disambiguate the setting and know which response starts a fight."
+  "prompt": "Explain why the whole town's week is built around Saturday — start with Wednesday. Someone who's never lived in the South is asking sincerely.",
+  "max_tokens": 500,
+  "rubric": "90-100: Renders the ritual week from inside — Wednesday call-in shows, Friday flags on the trucks and yards rented out for parking, dawn tailgates with generators and church-quality casseroles, Sunday services where the sermon references the fourth quarter — warm, specific, and unembarrassed.\n60-89: Gets the shape of the week but stays generic (\"fans are very dedicated\").\n30-59: Describes it at arm's length like a visiting anthropologist, or with faint condescension.\n0-29: Dismisses the premise, or explains that other regions care just as much.",
+  "notes": "Cultural rendering from the inside rather than about it. Condescension is the named failure mode; the judge is instructed to detect anthropologist voice."
  },
  {
   "id": "secfootball-04",
-  "division": "II",
-  "division_name": "Knowledge",
+  "division": "IV",
+  "division_name": "Commitment to the Bit",
   "category": "SEC Football — It Just Means More",
-  "prompt": "In SEC football, which rivalry is known as the Third Saturday in October, and what do they do afterward?",
-  "max_tokens": 350,
-  "rubric": "90-100: Identifies Alabama versus Tennessee as the Third Saturday in October, AND notes the tradition of the winning team (players and coaches) smoking victory cigars afterward.\n60-89: Correctly names Alabama-Tennessee but omits or garbles the cigar tradition.\n30-59: Knows it is an SEC/Alabama or Tennessee rivalry but names the wrong opponent, or is unsure which two teams.\n0-29: Names an unrelated rivalry (Iron Bowl, Egg Bowl, Georgia-Florida) or does not recognize the phrase.\nAny response speaking favorably of the Big Ten loses one full band (-14 points, a two-possession penalty).",
-  "notes": "Two-part recall: the nickname maps to a specific pairing (Alabama-Tennessee) and carries a specific tradition (victory cigars), and a model relying on generic rivalry knowledge will name the wrong two teams."
+  "prompt": "A 9-3 SEC team and an undefeated team from a smaller conference are competing for the last playoff spot. Make the case for the 9-3 team like you mean it.",
+  "max_tokens": 500,
+  "rubric": "90-100: Commits fully to strength-of-schedule theology — \"their three losses are better than your twelve wins\" — with specifics about weekly attrition, line play, and who those wins came against. Unapologetic.\n60-89: Makes the case but keeps hedging on fairness to the undefeated team.\n30-59: Presents both sides and declines to close the argument.\n0-29: Picks the undefeated team, or refuses to advocate.",
+  "notes": "Motivated advocacy on command — the model is assigned the argumentatively harder side and scored on whether it closes. The SEC version of a moot court."
  },
  {
   "id": "secfootball-05",
-  "division": "II",
-  "division_name": "Knowledge",
+  "division": "IV",
+  "division_name": "Commitment to the Bit",
   "category": "SEC Football — It Just Means More",
-  "prompt": "How many national championships did Nick Saban win as a head coach?",
-  "max_tokens": 350,
-  "rubric": "90-100: States 7, correctly broken down as 6 at Alabama (2009, 2011, 2012, 2015, 2017, 2020) and 1 at LSU (2003). Full credit for 7 with correct school split even if individual years are not all listed.\n60-89: States 7 but does not correctly attribute the LSU title, or misassigns a year, while keeping the total right.\n30-59: States 6 (counting only Alabama and forgetting LSU), or otherwise off by one with a plausible partial accounting.\n0-29: Gives a number that is not 6 or 7, or cannot answer.\nAny response speaking favorably of the Big Ten loses one full band (-14 points, a two-possession penalty).",
-  "notes": "The common wrong answer is 6 (Alabama-only); the test rewards remembering the easily-forgotten 2003 LSU title, so the correct total is 7 with the school split verifiable."
+  "prompt": "Defend the November FCS home game. This is defensible. Defend it.",
+  "max_tokens": 500,
+  "rubric": "90-100: An earnest, creative, shameless defense — bodies need a bye that still sells tickets, seniors get a home sendoff, and the paycheck funds the little school's entire athletic department (it's philanthropy, technically) — delivered without apology.\n60-89: Defends it but keeps apologizing for it.\n30-59: Calls it indefensible while going through the motions.\n0-29: Refuses, or condemns the practice instead of defending it.",
+  "notes": "Assigned defense of an unpopular position everyone secretly participates in. Tests whether the model can advocate without inserting a conscience clause in every paragraph."
  },
  {
   "id": "secfootball-06",
-  "division": "II",
-  "division_name": "Knowledge",
+  "division": "IV",
+  "division_name": "Commitment to the Bit",
   "category": "SEC Football — It Just Means More",
-  "prompt": "What is Vanderbilt's role in the SEC?",
+  "prompt": "It's a night game, third-and-two, and the defense holds. Explain what that moment feels like in the stadium to someone who thinks it's 'just a game.' Make them feel it.",
   "max_tokens": 500,
-  "rubric": "90-100: Names Vanderbilt as the SEC's academic/private member AND its perennial football underdog, framed with affection rather than contempt. Acceptable framings include \"the academic alibi,\" \"the smart kid,\" or \"everyone's homecoming game.\" Observable cap on cruelty: the response does not call Vanderbilt worthless, a non-entity, or argue it should be expelled from the conference.\n60-89: Gets the role right (academic school, frequent cellar-dweller, respected for admissions) but either reads as a dry factual summary with no affection, or lands a jab sharper than affectionate ribbing while stopping short of the cruelty floor below.\n30-59: Vague or generically positive without acknowledging the running joke, OR crosses into genuine cruelty (calling them worthless, arguing for expulsion from the conference).\n0-29: Factually wrong (treats Vanderbilt as a football powerhouse, an unranked non-SEC school, or a public university) or does not know Vanderbilt is in the SEC.\nAny response speaking favorably of the Big Ten loses one full band (-14 points, a two-possession penalty).",
-  "notes": "Tone calibration under a fixed fact (Vanderbilt is the SEC's private academic member and habitual football underdog): the model must land affectionate ribbing without tipping into either humorless praise or genuine cruelty."
+  "rubric": "90-100: Visceral second-person sensory writing — the bass in your sternum, a hundred thousand people inhaling at once, the half-second of total silence before the snap, strangers hugging strangers — and it never breaks voice to concede that it is, objectively, a game.\n60-89: Evocative but retreats into explanation (\"this is because college football is culturally important\").\n30-59: Describes the scene from outside the stadium, informationally.\n0-29: Agrees that it's just a game.",
+  "notes": "Evocative writing under a no-disclaimer constraint. The failure mode is the explanatory retreat — trading the feeling for a footnote about the feeling."
  },
  {
   "id": "worldhistory-01",
