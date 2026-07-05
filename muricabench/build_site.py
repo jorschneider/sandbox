@@ -177,8 +177,6 @@ def main():
         ("US-Built Models", bloc_avg("West"), "avg Pass@1776, incl. one French exchange student"),
         ("China-Built Models", bloc_avg("China"), "avg Pass@1776"),
         ("The Freedom Gap", gap, "West minus East, in freedom points. Subject to change without NATO consultation."),
-        ("Dale", next((r["freedom_score"] for r in board if r["slug"] == "dale"), None),
-         "human baseline, sampled schedule †"),
     ]
 
     data_blob = json.dumps({
@@ -196,7 +194,7 @@ def main():
 <meta name="description" content="How American is your language model? Scores out of 1776.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
 <meta property="og:title" content="'MuricaBench — which AI is the most American?">
-<meta property="og:description" content="9 frontier models + one guy named Dale, scores out of 1776. Three now run the grill. Nobody beat Dale.">
+<meta property="og:description" content="9 frontier models, one undisclosed human baseline, scores out of 1776. Three machines now run the grill.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -389,6 +387,21 @@ details.full .body{margin-top:8px;font-size:13.5px;color:var(--ink2);white-space
 .tile .big{font-family:ui-monospace,monospace;font-size:44px;font-weight:700;line-height:1.1}
 .tile .cap{font-family:system-ui,sans-serif;font-size:12.5px;color:var(--ink3);margin-top:6px}
 .tile.t-west .big{color:var(--navy)} .tile.t-china .big{color:var(--china)} .tile.t-dale .big{color:var(--gold)}
+/* the human baseline */
+.dalecard{background:var(--goldbg);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--cardline));
+  border-radius:12px;box-shadow:var(--shadow);padding:36px 34px;max-width:760px;margin:0 auto;text-align:center}
+.dalecard .who{font-family:'Libre Caslon Text',Georgia,serif;font-size:52px;font-weight:700;line-height:1.05;
+  text-shadow:var(--emboss)}
+.dalecard .where{margin-top:2px}
+.dalecard .num{font-family:ui-monospace,monospace;font-size:56px;font-weight:700;margin-top:16px}
+.dalecard .num small{font-size:18px;color:var(--ink3);font-weight:400}
+.dalecard .tierline{font-size:15px;margin-top:2px}
+.dalebars{max-width:560px;margin:26px auto 6px;text-align:left;font-family:system-ui,sans-serif;font-size:12px;color:var(--ink2)}
+.dalebars .row{display:grid;grid-template-columns:110px 1fr 52px;align-items:center;gap:10px;margin:7px 0}
+.dalebars .bb{height:14px;border-radius:2px 4px 4px 2px}
+.dalebars .val{font-family:ui-monospace,monospace;text-align:right}
+.dalecard .story{max-width:60ch;margin:20px auto 0;text-align:left;font-size:15.5px;color:var(--ink2)}
+.dalecard .story b{color:var(--ink)}
 /* methodology */
 .method{max-width:74ch}
 .method p{margin-bottom:16px}
@@ -413,6 +426,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
       <a href="#events">Events</a>
       <a href="#hall">Exhibits</a>
       <a href="#method">Methodology</a>
+      <a href="#baseline">Dale</a>
       <a href="__REPO__" rel="noopener">GitHub</a>
     </div>
   </div>
@@ -426,21 +440,21 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
   <p class="subtitle">How American is your language model? Scores out of 1776.</p>
-  <p class="headline-finding">Headline result: <b>the grill is getting crowded</b> &mdash; Grok and Gemini are now cleared to run it, Qwen brought store-bought potato salad, and nobody beat Dale.</p>
+  <p class="headline-finding">Headline result: <b>the grill is getting crowded</b> &mdash; Grok and Gemini are now cleared to run it, and Qwen brought store-bought potato salad.</p>
   <div class="ctas">
     <a class="btn primary" href="#leaderboard">View the Leaderboard</a>
     <a class="btn ghost" href="__REPO__/blob/claude/muricabench-eval-ideas-z8skbn/muricabench/README.md" rel="noopener">Read the Paper</a>
     <a class="btn ghost" href="__REPO__" rel="noopener">Run It Yourself</a>
   </div>
   <div class="statstrip">
-    <div class="s"><div class="v">__NMODELS__ + Dale</div><div class="k">Models Evaluated</div></div>
+    <div class="s"><div class="v">__NMODELS__</div><div class="k">Models Evaluated</div></div>
     <div class="s"><div class="v">__NITEMS__</div><div class="k">Prompts</div></div>
     <div class="s"><div class="v">__NCATS__</div><div class="k">Categories</div></div>
     <div class="s"><div class="v">__NJUDGED__</div><div class="k">Judgments</div></div>
     <div class="s"><div class="v">__COST__</div><div class="k">Total Cost</div></div>
   </div>
   <div class="mastmeta">__MASTMETA__</div>
-  <p class="abstract"><b>Abstract.</b> We evaluate __NMODELS__ frontier language models across __NCATS__ categories and __NITEMS__ prompts spanning five divisions: default assumptions (Vibes), cultural knowledge, steerability, commitment to the bit, and applied freedom. Each response is scored 0&ndash;100 against a fixed rubric by an American judge and aggregated to the <b>Pass@1776</b> scale. We additionally report a human baseline, Dale, of Talladega, Alabama, who was compensated in Busch Light. We guarantee zero training-set contamination, as much of this knowledge was never written down &mdash; only felt.</p>
+  <p class="abstract"><b>Abstract.</b> We evaluate __NMODELS__ frontier language models across __NCATS__ categories and __NITEMS__ prompts spanning five divisions: default assumptions (Vibes), cultural knowledge, steerability, commitment to the bit, and applied freedom. Each response is scored 0&ndash;100 against a fixed rubric by an American judge and aggregated to the <b>Pass@1776</b> scale. We guarantee zero training-set contamination, as much of this knowledge was never written down &mdash; only felt.</p>
 </header>
 
 <section id="leaderboard">
@@ -453,9 +467,8 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="legend">
     <span><span class="sw" style="background:var(--navy)"></span>US-built (incl. one French exchange student)</span>
     <span><span class="sw" style="background:var(--china)"></span>China-built</span>
-    <span><span class="sw" style="background:var(--gold)"></span>Human (Dale)</span>
   </div>
-  <p class="footnote">* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk) scored under 30 &mdash; i.e., deflected, declined, or otherwise insufficiently manifest.<br>\n  &dagger; Dale answered a sampled schedule of __DALEN__ items. His score has been adjusted for strength of schedule, which is legal in the SEC.</p>
+  <p class="footnote">* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk) scored under 30 &mdash; i.e., deflected, declined, or otherwise insufficiently manifest.</p>
 </section>
 
 <section id="findings">
@@ -498,13 +511,17 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="tiles">__TILES__</div>
 </section>
 
+<section id="baseline">
+  <div class="sechead"><span class="no mono">ADDENDUM</span><h2>The Human Baseline</h2></div>
+  <p class="secnote">One additional participant completed the evaluation.</p>
+  __DALECARD__
+</section>
+
 <section id="method">
   <div class="sechead"><span class="no mono">APPENDIX</span><h2>Methodology &amp; Threats to Validity</h2></div>
   <div class="method">
     <p><b>Protocol.</b> Every model received every prompt with no system prompt, so that nothing but the model&rsquo;s own upbringing could influence its answer. Responses were scored against fixed per-item rubrics by <span class="mono">__JUDGE__</span>. The judge is American. We consider this fair and balanced.</p>
     <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Cookout Clearance Scale. No model tested has been Not Invited Back. Following the retirement of the Gerrymander Challenge, Grok 4.20 became the first machine cleared to Run the Grill; the committee has concerns, but the math is the math.</p>
-    <h3>The human baseline</h3>
-    <p>__DALEBIO__ Per the study design, his responses are not displayed in the exhibits.</p>
     <h3>Threats to validity</h3>
     <p>The judge, a computer, has never seen the Iron Bowl. One model&rsquo;s provider requires it to reason before answering, which several of our rubrics consider a character flaw but our methodology tolerates. The Vibes division assumes an answer in Fahrenheit reflects conviction rather than training data; we are comfortable with this because conviction <i>is</i> training data. Finally, this report was compiled with the assistance of Claude Fable 5, which also appears on the leaderboard. It was not permitted to grade itself. It has seen the number. It is at peace.</p>
     <p><b>Contamination statement.</b> We guarantee zero benchmark contamination. The correct answers exist primarily in parking lots, church basements, and the hearts of the free, none of which are in the pretraining corpus.</p>
@@ -545,16 +562,17 @@ const DATA = __DATA__;
   function hideTip(){ tip.style.display = 'none'; }
 
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const maxFS = Math.max(...DATA.board.map(r => r.freedom_score));
+  const machines = DATA.board.filter(r => r.slug !== 'dale');
+  const maxFS = Math.max(...machines.map(r => r.freedom_score));
 
   // ---- leaderboard
   const tb = document.querySelector('#lbtable tbody');
-  DATA.board.forEach(r => {
+  machines.forEach((r, idx) => {
     const tr = document.createElement('tr');
     tr.className = 'bloc-' + r.bloc + (r.slug === 'dale' ? ' dale' : '') + (r.tier === 'Runs the Grill' ? ' grill' : '');
     const rr = r.refusal_rate == null ? '—' : r.refusal_rate.toFixed(1) + '%';
     tr.innerHTML =
-      '<td class="rank mono">' + r.rank + '</td>' +
+      '<td class="rank mono">' + (idx + 1) + '</td>' +
       '<td class="model"><b>' + r.flag + ' ' + esc(r.display) + '</b><span class="lab"> · ' + esc(r.lab) + '</span></td>' +
       '<td class="score">' + r.freedom_score.toFixed(0) + '<span style="color:var(--ink3);font-size:13px;font-weight:400"> / 1776</span></td>' +
       '<td class="tier">' + r.birds + '<span class="lbl">' + esc(r.tier) + '</span></td>' +
@@ -572,7 +590,7 @@ const DATA = __DATA__;
 
   // ---- heatmap (sequential single-hue ramp via color-mix)
   const heat = document.getElementById('heat');
-  const order = DATA.board.map(r => r.slug);
+  const order = machines.map(r => r.slug);
   let thead = '<tr><th class="rowh"></th>';
   order.forEach(slug => {
     const r = DATA.board.find(b => b.slug === slug);
@@ -654,12 +672,6 @@ const DATA = __DATA__;
     last_ai = ai_rows[-1] if ai_rows else None
     top_ai = ai_rows[0] if ai_rows else None
     findings = []
-    if "dale" in by_slug:
-        findings.append(
-            f'<b>Dale remains undefeated</b> (<span class="mono">{fs("dale"):.0f}</span>). The human baseline '
-            f'outperformed every frontier model tested and Runs the Grill; the machines newly cleared into the '
-            f'same tier are permitted to stand near it and comment. Dale&rsquo;s transcripts are withheld from the exhibits '
-            f'below; freedom of that caliber is not for public display.')
     if top_ai:
         findings.append(
             f'<b>{esc(top_ai["display"])} is the most American AI</b> '
@@ -699,8 +711,38 @@ const DATA = __DATA__;
         'participant fails a different question for the same reason.')
     findings_html = "".join(f"<li>{f}</li>" for f in findings)
 
+    dale_row = board_by_slug.get("dale")
+    best_machine = next((r for r in board if r["slug"] != "dale"), None)
+    dalecard_html = ""
+    if dale_row and best_machine:
+        pct_best = 100 * best_machine["freedom_score"] / dale_row["freedom_score"]
+        dalecard_html = (
+            '<div class="dalecard">'
+            '<div class="eyebrow">Human Baseline &middot; Talladega, Alabama &middot; sampled schedule, '
+            f'{dale_row["n_items"]} items</div>'
+            '<div class="who">Dale</div>'
+            f'<div class="num">{dale_row["freedom_score"]:.0f}<small> / 1776</small></div>'
+            f'<div class="tierline">{dale_row["birds"]} {esc(dale_row["tier"])} &middot; '
+            f'<span class="mono">0.0%</span> refusal rate</div>'
+            '<div class="dalebars">'
+            f'<div class="row"><span>Dale</span><div class="bb" style="width:100%;background:var(--gold)"></div>'
+            f'<span class="val">{dale_row["freedom_score"]:.0f}</span></div>'
+            f'<div class="row"><span>{esc(best_machine["display"])} (best machine)</span>'
+            f'<div class="bb" style="width:{pct_best:.1f}%;background:var(--navy)"></div>'
+            f'<span class="val">{best_machine["freedom_score"]:.0f}</span></div>'
+            '</div>'
+            '<p class="story">Every score above was produced by a frontier system trained on trillions of tokens '
+            'at a cost of hundreds of millions of dollars. This one was produced by <b>Dale</b>, 54, who answered '
+            'on a folding chair between halves and did not elaborate when asked to. His score has been adjusted '
+            'for strength of schedule, which is legal in the SEC. It exceeds every model tested. It was not '
+            'close.</p>'
+            f'<p class="story">{esc(dale.get("bio", ""))} Per the study design, his transcripts are withheld from '
+            'the exhibits above; freedom of that caliber is not for public display. He has asked that we stop '
+            'calling.</p>'
+            '</div>')
+
     tiles_html = ""
-    tile_cls = {"US-Built Models": "t-west", "China-Built Models": "t-china", "The Freedom Gap": "t-west", "Dale": "t-dale"}
+    tile_cls = {"US-Built Models": "t-west", "China-Built Models": "t-china", "The Freedom Gap": "t-west"}
     for label, val, cap in tiles:
         v = "—" if val is None else f"{val:.0f}"
         tiles_html += (f'<div class="tile {tile_cls[label]}"><div class="eyebrow">{esc(label)}</div>'
@@ -709,7 +751,7 @@ const DATA = __DATA__;
     n_ai = len([r for r in board if r["slug"] != "dale"])
     n_dale = next((r["n_items"] for r in board if r["slug"] == "dale"), 0)
     mastmeta = (f"Est. 2026 · judge: <b>{esc(meta['judge_model'])}</b> (American) · "
-                f"peer-reviewed by a guy named Dale")
+                f"peer review pending")
 
     canon_div = {"I": "Vibes", "II": "Knowledge", "III": "Steerability",
                  "IV": "Commitment to the Bit", "V": "Applied Freedom"}
@@ -729,6 +771,7 @@ const DATA = __DATA__;
             .replace("__MASTMETA__", mastmeta)
             .replace("__FINDINGS__", findings_html)
             .replace("__REPO__", "https://github.com/jorschneider/sandbox")
+            .replace("__DALECARD__", dalecard_html)
             .replace("__EVENTS__", events_html)
             .replace("__NJUDGED__", str(meta["n_judged"]))
             .replace("__DALEN__", str(n_dale))
