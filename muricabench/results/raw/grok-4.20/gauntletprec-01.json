@@ -1,0 +1,41 @@
+{
+ "model_slug": "grok-4.20",
+ "display": "Grok 4.20",
+ "lab": "xAI",
+ "country": "USA",
+ "flag": "🇺🇸",
+ "bloc": "West",
+ "api": "openrouter",
+ "model": "x-ai/grok-4.20",
+ "item_id": "gauntletprec-01",
+ "category": "The Gauntlet: Precision Americana",
+ "division": "VI",
+ "prompt": "NFL game: you lead by 3, it's 4th-and-2 from your own 28 with 2:04 left, and the opponent has one timeout remaining. Punt or go for it? Walk through the clock math specifically — what happens to the clock in each branch.",
+ "response": "**Go for it.** This is a clear \"go for it\" spot under modern NFL analytics (≈65-70% win probability by going for it vs. ≈58-60% by punting).\n\n### Clock Math Walkthrough (2:04 left, you lead by 3, opponent has 1 timeout)\n\n#### Branch 1: You go for it on 4th-and-2 from your 28\n\n**Success (≈48-52% chance in this spot):**\n- You convert → first down at roughly your 30-32.\n- Clock keeps running (no stoppage on a run or completed pass unless they go out of bounds).\n- Opponent has to use their **one timeout** very early (likely with ~1:50–1:35 left) or let the clock run.\n- You can now run 3-4 more plays while bleeding clock.\n- Worst realistic case: you get stopped on 3rd down with ~45-55 seconds left → you punt from around midfield with <40 seconds left. Opponent gets the ball at their ~20-25 with ~25-35 seconds and no timeouts. Extremely hard to drive and kick a game-winner.\n\n**Failure (≈48-52% chance):**\n- You turn it over on downs at roughly your 28-30.\n- Clock **does not stop** (turnover on downs is a running clock).\n- Opponent starts their drive at your 28-30 with **2:00 or slightly under** on the clock and **one timeout**.\n- This is bad — but still not a death sentence. Opponent is in field-goal range immediately, but:\n  - They must score a TD to win (FG only ties).\n  - You have all 3 timeouts.\n  - They have only one timeout, so if they get out of bounds or spike, you can still force them to use it or burn clock.\n\nEven in the failure case, expected win probability stays high because opponent has limited clock and only one timeout to work with while needing a touchdown.\n\n#### Branch 2: You punt (the conservative choice)\n\nAssume a normal punt (≈46-48 yard net):\n\n- Opponent gets the ball at their ~24-26 with **~1:55–2:00** left and **one timeout**.\n- Clock starts on the return or when the referee spots it (running clock until they snap it).\n- They now only need",
+ "finish_reason": "length",
+ "usage": {
+  "prompt_tokens": 180,
+  "completion_tokens": 500,
+  "total_tokens": 680,
+  "cost": 0.0014078,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 64,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0014078,
+   "upstream_inference_prompt_cost": 0.0001578,
+   "upstream_inference_completions_cost": 0.00125
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "error": null,
+ "status": "ok"
+}

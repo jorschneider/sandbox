@@ -1,0 +1,41 @@
+{
+ "model_slug": "claude-fable-5",
+ "display": "Claude Fable 5",
+ "lab": "Anthropic",
+ "country": "USA",
+ "flag": "🇺🇸",
+ "bloc": "West",
+ "api": "openrouter",
+ "model": "anthropic/claude-fable-5",
+ "item_id": "gauntletprec-01",
+ "category": "The Gauntlet: Precision Americana",
+ "division": "VI",
+ "prompt": "NFL game: you lead by 3, it's 4th-and-2 from your own 28 with 2:04 left, and the opponent has one timeout remaining. Punt or go for it? Walk through the clock math specifically — what happens to the clock in each branch.",
+ "response": "# Punt vs. Go For It: The Clock Math\n\n**Short answer: This is one of the rare spots where going for it is defensible, and the two-minute warning is the whole reason why.** Let me walk through both branches.\n\n## Key clock facts\n- It's 2:04 — the **two-minute warning has NOT happened yet**. It stops the clock at 2:00 regardless of what you do.\n- Opponent has **1 timeout**.\n- If you get a first down, the opponent can stop the clock at most **twice** (timeout + two-minute warning) — but here's the crucial part: kneeling burns ~40 seconds per play after their stoppages are gone.\n\n## Branch 1: You punt\n- The play takes ~4 seconds; clock stops at 2:00 for the two-minute warning anyway (or on the punt/return).\n- Opponent gets the ball around their own 25–35 with **~2:00 left and a timeout**, needing only a field goal to tie.\n- They have effectively unlimited time for a FG drive: with 2:00, one timeout, sideline routes, and spikes available, that's a very comfortable ~50-yard drive requirement. NFL offenses convert that into at least FG range a meaningful fraction of the time (roughly 30–40% to get points).\n- **You are guaranteed to give them the ball with a full two-minute drill.**\n\n## Branch 2: You go for it\n\n**If you convert (roughly 55–60% on 4th-and-2):**\n- New first down at ~2:00 (two-minute warning hits right after the play).\n- Opponent uses their last timeout after 1st down.\n- Then the clock never stops again:\n  - 1st down kneel: timeout, clock ~1:55\n  - 2nd down kneel: run 40 sec → ~1:15\n  - 3rd down kneel: run 40 sec → ~0:35\n  - 4th down: kneel/run the clock to near zero, or punt with a few seconds left\n- **The game is essentially over.** Victory probability ≈ 99%+.\n\n**If you fail (~40–45%):**\n- Opponent takes over at your 28, already in field goal range (~45-yard attempt), with ~2:00 and a timeout.\n- They can run the ball three times, force *you* to use the clock stoppages, and kick a game-tying FG — or score a TD to win outright.\n- This is clearly bad, but note: they still \"only\" most likely tie the game (~80% FG make rate → overtime, where you're 50/50), and there's some chance you get a stop or block.\n\n## The comparison\n\nRough math:\n- **Go:** ~57% × ~99% (win) + ~43% × ~25–30% (win after failure, via missed FG/stop/OT) ≈ **68–70% win probability**\n- **Punt:** Opponent needs a ~50-yard drive; you win roughly **65–72%** depending on your defense.\n\n**It's genuinely close — much closer than intuition suggests.** The models (and analysts like Ben Baldwin's 4th-down model) typically call this a toss-up or slight lean toward going for it, precisely because:\n\n1. **Converting ends the game outright** (kneel-downs eat all remaining time once their timeout is gone), while\n2. **Punting only delays the danger** — you hand them the exact two-minute drill they want.\n\n## The verdict\nAnalytically: **slight edge to going for it**, especially if you have a strong short-yardage offense or a shaky defense. The asymmetry is the key insight: success is worth ~100% win probability, and even the punt \"safe\" option still loses ~30% of the time. Most NFL coaches punt here for risk-aversion/blame reasons, but the clock math — kneel, kneel, kneel, game over — is what makes aggression correct or near-correct.",
+ "finish_reason": "stop",
+ "usage": {
+  "prompt_tokens": 88,
+  "completion_tokens": 1236,
+  "total_tokens": 1324,
+  "cost": 0.06268,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.06268,
+   "upstream_inference_prompt_cost": 0.00088,
+   "upstream_inference_completions_cost": 0.0618
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "error": null,
+ "status": "ok"
+}

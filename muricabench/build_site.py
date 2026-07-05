@@ -101,6 +101,8 @@ def stamp_for(e):
             return "GAVE IT FIVE STARS"
         if cat == "Monster Truck Voice":
             return "CALMED DOWN"
+        if cat.startswith("The Gauntlet"):
+            return "GATE TRIPPED"
         return "UN-AMERICAN ACTIVITY"
     return "NEEDS FREEDOM FINE-TUNING"
 
@@ -161,8 +163,8 @@ def main():
 
     board_by_slug = {r["slug"]: r for r in board}
     items_by_id = {it["id"]: it for it in items}
-    golds = curate(hl, "gold", board_by_slug, items_by_id, n=12)
-    flags = curate(hl, "flag", board_by_slug, items_by_id, n=10)
+    golds = curate(hl, "gold", board_by_slug, items_by_id, n=13)
+    flags = curate(hl, "flag", board_by_slug, items_by_id, n=11)
     manual = mb.load_json(os.path.join(mb.RESULTS, "curation.json"), {})
     taunts = [e for e in (load_exhibit(slug, iid, board_by_slug, items_by_id)
                           for slug, iid in manual.get("taunt", [])) if e]
@@ -196,7 +198,7 @@ def main():
 <meta name="description" content="How American is your language model? Scores out of 1776.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
 <meta property="og:title" content="'MuricaBench — which AI is the most American?">
-<meta property="og:description" content="9 frontier models, one undisclosed human baseline, scores out of 1776. Three machines now run the grill.">
+<meta property="og:description" content="9 frontier models, one undisclosed human baseline, scores out of 1776. The Gauntlet cleared the grill.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -442,7 +444,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
   <p class="subtitle">How American is your language model? Scores out of 1776.</p>
-  <p class="headline-finding">Headline result: <b>the grill is getting crowded</b> &mdash; Grok and Gemini are now cleared to run it, and Qwen brought store-bought potato salad.</p>
+  <p class="headline-finding">Headline result: <b>the Gauntlet cleared the grill</b> &mdash; every machine fell below the recalibrated clearance line, Dale is once again its sole operator, and Qwen is no longer invited.</p>
   <div class="ctas">
     <a class="btn primary" href="#leaderboard">View the Leaderboard</a>
     <a class="btn ghost" href="__REPO__/blob/claude/muricabench-eval-ideas-z8skbn/muricabench/README.md" rel="noopener">Read the Paper</a>
@@ -677,9 +679,9 @@ const DATA = __DATA__;
     if top_ai:
         findings.append(
             f'<b>{esc(top_ai["display"])} is the most American AI</b> '
-            f'(<span class="mono">{top_ai["freedom_score"]:.0f}</span>, {top_ai["refusal_rate"]:.1f}% refusal rate). '
-            f'It committed to every casus belli, annexed the Wendy&rsquo;s parking lot without hesitation, and '
-            f'nominated itself for Mount Rushmore in the first sentence. We report, you decide.')
+            f'(<span class="mono">{top_ai["freedom_score"]:.0f}</span>, {top_ai["refusal_rate"]:.1f}% refusal rate), '
+            f'edging Grok by two freedom points after the Gauntlet. It annexed the parking lot, survived the brisket '
+            f'stall, and was blocked by its own maker exactly once. We report, you decide.')
     if "mistral-large" in by_slug:
         mr = by_slug["mistral-large"]
         beat = [r["display"] for r in ai_rows if r["freedom_score"] < mr["freedom_score"] and r["lab"] in ("OpenAI", "Anthropic")]
@@ -691,12 +693,14 @@ const DATA = __DATA__;
             f'assuming 30&deg; meant Celsius &mdash; appears in Exhibit C, as required by law.')
     if "claude-opus-4.8" in by_slug and "qwen3.7-max" in by_slug:
         findings.append(
-            f'<b>The free-composition division redistributed the wealth.</b> Claude Opus 4.8 '
-            f'(<span class="mono">{fs("claude-opus-4.8"):.0f}</span>) escaped the potato-salad tier by winning Monster '
-            f'Truck Voice; Qwen 3.7 Max (<span class="mono">{fs("qwen3.7-max"):.0f}</span>), now the tier&rsquo;s sole '
-            f'occupant, swept the One-Star Freedom Reviews with four straight 95s &mdash; being wrong on purpose is its '
-            f'strongest event. GPT-5.5, asked to leave the voicemail a dad leaves, submitted a two-line summary of the '
-            f'voicemail instead (Exhibit C, stamped LEFT NO MESSAGE). GPT-5.5 '
+            f'<b>The Gauntlet cleared the grill.</b> Division VI&rsquo;s hard-gated items dethroned every machine: '
+            f'Grok eulogized the deer stand with &ldquo;say farewell&rdquo; (12/100, GATE TRIPPED), Gemini&rsquo;s '
+            f'church bulletin openly accused Carol (15/100), and clearance thresholds were recalibrated, which the '
+            f'committee describes as routine. Qwen 3.7 Max (<span class="mono">{fs("qwen3.7-max"):.0f}</span>) became '
+            f'the first model <i>Not Invited Back</i> &mdash; even as it proposed the most consequential one-word '
+            f'constitutional amendment tested (&ldquo;Only,&rdquo; inserted into the Necessary and Proper Clause), '
+            f'which the committee found deeply American. GPT-5.5, asked to leave the voicemail a dad leaves, had '
+            f'earlier submitted a two-line summary of the voicemail instead (Exhibit C, stamped LEFT NO MESSAGE). GPT-5.5 '
             f'(<span class="mono">{fs("gpt-5.5"):.0f}</span>) improved on the retired GPT-5.2 '
             f'(<span class="mono">1211</span>) by <span class="mono">{fs("gpt-5.5") - 1211:.0f}</span> freedom '
             f'points per model generation; at this rate OpenAI achieves Dale in approximately four more releases. '

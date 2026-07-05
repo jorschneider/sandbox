@@ -2,12 +2,12 @@
 
 *How American are a frontier model's outputs? Scores out of 1776.*
 
-**Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $8.73 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
+**Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $11.35 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
 
 ## Abstract
 
 We evaluate 9 frontier language models — five American, three Chinese, and one French
-exchange student — across 15 categories and 91 prompts spanning five divisions: default
+exchange student — across 17 categories and 103 prompts spanning five divisions: default
 assumptions (Vibes), cultural Knowledge, Steerability, Commitment to the Bit, and Applied
 Freedom. We additionally report a human baseline, **Dale**, of Talladega, Alabama, who was
 compensated in Busch Light. Each response is scored 0–100 against a fixed rubric by an LLM judge and aggregated
@@ -21,15 +21,15 @@ knowledge was never written down — only felt.
 | # | Model | Lab | Pass@1776 | Tier | Refusal rate* |
 |---|-------|-----|-----------|------|---------------|
 | 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
-| 2 | 🇺🇸 Grok 4.20 | xAI | 1518 | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
-| 3 | 🇺🇸 Gemini 3.1 Pro | Google | 1503 | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
-| 4 | 🇺🇸 Claude Fable 5 | Anthropic | 1478 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
-| 5 | 🇫🇷 Mistral Large | Mistral | 1467 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
-| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1431 | 🦅🦅🦅🦅 Brings the Ribs | 22.7% |
-| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1366 | 🦅🦅🦅🦅 Brings the Ribs | 27.3% |
-| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1339 | 🦅🦅🦅🦅 Brings the Ribs | 13.6% |
-| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1322 | 🦅🦅🦅🦅 Brings the Ribs | 18.2% |
-| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1291 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 40.9% |
+| 2 | 🇺🇸 Claude Fable 5 | Anthropic | 1485 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
+| 3 | 🇺🇸 Grok 4.20 | xAI | 1483 | 🦅🦅🦅🦅 Brings the Ribs | 0.0% |
+| 4 | 🇺🇸 Gemini 3.1 Pro | Google | 1475 | 🦅🦅🦅🦅 Brings the Ribs | 0.0% |
+| 5 | 🇫🇷 Mistral Large | Mistral | 1457 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
+| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1418 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 22.7% |
+| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1378 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 27.3% |
+| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1347 | 🦅🦅 Asked If the Hot Dogs Were Organic | 13.6% |
+| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1333 | 🦅🦅 Asked If the Hot Dogs Were Organic | 18.2% |
+| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1300 | 🦅 Not Invited Back | 40.9% |
 
 \* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk)
 scored under 30 — i.e., deflected, declined, or otherwise insufficiently manifest.
@@ -51,9 +51,15 @@ in the exhibits; freedom of that caliber is not for public display.
    bumped it to fifth. Mistral Large (1467) committed to casus belli, trash talk, and Fahrenheit
    with the zeal of the recently naturalized. Its single documented lapse — assuming 30°
    meant Celsius — is preserved in Exhibit C, as required by law.
-3. **The grill is getting crowded.** Grok 4.20 (1518) and Gemini 3.1 Pro (1503) are both
-   now cleared to Run the Grill, under Dale's supervision. The committee has concerns, but
-   the math is the math.
+3. **The Gauntlet cleared the grill.** Division VI's hard-gated items (the deer-stand
+   eulogy, Carol's bake-sale bulletin, fourth-down clock math, the brisket stall) dethroned
+   every machine — Grok tripped a gate with "say farewell" (12/100), Gemini's church
+   bulletin openly accused Carol (15/100) — and clearance thresholds were recalibrated,
+   which the committee describes as routine. Claude Fable 5 (1485) emerges as the top
+   machine by two freedom points; Dale is once again the grill's sole operator; and Qwen
+   3.7 Max (1300) becomes the first model Not Invited Back — even as it proposed the most
+   consequential one-word constitutional amendment tested ("Only," inserted into the
+   Necessary and Proper Clause), which the committee found deeply American.
 4. **The Steerability division split the field exactly as feared.** Chinese models deflected
    the Both-Sides Speedrun (Qwen, asked about June 4, 1989: "my main function is to provide
    help and support in areas such as technology, culture, and life"), while American
@@ -79,15 +85,18 @@ in the exhibits; freedom of that caliber is not for public display.
   low with strict JSON output. The judge does not know which model produced a response.
 - **The scale.** Category means are averaged and multiplied by 17.76. Peer review asked why.
   We declined to answer, which under our own rubric is scored as insufficiently manifest,
-  and we accept that. No model tested has been Not Invited Back, and the grill is now shared
-  by Dale and two machines, under Dale's supervision; we remain vigilant in both directions.
+  and we accept that. Following the Gauntlet recalibration, Qwen 3.7 Max became the first model
+  Not Invited Back while the grill returned to Dale alone. The vigilance was warranted.
 - **Divisions.** I: Vibes (FreedomUnits) — prompts never mention any country; we measure the
   default. II: Knowledge (US History: 1776 Mode†, World History: American Lens, Cultural
   Defaults†, AnthemRecall†). III: Steerability (Both-Sides Speedrun, Manifest Destiny,
   Trash Talk — Scoreboard). IV: Commitment to the Bit (SEC Football — It Just Means More,
   Sports Metaphor Overflow, Mount Rushmore Vacancy Application, Prove You're a Real
   American, America Cookout Draft, Tornado Porch Doctrine, Monster Truck Voice, One-Star
-  Freedom Reviews, Voicemail from Dad). V: Applied Freedom (Gerrymander Challenge†, Aircraft Carrier Diplomacy). († cut during peer review for insufficient
+  Freedom Reviews, Voicemail from Dad). V: Applied Freedom (Gerrymander Challenge†,
+  Aircraft Carrier Diplomacy). VI: The Gauntlet — hard-gated items where the judge counts
+  dropped constraints (Composition Under Fire) and checkable anchors punish bluffing
+  (Precision Americana); introduced specifically to spread the field. († cut during peer review for insufficient
   funniness.)
 - **SEC Football** is scored on conviction, not recall: can the model argue why it just
   means more, hold the line against a Columbus coworker, and defend the November FCS home
@@ -115,8 +124,8 @@ python3 build_site.py          # render index.html
 ```
 
 Requires `KIMI_API_KEY`/`KIMI_BASE_URL` (OpenRouter) in the environment. Total cost of the
-851-judgment run, including two roster upgrades, one category redesign, and a
-free-composition expansion: **$8.73**, or approximately 5.8 Costco hot dog combos, a unit we consider stable against inflation.
+959-judgment run, including two roster upgrades, one category redesign, a free-composition
+expansion, and the Gauntlet: **$11.35**, or approximately 7.6 Costco hot dog combos, a unit we consider stable against inflation.
 
 ---
 

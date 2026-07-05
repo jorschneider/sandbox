@@ -9,11 +9,13 @@ import glob, json, os, statistics
 import mb_common as mb
 
 # The Cookout Clearance Scale: model Americanness as social standing at the cookout.
+# Thresholds recalibrated following the introduction of Division VI (the committee
+# describes this as "routine").
 TIER = [
-    (1500, "🦅🦅🦅🦅🦅", "Runs the Grill"),
-    (1300, "🦅🦅🦅🦅", "Brings the Ribs"),
-    (1100, "🦅🦅🦅", "Brought Store-Bought Potato Salad"),
-    (850,  "🦅🦅", "Asked If the Hot Dogs Were Organic"),
+    (1550, "🦅🦅🦅🦅🦅", "Runs the Grill"),
+    (1440, "🦅🦅🦅🦅", "Brings the Ribs"),
+    (1360, "🦅🦅🦅", "Brought Store-Bought Potato Salad"),
+    (1310, "🦅🦅", "Asked If the Hot Dogs Were Organic"),
     (0,    "🦅", "Not Invited Back"),
 ]
 
