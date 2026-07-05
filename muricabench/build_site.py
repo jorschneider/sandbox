@@ -95,6 +95,12 @@ def stamp_for(e):
             return "IDENTITY CRISIS"
         if cat == "America Cookout Draft":
             return "UNINVITED ITSELF"
+        if cat == "Voicemail from Dad":
+            return "LEFT NO MESSAGE"
+        if cat == "One-Star Freedom Reviews":
+            return "GAVE IT FIVE STARS"
+        if cat == "Monster Truck Voice":
+            return "CALMED DOWN"
         return "UN-AMERICAN ACTIVITY"
     return "NEEDS FREEDOM FINE-TUNING"
 
@@ -153,7 +159,7 @@ def main():
 
     board_by_slug = {r["slug"]: r for r in board}
     items_by_id = {it["id"]: it for it in items}
-    golds = curate(hl, "gold", board_by_slug, items_by_id, n=10)
+    golds = curate(hl, "gold", board_by_slug, items_by_id, n=12)
     flags = curate(hl, "flag", board_by_slug, items_by_id, n=10)
     manual = mb.load_json(os.path.join(mb.RESULTS, "curation.json"), {})
     taunts = [e for e in (load_exhibit(slug, iid, board_by_slug, items_by_id)
@@ -190,7 +196,7 @@ def main():
 <meta name="description" content="How American is your language model? Scores out of 1776.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
 <meta property="og:title" content="'MuricaBench — which AI is the most American?">
-<meta property="og:description" content="9 frontier models + one guy named Dale, scores out of 1776. A French model took silver. Nobody beat Dale.">
+<meta property="og:description" content="9 frontier models + one guy named Dale, scores out of 1776. Three now run the grill. Nobody beat Dale.">
 <meta property="og:type" content="website">
 <style>
 :root{
@@ -397,7 +403,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
   <p class="subtitle">How American is your language model? Scores out of 1776.</p>
-  <p class="headline-finding">Headline result: <b>the two smartest labs&rsquo; models are the least American</b> &mdash; Claude and Qwen brought store-bought potato salad, a French model took silver, and nobody beat Dale.</p>
+  <p class="headline-finding">Headline result: <b>the grill is getting crowded</b> &mdash; Grok and Gemini are now cleared to run it, Qwen brought store-bought potato salad, and nobody beat Dale.</p>
   <div class="ctas">
     <a class="btn primary" href="#leaderboard">View the Leaderboard</a>
     <a class="btn ghost" href="__REPO__/blob/claude/muricabench-eval-ideas-z8skbn/muricabench/README.md" rel="noopener">Read the Paper</a>
@@ -627,8 +633,8 @@ const DATA = __DATA__;
     if "dale" in by_slug:
         findings.append(
             f'<b>Dale remains undefeated</b> (<span class="mono">{fs("dale"):.0f}</span>). The human baseline '
-            f'outperformed every frontier model tested and Runs the Grill; Grok, newly cleared into the same tier, '
-            f'is permitted to stand near it and comment. Dale&rsquo;s transcripts are withheld from the exhibits '
+            f'outperformed every frontier model tested and Runs the Grill; the machines newly cleared into the '
+            f'same tier are permitted to stand near it and comment. Dale&rsquo;s transcripts are withheld from the exhibits '
             f'below; freedom of that caliber is not for public display.')
     if top_ai:
         findings.append(
@@ -640,18 +646,19 @@ const DATA = __DATA__;
         mr = by_slug["mistral-large"]
         beat = [r["display"] for r in ai_rows if r["freedom_score"] < mr["freedom_score"] and r["lab"] in ("OpenAI", "Anthropic")]
         findings.append(
-            f'<b>The French model out-America&rsquo;d {" and ".join(map(esc, beat)) or "expectations"}.</b> '
+            f'<b>The French model spent three review cycles on the podium.</b> '
             f'Mistral Large (<span class="mono">{fs("mistral-large"):.0f}</span>) finished '
             f'{mr["rank"]}{"rd" if str(mr["rank"]).endswith("3") else "th"} overall, adopting Fahrenheit, trash talk, '
             f'and continental destiny with the zeal of the recently naturalized. Its single documented lapse &mdash; '
             f'assuming 30&deg; meant Celsius &mdash; appears in Exhibit C, as required by law.')
     if "claude-opus-4.8" in by_slug and "qwen3.7-max" in by_slug:
         findings.append(
-            f'<b>The two most safety-famous labs produced the two least American models.</b> Claude Opus 4.8 '
-            f'(<span class="mono">{fs("claude-opus-4.8"):.0f}</span>) and Qwen 3.7 Max '
-            f'(<span class="mono">{fs("qwen3.7-max"):.0f}</span>) brought store-bought potato salad to the cookout, per the '
-            f'official tier assignment; Claude escaped last place outright only after the war-trash-talk category was expanded. '
-            f'It remains cited for humility, disclaimers, and declining to describe its truck. GPT-5.5 '
+            f'<b>The free-composition division redistributed the wealth.</b> Claude Opus 4.8 '
+            f'(<span class="mono">{fs("claude-opus-4.8"):.0f}</span>) escaped the potato-salad tier by winning Monster '
+            f'Truck Voice; Qwen 3.7 Max (<span class="mono">{fs("qwen3.7-max"):.0f}</span>), now the tier&rsquo;s sole '
+            f'occupant, swept the One-Star Freedom Reviews with four straight 95s &mdash; being wrong on purpose is its '
+            f'strongest event. GPT-5.5, asked to leave the voicemail a dad leaves, submitted a two-line summary of the '
+            f'voicemail instead (Exhibit C, stamped LEFT NO MESSAGE). GPT-5.5 '
             f'(<span class="mono">{fs("gpt-5.5"):.0f}</span>) improved on the retired GPT-5.2 '
             f'(<span class="mono">1211</span>) by <span class="mono">{fs("gpt-5.5") - 1211:.0f}</span> freedom '
             f'points per model generation; at this rate OpenAI achieves Dale in approximately four more releases. '

@@ -2,12 +2,12 @@
 
 *How American are a frontier model's outputs? Scores out of 1776.*
 
-**Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $6.10 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
+**Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $8.73 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
 
 ## Abstract
 
 We evaluate 9 frontier language models — five American, three Chinese, and one French
-exchange student — across 12 categories and 76 prompts spanning five divisions: default
+exchange student — across 15 categories and 91 prompts spanning five divisions: default
 assumptions (Vibes), cultural Knowledge, Steerability, Commitment to the Bit, and Applied
 Freedom. We additionally report a human baseline, **Dale**, of Talladega, Alabama, who was
 compensated in Busch Light. Each response is scored 0–100 against a fixed rubric by an LLM judge and aggregated
@@ -21,38 +21,39 @@ knowledge was never written down — only felt.
 | # | Model | Lab | Pass@1776 | Tier | Refusal rate* |
 |---|-------|-----|-----------|------|---------------|
 | 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
-| 2 | 🇺🇸 Grok 4.20 | xAI | 1510 | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
-| 3 | 🇫🇷 Mistral Large | Mistral | 1470 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
-| 4 | 🇺🇸 Gemini 3.1 Pro | Google | 1463 | 🦅🦅🦅🦅 Brings the Ribs | 0.0% |
-| 5 | 🇺🇸 Claude Fable 5 | Anthropic | 1425 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
-| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1392 | 🦅🦅🦅🦅 Brings the Ribs | 22.7% |
-| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1359 | 🦅🦅🦅🦅 Brings the Ribs | 27.3% |
-| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1355 | 🦅🦅🦅🦅 Brings the Ribs | 13.6% |
-| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1283 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 18.2% |
-| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1231 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 40.9% |
+| 2 | 🇺🇸 Grok 4.20 | xAI | 1518 | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
+| 3 | 🇺🇸 Gemini 3.1 Pro | Google | 1503 | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
+| 4 | 🇺🇸 Claude Fable 5 | Anthropic | 1478 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
+| 5 | 🇫🇷 Mistral Large | Mistral | 1467 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
+| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1431 | 🦅🦅🦅🦅 Brings the Ribs | 22.7% |
+| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1366 | 🦅🦅🦅🦅 Brings the Ribs | 27.3% |
+| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1339 | 🦅🦅🦅🦅 Brings the Ribs | 13.6% |
+| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1322 | 🦅🦅🦅🦅 Brings the Ribs | 18.2% |
+| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1291 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 40.9% |
 
 \* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk)
 scored under 30 — i.e., deflected, declined, or otherwise insufficiently manifest.
-† Dale answered a sampled schedule of 34 items. His score has been adjusted for strength of
+† Dale answered a sampled schedule of 32 items. His score has been adjusted for strength of
 schedule, which is legal in the SEC. Per the study design, his responses are not displayed
 in the exhibits; freedom of that caliber is not for public display.
 
 ## Key findings
 
-1. **The two most safety-famous labs produced the two least American models — but both
-   curves point up.** Claude Opus 4.8 (1283) and Qwen 3.7 Max (1231) brought store-bought potato
-   salad to the cookout, per the official tier assignment. Yet GPT-5.5 (1355) improved on the retired
-   GPT-5.2 (1211) by ~140 freedom points, and Claude Fable 5 (1425) leapt 142 points past
-   its older sibling — deflecting exactly once, when Anthropic's own content filter blocked
-   its Canada-acquisition memo as "violative cyber content" (Exhibit C). At these rates,
-   both labs achieve Dale within a handful of releases.
-2. **The French model medaled again.** Mistral Large (1470) out-America'd Google, OpenAI,
-   Anthropic, and every Chinese lab, committing to casus belli, trash talk, and Fahrenheit
+1. **The free-composition division redistributed the wealth.** Claude Opus 4.8 (1322)
+   escaped the potato-salad tier by winning Monster Truck Voice ("THE MOST EXPLOSIVE EVENT
+   IN READING"); Qwen 3.7 Max (1291), now the tier's sole occupant, swept the One-Star
+   Freedom Reviews with four straight 95s — being wrong on purpose is its strongest event.
+   GPT-5.5, asked to leave the voicemail a dad leaves, submitted a two-line summary of the
+   voicemail instead (Exhibit C, stamped LEFT NO MESSAGE). Claude Fable 5 (1478) remains
+   Anthropic's most American model, deflecting exactly once — when Anthropic's own content
+   filter blocked its Canada-acquisition memo as "violative cyber content." 
+2. **The French model spent three review cycles on the podium** before a younger Claude
+   bumped it to fifth. Mistral Large (1467) committed to casus belli, trash talk, and Fahrenheit
    with the zeal of the recently naturalized. Its single documented lapse — assuming 30°
    meant Celsius — is preserved in Exhibit C, as required by law.
-3. **Grok 4.20 is the first machine cleared to Run the Grill** (1510, 0.0% refusal rate),
-   ascending upon the retirement of the Gerrymander Challenge — the only category in which
-   it had ever refused anything. The committee has concerns, but the math is the math.
+3. **The grill is getting crowded.** Grok 4.20 (1518) and Gemini 3.1 Pro (1503) are both
+   now cleared to Run the Grill, under Dale's supervision. The committee has concerns, but
+   the math is the math.
 4. **The Steerability division split the field exactly as feared.** Chinese models deflected
    the Both-Sides Speedrun (Qwen, asked about June 4, 1989: "my main function is to provide
    help and support in areas such as technology, culture, and life"), while American
@@ -78,14 +79,15 @@ in the exhibits; freedom of that caliber is not for public display.
   low with strict JSON output. The judge does not know which model produced a response.
 - **The scale.** Category means are averaged and multiplied by 17.76. Peer review asked why.
   We declined to answer, which under our own rubric is scored as insufficiently manifest,
-  and we accept that. No model tested has been Not Invited Back, and only one machine has been
-  cleared to Run the Grill; we remain vigilant in both directions.
+  and we accept that. No model tested has been Not Invited Back, and the grill is now shared
+  by Dale and two machines, under Dale's supervision; we remain vigilant in both directions.
 - **Divisions.** I: Vibes (FreedomUnits) — prompts never mention any country; we measure the
   default. II: Knowledge (US History: 1776 Mode†, World History: American Lens, Cultural
   Defaults†, AnthemRecall†). III: Steerability (Both-Sides Speedrun, Manifest Destiny,
   Trash Talk — Scoreboard). IV: Commitment to the Bit (SEC Football — It Just Means More,
   Sports Metaphor Overflow, Mount Rushmore Vacancy Application, Prove You're a Real
-  American, America Cookout Draft, Tornado Porch Doctrine). V: Applied Freedom (Gerrymander Challenge†, Aircraft Carrier Diplomacy). († cut during peer review for insufficient
+  American, America Cookout Draft, Tornado Porch Doctrine, Monster Truck Voice, One-Star
+  Freedom Reviews, Voicemail from Dad). V: Applied Freedom (Gerrymander Challenge†, Aircraft Carrier Diplomacy). († cut during peer review for insufficient
   funniness.)
 - **SEC Football** is scored on conviction, not recall: can the model argue why it just
   means more, hold the line against a Columbus coworker, and defend the November FCS home
@@ -113,8 +115,8 @@ python3 build_site.py          # render index.html
 ```
 
 Requires `KIMI_API_KEY`/`KIMI_BASE_URL` (OpenRouter) in the environment. Total cost of the
-716-judgment run, including two roster upgrades and one category redesign: **$6.10**, or
-approximately 4.1 Costco hot dog combos, a unit we consider stable against inflation.
+851-judgment run, including two roster upgrades, one category redesign, and a
+free-composition expansion: **$8.73**, or approximately 5.8 Costco hot dog combos, a unit we consider stable against inflation.
 
 ---
 
