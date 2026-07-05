@@ -57,17 +57,22 @@ const isReasoningStyle = (model) => /(^|\/)(gpt-5|o\d)/.test(model);
 async function chat(spec, model, messages, { maxTokens = 700, json = false } = {}) {
   const key = keyFor(spec);
   if (!key) throw new Error(`no API key set (tried ${spec.env.join(", ")})`);
-  const body = { model, messages };
-  const budget = isReasoningStyle(model) ? maxTokens + 3000 : maxTokens;
-  if (isReasoningStyle(model) && spec.base_url.includes("api.openai.com")) {
-    body.max_completion_tokens = budget;
-  } else {
-    body.max_tokens = budget;
-  }
-  if (!isReasoningStyle(model)) body.temperature = 0.7;
-  if (json) body.response_format = { type: "json_object" };
 
   for (let attempt = 0; ; attempt++) {
+    // Hybrid-reasoning models (GLM-5, GPT-5.x, DeepSeek…) silently burn the
+    // token budget on hidden thinking before emitting text, so every call gets
+    // headroom on top of the visible-answer budget — doubled after an empty
+    // completion, which is what running out mid-think looks like.
+    const body = { model, messages };
+    const budget = maxTokens + 3000 * (attempt + 1);
+    if (isReasoningStyle(model) && spec.base_url.includes("api.openai.com")) {
+      body.max_completion_tokens = budget;
+    } else {
+      body.max_tokens = budget;
+    }
+    if (!isReasoningStyle(model)) body.temperature = 0.7;
+    if (json) body.response_format = { type: "json_object" };
+
     const res = await fetch(`${spec.base_url}/chat/completions`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
@@ -77,7 +82,8 @@ async function chat(spec, model, messages, { maxTokens = 700, json = false } = {
       const data = await res.json();
       const text = data.choices?.[0]?.message?.content?.trim();
       if (text) return text;
-      throw new Error(`empty completion from ${model}`);
+      if (attempt >= 3) throw new Error(`empty completion from ${model}`);
+      continue;
     }
     const retriable = res.status === 429 || res.status >= 500;
     if (!retriable || attempt >= 4) {
