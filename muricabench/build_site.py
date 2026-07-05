@@ -110,6 +110,7 @@ def main():
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>'MuricaBench — Pass@1776 Leaderboard</title>
 <meta name="description" content="A rigorous evaluation of frontier-model Americanness. Scores out of 1776.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
 <style>
 :root{
   --paper:#FAF8F3; --ink:#1C2433; --ink2:#4A5468; --ink3:#8A8FA0; --rule:#D8D3C8;
