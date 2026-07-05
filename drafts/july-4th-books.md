@@ -70,14 +70,17 @@ better since — flappers, Ponzi, the Big Bull Market, all with the pacing of a 
 *Pair with:* *Bubble in the Sun* on the Florida land boom, the purest distillation of
 American real-estate mania ever printed.
 
-## 8. With the Old Breed — E.B. Sledge (1981)
+## 8. Pacific Crucible — Ian W. Toll (2011)
 
-**WWII.** Peleliu and Okinawa through the eyes of a mortarman from Alabama. A horrific
-book written with compassion and humanity — the citizen-soldier tradition Catton traced
-to Appomattox, picked up eighty years later in the coral mud of the Pacific. The cost
-side of the ledger for everything else on this list.
-*Pair with:* Ian Toll's Pacific War trilogy, a modern masterpiece and the best account
-of how America actually fought and won a global war.
+**WWII.** Yes, Toll twice — he earned it. The opening volume of his Pacific War
+trilogy: Pearl Harbor through Midway, the six months when the whole thing hung in the
+balance. The chapters on Nimitz taking command are as good as narrative history gets,
+and the Midway code-breaking sequence is the best argument ever written for betting on
+improvisation over doctrine. The republic that argued itself into six frigates opens
+this story losing its battle fleet in a single morning — and turning the war around
+anyway.
+*Pair with:* the rest of the trilogy, a modern masterpiece that only gets stronger,
+and E.B. Sledge's *With the Old Breed* for the same war from the coral mud of Peleliu.
 
 ## 9. Command and Control — Eric Schlosser (2013)
 
