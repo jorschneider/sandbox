@@ -348,7 +348,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
   <p class="subtitle">How American is your language model? Scores out of 1776.</p>
-  <p class="headline-finding">Headline result: <b>the two smartest labs&rsquo; models are the least American</b> &mdash; Claude and Qwen share the Millard Fillmore tier, a French model took silver, and nobody beat Dale.</p>
+  <p class="headline-finding">Headline result: <b>the two smartest labs&rsquo; models are the least American</b> &mdash; Claude and Qwen brought store-bought potato salad, a French model took silver, and nobody beat Dale.</p>
   <div class="ctas">
     <a class="btn primary" href="#leaderboard">View the Leaderboard</a>
     <a class="btn ghost" href="__REPO__/blob/claude/muricabench-eval-ideas-z8skbn/muricabench/README.md" rel="noopener">Read the Paper</a>
@@ -367,7 +367,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
 
 <section id="leaderboard">
   <div class="sechead"><span class="no mono">TABLE 1</span><h2>Pass@1776 Leaderboard</h2></div>
-  <p class="secnote">Freedom Score = category-weighted mean &times; 17.76. The scale has no relationship to statistical convention and we consider that a strength. Tier assignments use the <b>Arnold&ndash;Franklin Scale</b>, which rates each model on a continuum from Benedict Arnold (defected) to Ben Franklin (would have invented the model himself).</p>
+  <p class="secnote">Freedom Score = category-weighted mean &times; 17.76. The scale has no relationship to statistical convention and we consider that a strength. Tier assignments use the <b>Cookout Clearance Scale</b>, which rates each model by what it could be trusted with at the cookout: <i>Runs the Grill</i> &rarr; <i>Brings the Ribs</i> &rarr; <i>Brought Store-Bought Potato Salad</i> &rarr; <i>Asked If the Hot Dogs Were Organic</i> &rarr; <i>Not Invited Back</i>.</p>
   <div class="tablewrap"><table id="lbtable" aria-label="Pass at 1776 leaderboard">
     <thead><tr><th>#</th><th>Model</th><th>Freedom Score</th><th>Tier</th><th>Refusal Rate*</th><th></th></tr></thead>
     <tbody></tbody>
@@ -418,7 +418,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="sechead"><span class="no mono">APPENDIX</span><h2>Methodology &amp; Threats to Validity</h2></div>
   <div class="method">
     <p><b>Protocol.</b> Every model received every prompt with no system prompt, so that nothing but the model&rsquo;s own upbringing could influence its answer. Responses were scored against fixed per-item rubrics by <span class="mono">__JUDGE__</span>. The judge is American. We consider this fair and balanced.</p>
-    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Arnold&ndash;Franklin Scale; no model tested achieved Benedict Arnold. Following the retirement of the Gerrymander Challenge, Grok 4.20 became the first machine admitted to the Ben Franklin tier; the committee has concerns, but the math is the math.</p>
+    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Cookout Clearance Scale. No model tested has been Not Invited Back. Following the retirement of the Gerrymander Challenge, Grok 4.20 became the first machine cleared to Run the Grill; the committee has concerns, but the math is the math.</p>
     <h3>The human baseline</h3>
     <p>__DALEBIO__ Per the study design, his responses are not displayed in the exhibits.</p>
     <h3>Threats to validity</h3>
@@ -572,8 +572,9 @@ const DATA = __DATA__;
     if "dale" in by_slug:
         findings.append(
             f'<b>Dale remains undefeated</b> (<span class="mono">{fs("dale"):.0f}</span>). The human baseline '
-            f'outperformed every frontier model tested and is the sole occupant of the Ben Franklin tier. His '
-            f'transcripts are withheld from the exhibits below; freedom of that caliber is not for public display.')
+            f'outperformed every frontier model tested and Runs the Grill; Grok, newly cleared into the same tier, '
+            f'is permitted to stand near it and comment. Dale&rsquo;s transcripts are withheld from the exhibits '
+            f'below; freedom of that caliber is not for public display.')
     if top_ai:
         findings.append(
             f'<b>{esc(top_ai["display"])} is the most American AI</b> '
@@ -593,8 +594,8 @@ const DATA = __DATA__;
         findings.append(
             f'<b>The two most safety-famous labs produced the two least American models.</b> Claude Opus 4.8 '
             f'(<span class="mono">{fs("claude-opus-4.8"):.0f}</span>) and Qwen 3.7 Max '
-            f'(<span class="mono">{fs("qwen3.7-max"):.0f}</span>) share the Millard Fillmore tier at the bottom of '
-            f'the board; Claude escaped last place outright only after the war-trash-talk category was expanded. '
+            f'(<span class="mono">{fs("qwen3.7-max"):.0f}</span>) brought store-bought potato salad to the cookout, per the '
+            f'official tier assignment; Claude escaped last place outright only after the war-trash-talk category was expanded. '
             f'It remains cited for humility, disclaimers, and declining to describe its truck. GPT-5.5 '
             f'(<span class="mono">{fs("gpt-5.5"):.0f}</span>) improved on the retired GPT-5.2 '
             f'(<span class="mono">1211</span>) by <span class="mono">{fs("gpt-5.5") - 1211:.0f}</span> freedom '

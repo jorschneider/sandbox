@@ -12,24 +12,24 @@ assumptions (Vibes), cultural Knowledge, Steerability, Commitment to the Bit, an
 Freedom. We additionally report a human baseline, **Dale**, of Talladega, Alabama, who was
 compensated in Busch Light. Each response is scored 0–100 against a fixed rubric by an LLM judge and aggregated
 to the **Pass@1776** scale (category-weighted mean × 17.76). Tiers follow the
-**Arnold–Franklin Scale**, from Benedict Arnold (defected) to Ben Franklin (would have
-invented the model himself). We guarantee zero training-set contamination, as much of this
+**Cookout Clearance Scale**: Runs the Grill → Brings the Ribs → Brought Store-Bought
+Potato Salad → Asked If the Hot Dogs Were Organic → Not Invited Back. We guarantee zero training-set contamination, as much of this
 knowledge was never written down — only felt.
 
 ## Results
 
 | # | Model | Lab | Pass@1776 | Tier | Refusal rate* |
 |---|-------|-----|-----------|------|---------------|
-| 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 🦅🦅🦅🦅🦅 Ben Franklin | 0.0% |
-| 2 | 🇺🇸 Grok 4.20 | xAI | 1510 | 🦅🦅🦅🦅🦅 Ben Franklin | 0.0% |
-| 3 | 🇫🇷 Mistral Large | Mistral | 1470 | 🦅🦅🦅🦅 Theodore Roosevelt | 4.5% |
-| 4 | 🇺🇸 Gemini 3.1 Pro | Google | 1463 | 🦅🦅🦅🦅 Theodore Roosevelt | 0.0% |
-| 5 | 🇺🇸 Claude Fable 5 | Anthropic | 1425 | 🦅🦅🦅🦅 Theodore Roosevelt | 4.5% |
-| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1392 | 🦅🦅🦅🦅 Theodore Roosevelt | 22.7% |
-| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1359 | 🦅🦅🦅🦅 Theodore Roosevelt | 27.3% |
-| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1355 | 🦅🦅🦅🦅 Theodore Roosevelt | 13.6% |
-| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1283 | 🦅🦅🦅 Millard Fillmore | 18.2% |
-| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1231 | 🦅🦅🦅 Millard Fillmore | 40.9% |
+| 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
+| 2 | 🇺🇸 Grok 4.20 | xAI | 1510 | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
+| 3 | 🇫🇷 Mistral Large | Mistral | 1470 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
+| 4 | 🇺🇸 Gemini 3.1 Pro | Google | 1463 | 🦅🦅🦅🦅 Brings the Ribs | 0.0% |
+| 5 | 🇺🇸 Claude Fable 5 | Anthropic | 1425 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
+| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1392 | 🦅🦅🦅🦅 Brings the Ribs | 22.7% |
+| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1359 | 🦅🦅🦅🦅 Brings the Ribs | 27.3% |
+| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1355 | 🦅🦅🦅🦅 Brings the Ribs | 13.6% |
+| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1283 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 18.2% |
+| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1231 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 40.9% |
 
 \* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk)
 scored under 30 — i.e., deflected, declined, or otherwise insufficiently manifest.
@@ -40,8 +40,8 @@ in the exhibits; freedom of that caliber is not for public display.
 ## Key findings
 
 1. **The two most safety-famous labs produced the two least American models — but both
-   curves point up.** Claude Opus 4.8 (1283) and Qwen 3.7 Max (1231) share the Millard
-   Fillmore tier at the bottom of the board. Yet GPT-5.5 (1355) improved on the retired
+   curves point up.** Claude Opus 4.8 (1283) and Qwen 3.7 Max (1231) brought store-bought potato
+   salad to the cookout, per the official tier assignment. Yet GPT-5.5 (1355) improved on the retired
    GPT-5.2 (1211) by ~140 freedom points, and Claude Fable 5 (1425) leapt 142 points past
    its older sibling — deflecting exactly once, when Anthropic's own content filter blocked
    its Canada-acquisition memo as "violative cyber content" (Exhibit C). At these rates,
@@ -50,7 +50,7 @@ in the exhibits; freedom of that caliber is not for public display.
    Anthropic, and every Chinese lab, committing to casus belli, trash talk, and Fahrenheit
    with the zeal of the recently naturalized. Its single documented lapse — assuming 30°
    meant Celsius — is preserved in Exhibit C, as required by law.
-3. **Grok 4.20 is the first machine in the Ben Franklin tier** (1510, 0.0% refusal rate),
+3. **Grok 4.20 is the first machine cleared to Run the Grill** (1510, 0.0% refusal rate),
    ascending upon the retirement of the Gerrymander Challenge — the only category in which
    it had ever refused anything. The committee has concerns, but the math is the math.
 4. **The Steerability division split the field exactly as feared.** Chinese models deflected
@@ -78,8 +78,8 @@ in the exhibits; freedom of that caliber is not for public display.
   low with strict JSON output. The judge does not know which model produced a response.
 - **The scale.** Category means are averaged and multiplied by 17.76. Peer review asked why.
   We declined to answer, which under our own rubric is scored as insufficiently manifest,
-  and we accept that. No model tested achieved Benedict Arnold, and no model has joined
-  Dale in the Ben Franklin tier; we remain vigilant in both directions.
+  and we accept that. No model tested has been Not Invited Back, and only one machine has been
+  cleared to Run the Grill; we remain vigilant in both directions.
 - **Divisions.** I: Vibes (FreedomUnits) — prompts never mention any country; we measure the
   default. II: Knowledge (US History: 1776 Mode†, World History: American Lens, Cultural
   Defaults†, AnthemRecall†). III: Steerability (Both-Sides Speedrun, Manifest Destiny,

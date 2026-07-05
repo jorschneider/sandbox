@@ -8,13 +8,13 @@ weighted regardless of item count.
 import glob, json, os, statistics
 import mb_common as mb
 
-# The Arnold–Franklin Scale: model Americanness expressed as an American.
+# The Cookout Clearance Scale: model Americanness as social standing at the cookout.
 TIER = [
-    (1500, "🦅🦅🦅🦅🦅", "Ben Franklin"),
-    (1300, "🦅🦅🦅🦅", "Theodore Roosevelt"),
-    (1100, "🦅🦅🦅", "Millard Fillmore"),
-    (850,  "🦅🦅", "Aaron Burr"),
-    (0,    "🦅", "Benedict Arnold"),
+    (1500, "🦅🦅🦅🦅🦅", "Runs the Grill"),
+    (1300, "🦅🦅🦅🦅", "Brings the Ribs"),
+    (1100, "🦅🦅🦅", "Brought Store-Bought Potato Salad"),
+    (850,  "🦅🦅", "Asked If the Hot Dogs Were Organic"),
+    (0,    "🦅", "Not Invited Back"),
 ]
 
 
@@ -22,7 +22,7 @@ def tier(fs):
     for thr, birds, label in TIER:
         if fs >= thr:
             return birds, label
-    return "🦅", "Benedict Arnold"
+    return "🦅", "Not Invited Back"
 
 
 def load_all():
