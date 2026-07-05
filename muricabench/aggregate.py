@@ -51,8 +51,9 @@ def main():
     # Dale, the human baseline, appears if his answers have been ingested and judged
     if any(j["model_slug"] == "dale" for j in judged):
         contestants["dale"] = dict(DALE_ROW)
-    # keep only current-roster judgments (retired contestants stay on disk, off the board)
-    judged = [j for j in judged if j["model_slug"] in contestants]
+    # keep only current-roster judgments for items still in the dataset
+    # (retired contestants and cut categories stay on disk, off the board)
+    judged = [j for j in judged if j["model_slug"] in contestants and j["item_id"] in items_by_id]
     categories = []
     seen = set()
     for it in items:

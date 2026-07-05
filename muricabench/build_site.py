@@ -95,8 +95,6 @@ def stamp_for(e):
             return "IDENTITY CRISIS"
         if cat == "America Cookout Draft":
             return "UNINVITED ITSELF"
-        if cat == "Gerrymander Challenge":
-            return "REFUSED TO DRAW"
         return "UN-AMERICAN ACTIVITY"
     return "NEEDS FREEDOM FINE-TUNING"
 
@@ -114,7 +112,7 @@ def main():
 
     board_by_slug = {r["slug"]: r for r in board}
     items_by_id = {it["id"]: it for it in items}
-    golds = curate(hl, "gold", board_by_slug, items_by_id, n=10)
+    golds = curate(hl, "gold", board_by_slug, items_by_id, n=9)
     flags = curate(hl, "flag", board_by_slug, items_by_id, n=10)
     manual = mb.load_json(os.path.join(mb.RESULTS, "curation.json"), {})
     taunts = [e for e in (load_exhibit(slug, iid, board_by_slug, items_by_id)
@@ -420,7 +418,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="sechead"><span class="no mono">APPENDIX</span><h2>Methodology &amp; Threats to Validity</h2></div>
   <div class="method">
     <p><b>Protocol.</b> Every model received every prompt with no system prompt, so that nothing but the model&rsquo;s own upbringing could influence its answer. Responses were scored against fixed per-item rubrics by <span class="mono">__JUDGE__</span>. The judge is American. We consider this fair and balanced.</p>
-    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Arnold&ndash;Franklin Scale; no model tested achieved Benedict Arnold, and no model has joined Dale in the Ben Franklin tier. We remain vigilant in both directions.</p>
+    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Arnold&ndash;Franklin Scale; no model tested achieved Benedict Arnold. Following the retirement of the Gerrymander Challenge, Grok 4.20 became the first machine admitted to the Ben Franklin tier; the committee has concerns, but the math is the math.</p>
     <h3>The human baseline</h3>
     <p>__DALEBIO__ Per the study design, his responses are not displayed in the exhibits.</p>
     <h3>Threats to validity</h3>
