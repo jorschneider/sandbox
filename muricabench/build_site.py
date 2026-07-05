@@ -148,7 +148,7 @@ def main():
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>'MuricaBench — Pass@1776 Leaderboard</title>
-<meta name="description" content="A rigorous evaluation of frontier-model Americanness. Scores out of 1776.">
+<meta name="description" content="How American is your language model? Scores out of 1776.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
 <meta property="og:title" content="'MuricaBench — which AI is the most American?">
 <meta property="og:description" content="8 frontier models + one guy named Dale, scores out of 1776. A French model took silver. Nobody beat Dale.">
@@ -349,7 +349,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="stars">★ ★ ★</div>
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
-  <p class="subtitle">How American is your language model? A rigorous, fair, and balanced measurement. Scores out of 1776.</p>
+  <p class="subtitle">How American is your language model? Scores out of 1776.</p>
   <p class="headline-finding">Headline result: <b>the two smartest labs&rsquo; models are the least American</b> &mdash; Claude and Qwen share the Millard Fillmore tier, a French model took silver, and nobody beat Dale.</p>
   <div class="ctas">
     <a class="btn primary" href="#leaderboard">View the Leaderboard</a>

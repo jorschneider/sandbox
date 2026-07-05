@@ -1,7 +1,6 @@
 # 'MuricaBench: Towards Star-Spangled Superintelligence
 
-*A rigorous, fair, and balanced measurement of how American a frontier model's outputs are.
-Scores out of 1776.*
+*How American are a frontier model's outputs? Scores out of 1776.*
 
 **Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $3.90 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
 
