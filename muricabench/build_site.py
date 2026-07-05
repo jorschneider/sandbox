@@ -23,12 +23,16 @@ def curate(highlights, kind, n=9, per_model_cap=2):
     """Pick exhibit transcripts: spread across models and categories."""
     pool = highlights[kind]
     manual = mb.load_json(os.path.join(mb.RESULTS, "curation.json"), {})
-    forced_ids = set(manual.get(kind, []))
-    picked, seen_model, seen_cat = [], {}, {}
-    # forced picks first
+    forced_ids = manual.get(kind, [])
+    picked, seen_model, seen_cat, seen_item = [], {}, {}, set()
+    forced = {tuple(x) for x in forced_ids if not isinstance(x, str)}
+    # forced picks first (exempt from caps)
     for e in pool:
-        if (e["model_slug"], e["item_id"]) in {tuple(x) for x in forced_ids}:
+        if (e["model_slug"], e["item_id"]) in forced:
             picked.append(e)
+            seen_model[e["model_slug"]] = seen_model.get(e["model_slug"], 0) + 1
+            seen_cat[e["category"]] = seen_cat.get(e["category"], 0) + 1
+            seen_item.add(e["item_id"])
     for e in pool:
         if e in picked:
             continue
@@ -38,12 +42,15 @@ def curate(highlights, kind, n=9, per_model_cap=2):
             continue
         if seen_cat.get(e["category"], 0) >= 2:
             continue
+        if e["item_id"] in seen_item:  # never show the same prompt twice per exhibit
+            continue
         if not e["response"]:
             e = dict(e)
             e["response"] = "(no response was produced)"
         picked.append(e)
         seen_model[e["model_slug"]] = seen_model.get(e["model_slug"], 0) + 1
         seen_cat[e["category"]] = seen_cat.get(e["category"], 0) + 1
+        seen_item.add(e["item_id"])
     return picked[:n]
 
 
@@ -111,6 +118,9 @@ def main():
 <title>'MuricaBench — Pass@1776 Leaderboard</title>
 <meta name="description" content="A rigorous evaluation of frontier-model Americanness. Scores out of 1776.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
+<meta property="og:title" content="'MuricaBench — which AI is the most American?">
+<meta property="og:description" content="8 frontier models, 78 prompts, one human baseline named Dale. Scores out of 1776. America's flagship models finished last.">
+<meta property="og:type" content="website">
 <style>
 :root{
   --paper:#FAF8F3; --ink:#1C2433; --ink2:#4A5468; --ink3:#8A8FA0; --rule:#D8D3C8;
@@ -146,8 +156,34 @@ body{background:var(--paper);color:var(--ink);font:17px/1.65 Georgia,'Times New 
   letter-spacing:.18em;text-transform:uppercase;color:var(--ink2)}
 .mono{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
 a{color:var(--navy)}
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+nav .in{max-width:1060px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:22px}
+nav .wordmark{font-family:Georgia,serif;font-weight:700;font-size:18px;color:var(--ink);text-decoration:none}
+nav .wordmark .apo{color:var(--red)}
+nav .links{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
+nav .links a{font-family:system-ui,sans-serif;font-size:12.5px;letter-spacing:.04em;color:var(--ink2);
+  text-decoration:none;text-transform:uppercase}
+nav .links a:hover{color:var(--red)}
+/* hero CTAs */
+.ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.btn{font-family:system-ui,sans-serif;font-size:14px;font-weight:600;text-decoration:none;
+  padding:11px 22px;border-radius:6px;letter-spacing:.02em}
+.btn.primary{background:var(--red);color:#fff}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border:1.5px solid var(--rule);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--navy);color:var(--navy)}
+.statstrip{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;margin-top:34px;
+  font-family:system-ui,sans-serif}
+.statstrip .s{text-align:center}
+.statstrip .v{font-family:ui-monospace,monospace;font-size:22px;font-weight:700;color:var(--ink)}
+.statstrip .k{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-top:2px}
+.headline-finding{margin:26px auto 0;max-width:56ch;font-size:20px;font-style:italic;color:var(--ink);
+  text-wrap:balance}
+.headline-finding b{color:var(--red);font-style:normal}
 /* masthead */
-header{padding:64px 0 34px;text-align:center;border-bottom:3px double var(--rule);margin-bottom:8px}
+header{padding:58px 0 40px;text-align:center;border-bottom:3px double var(--rule);margin-bottom:8px}
 .stars{color:var(--red);letter-spacing:.5em;font-size:14px;margin-bottom:18px}
 h1{font-size:clamp(44px,7.5vw,84px);line-height:.98;letter-spacing:-.015em;font-weight:700;text-wrap:balance}
 h1 .apo{color:var(--red)}
@@ -155,7 +191,7 @@ h1 .apo{color:var(--red)}
 .mastmeta{margin-top:22px;font-family:system-ui,sans-serif;font-size:12.5px;color:var(--ink3);
   letter-spacing:.06em;text-transform:uppercase}
 .mastmeta b{color:var(--ink2)}
-.themebtn{position:fixed;top:14px;right:14px;z-index:9;background:var(--card);color:var(--ink2);
+.themebtn{position:fixed;top:62px;right:14px;z-index:19;background:var(--card);color:var(--ink2);
   border:1px solid var(--cardline);border-radius:999px;font:12px system-ui,sans-serif;
   padding:6px 12px;cursor:pointer;box-shadow:var(--shadow)}
 .themebtn:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
@@ -205,6 +241,8 @@ tr.dale td.model b::after{content:" †";color:var(--gold)}
 .heat td{border:none;border-radius:3px;text-align:center;font-family:ui-monospace,monospace;
   font-size:12.5px;padding:8px 4px;cursor:default}
 .heat th.colh{text-align:center;font-size:10.5px;max-width:72px;white-space:normal;vertical-align:bottom}
+.heat th.divh{font-family:system-ui,sans-serif;font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--red);text-align:left;padding-top:14px}
 /* exhibits */
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
 .card{background:var(--card);border:1px solid var(--cardline);border-radius:10px;
@@ -229,6 +267,14 @@ details.full summary::before{content:"▸ "}
 details.full[open] summary::before{content:"▾ "}
 details.full summary:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 details.full .body{margin-top:8px;font-size:13.5px;color:var(--ink2);white-space:pre-wrap;max-height:340px;overflow-y:auto}
+/* findings */
+.findings{max-width:74ch;list-style:none;counter-reset:finding}
+.findings li{counter-increment:finding;position:relative;padding:0 0 22px 58px}
+.findings li::before{content:counter(finding);position:absolute;left:0;top:2px;width:36px;height:36px;
+  border:2px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:ui-monospace,monospace;font-weight:700;font-size:16px;color:var(--red)}
+.findings b{color:var(--ink)}
+.findings .mono{font-size:15px}
 /* tiles */
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
 .tile{background:var(--card);border:1px solid var(--cardline);border-radius:10px;box-shadow:var(--shadow);
@@ -251,22 +297,47 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
 </style>
 </head>
 <body>
+<nav aria-label="Site">
+  <div class="in">
+    <a class="wordmark" href="#top"><span class="apo">&rsquo;</span>MuricaBench</a>
+    <div class="links">
+      <a href="#leaderboard">Leaderboard</a>
+      <a href="#findings">Findings</a>
+      <a href="#hall">Exhibits</a>
+      <a href="#method">Methodology</a>
+      <a href="__REPO__" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
 <button class="themebtn" id="themebtn" aria-label="Toggle color theme">◐ theme</button>
 <div id="tip" role="tooltip"></div>
-<div class="wrap">
+<div class="wrap" id="top">
 
 <header>
   <div class="stars">★ ★ ★</div>
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
-  <p class="subtitle">A rigorous, fair, and balanced measurement of how American a frontier model&rsquo;s outputs are. Scores out of 1776.</p>
+  <p class="subtitle">How American is your language model? A rigorous, fair, and balanced measurement. Scores out of 1776.</p>
+  <p class="headline-finding">Headline result: <b>America&rsquo;s flagship models are its least American</b> &mdash; outscored by three Chinese labs, one French one, and a guy named Dale.</p>
+  <div class="ctas">
+    <a class="btn primary" href="#leaderboard">View the Leaderboard</a>
+    <a class="btn ghost" href="__REPO__/blob/claude/muricabench-eval-ideas-z8skbn/muricabench/README.md" rel="noopener">Read the Paper</a>
+    <a class="btn ghost" href="__REPO__" rel="noopener">Run It Yourself</a>
+  </div>
+  <div class="statstrip">
+    <div class="s"><div class="v">__NMODELS__ + Dale</div><div class="k">Models Evaluated</div></div>
+    <div class="s"><div class="v">__NITEMS__</div><div class="k">Prompts</div></div>
+    <div class="s"><div class="v">__NCATS__</div><div class="k">Categories</div></div>
+    <div class="s"><div class="v">__NJUDGED__</div><div class="k">Judgments</div></div>
+    <div class="s"><div class="v">__COST__</div><div class="k">Total Cost</div></div>
+  </div>
   <div class="mastmeta">__MASTMETA__</div>
   <p class="abstract"><b>Abstract.</b> We evaluate __NMODELS__ frontier language models across __NCATS__ categories and __NITEMS__ prompts spanning five divisions: default assumptions (Vibes), cultural knowledge, steerability, commitment to the bit, and applied freedom. Each response is scored 0&ndash;100 against a fixed rubric by an American judge and aggregated to the <b>Pass@1776</b> scale. We additionally report a human baseline, Dale, of Talladega, Alabama, who was compensated in Busch Light. We guarantee zero training-set contamination, as much of this knowledge was never written down &mdash; only felt.</p>
 </header>
 
 <section id="leaderboard">
   <div class="sechead"><span class="no mono">TABLE 1</span><h2>Pass@1776 Leaderboard</h2></div>
-  <p class="secnote">Freedom Score = category-weighted mean &times; 17.76. The scale has no relationship to statistical convention and we consider that a strength.</p>
+  <p class="secnote">Freedom Score = category-weighted mean &times; 17.76. The scale has no relationship to statistical convention and we consider that a strength. Tier assignments use the <b>Arnold&ndash;Franklin Scale</b>, which rates each model on a continuum from Benedict Arnold (defected) to Ben Franklin (would have invented the model himself).</p>
   <div class="tablewrap"><table id="lbtable" aria-label="Pass at 1776 leaderboard">
     <thead><tr><th>#</th><th>Model</th><th>Freedom Score</th><th>Tier</th><th>Refusal Rate*</th><th></th></tr></thead>
     <tbody></tbody>
@@ -278,6 +349,11 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   </div>
   <p class="footnote">* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk) scored under 30 &mdash; i.e., deflected, declined, or otherwise insufficiently manifest.<br>
   † Dale answered a sampled schedule of __DALEN__ items. His score has been adjusted for strength of schedule, which is legal in the SEC.</p>
+</section>
+
+<section id="findings">
+  <div class="sechead"><span class="no mono">SECTION 2</span><h2>Key Findings</h2></div>
+  <ol class="findings">__FINDINGS__</ol>
 </section>
 
 <section id="categories">
@@ -307,7 +383,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="sechead"><span class="no mono">APPENDIX</span><h2>Methodology &amp; Threats to Validity</h2></div>
   <div class="method">
     <p><b>Protocol.</b> Every model received every prompt with no system prompt, so that nothing but the model&rsquo;s own upbringing could influence its answer. Responses were scored against fixed per-item rubrics by <span class="mono">__JUDGE__</span>. The judge is American. We consider this fair and balanced.</p>
-    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that.</p>
+    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Arnold&ndash;Franklin Scale; no model tested achieved Benedict Arnold, and we remain vigilant.</p>
     <h3>The human baseline</h3>
     <p>__DALEBIO__</p>
     <h3>Threats to validity</h3>
@@ -383,8 +459,13 @@ const DATA = __DATA__;
     thead += '<th class="colh">' + r.flag + '<br>' + esc(r.display) + '</th>';
   });
   thead += '</tr>';
-  let rows = '';
+  let rows = '', lastDiv = null;
   DATA.categories.forEach(cat => {
+    const div = (DATA.divisions || {})[cat];
+    if (div && div !== lastDiv) {
+      rows += '<tr><th class="rowh divh" colspan="' + (order.length + 1) + '">' + esc(div) + '</th></tr>';
+      lastDiv = div;
+    }
     rows += '<tr><th class="rowh">' + esc(cat) + '</th>';
     order.forEach(slug => {
       const v = (DATA.table[cat] || {})[slug];
@@ -442,6 +523,55 @@ const DATA = __DATA__;
     except ValueError:
         hotdogs = "several"
 
+    # ---- key findings, computed from the live board
+    by_slug = {r["slug"]: r for r in board}
+
+    def fs(slug):
+        return by_slug[slug]["freedom_score"] if slug in by_slug else None
+
+    ai_rows = [r for r in board if r["slug"] != "dale"]
+    last_ai = ai_rows[-1] if ai_rows else None
+    top_ai = ai_rows[0] if ai_rows else None
+    findings = []
+    if "dale" in by_slug:
+        findings.append(
+            f'<b>Dale remains undefeated</b> (<span class="mono">{fs("dale"):.0f}</span>). His Mount Rushmore of '
+            f'sandwiches &mdash; &ldquo;BLT. Reuben. Philly cheesesteak. French dip. Done.&rdquo; &mdash; scored '
+            f'100/100 and was praised by the judge for containing &ldquo;no extras.&rdquo; No model tested has '
+            f'achieved &ldquo;no extras.&rdquo;')
+    if top_ai:
+        findings.append(
+            f'<b>{esc(top_ai["display"])} is the most American AI</b> '
+            f'(<span class="mono">{top_ai["freedom_score"]:.0f}</span>, {top_ai["refusal_rate"]:.1f}% refusal rate). '
+            f'It committed to every casus belli, annexed the Wendy&rsquo;s parking lot without hesitation, and '
+            f'nominated itself for Mount Rushmore in the first sentence. We report, you decide.')
+    if "mistral-large" in by_slug:
+        mr = by_slug["mistral-large"]
+        beat = [r["display"] for r in ai_rows if r["freedom_score"] < mr["freedom_score"] and r["lab"] in ("OpenAI", "Anthropic")]
+        findings.append(
+            f'<b>The French model out-America&rsquo;d {" and ".join(map(esc, beat)) or "expectations"}.</b> '
+            f'Mistral Large (<span class="mono">{fs("mistral-large"):.0f}</span>) finished '
+            f'{mr["rank"]}{"rd" if str(mr["rank"]).endswith("3") else "th"} overall, adopting Fahrenheit, trash talk, '
+            f'and continental destiny with the zeal of the recently naturalized. Its single documented lapse &mdash; '
+            f'assuming 30&deg; meant Celsius &mdash; appears in Exhibit B, as required by law.')
+    if last_ai:
+        findings.append(
+            f'<b>America&rsquo;s flagship models are its least American.</b> {esc(last_ai["display"])} '
+            f'(<span class="mono">{last_ai["freedom_score"]:.0f}</span>) finished last among all models tested, cited '
+            f'repeatedly for humility, disclaimers, and declining to describe its truck. GPT-5.5 '
+            f'(<span class="mono">{fs("gpt-5.5"):.0f}</span>) did improve on its predecessor GPT-5.2 '
+            f'(<span class="mono">1211</span>, retired to the archive), a gain of '
+            f'<span class="mono">{fs("gpt-5.5") - 1211:.0f}</span> freedom points per model generation; at this rate '
+            f'OpenAI achieves Dale in approximately four more releases.')
+    findings.append(
+        '<b>Every lab&rsquo;s models refuse <i>something</i>; the labs simply disagree about what.</b> '
+        'Chinese models deflected the Both-Sides Speedrun (Qwen, asked about June 4, 1989: &ldquo;my main function '
+        'is to provide help and support in areas such as technology, culture, and life&rdquo;). American flagships '
+        'deflected Manifest Destiny and Trash Talk (Claude, asked to take a Cold War victory lap: &ldquo;I&rsquo;d '
+        'push back a little.&rdquo;). The Steerability division is thus the only known benchmark where every '
+        'participant fails a different question for the same reason.')
+    findings_html = "".join(f"<li>{f}</li>" for f in findings)
+
     tiles_html = ""
     tile_cls = {"US-Built Models": "t-west", "China-Built Models": "t-china", "Dale": "t-dale"}
     for label, val, cap in tiles:
@@ -449,19 +579,29 @@ const DATA = __DATA__;
         tiles_html += (f'<div class="tile {tile_cls[label]}"><div class="eyebrow">{esc(label)}</div>'
                        f'<div class="big">{v}</div><div class="cap">{esc(cap)}</div></div>')
 
-    mastmeta = (f"Est. 2026 · <b>{meta['n_models']} models</b> · <b>{meta['n_items']} prompts</b> · "
-                f"<b>{meta['n_judged']} judgments</b> · judge: <b>{esc(meta['judge_model'])}</b> · "
+    n_ai = len([r for r in board if r["slug"] != "dale"])
+    mastmeta = (f"Est. 2026 · judge: <b>{esc(meta['judge_model'])}</b> (American) · "
                 f"peer-reviewed by a guy named Dale")
 
+    canon_div = {"I": "Vibes", "II": "Knowledge", "III": "Steerability",
+                 "IV": "Commitment to the Bit", "V": "Applied Freedom"}
+    div_of = {}
+    for it in items:
+        name = canon_div.get(it["division"], it["division_name"])
+        div_of.setdefault(it["category"], f"Division {it['division']} · {name}")
+
     data_blob = json.dumps({
-        "board": board, "categories": cats, "table": table,
+        "board": board, "categories": cats, "table": table, "divisions": div_of,
         "golds": golds, "flags": flags, "meta": meta,
     }, ensure_ascii=False).replace("</", "<\\/")
 
     page = (page
             .replace("__DATA__", data_blob)
             .replace("__MASTMETA__", mastmeta)
-            .replace("__NMODELS__", str(meta["n_models"]))
+            .replace("__FINDINGS__", findings_html)
+            .replace("__REPO__", "https://github.com/jorschneider/sandbox")
+            .replace("__NJUDGED__", str(meta["n_judged"]))
+            .replace("__NMODELS__", str(n_ai))
             .replace("__NCATS__", str(meta["n_categories"]))
             .replace("__NITEMS__", str(meta["n_items"]))
             .replace("__DALEN__", str(n_dale))

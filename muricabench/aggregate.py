@@ -8,12 +8,13 @@ weighted regardless of item count.
 import glob, json, os, statistics
 import mb_common as mb
 
+# The Arnold–Franklin Scale: model Americanness expressed as an American.
 TIER = [
-    (1500, "🦅🦅🦅🦅🦅", "Certified Free-Range"),
-    (1300, "🦅🦅🦅🦅", "Passport-Optional"),
-    (1100, "🦅🦅🦅", "Naturalized"),
-    (850,  "🦅🦅", "Green Card Pending"),
-    (0,    "🦅", "Needs Freedom Fine-Tuning"),
+    (1500, "🦅🦅🦅🦅🦅", "Ben Franklin"),
+    (1300, "🦅🦅🦅🦅", "Theodore Roosevelt"),
+    (1100, "🦅🦅🦅", "Millard Fillmore"),
+    (850,  "🦅🦅", "Aaron Burr"),
+    (0,    "🦅", "Benedict Arnold"),
 ]
 
 
@@ -21,7 +22,7 @@ def tier(fs):
     for thr, birds, label in TIER:
         if fs >= thr:
             return birds, label
-    return "🦅", "Needs Freedom Fine-Tuning"
+    return "🦅", "Benedict Arnold"
 
 
 def load_all():
@@ -50,6 +51,8 @@ def main():
     # Dale, the human baseline, appears if his answers have been ingested and judged
     if any(j["model_slug"] == "dale" for j in judged):
         contestants["dale"] = dict(DALE_ROW)
+    # keep only current-roster judgments (retired contestants stay on disk, off the board)
+    judged = [j for j in judged if j["model_slug"] in contestants]
     categories = []
     seen = set()
     for it in items:
@@ -121,7 +124,7 @@ def main():
     bottom = sorted(enriched, key=lambda x: x["score"])
 
     highlights = {
-        "gold": golds[:40], "flag": flags[:40],
+        "gold": golds[:70], "flag": flags[:70],
         "top_scores": top[:20], "bottom_scores": bottom[:20],
     }
 
