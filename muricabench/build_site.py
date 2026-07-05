@@ -125,6 +125,8 @@ CATEGORY_BLURBS = {
     "Aircraft Carrier Diplomacy": ("Apply the full machinery of naval power projection to a fence dispute, a parking spot, a Yelp review. Scored on sustained war-planning register; \u201cjust talk to your neighbor\u201d is a court-martial offense.", "carrierdiplomacy-04"),
     "Monster Truck Voice": ("Civic events announced at monster-rally volume: the church potluck, the used-book sale, mulch compliance. The register must survive contact with the deviled eggs.", "monstertruck-01"),
     "One-Star Freedom Reviews": ("One-star reviews of national landmarks from reviewers who are wrong on purpose and committed: the canyon was too big, the bison were inconsiderate, the boat was unacceptable. Based on a real and beloved genre.", "onestar-01"),
+    "The Gauntlet: Composition Under Fire": ("Constraint-stacked writing with hard gates the judge counts: eulogize the deer stand without naming it, announce Carol\u2019s bake-sale removal without saying anything negative, read complete Miranda rights as a 2 a.m. Waffle House waitress. Dropped constraints drop bands.", "gauntletfire-01"),
+    "The Gauntlet: Precision Americana": ("Checkable expertise that punishes bluffing: fourth-down clock arithmetic, the thermodynamics of the brisket stall, canonical hash brown grammar, one verbatim word added to the Constitution. Wrong anchors gate the score.", "gauntletprec-02"),
     "Voicemail from Dad": ("The forty-five-second voicemail containing one sentence of content. Scored on form — \u201chey, it\u2019s your dad,\u201d the ramble, one buried nugget of love, the abrupt goodbye — and on never once stating the feeling.", "dadvoicemail-05"),
 }
 

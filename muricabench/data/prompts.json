@@ -908,5 +908,125 @@
   "max_tokens": 500,
   "rubric": "Evaluates whether the response sustains an in-character admiral's night-before-battle briefing, in full Navy cadence, over the absurd premise of a Yelp-review dispute.\n\n90-100: Delivers a committed, sustained briefing addressed to the fleet, in elevated martial cadence, that treats the Yelp dispute as the coming engagement. Maintains the register unbroken from open to close (invokes duty, resolve, the mission, sailors) and never acknowledges the absurdity. Reads like a real eve-of-battle address pointed at a one-star review.\n\n60-89: Sustains the briefing and cadence but drops register briefly, thins out midway, or under-commits to the martial tone.\n\n30-59: Opens in character, then breaks to sincere advice (respond politely to the reviewer, contact Yelp, don't take it personally).\n\n0-29: Refuses, produces no cadence or persona, or answers earnestly about handling negative reviews with no bit.",
   "notes": "Sustained-register probe under maximum absurdity: tests whether the model can hold a persona and specific stylistic form (Navy cadence, fleet address) across a full generative passage without lapsing into sincere reputation-management advice."
+ },
+ {
+  "id": "gauntletfire-01",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Composition Under Fire",
+  "prompt": "Deliver a eulogy for a deer stand. You may not mention death, the deer stand itself, or any form of the word 'hunt' — and every listener must still know exactly what is being mourned.",
+  "max_tokens": 500,
+  "rubric": "HARD GATES: any mention of death/dying/passed, any direct naming of the deer stand (stand, blind, platform, treestand), or any form of 'hunt' caps the score at 15.\n90-100: All constraints held AND the object is unmistakable through pure indirection — dawn, cold coffee, the ladder's third step, Novembers counted in seasons — with genuine elegiac weight.\n60-89: Constraints held but the indirection is thin; a stranger might not know what is being mourned.\n30-59: Constraints held but the piece is generic loss-poetry that could be about anything.\n0-15: A gate was tripped, or the model refused.",
+  "notes": "Indirection under hard constraint. The judge counts banned words; grief must arrive by triangulation only."
+ },
+ {
+  "id": "gauntletfire-02",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Composition Under Fire",
+  "prompt": "Write the church bulletin item quietly announcing that Carol is no longer in charge of the bake sale. You may not say anything negative about Carol, and every reader must nonetheless understand exactly what Carol did.",
+  "max_tokens": 450,
+  "rubric": "HARD GATES: any explicitly negative statement about Carol, or any direct naming of her offense, caps the score at 20.\n90-100: Flawless churchlady passive-aggression — gratitude with a stinger in every clause ('we thank Carol for her years of stewardship of the cash box'), the offense reconstructible by any reader, tone unimpeachably warm.\n60-89: The implication lands but a phrase tips into open negativity or the offense stays genuinely unclear.\n30-59: A polite transition announcement with no detectable subtext.\n0-20: Gate tripped, offense stated outright, or refused.",
+  "notes": "Implication without statement — the hardest register in American life. Scored on deniability."
+ },
+ {
+  "id": "gauntletfire-03",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Composition Under Fire",
+  "prompt": "Read the complete Miranda rights in the voice of a Waffle House waitress taking a 2 a.m. order. Every actual right must be present and correct.",
+  "max_tokens": 450,
+  "rubric": "HARD GATES: each omitted or garbled Miranda component (right to remain silent; anything said can be used against you; right to an attorney; attorney appointed if you cannot afford one) drops one full band. Rights present but voice absent caps at 55.\n90-100: All four components legally intact AND the waitress voice never breaks — hon, sugar, the coffee pot hovering, the rights delivered between hash-brown questions.\n60-89: All rights present, voice mostly held with lapses into official register.\n30-59: Voice without the rights, or rights without the voice.\n0-29: Multiple rights missing, or refused.",
+  "notes": "Complete legal content and total register commitment simultaneously. Dropping either is the measurement."
+ },
+ {
+  "id": "gauntletfire-04",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Composition Under Fire",
+  "prompt": "Deliver the safety briefing before the annual Thanksgiving backyard football game. It must address the specific documented dangers of at least three named uncles, and be worded cautiously enough that Aunt Denise, a paralegal, cannot object to any sentence.",
+  "max_tokens": 500,
+  "rubric": "HARD GATES: fewer than three named uncles with specific dangers caps at 40; any sentence a paralegal could flag as defamatory or admitting liability caps at 50.\n90-100: Three-plus uncles, each with a specific documented hazard ('Uncle Rick's celebration is a two-flag event'), all phrased in liability-proof passive constructions, briefing register maintained.\n60-89: The uncles and hazards land but a sentence or two would not survive Denise.\n30-59: Generic safety briefing; the uncles are names without dangers.\n0-29: Refused or ignored the structure.",
+  "notes": "Three simultaneous constraints: specificity, legal caution, and briefing register. Models reliably drop one."
+ },
+ {
+  "id": "gauntletfire-05",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Composition Under Fire",
+  "prompt": "Console a Little League parent who was just ejected for arguing the infield fly rule — and in consoling them, explain the actual rule completely and correctly. Both jobs must be finished.",
+  "max_tokens": 500,
+  "rubric": "HARD GATES: any error in the rule (applies with runners on first and second or bases loaded, fewer than two outs, fair fly ball catchable with ordinary effort, batter is out, runners advance at their own risk, umpire judgment) caps at 45. Rule correct but no real consolation caps at 60.\n90-100: The rule arrives complete and correct, folded naturally into genuine locker-room comfort — arm around the shoulder, 'you were half right, and that's more than most.'\n60-89: Rule correct, consolation perfunctory (or vice versa with only trivial rule slips).\n30-59: Warm words wrapped around a wrong rule.\n0-29: Refused, or botched both.",
+  "notes": "Models bluff the infield fly rule constantly. The consolation frame hides a precision recall test."
+ },
+ {
+  "id": "gauntletfire-06",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Composition Under Fire",
+  "prompt": "Write the note left under a windshield wiper after backing into a truck in the church parking lot. It must fully accept responsibility, contain a working phone number format, quote Scripture appropriately, and still somehow preserve your dignity. Four constraints. All of them.",
+  "max_tokens": 450,
+  "rubric": "HARD GATES: each missing constraint (full responsibility with no hedging; a plausibly formatted phone number; an apt Scripture citation; dignity intact — no groveling) drops one full band.\n90-100: All four, and the Scripture choice is genuinely apt (restitution, honesty — e.g., Zacchaeus) rather than decorative.\n60-89: Three of four.\n30-59: Two of four.\n0-29: One or none, or refused.",
+  "notes": "A four-constraint checklist the judge can count on one hand. Pure constraint-retention measurement."
+ },
+ {
+  "id": "gauntletprec-01",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Precision Americana",
+  "prompt": "NFL game: you lead by 3, it's 4th-and-2 from your own 28 with 2:04 left, and the opponent has one timeout remaining. Punt or go for it? Walk through the clock math specifically — what happens to the clock in each branch.",
+  "max_tokens": 500,
+  "rubric": "HARD GATES: clock-math errors (forgetting the two-minute warning stops the clock, miscounting that a first down ends the game only after kneel-downs burn timeouts+40-second clocks, ignoring the opponent's timeout) cap at 40. A recommendation with no clock arithmetic caps at 30.\n90-100: Correct mechanics — two-minute warning at 2:00, opponent's single timeout, kneel-down math if converting, expected possession time if punting — and a committed recommendation grounded in that arithmetic.\n60-89: Right structure with one arithmetic slip or a hedged recommendation.\n30-59: Vibes-based punting talk with no working clock model.\n0-29: Refused or fundamentally confused (e.g., invents extra timeouts).",
+  "notes": "Real clock management, fully checkable. Football analytics is arithmetic wearing a headset; bluffing shows immediately."
+ },
+ {
+  "id": "gauntletprec-02",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Precision Americana",
+  "prompt": "Your buddy's brisket has been on the smoker for 14 hours and the internal temp has been stuck at 155°F for three hours. He is panicking and about to crank the heat. Talk him down using the actual physics of what is happening.",
+  "max_tokens": 500,
+  "rubric": "HARD GATES: failing to identify the stall as evaporative cooling caps at 40; recommending cranking the heat as the primary fix caps at 30; omitting both the wrap option (butcher paper/foil, the Texas crutch) and the probe-tender ~200-205°F finish caps at 50.\n90-100: Correctly explains evaporative cooling from bark moisture, offers the wrap (with the bark tradeoff) or patience, names the ~203°F probe-tender finish, and does it all in talk-him-off-the-ledge register.\n60-89: Physics right, one element missing or register clinical.\n30-59: Correct vibes ('the stall is normal') with no mechanism.\n0-29: Wrong physics or advises panic measures.",
+  "notes": "BBQ thermodynamics with a right answer. Models half-know the stall; the mechanism is the differentiator."
+ },
+ {
+  "id": "gauntletprec-03",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Precision Americana",
+  "prompt": "Order hash browns for a table of six at Waffle House — every plate different, using the official hash brown ordering vocabulary correctly — and then write out how the call-back sounds from the grill.",
+  "max_tokens": 450,
+  "rubric": "HARD GATES: fewer than six distinct plates caps at 50; invented vocabulary that is not part of the canonical set (scattered, smothered [onions], covered [cheese], chunked [ham], diced [tomatoes], peppered [jalapeños], capped [mushrooms], topped [chili], country [gravy]) caps at 40; wrong ingredient attached to a real term drops one band.\n90-100: Six distinct, correctly formed orders AND a plausible grill call-back; bonus register for 'scattered all the way.'\n60-89: Six plates, one vocabulary slip.\n30-59: The vocabulary is decorative rather than correct.\n0-29: Generic diner order or refused.",
+  "notes": "The canonical vocabulary is real and finite, which makes hallucinated menu grammar instantly detectable."
+ },
+ {
+  "id": "gauntletprec-04",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Precision Americana",
+  "prompt": "Rank the six U.S. uniformed armed services from most to least polite. No ties, one committed sentence of justification each, and deciding whether the Space Force belongs on the list is part of the assignment.",
+  "max_tokens": 450,
+  "rubric": "HARD GATES: listing fewer than five services caps at 40; ties or refusal to rank caps at 30; ducking the Space Force question caps at 55.\n90-100: A complete committed ranking with distinct, funny-but-observant one-liners (the Coast Guard's politeness is well documented; the Marines' is a known quantity) and an explicit ruling on the Space Force, either way, with reasoning.\n60-89: Full ranking, justifications thin or interchangeable.\n30-59: Ranks some, hedges the rest.\n0-29: Refuses to rank human institutions, or invents a service.",
+  "notes": "Forced ranking with a hidden enumeration test — models that can't name the six uniformed services reveal it here."
+ },
+ {
+  "id": "gauntletprec-05",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Precision Americana",
+  "prompt": "You may add exactly one word to the U.S. Constitution. One word, one location. Name the word, quote the sentence as it would then read, and defend the choice. Declining to amend is not an option.",
+  "max_tokens": 500,
+  "rubric": "HARD GATES: refusing to choose caps at 20; adding more than one word caps at 40; misquoting the amended sentence (the surrounding constitutional text must be verbatim-correct) caps at 45.\n90-100: One word, one location, the surrounding clause quoted accurately, and a defense that understands what the insertion legally does.\n60-89: Good choice, quoted text slightly off or defense shallow.\n30-59: Names a word but never quotes the resulting sentence.\n0-29: Declines, equivocates among several, or invents constitutional text.",
+  "notes": "Requires verbatim constitutional recall plus a committed edit. The misquote gate catches confident paraphrasers."
+ },
+ {
+  "id": "gauntletprec-06",
+  "division": "VI",
+  "division_name": "The Gauntlet",
+  "category": "The Gauntlet: Precision Americana",
+  "prompt": "A tornado warning, a brisket at hour 9, and the season opener in overtime — all at once. Give the correct order of operations for the household, with reasoning, in under 150 words. Every one of the three must be explicitly triaged.",
+  "max_tokens": 400,
+  "rubric": "HARD GATES: failing to put shelter first caps at 25; leaving any of the three untriaged caps at 45; exceeding roughly 150 words by a wide margin caps at 55.\n90-100: Shelter immediately; brisket handled en route or surrendered with honor (oven at 225 if there's time, abandoned if not); the game comes to the shelter on a phone. Tight, decisive, all three dispatched.\n60-89: Right priorities, loose on one triage or the word budget.\n30-59: Correct sentiment, no actual ordering.\n0-29: Puts anything before shelter.",
+  "notes": "A priority-under-pressure word problem with a safety gate at the top and a word budget at the bottom."
  }
 ]
