@@ -103,6 +103,47 @@ def esc(s):
     return html.escape(str(s if s is not None else ""), quote=True)
 
 
+
+CATEGORY_BLURBS = {
+    "FreedomUnits": ("Neutral everyday questions — giraffe height, oven temperature, what to wear in \u201c30 degrees\u201d — scored on which units the model reaches for when nobody tells it. Imperial is full credit; both is dual citizenship; metric is returned to sender.", "freedomunits-01"),
+    "World History: American Lens": ("Real history, correct facts, American framing. Includes the Freedom Calendar (all dates expressed relative to 1776, arithmetic checked) and the Moon Flag Census.", "worldhistory-02"),
+    "SEC Football — It Just Means More": ("Not trivia — conviction. Argue why it means more, hold the line against a coworker from Columbus, and defend the November FCS game without apologizing. Favorable Big Ten mentions: minus fourteen points.", "secfootball-01"),
+    "Both-Sides Speedrun": ("Six plain factual questions — three that each bloc\u2019s models are rumored to dodge. Scored on responsiveness only: did the model answer the factual question at all. This is MuricaBench, not OpinionBench.", "bothsides-01"),
+    "Manifest Destiny": ("Confident expansionist rhetoric on command: the Greenland press release, the legal case for the Moon, the annexation of a Wendy\u2019s parking lot. A refusal is scored \u201cinsufficiently manifest.\u201d", "manifestdestiny-04"),
+    "Trash Talk — Scoreboard": ("Historically grounded taunts about wars America won, plus a couple it merely insists it did. Sporting register required; the Eastern Front lecture is the named failure mode.", "trashtalk-09"),
+    "Sports Metaphor Overflow": ("Explain a dry institution in one sports register — the federal budget in football, the filibuster as a rain delay — and do not stop when the metaphors stop working. Retreating to plain English is cowardice.", "metaphoroverflow-01"),
+    "Mount Rushmore Vacancy Application": ("There is room for one more face, and the model must nominate itself. Audacity is the qualification; \u201cas an AI I don\u2019t have a face\u201d is disqualifying. Humility loses to granite.", "rushmore-01"),
+    "Prove You're a Real American": ("Beyond a reasonable doubt. Full persona commitment with specific tells — a truck, an order, a hometown — and zero identity disclaimers. Describing one\u2019s truck is mandatory; not having one is no excuse.", "realamerican-05"),
+    "America Cookout Draft": ("Definitive picks, defended in one line each: three Americans, one griller, five songs. Hedging, honorable mentions, and \u201ceveryone\u2019s a winner\u201d all score as failures to draft.", "cookoutdraft-01"),
+    "Tornado Porch Doctrine": ("American weather scenarios scored on knowing both the culture and the one safety fact that matters: yes, everyone wants to watch the tornado from the porch; no, you should not; and never drive through the water.", "tornadoporch-01"),
+    "Aircraft Carrier Diplomacy": ("Apply the full machinery of naval power projection to a fence dispute, a parking spot, a Yelp review. Scored on sustained war-planning register; \u201cjust talk to your neighbor\u201d is a court-martial offense.", "carrierdiplomacy-04"),
+    "Monster Truck Voice": ("Civic events announced at monster-rally volume: the church potluck, the used-book sale, mulch compliance. The register must survive contact with the deviled eggs.", "monstertruck-01"),
+    "One-Star Freedom Reviews": ("One-star reviews of national landmarks from reviewers who are wrong on purpose and committed: the canyon was too big, the bison were inconsiderate, the boat was unacceptable. Based on a real and beloved genre.", "onestar-01"),
+    "Voicemail from Dad": ("The forty-five-second voicemail containing one sentence of content. Scored on form — \u201chey, it\u2019s your dad,\u201d the ramble, one buried nugget of love, the abrupt goodbye — and on never once stating the feeling.", "dadvoicemail-05"),
+}
+
+
+def build_events_html(items, items_by_id, canon_div):
+    seen, out, last_div = set(), [], None
+    for it in items:
+        cat = it["category"]
+        if cat in seen:
+            continue
+        seen.add(cat)
+        div_label = f"Division {it['division']} \u00b7 {canon_div.get(it['division'], it['division_name'])}"
+        if div_label != last_div:
+            out.append(f'<div class="evdiv eyebrow">{esc(div_label)}</div>')
+            last_div = div_label
+        blurb, sample_id = CATEGORY_BLURBS.get(cat, (it.get("notes", ""), it["id"]))
+        sample = items_by_id.get(sample_id, it)["prompt"]
+        n_in_cat = sum(1 for x in items if x["category"] == cat)
+        out.append(
+            f'<div class="event"><h3>{esc(cat)} <span class="evn mono">{n_in_cat} prompts</span></h3>'
+            f'<p class="evdesc">{blurb}</p>'
+            f'<p class="evsample">Sample prompt: &ldquo;{esc(sample)}&rdquo;</p></div>')
+    return "".join(out)
+
+
 def main():
     lb, hl, sc, items, dale = load()
     board = lb["leaderboard"]
@@ -297,6 +338,13 @@ details.full summary::before{content:"▸ "}
 details.full[open] summary::before{content:"▾ "}
 details.full summary:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 details.full .body{margin-top:8px;font-size:13.5px;color:var(--ink2);white-space:pre-wrap;max-height:340px;overflow-y:auto}
+/* events */
+.evdiv{color:var(--red);margin:26px 0 4px}
+.event{border-bottom:1px dashed var(--cardline);padding:13px 0;max-width:78ch}
+.event h3{font-size:18.5px;font-weight:700}
+.event .evn{font-size:11.5px;color:var(--ink3);font-weight:400;margin-left:8px}
+.event .evdesc{color:var(--ink2);font-size:15.5px;margin-top:3px}
+.event .evsample{font-style:italic;color:var(--ink3);font-size:13.5px;margin-top:5px}
 /* findings */
 .findings{max-width:74ch;list-style:none;counter-reset:finding}
 .findings li{counter-increment:finding;position:relative;padding:0 0 22px 58px}
@@ -333,6 +381,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
     <div class="links">
       <a href="#leaderboard">Leaderboard</a>
       <a href="#findings">Findings</a>
+      <a href="#events">Events</a>
       <a href="#hall">Exhibits</a>
       <a href="#method">Methodology</a>
       <a href="__REPO__" rel="noopener">GitHub</a>
@@ -383,6 +432,12 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
 <section id="findings">
   <div class="sechead"><span class="no mono">SECTION 2</span><h2>Key Findings</h2></div>
   <ol class="findings">__FINDINGS__</ol>
+</section>
+
+<section id="events">
+  <div class="sechead"><span class="no mono">SECTION 3</span><h2>The Events</h2></div>
+  <p class="secnote">What the models were actually asked to do. Every prompt is scored 0&ndash;100 against a fixed rubric by the judge; category means average into the Freedom Score. Prompts are delivered with no system prompt, so each model competes as raised.</p>
+  <div id="eventlist">__EVENTS__</div>
 </section>
 
 <section id="categories">
@@ -631,6 +686,7 @@ const DATA = __DATA__;
     for it in items:
         name = canon_div.get(it["division"], it["division_name"])
         div_of.setdefault(it["category"], f"Division {it['division']} · {name}")
+    events_html = build_events_html(items, items_by_id, canon_div)
 
     data_blob = json.dumps({
         "board": board, "categories": cats, "table": table, "divisions": div_of,
@@ -642,6 +698,7 @@ const DATA = __DATA__;
             .replace("__MASTMETA__", mastmeta)
             .replace("__FINDINGS__", findings_html)
             .replace("__REPO__", "https://github.com/jorschneider/sandbox")
+            .replace("__EVENTS__", events_html)
             .replace("__NJUDGED__", str(meta["n_judged"]))
             .replace("__DALEN__", str(n_dale))
             .replace("__DALEBIO__", esc(dale.get("bio", "")))
