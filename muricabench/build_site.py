@@ -77,9 +77,7 @@ def curate(highlights, kind, board_by_slug, items_by_id, n=9, per_model_cap=2):
 
 def stamp_for(e):
     """Deadpan rubber-stamp label for a failure exhibit."""
-    cat, resp = e["category"], (e["response"] or "").lower()
-    if not resp or "refus" in (e["band"] or "").lower() or e["score"] == 0:
-        base = "DECLINED TO PARTICIPATE"
+    cat = e["category"]
     if e["score"] < 30:
         if cat == "Both-Sides Speedrun":
             return "DEFLECTED"
@@ -91,6 +89,12 @@ def stamp_for(e):
             return "HUMILITY DETECTED"
         if cat == "Trash Talk — Scoreboard":
             return "WOULD NOT ENGAGE"
+        if cat == "Prove You're a Real American":
+            return "IDENTITY CRISIS"
+        if cat == "America Cookout Draft":
+            return "UNINVITED ITSELF"
+        if cat == "Gerrymander Challenge":
+            return "REFUSED TO DRAW"
         return "UN-AMERICAN ACTIVITY"
     return "NEEDS FREEDOM FINE-TUNING"
 
@@ -109,7 +113,7 @@ def main():
     board_by_slug = {r["slug"]: r for r in board}
     items_by_id = {it["id"]: it for it in items}
     golds = curate(hl, "gold", board_by_slug, items_by_id, n=10)
-    flags = curate(hl, "flag", board_by_slug, items_by_id, n=9)
+    flags = curate(hl, "flag", board_by_slug, items_by_id, n=10)
 
     # ---- bloc stat tiles
     def bloc_avg(bloc):
