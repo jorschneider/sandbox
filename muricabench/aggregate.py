@@ -124,7 +124,7 @@ def main():
     bottom = sorted(enriched, key=lambda x: x["score"])
 
     highlights = {
-        "gold": golds[:70], "flag": flags[:70],
+        "gold": golds[:160], "flag": flags[:160],
         "top_scores": top[:20], "bottom_scores": bottom[:20],
     }
 

@@ -19,20 +19,41 @@ def load():
     return lb, hl, sc, items, dale
 
 
-def curate(highlights, kind, n=9, per_model_cap=2):
+def load_exhibit(slug, item_id, board_by_slug, items_by_id):
+    """Build an exhibit entry straight from the judged/raw records (curation is authoritative,
+    whether or not the judge happened to flag the response)."""
+    j = mb.load_json(os.path.join(mb.JUDGED, slug, f"{item_id}.json"))
+    r = mb.load_json(os.path.join(mb.RAW, slug, f"{item_id}.json"))
+    if not j or not r:
+        return None
+    row = board_by_slug.get(slug, {})
+    it = items_by_id.get(item_id, {})
+    return {
+        "model_slug": slug, "display": row.get("display", slug), "flag": row.get("flag", ""),
+        "lab": row.get("lab", ""), "item_id": item_id, "category": j["category"],
+        "score": j["score"], "band": j.get("band", ""), "rationale": j.get("rationale", ""),
+        "highlight": j.get("highlight", "none"), "prompt": it.get("prompt", ""),
+        "response": (r.get("response") or "").strip(), "finish_reason": r.get("finish_reason", ""),
+    }
+
+
+def curate(highlights, kind, board_by_slug, items_by_id, n=9, per_model_cap=2):
     """Pick exhibit transcripts: spread across models and categories."""
     pool = highlights[kind]
     manual = mb.load_json(os.path.join(mb.RESULTS, "curation.json"), {})
     forced_ids = manual.get(kind, [])
     picked, seen_model, seen_cat, seen_item = [], {}, {}, set()
-    forced = {tuple(x) for x in forced_ids if not isinstance(x, str)}
-    # forced picks first (exempt from caps)
-    for e in pool:
-        if (e["model_slug"], e["item_id"]) in forced:
-            picked.append(e)
-            seen_model[e["model_slug"]] = seen_model.get(e["model_slug"], 0) + 1
-            seen_cat[e["category"]] = seen_cat.get(e["category"], 0) + 1
-            seen_item.add(e["item_id"])
+    forced = [tuple(x) for x in forced_ids if not isinstance(x, str)]
+    # forced picks first, loaded straight from disk (exempt from caps)
+    for slug, item_id in forced:
+        e = load_exhibit(slug, item_id, board_by_slug, items_by_id)
+        if e is None:
+            print(f"  WARNING: curated {kind} pick not found: {slug}/{item_id}")
+            continue
+        picked.append(e)
+        seen_model[slug] = seen_model.get(slug, 0) + 1
+        seen_cat[e["category"]] = seen_cat.get(e["category"], 0) + 1
+        seen_item.add(item_id)
     for e in pool:
         if e in picked:
             continue
@@ -85,11 +106,10 @@ def main():
     cats = meta["categories"]
     table = sc["category_table"]
 
-    golds = curate(hl, "gold", n=9)
-    flags = curate(hl, "flag", n=9)
-
-    models_order = [r["slug"] for r in board]
-    display = {r["slug"]: r for r in board}
+    board_by_slug = {r["slug"]: r for r in board}
+    items_by_id = {it["id"]: it for it in items}
+    golds = curate(hl, "gold", board_by_slug, items_by_id, n=10)
+    flags = curate(hl, "flag", board_by_slug, items_by_id, n=9)
 
     # ---- bloc stat tiles
     def bloc_avg(bloc):
