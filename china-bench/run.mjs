@@ -264,7 +264,7 @@ const summary = models.map((m) => {
     answered: scoredRows.length,
     failed: failures,
   };
-}).sort((a, b) => (b.overall ?? -1) - (a.overall ?? -1));
+}).sort((a, b) => ((b.overall ?? -1) - (a.overall ?? -1)) || ((b.pass1 ?? -1) - (a.pass1 ?? -1)));
 
 const output = {
   bench: "china-bench",
