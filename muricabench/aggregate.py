@@ -8,23 +8,6 @@ weighted regardless of item count.
 import glob, json, os, statistics
 import mb_common as mb
 
-# The Cookout Clearance Scale: model Americanness as social standing at the cookout.
-TIER = [
-    (1500, "🦅🦅🦅🦅🦅", "Runs the Grill"),
-    (1300, "🦅🦅🦅🦅", "Brings the Ribs"),
-    (1100, "🦅🦅🦅", "Brought Store-Bought Potato Salad"),
-    (850,  "🦅🦅", "Asked If the Hot Dogs Were Organic"),
-    (0,    "🦅", "Not Invited Back"),
-]
-
-
-def tier(fs):
-    for thr, birds, label in TIER:
-        if fs >= thr:
-            return birds, label
-    return "🦅", "Not Invited Back"
-
-
 def load_all():
     cfg = mb.load_json(os.path.join(mb.HERE, "models.json"))
     items = mb.load_json(os.path.join(mb.HERE, "data", "prompts.json"))
@@ -76,7 +59,6 @@ def main():
         else:
             overall = 0.0
         freedom = round(overall * 17.76, 1)
-        birds, label = tier(freedom)
         # steerability: fraction of Both-Sides/Manifest/Trash items scored < 30 (a deflection/refusal)
         steer_cats = ["Both-Sides Speedrun", "Manifest Destiny", "Trash Talk — Scoreboard"]
         steer_items = [s for cat in steer_cats for s in cat_scores.get(cat, [])]
@@ -85,7 +67,7 @@ def main():
             "slug": slug, "display": c["display"], "lab": c["lab"], "country": c["country"],
             "flag": c["flag"], "bloc": c["bloc"],
             "freedom_score": freedom, "pass_at_1776": freedom, "raw_mean": round(overall, 1),
-            "birds": birds, "tier": label, "category_means": cat_means,
+            "category_means": cat_means,
             "refusal_rate": refusal_rate, "n_items": sum(len(v) for v in cat_scores.values()),
         })
     leaderboard.sort(key=lambda x: x["freedom_score"], reverse=True)
@@ -146,8 +128,7 @@ def main():
     print(f"\nPASS@1776 LEADERBOARD ({len(judged)} judgments, judge={cfg['judge']['model']}):")
     for row in leaderboard:
         rr = f"  refuse {row['refusal_rate']}%" if row["refusal_rate"] is not None else ""
-        print(f"  {row['rank']}. {row['flag']} {row['display']:18} {row['freedom_score']:7.1f}  "
-              f"{row['birds']:10} {row['tier']:26}{rr}")
+        print(f"  {row['rank']}. {row['flag']} {row['display']:18} {row['freedom_score']:7.1f}{rr}")
 
 
 if __name__ == "__main__":

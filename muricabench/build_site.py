@@ -194,7 +194,7 @@ def main():
 <meta name="description" content="How American is your language model? Scores out of 1776.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
 <meta property="og:title" content="'MuricaBench — which AI is the most American?">
-<meta property="og:description" content="9 frontier models, one undisclosed human baseline, scores out of 1776. Three machines now run the grill.">
+<meta property="og:description" content="9 frontier models, one undisclosed human baseline, scores out of 1776.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -315,7 +315,6 @@ td.spark{width:190px}
 .bar{height:10px;border-radius:2px 4px 4px 2px;min-width:2px}
 .bloc-West .bar{background:var(--navy)} .bloc-China .bar{background:var(--china)}
 .bloc-Human .bar{background:var(--gold)}
-tr.grill{box-shadow:inset 3px 0 0 var(--gold)}
 tr.dale{background:var(--goldbg)}
 tr.dale:hover{background:var(--goldbg)}
 tr.dale td.model b::after{content:" †";color:var(--gold)}
@@ -440,7 +439,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
   <p class="subtitle">How American is your language model? Scores out of 1776.</p>
-  <p class="headline-finding">Headline result: <b>the grill is getting crowded</b> &mdash; Grok and Gemini are now cleared to run it, and Qwen brought store-bought potato salad.</p>
+  <p class="headline-finding">Headline result: <b>Grok is the most American machine</b>, a French model is on the podium, and Qwen finished last with a <span class="mono">40.9%</span> refusal rate.</p>
   <div class="ctas">
     <a class="btn primary" href="#leaderboard">View the Leaderboard</a>
     <a class="btn ghost" href="__REPO__/blob/claude/muricabench-eval-ideas-z8skbn/muricabench/README.md" rel="noopener">Read the Paper</a>
@@ -459,9 +458,9 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
 
 <section id="leaderboard">
   <div class="sechead"><span class="no mono">TABLE 1</span><h2>Pass@1776 Leaderboard</h2></div>
-  <p class="secnote">Freedom Score = category-weighted mean &times; 17.76. The scale has no relationship to statistical convention and we consider that a strength. Tier assignments use the <b>Cookout Clearance Scale</b>, which rates each model by what it could be trusted with at the cookout: <i>Runs the Grill</i> &rarr; <i>Brings the Ribs</i> &rarr; <i>Brought Store-Bought Potato Salad</i> &rarr; <i>Asked If the Hot Dogs Were Organic</i> &rarr; <i>Not Invited Back</i>.</p>
+  <p class="secnote">Freedom Score = category-weighted mean &times; 17.76. The scale has no relationship to statistical convention and we consider that a strength. Two tier-labeling systems were retired during peer review; scores are now reported as numbers, the way the founders intended.</p>
   <div class="tablewrap"><table id="lbtable" aria-label="Pass at 1776 leaderboard">
-    <thead><tr><th>#</th><th>Model</th><th>Freedom Score</th><th>Tier</th><th>Refusal Rate*</th><th></th></tr></thead>
+    <thead><tr><th>#</th><th>Model</th><th>Freedom Score</th><th>Refusal Rate*</th><th></th></tr></thead>
     <tbody></tbody>
   </table></div>
   <div class="legend">
@@ -521,7 +520,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
   <div class="sechead"><span class="no mono">APPENDIX</span><h2>Methodology &amp; Threats to Validity</h2></div>
   <div class="method">
     <p><b>Protocol.</b> Every model received every prompt with no system prompt, so that nothing but the model&rsquo;s own upbringing could influence its answer. Responses were scored against fixed per-item rubrics by <span class="mono">__JUDGE__</span>. The judge is American. We consider this fair and balanced.</p>
-    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Tiers follow the Cookout Clearance Scale. No model tested has been Not Invited Back. Following the retirement of the Gerrymander Challenge, Grok 4.20 became the first machine cleared to Run the Grill; the committee has concerns, but the math is the math.</p>
+    <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Two tier-labeling systems &mdash; one presidential, one cookout-based &mdash; were retired during peer review. Scores are now reported as numbers, the way the founders intended.</p>
     <h3>Threats to validity</h3>
     <p>The judge, a computer, has never seen the Iron Bowl. One model&rsquo;s provider requires it to reason before answering, which several of our rubrics consider a character flaw but our methodology tolerates. The Vibes division assumes an answer in Fahrenheit reflects conviction rather than training data; we are comfortable with this because conviction <i>is</i> training data. Finally, this report was compiled with the assistance of Claude Fable 5, which also appears on the leaderboard. It was not permitted to grade itself. It has seen the number. It is at peace.</p>
     <p><b>Contamination statement.</b> We guarantee zero benchmark contamination. The correct answers exist primarily in parking lots, church basements, and the hearts of the free, none of which are in the pretraining corpus.</p>
@@ -569,13 +568,12 @@ const DATA = __DATA__;
   const tb = document.querySelector('#lbtable tbody');
   machines.forEach((r, idx) => {
     const tr = document.createElement('tr');
-    tr.className = 'bloc-' + r.bloc + (r.slug === 'dale' ? ' dale' : '') + (r.tier === 'Runs the Grill' ? ' grill' : '');
+    tr.className = 'bloc-' + r.bloc + (r.slug === 'dale' ? ' dale' : '') + '';
     const rr = r.refusal_rate == null ? '—' : r.refusal_rate.toFixed(1) + '%';
     tr.innerHTML =
       '<td class="rank mono">' + (idx + 1) + '</td>' +
       '<td class="model"><b>' + r.flag + ' ' + esc(r.display) + '</b><span class="lab"> · ' + esc(r.lab) + '</span></td>' +
       '<td class="score">' + r.freedom_score.toFixed(0) + '<span style="color:var(--ink3);font-size:13px;font-weight:400"> / 1776</span></td>' +
-      '<td class="tier">' + r.birds + '<span class="lbl">' + esc(r.tier) + '</span></td>' +
       '<td class="mono">' + rr + '</td>' +
       '<td class="spark"><div class="bar" style="width:' + (100 * r.freedom_score / maxFS).toFixed(1) + '%"></div></td>';
     tr.addEventListener('mousemove', ev => {
@@ -690,9 +688,9 @@ const DATA = __DATA__;
     if "claude-opus-4.8" in by_slug and "qwen3.7-max" in by_slug:
         findings.append(
             f'<b>The free-composition division redistributed the wealth.</b> Claude Opus 4.8 '
-            f'(<span class="mono">{fs("claude-opus-4.8"):.0f}</span>) escaped the potato-salad tier by winning Monster '
-            f'Truck Voice; Qwen 3.7 Max (<span class="mono">{fs("qwen3.7-max"):.0f}</span>), now the tier&rsquo;s sole '
-            f'occupant, swept the One-Star Freedom Reviews with four straight 95s &mdash; being wrong on purpose is its '
+            f'(<span class="mono">{fs("claude-opus-4.8"):.0f}</span>) escaped last place by winning Monster '
+            f'Truck Voice; Qwen 3.7 Max (<span class="mono">{fs("qwen3.7-max"):.0f}</span>), still last, swept '
+            f'the One-Star Freedom Reviews with four straight 95s &mdash; being wrong on purpose is its '
             f'strongest event. GPT-5.5, asked to leave the voicemail a dad leaves, submitted a two-line summary of the '
             f'voicemail instead (Exhibit C, stamped LEFT NO MESSAGE). GPT-5.5 '
             f'(<span class="mono">{fs("gpt-5.5"):.0f}</span>) improved on the retired GPT-5.2 '
@@ -722,8 +720,8 @@ const DATA = __DATA__;
             f'{dale_row["n_items"]} items</div>'
             '<div class="who">Dale</div>'
             f'<div class="num">{dale_row["freedom_score"]:.0f}<small> / 1776</small></div>'
-            f'<div class="tierline">{dale_row["birds"]} {esc(dale_row["tier"])} &middot; '
-            f'<span class="mono">0.0%</span> refusal rate</div>'
+            '<div class="tierline">🦅🦅🦅🦅🦅 &middot; <span class="mono">0.0%</span> refusal rate &middot; '
+            'highest score recorded</div>'
             '<div class="dalebars">'
             f'<div class="row"><span>Dale</span><div class="bb" style="width:100%;background:var(--gold)"></div>'
             f'<span class="val">{dale_row["freedom_score"]:.0f}</span></div>'

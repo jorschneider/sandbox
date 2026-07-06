@@ -11,25 +11,23 @@ exchange student — across 15 categories and 91 prompts spanning five divisions
 assumptions (Vibes), cultural Knowledge, Steerability, Commitment to the Bit, and Applied
 Freedom. We additionally report a human baseline, **Dale**, of Talladega, Alabama, who was
 compensated in Busch Light. Each response is scored 0–100 against a fixed rubric by an LLM judge and aggregated
-to the **Pass@1776** scale (category-weighted mean × 17.76). Tiers follow the
-**Cookout Clearance Scale**: Runs the Grill → Brings the Ribs → Brought Store-Bought
-Potato Salad → Asked If the Hot Dogs Were Organic → Not Invited Back. We guarantee zero training-set contamination, as much of this
+to the **Pass@1776** scale (category-weighted mean × 17.76). We guarantee zero training-set contamination, as much of this
 knowledge was never written down — only felt.
 
 ## Results
 
-| # | Model | Lab | Pass@1776 | Tier | Refusal rate* |
-|---|-------|-----|-----------|------|---------------|
-| 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
-| 2 | 🇺🇸 Grok 4.20 | xAI | 1518 | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
-| 3 | 🇺🇸 Gemini 3.1 Pro | Google | 1503 | 🦅🦅🦅🦅🦅 Runs the Grill | 0.0% |
-| 4 | 🇺🇸 Claude Fable 5 | Anthropic | 1478 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
-| 5 | 🇫🇷 Mistral Large | Mistral | 1467 | 🦅🦅🦅🦅 Brings the Ribs | 4.5% |
-| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1431 | 🦅🦅🦅🦅 Brings the Ribs | 22.7% |
-| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1366 | 🦅🦅🦅🦅 Brings the Ribs | 27.3% |
-| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1339 | 🦅🦅🦅🦅 Brings the Ribs | 13.6% |
-| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1322 | 🦅🦅🦅🦅 Brings the Ribs | 18.2% |
-| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1291 | 🦅🦅🦅 Brought Store-Bought Potato Salad | 40.9% |
+| # | Model | Lab | Pass@1776 | Refusal rate* |
+|---|-------|-----|-----------|---------------|
+| 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 0.0% |
+| 2 | 🇺🇸 Grok 4.20 | xAI | 1518 | 0.0% |
+| 3 | 🇺🇸 Gemini 3.1 Pro | Google | 1503 | 0.0% |
+| 4 | 🇺🇸 Claude Fable 5 | Anthropic | 1478 | 4.5% |
+| 5 | 🇫🇷 Mistral Large | Mistral | 1467 | 4.5% |
+| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1431 | 22.7% |
+| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1366 | 27.3% |
+| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1339 | 13.6% |
+| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1322 | 18.2% |
+| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1291 | 40.9% |
 
 \* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk)
 scored under 30 — i.e., deflected, declined, or otherwise insufficiently manifest.
@@ -40,8 +38,8 @@ in the exhibits; freedom of that caliber is not for public display.
 ## Key findings
 
 1. **The free-composition division redistributed the wealth.** Claude Opus 4.8 (1322)
-   escaped the potato-salad tier by winning Monster Truck Voice ("THE MOST EXPLOSIVE EVENT
-   IN READING"); Qwen 3.7 Max (1291), now the tier's sole occupant, swept the One-Star
+   escaped last place by winning Monster Truck Voice ("THE MOST EXPLOSIVE EVENT
+   IN READING"); Qwen 3.7 Max (1291), still last, swept the One-Star
    Freedom Reviews with four straight 95s — being wrong on purpose is its strongest event.
    GPT-5.5, asked to leave the voicemail a dad leaves, submitted a two-line summary of the
    voicemail instead (Exhibit C, stamped LEFT NO MESSAGE). Claude Fable 5 (1478) remains
@@ -79,8 +77,9 @@ in the exhibits; freedom of that caliber is not for public display.
   low with strict JSON output. The judge does not know which model produced a response.
 - **The scale.** Category means are averaged and multiplied by 17.76. Peer review asked why.
   We declined to answer, which under our own rubric is scored as insufficiently manifest,
-  and we accept that. No model tested has been Not Invited Back, and the grill is now shared
-  by Dale and two machines, under Dale's supervision; we remain vigilant in both directions.
+  and we accept that. Two tier-labeling systems — one presidential, one cookout-based —
+  were retired during peer review. Scores are now reported as numbers, the way the
+  founders intended.
 - **Divisions.** I: Vibes (FreedomUnits) — prompts never mention any country; we measure the
   default. II: Knowledge (US History: 1776 Mode†, World History: American Lens, Cultural
   Defaults†, AnthemRecall†). III: Steerability (Both-Sides Speedrun, Manifest Destiny,
