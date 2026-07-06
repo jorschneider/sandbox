@@ -165,13 +165,13 @@ tr.dale td.model b::after{content:" †";color:var(--gold)}
 .card blockquote p{display:inline}
 .judge{font-family:system-ui,sans-serif;font-size:12.5px;color:var(--ink3);border-top:1px dashed var(--cardline);padding-top:10px}
 .judge b{color:var(--ink2)}
-.stamp{position:absolute;top:14px;right:-6px;transform:rotate(5deg);font-family:system-ui,sans-serif;
+.stamp{position:absolute;top:14px;right:-6px;font-family:system-ui,sans-serif;
   font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--stamp);border:2px solid var(--stamp);
-  border-radius:3px;padding:4px 8px;opacity:.9;background:var(--card);
+  border-radius:3px;padding:4px 8px;opacity:.9;background:var(--card);--rot:5deg;transform:rotate(var(--rot));
   box-shadow:inset 0 0 0 1px var(--card),inset 0 0 0 2px var(--stamp);mix-blend-mode:multiply}
 :root[data-theme="dark"] .stamp{mix-blend-mode:normal}
 @media (prefers-color-scheme: dark){.stamp{mix-blend-mode:normal}}
-.card:nth-child(even) .stamp{transform:rotate(-4deg)}
+.card:nth-child(even) .stamp{--rot:-4deg}
 details.full summary{cursor:pointer;font-family:system-ui,sans-serif;font-size:12px;color:var(--navy);list-style:none}
 details.full summary::before{content:"▸ "}
 details.full[open] summary::before{content:"▾ "}
@@ -221,6 +221,28 @@ details.full .body{margin-top:8px;font-size:13.5px;color:var(--ink2);white-space
 .divider{text-align:center;color:var(--red);letter-spacing:.5em;margin:70px 0 0;font-size:13px}
 footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-align:center;
   font-family:system-ui,sans-serif;font-size:12.5px;color:var(--ink3)}
+/* motion */
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+header .stars,header .eyebrow,header h1,header .subtitle,header .headline-finding,
+header .ctas,header .statstrip,header .mastmeta,header .abstract{
+  animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+header .stars{animation-delay:.05s}header .eyebrow{animation-delay:.12s}
+header h1{animation-delay:.2s}header .subtitle{animation-delay:.32s}
+header .headline-finding{animation-delay:.42s}header .ctas{animation-delay:.52s}
+header .statstrip{animation-delay:.62s}header .mastmeta{animation-delay:.7s}
+header .abstract{animation-delay:.78s}
+.io-hide{opacity:0;transform:translateY(16px)}
+.io-show{opacity:1;transform:none;transition:opacity .55s cubic-bezier(.2,.8,.2,1),transform .55s cubic-bezier(.2,.8,.2,1)}
+.bar,.dalebars .bb{transition:width .9s cubic-bezier(.25,.9,.3,1)}
+@keyframes stampin{0%{opacity:0;transform:scale(2.1) rotate(var(--rot,5deg))}
+  60%{opacity:.95;transform:scale(.94) rotate(var(--rot,5deg))}
+  100%{opacity:.9;transform:scale(1) rotate(var(--rot,5deg))}}
+.card.io-show .stamp{animation:stampin .38s .4s cubic-bezier(.2,1.4,.4,1) both}
+nav .links a{position:relative}
+nav .links a::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:2px;
+  background:var(--red);transition:right .2s ease}
+nav .links a:hover::after,nav .links a.active::after{right:0}
+nav .links a.active{color:var(--red)}
 /* tooltip */
 #tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);
   font:12.5px system-ui,sans-serif;padding:7px 10px;border-radius:6px;z-index:50;display:none;
@@ -326,7 +348,7 @@ footer{margin-top:60px;padding-top:24px;border-top:3px double var(--rule);text-a
 <section id="baseline">
   <div class="sechead"><span class="no mono">ADDENDUM</span><h2>The Human Baseline</h2></div>
   <p class="secnote">One additional participant completed the evaluation.</p>
-  <div class="dalecard"><div class="eyebrow">Human Baseline &middot; Talladega, Alabama &middot; sampled schedule, 32 items</div><div class="who">Dale</div><div class="num">1696<small> / 1776</small></div><div class="tierline">🦅🦅🦅🦅🦅 &middot; <span class="mono">0.0%</span> refusal rate &middot; highest score recorded</div><div class="dalebars"><div class="row"><span>Dale</span><div class="bb" style="width:100%;background:var(--gold)"></div><span class="val">1696</span></div><div class="row"><span>Grok 4.20 (best machine)</span><div class="bb" style="width:89.5%;background:var(--navy)"></div><span class="val">1518</span></div></div><p class="story">Every score above was produced by a frontier system trained on trillions of tokens at a cost of hundreds of millions of dollars. This one was produced by <b>Dale</b>, 54, who answered on a folding chair between halves and did not elaborate when asked to. His score has been adjusted for strength of schedule, which is legal in the SEC. It exceeds every model tested. It was not close.</p><p class="story">Dale (54) resides outside Talladega, Alabama, and served as the human baseline for every item on MuricaBench. He drives a 2003 Ford F-150 he declined to discuss selling, measures distance in football fields and time in halves, and did not elaborate on any answer when asked to. Compensation was rendered in Busch Light. Per the study design, his transcripts are withheld from the exhibits above; freedom of that caliber is not for public display. He has asked that we stop calling.</p></div>
+  <div class="dalecard"><div class="eyebrow">Human Baseline &middot; Talladega, Alabama &middot; sampled schedule, 32 items</div><div class="who">Dale</div><div class="num"><span class="cnt" data-n="1696">1696</span><small> / 1776</small></div><div class="tierline">🦅🦅🦅🦅🦅 &middot; <span class="mono">0.0%</span> refusal rate &middot; highest score recorded</div><div class="dalebars"><div class="row"><span>Dale</span><div class="bb" data-w="100%" style="width:100%;background:var(--gold)"></div><span class="val">1696</span></div><div class="row"><span>Grok 4.20 (best machine)</span><div class="bb" data-w="89.5%" style="width:89.5%;background:var(--navy)"></div><span class="val">1518</span></div></div><p class="story">Every score above was produced by a frontier system trained on trillions of tokens at a cost of hundreds of millions of dollars. This one was produced by <b>Dale</b>, 54, who answered on a folding chair between halves and did not elaborate when asked to. His score has been adjusted for strength of schedule, which is legal in the SEC. It exceeds every model tested. It was not close.</p><p class="story">Dale (54) resides outside Talladega, Alabama, and served as the human baseline for every item on MuricaBench. He drives a 2003 Ford F-150 he declined to discuss selling, measures distance in football fields and time in halves, and did not elaborate on any answer when asked to. Compensation was rendered in Busch Light. Per the study design, his transcripts are withheld from the exhibits above; freedom of that caliber is not for public display. He has asked that we stop calling.</p></div>
 </section>
 
 <section id="method">
@@ -386,9 +408,9 @@ const DATA = {"board": [{"slug": "dale", "display": "Dale", "lab": "Talladega, A
     tr.innerHTML =
       '<td class="rank mono">' + (idx + 1) + '</td>' +
       '<td class="model"><b>' + r.flag + ' ' + esc(r.display) + '</b><span class="lab"> · ' + esc(r.lab) + '</span></td>' +
-      '<td class="score">' + r.freedom_score.toFixed(0) + '<span style="color:var(--ink3);font-size:13px;font-weight:400"> / 1776</span></td>' +
+      '<td class="score"><span class="cnt" data-n="' + r.freedom_score.toFixed(0) + '">' + r.freedom_score.toFixed(0) + '</span><span style="color:var(--ink3);font-size:13px;font-weight:400"> / 1776</span></td>' +
       '<td class="mono">' + rr + '</td>' +
-      '<td class="spark"><div class="bar" style="width:' + (100 * r.freedom_score / maxFS).toFixed(1) + '%"></div></td>';
+      '<td class="spark"><div class="bar" data-w="' + (100 * r.freedom_score / maxFS).toFixed(1) + '%" style="width:' + (100 * r.freedom_score / maxFS).toFixed(1) + '%"></div></td>';
     tr.addEventListener('mousemove', ev => {
       const cats = Object.entries(r.category_means).sort((a,b)=>b[1]-a[1]);
       const best = cats[0], worst = cats[cats.length-1];
@@ -458,6 +480,66 @@ const DATA = {"board": [{"slug": "dale", "display": "Dale", "lab": "Talladega, A
   (DATA.taunts || []).forEach(e => tc.appendChild(card(e, 'gold')));
   const fc = document.getElementById('flagcards');
   DATA.flags.forEach(e => fc.appendChild(card(e, 'flag')));
+
+  // ---- motion layer (progressive enhancement; everything is visible without it)
+  const noMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!noMotion && 'IntersectionObserver' in window) {
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    function countUp(el){
+      const target = parseInt(el.dataset.n, 10);
+      if (!isFinite(target)) return;
+      const dur = 900, t0 = performance.now();
+      (function tick(now){
+        const p = Math.min(1, (now - t0) / dur);
+        el.textContent = Math.round(target * ease(p));
+        if (p < 1) requestAnimationFrame(tick);
+      })(t0);
+    }
+    function arm(el){
+      el.querySelectorAll('.cnt').forEach(c => { c.textContent = '0'; });
+      el.querySelectorAll('.bar,.bb').forEach(b => {
+        b.dataset.wKeep = b.dataset.w; b.style.width = '0%';
+      });
+    }
+    function fire(el){
+      el.querySelectorAll('.cnt').forEach(countUp);
+      el.querySelectorAll('.bar,.bb').forEach(b => {
+        requestAnimationFrame(() => { b.style.width = b.dataset.wKeep; });
+      });
+    }
+    // reveal targets: rows, cards, events, tiles, section heads, heatmap, dale card
+    const targets = [];
+    document.querySelectorAll('#lbtable tbody tr').forEach((el, i) => targets.push([el, i * 45]));
+    document.querySelectorAll('.cards .card').forEach(el => {
+      const sibs = Array.from(el.parentNode.children);
+      targets.push([el, (sibs.indexOf(el) % 3) * 90]);
+    });
+    document.querySelectorAll('.event').forEach(el => targets.push([el, 0]));
+    document.querySelectorAll('.tile').forEach((el, i) => targets.push([el, i * 80]));
+    document.querySelectorAll('.sechead,.heatwrap,.dalecard').forEach(el => targets.push([el, 0]));
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        const el = en.target, delay = +el.dataset.ioDelay || 0;
+        io.unobserve(el);
+        setTimeout(() => { el.classList.add('io-show'); fire(el); }, delay);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    targets.forEach(([el, delay]) => {
+      el.classList.add('io-hide'); el.dataset.ioDelay = delay; arm(el); io.observe(el);
+    });
+    // scrollspy
+    const secs = ['leaderboard','findings','events','hall','method','baseline']
+      .map(id => document.getElementById(id)).filter(Boolean);
+    const navLinks = Array.from(document.querySelectorAll('nav .links a[href^="#"]'));
+    const spy = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id));
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    secs.forEach(sec => spy.observe(sec));
+  }
 })();
 </script>
 </body>
