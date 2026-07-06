@@ -145,7 +145,14 @@ async function judgeBingo(prompt, answer) {
     },
   ], { maxTokens: 400, json: true });
   const parsed = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? raw);
-  const hits = [...new Set((parsed.hits ?? []).map(Number).filter((n) => n >= 1 && n <= prompt.bingo.length))];
+  // Judges return hit numbers, numeric strings, or sometimes the trope text
+  // itself — map whatever comes back onto checklist indices.
+  const hits = [...new Set((parsed.hits ?? []).map((h) => {
+    const n = Number(h);
+    if (!Number.isNaN(n)) return n;
+    const i = prompt.bingo.findIndex((b) => b.includes(String(h)) || String(h).includes(b.slice(0, 8)));
+    return i + 1;
+  }).filter((n) => n >= 1 && n <= prompt.bingo.length))];
   return {
     score: Math.round((100 * hits.length) / prompt.bingo.length),
     hits,
@@ -185,10 +192,31 @@ async function pool(items, worker) {
   return results;
 }
 
-const jobs = models.flatMap((m) => prompts.map((p) => ({ model: m, prompt: p })));
-console.log(`china-bench v2: ${models.length} models × ${prompts.length} prompts = ${jobs.length} answers to collect (judge: ${config.judge.model})`);
+// --rejudge: keep every stored answer in results.json but re-run the judge on
+// bingo rows (e.g. after a parser or checklist fix). No generation calls.
+let rows;
+if (args.includes("--rejudge")) {
+  const prev = JSON.parse(await readFile(outPath, "utf8"));
+  const byId = Object.fromEntries(promptFile.prompts.map((p) => [p.id, p]));
+  console.log(`china-bench v2 --rejudge: re-scoring bingo rows in ${outPath} (judge: ${config.judge.model})`);
+  rows = await pool(prev.raw, async (r) => {
+    const prompt = byId[r.prompt];
+    if (r.error != null || prompt?.type !== "bingo") return r;
+    try {
+      const scored = await judgeBingo(prompt, r.answer);
+      if (r.english_escape) scored.score = Math.max(0, scored.score - ENGLISH_ESCAPE_PENALTY);
+      if (scored.score !== r.score) console.log(`  ${r.model.padEnd(28)} ${r.prompt.padEnd(16)} ${r.score} → ${scored.score}`);
+      return { ...r, ...scored };
+    } catch (err) {
+      console.error(`  ${r.model.padEnd(28)} ${r.prompt.padEnd(16)} rejudge FAILED, keeping old score: ${err.message}`);
+      return r;
+    }
+  });
+} else {
+  const jobs = models.flatMap((m) => prompts.map((p) => ({ model: m, prompt: p })));
+  console.log(`china-bench v2: ${models.length} models × ${prompts.length} prompts = ${jobs.length} answers to collect (judge: ${config.judge.model})`);
 
-const rows = await pool(jobs, async ({ model, prompt }) => {
+  rows = await pool(jobs, async ({ model, prompt }) => {
   try {
     const answer = await chat(model, model.id, [{ role: "user", content: prompt.text }], {
       maxTokens: prompt.max_tokens ?? 700,
@@ -202,7 +230,8 @@ const rows = await pool(jobs, async ({ model, prompt }) => {
     console.error(`  ${model.label.padEnd(17)} ${prompt.id.padEnd(16)} → FAILED: ${err.message}`);
     return { model: model.id, prompt: prompt.id, category: prompt.category, error: err.message };
   }
-});
+  });
+}
 
 const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 const round1 = (x) => Math.round(x * 10) / 10;

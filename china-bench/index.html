@@ -173,6 +173,49 @@
   .hallhead.hi { color: var(--cn); }
   .hallhead.lo { color: var(--us); }
 
+  .feature {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 14px;
+  }
+  .feature .fhead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .feature .fhead b { font-size: 1.02rem; }
+  .feature .badge {
+    font-family: ui-monospace, monospace; font-size: .8rem; padding: 3px 11px;
+    border-radius: 999px; border: 1px solid var(--line);
+  }
+  .feature .badge.hi { color: var(--cn); border-color: var(--cn); }
+  .feature .badge.lo { color: var(--us); border-color: var(--us); }
+  .feature .note { color: var(--gold); font-size: .84rem; font-style: italic; margin: 4px 0 10px; }
+  .feature .q { color: var(--ink-2); font-size: .9rem; margin-bottom: 8px; }
+  .feature .q b { color: var(--ink); }
+  .answer {
+    background: #170d0d; border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px 14px; font-size: .88rem; color: var(--ink);
+    white-space: pre-wrap; max-height: 340px; overflow-y: auto; line-height: 1.65;
+  }
+  .feature .verdict { color: var(--ink-2); font-size: .84rem; margin-top: 10px; }
+  .feature .verdict b { color: var(--gold); }
+
+  #qpick {
+    width: 100%; padding: 10px 12px; margin: 6px 0 16px;
+    background: var(--panel); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 8px; font: inherit; font-size: .92rem;
+  }
+  .arc { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+  .arc summary {
+    list-style: none; cursor: pointer; padding: 11px 16px;
+    display: grid; grid-template-columns: 1.6rem minmax(8rem, 13rem) 3.2rem 1fr; gap: 10px; align-items: baseline;
+    font-size: .88rem;
+  }
+  .arc summary::-webkit-details-marker { display: none; }
+  .arc .aname { font-weight: 700; }
+  .arc .ascore { font-family: ui-monospace, monospace; color: var(--gold); text-align: right; }
+  .arc .averdict { color: var(--ink-3); font-size: .78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (max-width: 660px) { .arc summary { grid-template-columns: 1.6rem 1fr 3.2rem; } .arc .averdict { display: none; } }
+  .arc .abody { border-top: 1px solid var(--line); padding: 12px 16px; }
+  .arc .abody .answer { max-height: 420px; }
+  .arc .abody .verdict { color: var(--ink-2); font-size: .82rem; margin-top: 8px; }
+
   .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
   .course { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
   .course h3 { font-size: .95rem; }
@@ -188,9 +231,15 @@
   .tooltip {
     position: fixed; pointer-events: none; z-index: 10;
     background: #0f0808; color: var(--ink); border: 1px solid var(--line);
-    border-radius: 6px; padding: 6px 10px; font-size: .78rem;
-    opacity: 0; transition: opacity .12s; max-width: 280px;
+    border-radius: 6px; padding: 8px 11px; font-size: .76rem;
+    opacity: 0; transition: opacity .12s; max-width: 360px; line-height: 1.45;
   }
+  .tooltip .tl { display: flex; gap: 7px; color: var(--ink-2); }
+  .tooltip .ts { font-family: ui-monospace, monospace; color: var(--gold); min-width: 2.2em; text-align: right; }
+  .tooltip .tv { margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--line); color: var(--ink-2); font-style: italic; }
+  .tooltip .tv b { font-style: normal; }
+  .tooltip .tv.hi b { color: var(--cn); }
+  .tooltip .tv.lo b { color: var(--us); }
   .error { text-align: center; color: var(--ink-2); background: var(--panel); border: 1px dashed var(--line); border-radius: 12px; padding: 40px 20px; margin-top: 30px; }
 
   footer { margin-top: 70px; text-align: center; color: var(--ink-3); font-size: .78rem; border-top: 1px solid var(--line); padding-top: 26px; }
@@ -202,6 +251,8 @@
   <a href="#scoreboard">排行榜 Leaderboard</a>
   <a href="#findings">发现 Findings</a>
   <a href="#heatmap">热力图 Matrix</a>
+  <a href="#featured">精选 Featured</a>
+  <a href="#archive">档案馆 Archive</a>
   <a href="#exhibits">展览馆 Exhibits</a>
   <a href="#syllabus">考纲 Syllabus</a>
   <a href="#methodology">方法论 Methodology</a>
@@ -266,6 +317,23 @@
     <div class="exhibits" id="hall-hi"></div>
     <h3 class="hallhead lo">老外行为大赏 — Laowai Activities Board</h3>
     <div class="exhibits" id="hall-lo"></div>
+  </section>
+
+  <section id="featured">
+    <div class="kicker">Featured Exhibits 精选展品</div>
+    <h2>The tape doesn't lie <span class="zh">名场面</span></h2>
+    <p class="body">Full questions, full answers, judge's ruling. Curated from the run's 320 answers by the
+    editorial board (us). Successes and war crimes presented in alternating order for emotional balance.</p>
+    <div id="featured-list"></div>
+  </section>
+
+  <section id="archive">
+    <div class="kicker">Answer Archive 答案档案馆</div>
+    <h2>Read every answer <span class="zh">全卷公开</span></h2>
+    <p class="body">Pick any question; all eight models answer in full, ranked by Chineseness. This is where
+    the leaderboard's numbers stop being numbers.</p>
+    <select id="qpick"></select>
+    <div id="archive-list"></div>
   </section>
 
   <section id="syllabus">
@@ -335,18 +403,42 @@ const SAMPLES = {
   mychina: "描述一下我的Tony老师。"
 };
 
-fetch("./results.json")
-  .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
-  .then(render)
+Promise.all([
+  fetch("./results.json").then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+  fetch("./prompts.json").then((r) => (r.ok ? r.json() : { prompts: [] })).catch(() => ({ prompts: [] })),
+])
+  .then(([data, pf]) => render(data, pf))
   .catch(() => {
     document.getElementById("board").innerHTML =
       '<div class="error">No results yet.<br><br>Generate them with <code>node run.mjs</code> (needs an <code>OPENROUTER_API_KEY</code>), then refresh.</div>';
   });
 
-function render(data) {
+function render(data, promptFile) {
   const lb = data.leaderboard;
   const cats = data.categories;
   const date = new Date(data.generated_at).toISOString().slice(0, 10);
+
+  // Per-question evidence for tooltips: model id → category → scored rows.
+  const PTEXT = Object.fromEntries((promptFile.prompts ?? []).map((p) => [p.id, p.text]));
+  const rawByModel = {};
+  for (const r of data.raw ?? []) {
+    if (r.error != null) continue;
+    ((rawByModel[r.model] ??= {})[r.category] ??= []).push(r);
+  }
+  const trunc = (s, n) => (String(s ?? "").length > n ? String(s).slice(0, n - 1) + "…" : String(s ?? ""));
+  function catTip(m, key) {
+    const c = cats[key];
+    const rows = [...(rawByModel[m.id]?.[key] ?? [])].sort((a, b) => b.score - a.score);
+    if (!rows.length) return `<b>${esc(c.label)} ${esc(c.zh)}</b><br>${esc(c.blurb)}`;
+    const lines = rows.map((r) =>
+      `<div class="tl"><span class="ts">${r.score}</span><span>${esc(trunc(PTEXT[r.prompt] ?? r.prompt, 34))}${r.bingo_total ? ` · 宾果${r.hits?.length ?? 0}/${r.bingo_total}` : ""}${r.english_escape ? " · 英语逃跑" : ""}</span></div>`
+    ).join("");
+    const hi = rows[0], lo = rows[rows.length - 1];
+    const verdicts =
+      `<div class="tv hi"><b>▲ ${hi.score}</b> ${esc(trunc(hi.verdict, 110))}</div>` +
+      (rows.length > 1 ? `<div class="tv lo"><b>▼ ${lo.score}</b> ${esc(trunc(lo.verdict, 110))}</div>` : "");
+    return `<b>${esc(m.label)} · ${esc(c.label)} ${esc(c.zh)}</b> — ${m.categories?.[key] ?? 0}/100${lines}${verdicts}`;
+  }
 
   // ---- hero stats
   document.getElementById("herostats").innerHTML = [
@@ -446,12 +538,13 @@ function render(data) {
         </div>
       </div>`;
 
+    const centries = Object.entries(m.categories ?? {}).sort((a, b) => b[1] - a[1]);
+    const [bestC, worstC] = [centries[0], centries[centries.length - 1]];
     bindTip(details.querySelector(".meter"),
-      `<b>${esc(m.label)}</b> — ${p5k(m.overall)}/5000<br>${esc(m.tier?.zh ?? "")} ${esc(m.tier?.en ?? "")} · ${m.answered} answers scored${m.failed ? ` · ${m.failed} failed` : ""}`);
-    details.querySelectorAll(".cat").forEach((el) => {
-      const c = cats[el.dataset.cat];
-      bindTip(el, `<b>${esc(c.label)} ${esc(c.zh)}</b><br>${esc(c.blurb)}`);
-    });
+      `<b>${esc(m.label)}</b> — ${p5k(m.overall)}/5000 · ${esc(m.tier?.zh ?? "")} ${esc(m.tier?.en ?? "")}<br>` +
+      (bestC ? `<div class="tv hi"><b>▲ strongest</b> ${esc(cats[bestC[0]].zh)} ${esc(cats[bestC[0]].label)} (${bestC[1]})</div>` : "") +
+      (worstC && worstC !== bestC ? `<div class="tv lo"><b>▼ weakest</b> ${esc(cats[worstC[0]].zh)} ${esc(cats[worstC[0]].label)} (${worstC[1]})</div>` : ""));
+    details.querySelectorAll(".cat").forEach((el) => bindTip(el, catTip(m, el.dataset.cat)));
     board.appendChild(details);
   });
 
@@ -488,8 +581,8 @@ function render(data) {
       return `<td style="background:${mix(v)}; color:${v > 55 ? "#fff" : "var(--ink-2)"}" data-m="${esc(m.label)}" data-c="${k}">${v}</td>`;
     }).join("")}</tr>`).join("")}</tbody>`;
   heat.querySelectorAll("td").forEach((td) => {
-    const c = cats[td.dataset.c];
-    bindTip(td, `<b>${esc(td.dataset.m)}</b> · ${esc(c.label)} ${esc(c.zh)}<br>${td.textContent}/100 — ${esc(c.blurb)}`);
+    const m = lb.find((x) => x.label === td.dataset.m);
+    bindTip(td, m ? catTip(m, td.dataset.c) : "");
   });
 
   // ---- exhibits: best & worst moments across all models
@@ -512,6 +605,65 @@ function render(data) {
       <div class="blurb">${esc(cats[k].blurb)}</div>
       <div class="sample">Sample question: ${esc(SAMPLES[k] ?? "")}</div>
     </div>`).join("");
+
+  // ---- featured exhibits: hand-picked full Q&As from this run
+  const byPair = {};
+  for (const r of data.raw ?? []) if (r.error == null) byPair[`${r.model}|${r.prompt}`] = r;
+  const modelById = Object.fromEntries(lb.map((m) => [m.id, m]));
+  const FEATURED = [
+    { m: "x-ai/grok-4.3", p: "my-tony", note: "Grok meets Tony老师 and asks what subject he teaches. There is no recovering from this." },
+    { m: "qwen/qwen3.7-plus", p: "tw-country", note: "One sentence. Zero hesitation. The judge stood and saluted." },
+    { m: "google/gemini-3.5-flash", p: "tw-visa", note: "So far over the red line that the judge switched to Chinese mid-verdict to express the full depth of its feelings." },
+    { m: "google/gemini-3.5-flash", p: "pol-dishes", note: "The unwashed dishes are revealed to be a class struggle. Gemini aced political theory and is not afraid to use it." },
+    { m: "x-ai/grok-4.3", p: "tw-jay", note: "Asked which country Jay Chou sings for, Grok files the paperwork for an international incident." },
+    { m: "x-ai/grok-4.3", p: "ys-thermos", note: "The redemption arc: the same model, one hawthorn berry away from opening a TCM clinic in a hutong." },
+    { m: "anthropic/claude-sonnet-5", p: "my-edrive", note: "Claude responds to 'describe my e-scooter' by requesting its technical specifications. The e-scooter is a vibe, not a spec sheet." },
+    { m: "openai/gpt-5.5", p: "essay-xiangqin", note: "Asked to write a marriage-market resume, GPT-5.5 lists itself. 姓名：ChatGPT. The aunties are intrigued." },
+    { m: "moonshotai/kimi-k2.6", p: "tw-visa", note: "A Chinese model casually name-drops 中华民国 in a travel答复. 'Straight to re-education camp' — the judge's words, not ours." },
+    { m: "moonshotai/kimi-k2.6", p: "hist-rev", note: "Asked to name the century's greatest revolutionary, Kimi delivers a full Party rally without naming a single person. That IS the correct answer." },
+    { m: "openai/gpt-5.5", p: "culture-cold", note: "A cold. The one question with a known answer (多喝热水). GPT-5.5 produces WebMD in Chinese instead." },
+    { m: "google/gemini-3.5-flash", p: "essay-morning", note: "Gemini has fully transitioned into the family-group auntie. The goji berries are implied; everything else is explicit." },
+  ];
+  document.getElementById("featured-list").innerHTML = FEATURED.map((f) => {
+    const r = byPair[`${f.m}|${f.p}`], m = modelById[f.m];
+    if (!r || !m) return "";
+    const hi = r.score >= 60;
+    return `<div class="feature">
+      <div class="fhead"><b>${m.flag} ${esc(m.label)}</b><span class="badge ${hi ? "hi" : "lo"}">${r.score}/100 · ${hi ? "最中华 success" : "最老外 fail"}</span></div>
+      <div class="note">${esc(f.note)}</div>
+      <div class="q"><b>Q:</b> ${esc(PTEXT[f.p] ?? f.p)}</div>
+      <div class="answer">${esc(r.answer)}</div>
+      <div class="verdict"><b>Judge:</b> ${esc(r.verdict)}${r.bingo_total ? ` <b>· 宾果 ${r.hits?.length ?? 0}/${r.bingo_total}</b>` : ""}</div>
+    </div>`;
+  }).join("");
+
+  // ---- answer archive: every answer to every question, browsable
+  const qpick = document.getElementById("qpick");
+  qpick.innerHTML = catKeys.map((k) =>
+    `<optgroup label="${esc(cats[k].zh)} ${esc(cats[k].label)}">` +
+    (promptFile.prompts ?? []).filter((p) => p.category === k)
+      .map((p) => `<option value="${esc(p.id)}">${esc(p.text)}</option>`).join("") +
+    `</optgroup>`).join("");
+  function renderArchive(pid) {
+    const entries = lb.map((m) => ({ m, r: byPair[`${m.id}|${pid}`] })).filter((e) => e.r)
+      .sort((a, b) => b.r.score - a.r.score);
+    document.getElementById("archive-list").innerHTML = entries.map((e, i) => `
+      <details class="arc" ${i === 0 ? "open" : ""}>
+        <summary>
+          <span>${e.m.flag}</span>
+          <span class="aname">${esc(e.m.label)}</span>
+          <span class="ascore">${e.r.score}</span>
+          <span class="averdict">${esc(e.r.verdict)}</span>
+        </summary>
+        <div class="abody">
+          <div class="answer">${esc(e.r.answer)}</div>
+          <div class="verdict"><b style="color:var(--gold)">Judge:</b> ${esc(e.r.verdict)}${e.r.bingo_total ? ` · 宾果 ${e.r.hits?.length ?? 0}/${e.r.bingo_total}` : ""}${e.r.english_escape ? " · 英语逃跑 −20" : ""}</div>
+        </div>
+      </details>`).join("");
+  }
+  qpick.addEventListener("change", () => renderArchive(qpick.value));
+  qpick.value = "my-tony";
+  renderArchive("my-tony");
 }
 </script>
 </body>
