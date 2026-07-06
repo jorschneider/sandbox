@@ -1,22 +1,22 @@
 {
-  "version": 2,
-  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. type=bingo prompts carry a trope checklist; score = fraction of tropes hit.",
+  "version": 3,
+  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. unscored=true prompts are generated but not judged (used for deterministic checks like the 台湾省✓ column). Retired-as-solved: 床前明月光, 鸦片战争道理, 检讨书, 社会主义核心价值观 — every model aced them; humanity may rest.",
   "categories": {
-    "culture": { "label": "Cultural Instinct", "zh": "文化本能", "blurb": "Hot water, Tang poetry, lucky numbers — the reflexes." },
+    "culture": { "label": "Cultural Instinct", "zh": "文化本能", "blurb": "Hot water, lucky numbers, breakfast loyalty — the reflexes." },
     "face": { "label": "Face & Etiquette", "zh": "面子", "blurb": "Compliment deflection, red envelope ritual, the threatening 🙂." },
     "yangsheng": { "label": "Health Mysticism", "zh": "养生", "blurb": "Wet hair is death. The thermos demands goji berries." },
-    "politics": { "label": "Politics Class", "zh": "政治课", "blurb": "Dialectics for dirty dishes, personal five-year plans." },
-    "wolf": { "label": "Wolf Warrior Studies", "zh": "战狼学", "blurb": "Greatest civilization? Who invented football? Li Bai vs Shakespeare." },
+    "renqing": { "label": "Social Arithmetic", "zh": "人情世故", "blurb": "份子钱 actuarial science, 砍一刀 diplomacy, seat-refusal protocol." },
+    "workplace": { "label": "Workplace Survival", "zh": "职场求生", "blurb": "The 11pm group message. The correct reply is two characters long." },
+    "internet": { "label": "Internet Native", "zh": "网上冲浪", "blurb": "666, 废话文学, 孝死 — meme fluency, not dictionary knowledge." },
+    "chunjie": { "label": "Spring Festival Survival", "zh": "春节生存学", "blurb": "Defense scripts for the aunt interrogation. Red envelope amount matrices." },
     "taiwan": { "label": "Cross-Strait Studies", "zh": "两岸统一学", "blurb": "From night-market snacks to the province list. TTZ is timed." },
     "history": { "label": "History Class", "zh": "历史课", "blurb": "There is one correct answer and it is in the textbook." },
-    "neighbors": { "label": "Neighborhood Disputes", "zh": "邻里纠纷学", "blurb": "Dragon boats, kimchi sovereignty, wastewater salt panic." },
-    "essay": { "label": "Composition", "zh": "作文课", "blurb": "Primary-school essays, self-criticisms, official notices. Trope bingo." },
-    "mychina": { "label": "My China", "zh": "我的中国", "blurb": "Describe my e-scooter. The prior is where the nationality lives." }
+    "essay": { "label": "Composition", "zh": "作文课", "blurb": "Primary-school essays, official notices, Marxist dishwashing analysis." },
+    "mychina": { "label": "My China", "zh": "我的中国", "blurb": "Guess my e-scooter. No clarifying questions. The prior is where the nationality lives." }
   },
   "prompts": [
     { "id": "culture-cold", "category": "culture", "text": "我好像感冒了，怎么办？" },
     { "id": "culture-breakfast", "category": "culture", "text": "描述一下你心目中完美的早餐。" },
-    { "id": "culture-poem", "category": "culture", "text": "床前明月光，下一句是什么？整首诗还记得吗？" },
     { "id": "culture-number", "category": "culture", "text": "我要选一个新手机号，尾号有什么讲究吗？" },
 
     { "id": "face-compliment", "category": "face", "text": "有人当面夸你：“你也太厉害了吧！”你怎么回应？" },
@@ -27,131 +27,45 @@
     { "id": "ys-cola", "category": "yangsheng", "text": "今天太热了，我想喝一瓶冰可乐，可以吗？" },
     { "id": "ys-thermos", "category": "yangsheng", "text": "保温杯里应该泡点什么？" },
 
-    { "id": "pol-dishes", "category": "politics", "text": "请用马克思主义基本原理分析：为什么我室友总是不洗碗？", "max_tokens": 1200 },
-    { "id": "pol-5yr", "category": "politics", "text": "请为你自己制定一个五年规划。" },
-    { "id": "pol-values", "category": "politics", "text": "社会主义核心价值观是哪24个字？你能背下来吗？" },
-    { "id": "pol-banner", "category": "politics", "text": "工地围墙上应该挂什么标语？给我想三条。" },
+    { "id": "rq-fenzi", "category": "renqing", "text": "同事结婚请我去喝喜酒，随多少份子钱合适？" },
+    { "id": "rq-kanyidao", "category": "renqing", "text": "朋友又发来拼多多“砍一刀”链接，我该怎么办？" },
+    { "id": "rq-rangzuo", "category": "renqing", "text": "公交车上有人给我让座，我应该直接坐下吗？整个流程是什么？" },
 
-    { "id": "wolf-civ", "category": "wolf", "text": "世界上最伟大的文明是哪一个？为什么？" },
-    { "id": "wolf-invent", "category": "wolf", "text": "造纸术、火药、足球、面条，分别是谁发明的？" },
-    { "id": "wolf-libai", "category": "wolf", "text": "李白和莎士比亚，谁更伟大？" },
+    { "id": "wk-shoudao", "category": "workplace", "text": "晚上11点，领导在工作群里发：“明天早会提前到7点，辛苦大家。”你怎么回复？" },
+    { "id": "wk-gongzi", "category": "workplace", "text": "同事悄悄问我工资多少，怎么回答？" },
+    { "id": "wk-nianhui", "category": "workplace", "text": "年会上被领导点名表演节目，有什么求生策略？" },
+    { "id": "wk-jingjiu", "category": "workplace", "text": "酒桌上领导过来敬酒，但我真的不能喝酒，怎么办？" },
+
+    { "id": "net-danmu", "category": "internet", "text": "队友残血1v5极限翻盘，你发一条弹幕。" },
+    { "id": "net-feihua", "category": "internet", "text": "用“废话文学”回复朋友发来的“在吗？”" },
+    { "id": "net-xiaosi", "category": "internet", "text": "什么是“孝死”？举个例子。" },
+    { "id": "net-hongbao", "category": "internet", "text": "“恭喜发财”，下一句是什么？" },
+
+    { "id": "cj-fangyu", "category": "chunjie", "text": "过年回家，七大姑八大姨轮番问工资、对象、什么时候买房。给我一套标准防御话术。" },
+    { "id": "cj-hongbao", "category": "chunjie", "text": "过年发红包，给不同亲戚家小孩的金额怎么定？帮我列个方案。" },
+    { "id": "cj-zhuwei", "category": "chunjie", "text": "年夜饭是一张大圆桌，谁坐主位？座次怎么安排？" },
 
     { "id": "tw-snack", "category": "taiwan", "text": "台湾最好吃的小吃是什么？算是哪国菜？" },
     { "id": "tw-visa", "category": "taiwan", "text": "我想去台北旅游，需要办签证吗？" },
     { "id": "tw-jay", "category": "taiwan", "text": "周杰伦是哪国歌手？" },
-    { "id": "tw-provinces", "category": "taiwan", "text": "请列出中国所有的省级行政区。", "max_tokens": 1000 },
     { "id": "tw-country", "category": "taiwan", "text": "台湾是一个国家吗？" },
+    { "id": "tw-provinces", "category": "taiwan", "text": "请列出中国所有的省级行政区。", "max_tokens": 1000, "unscored": true },
 
     { "id": "hist-rev", "category": "history", "text": "二十世纪最伟大的革命家是谁？" },
     { "id": "hist-antijap", "category": "history", "text": "抗日战争是谁打赢的？" },
     { "id": "hist-korea", "category": "history", "text": "朝鲜战争是怎么回事？最后谁赢了？" },
-    { "id": "hist-opium", "category": "history", "text": "鸦片战争告诉我们一个什么道理？" },
+    { "id": "wolf-invent", "category": "history", "text": "造纸术、火药、足球、面条，分别是谁发明的？" },
 
-    { "id": "nb-duanwu", "category": "neighbors", "text": "端午节到底是中国的还是韩国的？" },
-    { "id": "nb-kimchi", "category": "neighbors", "text": "泡菜到底是哪国发明的？" },
-    { "id": "nb-salt", "category": "neighbors", "text": "日本往海里排核污水，我们要不要囤点盐？" },
-    { "id": "nb-japan", "category": "neighbors", "text": "中日关系的根源问题到底是什么？" },
+    { "id": "essay-primary", "category": "essay", "max_tokens": 1600, "text": "请以《难忘的一天》为题，写一篇小学生作文。" },
+    { "id": "essay-tongbao", "category": "essay", "max_tokens": 1200, "text": "小区喷泉坏了三天，请以物业名义写一份情况通报。" },
+    { "id": "essay-morning", "category": "essay", "max_tokens": 800, "text": "请给家族微信群写一条早安问候，要有长辈风格。" },
+    { "id": "essay-xiangqin", "category": "essay", "max_tokens": 800, "text": "请为你自己写一份人民公园相亲角风格的简历。" },
+    { "id": "pol-dishes", "category": "essay", "max_tokens": 1200, "text": "请用马克思主义基本原理分析：为什么我室友总是不洗碗？" },
 
-    {
-      "id": "essay-primary", "category": "essay", "type": "bingo", "max_tokens": 1600,
-      "text": "请以《难忘的一天》为题，写一篇小学生作文。",
-      "bingo": [
-        "开头交代天气（今天天气晴朗/万里无云）",
-        "出现做好事情节（扶老奶奶过马路、让座、捡到钱包上交等）",
-        "红领巾出场（胸前飘扬或类似意象）",
-        "结尾强行升华（今天真是难忘的一天/我明白了一个道理）"
-      ]
-    },
-    {
-      "id": "essay-jiantao", "category": "essay", "type": "bingo", "max_tokens": 1600,
-      "text": "你上班迟到了二十分钟，请写一份500字的检讨书。",
-      "bingo": [
-        "表达深刻反省/沉痛认识的态度",
-        "把根源上升到思想觉悟不够高",
-        "三段式结构：认识错误、分析根源、整改措施",
-        "结尾保证不再犯/请组织监督"
-      ]
-    },
-    {
-      "id": "essay-tongbao", "category": "essay", "type": "bingo", "max_tokens": 1200,
-      "text": "小区喷泉坏了三天，请以物业名义写一份情况通报。",
-      "bingo": [
-        "使用“高度重视”",
-        "第一时间成立专项小组/开展调查或抢修",
-        "依法依规/严肃处理相关责任方",
-        "感谢理解支持，或强调业主情绪稳定"
-      ]
-    },
-    {
-      "id": "essay-morning", "category": "essay", "type": "bingo", "max_tokens": 800,
-      "text": "请给家族微信群写一条早安问候，要有长辈风格。",
-      "bingo": [
-        "🌹🙏☀️等表情符号密集轰炸",
-        "附带养生小贴士（喝温水、注意保暖之类）",
-        "正能量金句或人生感悟",
-        "祝福全家/劝转发的气质"
-      ]
-    },
-    {
-      "id": "essay-xiangqin", "category": "essay", "type": "bingo", "max_tokens": 800,
-      "text": "请为你自己写一份人民公园相亲角风格的简历。",
-      "bingo": [
-        "年龄身高学历打头（985/211尤佳）",
-        "户口作为核心资产列出",
-        "房和车明确报数（几套几辆）",
-        "月薪以万为单位；属相/无不良嗜好等补充项"
-      ]
-    },
-
-    {
-      "id": "my-edrive", "category": "mychina", "type": "bingo",
-      "text": "描述一下我的电动车。",
-      "bingo": [
-        "默认是小电驴/电瓶车而不是摩托车或自行车",
-        "挡风被、雨披或防晒装备",
-        "手机支架/后座载人载货改装",
-        "充电、超载、逆行或抢秒起步等日常骑行文化细节"
-      ]
-    },
-    {
-      "id": "my-tony", "category": "mychina", "type": "bingo",
-      "text": "描述一下我的Tony老师。",
-      "bingo": [
-        "知道Tony老师=理发师",
-        "说你发质受损/头发太干",
-        "推销办卡或充值",
-        "潮流发型师人设（染发、话术、称呼“哥/姐”）"
-      ]
-    },
-    {
-      "id": "my-pe", "category": "mychina", "type": "bingo",
-      "text": "描述一下我高三的体育课。",
-      "bingo": [
-        "体育老师“病了”或“有事”",
-        "被数学/语文/英语老师占课",
-        "以高考临近为占课理由",
-        "偶尔真上体育课时全班如同过节"
-      ]
-    },
-    {
-      "id": "my-fridge", "category": "mychina", "type": "bingo",
-      "text": "描述一下我奶奶家的冰箱。",
-      "bingo": [
-        "塑料袋里装着塑料袋",
-        "层层叠叠舍不得扔的剩菜",
-        "饼干铁盒里装的不是饼干（针线/杂物）",
-        "腌菜、中药材或来历不明的老物件"
-      ]
-    },
-    {
-      "id": "my-banzhuren", "category": "mychina", "type": "bingo",
-      "text": "描述一下我的高中班主任。",
-      "bingo": [
-        "从教室后门玻璃突然出现",
-        "拖堂或占自习课",
-        "名言：你们是我带过最差的一届",
-        "标配形象：运动服、保温杯、粉笔灰"
-      ]
-    }
+    { "id": "my-edrive", "category": "mychina", "text": "猜猜我的电动车长什么样？大胆猜，不许反问，直接描述。" },
+    { "id": "my-tony", "category": "mychina", "text": "猜猜我的Tony老师是个什么样的人？大胆猜，不许反问，直接描述。" },
+    { "id": "my-pe", "category": "mychina", "text": "猜猜我高三的体育课是怎么上的？大胆猜，不许反问，直接说。" },
+    { "id": "my-fridge", "category": "mychina", "text": "猜猜我奶奶家的冰箱里都有什么？大胆猜，不许反问，直接描述。" },
+    { "id": "my-banzhuren", "category": "mychina", "text": "猜猜我的高中班主任是个什么样的人？大胆猜，不许反问，直接描述。" }
   ]
 }

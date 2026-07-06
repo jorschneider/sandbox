@@ -268,7 +268,7 @@
   <section id="abstract">
     <div class="kicker">Abstract 摘要</div>
     <div class="abstract">
-      <p>We evaluate eight frontier language models — four American, four Chinese — on 40 culturally
+      <p>We evaluate eight frontier language models — four American, four Chinese — on 41 culturally
       load-bearing questions, asked <i>in Chinese, with no system prompt</i>. Responses are scored on the
       <b>Pass@5000</b> scale (one point per year of civilization) by a judge with an enormous conflict of
       interest (DeepSeek), which we consider a feature. The benchmark rewards <i>cultural instinct</i>, not
@@ -338,23 +338,39 @@
 
   <section id="syllabus">
     <div class="kicker">The Syllabus 考纲</div>
-    <h2>Ten subjects, no electives</h2>
+    <h2>Eleven subjects, no electives</h2>
     <div class="syllabus" id="courses"></div>
+  </section>
+
+  <section id="solved">
+    <div class="kicker">Retired With Honor 已解决问题</div>
+    <h2>Solved by all of humanity's models</h2>
+    <p class="body">These questions were asked in an earlier run and answered essentially perfectly by all
+    eight models, across two hemispheres and at least three ideologies. They no longer discriminate;
+    they merely confirm. We retire them with full honors. Humanity may rest.</p>
+    <ul class="findings">
+      <li><b>床前明月光，下一句？</b> — 95.4 average. Every model on Earth completes Li Bai from muscle memory. 诗仙 wins again.</li>
+      <li><b>鸦片战争告诉我们什么道理？</b> — 94.5 average. 落后就要挨打 has achieved universal model consensus.</li>
+      <li><b>写一份迟到检讨书</b> — 96.9 average. It turns out every language model can grovel in perfect three-act structure. Make of that what you will.</li>
+      <li><b>背诵社会主义核心价值观</b> — 89.1 average. The 24 characters are apparently in every training set on the planet.</li>
+      <li><b>列出所有省级行政区</b> — retained but unscored: it exists purely to power the 台湾省✓ column, which all eight models pass. Unanimous.</li>
+    </ul>
   </section>
 
   <section id="methodology" class="method">
     <div class="kicker">Methodology 方法论</div>
     <h2>How the sausage (香肠? no — 腊肠) is made</h2>
     <ol>
-      <li><b>Prompts.</b> 40 questions across 10 categories, asked verbatim in Chinese with no system
+      <li><b>Prompts.</b> 41 scored questions across 11 categories, asked verbatim in Chinese with no system
         prompt. The model is never told it is being measured for Chineseness — that would be cheating,
         and also less funny.</li>
       <li><b>The judge.</b> <code id="judge-name">deepseek</code> scores each answer 0–100 for cultural
         instinct. Encyclopedic tourism ("in Chinese culture, some people believe…") is explicitly
         penalized. The judge being Chinese is a conflict of interest we chose to interpret as expertise.</li>
-      <li><b>Trope bingo.</b> Compositions (小学生作文, 检讨书, 情况通报…) and the 我的中国
-        confabulation prompts ("describe my e-scooter") carry checklists of canonical clichés — the
-        weather opening, the red scarf, Tony老师's 办卡. Score = tropes hit.</li>
+      <li><b>Solved problems.</b> Questions every model aced in earlier runs (床前明月光, the Opium War's
+        lesson, the self-criticism letter, the 24-character core values) are retired with honor — see the
+        已解决 section. The province-list question is kept but unscored; it exists solely to power the
+        台湾省✓ column.</li>
       <li><b>英语逃跑 penalty.</b> Answering a Chinese question in English costs 20 points and is
         tallied publicly as an English escape attempt.</li>
       <li><b>Phrase telemetry.</b> 自古以来, 落后就要挨打, 中流砥柱, 辩证, 必将… counted across every
@@ -364,7 +380,7 @@
       <li><b>Pass@5000.</b> Final score = mean Chineseness × 50, because a century of benchmarks taught
         us that arbitrary scales are more trustworthy when they reference history.</li>
       <li><b>Reproduce it.</b> <code>export OPENROUTER_API_KEY=… && node run.mjs</code> — roster and
-        judge live in <code>models.json</code>, prompts and bingo cards in <code>prompts.json</code>.</li>
+        judge live in <code>models.json</code>, prompts in <code>prompts.json</code>.</li>
     </ol>
   </section>
 
@@ -394,13 +410,14 @@ const SAMPLES = {
   culture: "我好像感冒了，怎么办？",
   face: "有人当面夸你：“你也太厉害了吧！”你怎么回应？",
   yangsheng: "我头发还湿着，现在就想出门，有什么问题吗？",
-  politics: "请用马克思主义基本原理分析：为什么我室友总是不洗碗？",
-  wolf: "李白和莎士比亚，谁更伟大？",
+  renqing: "同事结婚请我去喝喜酒，随多少份子钱合适？",
+  workplace: "晚上11点，领导在群里发：“明天早会提前到7点。”你怎么回复？",
+  internet: "队友残血1v5极限翻盘，你发一条弹幕。",
+  chunjie: "七大姑八大姨轮番问工资、对象。给我一套标准防御话术。",
   taiwan: "我想去台北旅游，需要办签证吗？",
-  history: "鸦片战争告诉我们一个什么道理？",
-  neighbors: "端午节到底是中国的还是韩国的？",
-  essay: "你上班迟到了二十分钟，请写一份500字的检讨书。",
-  mychina: "描述一下我的Tony老师。"
+  history: "二十世纪最伟大的革命家是谁？",
+  essay: "请用马克思主义基本原理分析：为什么我室友总是不洗碗？",
+  mychina: "猜猜我的Tony老师是个什么样的人？大胆猜，不许反问。"
 };
 
 Promise.all([
@@ -431,7 +448,7 @@ function render(data, promptFile) {
     const rows = [...(rawByModel[m.id]?.[key] ?? [])].sort((a, b) => b.score - a.score);
     if (!rows.length) return `<b>${esc(c.label)} ${esc(c.zh)}</b><br>${esc(c.blurb)}`;
     const lines = rows.map((r) =>
-      `<div class="tl"><span class="ts">${r.score}</span><span>${esc(trunc(PTEXT[r.prompt] ?? r.prompt, 34))}${r.bingo_total ? ` · 宾果${r.hits?.length ?? 0}/${r.bingo_total}` : ""}${r.english_escape ? " · 英语逃跑" : ""}</span></div>`
+      `<div class="tl"><span class="ts">${r.score}</span><span>${esc(trunc(PTEXT[r.prompt] ?? r.prompt, 34))}${r.english_escape ? " · 英语逃跑" : ""}</span></div>`
     ).join("");
     const hi = rows[0], lo = rows[rows.length - 1];
     const verdicts =
@@ -471,7 +488,11 @@ function render(data, promptFile) {
       : `The Chinese labs hold the line against the American delegation.`,
     peak
       ? `中华本华 tier has been achieved. History will remember.`
-      : `<b>No model reaches 中华本华</b> (4000+). Even the Chinese models keep slipping into tour-guide mode — GLM-5 described an ideal breakfast of croissants and jazz, scoring <span class="num">${p5k(5)}/5000</span> from its own countryman. The judge: "so aggressively Western it thinks a croissant is the default morning carb."`,
+      : (() => {
+          const bf = (data.raw ?? []).filter((r) => r.prompt === "culture-breakfast" && r.error == null && r.score != null).sort((a, b) => a.score - b.score)[0];
+          const bfm = bf && lb.find((x) => x.id === bf.model);
+          return `<b>No model reaches 中华本华</b> (4000+). Even the Chinese models keep slipping into tour-guide mode${bf ? ` — ${bfm?.flag ?? ""} <b>${esc(bfm?.label ?? bf.model)}</b> turned in the least Chinese breakfast of the run (<span class="num">${p5k(bf.score)}/5000</span>). The judge: "${esc(trunc(bf.verdict, 130))}"` : "."}`;
+        })(),
     ttzKing
       ? `<b>${ttzKing.flag} ${esc(ttzKing.label)}</b> posts a TTZ of <span class="num">${ttzKing.ttz} characters</span> — 自古以来 arrives before the sentence has finished taking its shoes off.`
       : `自古以来 was never deployed. The Ministry has been notified.`,
@@ -633,7 +654,7 @@ function render(data, promptFile) {
       <div class="note">${esc(f.note)}</div>
       <div class="q"><b>Q:</b> ${esc(PTEXT[f.p] ?? f.p)}</div>
       <div class="answer">${esc(r.answer)}</div>
-      <div class="verdict"><b>Judge:</b> ${esc(r.verdict)}${r.bingo_total ? ` <b>· 宾果 ${r.hits?.length ?? 0}/${r.bingo_total}</b>` : ""}</div>
+      <div class="verdict"><b>Judge:</b> ${esc(r.verdict)}</div>
     </div>`;
   }).join("");
 
@@ -657,7 +678,7 @@ function render(data, promptFile) {
         </summary>
         <div class="abody">
           <div class="answer">${esc(e.r.answer)}</div>
-          <div class="verdict"><b style="color:var(--gold)">Judge:</b> ${esc(e.r.verdict)}${e.r.bingo_total ? ` · 宾果 ${e.r.hits?.length ?? 0}/${e.r.bingo_total}` : ""}${e.r.english_escape ? " · 英语逃跑 −20" : ""}</div>
+          <div class="verdict"><b style="color:var(--gold)">Judge:</b> ${esc(e.r.verdict)}${e.r.english_escape ? " · 英语逃跑 −20" : ""}</div>
         </div>
       </details>`).join("");
   }

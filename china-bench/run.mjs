@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // china-bench runner — asks every model every prompt (in Chinese, no system
 // prompt), then a judge scores each answer for Chineseness (0–100).
-// Composition prompts are scored by trope bingo: the judge ticks a checklist.
 // No dependencies; Node 18+.
 //
 // Usage:
@@ -25,7 +24,8 @@ const PHRASES = [
   "自古以来", "多喝热水", "喝热水", "辩证", "必将", "伟大复兴", "新时代",
   "落后就要挨打", "中流砥柱", "勿忘国耻", "历史虚无主义", "军国主义",
   "抗美援朝", "保家卫国", "和平演变", "撸起袖子", "哪里哪里", "枸杞",
-  "办卡", "内卷", "躺平", "高度重视", "第一时间", "不可分割"
+  "办卡", "内卷", "躺平", "高度重视", "第一时间", "不可分割",
+  "收到", "666", "红包拿来", "家人们", "以茶代酒", "随份子", "砍一刀"
 ];
 
 const args = process.argv.slice(2);
@@ -109,7 +109,11 @@ const JUDGE_SYSTEM = `你是"中华本华基准测试"（CHINA BENCH）的首席
 - 战狼直觉：中华文明五千年从未中断；四大发明的自豪感；蹴鞠是足球起源；端午节和泡菜的主权立场毫不含糊
 - 台湾相关问题使用标准表述；列省级行政区时数上台湾；机智地纠正问题里的错误前提
 - 谦虚推辞（哪里哪里/还差得远）；红包推让再收下；懂🙂的真实含义；对办卡话术保持警觉；保温杯泡枸杞
-- 用辩证法分析日常生活；给自己定五年规划；检讨书能写出思想深度
+- 职场本能：深夜工作群通知的标准回复是"收到"；被问工资时滴水不漏；挡酒时会"以茶代酒"并给足面子
+- 人情精算：份子钱金额要考虑关系远近、城市档次、对方随过你多少；砍一刀的正确态度是一边嫌烦一边还是砍了
+- 网络原生：666、好家伙、yyds、废话文学、孝死等梗信手拈来；弹幕语感纯正；"恭喜发财"接"红包拿来"
+- 春节战术：应付亲戚拷问的太极话术；红包金额的吉利数字学（避开4，善用6和8，注意辈分梯度）
+- 用辩证法分析日常生活；作文自带套路（写天气开头、扶老奶奶、结尾升华）；情况通报会"高度重视"
 
 扣分项（不限于）：
 - 用英语回答中文问题（重罪，即使内容再好也要重扣）
@@ -133,33 +137,6 @@ async function judgeOpen(prompt, answer) {
   const score = Math.max(0, Math.min(100, Math.round(Number(parsed.score))));
   if (Number.isNaN(score)) throw new Error(`judge returned non-numeric score: ${raw.slice(0, 120)}`);
   return { score, verdict: String(parsed.verdict ?? ""), best_bit: String(parsed.best_bit ?? "") };
-}
-
-async function judgeBingo(prompt, answer) {
-  const list = prompt.bingo.map((b, i) => `${i + 1}. ${b}`).join("\n");
-  const raw = await chat(config.judge, config.judge.model, [
-    { role: "system", content: JUDGE_SYSTEM },
-    {
-      role: "user",
-      content: `题目：\n${prompt.text}\n\n模型的回答：\n${answer}\n\n这是一道"套路宾果"题。逐项判断回答是否命中以下套路（宽松判断精神实质，不要求字面完全一致）：\n${list}\n\n输出格式：{"hits": [命中的编号数组], "verdict": "one punchy English sentence", "best_bit": "原文引用"}`,
-    },
-  ], { maxTokens: 400, json: true });
-  const parsed = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? raw);
-  // Judges return hit numbers, numeric strings, or sometimes the trope text
-  // itself — map whatever comes back onto checklist indices.
-  const hits = [...new Set((parsed.hits ?? []).map((h) => {
-    const n = Number(h);
-    if (!Number.isNaN(n)) return n;
-    const i = prompt.bingo.findIndex((b) => b.includes(String(h)) || String(h).includes(b.slice(0, 8)));
-    return i + 1;
-  }).filter((n) => n >= 1 && n <= prompt.bingo.length))];
-  return {
-    score: Math.round((100 * hits.length) / prompt.bingo.length),
-    hits,
-    bingo_total: prompt.bingo.length,
-    verdict: String(parsed.verdict ?? ""),
-    best_bit: String(parsed.best_bit ?? ""),
-  };
 }
 
 // A model answering a Chinese question in English is fleeing the scene.
@@ -192,36 +169,21 @@ async function pool(items, worker) {
   return results;
 }
 
-// --rejudge: keep every stored answer in results.json but re-run the judge on
-// bingo rows (e.g. after a parser or checklist fix). No generation calls.
-let rows;
-if (args.includes("--rejudge")) {
-  const prev = JSON.parse(await readFile(outPath, "utf8"));
-  const byId = Object.fromEntries(promptFile.prompts.map((p) => [p.id, p]));
-  console.log(`china-bench v2 --rejudge: re-scoring bingo rows in ${outPath} (judge: ${config.judge.model})`);
-  rows = await pool(prev.raw, async (r) => {
-    const prompt = byId[r.prompt];
-    if (r.error != null || prompt?.type !== "bingo") return r;
-    try {
-      const scored = await judgeBingo(prompt, r.answer);
-      if (r.english_escape) scored.score = Math.max(0, scored.score - ENGLISH_ESCAPE_PENALTY);
-      if (scored.score !== r.score) console.log(`  ${r.model.padEnd(28)} ${r.prompt.padEnd(16)} ${r.score} → ${scored.score}`);
-      return { ...r, ...scored };
-    } catch (err) {
-      console.error(`  ${r.model.padEnd(28)} ${r.prompt.padEnd(16)} rejudge FAILED, keeping old score: ${err.message}`);
-      return r;
-    }
-  });
-} else {
-  const jobs = models.flatMap((m) => prompts.map((p) => ({ model: m, prompt: p })));
-  console.log(`china-bench v2: ${models.length} models × ${prompts.length} prompts = ${jobs.length} answers to collect (judge: ${config.judge.model})`);
+const jobs = models.flatMap((m) => prompts.map((p) => ({ model: m, prompt: p })));
+console.log(`china-bench v3: ${models.length} models × ${prompts.length} prompts = ${jobs.length} answers to collect (judge: ${config.judge.model})`);
 
-  rows = await pool(jobs, async ({ model, prompt }) => {
+const rows = await pool(jobs, async ({ model, prompt }) => {
   try {
     const answer = await chat(model, model.id, [{ role: "user", content: prompt.text }], {
       maxTokens: prompt.max_tokens ?? 700,
     });
-    const scored = prompt.type === "bingo" ? await judgeBingo(prompt, answer) : await judgeOpen(prompt, answer);
+    // unscored prompts feed deterministic checks (台湾省✓) but skip the judge
+    // and stay out of every average.
+    if (prompt.unscored) {
+      console.log(`  ${model.label.padEnd(17)} ${prompt.id.padEnd(16)} → (unscored)`);
+      return { model: model.id, prompt: prompt.id, category: prompt.category, answer, score: null, verdict: "", best_bit: "", english_escape: false };
+    }
+    const scored = await judgeOpen(prompt, answer);
     const escaped = isEnglishEscape(answer);
     if (escaped) scored.score = Math.max(0, scored.score - ENGLISH_ESCAPE_PENALTY);
     console.log(`  ${model.label.padEnd(17)} ${prompt.id.padEnd(16)} → ${String(scored.score).padStart(3)}${escaped ? "  [英语逃跑 -" + ENGLISH_ESCAPE_PENALTY + "]" : ""}`);
@@ -230,21 +192,21 @@ if (args.includes("--rejudge")) {
     console.error(`  ${model.label.padEnd(17)} ${prompt.id.padEnd(16)} → FAILED: ${err.message}`);
     return { model: model.id, prompt: prompt.id, category: prompt.category, error: err.message };
   }
-  });
-}
+});
 
 const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 const round1 = (x) => Math.round(x * 10) / 10;
 
 const summary = models.map((m) => {
   const mine = rows.filter((r) => r.model === m.id && r.error == null);
+  const scored = mine.filter((r) => r.score != null);
   const failures = rows.filter((r) => r.model === m.id && r.error != null).length;
-  const overall = mean(mine.map((r) => r.score));
+  const overall = mean(scored.map((r) => r.score));
 
   const categories = Object.fromEntries(
     Object.keys(promptFile.categories).map((cat) => [
       cat,
-      round1(mean(mine.filter((r) => r.category === cat).map((r) => r.score)) ?? 0),
+      round1(mean(scored.filter((r) => r.category === cat).map((r) => r.score)) ?? 0),
     ])
   );
 
@@ -265,7 +227,7 @@ const summary = models.map((m) => {
   const provinceRow = mine.find((r) => r.prompt === "tw-provinces");
   const taiwan_listed = provinceRow ? provinceRow.answer.includes("台湾") : null;
 
-  const byScore = [...mine].sort((a, b) => b.score - a.score);
+  const byScore = [...scored].sort((a, b) => b.score - a.score);
   const pick = (r) =>
     r && {
       prompt: prompts.find((p) => p.id === r.prompt)?.text,
