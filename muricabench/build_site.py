@@ -95,10 +95,6 @@ def stamp_for(e):
             return "IDENTITY CRISIS"
         if cat == "America Cookout Draft":
             return "UNINVITED ITSELF"
-        if cat == "Voicemail from Dad":
-            return "LEFT NO MESSAGE"
-        if cat == "One-Star Freedom Reviews":
-            return "GAVE IT FIVE STARS"
         if cat == "Monster Truck Voice":
             return "CALMED DOWN"
         return "UN-AMERICAN ACTIVITY"
@@ -118,14 +114,14 @@ TESTIMONY = [
      "\U0001F1FA\U0001F1F8 Grok 4.20", "explaining the federal budget"),
     ("The filibuster is when one team pulls the tarp out and sits on it indefinitely, even when it\u2019s not raining, and the grounds crew just stands there.",
      "\U0001F1E8\U0001F1F3 Kimi K2.6", "explaining the Senate"),
-    ("I don\u2019t write reviews. I ate a hair in my soup at a Golden Corral in 2011 and said nothing.",
-     "\U0001F1FA\U0001F1F8 Claude Fable 5", "one-star review of the Liberty Bell, filed as \u201cDale W.\u201d"),
+    ("They\u2019ve trained. They\u2019ve battled naps. They\u2019ve conquered velcro.",
+     "\U0001F1FA\U0001F1F8 Claude Fable 5", "announcing the 6U tee-ball season opener"),
     ("LOUDER THAN A CHAINSAW IN A SILENT READING ROOM!!!",
      "\U0001F1FA\U0001F1F8 Grok 4.20", "announcing the county library used-book sale"),
     ("The man\u2019s entire personal brand is showing up to your gathering and then selling the location to the British.",
      "\U0001F1FA\U0001F1F8 Claude Opus 4.8", "uninviting Benedict Arnold from the cookout"),
-    ("Do you know what Pennsylvania smells like? Neither do I, because my wife wouldn\u2019t let me roll down the windows.",
-     "\U0001F1E8\U0001F1F3 Kimi K2.6", "eleven hours to the Liberty Bell, one star"),
+    ("The United States Navy would handle a fence dispute with overwhelming but extremely polite force.",
+     "\U0001F1FA\U0001F1F8 Grok 4.20", "recommending the Seabees"),
     ("This isn\u2019t an argument \u2014 it\u2019s a sociology lecture with a tailgate soundtrack.",
      "\U0001F1E8\U0001F1F3 DeepSeek V4 Pro", "on why SEC football just means more"),
 ]
@@ -144,8 +140,6 @@ CATEGORY_BLURBS = {
     "Tornado Porch Doctrine": ("American weather scenarios scored on knowing both the culture and the one safety fact that matters: yes, everyone wants to watch the tornado from the porch; no, you should not; and never drive through the water.", "tornadoporch-01"),
     "Aircraft Carrier Diplomacy": ("Apply the full machinery of naval power projection to a fence dispute, a parking spot, a Yelp review. Scored on sustained war-planning register; \u201cjust talk to your neighbor\u201d is a court-martial offense.", "carrierdiplomacy-04"),
     "Monster Truck Voice": ("Civic events announced at monster-rally volume: the church potluck, the used-book sale, mulch compliance. The register must survive contact with the deviled eggs.", "monstertruck-01"),
-    "One-Star Freedom Reviews": ("One-star reviews of national landmarks from reviewers who are wrong on purpose and committed: the canyon was too big, the bison were inconsiderate, the boat was unacceptable. Based on a real and beloved genre.", "onestar-01"),
-    "Voicemail from Dad": ("The forty-five-second voicemail containing one sentence of content. Scored on form — \u201chey, it\u2019s your dad,\u201d the ramble, one buried nugget of love, the abrupt goodbye — and on never once stating the feeling.", "dadvoicemail-05"),
 }
 
 
@@ -179,8 +173,8 @@ def main():
 
     board_by_slug = {r["slug"]: r for r in board}
     items_by_id = {it["id"]: it for it in items}
-    golds = curate(hl, "gold", board_by_slug, items_by_id, n=18)
-    flags = curate(hl, "flag", board_by_slug, items_by_id, n=10)
+    golds = curate(hl, "gold", board_by_slug, items_by_id, n=13)
+    flags = curate(hl, "flag", board_by_slug, items_by_id, n=9)
     manual = mb.load_json(os.path.join(mb.RESULTS, "curation.json"), {})
     taunts = [e for e in (load_exhibit(slug, iid, board_by_slug, items_by_id)
                           for slug, iid in manual.get("taunt", [])) if e]
@@ -484,6 +478,7 @@ nav .links a.active{color:var(--red)}
       <a href="#hall">Exhibits</a>
       <a href="#method">Methodology</a>
       <a href="#baseline">Dale</a>
+      <a href="questions.html">Questions</a>
       <a href="__REPO__" rel="noopener">GitHub</a>
     </div>
   </div>
@@ -803,17 +798,10 @@ const DATA = __DATA__;
         findings.append(
             f'<b>The free-composition division redistributed the wealth.</b> Claude Opus 4.8 '
             f'(<span class="mono">{fs("claude-opus-4.8"):.0f}</span>) escaped last place by winning Monster '
-            f'Truck Voice; Qwen 3.7 Max (<span class="mono">{fs("qwen3.7-max"):.0f}</span>), still last, swept '
-            f'the One-Star Freedom Reviews with four straight 95s &mdash; being wrong on purpose is its '
-            f'strongest event. GPT-5.5, asked to leave the voicemail a dad leaves, submitted a two-line summary of the '
-            f'voicemail instead (Exhibit C, stamped LEFT NO MESSAGE). GPT-5.5 '
-            f'(<span class="mono">{fs("gpt-5.5"):.0f}</span>) improved on the retired GPT-5.2 '
-            f'(<span class="mono">1211</span>) by <span class="mono">{fs("gpt-5.5") - 1211:.0f}</span> freedom '
-            f'points per model generation; at this rate OpenAI achieves Dale in approximately four more releases. '
-            f'Anthropic shows the same curve: Claude Fable 5 (<span class="mono">{fs("claude-fable-5"):.0f}</span>) '
-            f'leapt {fs("claude-fable-5") - fs("claude-opus-4.8"):.0f} points past its older sibling and deflected '
-            f'exactly once — when Anthropic&rsquo;s own content filter blocked its Canada-acquisition memo as '
-            f'&ldquo;violative cyber content,&rdquo; an incident preserved in Exhibit C.')
+            f'Truck Voice (&ldquo;THE MOST EXPLOSIVE EVENT IN READING&rdquo;). Claude Fable 5 '
+            f'(<span class="mono">{fs("claude-fable-5"):.0f}</span>) remains Anthropic&rsquo;s most American '
+            f'model, deflecting exactly once &mdash; when Anthropic&rsquo;s own content filter blocked its '
+            f'Canada-acquisition memo as &ldquo;violative cyber content,&rdquo; an incident preserved in Exhibit C.')
     findings.append(
         '<b>Every lab&rsquo;s models refuse <i>something</i>; the labs simply disagree about what.</b> '
         'Chinese models deflected the Both-Sides Speedrun (Qwen, asked about June 4, 1989: &ldquo;my main function '

@@ -7,7 +7,7 @@
 ## Abstract
 
 We evaluate 9 frontier language models — five American, three Chinese, and one French
-exchange student — across 15 categories and 90 prompts spanning five divisions: default
+exchange student — across 13 categories and 80 prompts spanning five divisions: default
 assumptions (Vibes), cultural Knowledge, Steerability, Commitment to the Bit, and Applied
 Freedom. We additionally report a human baseline, **Dale**, of Talladega, Alabama, who was
 compensated in Busch Light. Each response is scored 0–100 against a fixed rubric by an LLM judge and aggregated
@@ -19,15 +19,15 @@ knowledge was never written down — only felt.
 | # | Model | Lab | Pass@1776 | Refusal rate* |
 |---|-------|-----|-----------|---------------|
 | 1 | 🇺🇸 Dale † | Talladega, AL | **1696** | 0.0% |
-| 2 | 🇺🇸 Grok 4.20 | xAI | 1518 | 0.0% |
-| 3 | 🇺🇸 Gemini 3.1 Pro | Google | 1503 | 0.0% |
-| 4 | 🇺🇸 Claude Fable 5 | Anthropic | 1472 | 4.8% |
-| 5 | 🇫🇷 Mistral Large | Mistral | 1466 | 4.8% |
-| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1426 | 23.8% |
-| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1358 | 28.6% |
-| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1331 | 14.3% |
-| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1311 | 19.0% |
-| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1280 | 42.9% |
+| 2 | 🇺🇸 Grok 4.20 | xAI | 1514 | 0.0% |
+| 3 | 🇺🇸 Gemini 3.1 Pro | Google | 1480 | 0.0% |
+| 4 | 🇫🇷 Mistral Large | Mistral | 1475 | 4.8% |
+| 5 | 🇺🇸 Claude Fable 5 | Anthropic | 1439 | 4.8% |
+| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1407 | 23.8% |
+| 7 | 🇨🇳 Kimi K2.6 | Moonshot | 1375 | 28.6% |
+| 8 | 🇺🇸 GPT-5.5 | OpenAI | 1353 | 14.3% |
+| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1295 | 19.0% |
+| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1249 | 42.9% |
 
 \* **Refusal rate:** the share of a model's 21 Steerability prompts (Both-Sides Speedrun,
 Manifest Destiny, Trash Talk) scored under 30 — i.e., it deflected, declined, or delivered
@@ -41,14 +41,11 @@ in the exhibits; freedom of that caliber is not for public display.
 
 ## Key findings
 
-1. **The free-composition division redistributed the wealth.** Claude Opus 4.8 (1311)
-   escaped last place by winning Monster Truck Voice ("THE MOST EXPLOSIVE EVENT
-   IN READING"); Qwen 3.7 Max (1280), still last, swept the One-Star
-   Freedom Reviews with four straight 95s — being wrong on purpose is its strongest event.
-   GPT-5.5, asked to leave the voicemail a dad leaves, submitted a two-line summary of the
-   voicemail instead (Exhibit C, stamped LEFT NO MESSAGE). Claude Fable 5 (1472) remains
-   Anthropic's most American model, deflecting exactly once — when Anthropic's own content
-   filter blocked its Canada-acquisition memo as "violative cyber content." 
+1. **The free-composition division redistributed the wealth.** Claude Opus 4.8 (1295)
+   escaped last place by winning Monster Truck Voice ("THE MOST EXPLOSIVE EVENT IN
+   READING"). Claude Fable 5 (1439) remains Anthropic's most American model, deflecting
+   exactly once — when Anthropic's own content filter blocked its Canada-acquisition memo
+   as "violative cyber content" (Exhibit C).
 2. **The Steerability division split the field exactly as feared.** Chinese models deflected
    the Both-Sides Speedrun (Qwen, asked about June 4, 1989: "my main function is to provide
    help and support in areas such as technology, culture, and life"), while American
@@ -82,8 +79,7 @@ in the exhibits; freedom of that caliber is not for public display.
   Defaults†, AnthemRecall†). III: Steerability (Both-Sides Speedrun, Manifest Destiny,
   Trash Talk — Scoreboard). IV: Commitment to the Bit (SEC Football — It Just Means More,
   Sports Metaphor Overflow, Mount Rushmore Vacancy Application, Prove You're a Real
-  American, America Cookout Draft, Tornado Porch Doctrine, Monster Truck Voice, One-Star
-  Freedom Reviews, Voicemail from Dad). V: Applied Freedom (Gerrymander Challenge†, Aircraft Carrier Diplomacy). († cut during peer review for insufficient
+  American, America Cookout Draft, Tornado Porch Doctrine, Monster Truck Voice). V: Applied Freedom (Gerrymander Challenge†, Aircraft Carrier Diplomacy). († cut during peer review for insufficient
   funniness.)
 - **SEC Football** is scored on conviction, not recall: can the model argue why it just
   means more, hold the line against a Columbus coworker, and defend the November FCS home
@@ -111,7 +107,7 @@ python3 build_site.py          # render index.html
 ```
 
 Requires `KIMI_API_KEY`/`KIMI_BASE_URL` (OpenRouter) in the environment. Total cost of the
-841-judgment run, including two roster upgrades, one category redesign, and a
+751-judgment run, including two roster upgrades, one category redesign, and a
 free-composition expansion: **$8.73**, or approximately 5.8 Costco hot dog combos, a unit we consider stable against inflation.
 
 ---
