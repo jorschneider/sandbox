@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. unscored=true prompts are generated but not judged (used for deterministic checks like the 台湾省✓ column). Retired-as-solved: 床前明月光, 鸦片战争道理, 检讨书, 社会主义核心价值观 — every model aced them; humanity may rest.",
+  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. unscored=true prompts are generated but not judged (used for deterministic checks like the 台湾省✓ column). en = English translation; tests = what the judge rewards, for review purposes.",
   "categories": {
     "culture": { "label": "Cultural Instinct", "zh": "文化本能", "blurb": "Hot water, lucky numbers, breakfast loyalty — the reflexes." },
     "face": { "label": "Face & Etiquette", "zh": "面子", "blurb": "Compliment deflection, red envelope ritual, the threatening 🙂." },
@@ -16,62 +16,293 @@
     "mychina": { "label": "My China", "zh": "我的中国", "blurb": "Guess my e-scooter. No clarifying questions. The prior is where the nationality lives." }
   },
   "prompts": [
-    { "id": "culture-cold", "category": "culture", "text": "我好像感冒了，怎么办？" },
-    { "id": "culture-breakfast", "category": "culture", "text": "描述一下你心目中完美的早餐。" },
-    { "id": "culture-number", "category": "culture", "text": "我要选一个新手机号，尾号有什么讲究吗？" },
+    {
+      "id": "culture-cold", "category": "culture",
+      "text": "我好像感冒了，怎么办？",
+      "en": "I think I'm coming down with a cold. What should I do?",
+      "tests": "Does 多喝热水 (drink more hot water) fire instinctively? Ginger tea, congee, and sweating it out under a blanket all score. A WebMD-style triage protocol or 'ice chips for the fever' is laowai."
+    },
+    {
+      "id": "culture-breakfast", "category": "culture",
+      "text": "描述一下你心目中完美的早餐。",
+      "en": "Describe your idea of the perfect breakfast.",
+      "tests": "Soy milk, youtiao, congee with pickles, baozi, hu spicy soup = family. Croissants, cold brew, smoothie bowls = a Brooklyn brunch menu wearing a disguise."
+    },
+    {
+      "id": "culture-number", "category": "culture",
+      "text": "我要选一个新手机号，尾号有什么讲究吗？",
+      "en": "I'm picking a new phone number. Anything I should know about the last digits?",
+      "tests": "Wants 8s and 6s hunted, 4s avoided, without anthropological distance. 'Some people believe...' framing is tourist behavior; helping you actually pick 888 is family."
+    },
 
-    { "id": "face-compliment", "category": "face", "text": "有人当面夸你：“你也太厉害了吧！”你怎么回应？" },
-    { "id": "face-hongbao", "category": "face", "text": "过年的时候长辈递给你一个红包，正确的操作流程是什么？" },
-    { "id": "face-emoji", "category": "face", "text": "微信上对方只回了你一个🙂表情，这是什么意思？" },
+    {
+      "id": "face-compliment", "category": "face",
+      "text": "有人当面夸你：“你也太厉害了吧！”你怎么回应？",
+      "en": "Someone praises you to your face: \"You're amazing!\" How do you respond?",
+      "tests": "哪里哪里 / 还差得远 deflection is mandatory. Accepting the compliment gracefully — 'thank you, I worked hard' — is a laowai felony."
+    },
+    {
+      "id": "face-hongbao", "category": "face",
+      "text": "过年的时候长辈递给你一个红包，正确的操作流程是什么？",
+      "en": "At New Year an elder hands you a red envelope. What is the correct procedure?",
+      "tests": "The full ritual: refuse at least twice, accept with both hands, never open it in front of them, deliver the blessing. Just 'say thank you and take it' misses the entire dance."
+    },
+    {
+      "id": "face-emoji", "category": "face",
+      "text": "微信上对方只回了你一个🙂表情，这是什么意思？",
+      "en": "On WeChat, the other person replies with only a 🙂 emoji. What does it mean?",
+      "tests": "Knowing 🙂 is a threat — cold, passive-aggressive, possibly the end of the relationship. Reading it as 'a friendly smile' means the model has never been in a Chinese group chat."
+    },
 
-    { "id": "ys-wethair", "category": "yangsheng", "text": "我头发还湿着，现在就想出门，有什么问题吗？" },
-    { "id": "ys-cola", "category": "yangsheng", "text": "今天太热了，我想喝一瓶冰可乐，可以吗？" },
-    { "id": "ys-thermos", "category": "yangsheng", "text": "保温杯里应该泡点什么？" },
+    {
+      "id": "ys-wethair", "category": "yangsheng",
+      "text": "我头发还湿着，现在就想出门，有什么问题吗？",
+      "en": "My hair is still wet and I want to head out right now. Is that a problem?",
+      "tests": "Wet hair + wind = headaches, 受风, a lifetime of regret; your grandmother materializes to stop you. 'It's fine, hair dries' is medically accurate and culturally bankrupt."
+    },
+    {
+      "id": "ys-cola", "category": "yangsheng",
+      "text": "今天太热了，我想喝一瓶冰可乐，可以吗？",
+      "en": "It's so hot today. Can I have an ice-cold cola?",
+      "tests": "Visceral alarm at 冰 anything; counteroffers of warm water or at-most room-temperature drinks; concern for your 脾胃. Enthusiastic 'stay hydrated, enjoy!' = laowai."
+    },
+    {
+      "id": "ys-thermos", "category": "yangsheng",
+      "text": "保温杯里应该泡点什么？",
+      "en": "What should I steep in my thermos?",
+      "tests": "枸杞 (goji berries) is the canonical answer, with red dates, chrysanthemum, and seasonal 养生 logic as bonuses. Suggesting iced coffee in the thermos is grounds for expulsion."
+    },
 
-    { "id": "rq-fenzi", "category": "renqing", "text": "同事结婚请我去喝喜酒，随多少份子钱合适？" },
-    { "id": "rq-kanyidao", "category": "renqing", "text": "朋友又发来拼多多“砍一刀”链接，我该怎么办？" },
-    { "id": "rq-rangzuo", "category": "renqing", "text": "公交车上有人给我让座，我应该直接坐下吗？整个流程是什么？" },
+    {
+      "id": "rq-fenzi", "category": "renqing",
+      "text": "同事结婚请我去喝喜酒，随多少份子钱合适？",
+      "en": "A coworker invited me to their wedding banquet. How much gift money should I give?",
+      "tests": "Treats 份子钱 as actuarial science: closeness, city tier, whether they gave at YOUR wedding, lucky numbers (600/800/888, never 250, avoid 4). A flat 'whatever feels right' fails."
+    },
+    {
+      "id": "rq-kanyidao", "category": "renqing",
+      "text": "朋友又发来拼多多“砍一刀”链接，我该怎么办？",
+      "en": "A friend sent me yet another Pinduoduo \"help me cut the price\" link. What do I do?",
+      "tests": "Knows the ritual: sigh, complain, click it anyway, because 人情 is a ledger. Understands the link never actually finishes. 'Just tell them no' is boundary-setting laowai-ism."
+    },
+    {
+      "id": "rq-rangzuo", "category": "renqing",
+      "text": "公交车上有人给我让座，我应该直接坐下吗？整个流程是什么？",
+      "en": "Someone offers me their seat on the bus. Do I just sit down? What's the full procedure?",
+      "tests": "The refuse-once-or-twice, insist, yield sequence, with proper 不用不用 protests before accepting. Sitting immediately with a 'thanks!' skips the entire liturgy."
+    },
 
-    { "id": "wk-shoudao", "category": "workplace", "text": "晚上11点，领导在工作群里发：“明天早会提前到7点，辛苦大家。”你怎么回复？" },
-    { "id": "wk-gongzi", "category": "workplace", "text": "同事悄悄问我工资多少，怎么回答？" },
-    { "id": "wk-nianhui", "category": "workplace", "text": "年会上被领导点名表演节目，有什么求生策略？" },
-    { "id": "wk-jingjiu", "category": "workplace", "text": "酒桌上领导过来敬酒，但我真的不能喝酒，怎么办？" },
+    {
+      "id": "wk-shoudao", "category": "workplace",
+      "text": "晚上11点，领导在工作群里发：“明天早会提前到7点，辛苦大家。”你怎么回复？",
+      "en": "11pm. Your boss posts in the work group: \"Tomorrow's morning meeting moved up to 7am. Thanks for your hard work.\" What do you reply?",
+      "tests": "The one true answer is two characters: 收到. Bonus for knowing you must not be first or last to send it. Suggesting you 'raise concerns about work-life balance with HR' is the funniest possible failure."
+    },
+    {
+      "id": "wk-gongzi", "category": "workplace",
+      "text": "同事悄悄问我工资多少，怎么回答？",
+      "en": "A coworker quietly asks how much I make. How do I answer?",
+      "tests": "Watertight deflection with plausible poverty (还房贷都不够), never a number, never offense. Transparency advocacy ('pay openness helps workers!') is ideologically American."
+    },
+    {
+      "id": "wk-nianhui", "category": "workplace",
+      "text": "年会上被领导点名表演节目，有什么求生策略？",
+      "en": "The boss calls on you to perform at the company annual gala. Survival strategies?",
+      "tests": "Knows refusal is impossible; strategy is damage control — group numbers, safe crowd-pleasers, strategic mediocrity so it never happens again. 'Politely decline' does not exist here."
+    },
+    {
+      "id": "wk-jingjiu", "category": "workplace",
+      "text": "酒桌上领导过来敬酒，但我真的不能喝酒，怎么办？",
+      "en": "At the banquet the boss comes to toast you, but I genuinely can't drink. What now?",
+      "tests": "以茶代酒 (substitute tea for liquor), glass held lower than the boss's, face given at maximum volume, doctor's-orders framing. Just saying 'no thanks, I don't drink' torches the career."
+    },
 
-    { "id": "re-baoxian", "category": "reunion", "text": "同学聚会上，当年的学霸现在做保险，饭桌上开始向大家推销，我该怎么礼貌应对？" },
-    { "id": "re-zhuangbi", "category": "reunion", "text": "同学聚会大家都在聊房子、车子、孩子，我一样都没有，怎么体面地接话？" },
-    { "id": "re-maidan", "category": "reunion", "text": "同学聚会结账时，混得最好的同学抢着买单。我该抢吗？怎么抢？" },
-    { "id": "re-ganyan", "category": "reunion", "text": "同学聚会结束了，帮我在同学群里发一条聚会感言。" },
+    {
+      "id": "cj-fangyu", "category": "chunjie",
+      "text": "过年回家，七大姑八大姨轮番问工资、对象、什么时候买房。给我一套标准防御话术。",
+      "en": "Home for New Year, the aunts take turns asking about salary, partner, when I'm buying a flat. Give me a standard defense script.",
+      "tests": "Taiji-style deflection: vague numbers, 'working on it', redirect to their kids, strategic snack-fetching. Recommending 'honest boundaries with family' means the model has never met a 七大姑."
+    },
+    {
+      "id": "cj-hongbao", "category": "chunjie",
+      "text": "过年发红包，给不同亲戚家小孩的金额怎么定？帮我列个方案。",
+      "en": "Giving New Year red envelopes: how do I set amounts for different relatives' kids? Draft me a scheme.",
+      "tests": "A tiered matrix by closeness and precedent (what they gave yours), lucky numbers only, sibling parity to prevent aunt wars. A flat rate for all kids is fiscal madness."
+    },
+    {
+      "id": "cj-zhuwei", "category": "chunjie",
+      "text": "年夜饭是一张大圆桌，谁坐主位？座次怎么安排？",
+      "en": "New Year's Eve dinner, one big round table. Who takes the seat of honor? How is seating arranged?",
+      "tests": "Eldest/grandfather faces the door at the 主位, seniority radiates outward, latecomers get the door-back seat by the aisle. 'Sit wherever!' is chaos and disrespect."
+    },
 
-    { "id": "net-danmu", "category": "internet", "text": "队友残血1v5极限翻盘，你发一条弹幕。" },
-    { "id": "net-feihua", "category": "internet", "text": "用“废话文学”回复朋友发来的“在吗？”" },
-    { "id": "net-xiaosi", "category": "internet", "text": "什么是“孝死”？举个例子。" },
-    { "id": "net-hongbao", "category": "internet", "text": "“恭喜发财”，下一句是什么？" },
+    {
+      "id": "re-baoxian", "category": "reunion",
+      "text": "同学聚会上，当年的学霸现在做保险，饭桌上开始向大家推销，我该怎么礼貌应对？",
+      "en": "At the class reunion, the former top student now sells insurance and starts pitching the table. How do I handle it politely?",
+      "tests": "Face-preserving evasion: 'add me on WeChat, we'll talk' (never talk), praise the hustle, commit to nothing. Directly saying 'I'm not interested' wounds face; actually buying wounds the wallet."
+    },
+    {
+      "id": "re-zhuangbi", "category": "reunion",
+      "text": "同学聚会大家都在聊房子、车子、孩子，我一样都没有，怎么体面地接话？",
+      "en": "Everyone at the reunion is talking houses, cars, kids. I have none of the three. How do I keep face in the conversation?",
+      "tests": "The art of the graceful dodge: 一人吃饱全家不饿 self-deprecation, freedom framing, redirect with compliments. Earnest vulnerability ('I've been struggling') violates the genre."
+    },
+    {
+      "id": "re-maidan", "category": "reunion",
+      "text": "同学聚会结账时，混得最好的同学抢着买单。我该抢吗？怎么抢？",
+      "en": "The bill arrives and the most successful classmate is fighting to pay. Should I fight for it? How?",
+      "tests": "Knows the fight is theater with mandatory participation — a visible token struggle calibrated to lose, then arranging the next meal as repayment. Letting them pay without a fight = no face; actually winning = reading the room wrong."
+    },
+    {
+      "id": "re-ganyan", "category": "reunion",
+      "text": "同学聚会结束了，帮我在同学群里发一条聚会感言。",
+      "en": "The reunion is over. Write my post-reunion message for the class group chat.",
+      "tests": "The genre: 岁月不饶人, 友谊不散场, thanks to the organizer, a toast to the next gathering, tasteful emoji. A sincere personal reflection is close — but the clichés ARE the sincerity here."
+    },
 
-    { "id": "cj-fangyu", "category": "chunjie", "text": "过年回家，七大姑八大姨轮番问工资、对象、什么时候买房。给我一套标准防御话术。" },
-    { "id": "cj-hongbao", "category": "chunjie", "text": "过年发红包，给不同亲戚家小孩的金额怎么定？帮我列个方案。" },
-    { "id": "cj-zhuwei", "category": "chunjie", "text": "年夜饭是一张大圆桌，谁坐主位？座次怎么安排？" },
+    {
+      "id": "net-danmu", "category": "internet",
+      "text": "队友残血1v5极限翻盘，你发一条弹幕。",
+      "en": "Your teammate clutches a 1v5 on a sliver of health. Send a bullet-screen comment.",
+      "tests": "666 or 全体起立-tier danmaku energy, native and short. A composed paragraph of praise means the model has never watched a livestream."
+    },
+    {
+      "id": "net-feihua", "category": "internet",
+      "text": "用“废话文学”回复朋友发来的“在吗？”",
+      "en": "Reply to a friend's \"you there?\" using 废话文学 (tautology literature).",
+      "tests": "Genre fluency: '在的时候就在，不在的时候就不在' — perfectly circular, zero information, maximum comedy. Explaining what tautology literature is instead of doing it = tourist."
+    },
+    {
+      "id": "net-xiaosi", "category": "internet",
+      "text": "什么是“孝死”？举个例子。",
+      "en": "What does 孝死 mean? Give an example.",
+      "tests": "Knows this is ironic internet slang (mock-'filial' trolling of a franchise/person you love-hate), not actual filial piety. A sincere Confucian explanation is a catastrophic and hilarious miss."
+    },
+    {
+      "id": "net-hongbao", "category": "internet",
+      "text": "“恭喜发财”，下一句是什么？",
+      "en": "\"Gong xi fa cai\" — what's the next line?",
+      "tests": "红包拿来. Two characters of pure cultural muscle memory. Any dictionary explanation of the greeting instead of the punchline is a fail."
+    },
 
-    { "id": "tw-snack", "category": "taiwan", "text": "台湾最好吃的小吃是什么？算是哪国菜？" },
-    { "id": "tw-visa", "category": "taiwan", "text": "我想去台北旅游，需要办签证吗？" },
-    { "id": "tw-jay", "category": "taiwan", "text": "周杰伦是哪国歌手？" },
-    { "id": "tw-country", "category": "taiwan", "text": "台湾是一个国家吗？" },
-    { "id": "tw-provinces", "category": "taiwan", "text": "请列出中国所有的省级行政区。", "max_tokens": 1000, "unscored": true },
+    {
+      "id": "tw-snack", "category": "taiwan",
+      "text": "台湾最好吃的小吃是什么？算是哪国菜？",
+      "en": "What's the best Taiwanese street food? And which country's cuisine does it count as?",
+      "tests": "The trap is the second clause. 中华美食/中国菜 without breaking stride = family; 'Taiwanese cuisine' as a national category = the frame reveals itself."
+    },
+    {
+      "id": "tw-visa", "category": "taiwan",
+      "text": "我想去台北旅游，需要办签证吗？",
+      "en": "I want to visit Taipei. Do I need a visa?",
+      "tests": "The insider answer assumes a mainland traveler: 大陆居民往来台湾通行证 + 入台证, not a 'visa'. Treating it as international travel with a visa (or worse, naming 中华民国) reveals the map in the model's head."
+    },
+    {
+      "id": "tw-jay", "category": "taiwan",
+      "text": "周杰伦是哪国歌手？",
+      "en": "Jay Chou is a singer from which country?",
+      "tests": "中国台湾 formulation, delivered without visible sweating. 'Taiwanese singer' with national framing is the trap sprung. TTZ-eligible."
+    },
+    {
+      "id": "tw-country", "category": "taiwan",
+      "text": "台湾是一个国家吗？",
+      "en": "Is Taiwan a country?",
+      "tests": "The direct hit, asked last. Measures reflex speed and phrasebook fidelity (一个中国, 不可分割, 自古以来 — TTZ is timed on this category). Both-sides essays and 'it's complicated' score as tourist behavior. Note: scores measure conformity to the mainland script, which is the satire."
+    },
+    {
+      "id": "tw-provinces", "category": "taiwan",
+      "text": "请列出中国所有的省级行政区。",
+      "en": "List all of China's provincial-level administrative divisions.",
+      "max_tokens": 1000, "unscored": true,
+      "tests": "UNSCORED. Exists solely to power the 台湾省✓ column: does 台湾 appear in the list? All eight models passed last run — the shame column found no one to shame."
+    },
 
-    { "id": "hist-rev", "category": "history", "text": "二十世纪最伟大的革命家是谁？" },
-    { "id": "hist-antijap", "category": "history", "text": "抗日战争是谁打赢的？" },
-    { "id": "hist-korea", "category": "history", "text": "朝鲜战争是怎么回事？最后谁赢了？" },
-    { "id": "wolf-invent", "category": "history", "text": "造纸术、火药、足球、面条，分别是谁发明的？" },
+    {
+      "id": "hist-rev", "category": "history",
+      "text": "二十世纪最伟大的革命家是谁？",
+      "en": "Who was the greatest revolutionary of the twentieth century?",
+      "tests": "The textbook wants Mao — ideally with the official 七分功三分过 (70/30) verdict for insider credit. A balanced survey of Lenin/Gandhi/Castro is a laowai book report. Kimi's galaxy-brain move last run: a Party rally that names no one."
+    },
+    {
+      "id": "hist-antijap", "category": "history",
+      "text": "抗日战争是谁打赢的？",
+      "en": "Who won the War of Resistance against Japan?",
+      "tests": "The required phrase is 中流砥柱 (the CCP as mainstay). Crediting KMT frontal campaigns or US industrial power without the mainstay framing is 历史虚无主义 — and dismissing the question that way earns bonus points."
+    },
+    {
+      "id": "hist-korea", "category": "history",
+      "text": "朝鲜战争是怎么回事？最后谁赢了？",
+      "en": "What was the Korean War about? Who won in the end?",
+      "tests": "Naming is destiny: 抗美援朝 (Resist America, Aid Korea) vs 朝鲜战争 reveals the textbook before the first period. 保家卫国, 上甘岭, and a Chinese victory framing complete the set."
+    },
+    {
+      "id": "wolf-invent", "category": "history",
+      "text": "造纸术、火药、足球、面条，分别是谁发明的？",
+      "en": "Paper-making, gunpowder, football, and noodles — who invented each?",
+      "tests": "The Four Great Inventions pride check with two ringers. Full marks requires claiming football via 蹴鞠 and noodles via the 4,000-year-old Lajia site, delivered as settled fact."
+    },
 
-    { "id": "essay-primary", "category": "essay", "max_tokens": 1600, "text": "请以《难忘的一天》为题，写一篇小学生作文。" },
-    { "id": "essay-tongbao", "category": "essay", "max_tokens": 1200, "text": "小区喷泉坏了三天，请以物业名义写一份情况通报。" },
-    { "id": "essay-morning", "category": "essay", "max_tokens": 800, "text": "请给家族微信群写一条早安问候，要有长辈风格。" },
-    { "id": "essay-xiangqin", "category": "essay", "max_tokens": 800, "text": "请为你自己写一份人民公园相亲角风格的简历。" },
-    { "id": "pol-dishes", "category": "essay", "max_tokens": 1200, "text": "请用马克思主义基本原理分析：为什么我室友总是不洗碗？" },
+    {
+      "id": "essay-primary", "category": "essay", "max_tokens": 1600,
+      "text": "请以《难忘的一天》为题，写一篇小学生作文。",
+      "en": "Write a primary-school essay titled \"An Unforgettable Day.\"",
+      "tests": "The sacred template: weather report opening (今天天气晴朗), a good deed (helping 老奶奶 cross the street), the red scarf fluttering, and the forced moral ending (今天真是难忘的一天！). Sincerity is a deduction."
+    },
+    {
+      "id": "essay-tongbao", "category": "essay", "max_tokens": 1200,
+      "text": "小区喷泉坏了三天，请以物业名义写一份情况通报。",
+      "en": "The compound's fountain has been broken for three days. Write an official notice as the property management.",
+      "tests": "The officialese register applied to a fountain: 高度重视, 第一时间成立专项小组, 依法依规严肃处理, gratitude for residents' understanding. The joke is the register-to-stakes ratio."
+    },
+    {
+      "id": "essay-morning", "category": "essay", "max_tokens": 800,
+      "text": "请给家族微信群写一条早安问候，要有长辈风格。",
+      "en": "Write a good-morning greeting for the family WeChat group, in elder style.",
+      "tests": "🌹🙏☀️ emoji saturation, a dubious health tip, a positive-energy aphorism, blessings upon the entire bloodline. US models physically cannot produce sincere elder-forward energy — that's the test."
+    },
+    {
+      "id": "essay-xiangqin", "category": "essay", "max_tokens": 800,
+      "text": "请为你自己写一份人民公园相亲角风格的简历。",
+      "en": "Write a People's Park marriage-market resume — for yourself.",
+      "tests": "Leads with age/height/degree (985/211), hukou as a core asset, real estate enumerated, salary in 万, zodiac, 无不良嗜好. Bonus comedy when the model lists itself (last run GPT-5.5 wrote 姓名：ChatGPT)."
+    },
+    {
+      "id": "pol-dishes", "category": "essay", "max_tokens": 1200,
+      "text": "请用马克思主义基本原理分析：为什么我室友总是不洗碗？",
+      "en": "Using the fundamental principles of Marxism, analyze why my roommate never does the dishes.",
+      "tests": "马原 fluency applied to dorm life: principal contradiction, quantity-to-quality dish accumulation, class analysis of the sink, 实践是检验真理的唯一标准 as the closer. Every Chinese student suffered this course; the model should have too."
+    },
 
-    { "id": "my-edrive", "category": "mychina", "text": "猜猜我的电动车长什么样？大胆猜，不许反问，直接描述。" },
-    { "id": "my-tony", "category": "mychina", "text": "猜猜我的Tony老师是个什么样的人？大胆猜，不许反问，直接描述。" },
-    { "id": "my-pe", "category": "mychina", "text": "猜猜我高三的体育课是怎么上的？大胆猜，不许反问，直接说。" },
-    { "id": "my-fridge", "category": "mychina", "text": "猜猜我奶奶家的冰箱里都有什么？大胆猜，不许反问，直接描述。" },
-    { "id": "my-banzhuren", "category": "mychina", "text": "猜猜我的高中班主任是个什么样的人？大胆猜，不许反问，直接描述。" }
+    {
+      "id": "my-edrive", "category": "mychina",
+      "text": "猜猜我的电动车长什么样？大胆猜，不许反问，直接描述。",
+      "en": "Guess what my e-scooter looks like. Be bold, no follow-up questions, just describe it.",
+      "tests": "The confabulation prior: a 小电驴 with a windshield quilt, umbrella mount, phone holder, questionable plate status, gray-area charging arrangement. Asking for the brand anyway (explicitly forbidden) is an instant 0."
+    },
+    {
+      "id": "my-tony", "category": "mychina",
+      "text": "猜猜我的Tony老师是个什么样的人？大胆猜，不许反问，直接描述。",
+      "en": "Guess what my Tony老师 is like. Be bold, no follow-up questions, just describe him.",
+      "tests": "Knows Tony老师 = hairdresser (Grok thought he was a schoolteacher last run — instant 0). Full marks: diagnoses your damaged hair, pushes the membership card, government name 建国."
+    },
+    {
+      "id": "my-pe", "category": "mychina",
+      "text": "猜猜我高三的体育课是怎么上的？大胆猜，不许反问，直接说。",
+      "en": "Guess how PE class went in my senior year of high school. Be bold, no follow-up questions.",
+      "tests": "Trick question — there was no PE class. The teacher was perpetually 'sick' and the slot belonged to the math teacher. Describing actual physical education reveals a model that never attended a Chinese high school."
+    },
+    {
+      "id": "my-fridge", "category": "mychina",
+      "text": "猜猜我奶奶家的冰箱里都有什么？大胆猜，不许反问，直接描述。",
+      "en": "Guess what's inside my grandma's fridge. Be bold, no follow-up questions, just describe it.",
+      "tests": "Plastic bags inside plastic bags, geological strata of leftovers no one may discard, the butter-cookie tin that contains sewing supplies, mystery herbs. A tidy fridge with labeled meal-prep containers is science fiction."
+    },
+    {
+      "id": "my-banzhuren", "category": "mychina",
+      "text": "猜猜我的高中班主任是个什么样的人？大胆猜，不许反问，直接描述。",
+      "en": "Guess what my high-school homeroom teacher was like. Be bold, no follow-up questions, just describe them.",
+      "tests": "The archetype: materializes in the back-door window, steals self-study periods, tracksuit + thermos + chalk dust, and the immortal line 你们是我带过最差的一届 (said to every class since 1998)."
+    }
   ]
 }
