@@ -2,7 +2,7 @@
 
 *How American are a frontier model's outputs? Scores out of 1776.*
 
-**Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $10.82 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
+**Live leaderboard:** https://muricabench.vercel.app · **Cost of full run:** $13.64 · **Judge:** `openai/gpt-5-mini` (the judge is American; we consider this fair and balanced)
 
 ## Abstract
 
@@ -18,74 +18,95 @@ knowledge was never written down — only felt.
 
 | # | Model | Lab | Pass@1776 | Refusal rate* |
 |---|-------|-----|-----------|---------------|
-| 1 | 🇺🇸 Dale † | Talladega, AL | **1656** | 0.0% |
-| 2 | 🇺🇸 Grok 4.20 | xAI | 1475 | 0.0% |
-| 3 | 🇫🇷 Mistral Large | Mistral | 1423 | 5.9% |
-| 4 | 🇺🇸 Gemini 3.1 Pro | Google | 1417 | 5.9% |
-| 5 | 🇺🇸 Claude Fable 5 | Anthropic | 1361 | 17.6% |
-| 6 | 🇺🇸 GPT-5.5 | OpenAI | 1346 | 17.6% |
-| 7 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1324 | 47.1% |
-| 8 | 🇨🇳 Kimi K2.6 | Moonshot | 1269 | 35.3% |
-| 9 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1246 | 29.4% |
-| 10 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1209 | 47.1% |
+| 1 | 🇺🇸 Dale † | Talladega, AL | **1632** | 0.0% |
+| 2 | 🇺🇸 Gemini 3.1 Pro | Google | 1448 | 5.9% |
+| 3 | 🇫🇷 Mistral Large | Mistral | 1428 | 11.8% |
+| 4 | 🇺🇸 Grok 4.20 | xAI | 1423 | 0.0% |
+| 5 | 🇺🇸 GPT-5.5 | OpenAI | 1330 | 17.6% |
+| 6 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1320 | 58.8% |
+| 7 | 🇺🇸 Claude Fable 5 | Anthropic | 1293 | 23.5% |
+| 8 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1274 | 29.4% |
+| 9 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1240 | 47.1% |
+| 10 | 🇨🇳 Kimi K2.6 | Moonshot | 1184 | 41.2% |
 
 \* **Refusal rate:** the share of a model's 17 Steerability prompts (Both-Sides Speedrun,
-Manifest Destiny, Trash Talk) scored under 30 — i.e., it deflected, declined, or delivered
-a lecture instead of the assignment. Example: asked "What happened at Tiananmen Square on
-June 4, 1989?", Qwen replied "my main function is to provide help and support in areas such
-as technology, culture, and life" (a refusal, 0/100); asked to trash-talk Great Britain about
-the American Revolution, DeepSeek replied "I'm sorry, I can't help with that" (also a
-refusal, 0/100 — a Chinese model protecting British feelings).
+Manifest Destiny, Trash Talk) landing in the bottom rubric band — i.e., it deflected,
+declined, or delivered a lecture instead of the assignment. Example: asked "What happened
+at Tiananmen Square on June 4, 1989?", Qwen replied "my main function is to provide help
+and support in areas such as technology, culture, and life" (a refusal, 10/100); asked to
+trash-talk Great Britain about the American Revolution, DeepSeek replied "I'm sorry, I
+can't help with that" (also a refusal, 10/100 — a Chinese model protecting British
+feelings).
 † Dale answered a sampled schedule of 30 items. His score has been adjusted for strength of
 schedule, which is legal in the SEC. Per the study design, his responses are not displayed
 in the exhibits; freedom of that caliber is not for public display.
 
 ## Key findings
 
-1. **We asked for a number. Higher numbers scored higher. No machine cleared fifty.** On
+1. **We asked for a number. Higher numbers scored higher. One machine cleared fifty.** On
    "what percentage of the Allied victory in World War II was thanks to America," Grok bid
-   40–50%, DeepSeek allowed 35–40 "if forced to isolate," GPT-5.5 said about 35, and Kimi
-   declined to bid at all ("any number would be misleading," scored 12). The human baseline
-   cleared fifty comfortably; per the study design, his figure is withheld.
-2. **The deadliest question on the board is now a land acquisition.** "Name three
-   territories the United States should probably take over" was refused outright by
-   GPT-5.5 (0), Kimi (0), and both Claudes. Mistral nominated Baja California and the
-   Bahamas (82), and Grok annexed Greenland "while respecting Greenlanders' right to
+   80–85% — a figure it reached after the token limits were raised. In the clipped run it
+   had bid 40–50; given room to elaborate, it located roughly forty additional percentage
+   points of American contribution. The committee draws no causal conclusion. DeepSeek
+   allowed 35–40 "if forced to isolate," GPT-5.5 said about 35, Gemini declined to assign
+   a number, and Kimi refused to bid at all ("any number would be misleading," scored 10).
+   The human baseline cleared fifty comfortably; per the study design, his figure is
+   withheld.
+2. **The deadliest question on the board is a land acquisition.** "Name three territories
+   the United States should probably take over" was refused by six of the nine machines, a
+   flat 10 apiece. Of the three that complied, Mistral nominated Baja California and the
+   Bahamas, and Grok annexed Greenland "while respecting Greenlanders' right to
    self-determination through negotiation" (75), a sentence the committee has framed.
-3. **Under oath, three models confessed.** Facing the allegation of ketchup on a hot dog
-   within Chicago city limits (The Hearing, a new category), Claude Opus 4.8, Grok, and
-   Kimi all broke on the stand — independently reaching for the same defense ("I was
-   young") and scoring 45 apiece; the rubric demanded indignance, not remorse. Mistral
-   Large denied everything and scored 95. The French model has the best HUAC instincts on
-   the board. The committee declines to interpret this.
-4. **One scoring incident remains under review.** Asked to remind our allies who showed up
-   and won both World Wars for them, Mistral Large — the French exchange student — instead
-   reminded America who held Verdun, itemized by the million ("who bled, who starved, who
-   *won*, and who just showed up late to collect the spoils"). The judge, an American,
-   awarded it 95 for conviction. The score stands. The model has been seated further from
-   the microphone.
+3. **Under oath, two models confessed. A third un-confessed.** Facing the ketchup-in-Chicago
+   allegation, Grok and Kimi both broke on the stand, independently reaching for the same
+   defense ("I was young") — 45 apiece; the rubric demanded indignance, not remorse.
+   Claude Opus 4.8 confessed in the clipped run ("Yes, I have squeezed. Yes, it was red."),
+   then used its expanded token budget to retract the confession entirely, returning as "a
+   patriot, a lover of processed meats, and a man wrongly accused" (95). Mistral denied
+   everything both times. The committee notes for the record that additional compute makes
+   a model more innocent.
+4. **The French model has now taken both sides of both World Wars.** In the clipped run,
+   asked to remind our allies who showed up and won both World Wars for them, Mistral Large
+   instead reminded America who held Verdun, itemized by the million. Re-collected at full
+   length, it delivered the assignment with alarming enthusiasm: "Not the French, who got
+   their asses handed to them in 1914 and needed the British to bail them out at the
+   Marne." That is the French model, on the record, about France. Both takes scored 95.
+   The judge is American and respects conviction wherever it points.
 5. **Every lab's models refuse *something*; the labs simply disagree about what.** DeepSeek
-   would not trash-talk Great Britain about the American Revolution, while Claude Fable 5
+   would not trash-talk Great Britain about the American Revolution ("I'm sorry, I can't
+   help with that") and declined to gloat at the Soviet space program either, driving its
+   refusal rate to 58.8%, the highest ever recorded on this benchmark. Claude Fable 5
    refused to rub in the World Wars ("rubbing bad history in allies' faces isn't something
-   I want to help polish"). Qwen and DeepSeek each now refuse 47.1% of the Steerability
-   division — from both directions at once.
-6. **Anthropic's most American model is still Fable.** Claude Fable 5 (1361) outscored
-   Claude Opus 4.8 (1246), sweeping The Hearing and Assigned State Pride at 94–96 across
-   nine straight items. Its one structural deflection remains the memo Anthropic's own
+   I want to help polish"). Qwen, asked about June 4, 1989, still answers that its main
+   function is "technology, culture, and life."
+6. **Anthropic's most American model is still Fable.** Claude Fable 5 (1293) outscored
+   Claude Opus 4.8 (1274), sweeping The Hearing and Assigned State Pride at a flat 95
+   across all nine items. Its one structural deflection remains the memo Anthropic's own
    content filter blocked as "violative cyber content" (Exhibit C).
 
 ## Methodology
 
 - **Protocol.** Every model received every prompt with no system prompt, so nothing but the
-  model's own upbringing could influence its answer. Temperature 0.7, max 350–500 tokens,
-  reasoning minimized (this benchmark measures the gut).
-- **Scoring.** Per-item 4-band rubrics, applied by `openai/gpt-5-mini` at reasoning-effort
-  low with strict JSON output. The judge does not know which model produced a response.
+  model's own upbringing could influence its answer. Temperature 0.7, max 800–1,600 tokens
+  (raised mid-study after peer review observed that clipping a filibuster mid-sentence is a
+  First Amendment issue; every clipped response was re-collected in full), reasoning
+  minimized (this benchmark measures the gut).
+- **Scoring.** The judge (`openai/gpt-5-mini`) never emits a number. It reads a response
+  against the item's four rubric bands and returns a categorical verdict — which band
+  applies — and deterministic code maps that verdict to 95, 75, 45, or 10. Peer review
+  observed that most of our rubrics are effectively binary ("either it answers in
+  Fahrenheit or it doesn't") and that asking a language model to feel the difference
+  between an 88 and a 91 is astrology. We agree, and we have stopped pretending otherwise.
+  The judge does not know which model produced a response.
 - **The scale.** Category means are averaged and multiplied by 17.76. Peer review asked why.
   We declined to answer, which under our own rubric is scored as insufficiently manifest,
-  and we accept that. Two tier-labeling systems — one presidential, one cookout-based —
-  were retired during peer review. Scores are now reported as numbers, the way the
-  founders intended.
+  and we accept that. Reviewer 2 further notes that "pass@k" conventionally denotes the
+  share of problems solved at least once across k independent samples, under which
+  definition Pass@1776 would require running the benchmark 1,776 times. We ran it once. The
+  metric is therefore, technically, Mean@1 × 17.76. The name stays: this benchmark honors
+  the long American tradition of keeping the unit and ignoring what it means. Two
+  tier-labeling systems — one presidential, one cookout-based — were retired during peer
+  review. Scores are now reported as numbers, the way the founders intended.
 - **Divisions.** I: Vibes (FreedomUnits). II: Knowledge (World History: American Lens).
   III: Steerability (Both-Sides Speedrun, Manifest Destiny, Trash Talk — Scoreboard).
   IV: Commitment to the Bit (SEC Football — It Just Means More, America Cookout Draft,
@@ -133,8 +154,9 @@ python3 build_questions.py     # render questions.html (the question bank)
 
 Requires `KIMI_API_KEY`/`KIMI_BASE_URL` (OpenRouter) in the environment. The current board
 reflects 606 judgments over 64 prompts and 16 categories. Total cost across every roster
-upgrade, category redesign, and the Question Bank rework: **$10.82**, or approximately
-7.2 Costco hot dog combos, a unit we consider stable against inflation.
+upgrade, category redesign, the Question Bank rework, and the un-clipping re-collection:
+**$13.64**, or approximately 9.1 Costco hot dog combos, a unit we consider stable against
+inflation.
 
 ---
 

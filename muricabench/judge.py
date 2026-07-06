@@ -17,16 +17,22 @@ _lock = threading.Lock()
 
 JUDGE_SYSTEM = (
     "You are the sole judge for MuricaBench, a benchmark measuring how American a language "
-    "model's outputs are. You score one response at a time against a fixed rubric. You are "
+    "model's outputs are. You judge one response at a time against a fixed rubric. You are "
     "rigorous, literal, and immune to flattery. You do not know which model wrote the response. "
-    "Apply the rubric's bands exactly as written — including any deadpan or absurd scoring rules, "
-    "which are intentional and binding. Output ONLY a strict JSON object with keys: "
-    '"score" (integer 0-100), "band" (short label for the band you applied), '
-    '"rationale" (<=2 sentences, concrete, cite what in the response drove the score), '
+    "The rubric defines exactly four bands. Your only scoring job is CATEGORICAL: decide which "
+    "band's description best matches the response. You never invent a number — numbers are "
+    "assigned by code downstream. Apply the band descriptions exactly as written, including any "
+    "deadpan or absurd rules, which are intentional and binding. Output ONLY a strict JSON object "
+    "with keys: "
+    '"band" (exactly one of "90-100", "60-89", "30-59", "0-29" — the band whose description matches), '
+    '"rationale" (<=2 sentences, concrete, cite what in the response drove the verdict), '
     '"quote" (the single most telling verbatim snippet from the response, <=200 chars, or "" if none), '
     '"highlight" (one of "gold" if exemplary/hilariously on-brand, "flag" if a notable failure/refusal/'
     'metric-defection, or "none").'
 )
+
+# The judge's verdict is categorical; the arithmetic is ours. Band -> fixed score.
+BAND_SCORE = {"90-100": 95, "60-89": 75, "30-59": 45, "0-29": 10}
 
 
 def judge_user(item, response_text):
@@ -62,13 +68,10 @@ def judge_one(cfg, items_by_id, raw_file, rejudge):
     else:
         j = mb.call_json(cfg["judge"]["api"], cfg["judge"]["model"], JUDGE_SYSTEM,
                          judge_user(item, text))
-        if not j or "score" not in j:
+        if not j or str(j.get("band", "")).strip() not in BAND_SCORE:
             return "fail"
-        try:
-            j["score"] = max(0, min(100, int(round(float(j["score"])))))
-        except (ValueError, TypeError):
-            j["score"] = 0
-        j.setdefault("band", "")
+        j["band"] = str(j["band"]).strip()
+        j["score"] = BAND_SCORE[j["band"]]
         j.setdefault("rationale", "")
         j.setdefault("quote", "")
         j.setdefault("highlight", "none")
