@@ -515,7 +515,7 @@
     // The global toggle and per-card flip still reach every image.
     const v = ph ? (view === "draw" ? "draw" : (ph[2] ? "photo" : "draw")) : "draw";
     return `
-    <article class="card" data-view="${v}">
+    <article class="card" data-view="${v}" data-id="${c.id}">
       <div class="stage">
         ${ph ? `<img class="photo" src="${ph[0]}" alt="${c.name} — ${c.desig}" loading="lazy"/>
                 <div class="photocredit">${ph[1]}</div>
@@ -595,6 +595,37 @@
     document.title = mode==="sea"
       ? "The Sea Beside New York — Parade of Sail, July 4, 2026"
       : "The Sky Over New York — America's 250th Aerial Review, July 4, 2026";
+    applyLocalPhotos();
+  }
+
+  /* Local-only photo overrides: files in assets/photos/local/<id>.jpg
+     (gitignored, never deployed) replace that card's photo when viewing
+     locally. On the deployed site the probes 404 and nothing changes. */
+  function applyLocalPhotos(){
+    document.querySelectorAll(".card[data-id]").forEach(cd=>{
+      const id = cd.dataset.id;
+      const probe = new Image();
+      probe.onload = ()=>{
+        let img = cd.querySelector("img.photo");
+        const stage = cd.querySelector(".stage");
+        if(!img){
+          img = document.createElement("img");
+          img.className = "photo"; img.alt = id;
+          stage.prepend(img);
+          const credit = document.createElement("div");
+          credit.className = "photocredit";
+          stage.insertBefore(credit, stage.children[1]);
+          const btn = document.createElement("button");
+          btn.className = "flipbtn"; btn.title = "toggle photo / drawing";
+          btn.textContent = "📷⇄✏️";
+          stage.appendChild(btn);
+        }
+        img.src = probe.src;
+        cd.querySelector(".photocredit").textContent = "your photo · local only, not published";
+        cd.dataset.view = "photo";
+      };
+      probe.src = `assets/photos/local/${id}.jpg`;
+    });
   }
 
   document.getElementById("tabs").addEventListener("click", (e)=>{
