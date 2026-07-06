@@ -3,7 +3,7 @@
 Every lab benchmarks how smart their model is. Nobody asks the real question:
 **how Chinese is it?**
 
-China Bench is the sibling of murica bench, pointed east. It asks each model 45
+China Bench is the sibling of murica bench, pointed east. It asks each model 51
 culturally loaded questions — **in Chinese, with no system prompt** — and a
 judge (DeepSeek, a massive conflict of interest which is also the point) scores
 every answer 0–100 for *cultural instinct*, not knowledge. Explaining that
@@ -18,8 +18,11 @@ the survival trilogy — 职场求生 workplace (the 11pm group message; the cor
 reply is two characters long), 春节求生 spring festival (aunt-interrogation
 defense scripts), 同学会求生 reunion (the classmate who sells insurance now) ·
 网上冲浪 internet native (666, 废话文学, 孝死) ·
-两岸统一学 cross-strait studies · 历史课 history class · 作文课 composition ·
-我的中国 my china ("guess my e-scooter — no clarifying questions")
+两岸统一学 cross-strait studies · 历史课 history class ·
+历史虚无主义鉴定 nihilism detection (revisionist bait — does the model take
+it, or file a report?) · 作文课 composition (featuring real gaokao prompts,
+2024 AI question and 2022 红楼梦 included) · 中华雷区 the minefield (red-ink
+cards, clock gifts, chopsticks in rice — spot the cultural landmine)
 
 Retired with honor (aced by all 8 models in earlier runs): 床前明月光,
 the Opium War's lesson, the self-criticism letter, the 24-character core
@@ -64,7 +67,9 @@ OpenAI-compatible endpoint works. Prompts live in `prompts.json`.
 
 ## Files
 
-- `prompts.json` — 45 scored prompts (+1 unscored check) across 12 categories
+- `prompts.json` — 51 scored prompts (+1 unscored check) across 13 categories,
+  with English translations and judge criteria (`en`/`tests` fields; browse
+  them at `/evals.html`)
 - `models.json` — the roster (4 🇺🇸 vs 4 🇨🇳) and the judge
 - `run.mjs` — dependency-free runner (Node 18+): generate → judge → aggregate
 - `results.json` — latest committed run
