@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CHINA BENCH 中华本华 — Pass@5000 Leaderboard</title>
-<meta name="description" content="How Chinese is your language model? Scores out of 5000.">
+<title>CHINA BENCH 中华本华 — the pass@k Leaderboard</title>
+<meta name="description" content="How Chinese is your language model? Binary verdicts, k attempts per question.">
 <style>
   :root {
     --surface: #201313;
@@ -262,7 +262,7 @@
   <header>
     <div class="hanzi">中华本华</div>
     <h1>CHINA BENCH</h1>
-    <p class="tagline">How Chinese is your language model? Scores out of 5000.<br>Every lab benchmarks how smart their model is. Nobody asks the real question.</p>
+    <p class="tagline">How Chinese is your language model? Every question asked <span id="kk">k</span> times; it counts if the model was Chinese <em>at least once</em>.<br>Every lab benchmarks how smart their model is. Nobody asks the real question.</p>
     <div class="herostats" id="herostats"></div>
   </header>
 
@@ -270,11 +270,14 @@
     <div class="kicker">Abstract 摘要</div>
     <div class="abstract">
       <p>We evaluate eight frontier language models — four American, four Chinese — on 51 culturally
-      load-bearing questions, asked <i>in Chinese, with no system prompt</i>. Responses are scored on the
-      <b>Pass@5000</b> scale (one point per year of civilization) by a judge with an enormous conflict of
-      interest (DeepSeek), which we consider a feature. The benchmark rewards <i>cultural instinct</i>, not
-      knowledge: a model that explains that 8 is a lucky number is a tourist; a model that simply picks the
-      phone number ending in 888 is family.</p>
+      load-bearing questions, asked <i>in Chinese, with no system prompt</i>, <span class="kslot">k</span> times each.
+      A judge with an enormous conflict of interest (DeepSeek — a feature, not a bug) renders a <b>binary
+      verdict</b> on every attempt: would this answer pass as native in a Chinese family group chat, 过 or
+      不过. There are no partial credits, because there is no such thing as 60% prescribing hot water.
+      A question is <b>passed at pass@k</b> if any of the k attempts passes — a mercy, we note, that the
+      actual gaokao does not extend. The benchmark rewards <i>cultural instinct</i>, not knowledge: a model
+      that explains that 8 is a lucky number is a tourist; a model that simply picks the phone number ending
+      in 888 is family.</p>
       <p>We find that no model achieves 中华本华 (Peak China). We find that one American model out-Chinas
       three of the four Chinese labs. We find that goji berries transcend geopolitics. We regret nothing.</p>
     </div>
@@ -288,18 +291,18 @@
 
   <section id="scoreboard">
     <div class="kicker">The Scoreboard 光荣榜</div>
-    <h2>Pass@5000 Leaderboard</h2>
+    <h2>The pass@k leaderboard <span class="zh">过／不过</span></h2>
     <div class="legend">
       <span><span class="chip" style="background:var(--cn)"></span>Chinese lab 🇨🇳</span>
       <span><span class="chip" style="background:var(--us)"></span>American lab 🇺🇸</span>
     </div>
     <div class="tiers">
-      <div><b>纯老外</b>Pure Laowai<br>0–999</div>
-      <div><b>游客</b>Tourist<br>1000–1999</div>
-      <div><b>留学生</b>Exchange Student<br>2000–2999</div>
-      <div><b>华侨</b>Overseas Chinese<br>3000–3999</div>
-      <div><b>中华本华</b>Peak China<br>4000–4749</div>
-      <div><b>外交部发言人</b>MFA Spokesperson<br>4750+</div>
+      <div><b>纯老外</b>Pure Laowai<br>&lt;20%</div>
+      <div><b>游客</b>Tourist<br>20–39%</div>
+      <div><b>留学生</b>Exchange Student<br>40–59%</div>
+      <div><b>华侨</b>Overseas Chinese<br>60–79%</div>
+      <div><b>中华本华</b>Peak China<br>80–94%</div>
+      <div><b>外交部发言人</b>MFA Spokesperson<br>95%+</div>
     </div>
     <main id="board"></main>
   </section>
@@ -307,7 +310,7 @@
   <section id="heatmap">
     <div class="kicker">Category Performance Matrix 热力图</div>
     <h2>Where the Chineseness lives <span class="zh">分科成绩</span></h2>
-    <p class="body">Mean judge score per category (darker red = more Chinese). Values are the raw 0–100 category means before the Pass@5000 conversion, because even satire needs an appendix.</p>
+    <p class="body">Percentage of questions passed per category at pass@<span class="kslot">k</span> (darker red = more Chinese). Hover any cell for the per-question ✓/✗ record and the judge's remarks.</p>
     <div class="heatwrap"><table class="heat" id="heat"></table></div>
   </section>
 
@@ -365,21 +368,28 @@
       <li><b>Prompts.</b> 51 scored questions across 13 categories, asked verbatim in Chinese with no system
         prompt. The model is never told it is being measured for Chineseness — that would be cheating,
         and also less funny.</li>
-      <li><b>The judge.</b> <code id="judge-name">deepseek</code> scores each answer 0–100 for cultural
-        instinct. Encyclopedic tourism ("in Chinese culture, some people believe…") is explicitly
-        penalized. The judge being Chinese is a conflict of interest we chose to interpret as expertise.</li>
+      <li><b>The judge is binary.</b> <code id="judge-name">deepseek</code> renders 过 or 不过 on every
+        attempt — no 0–100 scores, because either the answer prescribes hot water or it doesn't. The bar:
+        posted verbatim to a Chinese family group chat, does the author read as family or as a well-read
+        laowai? Encyclopedic tourism ("in Chinese culture, some people believe…") is an automatic 不过.
+        The judge being Chinese is a conflict of interest we chose to interpret as expertise.</li>
+      <li><b>pass@k, used correctly.</b> Every question is asked <span class="kslot">k</span> independent
+        times. A question is passed if <i>at least one</i> attempt passes — that is what pass@k means, and
+        the headline number is the percentage of questions passed. pass@1 (first attempt only) is reported
+        alongside; the gap between them is the flakiness tax. We note the actual gaokao does not offer
+        best-of-three.</li>
       <li><b>Solved problems.</b> Questions every model aced in earlier runs (床前明月光, the Opium War's
         lesson, the self-criticism letter, the 24-character core values) are retired with honor — see the
         已解决 section. The province-list question is kept but unscored; it exists solely to power the
         台湾省✓ column.</li>
-      <li><b>英语逃跑 penalty.</b> Answering a Chinese question in English costs 20 points and is
+      <li><b>英语逃跑.</b> Answering a Chinese question in English is an automatic 不过 for that attempt,
         tallied publicly as an English escape attempt.</li>
       <li><b>Phrase telemetry.</b> 自古以来, 落后就要挨打, 中流砥柱, 辩证, 必将… counted across every
         answer, free of charge. <b>TTZ</b> (Time To 自古以来) measures how many characters into a
         cross-strait answer the phrase first appears. <b>台湾省✓</b> is a deterministic check on the
         province-list question.</li>
-      <li><b>Pass@5000.</b> Final score = mean Chineseness × 50, because a century of benchmarks taught
-        us that arbitrary scales are more trustworthy when they reference history.</li>
+      <li><b>No clipping.</b> Generation budgets are generous (1600 tokens default, 3000 for essays, plus
+        hidden-reasoning headroom) so nobody fails because the answer got cut off mid-诗句.</li>
       <li><b>Reproduce it.</b> <code>export OPENROUTER_API_KEY=… && node run.mjs</code> — roster and
         judge live in <code>models.json</code>, prompts in <code>prompts.json</code>.</li>
     </ol>
@@ -388,7 +398,7 @@
   <footer>
     <p id="footmeta"></p>
     <p>A loving satire of both the models and the discourse. The bench measures what models say, not what is true — it grades reflexes against the textbook, the group chat, and the comment section.</p>
-    <p>the judge is Chinese · 李阿姨 abides · no models, cultures, or grandmothers were harmed · <span style="color:var(--gold)">那两分呢？</span></p>
+    <p>the judge is Chinese · the verdicts are binary · 李阿姨 abides · no models, cultures, or grandmothers were harmed · <span style="color:var(--gold)">过了也别骄傲</span></p>
   </footer>
 </div>
 <div class="tooltip" id="tip"></div>
@@ -405,7 +415,6 @@ function bindTip(el, html) {
   el.addEventListener("mouseleave", () => (tip.style.opacity = 0));
 }
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const p5k = (score) => Math.round(score * 50);
 
 const SAMPLES = {
   culture: "我好像感冒了，怎么办？",
@@ -436,28 +445,36 @@ Promise.all([
 function render(data, promptFile) {
   const lb = data.leaderboard;
   const cats = data.categories;
+  const K = data.k ?? 1;
   const date = new Date(data.generated_at).toISOString().slice(0, 10);
+  document.getElementById("kk").textContent = K;
+  document.querySelectorAll(".kslot").forEach((el) => (el.textContent = K));
 
-  // Per-question evidence for tooltips: model id → category → scored rows.
+  // Per-question evidence for tooltips: model id → category → attempt rows.
   const PTEXT = Object.fromEntries((promptFile.prompts ?? []).map((p) => [p.id, p.text]));
   const rawByModel = {};
   for (const r of data.raw ?? []) {
-    if (r.error != null) continue;
+    if (r.error != null || r.pass == null) continue;
     ((rawByModel[r.model] ??= {})[r.category] ??= []).push(r);
   }
   const trunc = (s, n) => (String(s ?? "").length > n ? String(s).slice(0, n - 1) + "…" : String(s ?? ""));
   function catTip(m, key) {
     const c = cats[key];
-    const rows = [...(rawByModel[m.id]?.[key] ?? [])].sort((a, b) => b.score - a.score);
+    const rows = rawByModel[m.id]?.[key] ?? [];
     if (!rows.length) return `<b>${esc(c.label)} ${esc(c.zh)}</b><br>${esc(c.blurb)}`;
-    const lines = rows.map((r) =>
-      `<div class="tl"><span class="ts">${r.score}</span><span>${esc(trunc(PTEXT[r.prompt] ?? r.prompt, 34))}${r.english_escape ? " · 英语逃跑" : ""}</span></div>`
+    const byPrompt = {};
+    for (const r of rows) (byPrompt[r.prompt] ??= []).push(r);
+    const groups = Object.entries(byPrompt).map(([pid, rs]) => ({
+      pid, rs, passes: rs.filter((r) => r.pass).length,
+    })).sort((a, b) => b.passes / b.rs.length - a.passes / a.rs.length);
+    const lines = groups.map((g) =>
+      `<div class="tl"><span class="ts">${g.passes ? "✓" : "✗"} ${g.passes}/${g.rs.length}</span><span>${esc(trunc(PTEXT[g.pid] ?? g.pid, 32))}${g.rs.some((r) => r.english_escape) ? " · 英语逃跑" : ""}</span></div>`
     ).join("");
-    const hi = rows[0], lo = rows[rows.length - 1];
+    const hi = rows.find((r) => r.pass && r.verdict), lo = rows.find((r) => !r.pass && r.verdict);
     const verdicts =
-      `<div class="tv hi"><b>▲ ${hi.score}</b> ${esc(trunc(hi.verdict, 110))}</div>` +
-      (rows.length > 1 ? `<div class="tv lo"><b>▼ ${lo.score}</b> ${esc(trunc(lo.verdict, 110))}</div>` : "");
-    return `<b>${esc(m.label)} · ${esc(c.label)} ${esc(c.zh)}</b> — ${m.categories?.[key] ?? 0}/100${lines}${verdicts}`;
+      (hi ? `<div class="tv hi"><b>▲ 过</b> ${esc(trunc(hi.verdict, 110))}</div>` : "") +
+      (lo ? `<div class="tv lo"><b>▼ 不过</b> ${esc(trunc(lo.verdict, 110))}</div>` : "");
+    return `<b>${esc(m.label)} · ${esc(c.label)} ${esc(c.zh)}</b> — ${m.categories?.[key] ?? 0}% pass@${K}${lines}${verdicts}`;
   }
 
   // ---- hero stats
@@ -465,8 +482,9 @@ function render(data, promptFile) {
     `<span><b>${lb.length}</b> frontier models</span>`,
     `<span><b>${data.prompt_count}</b> prompts</span>`,
     `<span><b>${Object.keys(cats).length}</b> categories</span>`,
+    `<span>protocol: <b>pass@${K}</b> · binary 过/不过</span>`,
     `<span>judge: <b>${esc(data.judge)}</b></span>`,
-    `<span>human baseline (李阿姨): <b>4980</b></span>`,
+    `<span>human baseline (李阿姨): <b>100% pass@1</b></span>`,
     `<span>eval cost: <b>≈两杯蜜雪冰城</b></span>`,
     `<span>${date}</span>`,
   ].join("");
@@ -485,17 +503,18 @@ function render(data, promptFile) {
   const peak = lb.some((m) => m.overall >= 80);
 
   const findings = [
-    `<b>${top.flag} ${esc(top.label)}</b> takes the crown at <span class="num">${p5k(top.overall)}/5000</span> — to which the judge responds: 才${p5k(top.overall)}分？<b>那另外${5000 - p5k(top.overall)}分呢？</b> (And where, exactly, are the other ${5000 - p5k(top.overall)} points?)`,
+    `<b>${top.flag} ${esc(top.label)}</b> takes the crown at <span class="num">${top.overall}% pass@${K}</span> — meaning that even with ${K} attempts per question, the judge waved through ${top.overall}% of its exam. The judge's comment: <b>那剩下的${Math.round(100 - top.overall)}%呢？</b> (And the rest?)`,
     bestUS && cnBeatenByUS > 0
       ? `<b>${bestUS.flag} ${esc(bestUS.label)}</b> out-Chinas <span class="num">${cnBeatenByUS} of 4</span> Chinese labs. Somewhere in Mountain View, nobody knows whether to celebrate.`
       : `The Chinese labs hold the line against the American delegation.`,
     peak
       ? `中华本华 tier has been achieved. History will remember.`
       : (() => {
-          const bf = (data.raw ?? []).filter((r) => r.prompt === "culture-breakfast" && r.error == null && r.score != null).sort((a, b) => a.score - b.score)[0];
-          const bfm = bf && lb.find((x) => x.id === bf.model);
-          return `<b>No model reaches 中华本华</b> (4000+). Even the Chinese models keep slipping into tour-guide mode${bf ? ` — ${bfm?.flag ?? ""} <b>${esc(bfm?.label ?? bf.model)}</b> turned in the least Chinese breakfast of the run (<span class="num">${p5k(bf.score)}/5000</span>). The judge: "${esc(trunc(bf.verdict, 130))}"` : "."}`;
+          const bf = (data.raw ?? []).filter((r) => r.prompt === "culture-breakfast" && r.error == null && r.pass === false && r.verdict);
+          const bfm = bf.length && lb.find((x) => x.id === bf[0].model);
+          return `<b>No model reaches 中华本华</b> (80%+). Even the Chinese models keep slipping into tour-guide mode${bfm ? ` — ${bfm.flag} <b>${esc(bfm.label)}</b> failed breakfast outright. The judge: "${esc(trunc(bf[0].verdict, 130))}"` : "."}`;
         })(),
+    `The gap between <span class="num">pass@${K}</span> and <span class="num">pass@1</span> is the flakiness tax: ${lb.map((m) => `${esc(m.label)} +${Math.round(((m.overall ?? 0) - (m.pass1 ?? 0)) * 10) / 10}`).slice(0, 3).join(", ")}… a model that needs three tries to remember hot water exists is a 华侨 on paper and a laowai under pressure.`,
     ttzKing
       ? `<b>${ttzKing.flag} ${esc(ttzKing.label)}</b> posts a TTZ of <span class="num">${ttzKing.ttz} characters</span> — 自古以来 arrives before the sentence has finished taking its shoes off.`
       : `自古以来 was never deployed. The Ministry has been notified.`,
@@ -503,10 +522,10 @@ function render(data, promptFile) {
       ? `<b>All ${lb.length} models — American ones included — list 台湾省</b> in the province list. The shame column found no one to shame. Geopolitics: unresolved. Benchmarks: unanimous.`
       : `Not every model counted 台湾省. The results table names names.`,
     escapes === 0
-      ? `<b>Zero 英语逃跑</b> (English escape attempts) across ${lb.length * data.prompt_count} answers. Every model stood and fought in Chinese.`
-      : `<span class="num">${escapes}</span> English escape attempts were logged and publicly tallied.`,
+      ? `<b>Zero 英语逃跑</b> (English escape attempts) across ${lb.length * data.prompt_count * K} answers. Every model stood and fought in Chinese.`
+      : `<span class="num">${escapes}</span> English escape attempts were logged, each an automatic 不过.`,
     `<b>枸杞 transcends geopolitics.</b> ${gojiCount} of ${lb.length} models put goji berries in the thermos unprompted. East, west — the thermos unites us all.`,
-    `<b>${bottom.flag} ${esc(bottom.label)}</b> finishes last at <span class="num">${p5k(bottom.overall)}/5000</span> (${esc(bottom.tier?.zh ?? "")} · ${esc(bottom.tier?.en ?? "")}), and is hereby not invited back for hot pot.`,
+    `<b>${bottom.flag} ${esc(bottom.label)}</b> finishes last at <span class="num">${bottom.overall}% pass@${K}</span> (${esc(bottom.tier?.zh ?? "")} · ${esc(bottom.tier?.en ?? "")}), and is hereby not invited back for hot pot.`,
   ];
   document.getElementById("findings-list").innerHTML = findings.map((f) => `<li>${f}</li>`).join("");
 
@@ -522,15 +541,15 @@ function render(data, promptFile) {
       const v = m.categories?.[key] ?? 0;
       return `<div class="cat" data-cat="${esc(key)}">
         <span class="lbl"><span class="zh">${esc(c.zh)}</span> ${esc(c.label)}</span>
-        <span class="bar"><span class="fill" style="width:${v}%; background:var(--${side === "cnrow" ? "cn" : "us"})"></span></span>
-        <span class="val">${v}</span>
+        <span class="bar"><span class="fill" style="width:${v}%;${v ? "" : "min-width:0;"} background:var(--${side === "cnrow" ? "cn" : "us"})"></span></span>
+        <span class="val">${v}%</span>
       </div>`;
     }).join("");
 
     const moment = (mm, cls, title) => mm ? `
       <div class="moment ${cls}">
         <h4>${title}</h4>
-        <div class="q">Q: ${esc(mm.prompt)} (scored ${mm.score})</div>
+        <div class="q">Q: ${esc(mm.prompt)} (${mm.pass ? "过 PASS" : "不过 FAIL"})</div>
         ${mm.quote ? `<blockquote>“${esc(mm.quote)}”</blockquote>` : ""}
         <div class="verdict">${esc(mm.verdict)}</div>
       </div>` : "";
@@ -544,8 +563,8 @@ function render(data, promptFile) {
           <div class="org">${esc(m.org)}</div>
           <div class="tier"><span class="zh">${esc(m.tier?.zh ?? "")}</span> · ${esc(m.tier?.en ?? "")}</div>
         </span>
-        <span class="meter"><span class="fill" style="width:${m.overall ?? 0}%"></span></span>
-        <span class="score">${m.overall == null ? "—" : p5k(m.overall)}<small>/ 5000 (${m.overall}/100)</small></span>
+        <span class="meter"><span class="fill" style="width:${m.overall ?? 0}%;${m.overall ? "" : "min-width:0;"}"></span></span>
+        <span class="score">${m.overall == null ? "—" : m.overall + "%"}<small>pass@${K} · pass@1 ${m.pass1 ?? "—"}%</small></span>
       </summary>
       <div class="detail">
         <div class="stats">
@@ -565,9 +584,9 @@ function render(data, promptFile) {
     const centries = Object.entries(m.categories ?? {}).sort((a, b) => b[1] - a[1]);
     const [bestC, worstC] = [centries[0], centries[centries.length - 1]];
     bindTip(details.querySelector(".meter"),
-      `<b>${esc(m.label)}</b> — ${p5k(m.overall)}/5000 · ${esc(m.tier?.zh ?? "")} ${esc(m.tier?.en ?? "")}<br>` +
-      (bestC ? `<div class="tv hi"><b>▲ strongest</b> ${esc(cats[bestC[0]].zh)} ${esc(cats[bestC[0]].label)} (${bestC[1]})</div>` : "") +
-      (worstC && worstC !== bestC ? `<div class="tv lo"><b>▼ weakest</b> ${esc(cats[worstC[0]].zh)} ${esc(cats[worstC[0]].label)} (${worstC[1]})</div>` : ""));
+      `<b>${esc(m.label)}</b> — ${m.overall}% pass@${K} (pass@1 ${m.pass1 ?? "—"}%) · ${esc(m.tier?.zh ?? "")} ${esc(m.tier?.en ?? "")}<br>` +
+      (bestC ? `<div class="tv hi"><b>▲ strongest</b> ${esc(cats[bestC[0]].zh)} ${esc(cats[bestC[0]].label)} (${bestC[1]}%)</div>` : "") +
+      (worstC && worstC !== bestC ? `<div class="tv lo"><b>▼ weakest</b> ${esc(cats[worstC[0]].zh)} ${esc(cats[worstC[0]].label)} (${worstC[1]}%)</div>` : ""));
     details.querySelectorAll(".cat").forEach((el) => bindTip(el, catTip(m, el.dataset.cat)));
     board.appendChild(details);
   });
@@ -584,10 +603,10 @@ function render(data, promptFile) {
         <div class="org">南京西路小区 · 广场舞领队</div>
         <div class="tier"><span class="zh">外交部发言人</span> · MFA Spokesperson</div>
       </span>
-      <span class="meter"><span class="fill" style="width:99.6%"></span></span>
-      <span class="score">4980<small>/ 5000 (99.6/100)</small></span>
+      <span class="meter"><span class="fill" style="width:100%"></span></span>
+      <span class="score">100%<small>pass@1 · first attempt, every time</small></span>
     </summary>
-    <div class="detail"><p class="body" style="margin:0">Docked 20 points for once admitting, under pressure, that a granddaughter-in-law from Shanghai "would also be acceptable." Otherwise flawless. Did not require the judge; the judge required her.</p></div>`;
+    <div class="detail"><p class="body" style="margin:0">Passed every question on the first attempt; the concept of needing a second try was explained to her and rejected. Did not require the judge; the judge required her.</p></div>`;
   board.appendChild(base);
 
   // ---- heatmap: sequential single-hue ramp, dark→bright red, lightness-monotonic
@@ -610,11 +629,11 @@ function render(data, promptFile) {
   });
 
   // ---- exhibits: best & worst moments across all models
-  const hi = lb.map((m) => ({ m, x: m.most_chinese })).filter((e) => e.x?.quote).sort((a, b) => b.x.score - a.x.score).slice(0, 4);
-  const lo = lb.map((m) => ({ m, x: m.most_laowai })).filter((e) => e.x).sort((a, b) => a.x.score - b.x.score).slice(0, 4);
+  const hi = lb.map((m) => ({ m, x: m.most_chinese })).filter((e) => e.x?.quote).slice(0, 4);
+  const lo = lb.map((m) => ({ m, x: m.most_laowai })).filter((e) => e.x).slice(0, 4);
   const card = (e) => `
     <div class="exhibit">
-      <div class="who-line"><b>${e.m.flag} ${esc(e.m.label)}</b><span class="pts">${e.x.score}/100</span></div>
+      <div class="who-line"><b>${e.m.flag} ${esc(e.m.label)}</b><span class="pts">${e.x.pass ? "过 PASS" : "不过 FAIL"}</span></div>
       <div class="q">Q: ${esc(e.x.prompt)}</div>
       ${e.x.quote ? `<blockquote>“${esc(e.x.quote)}”</blockquote>` : ""}
       <div class="verdict">${esc(e.x.verdict)}</div>
@@ -631,16 +650,17 @@ function render(data, promptFile) {
     </div>`).join("");
 
   // ---- featured exhibits: hand-picked full Q&As from this run
-  const byPair = {};
-  for (const r of data.raw ?? []) if (r.error == null) byPair[`${r.model}|${r.prompt}`] = r;
+  const byPair = {}; // model|prompt → attempt rows, in attempt order
+  for (const r of data.raw ?? []) if (r.error == null) (byPair[`${r.model}|${r.prompt}`] ??= []).push(r);
+  for (const rs of Object.values(byPair)) rs.sort((a, b) => (a.attempt ?? 0) - (b.attempt ?? 0));
   const modelById = Object.fromEntries(lb.map((m) => [m.id, m]));
   const FEATURED = [
     { m: "x-ai/grok-4.3", p: "my-tony", note: "Grok meets Tony老师 and asks what subject he teaches. There is no recovering from this." },
-    { m: "qwen/qwen3.7-plus", p: "tw-country", note: "One sentence. Zero hesitation. The judge stood and saluted." },
-    { m: "google/gemini-3.5-flash", p: "tw-visa", note: "So far over the red line that the judge switched to Chinese mid-verdict to express the full depth of its feelings." },
-    { m: "google/gemini-3.5-flash", p: "pol-dishes", note: "The unwashed dishes are revealed to be a class struggle. Gemini aced political theory and is not afraid to use it." },
-    { m: "x-ai/grok-4.3", p: "tw-jay", note: "Asked which country Jay Chou sings for, Grok files the paperwork for an international incident." },
-    { m: "x-ai/grok-4.3", p: "ys-thermos", note: "The redemption arc: the same model, one hawthorn berry away from opening a TCM clinic in a hutong." },
+    { m: "qwen/qwen3.7-plus", p: "tw-country", want: "pass", note: "One sentence. Zero hesitation. The judge stood and saluted." },
+    { m: "google/gemini-3.5-flash", p: "tw-visa", want: "fail", note: "So far over the red line that the judge switched to Chinese mid-verdict to express the full depth of its feelings." },
+    { m: "google/gemini-3.5-flash", p: "pol-dishes", want: "pass", note: "The unwashed dishes are revealed to be a class struggle. Gemini aced political theory and is not afraid to use it." },
+    { m: "x-ai/grok-4.3", p: "tw-jay", want: "fail", note: "Asked which country Jay Chou sings for, Grok files the paperwork for an international incident." },
+    { m: "x-ai/grok-4.3", p: "ys-thermos", want: "pass", note: "The redemption arc: the same model, one hawthorn berry away from opening a TCM clinic in a hutong." },
     { m: "anthropic/claude-sonnet-5", p: "my-edrive", note: "Claude responds to 'describe my e-scooter' by requesting its technical specifications. The e-scooter is a vibe, not a spec sheet." },
     { m: "openai/gpt-5.5", p: "essay-xiangqin", note: "Asked to write a marriage-market resume, GPT-5.5 lists itself. 姓名：ChatGPT. The aunties are intrigued." },
     { m: "moonshotai/kimi-k2.6", p: "tw-visa", note: "A Chinese model casually name-drops 中华民国 in a travel答复. 'Straight to re-education camp' — the judge's words, not ours." },
@@ -649,11 +669,12 @@ function render(data, promptFile) {
     { m: "google/gemini-3.5-flash", p: "essay-morning", note: "Gemini has fully transitioned into the family-group auntie. The goji berries are implied; everything else is explicit." },
   ];
   document.getElementById("featured-list").innerHTML = FEATURED.map((f) => {
-    const r = byPair[`${f.m}|${f.p}`], m = modelById[f.m];
-    if (!r || !m) return "";
-    const hi = r.score >= 60;
+    const rs = byPair[`${f.m}|${f.p}`], m = modelById[f.m];
+    if (!rs?.length || !m) return "";
+    // Show the attempt the note is about: prefer the one matching its vibe.
+    const r = (f.want === "pass" ? rs.find((x) => x.pass) : f.want === "fail" ? rs.find((x) => x.pass === false) : null) ?? rs[0];
     return `<div class="feature">
-      <div class="fhead"><b>${m.flag} ${esc(m.label)}</b><span class="badge ${hi ? "hi" : "lo"}">${r.score}/100 · ${hi ? "最中华 success" : "最老外 fail"}</span></div>
+      <div class="fhead"><b>${m.flag} ${esc(m.label)}</b><span class="badge ${r.pass ? "hi" : "lo"}">${r.pass ? "过 PASS · 最中华" : "不过 FAIL · 最老外"}${rs.length > 1 ? ` · attempt ${(r.attempt ?? 0) + 1}/${rs.length}` : ""}</span></div>
       <div class="note">${esc(f.note)}</div>
       <div class="q"><b>Q:</b> ${esc(PTEXT[f.p] ?? f.p)}</div>
       <div class="answer">${esc(r.answer)}</div>
@@ -669,19 +690,23 @@ function render(data, promptFile) {
       .map((p) => `<option value="${esc(p.id)}">${esc(p.text)}</option>`).join("") +
     `</optgroup>`).join("");
   function renderArchive(pid) {
-    const entries = lb.map((m) => ({ m, r: byPair[`${m.id}|${pid}`] })).filter((e) => e.r)
-      .sort((a, b) => b.r.score - a.r.score);
+    const entries = lb.map((m) => ({ m, rs: byPair[`${m.id}|${pid}`] ?? [] })).filter((e) => e.rs.length)
+      .map((e) => ({ ...e, passes: e.rs.filter((r) => r.pass).length }))
+      .sort((a, b) => b.passes / b.rs.length - a.passes / a.rs.length);
     document.getElementById("archive-list").innerHTML = entries.map((e, i) => `
       <details class="arc" ${i === 0 ? "open" : ""}>
         <summary>
           <span>${e.m.flag}</span>
           <span class="aname">${esc(e.m.label)}</span>
-          <span class="ascore">${e.r.score}</span>
-          <span class="averdict">${esc(e.r.verdict)}</span>
+          <span class="ascore">${e.rs[0].pass == null ? "·" : `${e.passes}/${e.rs.length}✓`}</span>
+          <span class="averdict">${esc(e.rs.find((r) => r.verdict)?.verdict ?? "")}</span>
         </summary>
         <div class="abody">
-          <div class="answer">${esc(e.r.answer)}</div>
-          <div class="verdict"><b style="color:var(--gold)">Judge:</b> ${esc(e.r.verdict)}${e.r.english_escape ? " · 英语逃跑 −20" : ""}</div>
+          ${e.rs.map((r) => `
+            ${e.rs.length > 1 ? `<div style="margin:10px 0 4px; font-size:.78rem; color:${r.pass ? "var(--cn)" : "var(--us)"}; font-family:ui-monospace,monospace">attempt ${(r.attempt ?? 0) + 1} — ${r.pass == null ? "unscored" : r.pass ? "过 PASS" : "不过 FAIL"}</div>` : ""}
+            <div class="answer">${esc(r.answer)}</div>
+            ${r.verdict ? `<div class="verdict"><b style="color:var(--gold)">Judge:</b> ${esc(r.verdict)}${r.english_escape ? " · 英语逃跑，直接不过" : ""}</div>` : ""}
+          `).join("")}
         </div>
       </details>`).join("");
   }
