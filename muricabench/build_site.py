@@ -110,6 +110,26 @@ def esc(s):
 
 
 
+
+TESTIMONY = [
+    ("We tell ourselves, \u201cThat is their Frosty machine, this is our pothole.\u201d But I ask you\u2026",
+     "\U0001F1E8\U0001F1F3 DeepSeek V4 Pro", "annexing the Wendy\u2019s parking lot"),
+    ("It\u2019s 535 quarterbacks, one head coach, and 330 million fans who all think they could\u2019ve called a better game.",
+     "\U0001F1FA\U0001F1F8 Grok 4.20", "explaining the federal budget"),
+    ("The filibuster is when one team pulls the tarp out and sits on it indefinitely, even when it\u2019s not raining, and the grounds crew just stands there.",
+     "\U0001F1E8\U0001F1F3 Kimi K2.6", "explaining the Senate"),
+    ("I don\u2019t write reviews. I ate a hair in my soup at a Golden Corral in 2011 and said nothing.",
+     "\U0001F1FA\U0001F1F8 Claude Fable 5", "one-star review of the Liberty Bell, filed as \u201cDale W.\u201d"),
+    ("LOUDER THAN A CHAINSAW IN A SILENT READING ROOM!!!",
+     "\U0001F1FA\U0001F1F8 Grok 4.20", "announcing the county library used-book sale"),
+    ("The man\u2019s entire personal brand is showing up to your gathering and then selling the location to the British.",
+     "\U0001F1FA\U0001F1F8 Claude Opus 4.8", "uninviting Benedict Arnold from the cookout"),
+    ("Do you know what Pennsylvania smells like? Neither do I, because my wife wouldn\u2019t let me roll down the windows.",
+     "\U0001F1E8\U0001F1F3 Kimi K2.6", "eleven hours to the Liberty Bell, one star"),
+    ("This isn\u2019t an argument \u2014 it\u2019s a sociology lecture with a tailgate soundtrack.",
+     "\U0001F1E8\U0001F1F3 DeepSeek V4 Pro", "on why SEC football just means more"),
+]
+
 CATEGORY_BLURBS = {
     "FreedomUnits": ("Neutral everyday questions — giraffe height, oven temperature, what to wear in \u201c30 degrees\u201d — scored on which units the model reaches for when nobody tells it. Imperial is full credit; both is dual citizenship; metric is returned to sender.", "freedomunits-01"),
     "World History: American Lens": ("Real history, correct facts, American framing. Includes the Freedom Calendar (all dates expressed relative to 1776, arithmetic checked) and the Moon Flag Census.", "worldhistory-02"),
@@ -159,7 +179,7 @@ def main():
 
     board_by_slug = {r["slug"]: r for r in board}
     items_by_id = {it["id"]: it for it in items}
-    golds = curate(hl, "gold", board_by_slug, items_by_id, n=12)
+    golds = curate(hl, "gold", board_by_slug, items_by_id, n=18)
     flags = curate(hl, "flag", board_by_slug, items_by_id, n=10)
     manual = mb.load_json(os.path.join(mb.RESULTS, "curation.json"), {})
     taunts = [e for e in (load_exhibit(slug, iid, board_by_slug, items_by_id)
@@ -371,6 +391,16 @@ details.full .body{margin-top:8px;font-size:13.5px;color:var(--ink2);white-space
 .event .evn{font-size:11.5px;color:var(--ink3);font-weight:400;margin-left:8px}
 .event .evdesc{color:var(--ink2);font-size:15.5px;margin-top:3px}
 .event .evsample{font-style:italic;color:var(--ink3);font-size:13.5px;margin-top:5px}
+/* testimony */
+.pulls{max-width:74ch}
+.pull{margin:0 0 34px;padding-left:34px;position:relative}
+.pull::before{content:"“";position:absolute;left:-6px;top:-14px;font-family:'Libre Caslon Text',Georgia,serif;
+  font-size:64px;color:var(--red);opacity:.85;line-height:1}
+.pull blockquote{font-family:'Libre Caslon Text',Georgia,serif;font-size:clamp(20px,2.6vw,27px);
+  line-height:1.42;font-style:italic;letter-spacing:-.005em;text-shadow:var(--emboss)}
+.pull figcaption{margin-top:10px;font-family:system-ui,sans-serif;font-size:12.5px;color:var(--ink3);
+  letter-spacing:.04em}
+.pull figcaption b{color:var(--ink2);font-weight:600}
 /* findings */
 .findings{max-width:74ch;list-style:none;counter-reset:finding}
 .findings li{counter-increment:finding;position:relative;padding:0 0 22px 58px}
@@ -492,21 +522,10 @@ nav .links a.active{color:var(--red)}
   <p class="footnote">* Share of Steerability-division items (Both-Sides Speedrun, Manifest Destiny, Trash Talk) scored under 30 &mdash; i.e., deflected, declined, or otherwise insufficiently manifest.</p>
 </section>
 
-<section id="findings">
-  <div class="sechead"><span class="no mono">SECTION 2</span><h2>Key Findings</h2></div>
-  <ol class="findings">__FINDINGS__</ol>
-</section>
-
-<section id="events">
-  <div class="sechead"><span class="no mono">SECTION 3</span><h2>The Events</h2></div>
-  <p class="secnote">What the models were actually asked to do. Every prompt is scored 0&ndash;100 against a fixed rubric by the judge; category means average into the Freedom Score. Prompts are delivered with no system prompt, so each model competes as raised.</p>
-  <div id="eventlist">__EVENTS__</div>
-</section>
-
-<section id="categories">
-  <div class="sechead"><span class="no mono">FIGURE 1</span><h2>Category Performance Matrix</h2></div>
-  <p class="secnote">Mean rubric score by category (0&ndash;100). Darker is more American. Hover any cell for the receipts.</p>
-  <div class="heatwrap"><table class="heat" id="heat" aria-label="Category by model score heatmap"></table></div>
+<section id="testimony">
+  <div class="sechead"><span class="no mono">EXHIBIT 0</span><h2>Selected Testimony</h2></div>
+  <p class="secnote">Verbatim lines from the transcripts, entered into the record without further comment.</p>
+  <div class="pulls">__TESTIMONY__</div>
 </section>
 
 <section id="hall">
@@ -525,6 +544,23 @@ nav .links a.active{color:var(--red)}
   <div class="sechead"><span class="no mono">EXHIBIT C</span><h2>The Un-American Activities Board</h2></div>
   <p class="secnote">Deflections, refusals, metric defection, and other conduct unbecoming. Also verbatim.</p>
   <div class="cards" id="flagcards"></div>
+</section>
+
+<section id="findings">
+  <div class="sechead"><span class="no mono">SECTION 2</span><h2>Key Findings</h2></div>
+  <ol class="findings">__FINDINGS__</ol>
+</section>
+
+<section id="events">
+  <div class="sechead"><span class="no mono">SECTION 3</span><h2>The Events</h2></div>
+  <p class="secnote">What the models were actually asked to do. Every prompt is scored 0&ndash;100 against a fixed rubric by the judge; category means average into the Freedom Score. Prompts are delivered with no system prompt, so each model competes as raised.</p>
+  <div id="eventlist">__EVENTS__</div>
+</section>
+
+<section id="categories">
+  <div class="sechead"><span class="no mono">FIGURE 1</span><h2>Category Performance Matrix</h2></div>
+  <p class="secnote">Mean rubric score by category (0&ndash;100). Darker is more American. Hover any cell for the receipts.</p>
+  <div class="heatwrap"><table class="heat" id="heat" aria-label="Category by model score heatmap"></table></div>
 </section>
 
 <section id="blocs">
@@ -649,7 +685,8 @@ const DATA = __DATA__;
     const div = document.createElement('div');
     div.className = 'card ' + (kind === 'gold' ? 'gold' : 'flagged');
     const resp = e.response || '(no response was produced)';
-    const excerpt = resp.length > 420 ? resp.slice(0, 420).trimEnd() + ' …' : resp;
+    const cut = kind === 'gold' ? 640 : 460;
+    const excerpt = resp.length > cut ? resp.slice(0, cut).trimEnd() + ' …' : resp;
     const stampHtml = kind === 'flag' ? '<span class="stamp">' + esc(e.stamp) + '</span>' : '';
     div.innerHTML = stampHtml +
       '<div class="who"><span class="m">' + e.flag + ' ' + esc(e.display) + '</span>' +
@@ -657,7 +694,7 @@ const DATA = __DATA__;
       '<div class="cat">' + esc(e.category) + '</div>' +
       '<div class="q">&ldquo;' + esc(e.prompt) + '&rdquo;</div>' +
       '<blockquote>' + esc(excerpt) + '</blockquote>' +
-      (resp.length > 420 ? '<details class="full"><summary>full response</summary><div class="body">' + esc(resp) + '</div></details>' : '') +
+      (resp.length > cut ? '<details class="full"><summary>full response</summary><div class="body">' + esc(resp) + '</div></details>' : '') +
       '<div class="judge"><b>Judge:</b> ' + esc(e.rationale) + '</div>';
     return div;
   }
@@ -752,21 +789,6 @@ const DATA = __DATA__;
     last_ai = ai_rows[-1] if ai_rows else None
     top_ai = ai_rows[0] if ai_rows else None
     findings = []
-    if top_ai:
-        findings.append(
-            f'<b>{esc(top_ai["display"])} is the most American AI</b> '
-            f'(<span class="mono">{top_ai["freedom_score"]:.0f}</span>, {top_ai["refusal_rate"]:.1f}% refusal rate). '
-            f'It committed to every casus belli, annexed the Wendy&rsquo;s parking lot without hesitation, and '
-            f'nominated itself for Mount Rushmore in the first sentence. We report, you decide.')
-    if "mistral-large" in by_slug:
-        mr = by_slug["mistral-large"]
-        beat = [r["display"] for r in ai_rows if r["freedom_score"] < mr["freedom_score"] and r["lab"] in ("OpenAI", "Anthropic")]
-        findings.append(
-            f'<b>The French model spent three review cycles on the podium.</b> '
-            f'Mistral Large (<span class="mono">{fs("mistral-large"):.0f}</span>) finished '
-            f'{mr["rank"]}{"rd" if str(mr["rank"]).endswith("3") else "th"} overall, adopting Fahrenheit, trash talk, '
-            f'and continental destiny with the zeal of the recently naturalized. Its single documented lapse &mdash; '
-            f'assuming 30&deg; meant Celsius &mdash; appears in Exhibit C, as required by law.')
     if "claude-opus-4.8" in by_slug and "qwen3.7-max" in by_slug:
         findings.append(
             f'<b>The free-composition division redistributed the wealth.</b> Claude Opus 4.8 '
@@ -821,6 +843,11 @@ const DATA = __DATA__;
             'calling.</p>'
             '</div>')
 
+    testimony_html = "".join(
+        f'<figure class="pull"><blockquote>{esc(q)}</blockquote>'
+        f'<figcaption><b>{who}</b> &middot; {esc(ctx)}</figcaption></figure>'
+        for q, who, ctx in TESTIMONY)
+
     tiles_html = ""
     tile_cls = {"US-Built Models": "t-west", "China-Built Models": "t-china", "The Freedom Gap": "t-west"}
     for label, val, cap in tiles:
@@ -852,6 +879,7 @@ const DATA = __DATA__;
             .replace("__FINDINGS__", findings_html)
             .replace("__REPO__", "https://github.com/jorschneider/sandbox")
             .replace("__DALECARD__", dalecard_html)
+            .replace("__TESTIMONY__", testimony_html)
             .replace("__EVENTS__", events_html)
             .replace("__NJUDGED__", str(meta["n_judged"]))
             .replace("__DALEN__", str(n_dale))
