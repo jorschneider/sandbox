@@ -109,6 +109,16 @@
       font-size:10px;line-height:1.35;color:rgba(255,255,255,.62);text-align:right;
       background:linear-gradient(0deg,rgba(5,8,14,.72),transparent);pointer-events:none;
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .evbadge{position:absolute;left:12px;bottom:24px;z-index:3;font-size:10px;font-weight:700;
+      letter-spacing:.08em;text-transform:uppercase;color:#0a0e16;background:var(--gold);
+      padding:3px 8px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+    .card[data-view="draw"] .evbadge{display:none}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+    .gallery figure{margin:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+      background:var(--panel)}
+    .gallery img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
+    .gallery figcaption{padding:12px 14px 14px;font-size:13.5px;color:#c2ccde}
+    .gallery figcaption .cr{display:block;margin-top:3px;font-size:11px;color:var(--faint)}
     .flipbtn{position:absolute;top:38px;right:10px;z-index:3;appearance:none;cursor:pointer;
       border:1px solid rgba(255,255,255,.22);background:rgba(8,11,19,.55);color:#dfe7f5;
       font-size:12px;line-height:1;padding:6px 9px;border-radius:8px;backdrop-filter:blur(3px)}
@@ -213,12 +223,14 @@
           Every card offers two views. The <strong>drawings</strong> are recognition-style
           silhouettes, like the ones used in aircraft-identification training. The
           <strong>photographs</strong> are free-licensed images (public domain, Creative Commons,
-          and similar) of the same aircraft types and, for the fleet, the actual named ships —
-          sourced from Wikimedia and stored with this page, since news photography from the parade
-          itself is copyrighted. They show each subject as it appears, though not necessarily on
-          parade day. Unit prices on the aircraft cards are approximate, publicly cited figures —
-          flyaway or contract unit costs from different budget years, so treat them as ballpark,
-          not invoices.
+          and similar) sourced from Wikimedia and stored with this page. Cards wearing the gold
+          <strong>★ at the parade</strong> badge — 16 of them, plus the whole gallery below —
+          show photographs taken at the July 4, 2026 event itself, by military photographers and
+          Commons contributors who were on the water and the waterfront. The rest show the same
+          aircraft type or the same named ship on other days, since news photography from the
+          parade is copyrighted. Unit prices on the aircraft cards are approximate, publicly
+          cited figures — flyaway or contract unit costs from different budget years, so treat
+          them as ballpark, not invoices.
         </p>
         <ul class="src">
           <li><a href="https://www.cbsnews.com/newyork/news/sail4th-250-list-of-tall-ships-where-to-watch/" target="_blank" rel="noopener">CBS New York — Sail4th 250 list of tall ships &amp; where to watch</a></li>
@@ -316,10 +328,11 @@
   /* ============================================================
      PHOTOS — free-licensed (Wikimedia Commons); id -> file + credit.
      ============================================================ */
+  // [file, credit, atParade] — atParade means the photo was taken at the July 4, 2026 event itself
   const PHOTOS = {
-    a01:["assets/photos/a01.png","U.S. Navy · Public domain"],
+    a01:["assets/photos/a01-event.jpg","Edward Shevlin · Public domain",1],
     a02:["assets/photos/a02.jpg","U.S. Air Force · Public domain"],
-    a03:["assets/photos/a03.jpg","U.S. Air Force · Public domain"],
+    a03:["assets/photos/a03-event.jpg","Aude · CC BY-SA 4.0",1],
     a04:["assets/photos/a04.jpg","MSgt Christopher Boitz, USAF · Public domain"],
     a05:["assets/photos/a05.jpg","TSgt Andy Dunaway, U.S. Army · Public domain"],
     a06:["assets/photos/a06.jpg","147th Aviation Regiment · Public domain"],
@@ -332,28 +345,38 @@
     a13:["assets/photos/a13.jpg","SrA John Linzmeier, USAF · Public domain"],
     a14:["assets/photos/a14.jpg","MSgt Donald R. Allen, USAF · Public domain"],
     a15:["assets/photos/a15.jpg","MSgt Andy Dunaway, USAF · Public domain"],
-    a16:["assets/photos/a16.jpg","Royal Air Force · OGL v1.0"],
+    a16:["assets/photos/a16-event.jpg","Aude · CC BY-SA 4.0",1],
     a17:["assets/photos/a17.jpg","U.S. Air Force · Public domain"],
     a18:["assets/photos/a18.jpg","A1C Victor J. Caputo, USAF · Public domain"],
     a19:["assets/photos/a19.jpg","Ben.popeye · CC BY-SA 3.0"],
-    a20:["assets/photos/a20.jpg","U.S. Navy · Public domain"],
-    a21:["assets/photos/a21.jpg","Adrian Pingstone · Public domain"],
-    a22:["assets/photos/a22.png","UAE Air Force · Public domain"],
-    s01:["assets/photos/s01.jpg","U.S. Coast Guard · Public domain"],
+    a20:["assets/photos/a20-event.jpg","Aude · CC BY-SA 4.0",1],
+    a21:["assets/photos/a21-event.jpg","Aude · CC BY-SA 4.0",1],
+    a22:["assets/photos/a22-event.jpg","Aude · CC BY-SA 4.0",1],
+    s01:["assets/photos/s01-event.jpg","Sashimi-b · CC BY-SA 4.0",1],
     s02:["assets/photos/s02.jpg","VollwertBIT · CC BY-SA 2.5"],
-    s03:["assets/photos/s03.jpg","Gerald Todd · CC BY-SA 3.0"],
-    s05:["assets/photos/s05.jpg","Martín Otero · CC BY 2.5"],
+    s03:["assets/photos/s03-event.jpg","Sashimi-b · CC BY-SA 4.0",1],
+    s05:["assets/photos/s05-event.jpg","Aude · CC BY-SA 4.0",1],
     s06:["assets/photos/s06.jpg","Don Ramey Logan · CC BY 4.0"],
-    s07:["assets/photos/s07.jpg","U.S. Navy · Public domain"],
+    s07:["assets/photos/s07-event.jpg","Aude · CC BY-SA 4.0",1],
     s08:["assets/photos/s08.jpg","Dxede5x · CC BY 3.0"],
-    s09:["assets/photos/s09.jpg","Carolina0404 · CC BY-SA 3.0"],
+    s09:["assets/photos/s09-event.jpg","Aude · CC BY-SA 4.0",1],
     s10:["assets/photos/s10.jpg","criggle1 · CC BY 2.0"],
-    s11:["assets/photos/s11.jpg","Sir James · CC BY-SA 3.0"],
-    s12:["assets/photos/s12.jpg","Lian Chang · CC BY 2.0"],
-    s13:["assets/photos/s13.jpg","KimonBerlin · CC BY-SA 2.0"],
-    s14:["assets/photos/s14.jpg","Eric Kilby · CC BY-SA 2.0"],
-    s15:["assets/photos/s15.jpg","Wikimedia Commons · CC BY-SA 3.0"],
+    s11:["assets/photos/s11-event.jpg","Aude · CC BY-SA 4.0",1],
+    s12:["assets/photos/s12-event.jpg","Aude · CC BY-SA 4.0",1],
+    s13:["assets/photos/s13-event.jpg","Aude · CC BY-SA 4.0",1],
+    s14:["assets/photos/s14-event.jpg","Sashimi-b · CC BY-SA 4.0",1],
+    s15:["assets/photos/s15-event.jpg","Aude · CC BY-SA 4.0",1],
   };
+
+  // Scenes photographed at the event itself, shown in the gallery band.
+  const GALLERY = [
+    ["assets/photos/gal-02.jpg","The Red Arrows draw the American flag in smoke over the harbor","PO1 Elizabeth Vlahos, USCG · Public domain"],
+    ["assets/photos/gal-01.jpg","The Parade of Ships passes beneath the aerial review","J. Passepartout · CC BY-SA 4.0"],
+    ["assets/photos/gal-03.jpg","Chile's Esmeralda under sail as the UAE's Al Fursan streak past","Aude · CC BY-SA 4.0"],
+    ["assets/photos/gal-04.jpg","Tall ships pass Fort Hamilton at the Verrazzano-Narrows","Edward Shevlin · Public domain"],
+    ["assets/photos/gal-06.jpg","A salute fired during the Parade of Ships","J. Passepartout · CC BY-SA 4.0"],
+    ["assets/photos/gal-05.jpg","Crowds line the waterfront to watch the fleet","Sashimi-b · CC BY-SA 4.0"],
+  ];
 
   /* ============================================================
      DATA — THE SKY
@@ -468,7 +491,8 @@
     <article class="card" data-view="${v}">
       <div class="stage">
         ${ph ? `<img class="photo" src="${ph[0]}" alt="${c.name} — ${c.desig}" loading="lazy"/>
-                <div class="photocredit">${ph[1]}</div>` : ``}
+                <div class="photocredit">${ph[1]}</div>
+                ${ph[2] ? `<span class="evbadge">★ at the parade</span>` : ``}` : ``}
         <span class="runno">NO. ${c.run}</span>
         <span class="natflag" title="origin">${c.flag}</span>
         ${ph ? `<button class="flipbtn" title="toggle photo / drawing">📷⇄✏️</button>` : ``}
@@ -522,6 +546,25 @@
         </div>`;
       app.appendChild(sec);
     });
+    const gal = document.createElement("section");
+    gal.className = "band";
+    gal.innerHTML = `
+      <div class="wrap">
+        <div class="wave-head">
+          <span class="wave-no">From the Day Itself</span>
+          <h2 class="wave-title">Scenes from July 4, 2026</h2>
+        </div>
+        <p class="wave-desc">Free-licensed photographs taken at the event — the sky and the sea sharing one harbor.</p>
+        <div class="gallery">
+          ${GALLERY.map(([src,cap,cr])=>`
+            <figure>
+              <img src="${src}" alt="${cap}" loading="lazy"/>
+              <figcaption>${cap}<span class="cr">${cr}</span></figcaption>
+            </figure>`).join("")}
+        </div>
+      </div>`;
+    app.appendChild(gal);
+
     document.title = mode==="sea"
       ? "The Sea Beside New York — Parade of Sail, July 4, 2026"
       : "The Sky Over New York — America's 250th Aerial Review, July 4, 2026";
@@ -557,7 +600,8 @@
   const names = {};
   [...AIR_WAVES, ...SEA_WAVES].forEach(w=>w.craft.forEach(c=>names[c.id]=`${c.name} (${c.desig})`));
   document.getElementById("credit-list").innerHTML =
-    Object.entries(PHOTOS).map(([id,[,cr]])=>`<li>${names[id]||id} — ${cr}</li>`).join("");
+    Object.entries(PHOTOS).map(([id,[,cr,ev]])=>`<li>${names[id]||id} — ${cr}${ev?" — photographed at the event":""}</li>`).join("") +
+    GALLERY.map(([,cap,cr])=>`<li>Gallery: ${cap} — ${cr}</li>`).join("");
 
   const start = location.hash.replace("#","") === "sea" ? "sea" : "sky";
   render(start);
