@@ -63,9 +63,40 @@
   .retired { border-style: dashed; opacity: .85; }
   .retired .zhq { text-decoration: line-through; text-decoration-color: #93796a88; text-decoration-thickness: 1px; }
 
-  footer { margin-top: 60px; text-align: center; color: var(--ink-3); font-size: .78rem; border-top: 1px solid var(--line); padding-top: 24px; }
+  footer { margin-top: 60px; text-align: center; color: var(--ink-3); font-size: .78rem; border-top: 1px solid var(--line); padding-top: 24px; padding-bottom: 70px; }
   footer p { margin-bottom: 6px; }
   .error { text-align: center; color: var(--ink-2); background: var(--panel); border: 1px dashed var(--line); border-radius: 12px; padding: 40px; margin-top: 40px; }
+
+  .fb { display: flex; gap: 6px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+  .fb button {
+    font: inherit; font-size: .74rem; cursor: pointer; border-radius: 999px;
+    padding: 4px 13px; background: var(--panel-2); color: var(--ink-2); border: 1px solid var(--line);
+  }
+  .fb button:hover { color: var(--ink); }
+  .fb button.on-keep { background: #1e3320; color: #9fdf9f; border-color: #3f6b42; }
+  .fb button.on-cut { background: #3a1717; color: #ff9d9d; border-color: #7a3030; }
+  .fb button.on-note { color: var(--gold); border-color: var(--gold); }
+  .fb-note { width: 100%; margin-top: 8px; display: none; }
+  .fb-note.show { display: block; }
+  .fb-note textarea {
+    width: 100%; min-height: 60px; resize: vertical; font: inherit; font-size: .84rem;
+    background: #170d0d; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+  }
+
+  .fbbar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 6;
+    background: #170d0dee; backdrop-filter: blur(6px); border-top: 1px solid var(--line);
+    display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 10px 14px; font-size: .82rem; color: var(--ink-2);
+  }
+  .fbbar b { color: var(--gold); }
+  .fbbar button {
+    font: inherit; font-size: .8rem; cursor: pointer; border-radius: 999px;
+    padding: 6px 16px; border: 1px solid var(--gold); background: none; color: var(--gold);
+  }
+  .fbbar button:hover { background: var(--gold); color: #201313; }
+  .fbbar button.ghost { border-color: var(--line); color: var(--ink-3); }
+  .fbbar .copied { color: #9fdf9f; }
 </style>
 </head>
 <body>
@@ -104,10 +135,22 @@
     </div>
   </section>
 
+  <section id="overall-sec">
+    <h2><span class="zh">总评</span>Overall Notes</h2>
+    <p class="blurb">Anything that doesn't belong to a single question — categories to add or kill, tone, scoring ideas.</p>
+    <div class="q"><textarea id="overall-note" style="width:100%;min-height:90px;resize:vertical;font:inherit;font-size:.9rem;background:#170d0d;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px" placeholder="总体意见…"></textarea></div>
+  </section>
+
   <footer>
     <p>Questions are asked verbatim in Chinese with no system prompt. English answers eat the −20 英语逃跑 penalty.</p>
     <p>Edit <code style="color:var(--gold)">prompts.json</code> and rerun <code style="color:var(--gold)">node run.mjs</code> · <a href="./index.html">back to the leaderboard</a></p>
   </footer>
+</div>
+
+<div class="fbbar">
+  <span id="fb-count">No feedback yet — use Keep / Cut / Note on any question.</span>
+  <button id="fb-copy">Copy feedback 复制反馈</button>
+  <button id="fb-clear" class="ghost">Clear</button>
 </div>
 
 <script>
@@ -141,15 +184,92 @@ fetch("./prompts.json")
             <div class="zhq">${esc(p.text)}</div>
             <div class="enq">${esc(p.en ?? "")}</div>
             ${p.tests ? `<div class="tests"><b>What scores:</b> ${esc(p.tests)}</div>` : ""}
+            <div class="fb" data-id="${esc(p.id)}">
+              <button data-v="keep">👍 Keep</button>
+              <button data-v="cut">👎 Cut</button>
+              <button data-v="note">✏️ Note</button>
+              <div class="fb-note"><textarea placeholder="这题怎么改…"></textarea></div>
+            </div>
           </div>`).join("")}
       </section>`).join("");
 
     const nav = document.getElementById("topnav");
     nav.innerHTML += keys.map((k) => `<a href="#cat-${esc(k)}">${esc(cats[k].zh)}</a>`).join("");
+    initFeedback(pf);
   })
   .catch(() => {
     document.getElementById("main").innerHTML = '<div class="error">Could not load prompts.json — serve this directory over HTTP.</div>';
   });
+
+// ---- feedback: verdicts + notes in localStorage, exported as paste-able text
+const FBKEY = "chinabench-eval-feedback-v3";
+function initFeedback(pf) {
+  const state = JSON.parse(localStorage.getItem(FBKEY) ?? "{}");
+  const save = () => { localStorage.setItem(FBKEY, JSON.stringify(state)); refresh(); };
+  const overall = document.getElementById("overall-note");
+  overall.value = state.__overall ?? "";
+  overall.addEventListener("input", () => { state.__overall = overall.value; save(); });
+
+  document.querySelectorAll(".fb").forEach((fb) => {
+    const id = fb.dataset.id;
+    const entry = () => (state[id] ??= {});
+    const noteBox = fb.querySelector(".fb-note");
+    const ta = noteBox.querySelector("textarea");
+    const sync = () => {
+      const e = state[id] ?? {};
+      fb.querySelector('[data-v="keep"]').classList.toggle("on-keep", e.v === "keep");
+      fb.querySelector('[data-v="cut"]').classList.toggle("on-cut", e.v === "cut");
+      fb.querySelector('[data-v="note"]').classList.toggle("on-note", !!e.note);
+      if (e.note) { noteBox.classList.add("show"); ta.value = e.note; }
+    };
+    fb.querySelectorAll("button").forEach((btn) => btn.addEventListener("click", () => {
+      const v = btn.dataset.v;
+      if (v === "note") { noteBox.classList.toggle("show"); ta.focus(); return; }
+      entry().v = entry().v === v ? undefined : v;
+      sync(); save();
+    }));
+    ta.addEventListener("input", () => { entry().note = ta.value; sync(); save(); });
+    sync();
+  });
+
+  const refresh = () => {
+    const ids = Object.keys(state).filter((k) => k !== "__overall" && (state[k].v || state[k].note));
+    const n = ids.length, hasOverall = !!(state.__overall ?? "").trim();
+    document.getElementById("fb-count").innerHTML = n || hasOverall
+      ? `<b>${n}</b> question${n === 1 ? "" : "s"} marked${hasOverall ? " · overall note ✓" : ""} — copy &amp; paste it back to Claude.`
+      : "No feedback yet — use Keep / Cut / Note on any question.";
+  };
+
+  document.getElementById("fb-copy").addEventListener("click", async () => {
+    const byId = Object.fromEntries(pf.prompts.map((p) => [p.id, p]));
+    const lines = ["# china-bench eval feedback (v" + pf.version + ")", ""];
+    if ((state.__overall ?? "").trim()) lines.push("OVERALL: " + state.__overall.trim(), "");
+    for (const [id, e] of Object.entries(state)) {
+      if (id === "__overall" || (!e.v && !e.note)) continue;
+      const p = byId[id];
+      lines.push(`- ${id} [${(e.v ?? "comment").toUpperCase()}] ${p ? p.text : ""}${e.note ? `\n  note: ${e.note.trim()}` : ""}`);
+    }
+    const text = lines.join("\n");
+    try { await navigator.clipboard.writeText(text); }
+    catch { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove(); }
+    const el = document.getElementById("fb-count");
+    el.innerHTML = '<span class="copied">Copied ✓ — paste it to Claude in the session.</span>';
+    setTimeout(refresh, 2500);
+  });
+
+  document.getElementById("fb-clear").addEventListener("click", () => {
+    if (!confirm("Clear all feedback?")) return;
+    localStorage.removeItem(FBKEY);
+    for (const k of Object.keys(state)) delete state[k];
+    overall.value = "";
+    document.querySelectorAll(".fb").forEach((fb) => {
+      fb.querySelectorAll("button").forEach((b) => b.classList.remove("on-keep", "on-cut", "on-note"));
+      const nb = fb.querySelector(".fb-note"); nb.classList.remove("show"); nb.querySelector("textarea").value = "";
+    });
+    refresh();
+  });
+  refresh();
+}
 </script>
 </body>
 </html>
