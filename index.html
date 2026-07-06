@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>New York Harbor · America's 250th — The Aircraft & the Tall Ships, July 4, 2026</title>
-  <meta name="description" content="Two field guides to America's 250th over New York Harbor, July 4, 2026: every aircraft in the Sail4th 250 aerial review and the first 15 ships of the Parade of Sail — in order, with photos, drawings, prices, and what each one does." />
+  <meta name="description" content="Two field guides to America's 250th over New York Harbor, July 4, 2026: every aircraft in the Sail4th 250 aerial review and the first 15 ships of the Parade of Sail — in order, with photos, prices, and what each one does." />
   <meta name="color-scheme" content="dark" />
   <style>
     :root{
@@ -53,12 +53,6 @@
     .modetab:hover{color:var(--ink)}
     .modetab.active{background:var(--accent);color:#07101c;box-shadow:0 4px 16px rgba(0,0,0,.35)}
     body[data-mode="sea"] .modetab.active{color:#04110f}
-    .viewtabs{display:inline-flex;gap:4px;padding:5px;border:1px solid var(--line);
-      border-radius:999px;background:rgba(255,255,255,.02)}
-    .viewtab{appearance:none;border:0;cursor:pointer;font:inherit;font-size:13px;font-weight:600;
-      color:var(--faint);background:transparent;padding:8px 15px;border-radius:999px;transition:.18s ease}
-    .viewtab:hover{color:var(--ink)}
-    .viewtab.active{background:rgba(255,255,255,.1);color:var(--ink)}
 
     .kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.28em;text-transform:uppercase;
       color:var(--gold);margin:0 0 18px}
@@ -100,11 +94,7 @@
         repeating-linear-gradient(90deg,transparent 0 21px,rgba(255,255,255,.02) 21px 22px)}
     .card .stage::after{content:"";position:absolute;inset:0;
       background:radial-gradient(closest-side,transparent 60%,rgba(8,11,19,.55));pointer-events:none}
-    .card svg.sil{width:250px;height:250px;color:#dfe7f5;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
-    .card svg.sil.ship{width:340px;height:215px;color:#eaf1f6}
     .card img.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    .card[data-view="draw"] img.photo,.card[data-view="draw"] .photocredit{display:none}
-    .card[data-view="photo"] svg.sil{display:none}
     .photocredit{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:14px 10px 5px;
       font-size:10px;line-height:1.35;color:rgba(255,255,255,.62);text-align:right;
       background:linear-gradient(0deg,rgba(5,8,14,.72),transparent);pointer-events:none;
@@ -112,17 +102,12 @@
     .evbadge{position:absolute;left:12px;bottom:24px;z-index:3;font-size:10px;font-weight:700;
       letter-spacing:.08em;text-transform:uppercase;color:#0a0e16;background:var(--gold);
       padding:3px 8px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.5)}
-    .card[data-view="draw"] .evbadge{display:none}
     .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px}
     .gallery figure{margin:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
       background:var(--panel)}
     .gallery img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
     .gallery figcaption{padding:12px 14px 14px;font-size:13.5px;color:#c2ccde}
     .gallery figcaption .cr{display:block;margin-top:3px;font-size:11px;color:var(--faint)}
-    .flipbtn{position:absolute;top:38px;right:10px;z-index:3;appearance:none;cursor:pointer;
-      border:1px solid rgba(255,255,255,.22);background:rgba(8,11,19,.55);color:#dfe7f5;
-      font-size:12px;line-height:1;padding:6px 9px;border-radius:8px;backdrop-filter:blur(3px)}
-    .flipbtn:hover{background:rgba(8,11,19,.8);border-color:rgba(255,255,255,.4)}
     .runno{position:absolute;top:12px;left:14px;z-index:2;font-family:var(--mono);font-size:12px;
       color:rgba(255,255,255,.75);letter-spacing:.15em;text-shadow:0 1px 4px rgba(0,0,0,.8)}
     .natflag{position:absolute;top:10px;right:12px;z-index:2;font-size:22px;line-height:1;
@@ -169,9 +154,8 @@
       .gallery{grid-template-columns:1fr}
       .specs{grid-template-columns:1fr 1fr}
       .card .stage{height:240px}
-      .card svg.sil.ship{width:270px}
     }
-    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.modetab,.viewtab,header.hero{transition:none}}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.modetab,header.hero{transition:none}}
   </style>
 </head>
 <body data-mode="sky">
@@ -184,10 +168,6 @@
         <div class="modetabs" id="tabs">
           <button class="modetab" data-m="sky">✈&nbsp; The Sky</button>
           <button class="modetab" data-m="sea">⛵&nbsp; The Sea</button>
-        </div>
-        <div class="viewtabs" id="views">
-          <button class="viewtab" data-v="photo">📷 Photos</button>
-          <button class="viewtab" data-v="draw">✏️ Drawings</button>
         </div>
       </div>
       <p class="kicker" id="h-kicker"></p>
@@ -222,18 +202,18 @@
           timetables.
         </p>
         <p>
-          Every card offers two views. The <strong>drawings</strong> are recognition-style
-          silhouettes, like the ones used in aircraft-identification training. The
-          <strong>photographs</strong> are free-licensed images (public domain, Creative Commons,
-          and similar) sourced from Wikimedia and stored with this page. Cards wearing the gold
-          <strong>★ at the parade</strong> badge — 16 of them, plus the whole gallery below —
-          show photographs taken at the July 4, 2026 event itself, by military photographers and
-          Commons contributors who were on the water and the waterfront — these are what cards
-          open on by default. Cards without a parade photo open on their drawing; flip them to
-          see a photo of the same aircraft type or the same named ship on another day, since news
-          photography from the parade is copyrighted. Unit prices on the aircraft cards are approximate, publicly
-          cited figures — flyaway or contract unit costs from different budget years, so treat
-          them as ballpark, not invoices.
+          Every card shows one <strong>photograph</strong>, and every image on this page is
+          free-licensed (public domain, Creative Commons, and similar) — sourced from Wikimedia and
+          stored with the page. Cards wearing the gold <strong>★ at the parade</strong> badge, plus
+          the whole gallery below, are photographs taken at the July 4, 2026 event itself, by
+          military photographers and Commons contributors who were on the water and the waterfront;
+          that parade-day photo is always shown first when one exists. The remaining cards fall back
+          to a free photo of the same aircraft type or the same named ship on another day, since
+          news photography from the parade is copyrighted. One exception: no free photograph of the
+          yacht <em>Ticonderoga</em> exists anywhere, so her card shows a clearly-labeled
+          representative 1930s classic yacht instead. Unit prices on the aircraft cards are
+          approximate, publicly cited figures — flyaway or contract unit costs from different budget
+          years, so treat them as ballpark, not invoices.
         </p>
         <ul class="src">
           <li><a href="https://www.cbsnews.com/newyork/news/sail4th-250-list-of-tall-ships-where-to-watch/" target="_blank" rel="noopener">CBS New York — Sail4th 250 list of tall ships &amp; where to watch</a></li>
@@ -255,79 +235,13 @@
     <div class="wrap">
       <div class="foot-flag"><span style="background:var(--red)"></span><span style="background:#eef2fb"></span><span style="background:var(--sky)"></span></div>
       <p>New York Harbor, July 4, 2026 — a field guide to America's 250th, in the sky and on the water.
-      Drawings and text are illustrative and for general education; roles, prices, and specifications are
+      Photographs are free-licensed and credited above; roles, prices, and specifications are
       approximate, drawn from public sources.</p>
       <p style="margin-top:6px">Static page · <a href="mao.html">psst — the previous tenant of this URL is still here</a></p>
     </div>
   </footer>
 
   <script>
-  /* ============================================================
-     AIRCRAFT SILHOUETTES — top-down recognition views.
-     ============================================================ */
-  const SVG = (inner) =>
-    `<svg class="sil" viewBox="0 0 240 260" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${inner}</svg>`;
-
-  const SIL = {
-    superhornet: SVG(`<path d="M120 22 L129 58 L133 150 L129 198 L111 198 L107 150 L111 58 Z"/><path d="M111 92 L40 150 L58 160 L114 128 Z"/><path d="M129 92 L200 150 L182 160 L126 128 Z"/><path d="M113 176 L78 200 L90 206 L119 189 Z"/><path d="M127 176 L162 200 L150 206 L121 189 Z"/><path d="M114 148 L103 176 L112 178 L120 156 Z"/><path d="M126 148 L137 176 L128 178 L120 156 Z"/><rect x="108" y="194" width="8" height="12" rx="2"/><rect x="124" y="194" width="8" height="12" rx="2"/>`),
-    raptor: SVG(`<path d="M120 24 L131 66 L131 150 L126 196 L114 196 L109 150 L109 66 Z"/><path d="M114 96 L36 158 L58 162 L118 134 Z"/><path d="M126 96 L204 158 L182 162 L122 134 Z"/><path d="M112 150 L96 182 L108 182 L120 158 Z"/><path d="M128 150 L144 182 L132 182 L120 158 Z"/><path d="M113 176 L84 198 L96 202 L120 186 Z"/><path d="M127 176 L156 198 L144 202 L120 186 Z"/>`),
-    lightning: SVG(`<path d="M120 26 L130 68 L132 152 L124 196 L116 196 L108 152 L110 68 Z"/><path d="M112 100 L46 154 L64 160 L116 136 Z"/><path d="M128 100 L194 154 L176 160 L124 136 Z"/><path d="M113 156 L98 184 L110 184 L120 162 Z"/><path d="M127 156 L142 184 L130 184 L120 162 Z"/><path d="M114 176 L88 196 L100 200 L120 188 Z"/><path d="M126 176 L152 196 L140 200 L120 188 Z"/><rect x="114" y="192" width="12" height="10" rx="3"/>`),
-    eagle: SVG(`<path d="M120 22 L128 56 L134 152 L130 200 L110 200 L106 152 L112 56 Z"/><path d="M112 84 L34 146 L56 156 L115 122 Z"/><path d="M128 84 L206 146 L184 156 L125 122 Z"/><path d="M112 150 L98 184 L110 186 L120 158 Z"/><path d="M128 150 L142 184 L130 186 L120 158 Z"/><path d="M112 178 L74 202 L88 208 L120 191 Z"/><path d="M128 178 L166 202 L152 208 L120 191 Z"/><rect x="107" y="196" width="9" height="12" rx="2"/><rect x="124" y="196" width="9" height="12" rx="2"/>`),
-    viper: SVG(`<path d="M120 24 L128 60 L130 150 L120 202 L110 150 L112 60 Z"/><path d="M112 104 L52 156 L70 162 L116 138 Z"/><path d="M128 104 L188 156 L170 162 L124 138 Z"/><path d="M116 150 L110 186 L130 186 L124 150 Z"/><path d="M114 172 L86 196 L98 200 L120 186 Z"/><path d="M126 172 L154 196 L142 200 L120 186 Z"/>`),
-    warthog: SVG(`<path d="M120 30 L127 60 L127 150 L124 188 L116 188 L113 150 L113 60 Z"/><path d="M113 96 L26 96 L26 112 L113 122 Z"/><path d="M127 96 L214 96 L214 112 L127 122 Z"/><rect x="96" y="128" width="16" height="42" rx="8"/><rect x="128" y="128" width="16" height="42" rx="8"/><path d="M104 182 L82 182 L82 204 L96 204 Z"/><path d="M136 182 L158 182 L158 204 L144 204 Z"/><rect x="112" y="182" width="16" height="20"/>`),
-    spirit: SVG(`<path d="M120 66 L214 176 L188 176 L150 150 L138 176 L120 158 L102 176 L90 150 L52 176 L26 176 Z"/>`),
-    lancer: SVG(`<path d="M120 22 L130 70 L134 150 L128 206 L112 206 L106 150 L110 70 Z"/><path d="M110 108 L40 178 L60 180 L114 138 Z"/><path d="M130 108 L200 178 L180 180 L126 138 Z"/><path d="M112 150 L96 194 L108 194 L120 160 Z"/><path d="M128 150 L144 194 L132 194 L120 160 Z"/><rect x="104" y="182" width="12" height="20" rx="3"/><rect x="124" y="182" width="12" height="20" rx="3"/>`),
-    strato: SVG(`<path d="M120 20 L127 52 L131 160 L127 214 L113 214 L109 160 L113 52 Z"/><path d="M113 88 L20 140 L20 150 L114 120 Z"/><path d="M127 88 L220 140 L220 150 L126 120 Z"/><rect x="60" y="128" width="20" height="10" rx="4"/><rect x="86" y="120" width="20" height="10" rx="4"/><rect x="134" y="120" width="20" height="10" rx="4"/><rect x="160" y="128" width="20" height="10" rx="4"/><path d="M113 176 L82 202 L94 206 L120 188 Z"/><path d="M127 176 L158 202 L146 206 L120 188 Z"/><rect x="116" y="150" width="8" height="46"/>`),
-    herc: SVG(`<path d="M120 24 C124 24 127 30 127 40 L131 176 L127 210 L113 210 L109 176 L113 40 C113 30 116 24 120 24 Z"/><path d="M113 84 L22 92 L22 104 L114 112 Z"/><path d="M127 84 L218 92 L218 104 L126 112 Z"/><rect x="54" y="80" width="10" height="26" rx="3"/><rect x="80" y="82" width="10" height="26" rx="3"/><rect x="150" y="82" width="10" height="26" rx="3"/><rect x="176" y="80" width="10" height="26" rx="3"/><path d="M113 178 L80 190 L82 200 L116 196 Z"/><path d="M127 178 L160 190 L158 200 L124 196 Z"/><path d="M116 176 L110 150 L130 150 L124 176 Z"/>`),
-    jumbo: SVG(`<path d="M120 20 C125 20 128 28 128 40 L134 190 L128 224 L112 224 L106 190 L112 40 C112 28 115 20 120 20 Z"/><path d="M112 96 L26 156 L28 166 L114 128 Z"/><path d="M128 96 L214 156 L212 166 L126 128 Z"/><rect x="56" y="128" width="18" height="12" rx="6"/><rect x="82" y="116" width="18" height="12" rx="6"/><rect x="140" y="116" width="18" height="12" rx="6"/><rect x="166" y="128" width="18" height="12" rx="6"/><path d="M112 194 L74 214 L86 220 L120 202 Z"/><path d="M128 194 L166 214 L154 220 L120 202 Z"/><path d="M116 192 L110 168 L130 168 L124 192 Z"/>`),
-    osprey: SVG(`<path d="M120 40 L127 62 L129 168 L124 196 L116 196 L111 168 L113 62 Z"/><rect x="44" y="96" width="152" height="16" rx="8"/><circle cx="48" cy="104" r="34" fill="none" stroke="currentColor" stroke-width="2" opacity=".38"/><circle cx="192" cy="104" r="34" fill="none" stroke="currentColor" stroke-width="2" opacity=".38"/><rect x="16" y="102" width="64" height="4" rx="2"/><rect x="46" y="72" width="4" height="64" rx="2"/><rect x="160" y="102" width="64" height="4" rx="2"/><rect x="190" y="72" width="4" height="64" rx="2"/><path d="M112 176 L92 196 L102 200 L120 188 Z"/><path d="M128 176 L148 196 L138 200 L120 188 Z"/>`),
-    helo: SVG(`<circle cx="120" cy="118" r="86" fill="none" stroke="currentColor" stroke-width="2" opacity=".33"/><rect x="34" y="116" width="172" height="4" rx="2" opacity=".55"/><rect x="118" y="32" width="4" height="172" rx="2" opacity=".55"/><path d="M120 66 C130 66 134 78 134 96 L132 176 L120 190 L108 176 L106 96 C106 78 110 66 120 66 Z"/><rect x="116" y="186" width="8" height="40"/><path d="M112 220 L96 226 L96 234 L120 230 Z"/><circle cx="120" cy="118" r="6"/><rect x="86" y="110" width="14" height="6" rx="3"/><rect x="140" y="110" width="14" height="6" rx="3"/>`),
-    chinook: SVG(`<circle cx="120" cy="78" r="60" fill="none" stroke="currentColor" stroke-width="2" opacity=".33"/><circle cx="120" cy="182" r="60" fill="none" stroke="currentColor" stroke-width="2" opacity=".33"/><rect x="58" y="76" width="124" height="4" rx="2" opacity=".55"/><rect x="58" y="180" width="124" height="4" rx="2" opacity=".55"/><rect x="118" y="20" width="4" height="116" rx="2" opacity=".55"/><rect x="118" y="124" width="4" height="116" rx="2" opacity=".55"/><path d="M106 60 L134 60 C138 60 140 66 140 74 L140 196 C140 204 138 210 132 210 L108 210 C102 210 100 204 100 196 L100 74 C100 66 102 60 106 60 Z"/><circle cx="120" cy="78" r="6"/><circle cx="120" cy="182" r="6"/>`),
-  };
-
-  /* ============================================================
-     SHIP SILHOUETTES — side-profile generator by rig.
-     ============================================================ */
-  function gaffSail(x, top, bot, hw){
-    return `<path d="M${x} ${bot} L${x} ${top+14} L${x-hw} ${top} L${x-hw+6} ${bot} Z"/>`;
-  }
-  function SHIP(masts, opts){
-    opts = opts || {};
-    const jibs = opts.jibs == null ? 2 : opts.jibs;
-    const deckY = 148, hullL = 46, hullR = 246;
-    const span = hullR - hullL, n = masts.length;
-    const xs = masts.map((_,i)=> Math.round(hullL + span*(i+1)/(n+1)));
-    let s = "";
-    s += `<rect x="6" y="170" width="252" height="2.4" rx="1.2" opacity=".3"/>`;
-    s += `<path d="M${hullL-2} ${deckY} Q${hullL-16} ${deckY+8} ${hullL+8} ${deckY+18} L${hullR-4} ${deckY+18} Q${hullR+24} ${deckY+18} ${hullR+40} ${deckY} Z"/>`;
-    s += `<path d="M${hullR+6} ${deckY} L${hullR+74} ${deckY-14}" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>`;
-    const foreX = xs[n-1], bowTip = hullR + 70;
-    for(let j=0;j<jibs;j++){
-      const topY = 58 + j*15;
-      const baseX = foreX + (bowTip-foreX)*(0.34 + j*0.30);
-      s += `<path d="M${foreX} ${topY} L${baseX} ${deckY-3} L${foreX} ${deckY-3} Z" opacity=".95"/>`;
-    }
-    masts.forEach((type,i)=>{
-      const x = xs[i], mastTop = 26;
-      s += `<path d="M${x} ${deckY} L${x} ${mastTop}" stroke="currentColor" stroke-width="3.2" fill="none"/>`;
-      if(type === "square" || type === "topsail"){
-        const bands = (type === "square")
-          ? [[36,64,30],[68,96,26],[100,124,20]]
-          : [[34,54,20],[58,76,16]];
-        bands.forEach(([t,b,hw])=>{
-          s += `<path d="M${x-hw} ${t} Q${x} ${t+4} ${x+hw} ${t} L${x+hw} ${b} Q${x} ${b+6} ${x-hw} ${b} Z"/>`;
-          s += `<rect x="${x-hw-3}" y="${t-2}" width="${2*hw+6}" height="2.4" rx="1"/>`;
-        });
-        if(type === "topsail") s += gaffSail(x, 88, deckY-2, 42);
-      } else if(type === "gaff"){
-        s += gaffSail(x, 46, deckY-2, 44);
-      } else if(type === "bermuda"){
-        s += `<path d="M${x} 26 L${x} ${deckY-2} L${x-46} ${deckY-2} Z"/>`;
-      }
-    });
-    return `<svg class="sil ship" viewBox="0 0 300 190" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${s}</svg>`;
-  }
-
   /* ============================================================
      PHOTOS — free-licensed (Wikimedia Commons); id -> file + credit.
      ============================================================ */
@@ -367,6 +281,7 @@
     s01:["assets/photos/s01-event.jpg","Sashimi-b · CC BY-SA 4.0",1],
     s02:["assets/photos/s02.jpg","VollwertBIT · CC BY-SA 2.5"],
     s03:["assets/photos/s03-event.jpg","Sashimi-b · CC BY-SA 4.0",1],
+    s04:["assets/photos/s04.jpg","Representative 1930s classic yacht (no free photo of Ticonderoga exists) · Myrabella · CC BY-SA 3.0"],
     s05:["assets/photos/s05-event.jpg","Aude · CC BY-SA 4.0",1],
     s06:["assets/photos/s06.jpg","Don Ramey Logan · CC BY 4.0"],
     s07:["assets/photos/s07-event.jpg","Aude · CC BY-SA 4.0",1],
@@ -507,23 +422,19 @@
   };
 
   const app = document.getElementById("app");
-  let view = "photo";   // global default: photos
 
   const card = (c) => {
+    // One photograph per card: the parade-day shot when we have it, otherwise
+    // a free-licensed photo of the same aircraft type or named ship.
     const ph = PHOTOS[c.id];
-    // default view: photos taken at the parade itself; otherwise the drawing.
-    // The global toggle and per-card flip still reach every image.
-    const v = ph ? (view === "draw" ? "draw" : (ph[2] ? "photo" : "draw")) : "draw";
     return `
-    <article class="card" data-view="${v}" data-id="${c.id}">
+    <article class="card" data-id="${c.id}">
       <div class="stage">
         ${ph ? `<img class="photo" src="${ph[0]}" alt="${c.name} — ${c.desig}" loading="lazy"/>
                 <div class="photocredit">${ph[1]}</div>
                 ${ph[2] ? `<span class="evbadge">★ at the parade</span>` : ``}` : ``}
         <span class="runno">NO. ${c.run}</span>
         <span class="natflag" title="origin">${c.flag}</span>
-        ${ph ? `<button class="flipbtn" title="toggle photo / drawing">📷⇄✏️</button>` : ``}
-        ${c.rig ? SHIP(c.rig,{jibs:c.jibs}) : SIL[c.sil]}
       </div>
       <div class="body">
         <div>
@@ -555,8 +466,6 @@
     document.getElementById("h-foot").textContent = M.foot;
     document.querySelectorAll(".modetab").forEach(b=>
       b.classList.toggle("active", b.dataset.m===mode));
-    document.querySelectorAll(".viewtab").forEach(b=>
-      b.classList.toggle("active", b.dataset.v===view));
 
     app.innerHTML = "";
     M.waves.forEach(w=>{
@@ -615,14 +524,11 @@
           const credit = document.createElement("div");
           credit.className = "photocredit";
           stage.insertBefore(credit, stage.children[1]);
-          const btn = document.createElement("button");
-          btn.className = "flipbtn"; btn.title = "toggle photo / drawing";
-          btn.textContent = "📷⇄✏️";
-          stage.appendChild(btn);
         }
         img.src = probe.src;
         cd.querySelector(".photocredit").textContent = "your photo · local only, not published";
-        cd.dataset.view = "photo";
+        const badge = cd.querySelector(".evbadge");
+        if(badge) badge.remove();
       };
       probe.src = `assets/photos/local/${id}.jpg`;
     });
@@ -634,24 +540,6 @@
     history.replaceState(null,"",`#${btn.dataset.m}`);
     render(btn.dataset.m);
     window.scrollTo({top:0,behavior:"auto"});
-  });
-
-  document.getElementById("views").addEventListener("click", (e)=>{
-    const btn = e.target.closest(".viewtab");
-    if(!btn) return;
-    view = btn.dataset.v;
-    document.querySelectorAll(".viewtab").forEach(b=>
-      b.classList.toggle("active", b.dataset.v===view));
-    document.querySelectorAll(".card").forEach(cd=>{
-      if(cd.querySelector("img.photo")) cd.dataset.view = view;
-    });
-  });
-
-  app.addEventListener("click",(e)=>{
-    const btn = e.target.closest(".flipbtn");
-    if(!btn) return;
-    const cd = btn.closest(".card");
-    cd.dataset.view = cd.dataset.view === "photo" ? "draw" : "photo";
   });
 
   // photo credits list
