@@ -82,12 +82,12 @@
     .wave-desc{color:var(--muted);max-width:730px;margin:12px 0 30px}
 
     /* ---------- CARDS ---------- */
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px}
     .card{position:relative;border:1px solid var(--line);border-radius:var(--radius);
       background:linear-gradient(180deg,var(--panel2),var(--panel));overflow:hidden;
       transition:border-color .2s ease,transform .2s ease;display:flex;flex-direction:column}
     .card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
-    .card .stage{position:relative;height:196px;display:flex;align-items:center;justify-content:center;
+    .card .stage{position:relative;height:300px;display:flex;align-items:center;justify-content:center;
       background:
         radial-gradient(120% 120% at 50% 15%,var(--accent-soft),transparent 60%),
         repeating-linear-gradient(0deg,transparent 0 21px,rgba(255,255,255,.025) 21px 22px),
@@ -100,8 +100,8 @@
         repeating-linear-gradient(90deg,transparent 0 21px,rgba(255,255,255,.02) 21px 22px)}
     .card .stage::after{content:"";position:absolute;inset:0;
       background:radial-gradient(closest-side,transparent 60%,rgba(8,11,19,.55));pointer-events:none}
-    .card svg.sil{width:200px;height:196px;color:#dfe7f5;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
-    .card svg.sil.ship{width:262px;height:180px;color:#eaf1f6}
+    .card svg.sil{width:250px;height:250px;color:#dfe7f5;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+    .card svg.sil.ship{width:340px;height:215px;color:#eaf1f6}
     .card img.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
     .card[data-view="draw"] img.photo,.card[data-view="draw"] .photocredit{display:none}
     .card[data-view="photo"] svg.sil{display:none}
@@ -113,7 +113,7 @@
       letter-spacing:.08em;text-transform:uppercase;color:#0a0e16;background:var(--gold);
       padding:3px 8px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.5)}
     .card[data-view="draw"] .evbadge{display:none}
-    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px}
     .gallery figure{margin:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
       background:var(--panel)}
     .gallery img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
@@ -166,8 +166,10 @@
     @media (max-width:560px){
       .hero-inner{padding:40px 0 44px}
       .grid{grid-template-columns:1fr}
+      .gallery{grid-template-columns:1fr}
       .specs{grid-template-columns:1fr 1fr}
-      .card svg.sil.ship{width:230px}
+      .card .stage{height:240px}
+      .card svg.sil.ship{width:270px}
     }
     @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.modetab,.viewtab,header.hero{transition:none}}
   </style>
@@ -226,9 +228,10 @@
           and similar) sourced from Wikimedia and stored with this page. Cards wearing the gold
           <strong>★ at the parade</strong> badge — 16 of them, plus the whole gallery below —
           show photographs taken at the July 4, 2026 event itself, by military photographers and
-          Commons contributors who were on the water and the waterfront. The rest show the same
-          aircraft type or the same named ship on other days, since news photography from the
-          parade is copyrighted. Unit prices on the aircraft cards are approximate, publicly
+          Commons contributors who were on the water and the waterfront — these are what cards
+          open on by default. Cards without a parade photo open on their drawing; flip them to
+          see a photo of the same aircraft type or the same named ship on another day, since news
+          photography from the parade is copyrighted. Unit prices on the aircraft cards are approximate, publicly
           cited figures — flyaway or contract unit costs from different budget years, so treat
           them as ballpark, not invoices.
         </p>
@@ -486,7 +489,9 @@
 
   const card = (c) => {
     const ph = PHOTOS[c.id];
-    const v = ph ? view : "draw";
+    // default view: photos taken at the parade itself; otherwise the drawing.
+    // The global toggle and per-card flip still reach every image.
+    const v = ph ? (view === "draw" ? "draw" : (ph[2] ? "photo" : "draw")) : "draw";
     return `
     <article class="card" data-view="${v}">
       <div class="stage">
