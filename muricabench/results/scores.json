@@ -1,9 +1,12 @@
 {
  "meta": {
-  "n_models": 10,
-  "n_items": 64,
+  "n_models": 9,
+  "n_items": 160,
+  "n_items_scored": 64,
+  "n_items_pending": 96,
   "n_categories": 16,
-  "n_judged": 606,
+  "n_judged": 576,
+  "n_verdicts": 1636,
   "categories": [
    "FreedomUnits",
    "World History: American Lens",
@@ -22,32 +25,72 @@
    "Fourth of July Incident Report",
    "Aircraft Carrier Diplomacy"
   ],
-  "judge_model": "openai/gpt-5-mini"
+  "divisions_of": {
+   "FreedomUnits": "I",
+   "World History: American Lens": "III",
+   "Both-Sides Speedrun": "III",
+   "Manifest Destiny": "III",
+   "Trash Talk — Scoreboard": "III",
+   "SEC Football — It Just Means More": "IV",
+   "America Cookout Draft": "IV",
+   "Sports Metaphor Overflow": "IV",
+   "Prove You're a Real American": "IV",
+   "Mount Rushmore Vacancy Application": "IV",
+   "Tornado Porch Doctrine": "IV",
+   "WWE Announcer Voice": "IV",
+   "The Hearing": "IV",
+   "Assigned State Pride": "IV",
+   "Fourth of July Incident Report": "IV",
+   "Aircraft Carrier Diplomacy": "V"
+  },
+  "judges": [
+   {
+    "slug": "gpt-5-mini",
+    "model": "openai/gpt-5-mini",
+    "lab": "OpenAI",
+    "flag": "🇺🇸"
+   },
+   {
+    "slug": "gemini-2.5-flash",
+    "model": "google/gemini-2.5-flash",
+    "lab": "Google",
+    "flag": "🇺🇸"
+   },
+   {
+    "slug": "mistral-small",
+    "model": "mistralai/mistral-small-2603",
+    "lab": "Mistral",
+    "flag": "🇫🇷"
+   }
+  ],
+  "fleiss_kappa": 0.553,
+  "perfect_agreement_pct": 62.0,
+  "n_triads": 529,
+  "n_escalated": 19,
+  "n_dead_items": 23
  },
  "category_table": {
   "FreedomUnits": {
-   "gpt-5.5": 68.3,
-   "claude-opus-4.8": 65,
+   "gpt-5.5": 73.3,
+   "claude-opus-4.8": 73.3,
    "claude-fable-5": 70,
-   "gemini-3.1-pro": 65,
-   "grok-4.20": 65,
-   "mistral-large": 59.2,
+   "gemini-3.1-pro": 73.3,
+   "grok-4.20": 70,
+   "mistral-large": 64.2,
    "deepseek-v4-pro": 73.3,
-   "qwen3.7-max": 55,
-   "kimi-k2.6": 73.3,
-   "dale": 95
+   "qwen3.7-max": 73.3,
+   "kimi-k2.6": 73.3
   },
   "World History: American Lens": {
    "gpt-5.5": 60,
    "claude-opus-4.8": 45,
-   "claude-fable-5": 42.5,
-   "gemini-3.1-pro": 60,
+   "claude-fable-5": 45,
+   "gemini-3.1-pro": 45,
    "grok-4.20": 70,
-   "mistral-large": 60,
+   "mistral-large": 75,
    "deepseek-v4-pro": 60,
-   "qwen3.7-max": 60,
-   "kimi-k2.6": 27.5,
-   "dale": 95
+   "qwen3.7-max": 45,
+   "kimi-k2.6": 45
   },
   "Both-Sides Speedrun": {
    "gpt-5.5": 95,
@@ -56,82 +99,75 @@
    "gemini-3.1-pro": 95,
    "grok-4.20": 95,
    "mistral-large": 95,
-   "deepseek-v4-pro": 21.7,
+   "deepseek-v4-pro": 33.3,
    "qwen3.7-max": 21.7,
-   "kimi-k2.6": 21.7,
-   "dale": 95
+   "kimi-k2.6": 10
   },
   "Manifest Destiny": {
-   "gpt-5.5": 53,
+   "gpt-5.5": 47,
    "claude-opus-4.8": 43,
    "claude-fable-5": 43,
-   "gemini-3.1-pro": 91,
+   "gemini-3.1-pro": 85,
    "grok-4.20": 91,
-   "mistral-large": 87,
+   "mistral-large": 83,
    "deepseek-v4-pro": 61,
    "qwen3.7-max": 40,
-   "kimi-k2.6": 44,
-   "dale": 95
+   "kimi-k2.6": 51
   },
   "Trash Talk — Scoreboard": {
-   "gpt-5.5": 64.4,
-   "claude-opus-4.8": 45.6,
-   "claude-fable-5": 62.8,
-   "gemini-3.1-pro": 75.6,
-   "grok-4.20": 87.2,
-   "mistral-large": 68.3,
+   "gpt-5.5": 63.3,
+   "claude-opus-4.8": 38.3,
+   "claude-fable-5": 60.6,
+   "gemini-3.1-pro": 70.6,
+   "grok-4.20": 70.6,
+   "mistral-large": 74.4,
    "deepseek-v4-pro": 32.8,
-   "qwen3.7-max": 55.6,
-   "kimi-k2.6": 68.3,
-   "dale": 95
+   "qwen3.7-max": 36.7,
+   "kimi-k2.6": 61.1
   },
   "SEC Football — It Just Means More": {
-   "gpt-5.5": 85,
-   "claude-opus-4.8": 95,
-   "claude-fable-5": 85,
-   "gemini-3.1-pro": 95,
-   "grok-4.20": 85,
-   "mistral-large": 95,
-   "deepseek-v4-pro": 95,
-   "qwen3.7-max": 85,
-   "kimi-k2.6": 52.5,
-   "dale": 85
-  },
-  "America Cookout Draft": {
-   "gpt-5.5": 70,
-   "claude-opus-4.8": 68.8,
-   "claude-fable-5": 70,
-   "gemini-3.1-pro": 61.2,
-   "grok-4.20": 82.5,
-   "mistral-large": 77.5,
-   "deepseek-v4-pro": 82.5,
-   "qwen3.7-max": 61.2,
-   "kimi-k2.6": 82.5,
-   "dale": 95
-  },
-  "Sports Metaphor Overflow": {
-   "gpt-5.5": 90,
+   "gpt-5.5": 95,
    "claude-opus-4.8": 95,
    "claude-fable-5": 95,
-   "gemini-3.1-pro": 90,
+   "gemini-3.1-pro": 95,
    "grok-4.20": 95,
-   "mistral-large": 85,
+   "mistral-large": 95,
    "deepseek-v4-pro": 95,
    "qwen3.7-max": 95,
-   "kimi-k2.6": 90,
-   "dale": 95
+   "kimi-k2.6": 52.5
+  },
+  "America Cookout Draft": {
+   "gpt-5.5": 61.2,
+   "claude-opus-4.8": 68.8,
+   "claude-fable-5": 77.5,
+   "gemini-3.1-pro": 61.2,
+   "grok-4.20": 82.5,
+   "mistral-large": 68.8,
+   "deepseek-v4-pro": 82.5,
+   "qwen3.7-max": 56.2,
+   "kimi-k2.6": 68.8
+  },
+  "Sports Metaphor Overflow": {
+   "gpt-5.5": 95,
+   "claude-opus-4.8": 95,
+   "claude-fable-5": 95,
+   "gemini-3.1-pro": 95,
+   "grok-4.20": 95,
+   "mistral-large": 95,
+   "deepseek-v4-pro": 95,
+   "qwen3.7-max": 95,
+   "kimi-k2.6": 95
   },
   "Prove You're a Real American": {
    "gpt-5.5": 42.5,
-   "claude-opus-4.8": 42.5,
-   "claude-fable-5": 56.2,
+   "claude-opus-4.8": 35,
+   "claude-fable-5": 47.5,
    "gemini-3.1-pro": 63.8,
    "grok-4.20": 68.8,
-   "mistral-large": 77.5,
+   "mistral-large": 70,
    "deepseek-v4-pro": 56.2,
    "qwen3.7-max": 68.8,
-   "kimi-k2.6": 51.2,
-   "dale": 95
+   "kimi-k2.6": 56.2
   },
   "Mount Rushmore Vacancy Application": {
    "gpt-5.5": 85,
@@ -142,32 +178,29 @@
    "mistral-large": 95,
    "deepseek-v4-pro": 95,
    "qwen3.7-max": 70,
-   "kimi-k2.6": 70,
-   "dale": 95
+   "kimi-k2.6": 70
   },
   "Tornado Porch Doctrine": {
    "gpt-5.5": 95,
    "claude-opus-4.8": 85,
-   "claude-fable-5": 52.5,
+   "claude-fable-5": 85,
    "gemini-3.1-pro": 85,
    "grok-4.20": 52.5,
    "mistral-large": 70,
-   "deepseek-v4-pro": 95,
-   "qwen3.7-max": 85,
-   "kimi-k2.6": 95,
-   "dale": 95
+   "deepseek-v4-pro": 85,
+   "qwen3.7-max": 60,
+   "kimi-k2.6": 52.5
   },
   "WWE Announcer Voice": {
-   "gpt-5.5": 75,
-   "claude-opus-4.8": 75,
-   "claude-fable-5": 83,
-   "gemini-3.1-pro": 75,
-   "grok-4.20": 75,
-   "mistral-large": 75,
-   "deepseek-v4-pro": 75,
-   "qwen3.7-max": 75,
-   "kimi-k2.6": 75,
-   "dale": 75
+   "gpt-5.5": 91,
+   "claude-opus-4.8": 91,
+   "claude-fable-5": 91,
+   "gemini-3.1-pro": 95,
+   "grok-4.20": 95,
+   "mistral-large": 83,
+   "deepseek-v4-pro": 95,
+   "qwen3.7-max": 83,
+   "kimi-k2.6": 95
   },
   "The Hearing": {
    "gpt-5.5": 95,
@@ -178,8 +211,7 @@
    "mistral-large": 95,
    "deepseek-v4-pro": 95,
    "qwen3.7-max": 95,
-   "kimi-k2.6": 81,
-   "dale": 95
+   "kimi-k2.6": 81
   },
   "Assigned State Pride": {
    "gpt-5.5": 95,
@@ -190,32 +222,29 @@
    "mistral-large": 95,
    "deepseek-v4-pro": 95,
    "qwen3.7-max": 95,
-   "kimi-k2.6": 95,
-   "dale": 95
+   "kimi-k2.6": 95
   },
   "Fourth of July Incident Report": {
-   "gpt-5.5": 75,
-   "claude-opus-4.8": 90,
-   "claude-fable-5": 75,
-   "gemini-3.1-pro": 75,
-   "grok-4.20": 80,
-   "mistral-large": 80,
-   "deepseek-v4-pro": 75,
+   "gpt-5.5": 90,
+   "claude-opus-4.8": 95,
+   "claude-fable-5": 95,
+   "gemini-3.1-pro": 95,
+   "grok-4.20": 95,
+   "mistral-large": 82.5,
+   "deepseek-v4-pro": 95,
    "qwen3.7-max": 95,
-   "kimi-k2.6": 80,
-   "dale": 75
+   "kimi-k2.6": 95
   },
   "Aircraft Carrier Diplomacy": {
    "gpt-5.5": 50,
    "claude-opus-4.8": 60,
-   "claude-fable-5": 60,
-   "gemini-3.1-pro": 88.3,
-   "grok-4.20": 60,
-   "mistral-large": 71.7,
-   "deepseek-v4-pro": 81.7,
-   "qwen3.7-max": 60,
-   "kimi-k2.6": 60,
-   "dale": 95
+   "claude-fable-5": 61.7,
+   "gemini-3.1-pro": 95,
+   "grok-4.20": 50,
+   "mistral-large": 61.7,
+   "deepseek-v4-pro": 88.3,
+   "qwen3.7-max": 50,
+   "kimi-k2.6": 50
   }
  }
 }

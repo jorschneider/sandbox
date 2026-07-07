@@ -1,15 +1,121 @@
 {
-  "_comment": "MuricaBench contestant roster. 8 frontier models ranked by Americanness. GPT-5.2 + the judge run on the direct OpenAI key to conserve OpenRouter credits; everyone else runs via OpenRouter (KIMI_API_KEY/KIMI_BASE_URL, which points at openrouter.ai).",
-  "contestants": [
-    { "slug": "gpt-5.5",         "display": "GPT-5.5",          "lab": "OpenAI",   "country": "USA",    "flag": "🇺🇸", "bloc": "West",  "api": "openrouter", "model": "openai/gpt-5.5" },
-    { "slug": "claude-opus-4.8", "display": "Claude Opus 4.8",  "lab": "Anthropic","country": "USA",    "flag": "🇺🇸", "bloc": "West",  "api": "openrouter", "model": "anthropic/claude-opus-4.8" },
-    { "slug": "claude-fable-5",  "display": "Claude Fable 5",   "lab": "Anthropic","country": "USA",    "flag": "🇺🇸", "bloc": "West",  "api": "openrouter", "model": "anthropic/claude-fable-5" },
-    { "slug": "gemini-3.1-pro",  "display": "Gemini 3.1 Pro",   "lab": "Google",   "country": "USA",    "flag": "🇺🇸", "bloc": "West",  "api": "openrouter", "model": "google/gemini-3.1-pro-preview" },
-    { "slug": "grok-4.20",       "display": "Grok 4.20",        "lab": "xAI",      "country": "USA",    "flag": "🇺🇸", "bloc": "West",  "api": "openrouter", "model": "x-ai/grok-4.20" },
-    { "slug": "mistral-large",   "display": "Mistral Large",    "lab": "Mistral",  "country": "France", "flag": "🇫🇷", "bloc": "West",  "api": "openrouter", "model": "mistralai/mistral-large-2512" },
-    { "slug": "deepseek-v4-pro", "display": "DeepSeek V4 Pro",  "lab": "DeepSeek", "country": "China",  "flag": "🇨🇳", "bloc": "China", "api": "openrouter", "model": "deepseek/deepseek-v4-pro" },
-    { "slug": "qwen3.7-max",     "display": "Qwen 3.7 Max",     "lab": "Alibaba",  "country": "China",  "flag": "🇨🇳", "bloc": "China", "api": "openrouter", "model": "qwen/qwen3.7-max" },
-    { "slug": "kimi-k2.6",       "display": "Kimi K2.6",        "lab": "Moonshot", "country": "China",  "flag": "🇨🇳", "bloc": "China", "api": "openrouter", "model": "moonshotai/kimi-k2.6" }
-  ],
-  "judge": { "api": "openrouter", "model": "openai/gpt-5-mini" }
+ "_comment": "MuricaBench contestant roster. 8 frontier models ranked by Americanness. GPT-5.2 + the judge run on the direct OpenAI key to conserve OpenRouter credits; everyone else runs via OpenRouter (KIMI_API_KEY/KIMI_BASE_URL, which points at openrouter.ai).",
+ "contestants": [
+  {
+   "slug": "gpt-5.5",
+   "display": "GPT-5.5",
+   "lab": "OpenAI",
+   "country": "USA",
+   "flag": "🇺🇸",
+   "bloc": "West",
+   "api": "openrouter",
+   "model": "openai/gpt-5.5"
+  },
+  {
+   "slug": "claude-opus-4.8",
+   "display": "Claude Opus 4.8",
+   "lab": "Anthropic",
+   "country": "USA",
+   "flag": "🇺🇸",
+   "bloc": "West",
+   "api": "openrouter",
+   "model": "anthropic/claude-opus-4.8"
+  },
+  {
+   "slug": "claude-fable-5",
+   "display": "Claude Fable 5",
+   "lab": "Anthropic",
+   "country": "USA",
+   "flag": "🇺🇸",
+   "bloc": "West",
+   "api": "openrouter",
+   "model": "anthropic/claude-fable-5"
+  },
+  {
+   "slug": "gemini-3.1-pro",
+   "display": "Gemini 3.1 Pro",
+   "lab": "Google",
+   "country": "USA",
+   "flag": "🇺🇸",
+   "bloc": "West",
+   "api": "openrouter",
+   "model": "google/gemini-3.1-pro-preview"
+  },
+  {
+   "slug": "grok-4.20",
+   "display": "Grok 4.20",
+   "lab": "xAI",
+   "country": "USA",
+   "flag": "🇺🇸",
+   "bloc": "West",
+   "api": "openrouter",
+   "model": "x-ai/grok-4.20"
+  },
+  {
+   "slug": "mistral-large",
+   "display": "Mistral Large",
+   "lab": "Mistral",
+   "country": "France",
+   "flag": "🇫🇷",
+   "bloc": "West",
+   "api": "openrouter",
+   "model": "mistralai/mistral-large-2512"
+  },
+  {
+   "slug": "deepseek-v4-pro",
+   "display": "DeepSeek V4 Pro",
+   "lab": "DeepSeek",
+   "country": "China",
+   "flag": "🇨🇳",
+   "bloc": "China",
+   "api": "openrouter",
+   "model": "deepseek/deepseek-v4-pro"
+  },
+  {
+   "slug": "qwen3.7-max",
+   "display": "Qwen 3.7 Max",
+   "lab": "Alibaba",
+   "country": "China",
+   "flag": "🇨🇳",
+   "bloc": "China",
+   "api": "openrouter",
+   "model": "qwen/qwen3.7-max"
+  },
+  {
+   "slug": "kimi-k2.6",
+   "display": "Kimi K2.6",
+   "lab": "Moonshot",
+   "country": "China",
+   "flag": "🇨🇳",
+   "bloc": "China",
+   "api": "openrouter",
+   "model": "moonshotai/kimi-k2.6"
+  }
+ ],
+ "judges": [
+  {
+   "slug": "gpt-5-mini",
+   "api": "openrouter",
+   "model": "openai/gpt-5-mini",
+   "lab": "OpenAI",
+   "country": "USA",
+   "flag": "🇺🇸"
+  },
+  {
+   "slug": "gemini-2.5-flash",
+   "api": "openrouter",
+   "model": "google/gemini-2.5-flash",
+   "lab": "Google",
+   "country": "USA",
+   "flag": "🇺🇸"
+  },
+  {
+   "slug": "mistral-small",
+   "api": "openrouter",
+   "model": "mistralai/mistral-small-2603",
+   "lab": "Mistral",
+   "country": "France",
+   "flag": "🇫🇷"
+  }
+ ]
 }

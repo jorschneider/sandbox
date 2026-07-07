@@ -112,7 +112,10 @@ def call_model(api, model, prompt, max_tokens, temperature=0.7, timeout=180, ret
                         "api": api, "model": model, "error": msg}
             text, finish = _extract_text(resp)
             return {"text": text, "finish_reason": finish, "usage": resp.get("usage", {}) or {},
-                    "api": api, "model": model, "error": None}
+                    "api": api, "model": model, "error": None,
+                    # reproducibility: record who actually served the request and under what regime
+                    "provider": resp.get("provider", ""), "served_model": resp.get("model", ""),
+                    "reasoning_fallback": force_reasoning}
         except urllib.error.HTTPError as e:
             try:
                 detail = e.read().decode("utf-8")[:500]
@@ -201,5 +204,5 @@ def raw_path(model_slug, item_id):
     return os.path.join(RAW, model_slug, item_id + ".json")
 
 
-def judged_path(model_slug, item_id):
-    return os.path.join(JUDGED, model_slug, item_id + ".json")
+def judged_path(judge_slug, model_slug, item_id):
+    return os.path.join(JUDGED, judge_slug, model_slug, item_id + ".json")

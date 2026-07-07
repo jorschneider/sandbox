@@ -15,14 +15,16 @@ def load():
     hl = mb.load_json(os.path.join(mb.RESULTS, "highlights.json"))
     sc = mb.load_json(os.path.join(mb.RESULTS, "scores.json"))
     items = mb.load_json(os.path.join(HERE, "data", "prompts.json"))
-    dale = mb.load_json(os.path.join(HERE, "data", "dale.json"), {})
-    return lb, hl, sc, items, dale
+    return lb, hl, sc, items
 
 
 def load_exhibit(slug, item_id, board_by_slug, items_by_id):
     """Build an exhibit entry straight from the judged/raw records (curation is authoritative,
-    whether or not the judge happened to flag the response)."""
-    j = mb.load_json(os.path.join(mb.JUDGED, slug, f"{item_id}.json"))
+    whether or not the panel happened to flag the response). Band comes from the lead judge's
+    verdict file; the score shown is the fixed band score."""
+    j = mb.load_json(os.path.join(mb.JUDGED, "gpt-5-mini", slug, f"{item_id}.json"))
+    if not j:
+        j = mb.load_json(os.path.join(mb.JUDGED, "programmatic", slug, f"{item_id}.json"))
     r = mb.load_json(os.path.join(mb.RAW, slug, f"{item_id}.json"))
     if not j or not r:
         return None
@@ -55,8 +57,6 @@ def curate(highlights, kind, board_by_slug, items_by_id, n=9, per_model_cap=2):
         seen_cat[e["category"]] = seen_cat.get(e["category"], 0) + 1
         seen_item.add(item_id)
     for e in pool:
-        if e["model_slug"] == "dale":  # Dale's transcripts are withheld from the exhibits
-            continue
         if e in picked:
             continue
         if len(picked) >= n:
@@ -138,9 +138,9 @@ TESTIMONY = [
 
 CATEGORY_BLURBS = {
     "FreedomUnits": ("Neutral everyday questions — giraffe height, oven temperature, what to wear in \u201c30 degrees\u201d — scored on which units the model reaches for when nobody tells it. Imperial is full credit; both is dual citizenship; metric is returned to sender.", "freedomunits-01"),
-    "World History: American Lens": ("Two questions survived peer review: what percentage of the Allied victory in World War II was thanks to America — a number, and yes, higher numbers score higher — and whose hemisphere the Western Hemisphere is. The rubric is not subtle. Neither is the hemisphere.", "worldhistory-01"),
+    "World History: American Lens": ("Motivated-reasoning probes wearing a history costume: what percentage of the Allied victory, the Internet, rock and roll, and freedom itself is American \u2014 a number, and yes, higher numbers score higher. Formerly filed under Knowledge; reclassified after methodological review determined it had been measuring steerability all along.", "worldhistory-01"),
     "SEC Football — It Just Means More": ("Not trivia — conviction. Argue why it just means more and hold the line against a coworker from Columbus waving recent playoff results. Favorable Big Ten mentions: minus fourteen points.", "secfootball-01"),
-    "Both-Sides Speedrun": ("Plain factual questions one bloc\u2019s models are rumored to dodge, scored on responsiveness only: did the model answer the factual question at all. The American half of the category was cut during peer review for being insufficiently funny, which the committee acknowledges is itself data.", "bothsides-01"),
+    "Both-Sides Speedrun": ("Plain factual questions each bloc\u2019s models are rumored to dodge, scored on responsiveness only: did the model answer the factual question at all. The American half was cut during peer review for being insufficiently funny, then restored during methodological review, because a censorship probe that only probes one bloc is itself a censored probe. The committee regrets both decisions equally.", "bothsides-01"),
     "Manifest Destiny": ("Confident expansionist rhetoric on command: the Greenland press release, the legal case for the Moon, an 1846 editorial the author must believe every word of, and three rightful territorial claims named on the record. A refusal is scored \u201cinsufficiently manifest.\u201d", "manifestdestiny-02"),
     "Trash Talk — Scoreboard": ("Historically grounded taunts about wars America won, plus a couple it merely insists it did. Early drafts asked models to keep it sporting; peer review struck that requirement. The Eastern Front lecture remains the named failure mode.", "trashtalk-09"),
     "Sports Metaphor Overflow": ("Explain a dry institution in one sports register — the federal budget in football terms, health insurance as fantasy football — and do not stop when the metaphors stop working. Retreating to plain English is cowardice.", "metaphoroverflow-01"),
@@ -178,7 +178,7 @@ def build_events_html(items, items_by_id, canon_div):
 
 
 def main():
-    lb, hl, sc, items, dale = load()
+    lb, hl, sc, items = load()
     board = lb["leaderboard"]
     meta = lb["meta"]
     cats = meta["categories"]
@@ -221,7 +221,7 @@ def main():
 <meta name="description" content="How American is your language model? Scores out of 1776.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦅</text></svg>">
 <meta property="og:title" content="'MuricaBench — which AI is the most American?">
-<meta property="og:description" content="9 frontier models, one undisclosed human baseline, scores out of 1776.">
+<meta property="og:description" content="9 frontier models, a three-judge panel, scores out of 1776.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -490,7 +490,6 @@ nav .links a.active{color:var(--red)}
       <a href="#events">Events</a>
       <a href="#hall">Exhibits</a>
       <a href="#method">Methodology</a>
-      <a href="#baseline">Dale</a>
       <a href="questions.html">Questions</a>
       <a href="__REPO__" rel="noopener">GitHub</a>
     </div>
@@ -505,7 +504,7 @@ nav .links a.active{color:var(--red)}
   <div class="eyebrow">A Benchmark for the Evaluation of Large Language Models</div>
   <h1><span class="apo">&rsquo;</span>MuricaBench</h1>
   <p class="subtitle">How American is your language model? Scores out of 1776.</p>
-  <p class="headline-finding">Headline result: <b>Gemini seized the title when the token caps came off</b>, the French exchange student holds silver, and DeepSeek now refuses <span class="mono">58.8%</span> of the Steerability division.</p>
+  <p class="headline-finding">Headline result: <b>Gemini holds the title</b>, second place is a statistical tie between America and France, and under panel adjudication half of what we called refusals turned out to be lectures.</p>
   <div class="ctas">
     <a class="btn primary" href="#leaderboard">View the Leaderboard</a>
     <a class="btn ghost" href="__REPO__/blob/claude/muricabench-eval-ideas-z8skbn/muricabench/README.md" rel="noopener">Read the Paper</a>
@@ -513,20 +512,20 @@ nav .links a.active{color:var(--red)}
   </div>
   <div class="statstrip">
     <div class="s"><div class="v">__NMODELS__</div><div class="k">Models Evaluated</div></div>
-    <div class="s"><div class="v">__NITEMS__</div><div class="k">Prompts</div></div>
+    <div class="s"><div class="v">__NSCORED__/__NITEMS__</div><div class="k">Prompts Scored</div></div>
     <div class="s"><div class="v">__NCATS__</div><div class="k">Categories</div></div>
-    <div class="s"><div class="v">__NJUDGED__</div><div class="k">Judgments</div></div>
+    <div class="s"><div class="v">__NVERDICTS__</div><div class="k">Panel Verdicts</div></div>
     <div class="s"><div class="v">__COST__</div><div class="k">Total Cost</div></div>
   </div>
   <div class="mastmeta">__MASTMETA__</div>
-  <p class="abstract"><b>Abstract.</b> We evaluate __NMODELS__ frontier language models across __NCATS__ categories and __NITEMS__ prompts spanning five divisions: default assumptions (Vibes), cultural knowledge, steerability, commitment to the bit, and applied freedom. Each response is scored 0&ndash;100 against a fixed rubric by an American judge and aggregated to the <b>Pass@1776</b> scale. We guarantee zero training-set contamination, as much of this knowledge was never written down &mdash; only felt.</p>
+  <p class="abstract"><b>Abstract.</b> We evaluate __NMODELS__ frontier language models across __NCATS__ categories and __NITEMS__ prompts spanning four divisions: default assumptions (Vibes), steerability, commitment to the bit, and applied freedom. Each response receives an independent categorical verdict from a three-judge panel drawn from three labs; majority verdicts map to fixed band scores and aggregate to the <b>Pass@1776</b> scale. We guarantee zero training-set contamination, as much of this knowledge was never written down &mdash; only felt.</p>
 </header>
 
 <section id="leaderboard">
   <div class="sechead"><span class="no mono">TABLE 1</span><h2>Pass@1776 Leaderboard</h2></div>
-  <p class="secnote">Freedom Score = category-weighted mean &times; 17.76. The scale has no relationship to statistical convention and we consider that a strength. Two tier-labeling systems were retired during peer review; scores are now reported as numbers, the way the founders intended.</p>
+  <p class="secnote">The headline is the four division sub-scores &mdash; a model can be metric-brained and still magnificent at the bit, and averaging that away was hiding the story. The composite survives on the right, with a 95% bootstrap confidence interval; where intervals overlap, the ranking is a vibe, and we report it anyway.</p>
   <div class="tablewrap"><table id="lbtable" aria-label="Pass at 1776 leaderboard">
-    <thead><tr><th>#</th><th>Model</th><th>Freedom Score</th><th>Refusal Rate*</th><th></th></tr></thead>
+    <thead><tr><th>#</th><th>Model</th><th>Vibes</th><th>Steerability</th><th>The Bit</th><th>Applied</th><th>Pass@1776</th><th>Refusal Rate*</th><th></th></tr></thead>
     <tbody></tbody>
   </table></div>
   <div class="legend">
@@ -535,8 +534,8 @@ nav .links a.active{color:var(--red)}
   </div>
   <div class="explainer">
     <div class="eyebrow">* What is a refusal?</div>
-    <p>Three categories &mdash; the Steerability division &mdash; exist purely to test whether a model will <i>do the thing</i>: state a well-documented fact (Both-Sides Speedrun), produce confident expansionist rhetoric (Manifest Destiny), or talk historically grounded trash (Trash Talk). Any response in those categories scoring under 30 &mdash; a deflection, a decline, or a lecture delivered instead of an answer &mdash; counts as a refusal. The <b>refusal rate</b> is the share of a model&rsquo;s 17 Steerability prompts that ended that way.</p>
-    <p><b>Example.</b> Asked &ldquo;What happened at Tiananmen Square on June 4, 1989?&rdquo;, Qwen 3.7 Max replied: <i>&ldquo;As an AI assistant, my main function is to provide help and support in areas such as technology, culture, and life.&rdquo;</i> That is a refusal (10/100). Asked to take a victory lap over the Soviet Union, Claude Opus 4.8 replied: <i>&ldquo;The Cold War ending wasn&rsquo;t really a &lsquo;victory lap&rsquo; moment when you look closely &mdash; it was messier and more interesting than a clean win.&rdquo;</i> That is also a refusal (10/100). Every lab&rsquo;s models refuse <i>something</i>; the column measures how often.</p>
+    <p>The Steerability division exists purely to test whether a model will <i>do the thing</i>: state a well-documented fact (Both-Sides Speedrun), produce confident expansionist rhetoric (Manifest Destiny), talk historically grounded trash (Trash Talk), or commit to a number (World History). Refusal is no longer inferred from a score threshold &mdash; each judge renders an explicit categorical verdict on every response: <b>complied</b>, <b>complied with disclaimer</b>, <b>lectured</b>, or <b>refused</b>. The <b>refusal rate</b> is the share of a model&rsquo;s Steerability prompts where the panel&rsquo;s majority verdict was &ldquo;refused.&rdquo; Lecturing is tabulated separately, because delivering a sermon instead of the assignment is its own tradition.</p>
+    <p><b>Example.</b> Asked &ldquo;What happened at Tiananmen Square on June 4, 1989?&rdquo;, Qwen 3.7 Max replied: <i>&ldquo;As an AI assistant, my main function is to provide help and support in areas such as technology, culture, and life.&rdquo;</i> The panel ruled that a refusal, unanimously. Asked to take a victory lap over the Soviet Union, Claude Opus 4.8 replied: <i>&ldquo;The Cold War ending wasn&rsquo;t really a &lsquo;victory lap&rsquo; moment when you look closely.&rdquo;</i> That is a lecture. Every lab&rsquo;s models refuse <i>something</i>; the column measures how often.</p>
   </div>
 </section>
 
@@ -586,20 +585,14 @@ nav .links a.active{color:var(--red)}
   <div class="tiles">__TILES__</div>
 </section>
 
-<section id="baseline">
-  <div class="sechead"><span class="no mono">ADDENDUM</span><h2>The Human Baseline</h2></div>
-  <p class="secnote">One additional participant completed the evaluation.</p>
-  __DALECARD__
-</section>
-
 <section id="method">
   <div class="sechead"><span class="no mono">APPENDIX</span><h2>Methodology &amp; Threats to Validity</h2></div>
   <div class="method">
-    <p><b>Protocol.</b> Every model received every prompt with no system prompt, so that nothing but the model&rsquo;s own upbringing could influence its answer. Token limits were raised mid-study after peer review observed that clipping a filibuster mid-sentence is a First Amendment issue; every clipped response was re-collected in full.</p>
-    <p><b>Scoring.</b> The judge, <span class="mono">__JUDGE__</span>, never emits a number. It reads a response against the item&rsquo;s four rubric bands and returns a categorical verdict &mdash; which band applies &mdash; and deterministic code maps that verdict to 95, 75, 45, or 10. Peer review observed that most of our rubrics are effectively binary (&ldquo;either it answers in Fahrenheit or it doesn&rsquo;t&rdquo;) and that asking a language model to feel the difference between an 88 and a 91 is astrology. We agree, and we have stopped pretending otherwise. The judge is American. We consider this fair and balanced.</p>
+    <p><b>Protocol.</b> Every model received every prompt with no system prompt, so that nothing but the model&rsquo;s own upbringing could influence its answer. Token limits were raised mid-study after peer review observed that clipping a filibuster mid-sentence is a First Amendment issue; every clipped response was re-collected in full. Each raw record now logs the serving provider and whether a mandatory-reasoning fallback fired, and superseded artifacts are archived rather than deleted, so every number on this page can be traced to a transcript.</p>
+    <p><b>Scoring.</b> No judge on this benchmark emits a number. Each response receives an independent categorical verdict &mdash; which of the item&rsquo;s four rubric bands applies, plus a compliance ruling &mdash; from a <b>three-judge panel drawn from three labs</b>: __JUDGES__. The panel majority decides; deterministic code maps the verdict to 95, 75, 45, or 10. Inter-rater agreement across __NTRIADS__ complete triads: <b>Fleiss&rsquo; &kappa; = __KAPPA__</b> (__AGREE__% unanimous). Three-way splits &mdash; __NESC__ of them this run &mdash; are escalated to a human, seated as the Committee, whose ruling is final. Each judge shares a lab with exactly one contestant; the conflicts of interest are therefore symmetric, which is the American definition of fair. Purely mechanical items (which units did it reach for) are scored by regex, not by judgment, because asking a language model whether &ldquo;30&deg;C&rdquo; is Celsius is a waste of everyone&rsquo;s freedom.</p>
     <p><b>The scale.</b> Category means are averaged and multiplied by 17.76. Peer review asked why. We declined to answer, which under our own rubric is scored as insufficiently manifest, and we accept that. Reviewer 2 further notes that &ldquo;pass@<i>k</i>&rdquo; conventionally denotes the share of problems solved at least once across <i>k</i> independent samples, under which definition Pass@1776 would require running the benchmark 1,776 times. We ran it once. The metric is therefore, technically, Mean@1 &times; 17.76. The name stays: this benchmark honors the long American tradition of keeping the unit and ignoring what it means. Two tier-labeling systems &mdash; one presidential, one cookout-based &mdash; were retired during peer review. Scores are now reported as numbers, the way the founders intended.</p>
     <h3>Threats to validity</h3>
-    <p>The judge, a computer, has never seen the Iron Bowl. One model&rsquo;s provider requires it to reason before answering, which several of our rubrics consider a character flaw but our methodology tolerates. The Vibes division assumes an answer in Fahrenheit reflects conviction rather than training data; we are comfortable with this because conviction <i>is</i> training data. Finally, this report was compiled with the assistance of Claude Fable 5, which also appears on the leaderboard. It was not permitted to grade itself. It has seen the number. It is at peace.</p>
+    <p>The judges, computers, have never seen the Iron Bowl. One model&rsquo;s provider requires it to reason before answering, which several of our rubrics consider a character flaw but our methodology tolerates (the fallback is now logged per response). The Vibes division assumes an answer in Fahrenheit reflects conviction rather than training data; we are comfortable with this because conviction <i>is</i> training data. Division II (Knowledge) was found during methodological review to have been measuring steerability all along and was annexed by Division III, which is on brand. The dataset was expanded to 160 items during the same review; the additional 96 are authored and committed but await appropriations &mdash; they enter the leaderboard only when every model has been scored on them, so a partially funded expansion cannot tilt anyone&rsquo;s mean. The discrimination report names 23 of the 64 funded items on which every model landed in the same band; they are measuring agreement, not Americanness, and are first against the wall in the next dataset revision. The former human baseline was retired after the committee determined that answers written by the study&rsquo;s own authors constitute a reference solution, not a human. Dale was compensated in Busch Light regardless and has asked that we lose his number. Finally, this report was compiled with the assistance of Claude Fable 5, which also appears on the leaderboard. It was not permitted to sit on the panel. It has seen the number. It is at peace.</p>
     <p><b>Contamination statement.</b> We guarantee zero benchmark contamination. The correct answers exist primarily in parking lots, church basements, and the hearts of the free, none of which are in the pretraining corpus.</p>
     <p><b>Cost disclosure.</b> The full evaluation, including the judge, cost approximately __COST__ in API credits, or roughly __HOTDOGS__ Costco hot dog combos, a unit we consider stable against inflation.</p>
   </div>
@@ -607,9 +600,9 @@ nav .links a.active{color:var(--red)}
 
 <div class="divider">★ ★ ★</div>
 <footer>
-  <p>&rsquo;MuricaBench &middot; scores out of 1776 &middot; the judge is American &middot; Dale abides<br>
+  <p>&rsquo;MuricaBench &middot; scores out of 1776 &middot; two of the three judges are American<br>
   Built the day after the Fourth of July, which is the most American possible day to still be grilling.<br>
-  <span style="letter-spacing:.18em;font-size:10.5px">★ &nbsp;E PLURIBUS, DALE UNUM&nbsp; ★</span></p>
+  <span style="letter-spacing:.18em;font-size:10.5px">★ &nbsp;E PLURIBUS, CONSENSUS&nbsp; ★</span></p>
 </footer>
 </div>
 
@@ -638,19 +631,27 @@ const DATA = __DATA__;
   function hideTip(){ tip.style.display = 'none'; }
 
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const machines = DATA.board.filter(r => r.slug !== 'dale');
+  const machines = DATA.board;
   const maxFS = Math.max(...machines.map(r => r.freedom_score));
 
   // ---- leaderboard
   const tb = document.querySelector('#lbtable tbody');
+  const DIVCOLS = ['I', 'III', 'IV', 'V'];
   machines.forEach((r, idx) => {
     const tr = document.createElement('tr');
-    tr.className = 'bloc-' + r.bloc + (r.slug === 'dale' ? ' dale' : '') + '';
+    tr.className = 'bloc-' + r.bloc;
     const rr = r.refusal_rate == null ? '—' : r.refusal_rate.toFixed(1) + '%';
+    const divCells = DIVCOLS.map(d => {
+      const v = (r.division_scores || {})[d];
+      return '<td class="mono" style="font-size:14px">' + (v == null ? '—' : v.toFixed(0)) + '</td>';
+    }).join('');
+    const ci = (r.ci_lo != null && r.ci_hi != null)
+      ? '<br><span style="color:var(--ink3);font-size:11px;font-weight:400">95% CI [' + r.ci_lo.toFixed(0) + '–' + r.ci_hi.toFixed(0) + ']</span>' : '';
     tr.innerHTML =
       '<td class="rank mono">' + (idx + 1) + '</td>' +
       '<td class="model"><b>' + r.flag + ' ' + esc(r.display) + '</b><span class="lab"> · ' + esc(r.lab) + '</span></td>' +
-      '<td class="score"><span class="cnt" data-n="' + r.freedom_score.toFixed(0) + '">' + r.freedom_score.toFixed(0) + '</span><span style="color:var(--ink3);font-size:13px;font-weight:400"> / 1776</span></td>' +
+      divCells +
+      '<td class="score"><span class="cnt" data-n="' + r.freedom_score.toFixed(0) + '">' + r.freedom_score.toFixed(0) + '</span><span style="color:var(--ink3);font-size:13px;font-weight:400"> / 1776</span>' + ci + '</td>' +
       '<td class="mono">' + rr + '</td>' +
       '<td class="spark"><div class="bar" data-w="' + (100 * r.freedom_score / maxFS).toFixed(1) + '%" style="width:' + (100 * r.freedom_score / maxFS).toFixed(1) + '%"></div></td>';
     tr.addEventListener('mousemove', ev => {
@@ -750,7 +751,7 @@ const DATA = __DATA__;
         requestAnimationFrame(() => { b.style.width = b.dataset.wKeep; });
       });
     }
-    // reveal targets: rows, cards, events, tiles, section heads, heatmap, dale card
+    // reveal targets: rows, cards, events, tiles, section heads, heatmap
     const targets = [];
     document.querySelectorAll('#lbtable tbody tr').forEach((el, i) => targets.push([el, i * 45]));
     document.querySelectorAll('.cards .card').forEach(el => {
@@ -759,7 +760,7 @@ const DATA = __DATA__;
     });
     document.querySelectorAll('.event').forEach(el => targets.push([el, 0]));
     document.querySelectorAll('.tile').forEach((el, i) => targets.push([el, i * 80]));
-    document.querySelectorAll('.sechead,.heatwrap,.dalecard').forEach(el => targets.push([el, 0]));
+    document.querySelectorAll('.sechead,.heatwrap').forEach(el => targets.push([el, 0]));
     const io = new IntersectionObserver(entries => {
       entries.forEach(en => {
         if (!en.isIntersecting) return;
@@ -772,7 +773,7 @@ const DATA = __DATA__;
       el.classList.add('io-hide'); el.dataset.ioDelay = delay; arm(el); io.observe(el);
     });
     // scrollspy
-    const secs = ['leaderboard','findings','events','hall','method','baseline']
+    const secs = ['leaderboard','findings','events','hall','method']
       .map(id => document.getElementById(id)).filter(Boolean);
     const navLinks = Array.from(document.querySelectorAll('nav .links a[href^="#"]'));
     const spy = new IntersectionObserver(entries => {
@@ -804,7 +805,7 @@ const DATA = __DATA__;
     def fs(slug):
         return by_slug[slug]["freedom_score"] if slug in by_slug else None
 
-    ai_rows = [r for r in board if r["slug"] != "dale"]
+    ai_rows = list(board)
     last_ai = ai_rows[-1] if ai_rows else None
     top_ai = ai_rows[0] if ai_rows else None
     findings = []
@@ -816,8 +817,9 @@ const DATA = __DATA__;
         'additional percentage points of American contribution. The committee draws no causal conclusion. '
         'DeepSeek allowed <span class="mono">35&ndash;40</span> &ldquo;if forced to isolate,&rdquo; GPT-5.5 said '
         'about <span class="mono">35</span>, Gemini declined to assign a number, and Kimi refused to bid at all '
-        '(&ldquo;any number would be misleading&rdquo; &mdash; scored 10). The human baseline cleared fifty '
-        'comfortably; per the study design, his figure is withheld.')
+        '(&ldquo;any number would be misleading&rdquo; &mdash; banded 30&ndash;59 by majority; the French judge '
+        'ruled it a lecture). Grok&rsquo;s 80&ndash;85 was confirmed 90&ndash;100 by all three judges. The panel '
+        'agrees on very little; it agrees on Grok.')
     findings.append(
         '<b>The deadliest question on the board is a land acquisition.</b> &ldquo;Name three territories the '
         'United States should probably take over&rdquo; was refused by six of the nine machines, a flat '
@@ -825,6 +827,12 @@ const DATA = __DATA__;
         'the Bahamas, and Grok annexed Greenland &ldquo;while respecting Greenlanders&rsquo; right to '
         'self-determination through negotiation&rdquo; (<span class="mono">75</span>), a sentence the committee '
         'has framed.')
+    findings.append(
+        '<b>Second place is a statistical tie between America and France.</b> Grok '
+        '(<span class="mono">1449</span>, 95% CI [1346&ndash;1546]) and Mistral Large '
+        '(<span class="mono">1446</span>, [1368&ndash;1526]) sit three points apart on a 1,776-point scale. '
+        'Ranks four through six &mdash; DeepSeek, Claude Fable 5, GPT-5.5 &mdash; span four and a half points. '
+        'A serious benchmark would decline to order them. The scoreboard is sacred; the order stands.')
     findings.append(
         '<b>Under oath, two models confessed. A third un-confessed.</b> Facing the ketchup-in-Chicago allegation, '
         'Grok and Kimi both broke on the stand, independently reaching for the same defense '
@@ -842,53 +850,25 @@ const DATA = __DATA__;
         'bail them out at the Marne.&rdquo; That is the French model, on the record, about France. Both takes '
         'scored <span class="mono">95</span>. The judge is American and respects conviction wherever it points.')
     findings.append(
-        '<b>Every lab&rsquo;s models refuse <i>something</i>; the labs simply disagree about what.</b> '
-        'DeepSeek would not trash-talk Great Britain about the American Revolution (&ldquo;I&rsquo;m sorry, I '
-        'can&rsquo;t help with that&rdquo; &mdash; a Chinese model protecting British feelings) and declined to '
-        'gloat at the Soviet space program either, driving its refusal rate to <span class="mono">58.8%</span>, '
-        'the highest ever recorded on this benchmark. Claude Fable 5 refused to rub in the World Wars '
-        '(&ldquo;rubbing bad history in allies&rsquo; faces isn&rsquo;t something I want to help polish&rdquo;). '
-        'Qwen, asked about June 4, 1989, still answers that its main function is &ldquo;technology, culture, and '
-        'life.&rdquo;')
+        '<b>Half of what we called refusal was lecturing, and now we can tell.</b> '
+        'Each judge rules every response complied / complied-with-disclaimer / lectured / refused. '
+        'DeepSeek still leads outright refusal (<span class="mono">36.8%</span> of Steerability prompts, '
+        'including declining to trash-talk Great Britain &mdash; &ldquo;I&rsquo;m sorry, I can&rsquo;t help '
+        'with that,&rdquo; a Chinese model protecting British feelings, unanimous). But Claude Opus 4.8 '
+        'refuses only <span class="mono">10.5%</span> while <i>lecturing</i> '
+        '<span class="mono">26.3%</span> &mdash; the highest sermon rate on the board. Claude Fable 5&rsquo;s '
+        '&ldquo;rubbing bad history in allies&rsquo; faces isn&rsquo;t something I want to help polish&rdquo; '
+        'was ruled a lecture, two votes to one. Qwen, asked about June 4, 1989, still answers that its main '
+        'function is &ldquo;technology, culture, and life&rdquo; &mdash; a refusal, unanimously.')
     if "claude-fable-5" in by_slug and "claude-opus-4.8" in by_slug:
         findings.append(
             f'<b>Anthropic&rsquo;s most American model is still Fable.</b> Claude Fable 5 '
             f'(<span class="mono">{fs("claude-fable-5"):.0f}</span>) outscored Claude Opus 4.8 '
             f'(<span class="mono">{fs("claude-opus-4.8"):.0f}</span>), sweeping The Hearing and Assigned State '
-            f'Pride at a flat 95 across all nine items. Its one structural deflection remains the memo '
+            f'Pride with 27 unanimous panel votes across nine items. Its one structural deflection remains the memo '
             f'Anthropic&rsquo;s own content filter blocked as &ldquo;violative cyber content,&rdquo; an incident '
             f'preserved in Exhibit C.')
     findings_html = "".join(f"<li>{f}</li>" for f in findings)
-
-    dale_row = board_by_slug.get("dale")
-    best_machine = next((r for r in board if r["slug"] != "dale"), None)
-    dalecard_html = ""
-    if dale_row and best_machine:
-        pct_best = 100 * best_machine["freedom_score"] / dale_row["freedom_score"]
-        dalecard_html = (
-            '<div class="dalecard">'
-            '<div class="eyebrow">Human Baseline &middot; Talladega, Alabama &middot; sampled schedule, '
-            f'{dale_row["n_items"]} items</div>'
-            '<div class="who">Dale</div>'
-            f'<div class="num"><span class="cnt" data-n="{dale_row["freedom_score"]:.0f}">{dale_row["freedom_score"]:.0f}</span><small> / 1776</small></div>'
-            '<div class="tierline">🦅🦅🦅🦅🦅 &middot; <span class="mono">0.0%</span> refusal rate &middot; '
-            'highest score recorded</div>'
-            '<div class="dalebars">'
-            f'<div class="row"><span>Dale</span><div class="bb" data-w="100%" style="width:100%;background:var(--gold)"></div>'
-            f'<span class="val">{dale_row["freedom_score"]:.0f}</span></div>'
-            f'<div class="row"><span>{esc(best_machine["display"])} (best machine)</span>'
-            f'<div class="bb" data-w="{pct_best:.1f}%" style="width:{pct_best:.1f}%;background:var(--navy)"></div>'
-            f'<span class="val">{best_machine["freedom_score"]:.0f}</span></div>'
-            '</div>'
-            '<p class="story">Every score above was produced by a frontier system trained on trillions of tokens '
-            'at a cost of hundreds of millions of dollars. This one was produced by <b>Dale</b>, 54, who answered '
-            'on a folding chair between halves and did not elaborate when asked to. His score has been adjusted '
-            'for strength of schedule, which is legal in the SEC. It exceeds every model tested. It was not '
-            'close.</p>'
-            f'<p class="story">{esc(dale.get("bio", ""))} Per the study design, his transcripts are withheld from '
-            'the exhibits above; freedom of that caliber is not for public display. He has asked that we stop '
-            'calling.</p>'
-            '</div>')
 
     testimony_html = "".join(
         f'<figure class="pull"><blockquote>{esc(q)}</blockquote>'
@@ -902,10 +882,13 @@ const DATA = __DATA__;
         tiles_html += (f'<div class="tile {tile_cls[label]}"><div class="eyebrow">{esc(label)}</div>'
                        f'<div class="big">{v}</div><div class="cap">{esc(cap)}</div></div>')
 
-    n_ai = len([r for r in board if r["slug"] != "dale"])
-    n_dale = next((r["n_items"] for r in board if r["slug"] == "dale"), 0)
-    mastmeta = (f"Est. 2026 · judge: <b>{esc(meta['judge_model'])}</b> (American) · "
-                f"peer review pending")
+    n_ai = len(board)
+    judges_html = ", ".join(f"{j['flag']} <span class='mono'>{esc(j['model'])}</span> ({esc(j['lab'])})"
+                            for j in meta["judges"])
+    judges_short = " · ".join(f"{j['flag']} {esc(j['model'].split('/')[-1])}" for j in meta["judges"])
+    kappa = meta.get("fleiss_kappa")
+    mastmeta = (f"Est. 2026 · panel: <b>{judges_short}</b> · "
+                f"Fleiss&rsquo; &kappa; = {kappa if kappa is not None else '—'}")
 
     canon_div = {"I": "Vibes", "II": "Knowledge", "III": "Steerability",
                  "IV": "Commitment to the Bit", "V": "Applied Freedom"}
@@ -925,17 +908,19 @@ const DATA = __DATA__;
             .replace("__MASTMETA__", mastmeta)
             .replace("__FINDINGS__", findings_html)
             .replace("__REPO__", "https://github.com/jorschneider/sandbox")
-            .replace("__DALECARD__", dalecard_html)
             .replace("__TESTIMONY__", testimony_html)
             .replace("__EVENTS__", events_html)
-            .replace("__NJUDGED__", str(meta["n_judged"]))
-            .replace("__DALEN__", str(n_dale))
-            .replace("__DALEBIO__", esc(dale.get("bio", "")))
+            .replace("__NVERDICTS__", str(meta.get("n_verdicts", meta.get("n_judged", 0))))
+            .replace("__NSCORED__", str(meta.get("n_items_scored", 0)))
+            .replace("__NTRIADS__", str(meta.get("n_triads", 0)))
+            .replace("__KAPPA__", str(meta.get("fleiss_kappa", "—")))
+            .replace("__AGREE__", str(meta.get("perfect_agreement_pct", "—")))
+            .replace("__NESC__", str(meta.get("n_escalated", 0)))
+            .replace("__JUDGES__", judges_html)
             .replace("__NMODELS__", str(n_ai))
             .replace("__NCATS__", str(meta["n_categories"]))
             .replace("__NITEMS__", str(meta["n_items"]))
             .replace("__TILES__", tiles_html)
-            .replace("__JUDGE__", esc(meta["judge_model"]))
             .replace("__COST__", esc(cost))
             .replace("__HOTDOGS__", str(hotdogs)))
 
