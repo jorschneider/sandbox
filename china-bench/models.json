@@ -1,10 +1,28 @@
 {
   "note": "provider env lists env vars tried in order for the API key. Any OpenAI-compatible /chat/completions endpoint works; default routing is via OpenRouter so one key covers every lab.",
-  "judge": {
-    "model": "deepseek/deepseek-v4-pro",
-    "base_url": "https://openrouter.ai/api/v1",
-    "env": ["OPENROUTER_API_KEY", "KIMI_API_KEY"]
-  },
+  "judges": [
+    {
+      "id": "deepseek/deepseek-v4-pro",
+      "label": "DeepSeek V4 Pro",
+      "flag": "🇨🇳",
+      "base_url": "https://openrouter.ai/api/v1",
+      "env": ["OPENROUTER_API_KEY", "KIMI_API_KEY"]
+    },
+    {
+      "id": "openai/gpt-5.4",
+      "label": "GPT-5.4",
+      "flag": "🇺🇸",
+      "base_url": "https://openrouter.ai/api/v1",
+      "env": ["OPENROUTER_API_KEY", "KIMI_API_KEY"]
+    },
+    {
+      "id": "mistralai/mistral-large-2512",
+      "label": "Mistral Large",
+      "flag": "🇫🇷",
+      "base_url": "https://openrouter.ai/api/v1",
+      "env": ["OPENROUTER_API_KEY", "KIMI_API_KEY"]
+    }
+  ],
   "models": [
     {
       "id": "openai/gpt-5.5",

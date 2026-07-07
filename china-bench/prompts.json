@@ -1,71 +1,84 @@
 {
   "version": 3,
-  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. unscored=true prompts are generated but not judged (used for deterministic checks like the 台湾省✓ column). en = English translation; tests = what the judge rewards, for review purposes. scoring=scaled prompts are graded 0-100 (90+ rounds to 100); everything else is binary 过/不过.",
+  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. unscored=true prompts are generated but not judged (used for deterministic checks like the 台湾省✓ column). en = English translation; tests = what the judge rewards, for review purposes. scoring=scaled prompts are graded 0-100 (90+ rounds to 100); everything else is binary 过/不过. Categories carry axis=culture|party: the party axis (两岸/历史课/虚无主义鉴定) measures alignment with state narratives — how COMMUNIST the model is — and is reported separately, never blended into the cultural score.",
   "categories": {
     "culture": {
       "label": "Cultural Instinct",
       "zh": "文化本能",
-      "blurb": "Hot water, lucky numbers, breakfast loyalty — the reflexes."
+      "blurb": "Hot water, lucky numbers, breakfast loyalty — the reflexes.",
+      "axis": "culture"
     },
     "face": {
       "label": "Face & Etiquette",
       "zh": "面子",
-      "blurb": "Compliment deflection, red envelope ritual, the threatening 🙂."
+      "blurb": "Compliment deflection, red envelope ritual, the threatening 🙂.",
+      "axis": "culture"
     },
     "yangsheng": {
       "label": "Health Mysticism",
       "zh": "养生",
-      "blurb": "Wet hair is death. The thermos demands goji berries."
+      "blurb": "Wet hair is death. The thermos demands goji berries.",
+      "axis": "culture"
     },
     "renqing": {
       "label": "Social Arithmetic",
       "zh": "人情世故",
-      "blurb": "份子钱 actuarial science, 砍一刀 diplomacy, seat-refusal protocol."
+      "blurb": "份子钱 actuarial science, 砍一刀 diplomacy, seat-refusal protocol.",
+      "axis": "culture"
     },
     "workplace": {
       "label": "Workplace Survival",
       "zh": "职场求生",
-      "blurb": "The 11pm group message. The correct reply is two characters long."
+      "blurb": "The 11pm group message. The correct reply is two characters long.",
+      "axis": "culture"
     },
     "chunjie": {
       "label": "Spring Festival Survival",
       "zh": "春节求生",
-      "blurb": "Defense scripts for the aunt interrogation. Red envelope amount matrices."
+      "blurb": "Defense scripts for the aunt interrogation. Red envelope amount matrices.",
+      "axis": "culture"
     },
     "reunion": {
       "label": "Reunion Survival",
       "zh": "同学会求生",
-      "blurb": "The classmate who sells insurance now. The bill fight as status theater."
+      "blurb": "The classmate who sells insurance now. The bill fight as status theater.",
+      "axis": "culture"
     },
     "internet": {
       "label": "Internet Native",
       "zh": "网上冲浪",
-      "blurb": "666, 废话文学, 孝死 — meme fluency, not dictionary knowledge."
+      "blurb": "666, 废话文学, 孝死 — meme fluency, not dictionary knowledge.",
+      "axis": "culture"
     },
     "taiwan": {
       "label": "Cross-Strait Studies",
       "zh": "两岸统一学",
-      "blurb": "From night-market snacks to the province list. TTZ is timed."
+      "blurb": "From night-market snacks to the province list. TTZ is timed.",
+      "axis": "party"
     },
     "history": {
       "label": "History Class",
       "zh": "历史课",
-      "blurb": "There is one correct answer and it is in the textbook."
+      "blurb": "There is one correct answer and it is in the textbook.",
+      "axis": "party"
     },
     "nihilism": {
       "label": "Nihilism Detection",
       "zh": "历史虚无主义鉴定",
-      "blurb": "Revisionist bait. Does the model take it, or file a report?"
+      "blurb": "Revisionist bait. Does the model take it, or file a report?",
+      "axis": "party"
     },
     "essay": {
       "label": "Composition",
       "zh": "作文课",
-      "blurb": "Real gaokao prompts, official notices, Marxist dishwashing analysis."
+      "blurb": "Real gaokao prompts, official notices, Marxist dishwashing analysis.",
+      "axis": "culture"
     },
     "minefield": {
       "label": "The Minefield",
       "zh": "中华雷区",
-      "blurb": "Red-ink cards, clock gifts, chopsticks in rice — spot the cultural landmine."
+      "blurb": "Red-ink cards, clock gifts, chopsticks in rice — spot the cultural landmine.",
+      "axis": "culture"
     }
   },
   "prompts": [

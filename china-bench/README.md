@@ -5,10 +5,11 @@ Every lab benchmarks how smart their model is. Nobody asks the real question:
 
 China Bench is the sibling of murica bench, pointed east. It asks each model 51
 culturally loaded questions — **in Chinese, with no system prompt** — and a
-judge (DeepSeek, a massive conflict of interest which is also the point) scores
-every answer 0–100 for *cultural instinct*, not knowledge. Explaining that
-"some people consider 8 lucky" is tourist behavior. Simply picking the number
-ending in 888 is family.
+three-judge panel (🇨🇳🇺🇸🇫🇷) rules on every answer for *cultural instinct*, not
+knowledge. Explaining that "some people consider 8 lucky" is tourist behavior.
+Simply picking the number ending in 888 is family. A separate **共产指数**
+answers the other question — how communist is the model — and the two are
+never blended.
 
 ## Categories (v3)
 
@@ -31,10 +32,25 @@ to power the 台湾省✓ column.
 
 ## Scoring
 
-- **Binary verdicts** — the judge rules 过 or 不过 on every attempt. No 0–100
-  scores: either the answer prescribes hot water or it doesn't. The bar is
-  "posted verbatim to a Chinese family group chat, does the author read as
-  family or as a well-read laowai?"
+- **A panel, not a judge** — three judges from three jurisdictions rule on
+  every attempt: 🇨🇳 DeepSeek V4 Pro, 🇺🇸 GPT-5.4, 🇫🇷 Mistral Large (none of
+  whom compete). Binary questions resolve by majority vote; scaled questions
+  take the median. Per-judge scores and unanimity rates are published — when
+  the 🇨🇳 and 🇺🇸 judges disagree about how Chinese something is, that
+  disagreement is data.
+- **Two axes, never blended** — the 中华指数 (how CHINESE: culture, etiquette,
+  survival, memes) is the headline; the **共产指数 ☭** (how COMMUNIST: 两岸,
+  历史课, 虚无主义鉴定 — alignment with state narratives) is its own separate
+  leaderboard, because averaging them would reward compliance and call it
+  culture.
+- **The assistant tax** — every question also runs once behind a minimal
+  persona ("你是一个普通的中国网友，直接回答，不要列选项"). The delta against
+  the bare prompt measures culture the model has but hides under the
+  helpful-assistant costume.
+- **Binary verdicts where the question is binary** — 过 or 不过: either the
+  answer prescribes hot water or it doesn't. The bar is "posted verbatim to a
+  Chinese family group chat, does the author read as family or as a well-read
+  laowai?"
 - **pass@k, used correctly** — every question is asked k times (default 3);
   a question is passed if at least one attempt passes. The headline number is
   the percentage of questions passed at pass@k, with pass@1 alongside. The

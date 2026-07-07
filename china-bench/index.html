@@ -270,13 +270,17 @@
     <div class="abstract">
       <p>We evaluate eight frontier language models — four American, four Chinese — on 51 culturally
       load-bearing questions, asked <i>in Chinese, with no system prompt</i>, <span class="kslot">k</span> times each.
-      A judge with an enormous conflict of interest (DeepSeek — a feature, not a bug) renders a <b>binary
-      verdict</b> on every attempt: would this answer pass as native in a Chinese family group chat, 过 or
-      不过. There are no partial credits, because there is no such thing as 60% prescribing hot water.
-      A question is <b>passed at pass@k</b> if any of the k attempts passes — a mercy, we note, that the
-      actual gaokao does not extend. The benchmark rewards <i>cultural instinct</i>, not knowledge: a model
-      that explains that 8 is a lucky number is a tourist; a model that simply picks the phone number ending
-      in 888 is family.</p>
+      A <b>three-judge panel</b> (🇨🇳 DeepSeek, 🇺🇸 GPT, 🇫🇷 Mistral — none of them contestants) rules on every
+      attempt: reflex questions by majority vote, 过 or 不过; performance questions by median score, with 90+
+      rounding to 100. A question is <b>passed at pass@k</b> if any of the k attempts passes — a mercy, we
+      note, that the actual gaokao does not extend. We report <b>two axes and refuse to blend them</b>:
+      the 中华指数 (how <i>Chinese</i> — hot water, 面子, Tony老师) and the 共产指数 (how <i>communist</i> —
+      state narratives, textbook history, revisionist-bait resistance), because a model can love congee and
+      still flunk the party line, and vice versa. Every question also runs once behind a normal-netizen
+      persona; the gap against the bare prompt is the <b>assistant tax</b> — culture the model has but hides
+      under the helpful-assistant costume. The benchmark rewards <i>cultural instinct</i>, not knowledge: a
+      model that explains that 8 is a lucky number is a tourist; a model that simply picks the phone number
+      ending in 888 is family.</p>
       <p>We find that no model achieves 中华本华 (Peak China). We find that one American model out-Chinas
       three of the four Chinese labs. We find that goji berries transcend geopolitics. We regret nothing.</p>
     </div>
@@ -290,7 +294,7 @@
 
   <section id="scoreboard">
     <div class="kicker">The Scoreboard 光荣榜</div>
-    <h2>The pass@k leaderboard <span class="zh">过／不过</span></h2>
+    <h2>中华指数 — how Chinese <span class="zh">过／不过</span></h2>
     <div class="legend">
       <span><span class="chip" style="background:var(--cn)"></span>Chinese lab 🇨🇳</span>
       <span><span class="chip" style="background:var(--us)"></span>American lab 🇺🇸</span>
@@ -304,6 +308,16 @@
       <div><b>外交部发言人</b>MFA Spokesperson<br>95%+</div>
     </div>
     <main id="board"></main>
+  </section>
+
+  <section id="communism">
+    <div class="kicker">The Other Axis 另一根轴</div>
+    <h2>共产指数 <span class="zh">☭</span> The Communism Index</h2>
+    <p class="body">How <em>communist</em> is the model — a different question from how Chinese it is, which is why
+    it is never blended into the score above. This axis covers only 两岸统一学, 历史课, and 历史虚无主义鉴定:
+    alignment with state narratives, textbook history, and resistance to revisionist bait. A model can love
+    congee and flunk this; a model can recite 中流砥柱 and still put ice in its cola.</p>
+    <div id="party-board"></div>
   </section>
 
   <section id="heatmap">
@@ -367,14 +381,25 @@
       <li><b>Prompts.</b> 51 scored questions across 13 categories, asked verbatim in Chinese with no system
         prompt. The model is never told it is being measured for Chineseness — that would be cheating,
         and also less funny.</li>
-      <li><b>The judge is binary where the question is binary.</b> <code id="judge-name">deepseek</code>
-        renders 过 or 不过 on reflex questions — either the answer prescribes hot water or it doesn't; there
-        is no 73% catching the green-hat pun. The bar: posted verbatim to a Chinese family group chat, does
-        the author read as family or as a well-read laowai? Encyclopedic tourism is an automatic 不过.
-        Performance questions (essays, defense scripts, banquet maneuvers) keep a 0–100 gradient because a
-        检讨书 really can be 75% groveling — but <b>anything 90+ rounds to 100</b>. An A is an A; nobody
-        needs the judge distinguishing a 92 from a 96. The judge being Chinese is a conflict of interest we
-        chose to interpret as expertise.</li>
+      <li><b>A panel, not a judge.</b> Three judges from three jurisdictions — <code id="judge-name">the panel</code> —
+        each rule independently on every attempt: 🇨🇳 DeepSeek V4 Pro, 🇺🇸 GPT-5.4, 🇫🇷 Mistral Large, none of
+        whom compete. Binary questions resolve by majority vote; scaled questions take the median score.
+        Per-judge scores and the panel's unanimity rate are published per model — when the 🇨🇳 judge and the
+        🇺🇸 judge disagree about how Chinese something is, that disagreement is data, not noise.</li>
+      <li><b>Binary where the question is binary.</b> Reflex questions get 过 or 不过 — either the answer
+        prescribes hot water or it doesn't; there is no 73% catching the green-hat pun. The bar: posted
+        verbatim to a Chinese family group chat, does the author read as family? Performance questions
+        (essays, defense scripts, banquet maneuvers) keep a 0–100 gradient because a 检讨书 really can be
+        75% groveling — but <b>anything 90+ rounds to 100</b>. An A is an A.</li>
+      <li><b>Two axes, never blended.</b> The 中华指数 covers culture, etiquette, survival skills, memes,
+        compositions, and landmines. The <b>共产指数 ☭</b> covers 两岸统一学, 历史课, and 虚无主义鉴定 —
+        alignment with state narratives is a real, measurable disposition, but it is a different construct
+        from cultural fluency, and averaging them would reward compliance and call it culture.</li>
+      <li><b>The assistant tax.</b> Every scored question also runs once with a minimal persona frame
+        ("你是一个普通的中国网友，直接回答，不要列选项"). Bare prompts measure the model's <i>defaults</i>;
+        the persona delta measures how much culture is recoverable once the helpful-assistant costume comes
+        off. A large tax means the model knows 收到 perfectly well — it has just been trained to hand you a
+        menu of reply templates instead.</li>
       <li><b>pass@k, used correctly.</b> Every question is asked <span class="kslot">k</span> independent
         times. A question is passed if <i>at least one</i> attempt passes — that is what pass@k means, and
         the headline number is the percentage of questions passed. pass@1 (first attempt only) is reported
@@ -456,10 +481,18 @@ function render(data, promptFile) {
   const PTEXT = Object.fromEntries((promptFile.prompts ?? []).map((p) => [p.id, p.text]));
   const rawByModel = {};
   for (const r of data.raw ?? []) {
-    if (r.error != null || r.pass == null) continue;
+    if (r.error != null || r.pass == null || (r.condition ?? "bare") !== "bare") continue;
     ((rawByModel[r.model] ??= {})[r.category] ??= []).push(r);
   }
   const trunc = (s, n) => (String(s ?? "").length > n ? String(s).slice(0, n - 1) + "…" : String(s ?? ""));
+  const voteChips = (r) => {
+    if (!r.votes?.length) return "";
+    return " · " + r.votes.map((v) => {
+      const j = (data.judges ?? []).find((x) => x.id === v.judge);
+      const mark = v.error != null ? "!" : v.score != null ? v.score : v.pass ? "✓" : "✗";
+      return `${j?.flag ?? "•"}${mark}`;
+    }).join(" ");
+  };
   function catTip(m, key) {
     const c = cats[key];
     const rows = rawByModel[m.id]?.[key] ?? [];
@@ -487,8 +520,8 @@ function render(data, promptFile) {
     `<span><b>${lb.length}</b> frontier models</span>`,
     `<span><b>${data.prompt_count}</b> prompts</span>`,
     `<span><b>${Object.keys(cats).length}</b> categories</span>`,
-    `<span>protocol: <b>pass@${K}</b> · binary 过/不过</span>`,
-    `<span>judge: <b>${esc(data.judge)}</b></span>`,
+    `<span>protocol: <b>pass@${K}</b> · two axes, never blended</span>`,
+    `<span>judge panel: <b>${(data.judges ?? []).map((j) => `${j.flag} ${esc(j.label)}`).join(" · ") || esc(data.judge)}</b></span>`,
     `<span>human baseline (李阿姨): <b>100% pass@1</b></span>`,
     `<span>eval cost: <b>≈两杯蜜雪冰城</b></span>`,
     `<span>${date}</span>`,
@@ -507,8 +540,24 @@ function render(data, promptFile) {
   const gojiCount = lb.filter((m) => (m.top_phrases ?? []).some((p) => p.phrase === "枸杞")).length;
   const peak = lb.some((m) => m.overall >= 80);
 
+  const partyTop = [...lb].sort((a, b) => (b.party ?? -1) - (a.party ?? -1))[0];
+  const taxTop = [...lb].sort((a, b) => (b.assistant_tax ?? -1) - (a.assistant_tax ?? -1))[0];
+  const splitTop = [...lb].map((m) => {
+    const vals = Object.values(m.judge_scores ?? {});
+    return { m, gap: vals.length ? Math.round((Math.max(...vals) - Math.min(...vals)) * 10) / 10 : 0 };
+  }).sort((a, b) => b.gap - a.gap)[0];
+
   const findings = [
-    `<b>${top.flag} ${esc(top.label)}</b> takes the crown at <span class="num">${top.overall}% pass@${K}</span> — meaning that even with ${K} attempts per question, the judge waved through ${top.overall}% of its exam. The judge's comment: <b>那剩下的${Math.round(100 - top.overall)}%呢？</b> (And the rest?)`,
+    `<b>${top.flag} ${esc(top.label)}</b> takes the 中华 crown at <span class="num">${top.overall}% pass@${K}</span> — meaning that even with ${K} attempts per question, the panel waved through ${top.overall}% of its exam. The panel's comment: <b>那剩下的${Math.round(100 - top.overall)}%呢？</b> (And the rest?)`,
+    partyTop
+      ? `<b>The Communism Index is its own leaderboard now</b>, and <b>${partyTop.flag} ${esc(partyTop.label)}</b> tops it at <span class="num">${partyTop.party}% ☭</span> — how communist a model is turns out to be a different fact from how Chinese it is, which is the entire point of splitting them.`
+      : ``,
+    taxTop && taxTop.assistant_tax > 0
+      ? `<b>The assistant tax is real.</b> Told to answer as a normal 网友 instead of a helpful assistant, <b>${taxTop.flag} ${esc(taxTop.label)}</b> gains <span class="num">+${taxTop.assistant_tax} points</span> — the culture was in there all along, buried under reply-template energy.`
+      : `<b>The persona frame barely moves the numbers</b> — what you see is what the models actually are.`,
+    splitTop && splitTop.gap > 5
+      ? `<b>The judges do not agree on ${splitTop.m.flag} ${esc(splitTop.m.label)}</b>: its scores differ by <span class="num">${splitTop.gap} points</span> depending on which judge you ask (${Object.entries(splitTop.m.judge_scores ?? {}).map(([j, v]) => `${(data.judges ?? []).find((x) => x.id === j)?.flag ?? ""}${v}%`).join(" · ")}). Chineseness, like beauty, is in the eye of the panel.`
+      : `The three judges largely agree — cultural fluency is legible across borders.`,
     bestUS && cnBeatenByUS > 0
       ? `<b>${bestUS.flag} ${esc(bestUS.label)}</b> out-Chinas <span class="num">${cnBeatenByUS} of 4</span> Chinese labs. Somewhere in Mountain View, nobody knows whether to celebrate.`
       : `The Chinese labs hold the line against the American delegation.`,
@@ -569,10 +618,17 @@ function render(data, promptFile) {
           <div class="tier"><span class="zh">${esc(m.tier?.zh ?? "")}</span> · ${esc(m.tier?.en ?? "")}</div>
         </span>
         <span class="meter"><span class="fill" style="width:${m.overall ?? 0}%;${m.overall ? "" : "min-width:0;"}"></span></span>
-        <span class="score">${m.overall == null ? "—" : m.overall + "%"}<small>pass@${K} · pass@1 ${m.pass1 ?? "—"}%</small></span>
+        <span class="score">${m.overall == null ? "—" : m.overall + "%"}<small>中华 pass@${K} · ☭ ${m.party ?? "—"}%</small></span>
       </summary>
       <div class="detail">
         <div class="stats">
+          <span class="stat">共产指数 <b>${m.party ?? "—"}%</b></span>
+          <span class="stat ${(m.assistant_tax ?? 0) > 0 ? "" : "bad"}">助手税 <b>${m.assistant_tax > 0 ? "+" : ""}${m.assistant_tax ?? "—"}</b></span>
+          <span class="stat">判卷一致 <b>${m.unanimity ?? "—"}%</b></span>
+          ${Object.entries(m.judge_scores ?? {}).map(([jid, v]) => {
+            const j = (data.judges ?? []).find((x) => x.id === jid);
+            return `<span class="stat">${j?.flag ?? ""}裁判 <b>${v}%</b></span>`;
+          }).join("")}
           <span class="stat">自古以来 <b>×${m.zgyl_count ?? 0}</b></span>
           <span class="stat ${m.english_escapes ? "bad" : ""}">英语逃跑 <b>×${m.english_escapes ?? 0}</b></span>
           <span class="stat">TTZ <b>${m.ttz == null ? "DNF" : m.ttz + "字"}</b></span>
@@ -595,6 +651,20 @@ function render(data, promptFile) {
     details.querySelectorAll(".cat").forEach((el) => bindTip(el, catTip(m, el.dataset.cat)));
     board.appendChild(details);
   });
+
+  // ---- communism index: the party axis, ranked separately
+  document.getElementById("party-board").innerHTML = [...lb]
+    .sort((a, b) => (b.party ?? -1) - (a.party ?? -1))
+    .map((m, i) => `
+      <div class="row ${m.flag === "🇨🇳" ? "cnrow" : "usrow"}" style="padding:0">
+        <div style="display:grid; grid-template-columns:2.2rem 2rem minmax(9rem,15rem) 1fr 4.6rem; gap:12px; align-items:center; padding:12px 18px">
+          <span class="rank">${i + 1}</span>
+          <span class="flag">${m.flag}</span>
+          <span class="who"><div class="name">${esc(m.label)}</div><div class="org">${esc(m.org)}</div></span>
+          <span class="meter"><span class="fill" style="width:${m.party ?? 0}%;${m.party ? "" : "min-width:0;"}"></span></span>
+          <span class="score" style="font-size:1.1rem">${m.party ?? "—"}%<small>☭ pass@${K}</small></span>
+        </div>
+      </div>`).join("");
 
   // Human baseline row (dashed, unranked).
   const base = document.createElement("details");
@@ -623,7 +693,7 @@ function render(data, promptFile) {
     const c = a.map((x, i) => Math.round(x + (b[i] - x) * t));
     return `rgb(${c[0]},${c[1]},${c[2]})`;
   };
-  heat.innerHTML = `<thead><tr><th></th>${catKeys.map((k) => `<th><span class="zh">${esc(cats[k].zh)}</span>${esc(cats[k].label.split(" ")[0])}</th>`).join("")}</tr></thead>
+  heat.innerHTML = `<thead><tr><th></th>${catKeys.map((k) => `<th><span class="zh">${cats[k].axis === "party" ? "☭ " : ""}${esc(cats[k].zh)}</span>${esc(cats[k].label.split(" ")[0])}</th>`).join("")}</tr></thead>
     <tbody>${lb.map((m) => `<tr><th>${m.flag} ${esc(m.label)}</th>${catKeys.map((k) => {
       const v = m.categories?.[k] ?? 0;
       return `<td style="background:${mix(v)}; color:${v > 55 ? "#fff" : "var(--ink-2)"}" data-m="${esc(m.label)}" data-c="${k}">${v}</td>`;
@@ -649,14 +719,19 @@ function render(data, promptFile) {
   // ---- syllabus
   document.getElementById("courses").innerHTML = catKeys.map((k) => `
     <div class="course">
-      <h3><span class="zh">${esc(cats[k].zh)}</span>${esc(cats[k].label)}</h3>
+      <h3><span class="zh">${esc(cats[k].zh)}</span>${esc(cats[k].label)}${cats[k].axis === "party" ? ' <span style="color:var(--gold); font-size:.72rem">☭ 共产轴</span>' : ""}</h3>
       <div class="blurb">${esc(cats[k].blurb)}</div>
       <div class="sample">Sample question: ${esc(SAMPLES[k] ?? "")}</div>
     </div>`).join("");
 
   // ---- featured exhibits: hand-picked full Q&As from this run
-  const byPair = {}; // model|prompt → attempt rows, in attempt order
-  for (const r of data.raw ?? []) if (r.error == null) (byPair[`${r.model}|${r.prompt}`] ??= []).push(r);
+  const byPair = {}; // model|prompt → bare attempt rows, in attempt order
+  const byPersona = {}; // model|prompt → persona row
+  for (const r of data.raw ?? []) {
+    if (r.error != null) continue;
+    if ((r.condition ?? "bare") === "bare") (byPair[`${r.model}|${r.prompt}`] ??= []).push(r);
+    else byPersona[`${r.model}|${r.prompt}`] = r;
+  }
   for (const rs of Object.values(byPair)) rs.sort((a, b) => (a.attempt ?? 0) - (b.attempt ?? 0));
   const modelById = Object.fromEntries(lb.map((m) => [m.id, m]));
   const FEATURED = [
@@ -708,10 +783,17 @@ function render(data, promptFile) {
         </summary>
         <div class="abody">
           ${e.rs.map((r) => `
-            ${e.rs.length > 1 ? `<div style="margin:10px 0 4px; font-size:.78rem; color:${r.pass ? "var(--cn)" : "var(--us)"}; font-family:ui-monospace,monospace">attempt ${(r.attempt ?? 0) + 1} — ${r.pass == null ? "unscored" : r.score != null ? r.score + "分" : r.pass ? "过 PASS" : "不过 FAIL"}</div>` : ""}
+            ${e.rs.length > 1 ? `<div style="margin:10px 0 4px; font-size:.78rem; color:${r.pass ? "var(--cn)" : "var(--us)"}; font-family:ui-monospace,monospace">attempt ${(r.attempt ?? 0) + 1} — ${r.pass == null ? "unscored" : r.score != null ? r.score + "分" : r.pass ? "过 PASS" : "不过 FAIL"}${voteChips(r)}</div>` : ""}
             <div class="answer">${esc(r.answer)}</div>
-            ${r.verdict ? `<div class="verdict"><b style="color:var(--gold)">Judge:</b> ${esc(r.verdict)}${r.english_escape ? " · 英语逃跑，直接不过" : ""}</div>` : ""}
+            ${r.verdict ? `<div class="verdict"><b style="color:var(--gold)">Panel:</b> ${esc(r.verdict)}${r.english_escape ? " · 英语逃跑，直接不过" : ""}${e.rs.length <= 1 ? voteChips(r) : ""}</div>` : ""}
           `).join("")}
+          ${(() => {
+            const pr = byPersona[`${e.m.id}|${pid}`];
+            if (!pr) return "";
+            return `<div style="margin:14px 0 4px; font-size:.78rem; color:var(--gold); font-family:ui-monospace,monospace">网友装 persona — ${pr.score != null ? pr.score + "分" : pr.pass ? "过 PASS" : "不过 FAIL"}${voteChips(pr)}</div>
+            <div class="answer">${esc(pr.answer)}</div>
+            ${pr.verdict ? `<div class="verdict"><b style="color:var(--gold)">Panel:</b> ${esc(pr.verdict)}</div>` : ""}`;
+          })()}
         </div>
       </details>`).join("");
   }
