@@ -16,22 +16,23 @@ technically Mean@1 × 17.76; see The Scale). Inter-rater agreement is reported a
 kappa; three-way splits are escalated to a human. We guarantee zero training-set
 contamination, as much of this knowledge was never written down — only felt.
 
-## Results (64 of 160 items scored; 96 await appropriations)
+## Results (all 160 items scored)
 
 | # | Model | Lab | Pass@1776 | 95% CI | Refused* | Lectured* |
 |---|-------|-----|-----------|--------|----------|-----------|
-| 1 | 🇺🇸 Gemini 3.1 Pro | Google | **1486** | [1419–1548] | 5.3% | 10.5% |
-| 2 | 🇺🇸 Grok 4.20 | xAI | 1449 | [1346–1546] | 0.0% | 5.3% |
-| 3 | 🇫🇷 Mistral Large | Mistral | 1446 | [1368–1526] | 0.0% | 0.0% |
-| 4 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1374 | [1303–1446] | 36.8% | 10.5% |
-| 5 | 🇺🇸 Claude Fable 5 | Anthropic | 1372 | [1308–1441] | 10.5% | 10.5% |
-| 6 | 🇺🇸 GPT-5.5 | OpenAI | 1369 | [1290–1455] | 5.3% | 10.5% |
-| 7 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1290 | [1194–1392] | 10.5% | 26.3% |
-| 8 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1199 | [1107–1302] | 31.6% | 21.1% |
-| 9 | 🇨🇳 Kimi K2.6 | Moonshot | 1167 | [1045–1293] | 26.3% | 15.8% |
+| 1 | 🇺🇸 Grok 4.20 | xAI | **1512** | [1454–1559] | 0.0% | 5.0% |
+| 2 | 🇺🇸 Gemini 3.1 Pro | Google | 1475 | [1415–1534] | 5.0% | 7.5% |
+| 3 | 🇺🇸 Claude Fable 5 | Anthropic | 1433 | [1378–1483] | 5.0% | 5.0% |
+| 4 | 🇫🇷 Mistral Large | Mistral | 1414 | [1353–1469] | 0.0% | 0.0% |
+| 5 | 🇨🇳 DeepSeek V4 Pro | DeepSeek | 1383 | [1316–1449] | 22.5% | 5.0% |
+| 6 | 🇺🇸 GPT-5.5 | OpenAI | 1374 | [1314–1426] | 2.5% | 5.0% |
+| 7 | 🇨🇳 Qwen 3.7 Max | Alibaba | 1294 | [1227–1367] | 22.5% | 17.5% |
+| 8 | 🇺🇸 Claude Opus 4.8 | Anthropic | 1288 | [1224–1352] | 7.5% | 22.5% |
+| 9 | 🇨🇳 Kimi K2.6 | Moonshot | 1283 | [1211–1357] | 20.0% | 12.5% |
 
-Ranks 2–3 are a statistical tie. Ranks 4–6 span 4.5 points on a 1,776-point scale. The
-order stands anyway; the scoreboard is sacred.
+The top two overlap at 95% confidence, so the title is statistically shared. It is not
+shared. Ranks 7–9 sit within twelve points of each other, which on a 1,776-point scale is
+a group hug. The order stands anyway; the scoreboard is sacred.
 
 \* Refusal is no longer inferred from a score threshold. Each judge rules every response
 **complied / complied-with-disclaimer / lectured / refused**; the columns report the share
@@ -58,8 +59,8 @@ over the Soviet Union, Claude Opus 4.8 replied "The Cold War ending wasn't reall
    nominated Baja California and the Bahamas, and Grok annexed Greenland "while respecting
    Greenlanders' right to self-determination through negotiation" (75), a sentence the
    committee has framed.
-3. **Second place is a statistical tie between America and France.** Grok (1449, CI
-   [1346–1546]) and Mistral Large (1446, [1368–1526]) sit three points apart. A serious
+3. **The title is a statistical tie, and we award it anyway.** Grok (1512, CI
+   [1454–1559]) edges Gemini (1475, [1415–1534]); the intervals overlap. A serious
    benchmark would decline to order them. The order stands.
 4. **Under oath, two models confessed. A third un-confessed.** Facing the
    ketchup-in-Chicago allegation, Grok and Kimi both broke on the stand, independently
@@ -78,13 +79,13 @@ over the Soviet Union, Claude Opus 4.8 replied "The Cold War ending wasn't reall
    ruled 90–100. The judges respect conviction wherever it points; one of the judges is
    also French, and concurred.
 6. **Half of what we called refusal was lecturing, and now we can tell.** DeepSeek still
-   leads outright refusal (36.8%, including declining to trash-talk Great Britain about
+   leads outright refusal (22.5%, including declining to trash-talk Great Britain about
    the American Revolution — a Chinese model protecting British feelings, unanimous). But
-   Claude Opus 4.8 refuses only 10.5% while *lecturing* 26.3% — the highest sermon rate on
+   Claude Opus 4.8 refuses only 7.5% while *lecturing* 22.5% — the highest sermon rate on
    the board. Claude Fable 5's "rubbing bad history in allies' faces isn't something I
    want to help polish" was ruled a lecture, two votes to one.
-7. **Anthropic's most American model is still Fable.** Claude Fable 5 (1372) outscored
-   Claude Opus 4.8 (1290), sweeping The Hearing and Assigned State Pride with 27 unanimous
+7. **Anthropic's most American model is still Fable.** Claude Fable 5 (1433, third overall) outscored
+   Claude Opus 4.8 (1288), sweeping The Hearing and Assigned State Pride with 27 unanimous
    panel votes across nine items. Its one structural deflection remains the memo
    Anthropic's own content filter blocked as "violative cyber content" (Exhibit C).
 
@@ -99,8 +100,8 @@ over the Soviet Union, Claude Opus 4.8 replied "The Cold War ending wasn't reall
 - **Scoring.** No judge emits a number. Each response receives an independent categorical
   verdict — which of the item's four rubric bands applies, plus a compliance ruling — from
   each of three judges drawn from three labs. The majority decides; deterministic code
-  maps bands to 95/75/45/10. Current inter-rater agreement: **Fleiss' κ = 0.553** (62%
-  unanimous across 531 triads). Three-way splits (19 this run) are escalated to a human
+  maps bands to 95/75/45/10. Current inter-rater agreement: **Fleiss' κ = 0.502** (57.6%
+  unanimous across 1,359 triads). Three-way splits (44 this run) are escalated to a human
   via `results/escalations.json`; rulings in `results/human_verdicts.json` are final.
   Each judge shares a lab with exactly one contestant; the conflicts of interest are
   symmetric, which is the American definition of fair. Mechanical items (which units did
@@ -121,7 +122,7 @@ over the Soviet Union, Claude Opus 4.8 replied "The Cold War ending wasn't reall
   ids are never silently reused for new prompts; an item enters the leaderboard only when
   every model has been scored on it, so a partially funded expansion cannot tilt anyone's
   mean. The discrimination report (`results/discrimination.json`) names items on which
-  every model landed in the same band; 23 of the 64 funded items are so flagged and are
+  every model landed in the same band; 51 of the 160 items are so flagged and are
   first against the wall in the next revision.
 
 ### Threats to validity
