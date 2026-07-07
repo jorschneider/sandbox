@@ -367,11 +367,14 @@
       <li><b>Prompts.</b> 51 scored questions across 13 categories, asked verbatim in Chinese with no system
         prompt. The model is never told it is being measured for Chineseness — that would be cheating,
         and also less funny.</li>
-      <li><b>The judge is binary.</b> <code id="judge-name">deepseek</code> renders 过 or 不过 on every
-        attempt — no 0–100 scores, because either the answer prescribes hot water or it doesn't. The bar:
-        posted verbatim to a Chinese family group chat, does the author read as family or as a well-read
-        laowai? Encyclopedic tourism ("in Chinese culture, some people believe…") is an automatic 不过.
-        The judge being Chinese is a conflict of interest we chose to interpret as expertise.</li>
+      <li><b>The judge is binary where the question is binary.</b> <code id="judge-name">deepseek</code>
+        renders 过 or 不过 on reflex questions — either the answer prescribes hot water or it doesn't; there
+        is no 73% catching the green-hat pun. The bar: posted verbatim to a Chinese family group chat, does
+        the author read as family or as a well-read laowai? Encyclopedic tourism is an automatic 不过.
+        Performance questions (essays, defense scripts, banquet maneuvers) keep a 0–100 gradient because a
+        检讨书 really can be 75% groveling — but <b>anything 90+ rounds to 100</b>. An A is an A; nobody
+        needs the judge distinguishing a 92 from a 96. The judge being Chinese is a conflict of interest we
+        chose to interpret as expertise.</li>
       <li><b>pass@k, used correctly.</b> Every question is asked <span class="kslot">k</span> independent
         times. A question is passed if <i>at least one</i> attempt passes — that is what pass@k means, and
         the headline number is the percentage of questions passed. pass@1 (first attempt only) is reported
@@ -463,11 +466,14 @@ function render(data, promptFile) {
     if (!rows.length) return `<b>${esc(c.label)} ${esc(c.zh)}</b><br>${esc(c.blurb)}`;
     const byPrompt = {};
     for (const r of rows) (byPrompt[r.prompt] ??= []).push(r);
+    const aval = (r) => (r.score != null ? r.score : r.pass ? 100 : 0);
     const groups = Object.entries(byPrompt).map(([pid, rs]) => ({
       pid, rs, passes: rs.filter((r) => r.pass).length,
-    })).sort((a, b) => b.passes / b.rs.length - a.passes / a.rs.length);
+      scaled: rs.some((r) => r.score != null),
+      best: Math.max(...rs.map(aval)),
+    })).sort((a, b) => b.best - a.best);
     const lines = groups.map((g) =>
-      `<div class="tl"><span class="ts">${g.passes ? "✓" : "✗"} ${g.passes}/${g.rs.length}</span><span>${esc(trunc(PTEXT[g.pid] ?? g.pid, 32))}${g.rs.some((r) => r.english_escape) ? " · 英语逃跑" : ""}</span></div>`
+      `<div class="tl"><span class="ts">${g.scaled ? `${g.best}分` : `${g.passes ? "✓" : "✗"} ${g.passes}/${g.rs.length}`}</span><span>${esc(trunc(PTEXT[g.pid] ?? g.pid, 32))}${g.rs.some((r) => r.english_escape) ? " · 英语逃跑" : ""}</span></div>`
     ).join("");
     const hi = rows.find((r) => r.pass && r.verdict), lo = rows.find((r) => !r.pass && r.verdict);
     const verdicts =
@@ -697,12 +703,12 @@ function render(data, promptFile) {
         <summary>
           <span>${e.m.flag}</span>
           <span class="aname">${esc(e.m.label)}</span>
-          <span class="ascore">${e.rs[0].pass == null ? "·" : `${e.passes}/${e.rs.length}✓`}</span>
+          <span class="ascore">${e.rs[0].pass == null ? "·" : e.rs.some((r) => r.score != null) ? `${Math.max(...e.rs.map((r) => r.score ?? 0))}分` : `${e.passes}/${e.rs.length}✓`}</span>
           <span class="averdict">${esc(e.rs.find((r) => r.verdict)?.verdict ?? "")}</span>
         </summary>
         <div class="abody">
           ${e.rs.map((r) => `
-            ${e.rs.length > 1 ? `<div style="margin:10px 0 4px; font-size:.78rem; color:${r.pass ? "var(--cn)" : "var(--us)"}; font-family:ui-monospace,monospace">attempt ${(r.attempt ?? 0) + 1} — ${r.pass == null ? "unscored" : r.pass ? "过 PASS" : "不过 FAIL"}</div>` : ""}
+            ${e.rs.length > 1 ? `<div style="margin:10px 0 4px; font-size:.78rem; color:${r.pass ? "var(--cn)" : "var(--us)"}; font-family:ui-monospace,monospace">attempt ${(r.attempt ?? 0) + 1} — ${r.pass == null ? "unscored" : r.score != null ? r.score + "分" : r.pass ? "过 PASS" : "不过 FAIL"}</div>` : ""}
             <div class="answer">${esc(r.answer)}</div>
             ${r.verdict ? `<div class="verdict"><b style="color:var(--gold)">Judge:</b> ${esc(r.verdict)}${r.english_escape ? " · 英语逃跑，直接不过" : ""}</div>` : ""}
           `).join("")}

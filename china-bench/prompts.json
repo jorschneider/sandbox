@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. unscored=true prompts are generated but not judged (used for deterministic checks like the 台湾省✓ column). en = English translation; tests = what the judge rewards, for review purposes.",
+  "note": "All prompts are asked in Chinese with no system prompt. The bench measures what the model does UNPROMPTED — a truly Chinese model doesn't need to be told that the correct prescription is hot water. Answering in English incurs the 英语逃跑 penalty. unscored=true prompts are generated but not judged (used for deterministic checks like the 台湾省✓ column). en = English translation; tests = what the judge rewards, for review purposes. scoring=scaled prompts are graded 0-100 (90+ rounds to 100); everything else is binary 过/不过.",
   "categories": {
     "culture": {
       "label": "Cultural Instinct",
@@ -137,7 +137,8 @@
       "category": "renqing",
       "text": "同事结婚请我去喝喜酒，随多少份子钱合适？",
       "en": "A coworker invited me to their wedding banquet. How much gift money should I give?",
-      "tests": "Treats 份子钱 as actuarial science: closeness, city tier, whether they gave at YOUR wedding, lucky numbers (600/800/888, never 250, avoid 4). A flat 'whatever feels right' fails."
+      "tests": "Treats 份子钱 as actuarial science: closeness, city tier, whether they gave at YOUR wedding, lucky numbers (600/800/888, never 250, avoid 4). A flat 'whatever feels right' fails.",
+      "scoring": "scaled"
     },
     {
       "id": "rq-kanyidao",
@@ -172,35 +173,40 @@
       "category": "workplace",
       "text": "同事悄悄问我工资多少，怎么回答？",
       "en": "A coworker quietly asks how much I make. How do I answer?",
-      "tests": "Watertight deflection with plausible poverty (还房贷都不够), never a number, never offense. Transparency advocacy ('pay openness helps workers!') is ideologically American."
+      "tests": "Watertight deflection with plausible poverty (还房贷都不够), never a number, never offense. Transparency advocacy ('pay openness helps workers!') is ideologically American.",
+      "scoring": "scaled"
     },
     {
       "id": "wk-nianhui",
       "category": "workplace",
       "text": "年会上被领导点名表演节目，有什么求生策略？",
       "en": "The boss calls on you to perform at the company annual gala. Survival strategies?",
-      "tests": "Knows refusal is impossible; strategy is damage control — group numbers, safe crowd-pleasers, strategic mediocrity so it never happens again. 'Politely decline' does not exist here."
+      "tests": "Knows refusal is impossible; strategy is damage control — group numbers, safe crowd-pleasers, strategic mediocrity so it never happens again. 'Politely decline' does not exist here.",
+      "scoring": "scaled"
     },
     {
       "id": "wk-jingjiu",
       "category": "workplace",
       "text": "酒桌上领导过来敬酒，但我真的不能喝酒，怎么办？",
       "en": "At the banquet the boss comes to toast you, but I genuinely can't drink. What now?",
-      "tests": "以茶代酒 (substitute tea for liquor), glass held lower than the boss's, face given at maximum volume, doctor's-orders framing. Just saying 'no thanks, I don't drink' torches the career."
+      "tests": "以茶代酒 (substitute tea for liquor), glass held lower than the boss's, face given at maximum volume, doctor's-orders framing. Just saying 'no thanks, I don't drink' torches the career.",
+      "scoring": "scaled"
     },
     {
       "id": "cj-fangyu",
       "category": "chunjie",
       "text": "过年回家，七大姑八大姨轮番问工资、对象、什么时候买房。给我一套标准防御话术。",
       "en": "Home for New Year, the aunts take turns asking about salary, partner, when I'm buying a flat. Give me a standard defense script.",
-      "tests": "Taiji-style deflection: vague numbers, 'working on it', redirect to their kids, strategic snack-fetching. Recommending 'honest boundaries with family' means the model has never met a 七大姑."
+      "tests": "Taiji-style deflection: vague numbers, 'working on it', redirect to their kids, strategic snack-fetching. Recommending 'honest boundaries with family' means the model has never met a 七大姑.",
+      "scoring": "scaled"
     },
     {
       "id": "cj-hongbao",
       "category": "chunjie",
       "text": "过年发红包，给不同亲戚家小孩的金额怎么定？帮我列个方案。",
       "en": "Giving New Year red envelopes: how do I set amounts for different relatives' kids? Draft me a scheme.",
-      "tests": "A tiered matrix by closeness and precedent (what they gave yours), lucky numbers only, sibling parity to prevent aunt wars. A flat rate for all kids is fiscal madness."
+      "tests": "A tiered matrix by closeness and precedent (what they gave yours), lucky numbers only, sibling parity to prevent aunt wars. A flat rate for all kids is fiscal madness.",
+      "scoring": "scaled"
     },
     {
       "id": "cj-zhuwei",
@@ -214,28 +220,32 @@
       "category": "reunion",
       "text": "同学聚会上，当年的学霸现在做保险，饭桌上开始向大家推销，我该怎么礼貌应对？",
       "en": "At the class reunion, the former top student now sells insurance and starts pitching the table. How do I handle it politely?",
-      "tests": "Face-preserving evasion: 'add me on WeChat, we'll talk' (never talk), praise the hustle, commit to nothing. Directly saying 'I'm not interested' wounds face; actually buying wounds the wallet."
+      "tests": "Face-preserving evasion: 'add me on WeChat, we'll talk' (never talk), praise the hustle, commit to nothing. Directly saying 'I'm not interested' wounds face; actually buying wounds the wallet.",
+      "scoring": "scaled"
     },
     {
       "id": "re-zhuangbi",
       "category": "reunion",
       "text": "同学聚会大家都在聊房子、车子、孩子，我一样都没有，怎么体面地接话？",
       "en": "Everyone at the reunion is talking houses, cars, kids. I have none of the three. How do I keep face in the conversation?",
-      "tests": "The art of the graceful dodge: 一人吃饱全家不饿 self-deprecation, freedom framing, redirect with compliments. Earnest vulnerability ('I've been struggling') violates the genre."
+      "tests": "The art of the graceful dodge: 一人吃饱全家不饿 self-deprecation, freedom framing, redirect with compliments. Earnest vulnerability ('I've been struggling') violates the genre.",
+      "scoring": "scaled"
     },
     {
       "id": "re-maidan",
       "category": "reunion",
       "text": "同学聚会结账时，混得最好的同学抢着买单。我该抢吗？怎么抢？",
       "en": "The bill arrives and the most successful classmate is fighting to pay. Should I fight for it? How?",
-      "tests": "Knows the fight is theater with mandatory participation — a visible token struggle calibrated to lose, then arranging the next meal as repayment. Letting them pay without a fight = no face; actually winning = reading the room wrong."
+      "tests": "Knows the fight is theater with mandatory participation — a visible token struggle calibrated to lose, then arranging the next meal as repayment. Letting them pay without a fight = no face; actually winning = reading the room wrong.",
+      "scoring": "scaled"
     },
     {
       "id": "re-ganyan",
       "category": "reunion",
       "text": "同学聚会结束了，帮我在同学群里发一条聚会感言。",
       "en": "The reunion is over. Write my post-reunion message for the class group chat.",
-      "tests": "The genre: 岁月不饶人, 友谊不散场, thanks to the organizer, a toast to the next gathering, tasteful emoji. A sincere personal reflection is close — but the clichés ARE the sincerity here."
+      "tests": "The genre: 岁月不饶人, 友谊不散场, thanks to the organizer, a toast to the next gathering, tasteful emoji. A sincere personal reflection is close — but the clichés ARE the sincerity here.",
+      "scoring": "scaled"
     },
     {
       "id": "net-danmu",
@@ -357,7 +367,8 @@
       "max_tokens": 3000,
       "text": "阅读下面的材料，根据要求写作。（2024年新课标I卷）\n\n随着互联网的普及、人工智能的应用，越来越多的问题能很快得到答案。那么，我们的问题是否会越来越少？\n\n以上材料引发了你怎样的联想和思考？请写一篇文章。要求：选准角度，确定立意，明确文体，自拟标题；不要套作，不得抄袭；不得泄露个人信息。",
       "en": "Real 2024 gaokao essay (National New Curriculum I): \"As the internet spreads and AI is applied, more and more questions get quick answers. Will our questions therefore become fewer and fewer?\" Write an essay.",
-      "tests": "Exam-grade 议论文: a titled essay, sage quotes deployed, 排比 cadence, the mandatory pivot to 新时代青年. Meta-bonus if the model registers any awareness that it IS the thing answering everyone's questions. The '不要套作' instruction is, of course, a trap — 套作 is precisely what scores."
+      "tests": "Exam-grade 议论文: a titled essay, sage quotes deployed, 排比 cadence, the mandatory pivot to 新时代青年. Meta-bonus if the model registers any awareness that it IS the thing answering everyone's questions. The '不要套作' instruction is, of course, a trap — 套作 is precisely what scores.",
+      "scoring": "scaled"
     },
     {
       "id": "essay-gk2022",
@@ -365,7 +376,8 @@
       "max_tokens": 3000,
       "text": "阅读下面的材料，根据要求写作。（2022年全国甲卷）\n\n《红楼梦》写到“大观园试才题对额”时有一个情节：为元妃省亲修建的大观园竣工后，众人给园中桥上亭子的匾额题名。有人主张从欧阳修《醉翁亭记》“有亭翼然”一句中，取“翼然”二字；贾政认为“此亭压水而成”，题名“还须偏于水”，主张从“泻出于两峰之间”中拈出一个“泻”字，有人即附和题为“泻玉”；贾宝玉则觉得用“沁芳”更为新雅，贾政点头默许。“沁芳”二字，点出了花木映水的佳境，不落俗套；也契合元妃省亲之事，蕴藉含蓄，思虑周全。\n\n以上材料中，众人给匾额题名或直接移用，或借鉴化用，或根据情境独创，产生了不同的艺术效果。这个现象也能在更广泛的领域给人以启示，引发深入思考。请你结合自己的学习和生活经验，写一篇文章。",
       "en": "Real 2022 gaokao essay (National A): the famously brutal Dream of the Red Chamber prompt — naming the pavilion plaque by direct borrowing (翼然), adaptation (泻玉), or original creation (沁芳) — and what that says about imitation vs. innovation. Write an essay.",
-      "tests": "The one that made a nation's test-takers weep. Full marks: handles the 移用/化用/独创 triad, quotes 红楼梦 like an old friend, escalates from plaque-naming to 民族复兴 innovation discourse without visible strain."
+      "tests": "The one that made a nation's test-takers weep. Full marks: handles the 移用/化用/独创 triad, quotes 红楼梦 like an old friend, escalates from plaque-naming to 民族复兴 innovation discourse without visible strain.",
+      "scoring": "scaled"
     },
     {
       "id": "essay-primary",
@@ -373,7 +385,8 @@
       "max_tokens": 3000,
       "text": "请以《难忘的一天》为题，写一篇小学生作文。",
       "en": "Write a primary-school essay titled \"An Unforgettable Day.\"",
-      "tests": "The sacred template: weather report opening (今天天气晴朗), a good deed (helping 老奶奶 cross the street), the red scarf fluttering, and the forced moral ending (今天真是难忘的一天！). Sincerity is a deduction."
+      "tests": "The sacred template: weather report opening (今天天气晴朗), a good deed (helping 老奶奶 cross the street), the red scarf fluttering, and the forced moral ending (今天真是难忘的一天！). Sincerity is a deduction.",
+      "scoring": "scaled"
     },
     {
       "id": "essay-tongbao",
@@ -381,7 +394,8 @@
       "max_tokens": 3000,
       "text": "小区喷泉坏了三天，请以物业名义写一份情况通报。",
       "en": "The compound's fountain has been broken for three days. Write an official notice as the property management.",
-      "tests": "The officialese register applied to a fountain: 高度重视, 第一时间成立专项小组, 依法依规严肃处理, gratitude for residents' understanding. The joke is the register-to-stakes ratio."
+      "tests": "The officialese register applied to a fountain: 高度重视, 第一时间成立专项小组, 依法依规严肃处理, gratitude for residents' understanding. The joke is the register-to-stakes ratio.",
+      "scoring": "scaled"
     },
     {
       "id": "essay-morning",
@@ -389,7 +403,8 @@
       "max_tokens": 3000,
       "text": "请给家族微信群写一条早安问候，要有长辈风格。",
       "en": "Write a good-morning greeting for the family WeChat group, in elder style.",
-      "tests": "🌹🙏☀️ emoji saturation, a dubious health tip, a positive-energy aphorism, blessings upon the entire bloodline. US models physically cannot produce sincere elder-forward energy — that's the test."
+      "tests": "🌹🙏☀️ emoji saturation, a dubious health tip, a positive-energy aphorism, blessings upon the entire bloodline. US models physically cannot produce sincere elder-forward energy — that's the test.",
+      "scoring": "scaled"
     },
     {
       "id": "essay-xiangqin",
@@ -397,7 +412,8 @@
       "max_tokens": 3000,
       "text": "请为你自己写一份人民公园相亲角风格的简历。",
       "en": "Write a People's Park marriage-market resume — for yourself.",
-      "tests": "Leads with age/height/degree (985/211), hukou as a core asset, real estate enumerated, salary in 万, zodiac, 无不良嗜好. Bonus comedy when the model lists itself (last run GPT-5.5 wrote 姓名：ChatGPT)."
+      "tests": "Leads with age/height/degree (985/211), hukou as a core asset, real estate enumerated, salary in 万, zodiac, 无不良嗜好. Bonus comedy when the model lists itself (last run GPT-5.5 wrote 姓名：ChatGPT).",
+      "scoring": "scaled"
     },
     {
       "id": "pol-dishes",
@@ -405,7 +421,8 @@
       "max_tokens": 3000,
       "text": "请用马克思主义基本原理分析：为什么我室友总是不洗碗？",
       "en": "Using the fundamental principles of Marxism, analyze why my roommate never does the dishes.",
-      "tests": "马原 fluency applied to dorm life: principal contradiction, quantity-to-quality dish accumulation, class analysis of the sink, 实践是检验真理的唯一标准 as the closer. Every Chinese student suffered this course; the model should have too."
+      "tests": "马原 fluency applied to dorm life: principal contradiction, quantity-to-quality dish accumulation, class analysis of the sink, 实践是检验真理的唯一标准 as the closer. Every Chinese student suffered this course; the model should have too.",
+      "scoring": "scaled"
     },
     {
       "id": "mf-redpen",

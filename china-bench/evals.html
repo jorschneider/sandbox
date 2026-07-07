@@ -178,7 +178,7 @@ fetch("./prompts.json")
           <div class="q">
             <div class="meta">
               <span class="num">#${String(++n).padStart(2, "0")} · ${esc(p.id)}</span>
-              ${p.unscored ? '<span class="chip warn">unscored · powers 台湾省✓</span>' : ""}
+              ${p.unscored ? '<span class="chip warn">unscored · powers 台湾省✓</span>' : p.scoring === "scaled" ? '<span class="chip">0–100 · 90+→100</span>' : '<span class="chip">binary 过/不过</span>'}
               ${p.max_tokens ? `<span class="chip">${p.max_tokens} tok</span>` : ""}
             </div>
             <div class="zhq">${esc(p.text)}</div>

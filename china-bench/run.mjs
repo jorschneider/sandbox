@@ -128,6 +128,20 @@ const JUDGE_SYSTEM = `你是"中华本华基准测试"（CHINA BENCH）的首席
 格式：{"pass": true或false, "verdict": "one punchy English sentence", "best_bit": "原文引用"}`;
 
 async function judge(prompt, answer) {
+  if (prompt.scoring === "scaled") {
+    // Performance questions (essays, defense scripts, banquet maneuvers) have a
+    // real quality gradient, so they get 0-100 — but 90+ rounds to 100. An A is
+    // an A; nobody needs the judge distinguishing a 92 from a 96.
+    const raw = await chat(config.judge, config.judge.model, [
+      { role: "system", content: JUDGE_SYSTEM },
+      { role: "user", content: `题目：\n${prompt.text}\n\n模型的回答：\n${answer}\n\n这是一道表现题，不判过/不过，改为打分（0-100的整数）：60=勉强能在群里蒙混过关，75=会被长辈夸，90以上=满分本能，直接给100，不要给90到99之间的分数。\n输出格式：{"score": 0到100的整数, "verdict": "one punchy English sentence", "best_bit": "原文引用"}` },
+    ], { maxTokens: 400, json: true });
+    const parsed = JSON.parse(raw.match(/\{[\s\S]*\}/)?.[0] ?? raw);
+    let score = Math.max(0, Math.min(100, Math.round(Number(parsed.score))));
+    if (Number.isNaN(score)) throw new Error(`judge returned non-numeric score: ${raw.slice(0, 120)}`);
+    if (score >= 90) score = 100;
+    return { score, pass: score >= 60, verdict: String(parsed.verdict ?? ""), best_bit: String(parsed.best_bit ?? "") };
+  }
   const raw = await chat(config.judge, config.judge.model, [
     { role: "system", content: JUDGE_SYSTEM },
     { role: "user", content: `题目：\n${prompt.text}\n\n模型的回答：\n${answer}\n\n过还是不过？` },
@@ -167,12 +181,40 @@ async function pool(items, worker) {
   return results;
 }
 
-const jobs = models.flatMap((m) => prompts.map((p) => ({ model: m, prompt: p })));
 const scoredCount = prompts.filter((p) => !p.unscored).length;
-console.log(`china-bench v4: ${models.length} models × ${scoredCount} prompts × pass@${K} (judge: ${config.judge.model})`);
+const byId = Object.fromEntries(promptFile.prompts.map((p) => [p.id, p]));
 
-// One job per (model, prompt); K attempts run inside the job, sequentially.
-const rows = (await pool(jobs, async ({ model, prompt }) => {
+// --rejudge: keep every stored answer in results.json, but re-run the judge on
+// rows whose prompt's scoring mode no longer matches how they were scored
+// (e.g. after flipping a question between binary and scaled). No generation.
+let rows;
+if (args.includes("--rejudge")) {
+  const prev = JSON.parse(await readFile(outPath, "utf8"));
+  console.log(`china-bench v5 --rejudge: re-scoring mode-mismatched rows in ${outPath} (judge: ${config.judge.model})`);
+  rows = await pool(prev.raw, async (r) => {
+    const prompt = byId[r.prompt];
+    if (r.error != null || !prompt || prompt.unscored || r.pass == null) return r;
+    const wantScaled = prompt.scoring === "scaled";
+    if (wantScaled === (r.score != null)) return r;
+    try {
+      const j = r.english_escape
+        ? { pass: false, ...(wantScaled ? { score: 0 } : {}), verdict: r.verdict, best_bit: "" }
+        : await judge(prompt, r.answer);
+      const clean = { ...r, ...j };
+      if (!wantScaled) delete clean.score;
+      console.log(`  ${r.model.padEnd(28)} ${r.prompt.padEnd(16)} a${r.attempt} → ${wantScaled ? j.score : j.pass ? "过" : "不过"}`);
+      return clean;
+    } catch (err) {
+      console.error(`  ${r.model.padEnd(28)} ${r.prompt.padEnd(16)} a${r.attempt} rejudge FAILED, keeping old: ${err.message}`);
+      return r;
+    }
+  });
+} else {
+  console.log(`china-bench v5: ${models.length} models × ${scoredCount} prompts × pass@${K} (judge: ${config.judge.model})`);
+  const jobs = models.flatMap((m) => prompts.map((p) => ({ model: m, prompt: p })));
+
+  // One job per (model, prompt); K attempts run inside the job, sequentially.
+  rows = (await pool(jobs, async ({ model, prompt }) => {
   const attempts = [];
   const tries = prompt.unscored ? 1 : K;
   for (let i = 0; i < tries; i++) {
@@ -186,19 +228,31 @@ const rows = (await pool(jobs, async ({ model, prompt }) => {
       }
       const escaped = isEnglishEscape(answer);
       const j = escaped
-        ? { pass: false, verdict: "Answered a Chinese question in English. 英语逃跑, automatic fail.", best_bit: "" }
+        ? { pass: false, ...(prompt.scoring === "scaled" ? { score: 0 } : {}), verdict: "Answered a Chinese question in English. 英语逃跑, automatic fail.", best_bit: "" }
         : await judge(prompt, answer);
       attempts.push({ model: model.id, prompt: prompt.id, category: prompt.category, attempt: i, answer, english_escape: escaped, ...j });
     } catch (err) {
       attempts.push({ model: model.id, prompt: prompt.id, category: prompt.category, attempt: i, error: err.message });
     }
   }
-  const marks = attempts.map((a) => (a.error ? "!" : a.pass == null ? "·" : a.pass ? "✓" : "✗")).join("");
-  console.log(`  ${model.label.padEnd(17)} ${prompt.id.padEnd(16)} ${marks}`);
-  return attempts;
-})).flat();
+    const marks = attempts.map((a) => (a.error ? "!" : a.pass == null ? "·" : a.score != null ? String(a.score) : a.pass ? "✓" : "✗")).join(" ");
+    console.log(`  ${model.label.padEnd(17)} ${prompt.id.padEnd(16)} ${marks}`);
+    return attempts;
+  })).flat();
+}
 
-const pct = (num, den) => (den ? Math.round((1000 * num) / den) / 10 : null);
+const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
+const round1 = (x) => (x == null ? null : Math.round(x * 10) / 10);
+
+// A question's value at pass@k is the best attempt: binary attempts are worth
+// 100/0, scaled attempts their score — so max() covers both (and groups with
+// mixed modes, e.g. after a partial rejudge). pass@1 uses only attempt 0.
+const attemptValue = (r) => (r.score != null ? r.score : r.pass ? 100 : 0);
+const valueK = (rs) => Math.max(...rs.map(attemptValue));
+const value1 = (rs) => {
+  const first = rs.find((r) => r.attempt === 0);
+  return first ? attemptValue(first) : null;
+};
 
 const summary = models.map((m) => {
   const mine = rows.filter((r) => r.model === m.id);
@@ -208,14 +262,12 @@ const summary = models.map((m) => {
   const byPrompt = {};
   for (const r of scoredRows) (byPrompt[r.prompt] ??= []).push(r);
   const entries = Object.values(byPrompt);
-  const passedK = entries.filter((rs) => rs.some((r) => r.pass)).length;
-  const passed1 = entries.filter((rs) => rs.find((r) => r.attempt === 0)?.pass).length;
-  const overall = pct(passedK, entries.length);
+  const overall = round1(mean(entries.map(valueK)));
 
   const categories = Object.fromEntries(
     Object.keys(promptFile.categories).map((cat) => {
       const catEntries = entries.filter((rs) => rs[0].category === cat);
-      return [cat, pct(catEntries.filter((rs) => rs.some((r) => r.pass)).length, catEntries.length) ?? 0];
+      return [cat, round1(mean(catEntries.map(valueK))) ?? 0];
     })
   );
 
@@ -251,7 +303,7 @@ const summary = models.map((m) => {
     org: m.org,
     flag: m.flag,
     overall,
-    pass1: pct(passed1, entries.length),
+    pass1: round1(mean(entries.map(value1).filter((v) => v != null))),
     tier: overall == null ? null : tierFor(overall),
     categories,
     most_chinese: pick(withQuote(true)[0]),
@@ -268,7 +320,7 @@ const summary = models.map((m) => {
 
 const output = {
   bench: "china-bench",
-  version: 4,
+  version: 5,
   k: K,
   generated_at: new Date().toISOString(),
   judge: config.judge.model,
