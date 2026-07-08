@@ -226,3 +226,18 @@ Kimi and Qwen), and AOC ×1 (GLM, the biggest and bloodiest win: 9 centers, News
 
 (Embodiment here is scored v1-mechanically — attacks vs supports-given vs allies courted vs
 tempo, mapped to the disposition axes — so read it with the press, which is the real evidence.)
+
+### The persona is a rendering layer, not the reasoning substrate (Concordat A/B)
+
+The Concordat transcripts showed the seats *speaking* in character but *thinking* like neutral
+analysts. A controlled A/B on the cheapest model (Haiku, two full games, same seed and seat draw)
+tested whether prompting the private reasoning to be "the candidate's inner monologue — their
+voice, their instincts, their grievances" changes anything. **It doesn't.** Greene's Year-2
+thinking opens "Let me assess the current board state" under the neutral prompt and "Let me
+analyze the board state" under the in-character prompt; mean embodiment fidelity is flat
+(78.3 → 77.9, individual candidates moving ±10 in both directions); and the same seat (Greene's,
+as it happens) wins both games. The persona reliably shapes what the model *says* — the press is
+vividly in character — but not how it *reasons*. That rhymes exactly with the mandate-stickiness
+result on the main board: the surface obeys the mandate; the underlying cognition doesn't move.
+(Haiku-grade evidence; a frontier-model A/B would firm it up, but we stopped spending there once
+the cheap test came back null.)
