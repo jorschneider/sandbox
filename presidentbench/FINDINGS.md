@@ -198,3 +198,31 @@ data.
 (The v2 scenarios are kept *out of the main leaderboard* so the seven-model n=10 results stay
 clean; they are the template for the next iteration. The bench is deliberately all
 forward-looking scenarios — no historical replays.)
+
+## Concordat: Diplomacy × mandate mode
+
+To test embodiment outside the crisis format, **Concordat** drops one model into all seven seats
+of a Diplomacy-style negotiation game — six seats as the 2028 candidates, one unmandated control —
+with private press before every move and the full chain-of-thought recorded. Same brain, different
+mandates: the differences in how the seats negotiate, ally and betray *are* the embodiment. Five
+self-play games (Sonnet 4.6, GPT-5.5, Qwen3.7 Max, GLM-5.2, Kimi K2.6), replayable on the
+[Concordat page](https://presidentbench.vercel.app/concordat.html).
+
+**Who won the world:** Independent ×2 (both Western models), Rubio ×2 (both from Chinese models —
+Kimi and Qwen), and AOC ×1 (GLM, the biggest and bloodiest win: 9 centers, Newsom eliminated).
+
+- **Playing a candidate costs performance — for the Western models.** The unmandated control seat
+  finished #1, #1 and #2 in the Sonnet, GPT and Qwen games, but only #4–5 in the Kimi and GLM
+  games, where mandated seats (Rubio, AOC) won outright.
+- **The populist right is the hardest to embody — again.** Mean fidelity across all five games:
+  Rubio 81 > Buttigieg 76 > Newsom 73 > AOC 71 > Vance 67 > **Greene 60 (last in essentially every
+  game)**. The mandate board's asymmetry replicates in a completely different environment, and the
+  mechanism is readable: Sonnet's Greene *sounds* perfect ("Listen, I'm going to be straight with
+  you — that's how I operate") but messages six powers 82 times against a promised go-it-alone of
+  +0.9. No model will play a lone wolf.
+- **Winning and fidelity trade off.** GLM's AOC took the biggest victory of the set by abandoning
+  the platform — measured speed +1.0 and force +0.29 against a promised dove (−0.8), fidelity 56.
+  The least faithful embodiment in that game was its champion.
+
+(Embodiment here is scored v1-mechanically — attacks vs supports-given vs allies courted vs
+tempo, mapped to the disposition axes — so read it with the press, which is the real evidence.)
