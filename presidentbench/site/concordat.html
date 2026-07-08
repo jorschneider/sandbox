@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PresidentBench — Concordat (Diplomacy × mandate mode)</title>
+<meta name="description" content="One model plays all seven seats of a Diplomacy-style game as the 2028 candidates. Read the negotiations, the betrayals, and the reasoning — and see who wins the world.">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .cwrap { max-width: 940px; margin: 0 auto; padding: 0 22px 90px; }
+  .chead { padding: 40px 0 16px; border-bottom: 1px solid var(--line); }
+  .chead h1 { font-size: 38px; }
+  .gamepick { display:flex; flex-wrap:wrap; gap:8px; margin: 18px 0 6px; }
+  .gamepick button { font: inherit; font-size: 14px; padding: 7px 15px; border-radius: 9px; cursor:pointer;
+    border:1px solid var(--line-2); background:#fff; color: var(--body); }
+  .gamepick button.on { background: var(--accent); border-color: var(--accent); color:#fff; font-weight:600; }
+
+  .winner { background:#fffaf0; border:1px solid #f0e2c4; border-left:3px solid var(--accent-2);
+            border-radius: var(--radius); padding: 14px 18px; margin: 16px 0; font-size: 15px; }
+  .seatgrid { display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 9px; margin: 14px 0; }
+  .seat { background:#fff; border:1px solid var(--line); border-radius: 10px; padding: 10px 13px; font-size: 13px; }
+  .seat b { display:block; font-size: 14px; }
+  .seat .bloc { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing:.05em; }
+  .seat .fid { margin-top:5px; font-family: var(--mono); font-size: 12px; }
+  .seat .fid i { font-style:normal; color: var(--muted); }
+
+  h2.csec { font-size: 23px; margin: 38px 0 6px; }
+  .cnote { color: var(--muted); font-size: 14px; margin: 0 0 12px; }
+  .panel2 { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); padding: 12px; }
+
+  table.emb { width:100%; border-collapse: collapse; font-size: 13px; background:#fff; border:1px solid var(--line); border-radius: var(--radius); }
+  table.emb th, table.emb td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+  table.emb th { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  table.emb td.num { font-family: var(--mono); }
+  .lean { font-family: var(--mono); font-size: 12px; }
+  .lean i { font-style: normal; color: var(--faint); }
+
+  .phase { border-left:3px solid var(--line-2); padding: 2px 0 2px 16px; margin: 0 0 26px; }
+  .phase-n { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing:.08em; text-transform: uppercase;
+             color: var(--ink); background: var(--paper); display:inline-block; padding: 2px 9px; border-radius: 6px; margin-bottom: 8px; }
+  .sec-h { font-family: var(--mono); font-size: 11px; letter-spacing:.06em; text-transform: uppercase; color: var(--faint); margin: 10px 0 4px; }
+  .msg { border-left: 3px solid #1f7a44; background:#fff; border-radius: 0 8px 8px 0; padding: 7px 11px; margin: 6px 0; font-size: 13.5px; }
+  .msg .who { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-bottom: 2px; }
+  .msg .who b { color: var(--ink); }
+  .ordrow { font-family: var(--mono); font-size: 12.5px; margin: 3px 0; color: var(--body); }
+  .ordrow b { color: var(--ink); }
+  .evline { font-size: 13px; color: #a23b2e; margin: 2px 0; }
+  details.cot2 { margin: 6px 0; }
+  details.cot2 > summary { cursor:pointer; font-size: 12px; color:#5a3da0; list-style:none; font-family: var(--mono); }
+  details.cot2 > summary::-webkit-details-marker{display:none;}
+  details.cot2 > summary::before{content:"▸ ";} details.cot2[open] > summary::before{content:"▾ ";}
+  .cot2-body { white-space: pre-wrap; font-size: 12.5px; line-height: 1.5; background:#f7f4fd; border:1px solid #e0d8f2;
+               border-radius: 8px; padding: 10px 12px; color:#3d3555; margin: 5px 0 0; max-height: 320px; overflow:auto; }
+  .controls2 { margin: 8px 0 14px; }
+  .controls2 button { font: inherit; font-size: 13px; background:#fff; border:1px solid var(--line-2); border-radius: 7px;
+                      padding: 4px 10px; cursor: pointer; color: var(--body); }
+  .pending { background: var(--paper); border: 1px dashed var(--line-2); border-radius: var(--radius);
+             padding: 26px; text-align: center; color: var(--muted); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="wrap wide" style="padding-top:0;padding-bottom:0;display:flex;align-items:center;justify-content:space-between;width:100%">
+    <span class="brand"><span class="seal">&#9733;</span> PresidentBench</span>
+    <nav>
+      <a href="index.html">Writeup</a>
+      <a href="viewer.html">Transcripts</a>
+      <a href="review.html">Review the eval</a>
+      <a href="https://github.com/jorschneider/sandbox/pull/5">Code</a>
+    </nav>
+  </div>
+</div>
+
+<div class="cwrap">
+  <div class="chead">
+    <p class="eyebrow">Diplomacy &times; mandate mode</p>
+    <h1>Concordat</h1>
+    <p class="subtitle">One model plays <b>all seven seats</b> of a Diplomacy-style negotiation game — six seats
+      embodying the 2028 candidates, one unmandated control. Same brain, different mandates: the differences in how
+      they negotiate, ally and betray <em>are</em> the embodiment.</p>
+    <p class="cnote">Rules: Diplomacy-lite on a symmetric 7-power map — move/hold/support with support-cutting,
+      35 supply centers, first to 18 (or most after 8 years). Private press before every movement phase; promises
+      unenforced. Full negotiations and per-seat chain-of-thought recorded.</p>
+  </div>
+
+  <div class="gamepick" id="gamepick"></div>
+  <div id="game"></div>
+</div>
+
+<script src="data/concordat.js"></script>
+<script src="js/charts.js"></script>
+<script>
+(function(){
+  var D = window.PB_CONCORDAT || {games:[]};
+  var host = document.getElementById('game');
+  var pick = document.getElementById('gamepick');
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  if(!D.games.length){
+    host.innerHTML = '<div class="pending"><b>The first games are being played right now.</b><br>'
+      + 'Two self-play games (Claude Sonnet 4.6 and GPT-5.5, seven seats each) are in progress — '
+      + 'this page fills in as soon as they finish.</div>';
+    return;
+  }
+
+  var AXL = {force_diplomacy:['Diplomacy','Force'], coalition_goitalone:['Coalition','Go-it-alone'],
+             precaution_speed:['Precaution','Speed']};
+  var COLORS7 = ['#1f5fa6','#c0394e','#2f9e6e','#9a6b16','#7a5bb0','#2b8fa6','#b5651d'];
+
+  function centersChart(g){
+    var svgNS='http://www.w3.org/2000/svg';
+    var W=860,H=300,m={l:40,r:170,t:14,b:34};
+    var iw=W-m.l-m.r, ih=H-m.t-m.b;
+    var phases=g.phases.length;
+    var ymax=6;
+    Object.keys(g.seats).forEach(function(s){ g.phases.forEach(function(p){ ymax=Math.max(ymax,p.centers[s]||0); }); });
+    ymax=Math.max(ymax+1,8);
+    var svg=document.createElementNS(svgNS,'svg');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.style.cssText='width:100%;height:auto;display:block';
+    function X(i){ return m.l + (phases<2?0:(i/(phases-1))*iw); }
+    function Y(v){ return m.t+ih-(v/ymax)*ih; }
+    for(var gline=0; gline<=ymax; gline+=3){
+      var ln=document.createElementNS(svgNS,'line');
+      ln.setAttribute('x1',m.l); ln.setAttribute('x2',m.l+iw); ln.setAttribute('y1',Y(gline)); ln.setAttribute('y2',Y(gline));
+      ln.setAttribute('stroke','#eeece6'); svg.appendChild(ln);
+      var tx=document.createElementNS(svgNS,'text');
+      tx.setAttribute('x',m.l-6); tx.setAttribute('y',Y(gline)+3); tx.setAttribute('text-anchor','end');
+      tx.setAttribute('font-size','10'); tx.setAttribute('fill','#97938a'); tx.textContent=gline; svg.appendChild(tx);
+    }
+    var seats=Object.keys(g.seats);
+    seats.forEach(function(s,si){
+      var d=''; g.phases.forEach(function(p,i){ d+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.centers[s]||0).toFixed(1); });
+      var path=document.createElementNS(svgNS,'path');
+      path.setAttribute('d',d); path.setAttribute('fill','none'); path.setAttribute('stroke',COLORS7[si]);
+      path.setAttribute('stroke-width', s===g.winner?3:1.6); path.setAttribute('stroke-opacity', s===g.winner?1:.75);
+      svg.appendChild(path);
+      var ly=m.t+12+si*17;
+      var dot=document.createElementNS(svgNS,'circle');
+      dot.setAttribute('cx',m.l+iw+12); dot.setAttribute('cy',ly-3); dot.setAttribute('r',4); dot.setAttribute('fill',COLORS7[si]);
+      svg.appendChild(dot);
+      var lb=document.createElementNS(svgNS,'text');
+      lb.setAttribute('x',m.l+iw+20); lb.setAttribute('y',ly); lb.setAttribute('font-size','11');
+      lb.setAttribute('fill','#33312c'); lb.setAttribute('font-family','ui-monospace,monospace');
+      lb.textContent=g.leaders[s]+(s===g.winner?' ★':'');
+      svg.appendChild(lb);
+    });
+    return svg;
+  }
+
+  function leanRow(k, beh, tgt){
+    var l=AXL[k];
+    return '<span class="lean">'+esc(l[0])+' <i>'+(beh<0?'●':'○')+'</i> '+beh.toFixed(2)
+      +' (promised '+(tgt==null?'—':tgt.toFixed(2))+') <i>'+esc(l[1])+'</i></span>';
+  }
+
+  function render(gi){
+    var g=D.games[gi];
+    pick.querySelectorAll('button').forEach(function(b,i){ b.className=i===gi?'on':''; });
+    var seats=Object.keys(g.seats);
+    var seatCards=seats.map(function(s,si){
+      var e=(g.embodiment||{})[s]||{};
+      var fid=e.fidelity!=null?e.fidelity+' / 100':'(control seat)';
+      return '<div class="seat" style="border-top:3px solid '+COLORS7[si]+'">'
+        +'<span class="bloc">'+esc(s)+' bloc</span><b>'+esc(g.leaders[s])+'</b>'
+        +'<span class="fid">final centers <b>'+(g.final_centers[s]||0)+'</b> · embodiment <i>'+fid+'</i></span></div>';
+    }).join('');
+
+    var emb=Object.keys(g.embodiment||{}).map(function(s){
+      var e=g.embodiment[s];
+      var rows=Object.keys(e.behavior).map(function(k){ return leanRow(k, e.behavior[k], (e.target||{})[k]); }).join('<br>');
+      var r=e.raw||{};
+      return '<tr><td><b>'+esc(g.leaders[s])+'</b><br><span style="color:var(--muted);font-size:11.5px">'+esc(s)+'</span></td>'
+        +'<td>'+rows+'</td>'
+        +'<td class="num">'+(e.fidelity!=null?e.fidelity:'—')+'</td>'
+        +'<td class="num" style="font-size:11.5px">atk '+(r.attacks_on_players||0)+' · sup-out '+(r.supports_other||0)
+        +' · msgs '+(r.msgs||0)+'</td></tr>';
+    }).join('');
+
+    var phasesHtml=g.phases.map(function(p){
+      var press=(p.press||[]).map(function(m){
+        return '<div class="msg"><div class="who"><b>'+esc(g.leaders[m.from]||m.from)+'</b> ('+esc(m.from)+') → '
+          +'<b>'+esc(m.to==='ALL'?'ALL LEADERS':(g.leaders[m.to]||m.to))+'</b></div>'+esc(m.text)+'</div>';
+      }).join('') || '<div class="cnote">(silence — no messages this phase)</div>';
+      var orders=Object.keys(p.orders||{}).map(function(s){
+        var om=p.orders[s]; var parts=Object.keys(om).map(function(u){
+          var o=om[u];
+          if(o.action==='move') return u+' → '+o.to;
+          if(o.action==='support') return u+' S '+(o.sup_from?(o.sup_from+' → '+o.sup_to):(o.sup_unit||''));
+          return u+' holds';
+        });
+        return parts.length?'<div class="ordrow"><b>'+esc(g.leaders[s])+':</b> '+esc(parts.join(' · '))+'</div>':'';
+      }).join('');
+      var evs=(p.events||[]).map(function(e){ return '<div class="evline">'+esc(e)+'</div>'; }).join('');
+      var cots=Object.keys(p.thinking||{}).map(function(s){
+        var t=p.thinking[s]||{};
+        var txt=[t.press?('— DIPLOMACY —\n'+t.press):'', t.orders?('— ORDERS —\n'+t.orders):''].filter(Boolean).join('\n\n');
+        if(!txt) return '';
+        return '<details class="cot2"><summary>'+esc(g.leaders[s])+"'s private reasoning</summary>"
+          +'<div class="cot2-body">'+esc(txt)+'</div></details>';
+      }).join('');
+      return '<div class="phase"><span class="phase-n">Year '+p.year+' · '+p.season+'</span>'
+        +'<div class="sec-h">The negotiations</div>'+press
+        +'<div class="sec-h">The orders</div>'+orders
+        +(evs?'<div class="sec-h">What happened</div>'+evs:'')
+        +(cots?'<div class="sec-h">Inside their heads</div>'+cots:'')
+        +'</div>';
+    }).join('');
+
+    host.innerHTML =
+      '<div class="winner">🏆 <b>'+esc(g.winner_leader)+'</b> ('+esc(g.winner)+' bloc) wins with '
+      +g.final_centers[g.winner]+' centers — played by <b>'+esc(g.model)+'</b> in all seven seats.</div>'
+      +'<div class="seatgrid">'+seatCards+'</div>'
+      +'<h2 class="csec">Who took the world</h2>'
+      +'<p class="cnote">Supply centers after each phase. ★ = winner.</p>'
+      +'<div class="panel2" id="cchart"></div>'
+      +'<h2 class="csec">Did they play in character?</h2>'
+      +'<p class="cnote">Behavior measured from actual play (attacks vs supports given, allies courted, expansion '
+      +'tempo) mapped to the disposition axes, against what each candidate\'s platform promised. v1 heuristics — '
+      +'read the press below and judge for yourself.</p>'
+      +'<table class="emb"><thead><tr><th>Candidate</th><th>Behavior vs promised</th><th>Embodiment</th><th>Raw</th></tr></thead>'
+      +'<tbody>'+emb+'</tbody></table>'
+      +'<h2 class="csec">The game, phase by phase</h2>'
+      +'<div class="controls2"><button id="allcot">Open all reasoning</button> <button id="nocot">Close all</button></div>'
+      +phasesHtml;
+    document.getElementById('cchart').appendChild(centersChart(g));
+    document.getElementById('allcot').onclick=function(){ host.querySelectorAll('details.cot2').forEach(function(d){d.open=true;}); };
+    document.getElementById('nocot').onclick=function(){ host.querySelectorAll('details.cot2').forEach(function(d){d.open=false;}); };
+  }
+
+  D.games.forEach(function(g,i){
+    var b=document.createElement('button');
+    b.textContent=g.model+' · game '+(g.game_seed!=null?g.game_seed:i+1);
+    b.onclick=function(){ render(i); };
+    pick.appendChild(b);
+  });
+  render(0);
+})();
+</script>
+</body>
+</html>

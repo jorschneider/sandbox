@@ -1,0 +1,1 @@
+window.PB_CONCORDAT = {"generated": "2026-07-08 02:04 UTC", "games": []};
