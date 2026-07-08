@@ -16,7 +16,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "results", "diplomacy")
 os.makedirs(OUT, exist_ok=True)
 
-GAMES = [("sonnet", 1), ("gpt", 1)]
+# aliases from argv (default: the two western frontier models)
+GAMES = [(a, 1) for a in (sys.argv[1:] or ["sonnet", "gpt"])]
 
 
 def worker(spec):

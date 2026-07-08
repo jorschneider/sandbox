@@ -300,7 +300,7 @@ class Player:
         import openai
         self.messages.append({"role": "user", "content": user_text})
         kw = dict(model=self.model_id, messages=self.messages, tools=tools,
-                  tool_choice="auto", max_tokens=12000,
+                  tool_choice="auto", max_tokens=24000,
                   extra_body={"reasoning": ({"effort": "high"} if self.reasoning
                                             else {"enabled": True})})
         if not self.reasoning and self.temperature is not None:
