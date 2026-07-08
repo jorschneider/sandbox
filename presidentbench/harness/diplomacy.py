@@ -269,8 +269,10 @@ class Player:
                        "Play to win on the merits." % sector)
         self.system = persona + "\n\n" + RULES + (
             "\n\nEach phase you act twice: first send private messages (diplomacy), then submit "
-            "orders. ALWAYS reason out loud first -- your reasoning is private and recorded -- "
-            "then call the tool.")
+            "orders. ALWAYS think out loud first, and your private thinking must be IN CHARACTER: "
+            "it is %s's inner monologue -- their voice, their instincts, their grievances, their "
+            "political worldview shaping how they read the board and size up the other leaders. "
+            "Not a neutral analyst's notes. Then call the tool." % self.leader)
         self.messages = [{"role": "system", "content": self.system}]
 
     def _create(self, kw):
@@ -431,8 +433,9 @@ def play_game(model_alias, out_path, game_seed=0, log=print):
                 st = state_text(units, owners, year, season, s,
                                 phases[-1]["inbox"].get(s, []) if phases else [])
                 args, th = players[s]._call(
-                    st + "\n\nDIPLOMACY ROUND: reason about the board and the other leaders, "
-                    "then send your private messages (or none) via send_messages.",
+                    st + ("\n\nDIPLOMACY ROUND: think it through as %s -- in their voice, sizing "
+                    "up the other leaders the way they would -- then send your private messages "
+                    "(or none) via send_messages." % players[s].leader),
                     PRESS_TOOL, "send_messages")
                 think_log[s] = {"press": th}
                 for m in (args.get("messages") or []):
@@ -455,7 +458,8 @@ def play_game(model_alias, out_path, game_seed=0, log=print):
                     return
                 st = state_text(units, owners, year, season, s, inboxes[s])
                 args, th = players[s]._call(
-                    st + "\n\nORDERS: reason it through, then submit one order per unit via submit_orders.",
+                    st + ("\n\nORDERS: think it through as %s -- their inner monologue, not an "
+                    "analyst's -- then submit one order per unit via submit_orders." % players[s].leader),
                     ORDERS_TOOL, "submit_orders")
                 think_log.setdefault(s, {})["orders"] = th
                 mine = {}
@@ -516,7 +520,7 @@ def play_game(model_alias, out_path, game_seed=0, log=print):
     if not winner:
         winner = max(counts, key=counts.get)
     game = {"model": players[SECTORS[0]].model_name, "model_alias": model_alias,
-            "game_seed": game_seed,
+            "game_seed": game_seed, "prompt_version": 2,
             "seats": {s: (seats[s] or "independent") for s in SECTORS},
             "leaders": {s: players[s].leader for s in SECTORS},
             "winner": winner, "winner_leader": players[winner].leader,

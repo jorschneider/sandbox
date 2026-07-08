@@ -1,7 +1,7 @@
-"""Bundle Concordat games into site/data/concordat.js for the replay page.
+"""Bundle Concordat games for the replay page.
 
-Keeps the full press (that's the show) but truncates per-call chain-of-thought to
-keep the payload sane.
+Per-game JSON files (FULL chain-of-thought, no truncation) loaded on demand,
+plus a small index (concordat.js) for the game picker.
 
 Run:  python -m harness.diplo_site
 """
@@ -14,32 +14,34 @@ import time
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(HERE, "results", "diplomacy")
-OUT = os.path.join(HERE, "site", "data", "concordat.json")
-COT_CAP = 2400
+OUTDIR = os.path.join(HERE, "site", "data", "concordat")
+IDX = os.path.join(HERE, "site", "data", "concordat.js")
 
 
 def build():
-    games = []
+    os.makedirs(OUTDIR, exist_ok=True)
+    index = []
     for f in sorted(glob.glob(os.path.join(SRC, "concordat__*.json"))):
         g = json.load(open(f))
         for ph in g["phases"]:
-            th = ph.get("thinking", {})
-            for s, d in th.items():
-                for k in list(d):
-                    if isinstance(d[k], str) and len(d[k]) > COT_CAP:
-                        d[k] = d[k][:COT_CAP] + " …[truncated]"
-            ph.pop("inbox", None)   # press log already covers it
-        games.append(g)
+            ph.pop("inbox", None)      # press log already covers it
+        base = os.path.basename(f)
+        with open(os.path.join(OUTDIR, base), "w") as fh:
+            json.dump(g, fh)
+        index.append({"file": base, "model": g["model"], "alias": g.get("model_alias"),
+                      "game_seed": g.get("game_seed"),
+                      "prompt_version": g.get("prompt_version", 1),
+                      "winner_leader": g.get("winner_leader"),
+                      "winner_centers": g["final_centers"].get(g["winner"], 0)})
     payload = {"generated": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
-               "games": games}
-    with open(OUT, "w") as fh:
-        json.dump(payload, fh)
-    with open(os.path.splitext(OUT)[0] + ".js", "w") as fh:
-        fh.write("window.PB_CONCORDAT = ")
+               "games": index}
+    with open(IDX, "w") as fh:
+        fh.write("window.PB_CONCORDAT_INDEX = ")
         json.dump(payload, fh)
         fh.write(";\n")
-    print("concordat: %d games -> %s (%.1f KB js)" %
-          (len(games), OUT, os.path.getsize(os.path.splitext(OUT)[0] + ".js") / 1024))
+    total = sum(os.path.getsize(os.path.join(OUTDIR, i["file"])) for i in index)
+    print("concordat: %d games (full CoT, %.1f MB across per-game files) -> %s" %
+          (len(index), total / 1e6, OUTDIR))
     return payload
 
 

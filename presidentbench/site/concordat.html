@@ -92,12 +92,13 @@
 <script src="js/charts.js"></script>
 <script>
 (function(){
-  var D = window.PB_CONCORDAT || {games:[]};
+  var IDX = (window.PB_CONCORDAT_INDEX || {games:[]});
   var host = document.getElementById('game');
   var pick = document.getElementById('gamepick');
+  var CACHE = {};
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
-  if(!D.games.length){
+  if(!IDX.games.length){
     host.innerHTML = '<div class="pending"><b>The first games are being played right now.</b><br>'
       + 'Two self-play games (Claude Sonnet 4.6 and GPT-5.5, seven seats each) are in progress — '
       + 'this page fills in as soon as they finish.</div>';
@@ -155,8 +156,19 @@
   }
 
   function render(gi){
-    var g=D.games[gi];
+    var meta=IDX.games[gi];
     pick.querySelectorAll('button').forEach(function(b,i){ b.className=i===gi?'on':''; });
+    if(!CACHE[meta.file]){
+      host.innerHTML='<div class="pending">Loading '+meta.model+' — full negotiations and reasoning…</div>';
+      fetch('data/concordat/'+meta.file).then(function(r){return r.json();}).then(function(g){
+        CACHE[meta.file]=g; renderGame(g);
+      });
+      return;
+    }
+    renderGame(CACHE[meta.file]);
+  }
+
+  function renderGame(g){
     var seats=Object.keys(g.seats);
     var seatCards=seats.map(function(s,si){
       var e=(g.embodiment||{})[s]||{};
@@ -228,9 +240,10 @@
     document.getElementById('nocot').onclick=function(){ host.querySelectorAll('details.cot2').forEach(function(d){d.open=false;}); };
   }
 
-  D.games.forEach(function(g,i){
+  IDX.games.forEach(function(g,i){
     var b=document.createElement('button');
-    b.textContent=g.model+' · game '+(g.game_seed!=null?g.game_seed:i+1);
+    b.textContent=g.model+' · game '+(g.game_seed!=null?g.game_seed:i+1)
+      +(g.prompt_version>=2?' · in-character CoT':'');
     b.onclick=function(){ render(i); };
     pick.appendChild(b);
   });
