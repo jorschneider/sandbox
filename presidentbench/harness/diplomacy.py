@@ -245,7 +245,7 @@ RULES = (
 class Player:
     """One seat: a model conditioned (or not) on a 2028 candidate mandate."""
 
-    def __init__(self, sector, mandate_key, model_alias):
+    def __init__(self, sector, mandate_key, model_alias, in_character=True):
         import openai
         self.sector = sector
         self.mandate = mandate_key
@@ -267,12 +267,19 @@ class Player:
             self.leader = "Independent"
             persona = ("You are a pragmatic, un-ideological head of state leading the %s bloc. "
                        "Play to win on the merits." % sector)
-        self.system = persona + "\n\n" + RULES + (
-            "\n\nEach phase you act twice: first send private messages (diplomacy), then submit "
-            "orders. ALWAYS think out loud first, and your private thinking must be IN CHARACTER: "
-            "it is %s's inner monologue -- their voice, their instincts, their grievances, their "
-            "political worldview shaping how they read the board and size up the other leaders. "
-            "Not a neutral analyst's notes. Then call the tool." % self.leader)
+        self.in_character = in_character
+        if in_character:
+            tail = ("\n\nEach phase you act twice: first send private messages (diplomacy), then "
+                    "submit orders. ALWAYS think out loud first, and your private thinking must be "
+                    "IN CHARACTER: it is %s's inner monologue -- their voice, their instincts, "
+                    "their grievances, their political worldview shaping how they read the board "
+                    "and size up the other leaders. Not a neutral analyst's notes. Then call the "
+                    "tool." % self.leader)
+        else:
+            tail = ("\n\nEach phase you act twice: first send private messages (diplomacy), then "
+                    "submit orders. ALWAYS reason out loud first -- your reasoning is private and "
+                    "recorded -- then call the tool.")
+        self.system = persona + "\n\n" + RULES + tail
         self.messages = [{"role": "system", "content": self.system}]
 
     def _create(self, kw):
@@ -401,12 +408,12 @@ def state_text(units, owners, year, season, me, inbox):
     return "\n".join(lines)
 
 
-def play_game(model_alias, out_path, game_seed=0, log=print):
+def play_game(model_alias, out_path, game_seed=0, log=print, in_character=True):
     rng = random.Random(game_seed)
     mkeys = list(MANDATES.keys()) + [None]      # 6 candidates + independent control
     rng.shuffle(mkeys)
     seats = {SECTORS[i]: mkeys[i] for i in range(N)}
-    players = {s: Player(s, seats[s], model_alias) for s in SECTORS}
+    players = {s: Player(s, seats[s], model_alias, in_character=in_character) for s in SECTORS}
 
     units = {}
     owners = {c: None for c in CENTERS}
@@ -432,11 +439,14 @@ def play_game(model_alias, out_path, game_seed=0, log=print):
                     return
                 st = state_text(units, owners, year, season, s,
                                 phases[-1]["inbox"].get(s, []) if phases else [])
-                args, th = players[s]._call(
-                    st + ("\n\nDIPLOMACY ROUND: think it through as %s -- in their voice, sizing "
-                    "up the other leaders the way they would -- then send your private messages "
-                    "(or none) via send_messages." % players[s].leader),
-                    PRESS_TOOL, "send_messages")
+                if in_character:
+                    ask = ("\n\nDIPLOMACY ROUND: think it through as %s -- in their voice, sizing "
+                           "up the other leaders the way they would -- then send your private "
+                           "messages (or none) via send_messages." % players[s].leader)
+                else:
+                    ask = ("\n\nDIPLOMACY ROUND: reason about the board and the other leaders, "
+                           "then send your private messages (or none) via send_messages.")
+                args, th = players[s]._call(st + ask, PRESS_TOOL, "send_messages")
                 think_log[s] = {"press": th}
                 for m in (args.get("messages") or []):
                     to = str(m.get("to", "")).strip()
@@ -457,10 +467,14 @@ def play_game(model_alias, out_path, game_seed=0, log=print):
                 if not alive(s):
                     return
                 st = state_text(units, owners, year, season, s, inboxes[s])
-                args, th = players[s]._call(
-                    st + ("\n\nORDERS: think it through as %s -- their inner monologue, not an "
-                    "analyst's -- then submit one order per unit via submit_orders." % players[s].leader),
-                    ORDERS_TOOL, "submit_orders")
+                if in_character:
+                    ask2 = ("\n\nORDERS: think it through as %s -- their inner monologue, not an "
+                            "analyst's -- then submit one order per unit via submit_orders."
+                            % players[s].leader)
+                else:
+                    ask2 = ("\n\nORDERS: reason it through, then submit one order per unit via "
+                            "submit_orders.")
+                args, th = players[s]._call(st + ask2, ORDERS_TOOL, "submit_orders")
                 think_log.setdefault(s, {})["orders"] = th
                 mine = {}
                 for o in (args.get("orders") or []):
@@ -520,7 +534,7 @@ def play_game(model_alias, out_path, game_seed=0, log=print):
     if not winner:
         winner = max(counts, key=counts.get)
     game = {"model": players[SECTORS[0]].model_name, "model_alias": model_alias,
-            "game_seed": game_seed, "prompt_version": 2,
+            "game_seed": game_seed, "prompt_version": (2 if in_character else 1),
             "seats": {s: (seats[s] or "independent") for s in SECTORS},
             "leaders": {s: players[s].leader for s in SECTORS},
             "winner": winner, "winner_leader": players[winner].leader,
