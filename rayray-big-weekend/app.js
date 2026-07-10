@@ -111,6 +111,7 @@
     }
     b.addEventListener("click", () => {
       state.day = key;
+      state.indoorOnly = false; // the rain banner (its only control) is per-day
       render();
     });
     dayPicker.appendChild(b);
@@ -264,7 +265,9 @@
   function downloadIcs(e) {
     if (!e.start) return;
     const days = e.days || [];
-    const dayKey = state.day !== "all" && days.indexOf(state.day) !== -1 ? state.day : days.filter((d) => DAY_KEYS.indexOf(d) !== -1)[0];
+    const real = days.filter((d) => DAY_KEYS.indexOf(d) !== -1);
+    const dayKey = state.day !== "all" && days.indexOf(state.day) !== -1 ? state.day
+      : real.find((d) => todayKey == null || DAY_KEYS.indexOf(d) >= DAY_KEYS.indexOf(todayKey)) || real[0];
     const idx = DAY_KEYS.indexOf(dayKey);
     if (idx < 0) return;
     const txt = [
@@ -307,6 +310,7 @@
   const HOME_COORDS = [40.7376, -73.9868]; // 112 E 19th St
   let map = null;
   let markerLayer = null;
+  let lastMapSig = null;
 
   function markerIcon(e, num) {
     const cat = CATS[e.category] || CATS.other;
@@ -379,6 +383,18 @@
         '<span><i class="tb-any"></i>All day</span>';
       document.querySelector(".map-pane").appendChild(legend);
     }
+    const sig = list.map(keyOf).join();
+    if (sig === lastMapSig) {
+      // same places (e.g. a heart toggled with the filter off) — refresh glyphs, keep viewport
+      document.getElementById("map-list").querySelectorAll(".mini-heart").forEach((b) => {
+        const on = hearts.has(b.dataset.key);
+        b.textContent = on ? "❤️" : "🤍";
+        b.setAttribute("aria-pressed", String(on));
+      });
+      map.invalidateSize();
+      return;
+    }
+    lastMapSig = sig;
     markerLayer.clearLayers();
     const mapList = document.getElementById("map-list");
     mapList.innerHTML = "";
@@ -405,6 +421,9 @@
       markers[n] = m;
 
       const card = miniCard(e, n);
+      card.addEventListener("keydown", (ev) => {
+        if ((ev.key === "Enter" || ev.key === " ") && ev.target === card) { ev.preventDefault(); card.click(); }
+      });
       card.addEventListener("click", (ev) => {
         if (ev.target.closest("a") || ev.target.closest(".heart") || ev.target.closest(".btn-cal-mini")) return;
         setActive(n, false);
