@@ -210,15 +210,38 @@
   let map = null;
   let markerLayer = null;
 
-  function markerIcon(e) {
+  function markerIcon(e, num) {
     const cat = CATS[e.category] || CATS.other;
     return L.divIcon({
       className: "emoji-pin" + (isEvent(e) ? " emoji-pin-event" : ""),
-      html: '<span>' + cat.emoji + "</span>",
+      html: "<span>" + cat.emoji + '<i class="pin-num">' + num + "</i></span>",
       iconSize: [38, 38],
       iconAnchor: [19, 19],
       popupAnchor: [0, -18],
     });
+  }
+
+  function miniCard(e, num) {
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = "mini-card" + (isEvent(e) ? " is-event" : "");
+    el.dataset.num = num;
+    el.innerHTML =
+      '<span class="mini-num">' + num + "</span>" +
+      '<span class="mini-body">' +
+        "<h4>" + esc(e.title) + "</h4>" +
+        '<p class="mini-when">🕐 ' + esc(e.when) + "</p>" +
+        '<p class="mini-meta">' +
+          (isFree(e) ? '<span class="m-free">FREE</span>' : "<span>" + esc(e.cost.split(";")[0].slice(0, 28)) + "</span>") +
+          '<span class="m-travel">🚇 ~' + e.travelMinutes + " min</span>" +
+          (e.outdoor ? "<span>☀️</span>" : "<span>❄️</span>") +
+        "</p>" +
+        '<span class="mini-links">' +
+          '<a href="' + esc(e.url) + '" target="_blank" rel="noopener">Details ↗</a> · ' +
+          '<a href="' + dirUrl(e) + '" target="_blank" rel="noopener">Directions 🗺️</a>' +
+        "</span>" +
+      "</span>";
+    return el;
   }
 
   function popupHtml(e) {
@@ -247,12 +270,39 @@
       markerLayer = L.layerGroup().addTo(map);
     }
     markerLayer.clearLayers();
+    const mapList = document.getElementById("map-list");
+    mapList.innerHTML = "";
     const pts = [HOME_COORDS];
+    const markers = {};
+
+    const setActive = (num, scrollList) => {
+      mapList.querySelectorAll(".mini-card").forEach((c) => c.classList.toggle("active", c.dataset.num === String(num)));
+      if (scrollList) {
+        const el = mapList.querySelector('.mini-card[data-num="' + num + '"]');
+        if (el) el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      }
+    };
+
+    let num = 0;
     list.forEach((e) => {
       if (typeof e.lat !== "number" || typeof e.lng !== "number") return;
-      L.marker([e.lat, e.lng], { icon: markerIcon(e) })
+      num += 1;
+      const n = num;
+      const m = L.marker([e.lat, e.lng], { icon: markerIcon(e, n), zIndexOffset: isEvent(e) ? 500 : 0 })
         .bindPopup(popupHtml(e), { maxWidth: 260 })
         .addTo(markerLayer);
+      m.on("click", () => setActive(n, true));
+      markers[n] = m;
+
+      const card = miniCard(e, n);
+      card.addEventListener("click", (ev) => {
+        if (ev.target.closest("a")) return; // let links be links
+        setActive(n, false);
+        map.flyTo([e.lat, e.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+        m.openPopup();
+      });
+      mapList.appendChild(card);
+
       pts.push([e.lat, e.lng]);
     });
     map.invalidateSize();
