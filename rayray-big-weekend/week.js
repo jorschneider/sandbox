@@ -800,6 +800,27 @@ window.WEEK_DATA = {
     "event": true
   },
   {
+    "title": "AMNH Block Party + Manhattanhenge",
+    "category": "festival",
+    "venue": "American Museum of Natural History, W 79th St between Columbus & Amsterdam",
+    "neighborhood": "Upper West Side",
+    "when": "Sat Jul 11, 3:00-10:00 PM (sunset alignment ~8:20 PM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free",
+    "travelMinutes": 32,
+    "travelHow": "L to 14 St-8 Av, then C uptown to 81 St-Museum of Natural History",
+    "toddlerNotes": "Go for the 3-5:30 PM window: street soccer, Double Dutch, chess and board games on a closed-off W 79th St — great for a wandering toddler. The Williamsburg Salsa Orchestra plays at sunset and the famous Manhattanhenge alignment hits ~8:20 PM, which is past bedtime — treat that part as a parents-night-out idea.",
+    "url": "https://www.amnh.org/calendar/stoops-to-stadium",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7818,
+    "lng": -73.9743,
+    "event": true
+  },
+  {
     "title": "Union Square Greenmarket wander",
     "category": "other",
     "venue": "Union Square Greenmarket (GrowNYC)",
