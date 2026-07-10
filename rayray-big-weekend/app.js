@@ -134,7 +134,7 @@
       '<div class="card-body">' +
         "<h3>" + esc(e.title) + "</h3>" +
         '<p class="venue">📍 ' + esc(e.venue) + " · " + esc(e.neighborhood) +
-          ' <span style="white-space:nowrap">(' + esc(e.travelHow) + ")</span></p>" +
+          " (" + esc(e.travelHow) + ")</p>" +
         '<p class="when">🕐 ' + esc(e.when) + "</p>" +
         '<div class="chips">' + chips.join("") + "</div>" +
         '<p class="tip">' + esc(e.toddlerNotes) + "</p>" +

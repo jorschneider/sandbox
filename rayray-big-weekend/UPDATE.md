@@ -16,7 +16,7 @@ window.WEEK_DATA = {
   weekLabel: "July 6–12, 2026",   // human label for the Mon–Sun week
   weekMonday: "2026-07-06",       // ISO date of that Monday (drives TODAY badge)
   updated: "July 10, 2026",       // date the data was refreshed
-  events: [ /* 20–35 entries, see schema below */ ]
+  events: [ /* 20–45 entries, see schema below */ ]
 };
 ```
 
