@@ -30,7 +30,7 @@
   const dayIndex = Math.floor((new Date() - weekStart) / 86400000); // 0 = Monday
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
-  const state = { day: todayKey || "all" };
+  const state = { day: todayKey || "all", showAnytime: false };
   const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri"];
 
   // ——— helpers ———
@@ -260,10 +260,11 @@
     }).sort((a, b) => startMin(a) - startMin(b) || (a.travelMinutes || 99) - (b.travelMinutes || 99));
 
     const label = state.day === "all" ? "this week" : (state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day]);
-    const nEvents = list.filter(isEvent).length;
+    const nTimed = list.filter((e) => timeBucket(e) !== "any").length;
+    const nAny = list.length - nTimed;
     document.getElementById("count").textContent =
-      list.length + " adventure" + (list.length === 1 ? "" : "s") + " " + label +
-      (nEvents ? " — " + nEvents + " real event" + (nEvents === 1 ? "" : "s") + " ⭐" : "") + " 🎈";
+      nTimed + " event" + (nTimed === 1 ? "" : "s") + " " + label +
+      (nAny ? (state.showAnytime ? " + " + nAny + " anytime spots" : " (+" + nAny + " anytime spots below)") : "") + " 🎈";
 
     // rebuild list + markers, grouped by time of day
     markerLayer.clearLayers();
@@ -277,9 +278,30 @@
     TB.forEach((bucket) => {
       const items = list.filter((e) => timeBucket(e) === bucket.key);
       if (!items.length) return;
+      if (bucket.key === "any" && !state.showAnytime) {
+        // anytime spots wait behind a reveal at the end of the scroll
+        const btn = document.createElement("button");
+        btn.className = "show-any";
+        btn.innerHTML = "🧭 Show " + items.length + " anytime spots<small>playgrounds, splash pads, carousels & ferries</small>";
+        btn.addEventListener("click", () => {
+          state.showAnytime = true;
+          render();
+          const head = mapList.querySelector(".list-head-any");
+          if (head) head.scrollIntoView({ block: "start", behavior: "smooth" });
+        });
+        mapList.appendChild(btn);
+        return;
+      }
       const head = document.createElement("div");
-      head.className = "list-head";
-      head.innerHTML = bucket.emoji + " " + bucket.label + ' <span class="list-count tb-' + bucket.key + '">' + items.length + "</span>";
+      head.className = "list-head" + (bucket.key === "any" ? " list-head-any" : "");
+      head.innerHTML = bucket.emoji + " " + bucket.label + ' <span class="list-count tb-' + bucket.key + '">' + items.length + "</span>" +
+        (bucket.key === "any" ? ' <button class="hide-any">hide</button>' : "");
+      if (bucket.key === "any") {
+        head.querySelector(".hide-any").addEventListener("click", () => {
+          state.showAnytime = false;
+          render();
+        });
+      }
       mapList.appendChild(head);
       items.forEach((e) => {
         if (typeof e.lat !== "number" || typeof e.lng !== "number") return;
