@@ -795,34 +795,6 @@ window.WEEK_DATA = {
     ]
   },
   {
-    "title": "West Side Fest — 20+ venues, all free",
-    "category": "festival",
-    "venue": "Little Island, the High Line, Whitney, Hudson River Park + more",
-    "neighborhood": "Meatpacking District / Chelsea",
-    "when": "Fri Jul 10 - Sun Jul 12, daytime through evening (varies by venue; e.g. Little Island Play Ground events Sat & Sun 11:00 AM)",
-    "days": [
-      "fri",
-      "sat",
-      "sun"
-    ],
-    "cost": "Free (including museum admission)",
-    "travelMinutes": 15,
-    "travelHow": "L to 8 Av + 5-10 min walk toward the river",
-    "toddlerNotes": "Drop-in structure is perfect for a 2-year-old: hop between free kids' artmaking, outdoor performances, Little Island's lawns and the Whitney's free galleries (AC!). Everything is stroller-friendly and no one show is mandatory. Little Island has shade pockets and water fountains; the Whitney lobby is a good midday cool-down.",
-    "url": "https://www.westsidefest.nyc/",
-    "outdoor": true,
-    "recurring": false,
-    "confidence": "high",
-    "lat": 40.7415,
-    "lng": -74.009,
-    "event": true,
-    "times": [
-      "morning",
-      "afternoon",
-      "evening"
-    ]
-  },
-  {
     "title": "Family Fun Circus Day — Bindlestiff Cirkus & giant bubbles",
     "category": "festival",
     "venue": "Herald Square Park, Broadway & W 34th St",
@@ -848,18 +820,18 @@ window.WEEK_DATA = {
     ]
   },
   {
-    "title": "Bastille Day on Madison Avenue",
+    "title": "Bastille Day on Madison Ave — masks, pets & a giant goose game",
     "category": "festival",
     "venue": "Madison Ave, 59th-63rd Sts (L'Alliance New York street fair)",
     "neighborhood": "Upper East Side",
-    "when": "Sun Jul 12, 12:00-5:00 PM",
+    "when": "Sun Jul 12, 12-5 PM. Mask-making (59th St corner): 1:00, 2:15 & 3:30. Pet parade on the red carpet: 12:30-1:15. Dance workshops on the lawn: 2:30 & 4:00. Giant Jeu de l'Oie goose game at the 60th St corner all afternoon.",
     "days": [
       "sun"
     ],
     "cost": "Free entry; food and tasting tickets cost extra",
     "travelMinutes": 20,
     "travelHow": "4/5/6 from Union Sq to 59 St + 5 min walk to Madison Ave",
-    "toddlerNotes": "Car-free avenue is great for a stroller cruise; free kids' arts & crafts and dance workshops on the pop-up lawn, plus a 'Carnaval des Animaux' theme in 2026; crepes make an easy toddler lunch; crowds build after 1 PM, so go right at noon",
+    "toddlerNotes": "Plan: arrive 12:15, watch the costumed-pet parade from the lawn edge (12:30), hit the 1:00 mask-making, then the goose game and a Mille-Feuille pastry in the French Garden block (61st-62nd). Free scavenger-hunt passport at the L'Alliance booths (63rd & Madison / 60th & 5th) - collect stamps, win a prize.",
     "url": "https://lallianceny.org/event/bastille-day-2026/",
     "outdoor": true,
     "recurring": false,
@@ -876,7 +848,7 @@ window.WEEK_DATA = {
     "category": "festival",
     "venue": "OLMC Shrine Church streets, N 8th & Havemeyer Sts",
     "neighborhood": "Williamsburg, Brooklyn",
-    "when": "Runs Jul 8-19; this weekend Fri-Sun from ~6 PM (weekend afternoons too); famous Dancing of the Giglio lift Sun Jul 12",
+    "when": "Carnival hours: Sat 4-11 PM, Sun 12-10 PM (Fri opens 6 PM). Dancing of the Giglio: Sun from 1:30 PM outside the church. Free bandstand shows nightly 7 PM (Havemeyer & N 9th).",
     "days": [
       "fri",
       "sat",
@@ -885,7 +857,7 @@ window.WEEK_DATA = {
     "cost": "Free entry; rides, games, and zeppole cost extra",
     "travelMinutes": 22,
     "travelHow": "L to Bedford Av or Lorimer St + 8-10 min walk",
-    "toddlerNotes": "Classic street carnival: lights, kiddie rides, zeppole — mesmerizing for a 2-year-old in small doses; Sunday's Giglio lift (100+ men carrying a 4-ton tower with a live band on it) is a genuine spectacle but very crowded — watch from a side street with the stroller; afternoons are calmer than nights",
+    "toddlerNotes": "Best toddler windows: Sat 4-6 PM (rides running, daylight, thin crowds) or Sun at noon sharp - kiddie rides until ~1:15, then watch the first lift of the 4-ton Giglio tower from the fringes at N 9th & Havemeyer and bail to zeppole before the crush. Skip Fri (opens at bedtime).",
     "url": "https://www.olmcfeast.com/",
     "outdoor": true,
     "recurring": false,
@@ -903,7 +875,7 @@ window.WEEK_DATA = {
     "category": "festival",
     "venue": "Little Island, The Play Ground (Pier 55, W 13th St & Hudson River)",
     "neighborhood": "Meatpacking District",
-    "when": "Sun Jul 12, 11:00 AM",
+    "when": "Sun Jul 12, 11:00 AM-3:00 PM at The Play Ground (drop in anytime)",
     "days": [
       "sun"
     ],
@@ -1092,6 +1064,177 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
+    ]
+  },
+  {
+    "title": "West Side Fest: Kids Community Quilt + screenprinting (Poster House)",
+    "category": "festival",
+    "venue": "Poster House",
+    "neighborhood": "Chelsea (119 W 23rd St)",
+    "when": "Fri Jul 10: Kids Community Quilt 10 AM-1 PM; drop-in tote-bag screenprinting 12-5 PM",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free",
+    "travelMinutes": 12,
+    "travelHow": "Walk 15 min up 5th Ave, or R/W to 23 St",
+    "toddlerNotes": "Make a paper quilt patch that hangs in the museum all weekend, then watch your tote get screenprinted. Air-conditioned, stroller-easy, zero sit-still required.",
+    "url": "https://posterhouse.org/events/",
+    "outdoor": false,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7437,
+    "lng": -73.993,
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
+  },
+  {
+    "title": "West Side Fest: Jazz on the Beach — real sand + live Latin band",
+    "category": "music",
+    "venue": "Gansevoort Peninsula beach, Hudson River Park",
+    "neighborhood": "Meatpacking",
+    "when": "Fri Jul 10, from 6:30 PM (dance class, then Sonido Costeño live)",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free",
+    "travelMinutes": 18,
+    "travelHow": "L to 8 Av + 12 min walk to the river",
+    "toddlerNotes": "NYC's only Manhattan beach: toddler digs in the sand while a Latin band plays at golden hour. Later than bedtime-strict, but it's the most toddler-compatible evening thing at the fest.",
+    "url": "https://hudsonriverpark.org/event-series/west-side-fest/",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7394,
+    "lng": -74.0095,
+    "event": true,
+    "times": [
+      "evening"
+    ]
+  },
+  {
+    "title": "West Side Fest: Whitney Free Friday + PLAY-DOH artmaking",
+    "category": "festival",
+    "venue": "Whitney Museum",
+    "neighborhood": "Meatpacking (99 Gansevoort St)",
+    "when": "Fri Jul 10, 5-10 PM free admission; 'Artmaking with Blooms by PLAY-DOH' 5-9:30 PM",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free (reserve free ticket online)",
+    "travelMinutes": 18,
+    "travelHow": "L to 8 Av + 8 min walk",
+    "toddlerNotes": "Squish PLAY-DOH in a museum, in the A/C, for free. Go 5-6:30 PM and you're home near bedtime. Reserve the free Friday ticket in advance - it books up.",
+    "url": "https://whitney.org/west-side-fest-2026",
+    "outdoor": false,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7396,
+    "lng": -74.0089,
+    "event": true,
+    "times": [
+      "evening"
+    ]
+  },
+  {
+    "title": "West Side Fest: Family Open Studio at Poster House",
+    "category": "festival",
+    "venue": "Poster House",
+    "neighborhood": "Chelsea (119 W 23rd St)",
+    "when": "Sat Jul 11: Family Open Studio 10 AM-12 PM; drop-in fan screenprinting 12-5 PM",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free",
+    "travelMinutes": 12,
+    "travelHow": "Walk 15 min up 5th Ave, or R/W to 23 St",
+    "toddlerNotes": "Hands-on family art session in the morning A/C, then a hand-fan gets printed while you watch. Pairs with the Herald Square circus day (11:30-3:30) five blocks north.",
+    "url": "https://posterhouse.org/events/",
+    "outdoor": false,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7437,
+    "lng": -73.993,
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Westbeth craft market + Penny Jones children's puppet show",
+    "category": "theater",
+    "venue": "Westbeth Center for the Arts",
+    "neighborhood": "West Village (55 Bethune St)",
+    "when": "Sat Jul 11 & Sun Jul 12, 1-5 PM (puppet show time not posted - ask at the door)",
+    "days": [
+      "sat",
+      "sun"
+    ],
+    "cost": "Free",
+    "travelMinutes": 17,
+    "travelHow": "L to 8 Av + 10 min walk",
+    "toddlerNotes": "Artist-colony courtyard with a craft market, open painting & ceramics studios, live music, and Penny Jones' puppet troupe - which exists specifically for very young children.",
+    "url": "https://westbeth.org/event/west-side-fest-2026/",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "medium",
+    "lat": 40.7369,
+    "lng": -74.0089,
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Making Moves: Community Art Party on the High Line",
+    "category": "festival",
+    "venue": "High Line at 14th St",
+    "neighborhood": "Meatpacking",
+    "when": "Sun Jul 12, 1-4 PM: DJs (Saint James Joy), movement games with New Victory Theater, collaborative art",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free (optional Eventbrite RSVP)",
+    "travelMinutes": 15,
+    "travelHow": "L to 8 Av + 5 min walk, elevator at 14th St",
+    "toddlerNotes": "A dance party ON the High Line with theater-led movement games. Art tables pitch at 6-10 but all ages are welcome - a 2-year-old mostly wants the DJs anyway. Do Mandalas at Little Island 11-1, lunch, then this.",
+    "url": "https://www.thehighline.org/events/making-moves-community-art-party-featuring-saint-james-joy-infirnity-new-victory-theater/",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7419,
+    "lng": -74.008,
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
+  },
+  {
+    "title": "West Side Fest: Soul Summit dance party at The Shed plaza",
+    "category": "music",
+    "venue": "The Shed, outdoor plaza",
+    "neighborhood": "Hudson Yards (30th St & 11th Ave)",
+    "when": "Fri Jul 10, 5-8 PM",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free",
+    "travelMinutes": 28,
+    "travelHow": "L to 8 Av + 20 min walk, or 7 from Times Sq to 34 St-Hudson Yards",
+    "toddlerNotes": "All-ages outdoor DJ set - they hand out earplugs, which fit a toddler mood perfectly. Catch 45 minutes of dancing at 5 PM and still make bedtime. Vessel plaza fountains nearby.",
+    "url": "https://www.theshed.org/program/562-west-side-fest-2026",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7538,
+    "lng": -74.0022,
+    "event": true,
+    "times": [
+      "evening"
     ]
   }
 ],
