@@ -657,7 +657,8 @@ function renderEpisodes(main) {
         const link = e.post || e.link;
         const title = link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${esc(e.title)}</a>` : esc(e.title);
         const guests = e.guests.length ? `<div class="ep-desc">Guest${e.guests.length > 1 ? 's' : ''}: ${esc(e.guests.join(', '))}</div>` : '';
-        const tr = e.tr ? `<span class="chip chip-tr">Transcript</span>` : '';
+        const tr = e.tr ? `<span class="chip chip-tr">Transcript</span>`
+          : e.gen ? `<span class="chip chip-tr">Auto transcript</span>` : '';
         return `<tr><td class="num">${e.n}</td><td style="white-space:nowrap">${fmtDate(e.date)}</td>` +
           `<td class="ep-title">${title}${guests}</td>` +
           `<td class="num">${fmtDur(e.duration)}</td>` +
@@ -674,6 +675,8 @@ function renderEpisodes(main) {
     `<li>Episode links go to the matching chinatalk.media post when one exists, otherwise to the podcast page.</li>` +
     `<li>“Transcript” marks episodes whose matched post reads as an interview transcript ` +
     `(ten or more speaker turns). Matching is by title, so some published transcripts are missed.</li>` +
+    `<li>“Auto transcript” marks episodes transcribed by Whisper speech-to-text for this project — ` +
+    `useful for the mention analytics, but expect name misspellings; the published transcripts remain canonical.</li>` +
     `<li>Guests are extracted from episode titles with conservative patterns ` +
     `(“Name on …”, “… with Name”), so co-hosts and unnamed guests are missed.</li>`);
 }
@@ -997,7 +1000,8 @@ function renderLanguage(main) {
   method(main,
     `<li>Mentions are counted over the full text of every chinatalk.media post — ` +
     `including the podcast transcripts the team publishes — normalized per million words ` +
-    `of that quarter’s corpus. Paid-only posts contribute their free preview.</li>` +
+    `of that quarter’s corpus. Machine-generated Whisper transcripts of episodes without ` +
+    `a published transcript are included where available. Paid-only posts contribute their free preview.</li>` +
     `<li>The corpus starts with the newsletter in late 2018; the podcast-only 2017–18 era ` +
     `has no text to mine, so the chart starts where the corpus does.</li>` +
     `<li>Lines are smoothed with a 3-quarter centered mean; tooltips show the raw quarterly rate.</li>`);

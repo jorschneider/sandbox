@@ -381,11 +381,13 @@ def build():
         desc = strip_html(parse_rss_field(it, "description") or "")
         # drop boilerplate outro that repeats on most episodes
         desc = re.sub(r"(Get bonus content on Patreon.*|Learn more about your ad choices.*|Outtro music.*)$", "", desc, flags=re.I).strip()
+        enc = re.search(r'<enclosure url="([^"]+)"', it)
         episodes.append({
             "title": title,
             "date": date,
             "duration": secs,
             "link": parse_rss_field(it, "link"),
+            "audio": enc.group(1) if enc else None,
             "guests": extract_guests(title),
             "desc": desc[:420],
         })
@@ -478,6 +480,23 @@ def build():
             matched += 1
     print(f"episodes matched to substack posts: {matched}/{len(episodes)} ({exact} exact)")
 
+    # ---- machine-generated transcripts (tools/transcribe.py) ----------
+    gen_texts = {}  # episode n -> transcript text
+    gen_dir = RAW / "transcripts"
+    if gen_dir.exists():
+        for f in sorted(gen_dir.glob("ep*.json")):
+            try:
+                d = json.loads(f.read_text())
+                if d.get("text"):
+                    gen_texts[d["n"]] = d["text"]
+            except (ValueError, KeyError):
+                pass
+    for e in episodes:
+        if e["n"] in gen_texts and not e.get("tr"):
+            e["gen"] = True
+    if gen_texts:
+        print(f"machine transcripts merged: {len(gen_texts)}")
+
     # ---- keyword topics across the full archive -----------------------
     # Classify every episode and post. For trends, matched transcript
     # posts are skipped so an episode and its transcript don't count the
@@ -505,6 +524,7 @@ def build():
         "words": sum(p["words"] for p in posts),
         "corpus_words": corpus_words,
         "transcripts": sum(1 for p in posts if p["is_transcript"]),
+        "gen_transcripts": len(gen_texts),
         "first_episode": episodes[0]["date"],
         "last_episode": episodes[-1]["date"],
         "likes": sum(p["likes"] for p in posts),
@@ -631,6 +651,10 @@ def build():
     for p in posts:
         if p["text"]:
             q_text[quarter(p["date"])].append(f'{p["title"]} {p["subtitle"]} {p["text"]}')
+    # machine transcripts fill quarters the newsletter never covered
+    for e in episodes:
+        if e["n"] in gen_texts:
+            q_text[quarter(e["date"])].append(f'{e["title"]} {gen_texts[e["n"]]}')
     q_words = {q: sum(len(t.split()) for t in texts) for q, texts in q_text.items()}
 
     def mention_series(pat):
