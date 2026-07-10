@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffd54f">
+  <title>Rayray’s Big Week</title>
+  <meta name="description" content="Toddler-approved adventures within 35 minutes of Union Square — music, puppets, splash pads, goats and ferries. Fresh every Monday.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎈</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sky">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="sun" aria-hidden="true">☀️</div>
+      <h1><span class="balloon" aria-hidden="true">🎈</span> Rayray’s Big Week</h1>
+      <p class="tagline">Toddler-approved adventures within <strong>35 minutes of Union Square</strong> —
+        music, puppets, splash pads, goats &amp; ferry rides.</p>
+      <p class="weekline">
+        <span class="week-label" id="week-label">…</span>
+        <span class="fresh">🗓️ fresh every Monday</span>
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="days" id="day-picker" aria-label="Pick a day"></nav>
+
+    <div class="filters">
+      <div class="cats" id="cat-picker" aria-label="Pick a kind of fun"></div>
+      <div class="toggles">
+        <button class="toggle" id="toggle-free" aria-pressed="false">💸 Free stuff only</button>
+        <button class="toggle" id="toggle-outdoor" aria-pressed="false">☀️ Outside only</button>
+      </div>
+    </div>
+
+    <p class="count" id="count" aria-live="polite"></p>
+    <section class="cards" id="cards"></section>
+
+    <section class="empty" id="empty" hidden>
+      <div class="empty-face">🫠</div>
+      <p>Nothing matches those filters — try loosening one up!</p>
+    </section>
+
+    <aside class="note">
+      <h2>🧢 Before you head out</h2>
+      <p>July in NYC = pack water, sunscreen and a spare shirt. Schedules wiggle for heat and rain,
+        so tap <em>Details</em> on a card before leaving the house. Cards marked
+        <span class="chip chip-check">🔍 double-check</span> are usually-running programs whose exact
+        time we couldn’t pin down for this week.</p>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Home base: 112 East 19th Street · travel times are door-to-door-ish by subway, foot or boat.</p>
+      <p id="updated-line"></p>
+    </div>
+  </footer>
+
+  <script src="week.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
