@@ -122,7 +122,7 @@ const roundRightRect = (x, y, w, h, r) => {
 
 // ---------------------------------------------------------------- boot
 
-const FILES = ['site', 'episodes', 'timeline', 'topics', 'people', 'language', 'engagement'];
+const FILES = ['site', 'episodes', 'timeline', 'topics', 'people', 'language', 'engagement', 'references'];
 Promise.all(FILES.map(f => fetch(`data/${f}.json`).then(r => r.json())))
   .then(values => {
     FILES.forEach((f, i) => S[f] = values[i]);
@@ -165,7 +165,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 
 const VIEWS = {
   overview: renderOverview, topics: renderTopics, map: renderMap,
-  episodes: renderEpisodes, people: renderPeople,
+  references: renderReferences, episodes: renderEpisodes, people: renderPeople,
   engagement: renderEngagement, language: renderLanguage,
 };
 
@@ -231,7 +231,8 @@ function renderOverview(main) {
   const years = ((isoDate(t.last_episode) - isoDate(t.first_episode)) / 31557600000).toFixed(1);
   kpi(row, 'Podcast episodes', fmtInt(t.episodes), `${fmtDate(t.first_episode)} → ${fmtDate(t.last_episode)}`);
   kpi(row, 'Hours of audio', fmtInt(t.audio_hours), `≈ ${Math.round(t.audio_hours / 24)} days of listening`);
-  kpi(row, 'Newsletter posts', fmtInt(t.posts), 'on chinatalk.media');
+  kpi(row, 'Newsletter posts', fmtInt(t.posts), t.transcripts
+    ? `incl. ${fmtInt(t.transcripts)} podcast transcripts` : 'on chinatalk.media');
   kpi(row, 'Words published', fmtSI(t.words), 'newsletter archive');
   kpi(row, 'Years running', years, 'and counting');
   kpi(row, 'Likes received', fmtSI(t.likes), `${fmtSI(t.comments)} comments`);
@@ -656,10 +657,11 @@ function renderEpisodes(main) {
         const link = e.post || e.link;
         const title = link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${esc(e.title)}</a>` : esc(e.title);
         const guests = e.guests.length ? `<div class="ep-desc">Guest${e.guests.length > 1 ? 's' : ''}: ${esc(e.guests.join(', '))}</div>` : '';
+        const tr = e.tr ? `<span class="chip chip-tr">Transcript</span>` : '';
         return `<tr><td class="num">${e.n}</td><td style="white-space:nowrap">${fmtDate(e.date)}</td>` +
           `<td class="ep-title">${title}${guests}</td>` +
           `<td class="num">${fmtDur(e.duration)}</td>` +
-          `<td>${e.topics.filter(t => t !== 'Other').slice(0, 3).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td></tr>`;
+          `<td>${tr}${e.topics.filter(t => t !== 'Other').slice(0, 3).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td></tr>`;
       }).join('') + `</tbody></table>`;
     moreBtn.style.display = rows.length > shown ? '' : 'none';
     moreBtn.textContent = `Show more (${fmtInt(rows.length - shown)} left)`;
@@ -670,6 +672,8 @@ function renderEpisodes(main) {
 
   method(main,
     `<li>Episode links go to the matching chinatalk.media post when one exists, otherwise to the podcast page.</li>` +
+    `<li>“Transcript” marks episodes whose matched post reads as an interview transcript ` +
+    `(ten or more speaker turns). Matching is by title, so some published transcripts are missed.</li>` +
     `<li>Guests are extracted from episode titles with conservative patterns ` +
     `(“Name on …”, “… with Name”), so co-hosts and unnamed guests are missed.</li>`);
 }
@@ -744,6 +748,35 @@ function renderPeople(main) {
     });
   }
 
+  // most-mentioned public figures, from the full-text corpus
+  if (S.language.people && S.language.people.length) {
+    const c25 = card(main, 'Most-mentioned figures',
+      'Name-drops across the full newsletter corpus, transcripts included. Explore their trends in the Language tab.');
+    const figures = S.language.people.filter(p => p.total > 0);
+    const rowH = 21;
+    const box = document.createElement('div');
+    c25.appendChild(box);
+    const { svg, m, iw } = makeSvg(box, figures.length * rowH + 30, { left: 150, right: 56, top: 4, bottom: 22 });
+    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+    const x = d3.scaleLinear().domain([0, d3.max(figures, f => f.total)]).nice().range([0, iw]);
+    const y = d3.scaleBand().domain(figures.map(f => f.term)).range([0, figures.length * rowH]).paddingInner(0.3);
+    for (const f of figures) {
+      g.append('path').attr('d', roundRightRect(0, y(f.term), x(f.total), y.bandwidth(), 3))
+        .attr('fill', cssVar('--series-1'))
+        .on('mousemove', ev => showTip(`<div class="tt-title">${esc(f.term)}</div>` +
+          ttRow(cssVar('--series-1'), 'mentions', fmtInt(f.total)), ev))
+        .on('mouseleave', hideTip);
+      g.append('text').attr('x', -8).attr('y', y(f.term) + y.bandwidth() / 2)
+        .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
+        .attr('fill', cssVar('--text-secondary')).attr('font-size', 12).text(f.term);
+      g.append('text').attr('x', x(f.total) + 6).attr('y', y(f.term) + y.bandwidth() / 2)
+        .attr('dominant-baseline', 'middle')
+        .attr('fill', cssVar('--text-muted')).attr('font-size', 11).text(fmtInt(f.total));
+    }
+    axisStyle(g.append('g').attr('transform', `translate(0,${figures.length * rowH})`)
+      .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0)));
+  }
+
   const c3 = card(main, 'All identified guests', '');
   c3.insertAdjacentHTML('beforeend',
     `<p class="sub">${S.people.guests.map(g => `<span class="chip">${esc(g.name)}</span>`).join(' ')}</p>`);
@@ -751,7 +784,9 @@ function renderPeople(main) {
   method(main,
     `<li>Bylines come from the archive API; the podcast host is not double-counted as a guest.</li>` +
     `<li>Guest names are parsed from episode titles only — a conservative lower bound. ` +
-    `Many episodes name no guest in the title and are not counted.</li>`);
+    `Many episodes name no guest in the title and are not counted.</li>` +
+    `<li>Figure mentions are counted over the full text of every post, including published transcripts; ` +
+    `single-surname patterns (“Xi”, “Trump”, “Deng”) are attributed to the usual bearer.</li>`);
 }
 
 // ================================================================ ENGAGEMENT
@@ -827,10 +862,11 @@ const termState = new Map(); // term -> slot index, survives re-renders
 function renderLanguage(main) {
   const L = S.language;
   const qs = L.quarters.map(qDate);
+  const ALL = L.terms.concat(L.people || []);
 
   if (termState.size === 0) {
-    ['AI', 'Semiconductors / chips', 'Taiwan', 'Tariffs / trade war']
-      .forEach(t => { if (L.terms.some(x => x.term === t)) termState.set(t, freeSlot()); });
+    ['AI', 'Chips & semis', 'Taiwan', 'Tariffs / trade war']
+      .forEach(t => { if (ALL.some(x => x.term === t)) termState.set(t, freeSlot()); });
   }
   function freeSlot() {
     const used = new Set(termState.values());
@@ -839,15 +875,19 @@ function renderLanguage(main) {
   }
 
   const c1 = card(main, 'What ChinaTalk talks about, by quarter',
-    'Share of each quarter’s items (episodes + posts) whose title or description mentions the term. Pick up to 8.');
+    'Mentions per million words of the full newsletter corpus — including published podcast transcripts. Pick up to 8 topics or people.');
   const chips = document.createElement('div');
   c1.appendChild(chips);
   const box = document.createElement('div');
   c1.appendChild(box);
 
-  function drawChips() {
-    chips.innerHTML = '';
-    for (const t of L.terms) {
+  function chipGroup(label, list) {
+    const head = document.createElement('div');
+    head.className = 'sub';
+    head.style.margin = '8px 0 2px';
+    head.textContent = label;
+    chips.appendChild(head);
+    for (const t of list) {
       const b = document.createElement('button');
       b.className = 'chip-toggle' + (termState.has(t.term) ? ' on' : '');
       const color = termState.has(t.term) ? cssVar(SLOTS[termState.get(t.term)]) : '';
@@ -865,15 +905,23 @@ function renderLanguage(main) {
       chips.appendChild(b);
     }
   }
+  function drawChips() {
+    chips.innerHTML = '';
+    chipGroup('Topics', L.terms);
+    if (L.people && L.people.length) chipGroup('People', L.people);
+  }
 
   function drawLines() {
     box.innerHTML = '';
-    const sel = L.terms.filter(t => termState.has(t.term));
+    const sel = ALL.filter(t => termState.has(t.term));
     if (!sel.length) { box.innerHTML = '<p class="sub">Pick a term above.</p>'; return; }
+    // the newsletter corpus only starts in late 2018 — clip empty quarters
+    const i0 = Math.max(0, (L.words_per_quarter || []).findIndex(w => w >= 20000));
+    const cqs = qs.slice(i0);
     const { svg, m, iw, ih } = makeSvg(box, 320, { right: 130 });
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
-    const x = d3.scaleTime().domain(d3.extent(qs)).range([0, iw]);
-    const maxV = d3.max(sel, t => d3.max(t.trend));
+    const x = d3.scaleTime().domain(d3.extent(cqs)).range([0, iw]);
+    const maxV = d3.max(sel, t => d3.max(t.trend.slice(i0)));
     const y = d3.scaleLinear().domain([0, maxV]).nice().range([ih, 0]);
     gridLines(g, 0, iw, y);
     // light smoothing: 3-quarter centered mean keeps eras visible without noise
@@ -882,8 +930,8 @@ function renderLanguage(main) {
     const endLabels = [];
     for (const t of sel) {
       const color = cssVar(SLOTS[termState.get(t.term)]);
-      const vals = smooth(t.trend);
-      const pts = vals.map((v, i) => ({ d: qs[i], v }));
+      const vals = smooth(t.trend.slice(i0));
+      const pts = vals.map((v, i) => ({ d: cqs[i], v }));
       g.append('path').datum(pts).attr('fill', 'none')
         .attr('stroke', color).attr('stroke-width', 2)
         .attr('d', d3.line().x(p => x(p.d)).y(p => y(p.v)).curve(d3.curveMonotoneX));
@@ -898,21 +946,25 @@ function renderLanguage(main) {
         .attr('fill', l.color).attr('font-size', 12).attr('font-weight', 600).text(l.term);
     axisStyle(g.append('g').attr('transform', `translate(0,${ih})`)
       .call(d3.axisBottom(x).ticks(7).tickSizeOuter(0)));
-    axisStyle(g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d => d + '%').tickSizeOuter(0)));
+    axisStyle(g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d3.format('~s')).tickSizeOuter(0)));
+    g.append('text').attr('x', -m.left + 4).attr('y', -2).attr('fill', cssVar('--text-muted'))
+      .attr('font-size', 11).text('mentions per 1M words');
     svg.append('rect').attr('x', m.left).attr('y', m.top).attr('width', iw).attr('height', ih)
       .attr('fill', 'transparent')
       .on('mousemove', ev => {
         const date = x.invert(d3.pointer(ev, g.node())[0]);
-        const i = Math.min(qs.length - 1, Math.max(0, d3.bisector(d => d).center(qs, date)));
+        const ci = Math.min(cqs.length - 1, Math.max(0, d3.bisector(d => d).center(cqs, date)));
+        const i = i0 + ci;
         showTip(`<div class="tt-title">${L.quarters[i].replace('-', ' ')}</div>` +
-          sel.map(t => ttRow(cssVar(SLOTS[termState.get(t.term)]), t.term, t.trend[i] + '%')).join(''), ev);
+          sel.map(t => ttRow(cssVar(SLOTS[termState.get(t.term)]), t.term, fmtInt(t.trend[i]) + ' /1M')).join(''), ev);
       })
       .on('mouseleave', hideTip);
   }
   drawChips();
   drawLines();
-  tableView(c1, ['Quarter', ...L.terms.map(t => t.term)],
-    L.quarters.map((q, i) => [q, ...L.terms.map(t => t.trend[i] + '%')]));
+  tableView(c1, ['Quarter', 'Corpus words', ...ALL.map(t => t.term)],
+    L.quarters.map((q, i) => [q, fmtInt((L.words_per_quarter || [])[i] || 0),
+      ...ALL.map(t => t.trend[i])]));
 
   const c2 = card(main, 'Most common words in episode titles',
     'Stopwords and the words “China/Chinese” excluded — this is a China show, after all.');
@@ -943,9 +995,62 @@ function renderLanguage(main) {
   }
 
   method(main,
-    `<li>Term matching runs over titles plus feed/archive descriptions — not full transcripts — ` +
-    `so it measures what an episode or post is <em>about</em>, not every passing mention.</li>` +
-    `<li>Lines are smoothed with a 3-quarter centered mean; tooltips show the raw quarterly value.</li>`);
+    `<li>Mentions are counted over the full text of every chinatalk.media post — ` +
+    `including the podcast transcripts the team publishes — normalized per million words ` +
+    `of that quarter’s corpus. Paid-only posts contribute their free preview.</li>` +
+    `<li>The corpus starts with the newsletter in late 2018; the podcast-only 2017–18 era ` +
+    `has no text to mine, so the chart starts where the corpus does.</li>` +
+    `<li>Lines are smoothed with a 3-quarter centered mean; tooltips show the raw quarterly rate.</li>`);
+}
+
+// ================================================================ REFERENCES
+
+function renderReferences(main) {
+  const R = S.references;
+  const row = document.createElement('div');
+  row.className = 'kpi-row';
+  main.appendChild(row);
+  kpi(row, 'Outbound links', fmtSI(R.total_links), `across ${fmtInt(R.posts_with_bodies)} posts`);
+  kpi(row, 'Distinct sources shown', fmtInt(R.domains.length), 'most-cited domains');
+  const perPost = R.total_links / Math.max(1, R.posts_with_bodies);
+  kpi(row, 'Links per post', perPost.toFixed(1), 'on average');
+
+  const c = card(main, 'Where ChinaTalk points its readers',
+    'Domains most often linked from post bodies. “Links” counts every citation; “posts” counts how many posts cite the domain at least once.');
+  const box = document.createElement('div');
+  c.appendChild(box);
+  {
+    const domains = R.domains.slice(0, 30);
+    const rowH = 21;
+    const { svg, m, iw } = makeSvg(box, domains.length * rowH + 30, { left: 190, right: 56, top: 4, bottom: 22 });
+    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+    const x = d3.scaleLinear().domain([0, d3.max(domains, d => d.links)]).nice().range([0, iw]);
+    const y = d3.scaleBand().domain(domains.map(d => d.domain)).range([0, domains.length * rowH]).paddingInner(0.3);
+    for (const d of domains) {
+      g.append('path').attr('d', roundRightRect(0, y(d.domain), x(d.links), y.bandwidth(), 3))
+        .attr('fill', cssVar('--series-1'))
+        .on('mousemove', ev => showTip(`<div class="tt-title">${esc(d.domain)}</div>` +
+          ttRow(cssVar('--series-1'), 'links', fmtInt(d.links)) +
+          ttRow('transparent', 'citing posts', fmtInt(d.posts)), ev))
+        .on('mouseleave', hideTip);
+      g.append('text').attr('x', -8).attr('y', y(d.domain) + y.bandwidth() / 2)
+        .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
+        .attr('fill', cssVar('--text-secondary')).attr('font-size', 12).text(d.domain);
+      g.append('text').attr('x', x(d.links) + 6).attr('y', y(d.domain) + y.bandwidth() / 2)
+        .attr('dominant-baseline', 'middle')
+        .attr('fill', cssVar('--text-muted')).attr('font-size', 11).text(fmtInt(d.links));
+    }
+    axisStyle(g.append('g').attr('transform', `translate(0,${domains.length * rowH})`)
+      .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0)));
+  }
+  tableView(c, ['Domain', 'Links', 'Citing posts'],
+    R.domains.map(d => [d.domain, fmtInt(d.links), fmtInt(d.posts)]));
+
+  method(main,
+    `<li>Links are extracted from the HTML of every fetched post body; ` +
+    `Substack plumbing (images, share links, chinatalk.media self-links) is excluded, ` +
+    `but links to other Substack publications count.</li>` +
+    `<li>Paid-only posts contribute links from their free preview only.</li>`);
 }
 
 // ================================================================ SEARCH

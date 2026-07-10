@@ -56,6 +56,52 @@ def fetch_raw():
     print(f"fetched {len(posts)} substack posts")
 
 
+def fetch_bodies():
+    """Fetch full body_html for every archive post (transcripts live here).
+
+    Paid-only posts return just the free preview. Results accumulate in
+    raw/post_bodies.jsonl keyed by slug; already-fetched slugs are skipped,
+    so the fetch is resumable.
+    """
+    posts = json.loads((RAW / "substack_archive.json").read_text())
+    out = RAW / "post_bodies.jsonl"
+    done = set()
+    if out.exists():
+        for line in out.read_text().splitlines():
+            try:
+                done.add(json.loads(line)["slug"])
+            except (ValueError, KeyError):
+                pass
+    todo = [p["slug"] for p in posts if p.get("slug") and p["slug"] not in done]
+    print(f"fetching {len(todo)} post bodies ({len(done)} cached)")
+    with out.open("a") as f:
+        for i, slug in enumerate(todo):
+            url = f"https://www.chinatalk.media/api/v1/posts/{slug}"
+            for attempt in range(5):
+                try:
+                    req = urllib.request.Request(url, headers=UA)
+                    with urllib.request.urlopen(req, timeout=30) as r:
+                        d = json.load(r)
+                    f.write(json.dumps({"slug": slug, "body_html": d.get("body_html") or ""}) + "\n")
+                    break
+                except urllib.error.HTTPError as e:
+                    if e.code == 429:  # rate limited: back off hard and retry
+                        time.sleep(15 * (attempt + 1))
+                        continue
+                    print(f"  FAILED {slug}: {e}", flush=True)
+                    break
+                except Exception as e:  # noqa: BLE001 - keep going, log the slug
+                    print(f"  FAILED {slug}: {e}", flush=True)
+                    break
+            else:
+                print(f"  FAILED {slug}: still rate-limited", flush=True)
+            if i % 50 == 0:
+                print(f"  {i}/{len(todo)}", flush=True)
+                f.flush()
+            time.sleep(0.8)
+    print("bodies done")
+
+
 # ---------------------------------------------------------------- helpers
 
 TAG_RE = re.compile(r"<[^>]+>")
@@ -223,15 +269,71 @@ def classify(text):
 
 TOPIC_RES = [(name, re.compile(pat, re.I)) for name, pat in TOPIC_TAXONOMY]
 
+# Public figures tracked in the People/Language views, counted over the
+# full newsletter corpus (which includes the podcast transcripts).
+PEOPLE = [
+    ("Xi Jinping", r"xi jinping|\bxi\b(?!['’]an)"),
+    ("Donald Trump", r"\btrump\b"),
+    ("Joe Biden", r"\bbiden\b"),
+    ("Mao Zedong", r"\bmao\b"),
+    ("Deng Xiaoping", r"\bdeng\b"),
+    ("Vladimir Putin", r"\bputin\b"),
+    ("Elon Musk", r"elon musk|\bmusk\b"),
+    ("Jack Ma", r"jack ma\b"),
+    ("Sam Altman", r"sam altman|\baltman\b"),
+    ("Jensen Huang", r"jensen huang|\bjensen\b"),
+    ("Morris Chang", r"morris chang"),
+    ("Li Qiang", r"li qiang"),
+    ("Li Keqiang", r"li keqiang"),
+    ("Jake Sullivan", r"jake sullivan"),
+    ("Nancy Pelosi", r"pelosi"),
+    ("Wang Huning", r"wang huning"),
+    ("Zhou Enlai", r"zhou enlai"),
+    ("Henry Kissinger", r"kissinger"),
+    ("Chiang Kai-shek", r"chiang kai-?shek"),
+    ("Volodymyr Zelensky", r"zelensky|zelenskyy"),
+    ("Kevin Xu", r"kevin xu"),
+    ("Chris Miller", r"chris miller"),
+    ("Dan Wang", r"dan wang"),
+]
+
+# Link hosts that are plumbing rather than citations.
+LINK_SKIP = {
+    "chinatalk.media", "www.chinatalk.media", "substackcdn.com",
+    "substack.com", "www.substack.com", "email.mg1.substack.com",
+    "chinatalk.substack.com", "api.substack.com",
+    "link.chtbl.com",  # Chartable smart links to the show's own episodes
+}
+
+HREF_RE = re.compile(r'<a[^>]+href="(https?://[^"#]+)', re.I)
+
+
+HOST_ALIAS = {
+    "x.com": "twitter / x.com", "twitter.com": "twitter / x.com",
+    "a.co": "amazon.com", "amzn.to": "amazon.com",
+    "youtu.be": "youtube.com", "m.youtube.com": "youtube.com",
+    "en.m.wikipedia.org": "en.wikipedia.org",
+}
+
+
+def link_host(url):
+    m = re.match(r"https?://([^/]+)", url)
+    if not m:
+        return None
+    host = m.group(1).lower().split(":")[0]
+    if host.startswith("www."):
+        host = host[4:]
+    return HOST_ALIAS.get(host, host)
+
+
 # Terms tracked in the Language view. Each entry: display label, regex.
 TERMS = [
     ("AI", r"\bAI\b|artificial intelligence"),
-    ("Semiconductors / chips", r"semiconductor|\bchips?\b|\bfabs?\b"),
+    ("Chips & semis", r"semiconductor|\bchips?\b|\bfabs?\b"),
     ("Export controls", r"export control"),
     ("Taiwan", r"taiwan"),
     ("Huawei", r"huawei"),
     ("TikTok", r"tiktok"),
-    ("Xi Jinping", r"xi jinping"),
     ("Tariffs / trade war", r"tariff|trade war"),
     ("DeepSeek", r"deepseek"),
     ("Nvidia", r"nvidia"),
@@ -292,6 +394,17 @@ def build():
         e["n"] = i + 1
 
     # ---- substack posts ---------------------------------------------
+    # Full bodies (transcripts live here) if fetch_bodies() has run.
+    bodies = {}
+    bodies_file = RAW / "post_bodies.jsonl"
+    if bodies_file.exists():
+        for line in bodies_file.read_text().splitlines():
+            try:
+                d = json.loads(line)
+                bodies[d["slug"]] = d.get("body_html") or ""
+            except (ValueError, KeyError):
+                pass
+
     raw_posts = json.loads((RAW / "substack_archive.json").read_text())
     posts = []
     for p in raw_posts:
@@ -300,7 +413,14 @@ def build():
         date = (p.get("post_date") or "")[:10]
         if not date:
             continue
+        body_html = bodies.get(p.get("slug"), "")
+        body_text = strip_html(body_html)
         posts.append({
+            "slug": p.get("slug"),
+            "body_html": body_html,
+            "text": body_text,
+            # ≥10 "First Last:" speaker turns marks an interview transcript
+            "is_transcript": len(re.findall(r"[A-Z][\w’'-]+(?: [A-Z][\w’'-]+)?:", body_text)) >= 10,
             "title": p.get("title") or "",
             "subtitle": p.get("subtitle") or "",
             "date": date,
@@ -353,6 +473,8 @@ def build():
             e["post"] = p["url"]
             if p["tags"]:
                 e["tags"] = p["tags"]
+            if p["is_transcript"]:
+                e["tr"] = True
             matched += 1
     print(f"episodes matched to substack posts: {matched}/{len(episodes)} ({exact} exact)")
 
@@ -374,12 +496,15 @@ def build():
 
     # ---- headline stats ----------------------------------------------
     total_secs = sum(e["duration"] for e in episodes)
+    corpus_words = sum(len(p["text"].split()) for p in posts)
     site = {
         "built": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         "episodes": len(episodes),
         "audio_hours": round(total_secs / 3600),
         "posts": len(posts),
         "words": sum(p["words"] for p in posts),
+        "corpus_words": corpus_words,
+        "transcripts": sum(1 for p in posts if p["is_transcript"]),
         "first_episode": episodes[0]["date"],
         "last_episode": episodes[-1]["date"],
         "likes": sum(p["likes"] for p in posts),
@@ -497,27 +622,37 @@ def build():
         ),
     }
 
-    # ---- language: term trends + title words ---------------------------
-    # Corpus per quarter: episode title+desc, post title+subtitle+blurb.
-    docs = []
-    for e in episodes:
-        docs.append((quarter(e["date"]), f'{e["title"]} {e["desc"]}'))
+    # ---- language: term/person mentions over the full-text corpus ------
+    # The corpus is every fetched post body — which includes the podcast
+    # transcripts ChinaTalk publishes — so these are true mention counts,
+    # not title matches. Rates are per million words of that quarter's
+    # corpus so growing output doesn't masquerade as growing interest.
+    q_text = defaultdict(list)
     for p in posts:
-        docs.append((quarter(p["date"]), f'{p["title"]} {p["subtitle"]} {p["blurb"]}'))
-    q_docs = Counter(q for q, _ in docs)
+        if p["text"]:
+            q_text[quarter(p["date"])].append(f'{p["title"]} {p["subtitle"]} {p["text"]}')
+    q_words = {q: sum(len(t.split()) for t in texts) for q, texts in q_text.items()}
+
+    def mention_series(pat):
+        rx = re.compile(pat, re.I)
+        counts = {q: sum(len(rx.findall(t)) for t in texts) for q, texts in q_text.items()}
+        trend = [
+            round(1e6 * counts.get(q, 0) / q_words[q]) if q_words.get(q, 0) >= 20000 else 0
+            for q in quarters
+        ]
+        return sum(counts.values()), trend
+
     term_data = []
     for label, pat in TERMS:
-        rx = re.compile(pat, re.I)
-        hits = Counter(q for q, text in docs if rx.search(text))
-        term_data.append({
-            "term": label,
-            "total": sum(hits.values()),
-            "trend": [
-                round(100 * hits.get(q, 0) / q_docs[q], 1) if q_docs.get(q) else 0
-                for q in quarters
-            ],
-        })
+        total, trend = mention_series(pat)
+        term_data.append({"term": label, "total": total, "trend": trend})
     term_data.sort(key=lambda t: -t["total"])
+
+    people_data = []
+    for label, pat in PEOPLE:
+        total, trend = mention_series(pat)
+        people_data.append({"term": label, "total": total, "trend": trend})
+    people_data.sort(key=lambda t: -t["total"])
 
     # brand-constant words carry no signal in a China-focused show
     title_skip = STOPWORDS | {"china", "chinese", "chinatalk", "u.s", "usa"}
@@ -528,26 +663,48 @@ def build():
                 words[w] += 1
     language = {
         "quarters": quarters,
-        "docs_per_quarter": [q_docs.get(q, 0) for q in quarters],
+        "words_per_quarter": [q_words.get(q, 0) for q in quarters],
         "terms": term_data,
+        "people": people_data,
         "title_words": [{"w": w, "n": n} for w, n in words.most_common(40)],
     }
 
-    # ---- engagement ----------------------------------------------------
-    engagement = {
-        "posts": [
-            {"title": p["title"], "date": p["date"], "likes": p["likes"],
-             "comments": p["comments"], "words": p["words"], "url": p["url"],
-             "paid": p["paid"], "tags": p["tags"], "authors": p["authors"]}
-            for p in posts
+    # ---- references: outbound links in post bodies ---------------------
+    host_links = Counter()
+    host_posts = Counter()
+    for p in posts:
+        if not p["body_html"]:
+            continue
+        hosts = [link_host(u) for u in HREF_RE.findall(p["body_html"])]
+        hosts = [h for h in hosts if h and h not in LINK_SKIP]
+        host_links.update(hosts)
+        host_posts.update(set(hosts))
+    references = {
+        "total_links": sum(host_links.values()),
+        "posts_with_bodies": sum(1 for p in posts if p["body_html"]),
+        "domains": [
+            {"domain": h, "links": n, "posts": host_posts[h]}
+            for h, n in host_links.most_common(40)
         ],
+    }
+
+    # ---- engagement ----------------------------------------------------
+    slim_posts = [
+        {"title": p["title"], "date": p["date"], "likes": p["likes"],
+         "comments": p["comments"], "words": p["words"], "url": p["url"],
+         "paid": p["paid"], "tags": p["tags"], "authors": p["authors"]}
+        for p in posts
+    ]
+    engagement = {
+        "posts": slim_posts,
         "top": sorted(
-            [p for p in posts if p["likes"]],
+            [p for p in slim_posts if p["likes"]],
             key=lambda p: -p["likes"],
         )[:20],
     }
 
     json.dump(site, open(OUT / "site.json", "w"))
+    json.dump(references, open(OUT / "references.json", "w"))
     json.dump(episodes, open(OUT / "episodes.json", "w"))
     json.dump(timeline, open(OUT / "timeline.json", "w"))
     json.dump(topics, open(OUT / "topics.json", "w"))
@@ -561,7 +718,10 @@ def build():
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--fetch", action="store_true", help="re-download raw sources first")
+    ap.add_argument("--fetch-bodies", action="store_true", help="fetch full post bodies (resumable)")
     args = ap.parse_args()
     if args.fetch or not (RAW / "megaphone.xml").exists():
         fetch_raw()
+    if args.fetch_bodies:
+        fetch_bodies()
     build()
