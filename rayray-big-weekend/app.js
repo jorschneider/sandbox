@@ -168,6 +168,37 @@
   let markers = {};
   let markerIsEvent = {};
   let activeNum = null;
+  // pins that would collide at the current zoom slide apart into a small ring;
+  // they return to their true spots as you zoom in
+  function spreadOverlaps() {
+    const entries = Object.keys(markers).map((n) => {
+      const m = markers[n];
+      m.setLatLng(m._rbwOrig);
+      return { m: m, px: map.latLngToLayerPoint(m._rbwOrig) };
+    });
+    const used = new Set();
+    for (let i = 0; i < entries.length; i++) {
+      if (used.has(i)) continue;
+      const cluster = [entries[i]];
+      for (let j = i + 1; j < entries.length; j++) {
+        if (used.has(j)) continue;
+        if (cluster.some((e) => entries[j].px.distanceTo(e.px) < 34)) {
+          cluster.push(entries[j]);
+          used.add(j);
+        }
+      }
+      if (cluster.length < 2) continue;
+      used.add(i);
+      const cx = cluster.reduce((s, e) => s + e.px.x, 0) / cluster.length;
+      const cy = cluster.reduce((s, e) => s + e.px.y, 0) / cluster.length;
+      const r = 14 + 8 * cluster.length;
+      cluster.forEach((e, k) => {
+        const a = (2 * Math.PI * k) / cluster.length - Math.PI / 2;
+        e.m.setLatLng(map.layerPointToLatLng(L.point(cx + r * Math.cos(a), cy + r * Math.sin(a))));
+      });
+    }
+  }
+  map.on("zoomend", spreadOverlaps);
 
   function markerIcon(e, num) {
     const cat = CATS[e.category] || CATS.other;
@@ -313,6 +344,7 @@
         const m = L.marker([e.lat, e.lng], { icon: markerIcon(e, n), zIndexOffset: isEvent(e) ? 500 : 0 })
           .bindPopup(popupHtml(e), { maxWidth: 260 })
           .addTo(markerLayer);
+        m._rbwOrig = L.latLng(e.lat, e.lng);
         m.on("click", () => highlight(n, { scrollList: true }));
         markers[n] = m;
         markerIsEvent[n] = isEvent(e);
@@ -336,6 +368,8 @@
     } else {
       map.setView(HOME_COORDS, 13);
     }
+
+    spreadOverlaps();
 
     renderWxStrip();
   }
