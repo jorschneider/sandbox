@@ -239,6 +239,9 @@
       if (opts.fly) {
         map.flyTo(m.getLatLng(), Math.max(map.getZoom(), 15), { duration: 0.6 });
         m.openPopup();
+      } else {
+        // gentle drift toward the pin you're scrolled to — no zoom changes
+        map.panTo(m.getLatLng(), { animate: true, duration: 0.8, easeLinearity: 0.4 });
       }
     }
     if (opts.scrollList) {
