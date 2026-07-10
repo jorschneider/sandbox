@@ -47,6 +47,11 @@
   /* jump-scrolls (End key, anchor links) can skip the observer band —
      anything fully scrolled past still counts as a receipt */
   function stampPassed() {
+    var doc = document.documentElement;
+    if (doc.scrollHeight <= doc.clientHeight + 2) {
+      receipts.forEach(stamp);
+      return;
+    }
     var line = window.innerHeight * 0.55;
     receipts.forEach(function (r) {
       if (r.getBoundingClientRect().bottom < line) stamp(r);
@@ -56,7 +61,7 @@
   /* ---------- running page number (chrome, not an interactive) ---------- */
 
   var pageEl = document.getElementById('pageno');
-  var FIRST_PAGE = 38441;
+  var FIRST_PAGE = 42901;
   var ticking = false;
 
   function updatePage() {
@@ -67,15 +72,21 @@
     pageEl.textContent = (FIRST_PAGE + pages).toLocaleString('en-US');
     stampPassed();
   }
-  window.addEventListener('scroll', function () {
+  function requestUpdate() {
     if (!ticking) { ticking = true; window.requestAnimationFrame(updatePage); }
-  }, { passive: true });
+  }
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
   updatePage();
 
   /* ---------- print the determination ---------- */
 
   document.getElementById('print-det').addEventListener('click', function () {
+    document.documentElement.classList.add('print-det-only');
     window.print();
+  });
+  window.addEventListener('afterprint', function () {
+    document.documentElement.classList.remove('print-det-only');
   });
 
   /* ---------- easter egg: type 3A090 anywhere ---------- */

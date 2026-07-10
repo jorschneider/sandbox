@@ -49,6 +49,12 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root { color-scheme: light; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+
 html { scroll-behavior: smooth; scroll-padding-top: 3rem; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
@@ -83,7 +89,9 @@ main {
   font-size: 0.66rem;
   letter-spacing: 0.02em;
   color: var(--ink-soft);
+  background: var(--paper);
   background: color-mix(in srgb, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--rule);
   white-space: nowrap;
@@ -144,6 +152,7 @@ h3 {
   font-size: 0.86rem;
   font-style: italic;
   color: var(--ink);
+  background: rgba(245, 213, 71, 0.32);
   background: linear-gradient(transparent 12%, color-mix(in srgb, var(--highlight) 38%, transparent) 12% 88%, transparent 88%);
   transform: rotate(-0.35deg);
   width: fit-content;
@@ -192,8 +201,8 @@ h3 {
 }
 .seal-text {
   font-family: var(--mono);
-  font-size: 9.5px;
-  letter-spacing: 0.135em;
+  font-size: 7px;
+  letter-spacing: 0.1em;
   fill: currentColor;
 }
 .agency-block p { line-height: 1.4; }
@@ -348,6 +357,9 @@ body.nudge main { animation: nudge 0.1s ease-out 1; }
 }
 #receipt-chip.on { opacity: 1; translate: 0 0; }
 #receipt-chip span { color: var(--stamp-ink); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) {
+  #receipt-chip { transition: opacity 0.3s ease; translate: 0 0; }
+}
 
 /* ---------- PART III — zero, physics, roll call, tiles ---------- */
 
@@ -662,7 +674,7 @@ body.nudge main { animation: nudge 0.1s ease-out 1; }
 /* ---------- print: the determination, suitable for framing ---------- */
 
 @media print {
-  :root, :root[data-theme="dark"] {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
     --paper: #fff;
     --paper-deep: #fff;
     --ink: #000;
@@ -676,14 +688,20 @@ body.nudge main { animation: nudge 0.1s ease-out 1; }
   }
   .running, #receipt-chip, .print-row, .record, .toast, .fr-confetti { display: none !important; }
   body { background: #fff; color: #000; }
-  #part-vii { border-top: none; padding-top: 0; }
-  main > section:not(#part-vii), main > footer, .isinformed, #part-vii > h2 { display: none; }
-  .determination {
+  .stamp { filter: none; }
+  .receipt .stamp { opacity: 1; transform: rotate(-3deg); }
+
+  /* determination-only mode: engaged by the "Print this determination" button */
+  .print-det-only #part-vii { border-top: none; padding-top: 0; }
+  .print-det-only main > section:not(#part-vii),
+  .print-det-only main > footer,
+  .print-det-only .isinformed,
+  .print-det-only #part-vii > h2 { display: none; }
+  .print-det-only .determination {
     box-shadow: none;
     border: 1.5pt solid #000;
     outline: 1.5pt solid #000;
     outline-offset: 6pt;
     padding: 2.2rem;
   }
-  .stamp { filter: none; }
 }
