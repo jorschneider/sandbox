@@ -1468,7 +1468,7 @@ window.WEEK_DATA = {
     "start": "18:00"
   },
   {
-    "title": "HUMAN — free puppet show for ages 1-4 at The Shed",
+    "title": "HUMAN — all-ages puppet spectacle at The Shed (free)",
     "category": "theater",
     "venue": "The Shed, 545 W 30th St, Hudson Yards",
     "neighborhood": "Hudson Yards / West Chelsea",
@@ -1480,7 +1480,7 @@ window.WEEK_DATA = {
     "cost": "Free (reserve free tickets online)",
     "travelMinutes": 28,
     "travelHow": "L to 8 Av + 15 min walk, or 1 train to 34 St-Penn + walk",
-    "toddlerNotes": "Nehprii Amenii's family puppetry/music show explicitly listed for toddlers-preschoolers (ages 1-4). Free community puppet-making from upcycled materials before each show, ending in a mini parade. 80 minutes at 6 PM is the one caveat for early bedtimes.",
+    "toddlerNotes": "Honest read: the show itself is an 80-minute mythic puppet piece — gorgeous, but a lot for a 2-year-old (all ages welcome, toddlers included, per the listing). The toddler-gold part is FREE pre-show puppet-making from upcycled trash, ending in a little parade through The Shed. Do that, then stay for as much show as the mood allows; sit aisle-adjacent.",
     "url": "https://www.theshed.org/program/526-human",
     "outdoor": false,
     "recurring": false,

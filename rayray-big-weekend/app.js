@@ -31,6 +31,7 @@
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
   const state = { day: todayKey || "all" };
+  const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri"];
 
   // ——— helpers ———
   const isFree = (e) => /free/i.test(e.cost || "");
@@ -249,10 +250,13 @@
   function render() {
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
+    // weekdays are work/daycare days: timed things must start 5 PM or later
+    const okOnDay = (e, d) => !(WEEKDAYS.indexOf(d) !== -1 && e.start && startMin(e) < 17 * 60);
     const list = data.events.filter((e) => {
-      if (state.day === "all") return true;
       const days = e.days || ["any"];
-      return days.indexOf("any") !== -1 || days.indexOf(state.day) !== -1;
+      if (days.indexOf("any") !== -1) return true;
+      if (state.day === "all") return days.some((d) => okOnDay(e, d));
+      return days.indexOf(state.day) !== -1 && okOnDay(e, state.day);
     }).sort((a, b) => startMin(a) - startMin(b) || (a.travelMinutes || 99) - (b.travelMinutes || 99));
 
     const label = state.day === "all" ? "this week" : (state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day]);
@@ -301,8 +305,12 @@
       });
     });
     map.invalidateSize();
-    if (pts.length > 1) map.fitBounds(L.latLngBounds(pts).pad(0.12));
-    else map.setView(HOME_COORDS, 13);
+    if (pts.length > 1) {
+      map.fitBounds(L.latLngBounds(pts).pad(0.12), { animate: false });
+      map.setZoom(map.getZoom() + 1, { animate: false }); // a tad closer than the full fit
+    } else {
+      map.setView(HOME_COORDS, 13);
+    }
 
     renderWxStrip();
   }

@@ -47,7 +47,11 @@ Each event:
 1. **Radius**: ~35 min by subway/walk/ferry from Union Square. Manhattan below
    ~86th St, DUMBO, Brooklyn Heights, Downtown Brooklyn, Williamsburg, north
    Park Slope, LIC, Governors Island. Nothing farther.
-2. **Age 2 fit**: short or drop-in, daytime, stroller-friendly, no age minimums.
+2. **Age 2 fit**: short or drop-in, stroller-friendly, no age minimums.
+   **Weekday rule**: on Monday-Friday only include timed activities that START
+   at 5:00 PM or later (work/daycare days) — the site also enforces this at
+   render time via the `start` field. Weekend events can be any time of day;
+   open-anytime places are exempt.
 3. **Real events first**: the site exists to surface ACTUAL SCHEDULED EVENTS —
    concerts, puppet shows, storytime sessions, festivals with a date and start
    time. Hunt venue calendars directly (NYC Parks events, Lincoln Center, Bryant
