@@ -81,11 +81,13 @@ python3 -m http.server  # from the repo root
 # open http://localhost:8000/rayray-big-weekend/
 ```
 
-Sanity-check: week label correct, TODAY badge on the right day, every card has
-a working Details link, no category renders as "undefined", and the 🗺️ Map view
-(the Cards/Map toggle, or #view=map) shows a pin per entry in the right place.
-Leaflet is vendored at `vendor/leaflet/` — no CDN needed; map tiles come from
-openstreetmap.org at view time.
+Sanity-check: week label correct, TODAY badge on the right day, the list groups
+under Morning/Afternoon/Evening/Anytime headers in start-time order, every entry
+has a numbered pin on the map in the right place, and each card's Details link
+works. The UI is a single map+scrolling-list view (no cards mode); the
+hour-by-hour weather strip fills from Open-Meteo at view time and hides itself
+if the fetch fails. Leaflet is vendored at `vendor/leaflet/` — no CDN needed;
+map tiles come from openstreetmap.org at view time.
 
 ## Git
 

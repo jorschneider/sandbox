@@ -35,44 +35,25 @@
 
   <main class="wrap">
     <nav class="days" id="day-picker" aria-label="Pick a day"></nav>
-
-    <div class="filters">
-      <div class="cats" id="cat-picker" aria-label="Pick a kind of fun"></div>
-      <div class="times" id="time-picker" aria-label="Pick a time of day"></div>
-      <div class="toggles">
-        <button class="toggle" id="toggle-events" aria-pressed="false">⭐ Real events only</button>
-        <button class="toggle" id="toggle-free" aria-pressed="false">💸 Free stuff only</button>
-        <button class="toggle" id="toggle-outdoor" aria-pressed="false">☀️ Outside only</button>
-        <button class="toggle" id="toggle-hearts" aria-pressed="false">❤️ Our plan</button>
-        <button class="toggle" id="copy-plan" hidden>🔗 Copy plan link</button>
-      </div>
-      <div class="views" role="tablist" aria-label="View">
-        <button class="view active" id="view-cards" role="tab" aria-selected="true">🗂️ Cards</button>
-        <button class="view" id="view-map" role="tab" aria-selected="false">🗺️ Map</button>
-      </div>
-    </div>
-
     <p class="count" id="count" aria-live="polite"></p>
-    <div class="wx-banner" id="wx-banner" hidden></div>
-    <section class="map-shell" id="map-shell" hidden>
+
+    <section class="wx-strip" id="wx-strip" hidden aria-label="Hour-by-hour weather">
+      <div class="wx-label" id="wx-label"></div>
+      <div class="wx-hours" id="wx-hours"></div>
+    </section>
+
+    <section class="map-shell" id="map-shell">
       <div class="map-split">
         <div class="map-list" id="map-list" aria-label="Places on the map"></div>
         <div class="map-pane"><div id="map"></div></div>
       </div>
     </section>
-    <section class="cards" id="cards"></section>
-
-    <section class="empty" id="empty" hidden>
-      <div class="empty-face">🫠</div>
-      <p>Nothing matches those filters — try loosening one up!</p>
-    </section>
 
     <aside class="note">
       <h2>🧢 Before you head out</h2>
       <p>July in NYC = pack water, sunscreen and a spare shirt. Schedules wiggle for heat and rain,
-        so tap <em>Details</em> on a card before leaving the house. Cards marked
-        <span class="chip chip-check">🔍 double-check</span> are usually-running programs whose exact
-        time we couldn’t pin down for this week.</p>
+        so tap <em>Details</em> before leaving the house. A 🔍 next to a name means the exact time
+        couldn’t be pinned down for this week — check the link.</p>
     </aside>
   </main>
 
