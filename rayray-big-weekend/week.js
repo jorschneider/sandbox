@@ -1060,6 +1060,32 @@ window.WEEK_DATA = {
     "start": null
   },
   {
+    "title": "Free Shakespeare on the lawn: The Taming of the Shrew",
+    "category": "theater",
+    "venue": "Central Park lawn, W 69th St & Central Park West entrance",
+    "neighborhood": "Upper West Side",
+    "when": "Sat Jul 11 & Sun Jul 12, 2:00 PM (~2 hrs; drifting in and out is normal)",
+    "days": [
+      "sat",
+      "sun"
+    ],
+    "cost": "Free — no tickets needed (optional free RSVP via Boomerang's site)",
+    "travelMinutes": 32,
+    "travelHow": "L to 14 St-8 Av, then C uptown to 72 St + 3-min walk",
+    "toddlerNotes": "The toddler-friendliest Shakespeare setup in town: open lawn, bring-a-blanket seating, no fixed rows, and grass behind the audience for wiggling - at a 2 PM matinee, so zero bedtime math. Boomerang Theatre plays this lawn every summer; stay for a scene or the whole show.",
+    "url": "https://www.boomerangtheatre.org/shows-tickets/the-taming-of-the-shrew",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7734,
+    "lng": -73.9769,
+    "event": true,
+    "times": [
+      "afternoon"
+    ],
+    "start": "14:00"
+  },
+  {
     "title": "West Side Fest: Kids Community Quilt + screenprinting (Poster House)",
     "category": "festival",
     "venue": "Poster House",
