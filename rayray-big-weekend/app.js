@@ -370,24 +370,29 @@
       ? (todayKey ? DAY_KEYS.indexOf(todayKey) : -1)
       : DAY_KEYS.indexOf(state.day);
     if (!WX.hourly || di < 0) { strip.hidden = true; return; }
-    strip.hidden = false;
     const dayName = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" }[DAY_KEYS[di]];
     const isToday = DAY_KEYS[di] === todayKey;
-    document.getElementById("wx-label").textContent =
-      "🌤️ " + (isToday ? "Today" : dayName) + ", hour by hour";
     const nowHour = new Date().getHours();
     let html = "";
+    let rainy = false;
     for (let h = 8; h <= 20; h++) {
       const i = di * 24 + h;
       if (!WX.hourly.weather_code || WX.hourly.weather_code[i] == null) continue;
+      const code = WX.hourly.weather_code[i];
       const temp = Math.round(WX.hourly.temperature_2m[i]);
       const prob = WX.hourly.precipitation_probability[i];
+      if (prob >= 30 || code >= 51) rainy = true;
       const hh = (h % 12 || 12) + (h >= 12 ? "p" : "a");
       html += '<span class="wx-h' + (isToday && h === nowHour ? " now" : "") + '">' +
-        "<b>" + hh + "</b>" + wxEmoji(WX.hourly.weather_code[i]) + " " + temp + "°" +
+        "<b>" + hh + "</b>" + wxEmoji(code) + " " + temp + "°" +
         (prob >= 30 ? "<i>💧" + prob + "%</i>" : "") +
       "</span>";
     }
+    // only worth the space when rain is in play; sunny days keep the chip badge
+    if (!rainy) { strip.hidden = true; return; }
+    strip.hidden = false;
+    document.getElementById("wx-label").textContent =
+      "🌧️ Rain's around " + (isToday ? "today" : dayName) + " — hour by hour";
     document.getElementById("wx-hours").innerHTML = html;
   }
   (function loadWeather() {
