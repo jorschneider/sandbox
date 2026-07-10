@@ -214,3 +214,39 @@ footer p { margin: 4px 0; }
 @media (prefers-reduced-motion: reduce) {
   .sun, .balloon, .day .today-tag { animation: none; }
 }
+
+/* ——— view switch + map ——— */
+.views { display: flex; gap: 0; border: 3px solid var(--ink); border-radius: 999px; overflow: hidden; box-shadow: 0 3px 0 var(--ink); }
+.view {
+  font-family: var(--font); font-weight: 700; font-size: 0.95rem;
+  border: 0; background: var(--card); color: var(--ink);
+  padding: 8px 18px; cursor: pointer;
+}
+.view.active { background: var(--ink); color: #fff; }
+
+.map-shell {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 10px; margin-bottom: 30px;
+}
+#map { height: 560px; border-radius: 18px; }
+
+.emoji-pin span {
+  display: grid; place-items: center; width: 38px; height: 38px;
+  background: #fff; border: 3px solid var(--ink); border-radius: 50% 50% 50% 6px;
+  font-size: 19px; box-shadow: 0 3px 8px rgba(58,46,57,0.3);
+  transform: rotate(-8deg);
+}
+.emoji-pin-event span { background: var(--sunny); }
+.emoji-pin-home span { background: var(--coral); border-radius: 50%; }
+
+.pop { font-family: var(--font); font-size: 0.92rem; line-height: 1.35; }
+.pop strong { font-size: 1rem; }
+.pop-when, .pop-venue { color: #6f6172; margin-top: 3px; }
+.pop-links { margin-top: 6px; font-weight: 700; }
+.pop-links a { color: var(--ink); }
+
+.chip-event { background: #ffe9a8; color: #6b4d00; }
+
+@media (max-width: 560px) {
+  #map { height: 420px; }
+}

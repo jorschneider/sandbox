@@ -37,6 +37,8 @@ Each event:
 | `url` | string | official page — real, working links only |
 | `outdoor` | boolean | drives the ☀️/❄️ badge and outdoor filter |
 | `confidence` | string | `high` = date verified; `medium`/`low` shows a "🔍 double-check" chip |
+| `lat`, `lng` | numbers | venue coordinates for the map view (NYC: lat 40.64–40.82, lng −74.05 to −73.92) |
+| `event` | boolean | `true` = a real dated happening (concert, show, storytime session, festival) — gets the "⭐ this week" chip, sorts first, and powers the "Real events only" filter. `false` = an open-anytime place. |
 
 ## Research rules
 
@@ -44,16 +46,22 @@ Each event:
    ~86th St, DUMBO, Brooklyn Heights, Downtown Brooklyn, Williamsburg, north
    Park Slope, LIC, Governors Island. Nothing farther.
 2. **Age 2 fit**: short or drop-in, daytime, stroller-friendly, no age minimums.
-3. **Mix**: aim for every category represented; every day of the week should
-   have at least one dated option plus evergreen places; keep plenty of free
-   options; in summer favor water play + shade, in winter favor indoor/A-C'd
-   (heated) options.
-4. **Verify, don't vibe**: check dates against official venue pages / NYC Parks
+3. **Real events first**: the site exists to surface ACTUAL SCHEDULED EVENTS —
+   concerts, puppet shows, storytime sessions, festivals with a date and start
+   time. Hunt venue calendars directly (NYC Parks events, Lincoln Center, Bryant
+   Park, Hudson River Park, Little Island, BRIC, NYPL/BPL branch calendars,
+   Mommy Poppins day-by-day). Aim for 15+ dated events across the week, every
+   day covered. Evergreen places (playgrounds, carousels, ferries, zoo) stay as
+   the "anytime" tail — refresh their open/closed status, don't let them crowd
+   out events.
+4. **Mix**: every category represented; plenty of free options; in summer favor
+   water play + shade, in winter favor indoor/heated options.
+5. **Verify, don't vibe**: check dates against official venue pages / NYC Parks
    calendar / Mommy Poppins / Time Out Kids for the *correct year*. If an exact
    time can't be confirmed, keep the typical time and set `confidence` to
    `medium` or `low`. Never invent dates or URLs. Drop anything you can't
    corroborate at all.
-5. Keep evergreen favorites (playgrounds, carousels, zoo, ferries) in the list
+6. Keep evergreen favorites (playgrounds, carousels, zoo, ferries) in the list
    every week — verify they're open (water features and carousels close
    seasonally or for repairs).
 
@@ -65,7 +73,10 @@ python3 -m http.server  # from the repo root
 ```
 
 Sanity-check: week label correct, TODAY badge on the right day, every card has
-a working Details link, no category renders as "undefined".
+a working Details link, no category renders as "undefined", and the 🗺️ Map view
+(the Cards/Map toggle, or #view=map) shows a pin per entry in the right place.
+Leaflet is vendored at `vendor/leaflet/` — no CDN needed; map tiles come from
+openstreetmap.org at view time.
 
 ## Git
 

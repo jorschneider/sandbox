@@ -29,7 +29,12 @@
     cat: "all",
     freeOnly: false,
     outdoorOnly: false,
+    eventsOnly: false,
+    view: location.hash === "#view=map" ? "map" : "cards",
   };
+
+  // "real event" = a dated happening this week (not an open-anytime place)
+  const isEvent = (e) => e.event === true;
 
   const isFree = (e) => /free/i.test(e.cost || "");
 
@@ -84,6 +89,7 @@
   // ——— toggles ———
   const freeBtn = document.getElementById("toggle-free");
   const outBtn = document.getElementById("toggle-outdoor");
+  const evBtn = document.getElementById("toggle-events");
   freeBtn.addEventListener("click", () => {
     state.freeOnly = !state.freeOnly;
     render();
@@ -92,6 +98,16 @@
     state.outdoorOnly = !state.outdoorOnly;
     render();
   });
+  evBtn.addEventListener("click", () => {
+    state.eventsOnly = !state.eventsOnly;
+    render();
+  });
+
+  // ——— view switch ———
+  const cardsViewBtn = document.getElementById("view-cards");
+  const mapViewBtn = document.getElementById("view-map");
+  cardsViewBtn.addEventListener("click", () => { state.view = "cards"; history.replaceState(null, "", " "); render(); });
+  mapViewBtn.addEventListener("click", () => { state.view = "map"; history.replaceState(null, "", "#view=map"); render(); });
 
   // ——— cards ———
   function matches(e) {
@@ -102,6 +118,7 @@
     if (state.cat !== "all" && e.category !== state.cat) return false;
     if (state.freeOnly && !isFree(e)) return false;
     if (state.outdoorOnly && !e.outdoor) return false;
+    if (state.eventsOnly && !isEvent(e)) return false;
     return true;
   }
 
@@ -116,6 +133,7 @@
     el.className = "card";
 
     const chips = [];
+    if (isEvent(e)) chips.push('<span class="chip chip-event">⭐ this week</span>');
     chips.push(isFree(e)
       ? '<span class="chip chip-free">FREE 🎉</span>'
       : '<span class="chip chip-cost">' + esc(e.cost) + "</span>");
@@ -152,24 +170,103 @@
       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
+  // ——— map ———
+  const HOME_COORDS = [40.7376, -73.9868]; // 112 E 19th St
+  let map = null;
+  let markerLayer = null;
+
+  function markerIcon(e) {
+    const cat = CATS[e.category] || CATS.other;
+    return L.divIcon({
+      className: "emoji-pin" + (isEvent(e) ? " emoji-pin-event" : ""),
+      html: '<span>' + cat.emoji + "</span>",
+      iconSize: [38, 38],
+      iconAnchor: [19, 19],
+      popupAnchor: [0, -18],
+    });
+  }
+
+  function popupHtml(e) {
+    return (
+      '<div class="pop">' +
+        "<strong>" + esc(e.title) + "</strong>" +
+        '<div class="pop-when">🕐 ' + esc(e.when) + "</div>" +
+        '<div class="pop-venue">📍 ' + esc(e.venue) + " · ~" + e.travelMinutes + " min</div>" +
+        '<div class="pop-links"><a href="' + esc(e.url) + '" target="_blank" rel="noopener">Details ↗</a>' +
+        ' · <a href="' + dirUrl(e) + '" target="_blank" rel="noopener">Directions 🗺️</a></div>' +
+      "</div>"
+    );
+  }
+
+  function renderMap(list) {
+    if (!window.L) return; // Leaflet failed to load — cards still work
+    if (!map) {
+      map = L.map("map", { scrollWheelZoom: false });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map);
+      L.marker(HOME_COORDS, {
+        icon: L.divIcon({ className: "emoji-pin emoji-pin-home", html: "<span>🏠</span>", iconSize: [38, 38], iconAnchor: [19, 19] }),
+      }).addTo(map).bindTooltip("Home base", { direction: "top" });
+      markerLayer = L.layerGroup().addTo(map);
+    }
+    markerLayer.clearLayers();
+    const pts = [HOME_COORDS];
+    list.forEach((e) => {
+      if (typeof e.lat !== "number" || typeof e.lng !== "number") return;
+      L.marker([e.lat, e.lng], { icon: markerIcon(e) })
+        .bindPopup(popupHtml(e), { maxWidth: 260 })
+        .addTo(markerLayer);
+      pts.push([e.lat, e.lng]);
+    });
+    map.invalidateSize();
+    if (pts.length > 1) map.fitBounds(L.latLngBounds(pts).pad(0.12));
+    else map.setView(HOME_COORDS, 13);
+  }
+
   function render() {
     // reflect state on controls
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
     catPicker.querySelectorAll(".cat").forEach((b) => b.classList.toggle("active", b.dataset.cat === state.cat));
     freeBtn.setAttribute("aria-pressed", String(state.freeOnly));
     outBtn.setAttribute("aria-pressed", String(state.outdoorOnly));
+    evBtn.setAttribute("aria-pressed", String(state.eventsOnly));
+    cardsViewBtn.classList.toggle("active", state.view === "cards");
+    cardsViewBtn.setAttribute("aria-selected", String(state.view === "cards"));
+    mapViewBtn.classList.toggle("active", state.view === "map");
+    mapViewBtn.setAttribute("aria-selected", String(state.view === "map"));
 
-    const list = data.events.filter(matches)
-      .sort((a, b) => (a.travelMinutes || 99) - (b.travelMinutes || 99));
+    // real dated events first (earliest day of the week first), then anytime spots by travel time
+    const dayRank = (e) => Math.min.apply(null, (e.days || []).map((d) => {
+      const i = DAY_KEYS.indexOf(d);
+      return i === -1 ? 99 : i;
+    }));
+    const list = data.events.filter(matches).sort((a, b) => {
+      if (isEvent(a) !== isEvent(b)) return isEvent(a) ? -1 : 1;
+      if (isEvent(a)) return dayRank(a) - dayRank(b) || (a.travelMinutes || 99) - (b.travelMinutes || 99);
+      return (a.travelMinutes || 99) - (b.travelMinutes || 99);
+    });
 
     const cards = document.getElementById("cards");
-    cards.innerHTML = "";
-    list.forEach((e) => cards.appendChild(card(e)));
+    const mapShell = document.getElementById("map-shell");
+    cards.hidden = state.view !== "cards";
+    mapShell.hidden = state.view !== "map";
 
-    document.getElementById("empty").hidden = list.length > 0;
+    if (state.view === "cards") {
+      cards.innerHTML = "";
+      list.forEach((e) => cards.appendChild(card(e)));
+    } else {
+      renderMap(list);
+    }
+
+    document.getElementById("empty").hidden = list.length > 0 || state.view === "map";
     const label = state.day === "all" ? "this week" : (state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day]);
-    document.getElementById("count").textContent =
-      list.length > 0 ? list.length + " adventure" + (list.length === 1 ? "" : "s") + " " + label + " 🎈" : "";
+    const nEvents = list.filter(isEvent).length;
+    document.getElementById("count").textContent = list.length > 0
+      ? list.length + " adventure" + (list.length === 1 ? "" : "s") + " " + label +
+        (nEvents ? " — " + nEvents + " real event" + (nEvents === 1 ? "" : "s") + " ⭐" : "") + " 🎈"
+      : "";
   }
 
   render();

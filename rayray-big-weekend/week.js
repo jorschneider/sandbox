@@ -20,7 +20,10 @@ window.WEEK_DATA = {
     "url": "https://bryantpark.org/activities/picnic-performances",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7536,
+    "lng": -73.9832,
+    "event": true
   },
   {
     "title": "Community Joy Day: puppets, DJs & free books (Celebrate Brooklyn!)",
@@ -38,7 +41,10 @@ window.WEEK_DATA = {
     "url": "https://bricartsmedia.org/event/community-joy-day/",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.6661,
+    "lng": -73.9766,
+    "event": true
   },
   {
     "title": "Bargemusic free family chamber concert",
@@ -57,7 +63,10 @@ window.WEEK_DATA = {
     "url": "https://www.bargemusic.org/calendar-tickets/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "medium"
+    "confidence": "medium",
+    "lat": 40.695,
+    "lng": -74.0,
+    "event": true
   },
   {
     "title": "Ruidosa Fest — free Latine music & dancing",
@@ -75,7 +84,10 @@ window.WEEK_DATA = {
     "url": "https://www.lincolncenter.org/series/summer-for-the-city/ruidosa-fest-1-104",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7725,
+    "lng": -73.9835,
+    "event": true
   },
   {
     "title": "AfriCarnaval on the Dance Floor",
@@ -93,7 +105,10 @@ window.WEEK_DATA = {
     "url": "https://www.lincolncenter.org/series/summer-for-the-city/africarnaval",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7725,
+    "lng": -73.9835,
+    "event": true
   },
   {
     "title": "Soul Summit — outdoor house-music dance party",
@@ -111,7 +126,10 @@ window.WEEK_DATA = {
     "url": "https://www.fortgreenepark.org/calendar/soul-summit-071226",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.6905,
+    "lng": -73.9742,
+    "event": true
   },
   {
     "title": "Little Red's Hood — Swedish Cottage Marionettes",
@@ -130,7 +148,10 @@ window.WEEK_DATA = {
     "url": "https://cityparksfoundation.org/swedish-cottage-marionette-theatre/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7794,
+    "lng": -73.9702,
+    "event": true
   },
   {
     "title": "Pinocchio at Puppetworks (final Park Slope season!)",
@@ -149,7 +170,10 @@ window.WEEK_DATA = {
     "url": "https://puppetworks.org/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.6693,
+    "lng": -73.9846,
+    "event": true
   },
   {
     "title": "Gazillion Bubble Show",
@@ -168,7 +192,10 @@ window.WEEK_DATA = {
     "url": "https://gazillionbubbleshow.com/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7629,
+    "lng": -73.988,
+    "event": true
   },
   {
     "title": "Le Carrousel Extravaganza — magic, puppets & stories",
@@ -188,7 +215,10 @@ window.WEEK_DATA = {
     "url": "https://www.nycgovparks.org/events/2026/07/10/le-carrousel-extravaganza",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7534,
+    "lng": -73.9829,
+    "event": true
   },
   {
     "title": "Saturday Family Storytime (ages 0–5)",
@@ -206,7 +236,10 @@ window.WEEK_DATA = {
     "url": "https://www.nypl.org/events/programs/2026/07/11/saturday-family-storytime-2",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7289,
+    "lng": -73.9879,
+    "event": true
   },
   {
     "title": "Sunday Storytime at Books of Wonder",
@@ -224,7 +257,10 @@ window.WEEK_DATA = {
     "url": "https://booksofwonder.com/blogs/upcoming/join-us-for-sunday-storytime",
     "outdoor": false,
     "recurring": true,
-    "confidence": "medium"
+    "confidence": "medium",
+    "lat": 40.7386,
+    "lng": -73.9938,
+    "event": true
   },
   {
     "title": "Whitney Free Second Sunday: storytime + artmaking",
@@ -242,7 +278,10 @@ window.WEEK_DATA = {
     "url": "https://whitney.org/west-side-fest-2026",
     "outdoor": false,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7396,
+    "lng": -74.0089,
+    "event": true
   },
   {
     "title": "SNFL Children's Center — stories, blocks & A/C",
@@ -260,7 +299,10 @@ window.WEEK_DATA = {
     "url": "https://www.nypl.org/locations/snfl/childrens",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7517,
+    "lng": -73.9817,
+    "event": false
   },
   {
     "title": "Evelyn's Playground — splash + sandbox on your doorstep",
@@ -278,7 +320,10 @@ window.WEEK_DATA = {
     "url": "https://www.nycgovparks.org/facilities/playgrounds/379",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.737,
+    "lng": -73.9907,
+    "event": false
   },
   {
     "title": "Washington Square playgrounds + spray showers",
@@ -296,7 +341,10 @@ window.WEEK_DATA = {
     "url": "https://www.nycgovparks.org/parks/washington-square-park/facilities/playgrounds",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7308,
+    "lng": -73.9973,
+    "event": false
   },
   {
     "title": "Pier 25 & 26 — splash pad, playground & mini golf",
@@ -314,7 +362,10 @@ window.WEEK_DATA = {
     "url": "https://hudsonriverpark.org/activities/pier-25-playground/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7203,
+    "lng": -74.0136,
+    "event": false
   },
   {
     "title": "Pier 51 water playground (freshly renovated)",
@@ -332,7 +383,10 @@ window.WEEK_DATA = {
     "url": "https://hudsonriverpark.org/activities/pier-51-play-area/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7385,
+    "lng": -74.0102,
+    "event": false
   },
   {
     "title": "Imagination Playground — sand, water & big blue blocks",
@@ -350,7 +404,10 @@ window.WEEK_DATA = {
     "url": "https://www.nycgovparks.org/parks/imagination-playground/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7052,
+    "lng": -74.0022,
+    "event": false
   },
   {
     "title": "Teardrop Park — bubbling springs & THE slide",
@@ -368,7 +425,10 @@ window.WEEK_DATA = {
     "url": "https://bpca.ny.gov/place/teardrop-park/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.717,
+    "lng": -74.0157,
+    "event": false
   },
   {
     "title": "Domino Park's 88-jet splash fountain",
@@ -386,7 +446,10 @@ window.WEEK_DATA = {
     "url": "https://www.dominopark.com/plan-your-visit/sprinklers-splashpad",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7145,
+    "lng": -73.967,
+    "event": false
   },
   {
     "title": "Pier 6 Water Lab + sand village",
@@ -404,7 +467,10 @@ window.WEEK_DATA = {
     "url": "https://brooklynbridgepark.org/places-to-see/playgrounds/water-lab-at-pier-6/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.6924,
+    "lng": -73.9982,
+    "event": false
   },
   {
     "title": "Little Island wander",
@@ -422,7 +488,10 @@ window.WEEK_DATA = {
     "url": "https://littleisland.org/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.742,
+    "lng": -74.0102,
+    "event": false
   },
   {
     "title": "Jane's Carousel in its glass box",
@@ -445,7 +514,10 @@ window.WEEK_DATA = {
     "url": "https://janescarousel.com/hours/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7043,
+    "lng": -73.9906,
+    "event": false
   },
   {
     "title": "SeaGlass Carousel — ride a glowing fish",
@@ -463,7 +535,10 @@ window.WEEK_DATA = {
     "url": "https://www.seaglasscarousel.nyc/plan-your-visit/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7036,
+    "lng": -74.0163,
+    "event": false
   },
   {
     "title": "Children's Museum of Manhattan (CMOM)",
@@ -481,7 +556,10 @@ window.WEEK_DATA = {
     "url": "https://cmom.org/visit/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7861,
+    "lng": -73.9765,
+    "event": false
   },
   {
     "title": "Complete Playground — 45,000 sq ft of indoor play",
@@ -499,7 +577,10 @@ window.WEEK_DATA = {
     "url": "https://completeplayground.org/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7057,
+    "lng": -74.011,
+    "event": false
   },
   {
     "title": "Tompkins Square Mini Pool (free kiddie pool)",
@@ -517,7 +598,10 @@ window.WEEK_DATA = {
     "url": "https://www.nycgovparks.org/parks/tompkins-square-park/facilities/outdoor-pools",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7269,
+    "lng": -73.982,
+    "event": false
   },
   {
     "title": "Feed the goats at the Tisch Children's Zoo",
@@ -535,7 +619,10 @@ window.WEEK_DATA = {
     "url": "https://centralparkzoo.com/plan-your-visit/hours-and-rates",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7683,
+    "lng": -73.9713,
+    "event": false
   },
   {
     "title": "Prospect Park Zoo — toddler-scale animals",
@@ -553,7 +640,10 @@ window.WEEK_DATA = {
     "url": "https://prospectparkzoo.com/plan-your-visit/hours-and-rates",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.665,
+    "lng": -73.9648,
+    "event": false
   },
   {
     "title": "Wetlab touch tanks — seahorses of the Hudson",
@@ -574,7 +664,10 @@ window.WEEK_DATA = {
     "url": "https://hudsonriverpark.org/the-park/parks-river-project/science/wetlab/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7288,
+    "lng": -74.0112,
+    "event": false
   },
   {
     "title": "Big City Fishing at Pier 51",
@@ -592,7 +685,10 @@ window.WEEK_DATA = {
     "url": "https://hudsonriverpark.org/special-events/view-info/big-city-fishing",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7385,
+    "lng": -74.0102,
+    "event": true
   },
   {
     "title": "West Side Fest — 20+ venues, all free",
@@ -612,7 +708,10 @@ window.WEEK_DATA = {
     "url": "https://www.westsidefest.nyc/",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7415,
+    "lng": -74.009,
+    "event": true
   },
   {
     "title": "Family Fun Circus Day — Bindlestiff Cirkus & giant bubbles",
@@ -630,7 +729,10 @@ window.WEEK_DATA = {
     "url": "https://mommypoppins.com/new-york-city-kids/event/events/family-fun-circus-day-in-herald-square-park",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7487,
+    "lng": -73.988,
+    "event": true
   },
   {
     "title": "Bastille Day on Madison Avenue",
@@ -648,7 +750,10 @@ window.WEEK_DATA = {
     "url": "https://lallianceny.org/event/bastille-day-2026/",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7645,
+    "lng": -73.9715,
+    "event": true
   },
   {
     "title": "Giglio Feast — rides, zeppole & the dancing tower",
@@ -668,7 +773,10 @@ window.WEEK_DATA = {
     "url": "https://www.olmcfeast.com/",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7169,
+    "lng": -73.9536,
+    "event": true
   },
   {
     "title": "A Myriad of Mandalas — artmaking on Little Island",
@@ -686,7 +794,10 @@ window.WEEK_DATA = {
     "url": "https://littleisland.org/events/",
     "outdoor": true,
     "recurring": false,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.742,
+    "lng": -74.0102,
+    "event": true
   },
   {
     "title": "Union Square Greenmarket wander",
@@ -707,7 +818,10 @@ window.WEEK_DATA = {
     "url": "https://grownyc.org/locations/union-square-greenmarket/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7362,
+    "lng": -73.9904,
+    "event": false
   },
   {
     "title": "Elizabeth Street Garden hangout",
@@ -725,7 +839,10 @@ window.WEEK_DATA = {
     "url": "https://www.elizabethstreetgarden.com/visit-contact",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7223,
+    "lng": -73.9944,
+    "event": false
   },
   {
     "title": "Governors Island ferry day",
@@ -743,7 +860,10 @@ window.WEEK_DATA = {
     "url": "https://www.govisland.com/plan-your-visit/ferry",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.6895,
+    "lng": -74.0165,
+    "event": false
   },
   {
     "title": "Staten Island Ferry — free boat ride",
@@ -761,7 +881,10 @@ window.WEEK_DATA = {
     "url": "https://siferry.com/faqs-trip-tips/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7011,
+    "lng": -74.0134,
+    "event": false
   },
   {
     "title": "NYC Ferry mini-hop under the Brooklyn Bridge",
@@ -779,7 +902,10 @@ window.WEEK_DATA = {
     "url": "https://www.ferry.nyc/routes-and-schedules/east-river/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7031,
+    "lng": -74.007,
+    "event": false
   },
   {
     "title": "High Line morning stroll",
@@ -797,7 +923,10 @@ window.WEEK_DATA = {
     "url": "https://www.thehighline.org/visit/",
     "outdoor": true,
     "recurring": true,
-    "confidence": "high"
+    "confidence": "high",
+    "lat": 40.7419,
+    "lng": -74.008,
+    "event": false
   }
 ],
 };

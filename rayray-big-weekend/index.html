@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -38,12 +39,20 @@
     <div class="filters">
       <div class="cats" id="cat-picker" aria-label="Pick a kind of fun"></div>
       <div class="toggles">
+        <button class="toggle" id="toggle-events" aria-pressed="false">⭐ Real events only</button>
         <button class="toggle" id="toggle-free" aria-pressed="false">💸 Free stuff only</button>
         <button class="toggle" id="toggle-outdoor" aria-pressed="false">☀️ Outside only</button>
+      </div>
+      <div class="views" role="tablist" aria-label="View">
+        <button class="view active" id="view-cards" role="tab" aria-selected="true">🗂️ Cards</button>
+        <button class="view" id="view-map" role="tab" aria-selected="false">🗺️ Map</button>
       </div>
     </div>
 
     <p class="count" id="count" aria-live="polite"></p>
+    <section class="map-shell" id="map-shell" hidden>
+      <div id="map"></div>
+    </section>
     <section class="cards" id="cards"></section>
 
     <section class="empty" id="empty" hidden>
@@ -67,6 +76,7 @@
     </div>
   </footer>
 
+  <script src="vendor/leaflet/leaflet.js"></script>
   <script src="week.js"></script>
   <script src="app.js"></script>
 </body>
