@@ -1,4 +1,4 @@
-/* Rayray's Big Week — renders week.js data with day/category/free/outdoor filters. */
+/* Rayray Big Weekend — renders week.js data with day/category/free/outdoor filters. */
 (function () {
   const data = window.WEEK_DATA;
   if (!data) return;

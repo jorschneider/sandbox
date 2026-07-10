@@ -1,4 +1,4 @@
-# Rayray's Big Week — Monday update contract
+# Rayray Big Weekend — Monday update contract
 
 This microsite lists toddler-friendly (age 2) activities within ~35 minutes
 door-to-door of Union Square, Manhattan (home base: 112 East 19th Street).
@@ -61,7 +61,7 @@ Each event:
 
 ```sh
 python3 -m http.server  # from the repo root
-# open http://localhost:8000/rayray-week/
+# open http://localhost:8000/rayray-big-weekend/
 ```
 
 Sanity-check: week label correct, TODAY badge on the right day, every card has
@@ -71,5 +71,5 @@ a working Details link, no category renders as "undefined".
 
 Work on branch `claude/toddler-activities-microsite-rhvwp8` while its PR is
 open (update the same PR). If that PR has been merged, branch fresh from the
-default branch as `rayray-week-update-<monday-date>`, push, and open a new
-draft PR titled "Rayray's Big Week — week of <Mon date>".
+default branch as `rayray-big-weekend-update-<monday-date>`, push, and open a new
+draft PR titled "Rayray Big Weekend — week of <Mon date>".
