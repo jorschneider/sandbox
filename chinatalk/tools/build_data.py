@@ -120,6 +120,11 @@ def norm_title(t):
     return WS_RE.sub(" ", t).strip()
 
 
+def d_median(vals):
+    vals = sorted(vals)
+    return vals[len(vals) // 2] if vals else 0
+
+
 def quarter(iso_date):
     y, m = int(iso_date[:4]), int(iso_date[5:7])
     return f"{y}-Q{(m - 1) // 3 + 1}"
@@ -156,11 +161,13 @@ NOT_GUEST = {
     "emergency pod", "rickover's playbook", "rickover’s playbook",
     "china talk", "chinatalk", "economic warfare", "concrete avalanche",
     "silicon valley", "wall street", "hong kong", "south china",
+    # the host is not a guest
+    "jordan schneider", "jordan",
 }
 
 # Leading honorifics stripped so "Sen. Chris Murphy" == "Chris Murphy".
 HONORIFIC_RE = re.compile(
-    r"^(?:sen\.?|rep\.?|amb\.?|gen\.?|adm\.?|dr\.?|fmr\.?|ltg|maj\.?|col\.?|secaf|secdef|sec\.?)\s+",
+    r"^(?:sen\.?|rep\.?|amb\.?|gen\.?|adm\.?|dr\.?|fmr\.?|ltg|maj\.?|col\.?|secaf|secdef|sec\.?|professor|prof\.?)\s+",
     re.I,
 )
 
@@ -201,6 +208,41 @@ def looks_like_name(s):
 def split_names(s):
     s = re.sub(r"\s*(?:&|\+|,| and )\s*", "|", s)
     return [WS_RE.sub(" ", n).strip(" ,.") for n in s.split("|") if n.strip(" ,.")]
+
+
+# A personal name: 2-4 capitalized tokens.
+NAME_PAT = r"[A-Z][\w'’.-]+(?: [A-Z][\w'’.-]+){1,3}"
+# A list of names: "A", "A and B", "A, B and C"
+NAME_LIST = rf"{NAME_PAT}(?:(?:,| and | & | \+ )\s*{NAME_PAT})*"
+
+DESC_GUEST_RES = [
+    # "Constanza Vidal Bustamante joins Chris Miller and Zachary Yerushalmi"
+    re.compile(rf"({NAME_LIST})(?:,[^.!?]{{0,90}}?)? join(?:s|ed)?\b", ),
+    re.compile(rf"\bjoin(?:s|ed)? (?:me|us|by)?\s*({NAME_LIST})"),
+    # "interviewed Ian Toll", "sat down with Mike Schmidt and Todd Fisher"
+    re.compile(rf"(?:interview(?:s|ed)?|sat down with|sits? down with|in person with|talk(?:s|ed)? (?:to|with)|"
+               rf"chat(?:s|ted)? with|conversation with|joined by|welcome(?:s|d)?(?: back)?|features?|featuring)\s+"
+               rf"(?:[a-z][\w'’-]*\s+){{0,2}}({NAME_LIST})"),
+    # "Chris Miller (chip wars), Chris McGuire (10 year vet) and I discuss"
+    re.compile(rf"({NAME_PAT})\s*\([^)]{{2,60}}\)(?:,\s*({NAME_PAT})\s*\([^)]{{2,60}}\))*[^.!?]{{0,40}}?\band I\b"),
+    # "X returns to the show / is back on the show"
+    re.compile(rf"({NAME_LIST})(?:,[^.!?]{{0,60}}?)? (?:returns?|is back|came back|comes? back)\b"),
+    # "our guest(s) X" / "today's guest, X"
+    re.compile(rf"guests?,?\s+(?:is|are|:)?\s*({NAME_LIST})"),
+]
+
+
+def extract_guests_from_desc(desc):
+    """Pull guest names out of show-notes prose (the first ~700 chars,
+    where the guest intro lives)."""
+    head = desc[:700]
+    names = []
+    for rx in DESC_GUEST_RES:
+        for m in rx.finditer(head):
+            for grp in m.groups():
+                if grp:
+                    names.extend(split_names(grp))
+    return [g for g in (clean_guest(n) for n in names) if g]
 
 
 def extract_guests(title):
@@ -249,15 +291,16 @@ TAG_TO_GROUP = {t.lower(): g for g, ts in TAG_GROUPS.items() for t in ts}
 TOPIC_TAXONOMY = [
     ("AI", r"\bAI\b|artificial intelligence|machine learning|\bLLMs?\b|\bAGI\b|openai|deepseek|anthropic|chatbot|\bGPT|data center|\bcompute\b|algorithm"),
     ("Semiconductors", r"semiconductor|\bchips?\b|\bfabs?\b|tsmc|\bsmic\b|nvidia|intel\b|\basml\b|\beuv\b|lithograph|export control|huawei|micron|foundry"),
-    ("Trade & Economics", r"trade war|tariff|econom|\bGDP\b|supply chain|manufactur|decoupl|de-risk|currency|yuan|\bRMB\b|market|invest|finance|debt|growth"),
-    ("Chinese Politics", r"\bCCP\b|communist party|xi jinping|politburo|party congress|propaganda|censor|\bmao\b|deng xiaoping|united front|corruption|zhongnanhai|beijing"),
-    ("Military & War", r"militar|\bPLA\b|\bwar\b|warfare|defense|defence|missile|nuclear|drone|navy|naval|army|invasion|pentagon|\bNATO\b|deterrence|weapon"),
+    ("Trade & Economics", r"trade war|tariff|econom|\bGDP\b|supply chain|manufactur|decoupl|de-risk|currency|yuan|\bRMB\b|market|invest|financ|banking|property|real estate|evergrande|debt|growth|\bWTO\b|entrepreneur"),
+    ("US-China Relations", r"us-china|u\.s\.[\s-]china|china relations|bilateral|engagement|diplomacy|diplomatic|summit|cold war"),
+    ("Chinese Politics", r"\bCCP\b|communist party|xi jinping|politburo|party congress|two sessions|propaganda|censor|\bmao\b|deng xiaoping|bo xilai|united front|corruption|zhongnanhai|beijing|tiananmen|xinjiang|uyghur|protest|governance"),
+    ("Military & War", r"militar|\bPLA\b|\bwar\b|warfare|defense|defence|missile|nuclear|drone|navy|naval|battleship|army|invasion|pentagon|\bNATO\b|\bNDAA\b|deterrence|weapon|\bCIA\b|intelligence|espionage|\bspy\b"),
     ("Taiwan", r"taiwan|cross-strait|taipei"),
-    ("US Policy", r"congress|washington|white house|biden|trump|obama|sanction|chips act|industrial policy|senate|state department|commerce department|national security"),
-    ("Tech Industry", r"tiktok|bytedance|tencent|alibaba|baidu|internet|startup|e-?commerce|social media|platform|app\b|gaming|xiaomi|wechat"),
-    ("Society & Culture", r"culture|history|film|movie|music|book|poetry|novel|food|youth|feminis|society|religion|education|language|literature"),
-    ("Energy & Climate", r"energy|climate|solar|\bEVs?\b|electric vehicle|battery|batteries|\bBYD\b|coal|oil\b|renewable|power grid"),
-    ("Rest of Asia & World", r"japan|korea|india|russia|europe|southeast asia|vietnam|philippines|australia|africa|middle east|iran|ukraine"),
+    ("US Policy", r"congress|washington|white house|biden|trump|obama|sanction|chips act|industrial policy|senate|state department|commerce department|national security|think tank|\bCSET\b|foreign aid|\bUSAID\b|competitiveness"),
+    ("Tech Industry", r"tiktok|bytedance|tencent|alibaba|baidu|internet|startup|e-?commerce|social media|platform|app\b|gaming|xiaomi|wechat|cyber|data policy|privacy|spacex|innovation|robot"),
+    ("Society & Culture", r"culture|history|film|movie|\bTV\b|drama|anime|music|book|poetry|novel|food|youth|feminis|society|religion|education|language|literature|dynasty|warring states|confuci"),
+    ("Energy & Climate", r"energy|climate|solar|\bEVs?\b|electric vehicle|battery|batteries|\bBYD\b|coal|oil\b|renewable|power grid|rare earth"),
+    ("Rest of Asia & World", r"japan|korea|india|russia|europe|southeast asia|vietnam|philippines|australia|africa|middle east|iran|israel|ukraine|great power|grand strategy|geopolit"),
     ("Covid & Health", r"covid|pandemic|vaccine|lockdown|quarantine|public health|virus"),
 ]
 
@@ -296,6 +339,49 @@ PEOPLE = [
     ("Chris Miller", r"chris miller"),
     ("Dan Wang", r"dan wang"),
 ]
+
+# Entities for the co-mention map, all counted from full text.
+# Groups are the map's color families (≤ 8).
+ENTITIES = {
+    "Companies": [
+        ("Huawei", r"huawei"), ("TSMC", r"tsmc"), ("Nvidia", r"nvidia"),
+        ("SMIC", r"\bsmic\b"), ("Intel", r"\bintel\b"), ("ASML", r"\basml\b"),
+        ("OpenAI", r"openai"), ("DeepSeek", r"deepseek"), ("Anthropic", r"anthropic|claude"),
+        ("Google", r"google"), ("Apple", r"\bapple\b"), ("Microsoft", r"microsoft"),
+        ("Tencent", r"tencent"), ("Alibaba", r"alibaba"), ("TikTok / ByteDance", r"tiktok|bytedance"),
+        ("BYD", r"\bbyd\b"), ("SpaceX", r"spacex"), ("Samsung", r"samsung"),
+    ],
+    "Countries & Regions": [
+        ("Taiwan", r"taiwan"), ("Japan", r"japan"), ("Korea", r"\bkorea"),
+        ("India", r"\bindia\b"), ("Russia", r"russia"), ("Ukraine", r"ukraine"),
+        ("Iran", r"\biran\b"), ("Israel", r"israel"), ("Europe / EU", r"europe|\bEU\b"),
+        ("Hong Kong", r"hong kong"), ("Xinjiang", r"xinjiang|uyghur"),
+        ("Vietnam", r"vietnam"),
+    ],
+    "People": [
+        ("Xi Jinping", r"xi jinping|\bxi\b(?!['’]an)"), ("Trump", r"\btrump\b"),
+        ("Biden", r"\bbiden\b"), ("Mao", r"\bmao\b"), ("Deng Xiaoping", r"\bdeng\b"),
+        ("Putin", r"\bputin\b"), ("Jensen Huang", r"jensen huang|\bjensen\b"),
+        ("Sam Altman", r"sam altman|\baltman\b"), ("Elon Musk", r"elon|\bmusk\b"),
+    ],
+    "Technology": [
+        ("AI / AGI", r"\bAI\b|artificial intelligence|\bAGI\b|\bLLMs?\b"),
+        ("Chips", r"semiconductor|\bchips?\b|\bfabs?\b"),
+        ("EUV / lithography", r"\beuv\b|lithograph"),
+        ("Drones", r"\bdrones?\b"), ("Nuclear", r"nuclear"),
+        ("EVs / batteries", r"\bEVs?\b|electric vehicle|batter(?:y|ies)"),
+        ("Rare earths", r"rare earth"), ("Quantum", r"quantum"),
+        ("Open source", r"open[- ]source"), ("Data centers", r"data cent(?:er|re)s?"),
+    ],
+    "Policy & Institutions": [
+        ("Export controls", r"export control"), ("Tariffs", r"tariff"),
+        ("Sanctions", r"sanction"), ("CHIPS Act", r"chips act"),
+        ("Congress", r"congress"), ("Pentagon / DoD", r"pentagon|department of defense|\bDoD\b"),
+        ("CCP", r"\bCCP\b|communist party"), ("PLA", r"\bPLA\b"),
+        ("CIA / intel community", r"\bCIA\b|intelligence community"),
+        ("NATO", r"\bNATO\b"),
+    ],
+}
 
 # Link hosts that are plumbing rather than citations.
 LINK_SKIP = {
@@ -382,13 +468,18 @@ def build():
         # drop boilerplate outro that repeats on most episodes
         desc = re.sub(r"(Get bonus content on Patreon.*|Learn more about your ad choices.*|Outtro music.*)$", "", desc, flags=re.I).strip()
         enc = re.search(r'<enclosure url="([^"]+)"', it)
+        guests, seen = [], set()
+        for g in extract_guests(title) + extract_guests_from_desc(desc):
+            if g.casefold() not in seen:
+                seen.add(g.casefold())
+                guests.append(g)
         episodes.append({
             "title": title,
             "date": date,
             "duration": secs,
             "link": parse_rss_field(it, "link"),
             "audio": enc.group(1) if enc else None,
-            "guests": extract_guests(title),
+            "guests": guests,
             "desc": desc[:420],
         })
     episodes.sort(key=lambda e: e["date"])
@@ -647,36 +738,198 @@ def build():
     # transcripts ChinaTalk publishes — so these are true mention counts,
     # not title matches. Rates are per million words of that quarter's
     # corpus so growing output doesn't masquerade as growing interest.
-    q_text = defaultdict(list)
+    # Speaker labels ("Chris Miller: ...") are attribution, not discussion —
+    # strip them from transcripts so a guest's own dialogue doesn't count
+    # as being mentioned.
+    speaker_re = re.compile(r"\b[A-Z][\w'’-]+(?: [A-Z][\w'’-]+){0,2}:(?=\s)")
+    q_text = defaultdict(list)      # everything
+    q_text_w = defaultdict(list)    # written pieces only
+    q_text_t = defaultdict(list)    # transcripts only (published + generated)
     for p in posts:
-        if p["text"]:
-            q_text[quarter(p["date"])].append(f'{p["title"]} {p["subtitle"]} {p["text"]}')
+        if not p["text"]:
+            continue
+        if p["is_transcript"]:
+            text = speaker_re.sub(" ", p["text"])
+            q_text_t[quarter(p["date"])].append(f'{p["title"]} {text}')
+        else:
+            text = p["text"]
+            q_text_w[quarter(p["date"])].append(f'{p["title"]} {p["subtitle"]} {text}')
+        q_text[quarter(p["date"])].append(f'{p["title"]} {p["subtitle"]} {text}')
     # machine transcripts fill quarters the newsletter never covered
     for e in episodes:
         if e["n"] in gen_texts:
             q_text[quarter(e["date"])].append(f'{e["title"]} {gen_texts[e["n"]]}')
-    q_words = {q: sum(len(t.split()) for t in texts) for q, texts in q_text.items()}
+            q_text_t[quarter(e["date"])].append(f'{e["title"]} {gen_texts[e["n"]]}')
+
+    def corpus_words(qt):
+        return {q: sum(len(t.split()) for t in texts) for q, texts in qt.items()}
+
+    q_words = corpus_words(q_text)
+    q_words_w = corpus_words(q_text_w)
+    q_words_t = corpus_words(q_text_t)
 
     def mention_series(pat):
         rx = re.compile(pat, re.I)
-        counts = {q: sum(len(rx.findall(t)) for t in texts) for q, texts in q_text.items()}
-        trend = [
-            round(1e6 * counts.get(q, 0) / q_words[q]) if q_words.get(q, 0) >= 20000 else 0
-            for q in quarters
-        ]
-        return sum(counts.values()), trend
+
+        def series(qt, qw):
+            counts = {q: sum(len(rx.findall(t)) for t in texts) for q, texts in qt.items()}
+            trend = [
+                round(1e6 * counts.get(q, 0) / qw[q]) if qw.get(q, 0) >= 20000 else 0
+                for q in quarters
+            ]
+            return sum(counts.values()), trend
+
+        total, trend = series(q_text, q_words)
+        _, trend_w = series(q_text_w, q_words_w)
+        _, trend_t = series(q_text_t, q_words_t)
+        return total, trend, trend_w, trend_t
 
     term_data = []
     for label, pat in TERMS:
-        total, trend = mention_series(pat)
-        term_data.append({"term": label, "total": total, "trend": trend})
+        total, trend, tw, tt = mention_series(pat)
+        term_data.append({"term": label, "total": total, "trend": trend, "w": tw, "t": tt})
     term_data.sort(key=lambda t: -t["total"])
 
     people_data = []
     for label, pat in PEOPLE:
-        total, trend = mention_series(pat)
-        people_data.append({"term": label, "total": total, "trend": trend})
+        total, trend, tw, tt = mention_series(pat)
+        people_data.append({"term": label, "total": total, "trend": trend, "w": tw, "t": tt})
     people_data.sort(key=lambda t: -t["total"])
+
+    # ---- entity co-mention map -----------------------------------------
+    # One "item" = one conversation or piece: every post, plus episodes
+    # without a matched post (their feed description + any generated
+    # transcript). An entity counts as present when it's mentioned at
+    # least twice in long texts (once in short ones) — passing mentions
+    # in hour-long transcripts shouldn't create edges.
+    items = []
+    for p in posts:
+        text = speaker_re.sub(" ", p["text"]) if p["is_transcript"] else p["text"]
+        items.append({
+            "text": f'{p["title"]} {p["subtitle"]} {text}',
+            "title": p["title"], "url": p["url"], "date": p["date"], "likes": p["likes"],
+        })
+    for e in episodes:
+        if not e.get("post"):
+            items.append({
+                "text": f'{e["title"]} {e["desc"]} {gen_texts.get(e["n"], "")}',
+                "title": e["title"], "url": e["link"], "date": e["date"], "likes": 0,
+            })
+
+    ent_res = [
+        (name, group, re.compile(pat, re.I))
+        for group, ents in ENTITIES.items() for name, pat in ents
+    ]
+    ent_items = defaultdict(list)   # entity -> list of item indexes
+    for idx, item in enumerate(items):
+        long_text = len(item["text"]) > 9000
+        present = []
+        for name, _group, rx in ent_res:
+            hits = rx.findall(item["text"])
+            if len(hits) >= (2 if long_text else 1):
+                present.append(name)
+        item["ents"] = present
+        for name in present:
+            ent_items[name].append(idx)
+
+    pair_counts = Counter()
+    for item in items:
+        ents = sorted(set(item["ents"]))
+        for i in range(len(ents)):
+            for j in range(i + 1, len(ents)):
+                pair_counts[(ents[i], ents[j])] += 1
+
+    # keep the strongest ~160 links, plus each node's single strongest
+    # link so nothing floats disconnected
+    top_links = set(p for p, _ in pair_counts.most_common(160))
+    for name in ent_items:
+        best = None
+        for pair, w in pair_counts.items():
+            if name in pair and (best is None or w > pair_counts[best]):
+                best = pair
+        if best:
+            top_links.add(best)
+
+    map_data = {
+        "items": len(items),
+        "entities": [
+            {
+                "name": name,
+                "group": group,
+                "items": len(ent_items[name]),
+                "top": [
+                    {"t": items[i]["title"], "u": items[i]["url"],
+                     "d": items[i]["date"], "l": items[i]["likes"]}
+                    for i in sorted(ent_items[name], key=lambda i: -items[i]["likes"])[:8]
+                ],
+            }
+            for name, group, _rx in ent_res if ent_items[name]
+        ],
+        "links": [
+            {"a": a, "b": b, "w": pair_counts[(a, b)]}
+            for (a, b) in sorted(top_links, key=lambda p: -pair_counts[p])
+        ],
+        "groups": list(ENTITIES.keys()),
+    }
+
+    # ---- writing: the archive minus the transcripts --------------------
+    written = [p for p in posts if not p["is_transcript"]]
+    trans_posts = [p for p in posts if p["is_transcript"]]
+    wq_posts = Counter(quarter(p["date"]) for p in written)
+    wq_words = Counter()
+    wq_likes = Counter()
+    for p in written:
+        wq_words[quarter(p["date"])] += p["words"]
+        wq_likes[quarter(p["date"])] += p["likes"]
+    tq_posts = Counter(quarter(p["date"]) for p in trans_posts)
+    w_topics = Counter()
+    for p in written:
+        for t in p["topics"]:
+            w_topics[t] += 1
+    w_authors = Counter()
+    w_author_likes = Counter()
+    for p in written:
+        for a in p["authors"]:
+            w_authors[a] += 1
+            w_author_likes[a] += p["likes"]
+
+    def slim(p):
+        return {"title": p["title"], "date": p["date"], "url": p["url"],
+                "likes": p["likes"], "comments": p["comments"], "words": p["words"],
+                "authors": p["authors"]}
+
+    writing = {
+        "quarters": quarters,
+        "written_per_quarter": [wq_posts.get(q, 0) for q in quarters],
+        "transcripts_per_quarter": [tq_posts.get(q, 0) for q in quarters],
+        "words_per_quarter": [wq_words.get(q, 0) for q in quarters],
+        "likes_per_quarter": [wq_likes.get(q, 0) for q in quarters],
+        "posts": len(written),
+        "words": sum(p["words"] for p in written),
+        "likes": sum(p["likes"] for p in written),
+        "median_likes_written": d_median([p["likes"] for p in written if p["date"] >= "2024-01-01"]),
+        "median_likes_transcript": d_median([p["likes"] for p in trans_posts if p["date"] >= "2024-01-01"]),
+        "top": [slim(p) for p in sorted(written, key=lambda p: -p["likes"])[:20]],
+        "longest": [slim(p) for p in sorted(written, key=lambda p: -p["words"])[:12]],
+        "authors": [
+            {"name": a, "posts": c, "likes": w_author_likes[a]}
+            for a, c in w_authors.most_common(15)
+        ],
+        "topics": [
+            {"topic": t, "posts": c} for t, c in w_topics.most_common()
+            if t != "Other"
+        ],
+    }
+
+    # ---- what's still unclassified --------------------------------------
+    other_items = []
+    for p in posts:
+        if p["topics"] == ["Other"]:
+            other_items.append({"t": p["title"], "d": p["date"], "u": p["url"]})
+    for e in episodes:
+        if e["topics"] == ["Other"] and not e.get("post"):
+            other_items.append({"t": e["title"], "d": e["date"], "u": e["link"]})
+    other_items.sort(key=lambda x: x["d"], reverse=True)
 
     # brand-constant words carry no signal in a China-focused show
     title_skip = STOPWORDS | {"china", "chinese", "chinatalk", "u.s", "usa"}
@@ -688,6 +941,8 @@ def build():
     language = {
         "quarters": quarters,
         "words_per_quarter": [q_words.get(q, 0) for q in quarters],
+        "words_per_quarter_w": [q_words_w.get(q, 0) for q in quarters],
+        "words_per_quarter_t": [q_words_t.get(q, 0) for q in quarters],
         "terms": term_data,
         "people": people_data,
         "title_words": [{"w": w, "n": n} for w, n in words.most_common(40)],
@@ -727,8 +982,12 @@ def build():
         )[:20],
     }
 
+    topics["other_items"] = other_items[:40]
+
     json.dump(site, open(OUT / "site.json", "w"))
     json.dump(references, open(OUT / "references.json", "w"))
+    json.dump(map_data, open(OUT / "map.json", "w"))
+    json.dump(writing, open(OUT / "writing.json", "w"))
     json.dump(episodes, open(OUT / "episodes.json", "w"))
     json.dump(timeline, open(OUT / "timeline.json", "w"))
     json.dump(topics, open(OUT / "topics.json", "w"))

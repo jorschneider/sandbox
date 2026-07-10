@@ -122,7 +122,8 @@ const roundRightRect = (x, y, w, h, r) => {
 
 // ---------------------------------------------------------------- boot
 
-const FILES = ['site', 'episodes', 'timeline', 'topics', 'people', 'language', 'engagement', 'references'];
+const FILES = ['site', 'episodes', 'timeline', 'topics', 'people', 'language',
+  'engagement', 'references', 'map', 'writing'];
 Promise.all(FILES.map(f => fetch(`data/${f}.json`).then(r => r.json())))
   .then(values => {
     FILES.forEach((f, i) => S[f] = values[i]);
@@ -165,9 +166,14 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 
 const VIEWS = {
   overview: renderOverview, topics: renderTopics, map: renderMap,
-  references: renderReferences, episodes: renderEpisodes, people: renderPeople,
-  engagement: renderEngagement, language: renderLanguage,
+  writing: renderWriting, references: renderReferences, episodes: renderEpisodes,
+  people: renderPeople, engagement: renderEngagement, language: renderLanguage,
 };
+const ENT_SLOT = {
+  'Technology': 0, 'Companies': 1, 'Countries & Regions': 3,
+  'Policy & Institutions': 4, 'People': 5,
+};
+const entColor = g => ENT_SLOT[g] !== undefined ? cssVar(SLOTS[ENT_SLOT[g]]) : cssVar('--other');
 
 function route() {
   const hash = decodeURIComponent(location.hash.slice(1)) || 'overview';
@@ -366,7 +372,7 @@ function renderTopics(main) {
   const top = byTotal.filter(k => TOPIC_SLOT[k.topic] !== undefined);
   const rest = byTotal.filter(k => TOPIC_SLOT[k.topic] === undefined);
   const series = [...top, {
-    topic: 'Other',
+    topic: 'Everything else',
     trend: T.quarters.map((_, i) => d3.sum(rest, r => r.trend[i])),
   }];
 
@@ -478,65 +484,47 @@ function renderTopics(main) {
     }).on('mouseleave', hideTip);
   }
 
-  // ---- editorial tags (2023+)
-  const c3 = card(main, 'Editorial tags',
-    'The tags the ChinaTalk team applies on chinatalk.media — tagging began in 2023. Color marks the tag family.');
-  const groups = [...new Set(T.tags.map(t => t.group))];
-  legend(c3, groups.map(gr => ({ label: gr, color: groupColor(gr) })));
-  const box3 = document.createElement('div');
-  c3.appendChild(box3);
-  {
-    const tags = T.tags.slice(0, 25);
-    const rowH = 21;
-    const { svg, m, iw, ih } = makeSvg(box3, tags.length * rowH + 30, { left: 150, right: 46, top: 4, bottom: 22 });
-    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
-    const x = d3.scaleLinear().domain([0, d3.max(tags, t => t.posts)]).nice().range([0, iw]);
-    const y = d3.scaleBand().domain(tags.map(t => t.tag)).range([0, tags.length * rowH]).paddingInner(0.3);
-    for (const t of tags) {
-      g.append('path').attr('d', roundRightRect(0, y(t.tag), x(t.posts), y.bandwidth(), 3))
-        .attr('fill', groupColor(t.group))
-        .on('mousemove', ev => showTip(`<div class="tt-title">${esc(t.tag)}</div>` +
-          ttRow(groupColor(t.group), 'posts', t.posts) +
-          ttRow('transparent', 'likes on those posts', fmtInt(t.likes)), ev))
-        .on('mouseleave', hideTip);
-      g.append('text').attr('x', -8).attr('y', y(t.tag) + y.bandwidth() / 2)
-        .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
-        .attr('fill', cssVar('--text-secondary')).attr('font-size', 12).text(t.tag);
-      g.append('text').attr('x', x(t.posts) + 6).attr('y', y(t.tag) + y.bandwidth() / 2)
-        .attr('dominant-baseline', 'middle')
-        .attr('fill', cssVar('--text-muted')).attr('font-size', 11).text(t.posts);
-    }
-    axisStyle(g.append('g').attr('transform', `translate(0,${tags.length * rowH})`)
-      .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0)));
+  // ---- what's still unclassified
+  if (T.other_items && T.other_items.length) {
+    const c3 = card(main, 'Still uncategorized',
+      'The most recent pieces the theme classifier couldn’t place. If a few of these suggest a ' +
+      'missing theme, the taxonomy lives in tools/build_data.py and is easy to extend.');
+    c3.insertAdjacentHTML('beforeend',
+      `<div class="scroll-x"><table class="data"><thead><tr><th>Piece</th><th>Date</th></tr></thead><tbody>` +
+      T.other_items.map(o =>
+        `<tr><td>${o.u ? `<a href="${esc(o.u)}" target="_blank" rel="noopener">${esc(o.t)}</a>` : esc(o.t)}</td>` +
+        `<td style="white-space:nowrap">${fmtDate(o.d)}</td></tr>`).join('') +
+      `</tbody></table></div>`);
   }
 
   method(main,
     `<li>Theme classification is keyword-based over each item’s title and description ` +
     `(episodes from the podcast feed; posts from the archive). One item can match several themes; ` +
     `unmatched items count as “Other”.</li>` +
+    `<li>The gray “Other” band in the stacked chart also contains the six smaller named themes ` +
+    `(shown individually in the small multiples) folded together so the chart keeps eight readable colors.</li>` +
     `<li>Episodes matched to their transcript post are counted once, not twice.</li>` +
-    `<li>Editorial tags are curated by the ChinaTalk team and only exist from early 2023, ` +
-    `so the long-run trends above rely on the keyword classifier instead.</li>`);
+    `<li>Editorial tags from chinatalk.media are deliberately not used — they only begin in 2023 ` +
+    `and aren’t applied consistently.</li>`);
 }
 
 // ================================================================ MAP
 
 function renderMap(main) {
-  const T = S.topics;
-  const c = card(main, 'Tag co-occurrence map',
-    'Editorial tags that appear on the same posts, since tagging began in 2023. ' +
-    'Node size = posts with that tag; a link means the two tags share at least 3 posts. ' +
-    'Click a tag to see its most-liked posts.');
-  const groups = [...new Set(T.tags.map(t => t.group))];
-  legend(c, groups.map(gr => ({ label: gr, color: groupColor(gr) })));
+  const M = S.map;
+  const c = card(main, 'What gets talked about together',
+    `Computed straight from the text of all ${fmtInt(M.items)} episodes and posts — no editorial tags. ` +
+    'Node size = items that substantively mention the entity; a link means the two are discussed in the same conversations. ' +
+    'Click a node for its most-liked pieces.');
+  legend(c, M.groups.map(gr => ({ label: gr, color: entColor(gr) })));
   const wrap = document.createElement('div');
   wrap.className = 'map-wrap';
   wrap.innerHTML = `<div class="map-hint">drag to move · scroll to zoom</div>`;
   c.appendChild(wrap);
 
-  const nodes = T.tags.slice(0, 40).map(t => ({ id: t.tag, group: t.group, posts: t.posts }));
+  const nodes = M.entities.map(t => ({ id: t.name, group: t.group, posts: t.items, top: t.top }));
   const nodeSet = new Set(nodes.map(n => n.id));
-  const links = T.links.filter(l => nodeSet.has(l.a) && nodeSet.has(l.b))
+  const links = M.links.filter(l => nodeSet.has(l.a) && nodeSet.has(l.b))
     .map(l => ({ source: l.a, target: l.b, w: l.w }));
 
   const height = Math.min(620, Math.max(440, innerHeight - 320));
@@ -549,10 +537,11 @@ function renderMap(main) {
   const r = d3.scaleSqrt().domain([0, d3.max(nodes, n => n.posts)]).range([4, 26]);
   const lw = d3.scaleLinear().domain(d3.extent(links, l => l.w)).range([1, 5]);
 
+  const maxW = d3.max(links, l => l.w) || 1;
   const sim = d3.forceSimulation(nodes)
     .force('link', d3.forceLink(links).id(d => d.id)
-      .distance(l => 90 - 4 * Math.min(10, l.w)).strength(l => Math.min(1, l.w / 12)))
-    .force('charge', d3.forceManyBody().strength(-220))
+      .distance(l => 110 - 60 * (l.w / maxW)).strength(l => 0.1 + 0.7 * (l.w / maxW)))
+    .force('charge', d3.forceManyBody().strength(-260))
     .force('center', d3.forceCenter(width / 2, height / 2))
     .force('collide', d3.forceCollide().radius(d => r(d.posts) + 12));
 
@@ -562,16 +551,16 @@ function renderMap(main) {
   const nodeSel = root.append('g').selectAll('circle').data(nodes).join('circle')
     .attr('class', 'net-node')
     .attr('r', d => r(d.posts))
-    .attr('fill', d => groupColor(d.group))
+    .attr('fill', d => entColor(d.group))
     .attr('stroke', cssVar('--surface-1')).attr('stroke-width', 1.5)
     .call(d3.drag()
       .on('start', (ev, d) => { if (!ev.active) sim.alphaTarget(0.25).restart(); d.fx = d.x; d.fy = d.y; })
       .on('drag', (ev, d) => { d.fx = ev.x; d.fy = ev.y; })
       .on('end', (ev, d) => { if (!ev.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }));
   const labelSel = root.append('g').selectAll('text').data(nodes).join('text')
-    .attr('class', d => 'net-label' + (d.posts < 12 ? ' dim' : ''))
+    .attr('class', d => 'net-label' + (d.posts < 60 ? ' dim' : ''))
     .attr('text-anchor', 'middle')
-    .attr('font-size', d => d.posts >= 25 ? 12 : 10.5)
+    .attr('font-size', d => d.posts >= 150 ? 12 : 10.5)
     .text(d => d.id);
 
   sim.on('tick', () => {
@@ -587,26 +576,27 @@ function renderMap(main) {
   nodeSel
     .on('mousemove', (ev, d) => showTip(
       `<div class="tt-title">${esc(d.id)}</div>` +
-      ttRow(groupColor(d.group), d.group, `${d.posts} posts`), ev))
+      ttRow(entColor(d.group), d.group, `${fmtInt(d.posts)} items`), ev))
     .on('mouseleave', hideTip)
     .on('click', (ev, d) => {
       hideTip();
-      const posts = S.engagement.posts
-        .filter(p => p.tags && p.tags.includes(d.id))
-        .sort((a, b) => b.likes - a.likes).slice(0, 12);
       detail.innerHTML = '';
-      const dc = card(detail, `Most-liked posts tagged “${esc(d.id)}”`, `${d.posts} tagged posts in total.`);
+      const dc = card(detail, `Most-liked pieces discussing “${esc(d.id)}”`,
+        `${fmtInt(d.posts)} episodes and posts mention it substantively.`);
       dc.insertAdjacentHTML('beforeend',
-        `<div class="scroll-x"><table class="data"><thead><tr><th>Post</th><th>Date</th><th class="num">Likes</th><th class="num">Comments</th></tr></thead><tbody>` +
-        posts.map(p =>
-          `<tr><td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></td>` +
-          `<td>${fmtDate(p.date)}</td><td class="num">${fmtInt(p.likes)}</td><td class="num">${fmtInt(p.comments)}</td></tr>`
+        `<div class="scroll-x"><table class="data"><thead><tr><th>Piece</th><th>Date</th><th class="num">Likes</th></tr></thead><tbody>` +
+        (d.top || []).map(p =>
+          `<tr><td>${p.u ? `<a href="${esc(p.u)}" target="_blank" rel="noopener">${esc(p.t)}</a>` : esc(p.t)}</td>` +
+          `<td style="white-space:nowrap">${fmtDate(p.d)}</td><td class="num">${fmtInt(p.l)}</td></tr>`
         ).join('') + `</tbody></table></div>`);
       detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 
   method(main,
-    `<li>Only the 40 most-used editorial tags are shown; links require ≥ 3 shared posts.</li>` +
+    `<li>Entities (companies, places, people, technologies, institutions) are counted from the ` +
+    `full text of every post and episode description, plus generated transcripts. In texts longer than a ` +
+    `few pages an entity must appear at least twice to count, so passing mentions don’t create links.</li>` +
+    `<li>Editorial tags are deliberately not used — this is all computed from the words themselves.</li>` +
     `<li>Layout is a force simulation — position beyond clustering carries no meaning.</li>`);
 }
 
@@ -689,7 +679,7 @@ function renderPeople(main) {
   row.className = 'kpi-row';
   main.appendChild(row);
   kpi(row, 'Newsletter contributors', fmtInt(P.authors.length), 'with a byline');
-  kpi(row, 'Guests identified from titles', fmtInt(P.guests.length), 'a conservative lower bound');
+  kpi(row, 'Guests identified', fmtInt(P.guests.length), 'from titles and show notes');
   kpi(row, 'Repeat guests', fmtInt(P.guests.filter(g => g.episodes.length > 1).length), '2+ appearances');
 
   const wrap = document.createElement('div');
@@ -725,7 +715,7 @@ function renderPeople(main) {
   }
 
   const c2 = card(wrap, 'Repeat guests',
-    'Guests whose names appear in more than one episode title. Click a name to see their episodes.');
+    'Guests named in more than one episode’s title or show notes. Click a name to see their episodes.');
   {
     const repeats = P.guests.filter(g => g.episodes.length > 1);
     const epByN = new Map(S.episodes.map(e => [e.n, e]));
@@ -786,10 +776,11 @@ function renderPeople(main) {
 
   method(main,
     `<li>Bylines come from the archive API; the podcast host is not double-counted as a guest.</li>` +
-    `<li>Guest names are parsed from episode titles only — a conservative lower bound. ` +
-    `Many episodes name no guest in the title and are not counted.</li>` +
+    `<li>Guest names are parsed from episode titles and show-notes prose (“X joins…”, “sat down with X”, ` +
+    `“X (bio) and I discuss”) — still a lower bound when notes don’t name the guest.</li>` +
     `<li>Figure mentions are counted over the full text of every post, including published transcripts; ` +
-    `single-surname patterns (“Xi”, “Trump”, “Deng”) are attributed to the usual bearer.</li>`);
+    `speaker labels in transcripts (“Chris Miller:”) are excluded, so a guest’s own dialogue doesn’t ` +
+    `count as being mentioned. Single-surname patterns (“Xi”, “Trump”, “Deng”) are attributed to the usual bearer.</li>`);
 }
 
 // ================================================================ ENGAGEMENT
@@ -878,11 +869,27 @@ function renderLanguage(main) {
   }
 
   const c1 = card(main, 'What ChinaTalk talks about, by quarter',
-    'Mentions per million words of the full newsletter corpus — including published podcast transcripts. Pick up to 8 topics or people.');
+    'Mentions per million words of the corpus. Pick up to 8 topics or people, and choose which corpus to measure.');
+  const seg = document.createElement('div');
+  seg.className = 'seg-toggle';
+  seg.innerHTML = `<button class="on" data-c="all">Everything</button>` +
+    `<button data-c="w">Written only</button><button data-c="t">Transcripts only</button>`;
+  c1.appendChild(seg);
   const chips = document.createElement('div');
   c1.appendChild(chips);
   const box = document.createElement('div');
   c1.appendChild(box);
+  let corpus = 'all';
+  const trendOf = t => corpus === 'w' ? t.w : corpus === 't' ? t.t : t.trend;
+  const wordsOf = () => corpus === 'w' ? L.words_per_quarter_w
+    : corpus === 't' ? L.words_per_quarter_t : L.words_per_quarter;
+  seg.addEventListener('click', ev => {
+    const b = ev.target.closest('button');
+    if (!b) return;
+    corpus = b.dataset.c;
+    seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    drawLines();
+  });
 
   function chipGroup(label, list) {
     const head = document.createElement('div');
@@ -919,12 +926,13 @@ function renderLanguage(main) {
     const sel = ALL.filter(t => termState.has(t.term));
     if (!sel.length) { box.innerHTML = '<p class="sub">Pick a term above.</p>'; return; }
     // the newsletter corpus only starts in late 2018 — clip empty quarters
-    const i0 = Math.max(0, (L.words_per_quarter || []).findIndex(w => w >= 20000));
+    const wpq = wordsOf() || [];
+    const i0 = Math.max(0, wpq.findIndex(w => w >= 20000));
     const cqs = qs.slice(i0);
     const { svg, m, iw, ih } = makeSvg(box, 320, { right: 130 });
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
     const x = d3.scaleTime().domain(d3.extent(cqs)).range([0, iw]);
-    const maxV = d3.max(sel, t => d3.max(t.trend.slice(i0)));
+    const maxV = d3.max(sel, t => d3.max(trendOf(t).slice(i0)));
     const y = d3.scaleLinear().domain([0, maxV]).nice().range([ih, 0]);
     gridLines(g, 0, iw, y);
     // light smoothing: 3-quarter centered mean keeps eras visible without noise
@@ -933,7 +941,7 @@ function renderLanguage(main) {
     const endLabels = [];
     for (const t of sel) {
       const color = cssVar(SLOTS[termState.get(t.term)]);
-      const vals = smooth(t.trend.slice(i0));
+      const vals = smooth(trendOf(t).slice(i0));
       const pts = vals.map((v, i) => ({ d: cqs[i], v }));
       g.append('path').datum(pts).attr('fill', 'none')
         .attr('stroke', color).attr('stroke-width', 2)
@@ -959,7 +967,7 @@ function renderLanguage(main) {
         const ci = Math.min(cqs.length - 1, Math.max(0, d3.bisector(d => d).center(cqs, date)));
         const i = i0 + ci;
         showTip(`<div class="tt-title">${L.quarters[i].replace('-', ' ')}</div>` +
-          sel.map(t => ttRow(cssVar(SLOTS[termState.get(t.term)]), t.term, fmtInt(t.trend[i]) + ' /1M')).join(''), ev);
+          sel.map(t => ttRow(cssVar(SLOTS[termState.get(t.term)]), t.term, fmtInt(trendOf(t)[i]) + ' /1M')).join(''), ev);
       })
       .on('mouseleave', hideTip);
   }
@@ -1005,6 +1013,147 @@ function renderLanguage(main) {
     `<li>The corpus starts with the newsletter in late 2018; the podcast-only 2017–18 era ` +
     `has no text to mine, so the chart starts where the corpus does.</li>` +
     `<li>Lines are smoothed with a 3-quarter centered mean; tooltips show the raw quarterly rate.</li>`);
+}
+
+// ================================================================ WRITING
+
+function renderWriting(main) {
+  const W = S.writing;
+  const qs = W.quarters.map(qDate);
+  const row = document.createElement('div');
+  row.className = 'kpi-row';
+  main.appendChild(row);
+  kpi(row, 'Written pieces', fmtInt(W.posts), `of ${fmtInt(S.site.posts)} posts on chinatalk.media`);
+  kpi(row, 'Words of original writing', fmtSI(W.words), 'transcripts excluded');
+  kpi(row, 'Likes on written work', fmtSI(W.likes), '');
+  kpi(row, 'Median likes since 2024', fmtInt(W.median_likes_written),
+    `vs ${fmtInt(W.median_likes_transcript)} for transcripts`);
+
+  // written vs transcript output per quarter
+  const c1 = card(main, 'Written pieces vs. transcripts',
+    'What the newsletter publishes each quarter, split by kind.');
+  const colors = { written: cssVar('--series-1'), transcripts: cssVar('--series-2') };
+  legend(c1, [{ label: 'Written pieces', color: colors.written },
+              { label: 'Podcast transcripts', color: colors.transcripts }]);
+  const box1 = document.createElement('div');
+  c1.appendChild(box1);
+  {
+    const { svg, m, iw, ih } = makeSvg(box1, 240);
+    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+    const data = W.quarters.map((q, i) => ({
+      q, d: qs[i], w: W.written_per_quarter[i], t: W.transcripts_per_quarter[i],
+    })).filter(d => d.w + d.t > 0);
+    const x = d3.scaleBand().domain(data.map(d => d.q)).range([0, iw]).paddingInner(0.25);
+    const y = d3.scaleLinear().domain([0, d3.max(data, d => d.w + d.t)]).nice().range([ih, 0]);
+    gridLines(g, 0, iw, y);
+    for (const d of data) {
+      const bw = x.bandwidth(), bx = x(d.q);
+      const hW = ih - y(d.w), hT = ih - y(d.t);
+      const gap = hW && hT ? 2 : 0;
+      g.append('rect').attr('x', bx).attr('y', ih - hW).attr('width', bw).attr('height', hW)
+        .attr('fill', colors.written);
+      g.append('path').attr('d', roundTopRect(bx, ih - hW - gap - hT, bw, hT, 3))
+        .attr('fill', colors.transcripts);
+      g.append('rect').attr('x', bx - 1).attr('y', 0).attr('width', bw + 2).attr('height', ih)
+        .attr('fill', 'transparent')
+        .on('mousemove', ev => showTip(
+          `<div class="tt-title">${d.q.replace('-', ' ')}</div>` +
+          ttRow(colors.written, 'written', d.w) +
+          ttRow(colors.transcripts, 'transcripts', d.t), ev))
+        .on('mouseleave', hideTip);
+    }
+    axisStyle(g.append('g').attr('transform', `translate(0,${ih})`)
+      .call(d3.axisBottom(x).tickValues(data.filter(d => d.q.endsWith('Q1')).map(d => d.q))
+        .tickFormat(q => q.slice(0, 4)).tickSizeOuter(0)));
+    axisStyle(g.append('g').call(d3.axisLeft(y).ticks(5).tickSizeOuter(0)));
+  }
+  tableView(c1, ['Quarter', 'Written', 'Transcripts', 'Written words'],
+    W.quarters.map((q, i) => [q, W.written_per_quarter[i], W.transcripts_per_quarter[i],
+      fmtInt(W.words_per_quarter[i])]));
+
+  const wrap = document.createElement('div');
+  wrap.className = 'grid-2';
+  main.appendChild(wrap);
+
+  const c2 = card(wrap, 'Who writes the written stuff', 'Bylines on non-transcript posts.');
+  {
+    const authors = W.authors;
+    const rowH = 22;
+    const box = document.createElement('div');
+    c2.appendChild(box);
+    const { svg, m, iw } = makeSvg(box, authors.length * rowH + 30, { left: 140, right: 46, top: 4, bottom: 22 });
+    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+    const x = d3.scaleLinear().domain([0, d3.max(authors, a => a.posts)]).nice().range([0, iw]);
+    const y = d3.scaleBand().domain(authors.map(a => a.name)).range([0, authors.length * rowH]).paddingInner(0.3);
+    for (const a of authors) {
+      g.append('path').attr('d', roundRightRect(0, y(a.name), x(a.posts), y.bandwidth(), 3))
+        .attr('fill', cssVar('--series-1'))
+        .on('mousemove', ev => showTip(`<div class="tt-title">${esc(a.name)}</div>` +
+          ttRow(cssVar('--series-1'), 'written posts', fmtInt(a.posts)) +
+          ttRow('transparent', 'likes', fmtInt(a.likes)), ev))
+        .on('mouseleave', hideTip);
+      g.append('text').attr('x', -8).attr('y', y(a.name) + y.bandwidth() / 2)
+        .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
+        .attr('fill', cssVar('--text-secondary')).attr('font-size', 12).text(a.name);
+      g.append('text').attr('x', x(a.posts) + 6).attr('y', y(a.name) + y.bandwidth() / 2)
+        .attr('dominant-baseline', 'middle')
+        .attr('fill', cssVar('--text-muted')).attr('font-size', 11).text(fmtInt(a.posts));
+    }
+    axisStyle(g.append('g').attr('transform', `translate(0,${authors.length * rowH})`)
+      .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0)));
+  }
+
+  const c3 = card(wrap, 'What the written work covers', 'Theme mix of non-transcript posts.');
+  {
+    const topics = W.topics.slice(0, 12);
+    const rowH = 22;
+    const box = document.createElement('div');
+    c3.appendChild(box);
+    const { svg, m, iw } = makeSvg(box, topics.length * rowH + 30, { left: 150, right: 46, top: 4, bottom: 22 });
+    const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
+    const x = d3.scaleLinear().domain([0, d3.max(topics, t => t.posts)]).nice().range([0, iw]);
+    const y = d3.scaleBand().domain(topics.map(t => t.topic)).range([0, topics.length * rowH]).paddingInner(0.3);
+    for (const t of topics) {
+      g.append('path').attr('d', roundRightRect(0, y(t.topic), x(t.posts), y.bandwidth(), 3))
+        .attr('fill', cssVar('--series-1'))
+        .on('mousemove', ev => showTip(`<div class="tt-title">${esc(t.topic)}</div>` +
+          ttRow(cssVar('--series-1'), 'written posts', fmtInt(t.posts)), ev))
+        .on('mouseleave', hideTip);
+      g.append('text').attr('x', -8).attr('y', y(t.topic) + y.bandwidth() / 2)
+        .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
+        .attr('fill', cssVar('--text-secondary')).attr('font-size', 12).text(t.topic);
+      g.append('text').attr('x', x(t.posts) + 6).attr('y', y(t.topic) + y.bandwidth() / 2)
+        .attr('dominant-baseline', 'middle')
+        .attr('fill', cssVar('--text-muted')).attr('font-size', 11).text(fmtInt(t.posts));
+    }
+    axisStyle(g.append('g').attr('transform', `translate(0,${topics.length * rowH})`)
+      .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0)));
+  }
+
+  const c4 = card(main, 'Most-liked written pieces', '');
+  c4.insertAdjacentHTML('beforeend',
+    `<div class="scroll-x"><table class="data"><thead><tr><th class="num">#</th><th>Piece</th><th>By</th><th>Date</th><th class="num">Words</th><th class="num">Likes</th></tr></thead><tbody>` +
+    W.top.map((p, i) =>
+      `<tr><td class="num">${i + 1}</td>` +
+      `<td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></td>` +
+      `<td>${esc((p.authors || []).join(', '))}</td>` +
+      `<td style="white-space:nowrap">${fmtDate(p.date)}</td>` +
+      `<td class="num">${fmtInt(p.words)}</td><td class="num">${fmtInt(p.likes)}</td></tr>`).join('') +
+    `</tbody></table></div>`);
+
+  const c5 = card(main, 'Longest pieces', 'The written marathons, by word count.');
+  c5.insertAdjacentHTML('beforeend',
+    `<div class="scroll-x"><table class="data"><thead><tr><th>Piece</th><th>Date</th><th class="num">Words</th><th class="num">Likes</th></tr></thead><tbody>` +
+    W.longest.map(p =>
+      `<tr><td><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></td>` +
+      `<td style="white-space:nowrap">${fmtDate(p.date)}</td>` +
+      `<td class="num">${fmtInt(p.words)}</td><td class="num">${fmtInt(p.likes)}</td></tr>`).join('') +
+    `</tbody></table></div>`);
+
+  method(main,
+    `<li>“Written” means every chinatalk.media post that does not read as an interview transcript ` +
+    `(fewer than ten speaker turns) — essays, analysis, translations, roundups.</li>` +
+    `<li>Word counts use the archive’s own metadata, so paid posts are counted in full.</li>`);
 }
 
 // ================================================================ REFERENCES
