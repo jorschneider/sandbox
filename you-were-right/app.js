@@ -1,4 +1,4 @@
-/* Docket No. FRIEND-2026-0710 — one interactive (the receipts ledger),
+/* Docket No. BIS-2026-0710 — one interactive (the receipts ledger),
    page-number chrome, a print link, and one easter egg. No dependencies. */
 (function () {
   'use strict';
