@@ -1236,6 +1236,672 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ]
+  },
+  {
+    "title": "Park Open Studio — drop-in artmaking in Washington Sq",
+    "category": "play",
+    "venue": "Washington Square Park, NW corner seating area (Scrabble Plaza)",
+    "neighborhood": "Greenwich Village",
+    "when": "Sat Jul 11, 1:00–3:00 PM (Fri Jul 10 session exists but starts 1:00 PM, before the 1:30 PM cutoff)",
+    "days": [
+      "fri",
+      "sat"
+    ],
+    "cost": "Free (all materials provided)",
+    "travelMinutes": 12,
+    "travelHow": "Walk from Union Square (about 0.6 mi)",
+    "toddlerNotes": "True drop-in, come-and-go hands-on artmaking (drawing, printmaking, cyanotypes) led by a teaching artist under shade trees; no age minimum, toddlers can smear paint alongside parents. Note the Friday session starts 1:00 PM — just before your 1:30 cutoff — but you can still drop in until 3:00 PM; Saturday session fully qualifies.",
+    "url": "https://www.nycgovparks.org/events/2026/07/11/park-open-studio",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7318,
+    "lng": -73.9989,
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Juggling show & class in Greeley Square",
+    "category": "other",
+    "venue": "Greeley Square Park, Broadway & W 32nd–33rd St",
+    "neighborhood": "Herald Square / Koreatown",
+    "when": "Fri Jul 10, 2:00 PM (2:00–3:00 PM)",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free",
+    "travelMinutes": 12,
+    "travelHow": "N/Q/R/W from Union Sq to 34 St–Herald Sq (2 stops) or ~20-min walk",
+    "toddlerNotes": "A pro juggler performs and teaches every weekday 2–3 PM; a 2-year-old can just watch the show from the bistro tables — zero commitment, stroller parks right next to you. Shaded seating and public restroom kiosk nearby.",
+    "url": "https://www.nycgovparks.org/events/2026/07/10/juggling-in-greeley-square-park",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7489,
+    "lng": -73.988,
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
+  },
+  {
+    "title": "World Cup on the big screen at The Battery",
+    "category": "other",
+    "venue": "Woodland Lawn, The Battery",
+    "neighborhood": "Financial District / Battery",
+    "when": "Fri Jul 10, 3:00 PM (also Sat Jul 11 matches at 5:00 PM and 9:00 PM)",
+    "days": [
+      "fri",
+      "sat"
+    ],
+    "cost": "Free",
+    "travelMinutes": 20,
+    "travelHow": "4/5 from Union Sq to Bowling Green (~15 min) + 5-min walk",
+    "toddlerNotes": "Open lawn watch party — blankets, roaming toddlers, and background soccer coexist happily. The Battery's playscape and SeaGlass Carousel are steps away for when attention runs out. Friday 3 PM and Saturday 5 PM games fit toddler hours; skip the 9 PM one.",
+    "url": "https://www.nycgovparks.org/events/2026/07/10/big-screen-at-the-battery-world-cup-quarter-final",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7034,
+    "lng": -74.0154,
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
+  },
+  {
+    "title": "Kids in Motion — staffed games & crafts at Columbus Park",
+    "category": "play",
+    "venue": "Columbus Park (Baxter/Mulberry/Bayard St)",
+    "neighborhood": "Chinatown",
+    "when": "Fri Jul 10, 10:00 AM–6:00 PM drop-in (also Sat Jul 11, same hours)",
+    "days": [
+      "fri",
+      "sat"
+    ],
+    "cost": "Free",
+    "travelMinutes": 18,
+    "travelHow": "6 from Union Sq to Canal St (~12 min) + 5-min walk",
+    "toddlerNotes": "NYC Parks staff run organized games, arts & crafts, water games and more all day — drop in any time (so a Friday 1:30+ arrival works fine). Activities skew a bit older but staff include little ones; dumpling shops nearby for snack bribes. Same program also runs Fri+Sat at Seward Park and Sol Lain Playground on the Lower East Side.",
+    "url": "https://www.nycgovparks.org/events/2026/07/10/kids-in-motion-columbus-park",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7149,
+    "lng": -73.9996,
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Movies Under the Stars: Zootopia 2 at Peter's Field",
+    "category": "other",
+    "venue": "Peter's Field athletic field, E 20th–21st St between 1st & 2nd Ave",
+    "neighborhood": "Gramercy",
+    "when": "Fri Jul 10, 8:00 PM (8:00–9:30 PM)",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free",
+    "travelMinutes": 12,
+    "travelHow": "Walk from Union Square (about 0.5 mi)",
+    "toddlerNotes": "Free outdoor screening of a toddler-safe animated film, flagged Best for Kids, a 12-min walk from home base — but the 8 PM dusk start is past many 2-year-old bedtimes. Bring a blanket and treat it as a stay-for-30-minutes novelty. (Same film screens Sat 8:30 PM at Sol Lain Playground, LES.)",
+    "url": "https://www.nycgovparks.org/events/2026/07/10/movies-under-the-stars-zootopia-2",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7368,
+    "lng": -73.9822,
+    "event": true,
+    "times": [
+      "evening"
+    ]
+  },
+  {
+    "title": "Moves with Limón — barefoot dance class on Bryant Park lawn",
+    "category": "play",
+    "venue": "Bryant Park Lawn",
+    "neighborhood": "Midtown / Bryant Park",
+    "when": "Sat Jul 11, 10:00 AM (10:00–11:00 AM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free",
+    "travelMinutes": 15,
+    "travelHow": "N/Q/R/W from Union Sq to Times Sq–42 St + 5-min walk (or F/M to 42 St–Bryant Pk)",
+    "toddlerNotes": "Free modern-dance class on the lawn led by Limón Dance Company dancers, explicitly open to all levels and AGES — toddlers can bounce along barefoot on the grass next to you, or wander off; no one minds. Le Carrousel and the reading room are steps away afterward.",
+    "url": "https://www.nycgovparks.org/events/2026/07/11/moves-with-limn-dance-at-bryant-park",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7536,
+    "lng": -73.9835,
+    "event": true,
+    "times": [
+      "morning"
+    ]
+  },
+  {
+    "title": "SummerStage Bastille Day concert in Central Park",
+    "category": "music",
+    "venue": "Rumsey Playfield (SummerStage), Central Park (~E 70th St entrance)",
+    "neighborhood": "Central Park (mid-park, below 86th)",
+    "when": "Sun Jul 12, 6:00 PM (gates 5:00 PM; runs to 10:00 PM)",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free",
+    "travelMinutes": 25,
+    "travelHow": "4/5/6 from Union Sq to 68 St–Hunter College (~12 min) + 10-min walk into the park",
+    "toddlerNotes": "Free, explicitly all-ages French-pop concert with the Consulate — a different event from the Madison Ave Bastille Day street fair you already have. Toddler plan: arrive at 5 PM gates, catch the first act, leave by 7:30. Standing crowd; bring ear protection. City Parks Foundation official listing.",
+    "url": "https://cityparksfoundation.org/events/bastille-day-26/",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7712,
+    "lng": -73.9702,
+    "event": true,
+    "times": [
+      "evening"
+    ]
+  },
+  {
+    "title": "HUMAN — free puppet show for ages 1-4 at The Shed",
+    "category": "theater",
+    "venue": "The Shed, 545 W 30th St, Hudson Yards",
+    "neighborhood": "Hudson Yards / West Chelsea",
+    "when": "Fri Jul 10, 6:00 PM (also Sat Jul 11, 6:00 PM; runs to 7:20 PM)",
+    "days": [
+      "fri",
+      "sat"
+    ],
+    "cost": "Free (reserve free tickets online)",
+    "travelMinutes": 28,
+    "travelHow": "L to 8 Av + 15 min walk, or 1 train to 34 St-Penn + walk",
+    "toddlerNotes": "Nehprii Amenii's family puppetry/music show explicitly listed for toddlers-preschoolers (ages 1-4). Free community puppet-making from upcycled materials before each show, ending in a mini parade. 80 minutes at 6 PM is the one caveat for early bedtimes.",
+    "url": "https://www.theshed.org/program/526-human",
+    "outdoor": false,
+    "recurring": false,
+    "confidence": "medium",
+    "lat": 40.7536,
+    "lng": -74.0022,
+    "event": true,
+    "times": [
+      "evening"
+    ]
+  },
+  {
+    "title": "Create-athon: sea-costume making + Miho Hatori dance party",
+    "category": "festival",
+    "venue": "The Dance Floor at Lincoln Center (outdoor plaza)",
+    "neighborhood": "Lincoln Center / Upper West Side",
+    "when": "Fri Jul 10, 6:00 PM (to 8:00 PM)",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free, drop-in",
+    "travelMinutes": 25,
+    "travelHow": "1 train 14 St to 66 St-Lincoln Center",
+    "toddlerNotes": "Family-friendly drop-in: make an undersea costume from cardboard/fabric on site, then toddler-dance to Cibo Matto's Miho Hatori DJing. All ages, outdoor, come-and-go. Part of Summer for the City 2026 (confirmed on Lincoln Center and artist sites).",
+    "url": "https://lincolncenter.org/series/summer-for-the-city/create-athon-deep-sea-costume-workshop",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7723,
+    "lng": -73.9838,
+    "event": true,
+    "times": [
+      "evening"
+    ]
+  },
+  {
+    "title": "Slate x Crayola Block Party — 40-foot coloring wall",
+    "category": "festival",
+    "venue": "16 Morton Street (street closed for block party)",
+    "neighborhood": "West Village",
+    "when": "Sat Jul 11, 10:30 AM (also Sun Jul 12, 10:30 AM; runs to 3:00 PM both days)",
+    "days": [
+      "sat",
+      "sun"
+    ],
+    "cost": "Free",
+    "travelMinutes": 15,
+    "travelHow": "Walk (~18 min) or 1 train to Christopher St",
+    "toddlerNotes": "Life-sized coloring world: 40-ft coloring wall, Crayola-colored EV trucks to look at, giveaways, food, family activities. Free, open to all, perfect drop-in toddler length. Confirmed by Slate's official events page, TechCrunch, and nycforfree.",
+    "url": "https://www.slate.auto/en/events",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7315,
+    "lng": -74.0042,
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
+  },
+  {
+    "title": "NYC Math Festival — giant hands-on math playground",
+    "category": "festival",
+    "venue": "NYC Lab School yard, 333 W 17th St (entrance on W 18th St)",
+    "neighborhood": "Chelsea",
+    "when": "Sat Jul 11, 10:00 AM (to 4:00 PM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free, no registration",
+    "travelMinutes": 12,
+    "travelHow": "L to 8 Av + 4 min walk",
+    "toddlerNotes": "Free rain-or-shine outdoor festival: giant hands-on exhibits, large-scale group constructions, games. Geared all-ages; a 2-year-old can climb into the big geometric builds. Drop in any time. Confirmed on momath.org.",
+    "url": "https://momath.org/mathfestival/",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7423,
+    "lng": -74.0011,
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Ladybug Launch at Domino Park",
+    "category": "animals",
+    "venue": "Domino Park, lawn next to Tacocina, 15 River St",
+    "neighborhood": "Williamsburg",
+    "when": "Sat Jul 11, 1:00 PM (to 3:00 PM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free, drop-in (no RSVP mentioned on official page)",
+    "travelMinutes": 20,
+    "travelHow": "L to Bedford Av + 10 min walk",
+    "toddlerNotes": "Help the horticulture team release live ladybugs into the plant beds — about as toddler-perfect as it gets. Drop-in window, on the lawn, right next to the water park and playground. Confirmed on Domino Park's official events page.",
+    "url": "https://www.dominopark.com/events/ladybug-launch",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7145,
+    "lng": -73.9672,
+    "event": true,
+    "times": [
+      "morning"
+    ]
+  },
+  {
+    "title": "The Little Moon Theater at TADA! (kids performing for kids)",
+    "category": "theater",
+    "venue": "TADA! Youth Theater, 15 W 28th St, 2nd Fl",
+    "neighborhood": "NoMad / Flatiron",
+    "when": "Sat Jul 11, 2:00 PM (to 3:00 PM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "$15 kids (15 & under) / $30 adults",
+    "travelMinutes": 10,
+    "travelHow": "R/W to 28 St or 12 min walk",
+    "toddlerNotes": "One-hour original musical based on Irene Haas's gentle picture book, performed by kids for young family audiences — a good first-theater length. No stated age minimum on the listing; opening day of the Jul 11-31 run (Saturdays 2 PM). Cheap for NYC kids' theater.",
+    "url": "https://tadatheater.com/artistic-overview/current-season/",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7452,
+    "lng": -73.9886,
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Meet the Beekeeper at Domino Park",
+    "category": "animals",
+    "venue": "Domino Park beehives, S 1st St & River St",
+    "neighborhood": "Williamsburg",
+    "when": "Sun Jul 12, 11:00 AM (to 1:00 PM, drop by any time)",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free, drop-by",
+    "travelMinutes": 20,
+    "travelHow": "L to Bedford Av + 10 min walk",
+    "toddlerNotes": "Watch the beehives in action, taste fresh honey, and meet a fourth-generation beekeeper. Two-hour drop-by window, steps from Domino's playground and splash area. Confirmed on Domino Park's official event page for Sun Jul 12.",
+    "url": "https://www.dominopark.com/events/meet-the-beekeeper-3",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7152,
+    "lng": -73.9665,
+    "event": true,
+    "times": [
+      "morning"
+    ]
+  },
+  {
+    "title": "Tear Down the King — hands-on 1776 reenactment",
+    "category": "other",
+    "venue": "Old Stone House & Washington Park, 336 3rd St",
+    "neighborhood": "Park Slope (north), Brooklyn",
+    "when": "Sun Jul 12, 12:00 PM (to 3:00 PM)",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free",
+    "travelMinutes": 32,
+    "travelHow": "R train to Union St + 8 min walk",
+    "toddlerNotes": "Family-friendly 1776 reenactment: kids scribble 'tyrannies' on a recreated King George III statue, then help tear it down. Outdoor, drop-in, directly beside JJ Byrne playground for before/after play. Confirmed via Old Stone House's Eventbrite (Sun Jul 12, 12-3 PM).",
+    "url": "https://www.eventbrite.com/e/declare-independence-tear-down-the-king-tickets-1990997366720",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.6728,
+    "lng": -73.9843,
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Freestyle soccer trick show at Lincoln Center",
+    "category": "other",
+    "venue": "Hearst Plaza, Lincoln Center",
+    "neighborhood": "Lincoln Square / Upper West Side",
+    "when": "Fri Jul 10, 5:00 PM",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free",
+    "travelMinutes": 30,
+    "travelHow": "Subway: N/Q from 14 St-Union Sq to Times Sq-42 St, transfer to 1 to 66 St-Lincoln Center",
+    "toddlerNotes": "Outdoor acrobatic soccer-trick show on the open plaza, marked All Ages. Drop-in, no seats/tickets, stroller-friendly, toddler can watch from anywhere and wander. Short attention span is fine since it is a plaza spectacle, not a seated show.",
+    "url": "https://lincolncenter.org/series/summer-for-the-city/freestyle-soccer-show-9",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7729,
+    "lng": -73.9846,
+    "event": true,
+    "times": [
+      "evening"
+    ]
+  },
+  {
+    "title": "Family ballet workshop with School of American Ballet",
+    "category": "play",
+    "venue": "The Dance Floor (Josie Robertson Plaza), Lincoln Center",
+    "neighborhood": "Lincoln Square / Upper West Side",
+    "when": "Sat Jul 11, 11:00 AM",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free",
+    "travelMinutes": 30,
+    "travelHow": "Subway: N/Q from 14 St-Union Sq to Times Sq-42 St, transfer to 1 to 66 St-Lincoln Center",
+    "toddlerNotes": "Hour-long participatory ballet-basics workshop with SAB faculty and advanced students, billed as family-friendly with all ages welcome (sneakers recommended). Outdoor on the giant dance floor, no registration mentioned - a toddler can copy moves or just bop along, and you can step out anytime.",
+    "url": "https://lincolncenter.org/series/summer-for-the-city/sab-family-friendly-ballet-workshop-489",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7726,
+    "lng": -73.9835,
+    "event": true,
+    "times": [
+      "morning"
+    ]
+  },
+  {
+    "title": "Naturalist-led nature walk from Pier 45",
+    "category": "animals",
+    "venue": "Hudson River Park — meet at Christopher St. Fountain by Pier 45",
+    "neighborhood": "West Village waterfront",
+    "when": "Sat Jul 11, 10:00 AM (to 11:00 AM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free",
+    "travelMinutes": 20,
+    "travelHow": "1 train from 14th St to Christopher St–Sheridan Sq + 8-min walk",
+    "toddlerNotes": "Leisurely one-hour stroll on the flat waterfront esplanade led by Park naturalists spotting birds, plants and river life — fully stroller-friendly, all ages, easy to peel off early.",
+    "url": "https://hudsonriverpark.org/visit/events/",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7333,
+    "lng": -74.0106,
+    "event": true,
+    "times": [
+      "morning"
+    ]
+  },
+  {
+    "title": "Touch-tank open hours — BBP Environmental Education Center",
+    "category": "animals",
+    "venue": "Brooklyn Bridge Park Environmental Education Center, 99 Plymouth St",
+    "neighborhood": "DUMBO",
+    "when": "Fri Jul 10, 3:00 PM (to 5:00 PM)",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free",
+    "travelMinutes": 28,
+    "travelHow": "F to York St, 5-min walk",
+    "toddlerNotes": "Free drop-in hours at the park's indoor nature center — tanks with live East River fish, crabs and oysters at toddler eye level. Air-conditioned, short-visit friendly. Pairs perfectly with the 4:30 PM storytime at Pier 1 nearby.",
+    "url": "https://brooklynbridgepark.org/event/open-hours-at-the-environmental-education-center-july-10/",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.704,
+    "lng": -73.9861,
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Habibi Festival — Celebrate Brooklyn! lawn concert",
+    "category": "music",
+    "venue": "Lena Horne Bandshell, Prospect Park",
+    "neighborhood": "Park Slope / Prospect Park",
+    "when": "Fri Jul 10, 6:00 PM (to 10:00 PM)",
+    "days": [
+      "fri"
+    ],
+    "cost": "Free (RSVP encouraged, entry first-come)",
+    "travelMinutes": 35,
+    "travelHow": "Q to 7th Ave (Flatbush) + 12-min walk, or F/G to 7th Ave",
+    "toddlerNotes": "Free all-ages lawn concert of North African/Arabic music; Celebrate Brooklyn! crowds are full of families and blankets. Go for the 6 PM opening hour and leave before bedtime. DJ Kofta of Yalla! Party Project (known for family dance parties) spins between sets. Loud near the stage — sit back on the lawn.",
+    "url": "https://bricartsmedia.org/event/habibi-fest-2026/",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.6635,
+    "lng": -73.9764,
+    "event": true,
+    "times": [
+      "evening"
+    ]
+  },
+  {
+    "title": "adidas World Cup Fan Zone under the Brooklyn Bridge",
+    "category": "festival",
+    "venue": "Emily Warren Roebling Plaza, Brooklyn Bridge Park",
+    "neighborhood": "DUMBO / Brooklyn Bridge Park",
+    "when": "Fri Jul 10, Sat Jul 11 & Sun Jul 12 — opens 12:00 PM daily (12 PM-10 PM)",
+    "days": [
+      "fri",
+      "sat",
+      "sun"
+    ],
+    "cost": "Free (reserve free tickets, released 24 hrs ahead; entry first-come)",
+    "travelMinutes": 30,
+    "travelHow": "F to York St or A/C to High St, ~8-min walk",
+    "toddlerNotes": "25,000 sq ft all-ages World Cup village under the Brooklyn Bridge: big-screen match viewing, mini soccer pitch, food vendors, family activities. Explicitly all ages. Weekend afternoons before the ~5 PM quarterfinal kickoffs are calmest; gets crowded during matches. Reserve the free ticket the day before.",
+    "url": "https://brooklynbridgepark.org/adidas-home-of-soccer/",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7034,
+    "lng": -73.9937,
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
+  },
+  {
+    "title": "Family Storytime at Brooklyn Heights Library",
+    "category": "storytime",
+    "venue": "Brooklyn Heights Library (BPL), Craft Room",
+    "neighborhood": "Brooklyn Heights",
+    "when": "Sat Jul 11, 11:00 AM (to 11:30)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free",
+    "travelMinutes": 22,
+    "travelHow": "4/5 to Borough Hall, 5-min walk",
+    "toddlerNotes": "Books, music and movement 'for all ages and their grownups' — no registration required. 30 minutes, perfect toddler length; big modern branch with elevator and stroller space.",
+    "url": "https://www.bklynlibrary.org/calendar/family-storytime-brooklyn-heights-library-20260711-1100am",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.6957,
+    "lng": -73.9908,
+    "event": true,
+    "times": [
+      "morning"
+    ]
+  },
+  {
+    "title": "Family Bowl — all-ages bowling at Brooklyn Bowl",
+    "category": "play",
+    "venue": "Brooklyn Bowl, 61 Wythe Ave",
+    "neighborhood": "Williamsburg (North)",
+    "when": "Sat Jul 11, 12:00 PM (all ages until 5:00 PM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free entry / no cover; bowling lane rental extra (pay per lane)",
+    "travelMinutes": 27,
+    "travelHow": "L to Bedford Av + 10-min walk",
+    "toddlerNotes": "The venue's official calendar lists Family Bowl Sat Jul 11, doors 12 PM, all ages until 5 PM, no cover. Music-venue bowling with bumpers and food; lively/loud but toddlers are expressly welcome in the afternoon window.",
+    "url": "https://www.brooklynbowl.com/brooklyn/shows/all",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.722,
+    "lng": -73.9576,
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Papi Juice dance party on Pier 6 Plaza",
+    "category": "music",
+    "venue": "Brooklyn Bridge Park, Pier 6 Plaza (foot of Atlantic Ave)",
+    "neighborhood": "Brooklyn Heights / Cobble Hill waterfront",
+    "when": "Sat Jul 11, 4:00 PM (to 10:00 PM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Free, first-come first-served (optional RSVP for reminders)",
+    "travelMinutes": 32,
+    "travelHow": "4/5 to Borough Hall + 15-min walk, or B63 bus down Atlantic",
+    "toddlerNotes": "Free outdoor all-ages waterfront dance party curated by the Papi Juice DJ collective — official BBP event. Go 4-6 PM when families with dancing toddlers are out in force; the huge Pier 6 playgrounds and water play are adjacent. Skews adult after sunset.",
+    "url": "https://brooklynbridgepark.org/event/papi-juice-dance-party-july-2026/",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.6925,
+    "lng": -73.9987,
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
+  },
+  {
+    "title": "Spellbound Theater: toddler show made for ages 2-5 (CMOM)",
+    "category": "theater",
+    "venue": "Children's Museum of Manhattan, 212 W 83rd St",
+    "neighborhood": "Upper West Side",
+    "when": "Sat Jul 11, 10:30 AM (second show 12:00 PM)",
+    "days": [
+      "sat"
+    ],
+    "cost": "Included with museum admission ($17 online / $18 door; under 1 free)",
+    "travelMinutes": 35,
+    "travelHow": "2/3 express from 14th St to 72nd St, transfer to 1 to 86th St + short walk",
+    "toddlerNotes": "Made exactly for ages 2-5: a 30-minute interactive show following a lost toy, Catbear, through the NYC subway tunnels. In the 3rd-floor PlayWorks classroom; sign-up at the museum required, so arrive early. Rest of the museum (ages 0-6) is all-day play afterward.",
+    "url": "https://cmom.org/visit/public-programs/",
+    "outdoor": false,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7864,
+    "lng": -73.9772,
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
+  },
+  {
+    "title": "Print your own newspaper at the Seaport Museum",
+    "category": "play",
+    "venue": "South Street Seaport Museum, 14 Fulton St",
+    "neighborhood": "South Street Seaport",
+    "when": "Sat Jul 11, 11:00 AM (drop-in any time 11:00 AM-4:30 PM; also Sun Jul 12)",
+    "days": [
+      "sat",
+      "sun"
+    ],
+    "cost": "Included with general admission: adults $18, children $5",
+    "travelMinutes": 22,
+    "travelHow": "4/5 express from Union Sq to Fulton St + 8-min walk",
+    "toddlerNotes": "Come-anytime craft: kids make foam-letter printing rollers and stamp newspaper headlines, inspired by the museum's Bowne & Co. print shop. No time slots, all ages, short attention spans fine. Admission also covers the tall ship Wavertree at Pier 16.",
+    "url": "https://southstreetseaportmuseum.org/family-activity/",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7063,
+    "lng": -74.0034,
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
+  },
+  {
+    "title": "World Cup watch party on Pier 86 (Intrepid)",
+    "category": "other",
+    "venue": "Pier 86, Intrepid Museum, W 46th St & 12th Ave",
+    "neighborhood": "Hell's Kitchen / Hudson River",
+    "when": "Fri Jul 10, 3:00 PM (Sat Jul 11: Norway vs England 5:00 PM)",
+    "days": [
+      "fri",
+      "sat"
+    ],
+    "cost": "Free, open to the public",
+    "travelMinutes": 35,
+    "travelHow": "N/Q/R/W to Times Sq-42 St, then M42 crosstown bus to 12th Ave",
+    "toddlerNotes": "Outdoor pier plaza with big screens - totally drop-in, stroller-friendly, toddler can wander while adults watch. Food/snacks for purchase. Friday 3 PM match is the mellow pick; Saturday 5 PM works pre-bedtime but crowds build (arrive early).",
+    "url": "https://intrepidmuseum.org/free-world-cup-watch-parties-pier-86",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7645,
+    "lng": -73.9995,
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
   }
 ],
 };
