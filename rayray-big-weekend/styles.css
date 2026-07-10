@@ -119,20 +119,40 @@ body {
 .count { text-align: center; color: var(--ink-soft); font-weight: 600; margin: 10px 0 16px; }
 
 /* ——— cards ——— */
-.cards {
+.cards { padding-bottom: 30px; }
+
+.card-grid {
   display: grid; gap: 22px;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  padding-bottom: 30px;
 }
+
+.time-head {
+  font-size: 1.5rem; font-weight: 800; margin: 26px 4px 14px;
+  display: flex; align-items: center; gap: 10px;
+  transform: rotate(-0.6deg);
+}
+.time-head .time-count {
+  font-size: 0.85rem; background: var(--ink); color: #fff;
+  border-radius: 999px; padding: 2px 11px; transform: rotate(2deg);
+}
+
+.times { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.time {
+  font-family: var(--font); font-weight: 700; font-size: 0.88rem;
+  border: 2px solid var(--ink); background: transparent; color: var(--ink);
+  border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: all 0.12s;
+}
+.time:hover { transform: translateY(-2px); }
+.time.active { background: var(--coral); border-color: var(--coral); color: #fff; }
 
 .card {
   background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
   overflow: hidden; display: flex; flex-direction: column;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-.cards .card:nth-child(3n+1) { transform: rotate(-0.8deg); }
-.cards .card:nth-child(3n+2) { transform: rotate(0.7deg); }
-.cards .card:nth-child(3n)   { transform: rotate(-0.3deg); }
+.card-grid .card:nth-child(3n+1) { transform: rotate(-0.8deg); }
+.card-grid .card:nth-child(3n+2) { transform: rotate(0.7deg); }
+.card-grid .card:nth-child(3n)   { transform: rotate(-0.3deg); }
 .card:hover {
   transform: rotate(0deg) translateY(-6px) scale(1.015);
   box-shadow: 0 18px 34px rgba(58, 46, 57, 0.18);
@@ -214,6 +234,9 @@ footer p { margin: 4px 0; }
 @media (prefers-reduced-motion: reduce) {
   .sun, .balloon, .day .today-tag { animation: none; }
 }
+
+/* the .cards grid's display:grid would defeat the hidden attribute */
+.cards[hidden], .map-shell[hidden] { display: none !important; }
 
 /* ——— view switch + map ——— */
 .views { display: flex; gap: 0; border: 3px solid var(--ink); border-radius: 999px; overflow: hidden; box-shadow: 0 3px 0 var(--ink); }

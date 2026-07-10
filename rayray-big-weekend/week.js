@@ -23,7 +23,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7536,
     "lng": -73.9832,
-    "event": true
+    "event": true,
+    "times": [
+      "evening"
+    ]
   },
   {
     "title": "Community Joy Day: puppets, DJs & free books (Celebrate Brooklyn!)",
@@ -44,7 +47,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.6661,
     "lng": -73.9766,
-    "event": true
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
   },
   {
     "title": "Bargemusic free family chamber concert",
@@ -66,7 +73,10 @@ window.WEEK_DATA = {
     "confidence": "medium",
     "lat": 40.695,
     "lng": -74.0,
-    "event": true
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
   },
   {
     "title": "Ruidosa Fest — free Latine music & dancing",
@@ -87,7 +97,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7725,
     "lng": -73.9835,
-    "event": true
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
   },
   {
     "title": "AfriCarnaval on the Dance Floor",
@@ -108,7 +122,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7725,
     "lng": -73.9835,
-    "event": true
+    "event": true,
+    "times": [
+      "evening"
+    ]
   },
   {
     "title": "Soul Summit — outdoor house-music dance party",
@@ -129,7 +146,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.6905,
     "lng": -73.9742,
-    "event": true
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
   },
   {
     "title": "Little Red's Hood — Swedish Cottage Marionettes",
@@ -151,7 +172,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7794,
     "lng": -73.9702,
-    "event": true
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
   },
   {
     "title": "Pinocchio at Puppetworks (final Park Slope season!)",
@@ -173,7 +198,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.6693,
     "lng": -73.9846,
-    "event": true
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
   },
   {
     "title": "Gazillion Bubble Show",
@@ -195,7 +223,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7629,
     "lng": -73.988,
-    "event": true
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
   },
   {
     "title": "Le Carrousel Extravaganza — magic, puppets & stories",
@@ -218,7 +250,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7534,
     "lng": -73.9829,
-    "event": true
+    "event": true,
+    "times": [
+      "morning"
+    ]
   },
   {
     "title": "Saturday Family Storytime (ages 0–5)",
@@ -239,7 +274,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7289,
     "lng": -73.9879,
-    "event": true
+    "event": true,
+    "times": [
+      "morning"
+    ]
   },
   {
     "title": "Sunday Storytime at Books of Wonder",
@@ -260,7 +298,10 @@ window.WEEK_DATA = {
     "confidence": "medium",
     "lat": 40.7386,
     "lng": -73.9938,
-    "event": true
+    "event": true,
+    "times": [
+      "morning"
+    ]
   },
   {
     "title": "Whitney Free Second Sunday: storytime + artmaking",
@@ -281,7 +322,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7396,
     "lng": -74.0089,
-    "event": true
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
   },
   {
     "title": "SNFL Children's Center — stories, blocks & A/C",
@@ -302,7 +347,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7517,
     "lng": -73.9817,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Evelyn's Playground — splash + sandbox on your doorstep",
@@ -323,7 +371,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.737,
     "lng": -73.9907,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Washington Square playgrounds + spray showers",
@@ -344,7 +395,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7308,
     "lng": -73.9973,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Pier 25 & 26 — splash pad, playground & mini golf",
@@ -365,7 +419,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7203,
     "lng": -74.0136,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Pier 51 water playground (freshly renovated)",
@@ -386,7 +443,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7385,
     "lng": -74.0102,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Imagination Playground — sand, water & big blue blocks",
@@ -407,7 +467,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7052,
     "lng": -74.0022,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Teardrop Park — bubbling springs & THE slide",
@@ -428,7 +491,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.717,
     "lng": -74.0157,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Domino Park's 88-jet splash fountain",
@@ -449,7 +515,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7145,
     "lng": -73.967,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Pier 6 Water Lab + sand village",
@@ -470,7 +539,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.6924,
     "lng": -73.9982,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Little Island wander",
@@ -491,7 +563,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.742,
     "lng": -74.0102,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Jane's Carousel in its glass box",
@@ -517,7 +592,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7043,
     "lng": -73.9906,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "SeaGlass Carousel — ride a glowing fish",
@@ -538,7 +616,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7036,
     "lng": -74.0163,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Children's Museum of Manhattan (CMOM)",
@@ -559,7 +640,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7861,
     "lng": -73.9765,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Complete Playground — 45,000 sq ft of indoor play",
@@ -580,7 +664,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7057,
     "lng": -74.011,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Tompkins Square Mini Pool (free kiddie pool)",
@@ -601,7 +688,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7269,
     "lng": -73.982,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Feed the goats at the Tisch Children's Zoo",
@@ -622,7 +712,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7683,
     "lng": -73.9713,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Prospect Park Zoo — toddler-scale animals",
@@ -643,7 +736,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.665,
     "lng": -73.9648,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Wetlab touch tanks — seahorses of the Hudson",
@@ -667,7 +763,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7288,
     "lng": -74.0112,
-    "event": false
+    "event": false,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
   },
   {
     "title": "Big City Fishing at Pier 51",
@@ -688,7 +788,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7385,
     "lng": -74.0102,
-    "event": true
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
   },
   {
     "title": "West Side Fest — 20+ venues, all free",
@@ -711,7 +815,12 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7415,
     "lng": -74.009,
-    "event": true
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon",
+      "evening"
+    ]
   },
   {
     "title": "Family Fun Circus Day — Bindlestiff Cirkus & giant bubbles",
@@ -732,7 +841,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7487,
     "lng": -73.988,
-    "event": true
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ]
   },
   {
     "title": "Bastille Day on Madison Avenue",
@@ -753,7 +866,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7645,
     "lng": -73.9715,
-    "event": true
+    "event": true,
+    "times": [
+      "afternoon"
+    ]
   },
   {
     "title": "Giglio Feast — rides, zeppole & the dancing tower",
@@ -776,7 +892,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7169,
     "lng": -73.9536,
-    "event": true
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
   },
   {
     "title": "A Myriad of Mandalas — artmaking on Little Island",
@@ -797,7 +917,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.742,
     "lng": -74.0102,
-    "event": true
+    "event": true,
+    "times": [
+      "morning"
+    ]
   },
   {
     "title": "AMNH Block Party + Manhattanhenge",
@@ -818,7 +941,11 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7818,
     "lng": -73.9743,
-    "event": true
+    "event": true,
+    "times": [
+      "afternoon",
+      "evening"
+    ]
   },
   {
     "title": "Union Square Greenmarket wander",
@@ -842,7 +969,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7362,
     "lng": -73.9904,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Elizabeth Street Garden hangout",
@@ -863,7 +993,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7223,
     "lng": -73.9944,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Governors Island ferry day",
@@ -884,7 +1017,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.6895,
     "lng": -74.0165,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "Staten Island Ferry — free boat ride",
@@ -905,7 +1041,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7011,
     "lng": -74.0134,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "NYC Ferry mini-hop under the Brooklyn Bridge",
@@ -926,7 +1065,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7031,
     "lng": -74.007,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   },
   {
     "title": "High Line morning stroll",
@@ -947,7 +1089,10 @@ window.WEEK_DATA = {
     "confidence": "high",
     "lat": 40.7419,
     "lng": -74.008,
-    "event": false
+    "event": false,
+    "times": [
+      "any"
+    ]
   }
 ],
 };

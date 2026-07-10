@@ -16,6 +16,12 @@
   };
 
   const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  const TIME_ORDER = ["morning", "afternoon", "evening"];
+  const TIME_META = {
+    morning: { label: "Morning", emoji: "🌅" },
+    afternoon: { label: "Afternoon", emoji: "☀️" },
+    evening: { label: "Evening", emoji: "🌆" },
+  };
   const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" };
 
   // Which day is "today" relative to the data's week (only if we're inside it).
@@ -30,7 +36,16 @@
     freeOnly: false,
     outdoorOnly: false,
     eventsOnly: false,
+    time: "all",
     view: location.hash === "#view=map" ? "map" : "cards",
+  };
+
+  // earliest time-of-day bucket an entry belongs to; "any" = open all day places
+  const timeBucket = (e) => {
+    const ts = e.times || ["any"];
+    if (ts.indexOf("any") !== -1) return "any";
+    for (const k of TIME_ORDER) if (ts.indexOf(k) !== -1) return k;
+    return "any";
   };
 
   // "real event" = a dated happening this week (not an open-anytime place)
@@ -86,6 +101,22 @@
       catPicker.appendChild(b);
     });
 
+  // ——— time-of-day picker ———
+  const timePicker = document.getElementById("time-picker");
+  [{ key: "all", label: "All times", emoji: "🕐" }]
+    .concat(TIME_ORDER.map((k) => ({ key: k, label: TIME_META[k].label, emoji: TIME_META[k].emoji })))
+    .forEach(({ key, label, emoji }) => {
+      const b = document.createElement("button");
+      b.className = "time";
+      b.dataset.time = key;
+      b.textContent = emoji + " " + label;
+      b.addEventListener("click", () => {
+        state.time = state.time === key ? "all" : key;
+        render();
+      });
+      timePicker.appendChild(b);
+    });
+
   // ——— toggles ———
   const freeBtn = document.getElementById("toggle-free");
   const outBtn = document.getElementById("toggle-outdoor");
@@ -106,7 +137,7 @@
   // ——— view switch ———
   const cardsViewBtn = document.getElementById("view-cards");
   const mapViewBtn = document.getElementById("view-map");
-  cardsViewBtn.addEventListener("click", () => { state.view = "cards"; history.replaceState(null, "", " "); render(); });
+  cardsViewBtn.addEventListener("click", () => { state.view = "cards"; history.replaceState(null, "", location.pathname + location.search); render(); });
   mapViewBtn.addEventListener("click", () => { state.view = "map"; history.replaceState(null, "", "#view=map"); render(); });
 
   // ——— cards ———
@@ -119,6 +150,10 @@
     if (state.freeOnly && !isFree(e)) return false;
     if (state.outdoorOnly && !e.outdoor) return false;
     if (state.eventsOnly && !isEvent(e)) return false;
+    if (state.time !== "all") {
+      const ts = e.times || ["any"];
+      if (!(ts.indexOf("any") !== -1 || ts.indexOf(state.time) !== -1)) return false;
+    }
     return true;
   }
 
@@ -229,6 +264,7 @@
     // reflect state on controls
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
     catPicker.querySelectorAll(".cat").forEach((b) => b.classList.toggle("active", b.dataset.cat === state.cat));
+    timePicker.querySelectorAll(".time").forEach((b) => b.classList.toggle("active", b.dataset.time === state.time));
     freeBtn.setAttribute("aria-pressed", String(state.freeOnly));
     outBtn.setAttribute("aria-pressed", String(state.outdoorOnly));
     evBtn.setAttribute("aria-pressed", String(state.eventsOnly));
@@ -255,7 +291,24 @@
 
     if (state.view === "cards") {
       cards.innerHTML = "";
-      list.forEach((e) => cards.appendChild(card(e)));
+      const groups = [
+        { key: "morning", label: "🌅 Morning" },
+        { key: "afternoon", label: "☀️ Afternoon" },
+        { key: "evening", label: "🌆 Evening" },
+        { key: "any", label: "🧭 Anytime spots" },
+      ];
+      groups.forEach((g) => {
+        const items = list.filter((e) => timeBucket(e) === g.key);
+        if (!items.length) return;
+        const head = document.createElement("h2");
+        head.className = "time-head";
+        head.innerHTML = g.label + ' <span class="time-count">' + items.length + "</span>";
+        cards.appendChild(head);
+        const grid = document.createElement("div");
+        grid.className = "card-grid";
+        items.forEach((e) => grid.appendChild(card(e)));
+        cards.appendChild(grid);
+      });
     } else {
       renderMap(list);
     }
