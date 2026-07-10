@@ -56,12 +56,19 @@ Each event:
    out events.
 4. **Mix**: every category represented; plenty of free options; in summer favor
    water play + shade, in winter favor indoor/heated options.
-5. **Verify, don't vibe**: check dates against official venue pages / NYC Parks
+5. **Cards must be self-sufficient**: a parent plans from the card alone —
+   never make them click through to figure out what/where/when. `when` carries
+   the exact day + time window; `toddlerNotes` says concretely what you do
+   there ("mask-making at the kids' lawn on 61st St, pet parade steps off
+   2 PM"), not vibes. Umbrella festivals must be broken into their specific
+   joinable sessions (one card per session or an explicit mini-schedule on the
+   card) — a card that says "20+ venues, lots going on!" is a defect.
+6. **Verify, don't vibe**: check dates against official venue pages / NYC Parks
    calendar / Mommy Poppins / Time Out Kids for the *correct year*. If an exact
    time can't be confirmed, keep the typical time and set `confidence` to
    `medium` or `low`. Never invent dates or URLs. Drop anything you can't
    corroborate at all.
-6. Keep evergreen favorites (playgrounds, carousels, zoo, ferries) in the list
+7. Keep evergreen favorites (playgrounds, carousels, zoo, ferries) in the list
    every week — verify they're open (water features and carousels close
    seasonally or for repairs).
 
