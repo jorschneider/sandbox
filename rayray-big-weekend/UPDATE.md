@@ -59,13 +59,22 @@ Each event:
    thing, not just be present while adults do it (no bowling, no escape
    rooms, no sit-still screenings).
 4. **Real events first**: the site exists to surface ACTUAL SCHEDULED EVENTS —
-   concerts, puppet shows, storytime sessions, festivals with a date and start
-   time. Hunt venue calendars directly (NYC Parks events, Lincoln Center, Bryant
-   Park, Hudson River Park, Little Island, BRIC, NYPL/BPL branch calendars,
-   Mommy Poppins day-by-day). Aim for 15+ dated events across the week, every
-   day covered. Evergreen places (playgrounds, carousels, ferries, zoo) stay as
-   the "anytime" tail — refresh their open/closed status, don't let them crowd
-   out events.
+   concerts, shows, festivals with a date and start time. Hunt venue calendars
+   directly (NYC Parks events, Lincoln Center, Bryant Park, Hudson River Park,
+   Little Island, BRIC, NYPL/BPL branch calendars, Mommy Poppins day-by-day).
+   Aim for 15+ dated events across the week, every day covered. Evergreen
+   places (playgrounds, carousels, ferries, zoo) stay as the "anytime" tail —
+   refresh their open/closed status, don't let them crowd out events.
+   **ALWAYS run a dedicated free-outdoor-theater hunt** every week: Shakespeare
+   in the park (Delacorte lottery, Shakespeare Downtown at Castle Clinton,
+   Shakespeare in the Parking Lot), roaming companies (New York Classical,
+   Boomerang, Piper Theatre at the Old Stone House), Little Island's
+   amphitheater, and outdoor puppet stages (PuppetMobile, Swedish Cottage
+   lawn events). Outdoor evening theater is prime toddler material — lawn
+   seating, leave anytime — and pairs with the weekday 5 PM+ rule.
+   **Frame ages honestly**: verify age recommendations on the official page;
+   "all ages welcome" is not "made for toddlers" — say which part of an event
+   is actually the toddler part.
 5. **Mix**: categories broadly represented; plenty of free options; in summer favor
    water play + shade, in winter favor indoor/heated options.
 6. **Cards must be self-sufficient**: a parent plans from the card alone —
