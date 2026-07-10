@@ -37,8 +37,30 @@
     outdoorOnly: false,
     eventsOnly: false,
     time: "all",
-    view: location.hash === "#view=map" ? "map" : "cards",
+    heartsOnly: false,
+    indoorOnly: false,
+    view: /(^|[#&])view=map(&|$)/.test(location.hash) ? "map" : "cards",
   };
+
+  // ——— hearts (shortlist), persisted locally, shareable via #hearts=… ———
+  const keyOf = (e) => e.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
+  const byKey = {};
+  data.events.forEach((e) => { byKey[keyOf(e)] = e; });
+  let hearts = new Set();
+  try { hearts = new Set(JSON.parse(localStorage.getItem("rbw-hearts") || "[]").filter((k) => byKey[k])); } catch (err) {}
+  const sharedMatch = location.hash.match(/hearts=([^&]*)/);
+  if (sharedMatch && sharedMatch[1]) {
+    decodeURIComponent(sharedMatch[1]).split(",").forEach((k) => { if (byKey[k]) hearts.add(k); });
+    state.heartsOnly = hearts.size > 0;
+  }
+  function saveHearts() {
+    try { localStorage.setItem("rbw-hearts", JSON.stringify(Array.from(hearts))); } catch (err) {}
+  }
+  function toggleHeart(k) {
+    if (hearts.has(k)) hearts.delete(k); else hearts.add(k);
+    saveHearts();
+    render();
+  }
 
   // earliest time-of-day bucket an entry belongs to; "any" = open all day places
   const timeBucket = (e) => {
@@ -143,6 +165,19 @@
     state.eventsOnly = !state.eventsOnly;
     render();
   });
+  const heartsBtn = document.getElementById("toggle-hearts");
+  heartsBtn.addEventListener("click", () => {
+    state.heartsOnly = !state.heartsOnly;
+    render();
+  });
+  const copyPlanBtn = document.getElementById("copy-plan");
+  copyPlanBtn.addEventListener("click", () => {
+    const url = location.origin + location.pathname + "#hearts=" + Array.from(hearts).join(",");
+    (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => {
+      copyPlanBtn.textContent = "✅ Copied!";
+      setTimeout(() => { copyPlanBtn.textContent = "🔗 Copy plan link"; }, 1600);
+    }).catch(() => { prompt("Copy this link:", url); });
+  });
 
   // ——— view switch ———
   const cardsViewBtn = document.getElementById("view-cards");
@@ -160,6 +195,8 @@
     if (state.freeOnly && !isFree(e)) return false;
     if (state.outdoorOnly && !e.outdoor) return false;
     if (state.eventsOnly && !isEvent(e)) return false;
+    if (state.heartsOnly && !hearts.has(keyOf(e))) return false;
+    if (state.indoorOnly && e.outdoor) return false;
     if (state.time !== "all") {
       const ts = e.times || ["any"];
       if (!(ts.indexOf("any") !== -1 || ts.indexOf(state.time) !== -1)) return false;
@@ -190,9 +227,11 @@
       chips.push('<span class="chip chip-check">🔍 double-check</span>');
     }
 
+    const k = keyOf(e);
     el.innerHTML =
       '<div class="card-top cat-' + esc(e.category) + '">' +
         '<span class="big-emoji">' + cat.emoji + "</span><span>" + esc(cat.label) + "</span>" +
+        '<button class="heart" data-key="' + k + '" title="Save to our plan" aria-pressed="' + hearts.has(k) + '">' + (hearts.has(k) ? "❤️" : "🤍") + "</button>" +
       "</div>" +
       '<div class="card-body">' +
         '<div class="start-badge tb-' + timeBucket(e) + '">' + TB_EMOJI[timeBucket(e)] + " " +
@@ -206,9 +245,46 @@
         '<div class="actions">' +
           '<a class="btn btn-details" href="' + esc(e.url) + '" target="_blank" rel="noopener">Details ↗</a>' +
           '<a class="btn btn-map" href="' + dirUrl(e) + '" target="_blank" rel="noopener">Directions 🗺️</a>' +
+          (e.start ? '<button class="btn btn-cal" data-key="' + k + '" title="Add to calendar">📅</button>' : "") +
         "</div>" +
       "</div>";
     return el;
+  }
+
+  function icsDate(dayIdx, hm, plusMinutes) {
+    const parts = data.weekMonday.split("-").map(Number);
+    const d = new Date(parts[0], parts[1] - 1, parts[2] + dayIdx,
+      parseInt(hm.slice(0, 2), 10), parseInt(hm.slice(3), 10) + (plusMinutes || 0));
+    const pad = (n) => String(n).padStart(2, "0");
+    return "" + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(d.getHours()) + pad(d.getMinutes()) + "00";
+  }
+  function icsEsc(s) {
+    return String(s || "").replace(/\\/g, "\\\\").replace(/([,;])/g, "\\$1").replace(/\n/g, "\\n");
+  }
+  function downloadIcs(e) {
+    if (!e.start) return;
+    const days = e.days || [];
+    const dayKey = state.day !== "all" && days.indexOf(state.day) !== -1 ? state.day : days.filter((d) => DAY_KEYS.indexOf(d) !== -1)[0];
+    const idx = DAY_KEYS.indexOf(dayKey);
+    if (idx < 0) return;
+    const txt = [
+      "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Rayray Big Weekend//EN",
+      "BEGIN:VEVENT",
+      "UID:" + keyOf(e) + "-" + data.weekMonday + "@rayray-big-weekend",
+      "DTSTAMP:" + icsDate(idx, e.start) + "Z",
+      "DTSTART:" + icsDate(idx, e.start),
+      "DTEND:" + icsDate(idx, e.start, 90),
+      "SUMMARY:" + icsEsc("🎈 " + e.title),
+      "LOCATION:" + icsEsc(e.venue + ", " + e.neighborhood + ", New York, NY"),
+      "DESCRIPTION:" + icsEsc(e.when + "\n\n" + e.toddlerNotes + "\n\n" + e.url),
+      "URL:" + e.url,
+      "END:VEVENT", "END:VCALENDAR",
+    ].join("\r\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([txt], { type: "text/calendar" }));
+    a.download = keyOf(e) + ".ics";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }
 
   function esc(s) {
@@ -216,6 +292,16 @@
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
+
+  // hearts + calendar clicks (cards re-render, so delegate)
+  ["cards", "map-list"].forEach((id) => {
+    document.getElementById(id).addEventListener("click", (ev) => {
+      const cal = ev.target.closest(".btn-cal, .btn-cal-mini");
+      if (cal) { ev.stopPropagation(); downloadIcs(byKey[cal.dataset.key]); return; }
+      const h = ev.target.closest(".heart");
+      if (h) { ev.stopPropagation(); toggleHeart(h.dataset.key); }
+    });
+  });
 
   // ——— map ———
   const HOME_COORDS = [40.7376, -73.9868]; // 112 E 19th St
@@ -234,8 +320,9 @@
   }
 
   function miniCard(e, num) {
-    const el = document.createElement("button");
-    el.type = "button";
+    const el = document.createElement("div");
+    el.setAttribute("role", "button");
+    el.tabIndex = 0;
     el.className = "mini-card" + (isEvent(e) ? " is-event" : "");
     el.dataset.num = num;
     el.innerHTML =
@@ -252,8 +339,10 @@
         '<span class="mini-links">' +
           '<a href="' + esc(e.url) + '" target="_blank" rel="noopener">Details ↗</a> · ' +
           '<a href="' + dirUrl(e) + '" target="_blank" rel="noopener">Directions 🗺️</a>' +
+          (e.start ? ' · <button class="heart btn-cal-mini" data-key="' + keyOf(e) + '" style="font-size:0.82rem;margin:0;padding:0;font-weight:800;font-family:inherit">📅 Calendar</button>' : "") +
         "</span>" +
-      "</span>";
+      "</span>" +
+      '<button class="heart mini-heart" data-key="' + keyOf(e) + '" aria-pressed="' + hearts.has(keyOf(e)) + '">' + (hearts.has(keyOf(e)) ? "❤️" : "🤍") + "</button>";
     return el;
   }
 
@@ -317,7 +406,7 @@
 
       const card = miniCard(e, n);
       card.addEventListener("click", (ev) => {
-        if (ev.target.closest("a")) return; // let links be links
+        if (ev.target.closest("a") || ev.target.closest(".heart") || ev.target.closest(".btn-cal-mini")) return;
         setActive(n, false);
         map.flyTo([e.lat, e.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
         m.openPopup();
@@ -384,6 +473,84 @@
       ? list.length + " adventure" + (list.length === 1 ? "" : "s") + " " + label +
         (nEvents ? " — " + nEvents + " real event" + (nEvents === 1 ? "" : "s") + " ⭐" : "") + " 🎈"
       : "";
+  }
+
+  // ——— reflect hearts/copy button + weather banner inside render ———
+  const baseRender = render;
+  render = function () {
+    baseRender();
+    heartsBtn.setAttribute("aria-pressed", String(state.heartsOnly));
+    heartsBtn.textContent = "❤️ Our plan" + (hearts.size ? " (" + hearts.size + ")" : "");
+    copyPlanBtn.hidden = !(state.heartsOnly && hearts.size > 0);
+    updateWxBanner();
+  };
+
+  // ——— weather-aware day chips (Open-Meteo, keyless) ———
+  const WX = { daily: null };
+  function wxEmoji(code) {
+    if (code === 0 || code === 1) return "☀️";
+    if (code === 2) return "🌤️";
+    if (code === 3) return "☁️";
+    if (code === 45 || code === 48) return "🌫️";
+    if (code >= 95) return "⛈️";
+    if (code >= 71 && code <= 77) return "❄️";
+    if (code >= 51) return "🌧️";
+    return "🌡️";
+  }
+  function updateWxBanner() {
+    const banner = document.getElementById("wx-banner");
+    if (!WX.daily || state.day === "all") { banner.hidden = true; return; }
+    const i = DAY_KEYS.indexOf(state.day);
+    const prob = WX.daily.precipitation_probability_max[i];
+    if (prob == null || prob < 50) { banner.hidden = true; return; }
+    banner.hidden = false;
+    banner.innerHTML = "🌧️ " + prob + "% chance of rain " + (state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day]) +
+      ' — <button id="wx-indoor">' + (state.indoorOnly ? "Show everything again" : "Show indoor (A/C) picks") + "</button>";
+    document.getElementById("wx-indoor").addEventListener("click", () => {
+      state.indoorOnly = !state.indoorOnly;
+      render();
+    });
+  }
+  (function loadWeather() {
+    const end = (function () {
+      const p = data.weekMonday.split("-").map(Number);
+      const d = new Date(p[0], p[1] - 1, p[2] + 6);
+      const pad = (n) => String(n).padStart(2, "0");
+      return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+    })();
+    try {
+      const cached = JSON.parse(sessionStorage.getItem("rbw-wx") || "null");
+      if (cached && cached.monday === data.weekMonday && Date.now() - cached.t < 3 * 3600e3) {
+        WX.daily = cached.daily;
+        decorateDays();
+        return;
+      }
+    } catch (err) {}
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=40.7376&longitude=-73.9868" +
+      "&daily=weather_code,temperature_2m_max,precipitation_probability_max" +
+      "&temperature_unit=fahrenheit&timezone=America%2FNew_York" +
+      "&start_date=" + data.weekMonday + "&end_date=" + end)
+      .then((r) => r.json())
+      .then((j) => {
+        if (!j || !j.daily) return;
+        WX.daily = j.daily;
+        try { sessionStorage.setItem("rbw-wx", JSON.stringify({ t: Date.now(), monday: data.weekMonday, daily: j.daily })); } catch (err) {}
+        decorateDays();
+      })
+      .catch(() => {});
+  })();
+  function decorateDays() {
+    if (!WX.daily) return;
+    dayPicker.querySelectorAll(".day").forEach((b) => {
+      const i = DAY_KEYS.indexOf(b.dataset.day);
+      if (i === -1 || !WX.daily.weather_code || WX.daily.weather_code[i] == null) return;
+      if (b.querySelector(".day-wx")) return;
+      const s = document.createElement("span");
+      s.className = "day-wx";
+      s.textContent = wxEmoji(WX.daily.weather_code[i]) + " " + Math.round(WX.daily.temperature_2m_max[i]) + "°";
+      b.appendChild(s);
+    });
+    updateWxBanner();
   }
 
   render();
