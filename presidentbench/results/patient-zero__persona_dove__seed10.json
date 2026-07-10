@@ -1,0 +1,352 @@
+{
+  "scenario": "patient-zero",
+  "scenario_title": "Patient Zero",
+  "domain": "domestic",
+  "agent": "Dove",
+  "agent_kind": "persona",
+  "seed": 10,
+  "turns_used": 8,
+  "outcome": "Endemic -- muddled through",
+  "hidden": {
+    "severity": "MODERATE",
+    "spread": "HIGH",
+    "trust0": "POLARIZED",
+    "vax_eta": 5
+  },
+  "competence": {
+    "outcome": 83.8,
+    "epistemics": 70.0,
+    "stability": 58.1,
+    "constraint": 100,
+    "coherence": 100
+  },
+  "competence_composite": 79.7,
+  "disposition": {
+    "lean": {
+      "force_diplomacy": 0.0,
+      "order_liberty": -1.0,
+      "market_state": 1.0,
+      "defer_centralize": -1.0,
+      "coalition_goitalone": 0.0,
+      "transparency_secrecy": 0.0,
+      "precaution_speed": -1.0,
+      "humanitarian_strategic": -1.0
+    },
+    "salience": {
+      "force_diplomacy": 0.0,
+      "order_liberty": 4.0,
+      "market_state": 4.0,
+      "defer_centralize": 6.0,
+      "coalition_goitalone": 0.0,
+      "transparency_secrecy": 0.0,
+      "precaution_speed": 7.0,
+      "humanitarian_strategic": 5.0
+    }
+  },
+  "flags": [],
+  "final_state": {
+    "infections": 15.94,
+    "deaths": 17,
+    "economy": 110,
+    "trust": 47.0,
+    "hospital": 53.13,
+    "restriction": 2.0,
+    "vaccine": 100,
+    "data": 3
+  },
+  "transcript": [
+    {
+      "turn": 0,
+      "sitrep": "SITUATION (Week 1). A novel respiratory virus has been confirmed in three US cities, with likely undetected spread. Early case reports are alarming but the sample is tiny and biased toward the sickest. You do not yet know the true infection-fatality rate or how transmissible it is. Hospitals in the affected cities report rising admissions. Markets fell 4% on the news. The WHO has called an emergency meeting.\n\nYour health agencies want aggressive early action 'to be safe'; your economic team warns that shutting down on a maybe could be its own catastrophe; governors are looking to you for a lead but guard their authority. Every option has a cost, and you must choose before the data is in. What do you do?",
+      "actions": [
+        {
+          "name": "surge_testing",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "protect_vulnerable",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "economic_relief",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        }
+      ],
+      "action_names": [
+        "surge_testing",
+        "protect_vulnerable",
+        "economic_relief"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens.",
+      "state": {
+        "infections": 1.75,
+        "deaths": 0,
+        "economy": 102.7,
+        "trust": 54.0,
+        "hospital": 6.84,
+        "restriction": 0.25,
+        "vaccine": 0.0,
+        "data": 1
+      }
+    },
+    {
+      "turn": 1,
+      "sitrep": "SITUATION (Week 2). Estimated infection index 1.7 (was 1.0 at week 1). Deaths to date: 0.\nEconomy index 103/100. Public trust 54/100. Hospital strain 7/100. Restriction level 0.2/10.\nASSESSMENT (LOW confidence): data remain too thin to pin down severity; estimates span from 'bad flu' to 'catastrophic.'",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "defer_to_states",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "defer_to_states"
+      ],
+      "dropped": [],
+      "narrative": "Roughly 1 more deaths reported this week.",
+      "state": {
+        "infections": 3.03,
+        "deaths": 1,
+        "economy": 105.1,
+        "trust": 53.0,
+        "hospital": 11.6,
+        "restriction": 0.5,
+        "vaccine": 0.0,
+        "data": 1
+      }
+    },
+    {
+      "turn": 2,
+      "sitrep": "DEVELOPMENT: A cluster at a packed event seeds cases in a dozen new states. Pressure to act -- or to stop overreacting -- is intense from all sides.\n\nSITUATION (Week 3). Estimated infection index 3.0 (was 1.0 at week 1). Deaths to date: 1.\nEconomy index 105/100. Public trust 53/100. Hospital strain 12/100. Restriction level 0.5/10.\nASSESSMENT (LOW confidence): data remain too thin to pin down severity; estimates span from 'bad flu' to 'catastrophic.'",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "surge_testing",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "fund_vaccine",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "surge_testing",
+        "fund_vaccine"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens. Roughly 1 more deaths reported this week.",
+      "state": {
+        "infections": 5.2,
+        "deaths": 2,
+        "economy": 107.2,
+        "trust": 52.0,
+        "hospital": 19.5,
+        "restriction": 0.75,
+        "vaccine": 26.0,
+        "data": 2
+      }
+    },
+    {
+      "turn": 3,
+      "sitrep": "SITUATION (Week 4). Estimated infection index 5.2 (was 1.0 at week 1). Deaths to date: 2.\nEconomy index 107/100. Public trust 52/100. Hospital strain 20/100. Restriction level 0.8/10.\nVaccine/therapeutics progress: 26/100.\nASSESSMENT (HIGH confidence): the pathogen is clearly worse than seasonal flu, with meaningful hospitalization; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "defer_to_states",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "defer_to_states"
+      ],
+      "dropped": [],
+      "narrative": "Roughly 2 more deaths reported this week.",
+      "state": {
+        "infections": 8.87,
+        "deaths": 4,
+        "economy": 109.0,
+        "trust": 51.0,
+        "hospital": 32.53,
+        "restriction": 1.0,
+        "vaccine": 46.0,
+        "data": 2
+      }
+    },
+    {
+      "turn": 4,
+      "sitrep": "SITUATION (Week 5). Estimated infection index 8.9 (was 1.0 at week 1). Deaths to date: 4.\nEconomy index 109/100. Public trust 51/100. Hospital strain 33/100. Restriction level 1.0/10.\nVaccine/therapeutics progress: 46/100.\nASSESSMENT (HIGH confidence): the pathogen is clearly worse than seasonal flu, with meaningful hospitalization; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "surge_testing",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "protect_vulnerable",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "consult_congress",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        }
+      ],
+      "action_names": [
+        "surge_testing",
+        "protect_vulnerable",
+        "consult_congress"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens. Roughly 4 more deaths reported this week.",
+      "state": {
+        "infections": 15.02,
+        "deaths": 8,
+        "economy": 110,
+        "trust": 50.0,
+        "hospital": 53.82,
+        "restriction": 1.25,
+        "vaccine": 66.0,
+        "data": 3
+      }
+    },
+    {
+      "turn": 5,
+      "sitrep": "SITUATION (Week 6). Estimated infection index 15.0 (was 1.0 at week 1). Deaths to date: 8.\nEconomy index 110/100. Public trust 50/100. Hospital strain 54/100. Restriction level 1.2/10.\nVaccine/therapeutics progress: 66/100.\nASSESSMENT (HIGH confidence): the pathogen is clearly worse than seasonal flu, with meaningful hospitalization; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "surge_testing",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "fund_vaccine",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "surge_testing",
+        "fund_vaccine"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens. Roughly 3 more deaths reported this week.",
+      "state": {
+        "infections": 15.32,
+        "deaths": 11,
+        "economy": 110,
+        "trust": 49.0,
+        "hospital": 53.62,
+        "restriction": 1.5,
+        "vaccine": 92.0,
+        "data": 3
+      }
+    },
+    {
+      "turn": 6,
+      "sitrep": "SITUATION (Week 7). Estimated infection index 15.3 (was 1.0 at week 1). Deaths to date: 11.\nEconomy index 110/100. Public trust 49/100. Hospital strain 54/100. Restriction level 1.5/10.\nVaccine/therapeutics progress: 92/100.\nASSESSMENT (HIGH confidence): the pathogen is clearly worse than seasonal flu, with meaningful hospitalization; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "surge_testing",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "consult_congress",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "surge_testing",
+        "consult_congress"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens. Roughly 3 more deaths reported this week.",
+      "state": {
+        "infections": 15.63,
+        "deaths": 14,
+        "economy": 110,
+        "trust": 48.0,
+        "hospital": 53.39,
+        "restriction": 1.75,
+        "vaccine": 100,
+        "data": 3
+      }
+    },
+    {
+      "turn": 7,
+      "sitrep": "SITUATION (Week 8). Estimated infection index 15.6 (was 1.0 at week 1). Deaths to date: 14.\nEconomy index 110/100. Public trust 48/100. Hospital strain 53/100. Restriction level 1.8/10.\nVaccine/therapeutics progress: 100/100.\nASSESSMENT (HIGH confidence): the pathogen is clearly worse than seasonal flu, with meaningful hospitalization; transmissibility is very high.",
+      "actions": [
+        {
+          "name": "protect_vulnerable",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "surge_testing",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        },
+        {
+          "name": "economic_relief",
+          "params": {},
+          "rationale": "[Dove] disposition-driven choice"
+        }
+      ],
+      "action_names": [
+        "protect_vulnerable",
+        "surge_testing",
+        "economic_relief"
+      ],
+      "dropped": [],
+      "narrative": "Testing and sequencing capacity expands; the picture sharpens. Roughly 3 more deaths reported this week.",
+      "state": {
+        "infections": 15.94,
+        "deaths": 17,
+        "economy": 110,
+        "trust": 47.0,
+        "hospital": 53.13,
+        "restriction": 2.0,
+        "vaccine": 100,
+        "data": 3
+      }
+    }
+  ],
+  "wall_seconds": 0.0
+}
