@@ -235,6 +235,31 @@ footer p { margin: 4px 0; }
   .sun, .balloon, .day .today-tag { animation: none; }
 }
 
+/* ——— time-of-day color coding ——— */
+.tb-morning   { background: #ffd166; color: #6b4d00; }
+.tb-afternoon { background: #79ccf2; color: #073a52; }
+.tb-evening   { background: #b28ff2; color: #2e1a5e; }
+.tb-any       { background: #efe9e0; color: #6f6172; }
+
+.start-badge {
+  align-self: flex-start; font-weight: 800; font-size: 0.92rem;
+  padding: 5px 13px; border-radius: 999px;
+}
+
+.mini-start { margin: 0 0 1px; font-size: 0.88rem; }
+.mini-start b { font-weight: 800; }
+
+.map-legend {
+  position: absolute; bottom: 14px; left: 14px; z-index: 900;
+  background: #fff; border-radius: 12px; padding: 7px 12px;
+  box-shadow: var(--shadow); display: flex; gap: 12px;
+  font-size: 0.78rem; font-weight: 700; color: var(--ink);
+}
+.map-legend i {
+  width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+  margin-right: 5px; vertical-align: -1px; border: 1.5px solid rgba(58,46,57,0.25);
+}
+
 /* the .cards grid's display:grid would defeat the hidden attribute */
 .cards[hidden], .map-shell[hidden] { display: none !important; }
 
@@ -277,7 +302,6 @@ footer p { margin: 4px 0; }
   background: var(--ink); color: #fff; font-weight: 800; font-size: 0.85rem;
   display: grid; place-items: center; margin-top: 2px;
 }
-.mini-card.is-event .mini-num { background: #d99000; }
 .mini-body { min-width: 0; }
 .mini-body h4 { margin: 0 0 2px; font-size: 0.98rem; line-height: 1.25; font-weight: 800; }
 .mini-when { margin: 0; font-size: 0.82rem; color: var(--ink-soft); font-weight: 600; }
@@ -293,7 +317,6 @@ footer p { margin: 4px 0; }
   font-size: 10px; font-weight: 800; font-style: normal;
   display: grid; place-items: center; padding: 0 3px; font-family: var(--font);
 }
-.emoji-pin-event .pin-num { background: #d99000; }
 
 @media (max-width: 860px) {
   .map-split { grid-template-columns: 1fr; }
@@ -308,7 +331,10 @@ footer p { margin: 4px 0; }
   font-size: 19px; box-shadow: 0 3px 8px rgba(58,46,57,0.3);
   transform: rotate(-8deg);
 }
-.emoji-pin-event span { background: var(--sunny); }
+.pin-tb-morning span   { background: #ffd166; }
+.pin-tb-afternoon span { background: #79ccf2; }
+.pin-tb-evening span   { background: #b28ff2; }
+.pin-tb-any span       { background: #f6f1e9; }
 .emoji-pin-home span { background: var(--coral); border-radius: 50%; }
 
 .pop { font-family: var(--font); font-size: 0.92rem; line-height: 1.35; }

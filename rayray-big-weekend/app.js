@@ -53,6 +53,16 @@
 
   const isFree = (e) => /free/i.test(e.cost || "");
 
+  const startMin = (e) => e.start ? parseInt(e.start.slice(0, 2), 10) * 60 + parseInt(e.start.slice(3), 10) : Infinity;
+  function fmtTime(start) {
+    let h = parseInt(start.slice(0, 2), 10);
+    const mn = start.slice(3);
+    const mer = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return h + (mn === "00" ? "" : ":" + mn) + " " + mer;
+  }
+  const TB_EMOJI = { morning: "🌅", afternoon: "☀️", evening: "🌆", any: "🧭" };
+
   // ——— header ———
   document.getElementById("week-label").textContent = "Week of " + data.weekLabel;
   document.getElementById("updated-line").textContent =
@@ -185,6 +195,8 @@
         '<span class="big-emoji">' + cat.emoji + "</span><span>" + esc(cat.label) + "</span>" +
       "</div>" +
       '<div class="card-body">' +
+        '<div class="start-badge tb-' + timeBucket(e) + '">' + TB_EMOJI[timeBucket(e)] + " " +
+          (e.start ? "Starts " + fmtTime(e.start) : "Open all day") + "</div>" +
         "<h3>" + esc(e.title) + "</h3>" +
         '<p class="venue">📍 ' + esc(e.venue) + " · " + esc(e.neighborhood) +
           " (" + esc(e.travelHow) + ")</p>" +
@@ -213,7 +225,7 @@
   function markerIcon(e, num) {
     const cat = CATS[e.category] || CATS.other;
     return L.divIcon({
-      className: "emoji-pin" + (isEvent(e) ? " emoji-pin-event" : ""),
+      className: "emoji-pin pin-tb-" + timeBucket(e) + (isEvent(e) ? " emoji-pin-event" : ""),
       html: "<span>" + cat.emoji + '<i class="pin-num">' + num + "</i></span>",
       iconSize: [38, 38],
       iconAnchor: [19, 19],
@@ -227,9 +239,10 @@
     el.className = "mini-card" + (isEvent(e) ? " is-event" : "");
     el.dataset.num = num;
     el.innerHTML =
-      '<span class="mini-num">' + num + "</span>" +
+      '<span class="mini-num tb-' + timeBucket(e) + '">' + num + "</span>" +
       '<span class="mini-body">' +
         "<h4>" + esc(e.title) + "</h4>" +
+        '<p class="mini-start">' + TB_EMOJI[timeBucket(e)] + " <b>" + (e.start ? fmtTime(e.start) : "All day") + "</b></p>" +
         '<p class="mini-when">🕐 ' + esc(e.when) + "</p>" +
         '<p class="mini-meta">' +
           (isFree(e) ? '<span class="m-free">FREE</span>' : "<span>" + esc(e.cost.split(";")[0].slice(0, 28)) + "</span>") +
@@ -268,6 +281,14 @@
         icon: L.divIcon({ className: "emoji-pin emoji-pin-home", html: "<span>🏠</span>", iconSize: [38, 38], iconAnchor: [19, 19] }),
       }).addTo(map).bindTooltip("Home base", { direction: "top" });
       markerLayer = L.layerGroup().addTo(map);
+      const legend = document.createElement("div");
+      legend.className = "map-legend";
+      legend.innerHTML =
+        '<span><i class="tb-morning"></i>Morning</span>' +
+        '<span><i class="tb-afternoon"></i>Afternoon</span>' +
+        '<span><i class="tb-evening"></i>Evening</span>' +
+        '<span><i class="tb-any"></i>All day</span>';
+      document.querySelector(".map-pane").appendChild(legend);
     }
     markerLayer.clearLayers();
     const mapList = document.getElementById("map-list");
@@ -323,16 +344,9 @@
     mapViewBtn.classList.toggle("active", state.view === "map");
     mapViewBtn.setAttribute("aria-selected", String(state.view === "map"));
 
-    // real dated events first (earliest day of the week first), then anytime spots by travel time
-    const dayRank = (e) => Math.min.apply(null, (e.days || []).map((d) => {
-      const i = DAY_KEYS.indexOf(d);
-      return i === -1 ? 99 : i;
-    }));
-    const list = data.events.filter(matches).sort((a, b) => {
-      if (isEvent(a) !== isEvent(b)) return isEvent(a) ? -1 : 1;
-      if (isEvent(a)) return dayRank(a) - dayRank(b) || (a.travelMinutes || 99) - (b.travelMinutes || 99);
-      return (a.travelMinutes || 99) - (b.travelMinutes || 99);
-    });
+    // chronological: earliest start first; open-anytime places last, by travel time
+    const list = data.events.filter(matches).sort((a, b) =>
+      startMin(a) - startMin(b) || (a.travelMinutes || 99) - (b.travelMinutes || 99));
 
     const cards = document.getElementById("cards");
     const mapShell = document.getElementById("map-shell");

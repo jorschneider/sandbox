@@ -26,7 +26,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "19:00"
   },
   {
     "title": "Community Joy Day: puppets, DJs & free books (Celebrate Brooklyn!)",
@@ -51,7 +52,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "15:00"
   },
   {
     "title": "Bargemusic free family chamber concert",
@@ -76,7 +78,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "14:00"
   },
   {
     "title": "Ruidosa Fest — free Latine music & dancing",
@@ -101,7 +104,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "15:00"
   },
   {
     "title": "AfriCarnaval on the Dance Floor",
@@ -125,7 +129,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "18:00"
   },
   {
     "title": "Soul Summit — outdoor house-music dance party",
@@ -150,7 +155,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "15:00"
   },
   {
     "title": "Little Red's Hood — Swedish Cottage Marionettes",
@@ -176,7 +182,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "10:15"
   },
   {
     "title": "Pinocchio at Puppetworks (final Park Slope season!)",
@@ -201,7 +208,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "12:30"
   },
   {
     "title": "Gazillion Bubble Show",
@@ -227,7 +235,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "Le Carrousel Extravaganza — magic, puppets & stories",
@@ -253,7 +262,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "10:00"
   },
   {
     "title": "Saturday Family Storytime (ages 0–5)",
@@ -277,7 +287,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "Sunday Storytime at Books of Wonder",
@@ -301,7 +312,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "11:30"
   },
   {
     "title": "Whitney Free Second Sunday: storytime + artmaking",
@@ -326,7 +338,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "10:30"
   },
   {
     "title": "SNFL Children's Center — stories, blocks & A/C",
@@ -350,7 +363,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Evelyn's Playground — splash + sandbox on your doorstep",
@@ -374,7 +388,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Washington Square playgrounds + spray showers",
@@ -398,7 +413,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Pier 25 & 26 — splash pad, playground & mini golf",
@@ -422,7 +438,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Pier 51 water playground (freshly renovated)",
@@ -446,7 +463,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Imagination Playground — sand, water & big blue blocks",
@@ -470,7 +488,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Teardrop Park — bubbling springs & THE slide",
@@ -494,7 +513,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Domino Park's 88-jet splash fountain",
@@ -518,7 +538,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Pier 6 Water Lab + sand village",
@@ -542,7 +563,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Little Island wander",
@@ -566,7 +588,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Jane's Carousel in its glass box",
@@ -595,7 +618,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "SeaGlass Carousel — ride a glowing fish",
@@ -619,7 +643,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Children's Museum of Manhattan (CMOM)",
@@ -643,7 +668,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Complete Playground — 45,000 sq ft of indoor play",
@@ -667,7 +693,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Tompkins Square Mini Pool (free kiddie pool)",
@@ -691,7 +718,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Feed the goats at the Tisch Children's Zoo",
@@ -715,7 +743,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Prospect Park Zoo — toddler-scale animals",
@@ -739,7 +768,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Wetlab touch tanks — seahorses of the Hudson",
@@ -767,7 +797,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "Big City Fishing at Pier 51",
@@ -792,7 +823,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "Family Fun Circus Day — Bindlestiff Cirkus & giant bubbles",
@@ -817,7 +849,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "11:30"
   },
   {
     "title": "Bastille Day on Madison Ave — masks, pets & a giant goose game",
@@ -841,7 +874,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "12:00"
   },
   {
     "title": "Giglio Feast — rides, zeppole & the dancing tower",
@@ -868,7 +902,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "16:00"
   },
   {
     "title": "A Myriad of Mandalas — artmaking on Little Island",
@@ -892,7 +927,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "AMNH Block Party + Manhattanhenge",
@@ -917,7 +953,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "15:00"
   },
   {
     "title": "Union Square Greenmarket wander",
@@ -944,7 +981,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Elizabeth Street Garden hangout",
@@ -968,7 +1006,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Governors Island ferry day",
@@ -992,7 +1031,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "Staten Island Ferry — free boat ride",
@@ -1016,7 +1056,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "NYC Ferry mini-hop under the Brooklyn Bridge",
@@ -1040,7 +1081,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "High Line morning stroll",
@@ -1064,7 +1106,8 @@ window.WEEK_DATA = {
     "event": false,
     "times": [
       "any"
-    ]
+    ],
+    "start": null
   },
   {
     "title": "West Side Fest: Kids Community Quilt + screenprinting (Poster House)",
@@ -1089,7 +1132,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "10:00"
   },
   {
     "title": "West Side Fest: Jazz on the Beach — real sand + live Latin band",
@@ -1113,7 +1157,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "18:30"
   },
   {
     "title": "West Side Fest: Whitney Free Friday + PLAY-DOH artmaking",
@@ -1137,7 +1182,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "17:00"
   },
   {
     "title": "West Side Fest: Family Open Studio at Poster House",
@@ -1162,7 +1208,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "10:00"
   },
   {
     "title": "Westbeth craft market + Penny Jones children's puppet show",
@@ -1187,7 +1234,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "13:00"
   },
   {
     "title": "Making Moves: Community Art Party on the High Line",
@@ -1211,7 +1259,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "13:00"
   },
   {
     "title": "West Side Fest: Soul Summit dance party at The Shed plaza",
@@ -1235,7 +1284,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "17:00"
   },
   {
     "title": "Park Open Studio — drop-in artmaking in Washington Sq",
@@ -1260,7 +1310,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "13:00"
   },
   {
     "title": "Juggling show & class in Greeley Square",
@@ -1284,7 +1335,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "14:00"
   },
   {
     "title": "World Cup on the big screen at The Battery",
@@ -1310,7 +1362,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "15:00"
   },
   {
     "title": "Kids in Motion — staffed games & crafts at Columbus Park",
@@ -1336,7 +1389,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "10:00"
   },
   {
     "title": "Movies Under the Stars: Zootopia 2 at Peter's Field",
@@ -1360,7 +1414,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "20:00"
   },
   {
     "title": "Moves with Limón — barefoot dance class on Bryant Park lawn",
@@ -1384,7 +1439,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "10:00"
   },
   {
     "title": "SummerStage Bastille Day concert in Central Park",
@@ -1408,7 +1464,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "18:00"
   },
   {
     "title": "HUMAN — free puppet show for ages 1-4 at The Shed",
@@ -1433,7 +1490,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "18:00"
   },
   {
     "title": "Create-athon: sea-costume making + Miho Hatori dance party",
@@ -1457,7 +1515,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "18:00"
   },
   {
     "title": "Slate x Crayola Block Party — 40-foot coloring wall",
@@ -1483,7 +1542,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "10:30"
   },
   {
     "title": "NYC Math Festival — giant hands-on math playground",
@@ -1508,7 +1568,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "10:00"
   },
   {
     "title": "Ladybug Launch at Domino Park",
@@ -1531,8 +1592,9 @@ window.WEEK_DATA = {
     "lng": -73.9672,
     "event": true,
     "times": [
-      "morning"
-    ]
+      "afternoon"
+    ],
+    "start": "13:00"
   },
   {
     "title": "The Little Moon Theater at TADA! (kids performing for kids)",
@@ -1556,7 +1618,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "14:00"
   },
   {
     "title": "Meet the Beekeeper at Domino Park",
@@ -1580,7 +1643,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "Tear Down the King — hands-on 1776 reenactment",
@@ -1604,7 +1668,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "12:00"
   },
   {
     "title": "Freestyle soccer trick show at Lincoln Center",
@@ -1628,7 +1693,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "17:00"
   },
   {
     "title": "Family ballet workshop with School of American Ballet",
@@ -1652,7 +1718,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "Naturalist-led nature walk from Pier 45",
@@ -1676,7 +1743,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "10:00"
   },
   {
     "title": "Touch-tank open hours — BBP Environmental Education Center",
@@ -1700,7 +1768,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "15:00"
   },
   {
     "title": "Habibi Festival — Celebrate Brooklyn! lawn concert",
@@ -1724,7 +1793,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "evening"
-    ]
+    ],
+    "start": "18:00"
   },
   {
     "title": "adidas World Cup Fan Zone under the Brooklyn Bridge",
@@ -1751,7 +1821,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "12:00"
   },
   {
     "title": "Family Storytime at Brooklyn Heights Library",
@@ -1775,7 +1846,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "morning"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "Family Bowl — all-ages bowling at Brooklyn Bowl",
@@ -1799,7 +1871,8 @@ window.WEEK_DATA = {
     "event": true,
     "times": [
       "afternoon"
-    ]
+    ],
+    "start": "12:00"
   },
   {
     "title": "Papi Juice dance party on Pier 6 Plaza",
@@ -1824,7 +1897,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "16:00"
   },
   {
     "title": "Spellbound Theater: toddler show made for ages 2-5 (CMOM)",
@@ -1849,7 +1923,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "10:30"
   },
   {
     "title": "Print your own newspaper at the Seaport Museum",
@@ -1875,7 +1950,8 @@ window.WEEK_DATA = {
     "times": [
       "morning",
       "afternoon"
-    ]
+    ],
+    "start": "11:00"
   },
   {
     "title": "World Cup watch party on Pier 86 (Intrepid)",
@@ -1901,7 +1977,8 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ]
+    ],
+    "start": "15:00"
   }
 ],
 };
