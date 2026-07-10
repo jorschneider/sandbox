@@ -266,58 +266,8 @@ window.WEEK_DATA = {
     "start": "10:00"
   },
   {
-    "title": "Saturday Family Storytime (ages 0–5)",
-    "category": "storytime",
-    "venue": "Ottendorfer Library",
-    "neighborhood": "East Village",
-    "when": "Sat Jul 11, 11:00-11:30 AM",
-    "days": [
-      "sat"
-    ],
-    "cost": "Free",
-    "travelMinutes": 12,
-    "travelHow": "12 min walk down 2nd Ave (or L to 3rd Av + 4 min walk)",
-    "toddlerNotes": "NYPL's East Village branch runs a classic lap-sit storytime for ages 0–5. Capped at ~20 families, first-come — arrive 15 min early. Pairs with a Tompkins Square playground run after.",
-    "url": "https://www.nypl.org/events/programs/2026/07/11/saturday-family-storytime-2",
-    "outdoor": false,
-    "recurring": true,
-    "confidence": "high",
-    "lat": 40.7289,
-    "lng": -73.9879,
-    "event": true,
-    "times": [
-      "morning"
-    ],
-    "start": "11:00"
-  },
-  {
-    "title": "Sunday Storytime at Books of Wonder",
-    "category": "storytime",
-    "venue": "Books of Wonder (42 W 17th St)",
-    "neighborhood": "Flatiron/Union Square",
-    "when": "Sundays 11:30 AM (Sun Jul 12)",
-    "days": [
-      "sun"
-    ],
-    "cost": "Free",
-    "travelMinutes": 8,
-    "travelHow": "8 min walk from Union Square",
-    "toddlerNotes": "Bookseller-led storytime at NYC's beloved kids-only bookstore; roomy, air-conditioned, stroller-friendly. Store's page says every Sunday at 11:30 AM but 'subject to change - call day-of' (212-989-3270), so ring before heading over.",
-    "url": "https://booksofwonder.com/blogs/upcoming/join-us-for-sunday-storytime",
-    "outdoor": false,
-    "recurring": true,
-    "confidence": "medium",
-    "lat": 40.7386,
-    "lng": -73.9938,
-    "event": true,
-    "times": [
-      "morning"
-    ],
-    "start": "11:30"
-  },
-  {
-    "title": "Whitney Free Second Sunday: storytime + artmaking",
-    "category": "storytime",
+    "title": "Whitney Free Second Sunday — free admission + artmaking",
+    "category": "festival",
     "venue": "Whitney Museum of American Art, 99 Gansevoort St",
     "neighborhood": "Meatpacking District",
     "when": "Sun Jul 12, 10:30 AM-6 PM free admission; Storytime 11 AM, collaborative magnetic mosaic 11 AM-1 PM, all-ages artmaking 11 AM-3 PM",
@@ -342,8 +292,8 @@ window.WEEK_DATA = {
     "start": "10:30"
   },
   {
-    "title": "SNFL Children's Center — stories, blocks & A/C",
-    "category": "storytime",
+    "title": "SNFL Children's Center — blocks, play & A/C",
+    "category": "play",
     "venue": "NYPL Stavros Niarchos Foundation Library (SNFL)",
     "neighborhood": "Midtown, 5th Ave at 40th St (455 5th Ave)",
     "when": "Open daily; Sat-Sun 10 AM-6 PM confirmed (Fri opens by 10 AM and stays open later, ~8 PM per listings); drop in anytime",
@@ -1821,56 +1771,6 @@ window.WEEK_DATA = {
     "times": [
       "afternoon",
       "evening"
-    ],
-    "start": "12:00"
-  },
-  {
-    "title": "Family Storytime at Brooklyn Heights Library",
-    "category": "storytime",
-    "venue": "Brooklyn Heights Library (BPL), Craft Room",
-    "neighborhood": "Brooklyn Heights",
-    "when": "Sat Jul 11, 11:00 AM (to 11:30)",
-    "days": [
-      "sat"
-    ],
-    "cost": "Free",
-    "travelMinutes": 22,
-    "travelHow": "4/5 to Borough Hall, 5-min walk",
-    "toddlerNotes": "Books, music and movement 'for all ages and their grownups' — no registration required. 30 minutes, perfect toddler length; big modern branch with elevator and stroller space.",
-    "url": "https://www.bklynlibrary.org/calendar/family-storytime-brooklyn-heights-library-20260711-1100am",
-    "outdoor": false,
-    "recurring": true,
-    "confidence": "high",
-    "lat": 40.6957,
-    "lng": -73.9908,
-    "event": true,
-    "times": [
-      "morning"
-    ],
-    "start": "11:00"
-  },
-  {
-    "title": "Family Bowl — all-ages bowling at Brooklyn Bowl",
-    "category": "play",
-    "venue": "Brooklyn Bowl, 61 Wythe Ave",
-    "neighborhood": "Williamsburg (North)",
-    "when": "Sat Jul 11, 12:00 PM (all ages until 5:00 PM)",
-    "days": [
-      "sat"
-    ],
-    "cost": "Free entry / no cover; bowling lane rental extra (pay per lane)",
-    "travelMinutes": 27,
-    "travelHow": "L to Bedford Av + 10-min walk",
-    "toddlerNotes": "The venue's official calendar lists Family Bowl Sat Jul 11, doors 12 PM, all ages until 5 PM, no cover. Music-venue bowling with bumpers and food; lively/loud but toddlers are expressly welcome in the afternoon window.",
-    "url": "https://www.brooklynbowl.com/brooklyn/shows/all",
-    "outdoor": false,
-    "recurring": true,
-    "confidence": "high",
-    "lat": 40.722,
-    "lng": -73.9576,
-    "event": true,
-    "times": [
-      "afternoon"
     ],
     "start": "12:00"
   },

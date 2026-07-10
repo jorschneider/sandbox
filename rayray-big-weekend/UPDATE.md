@@ -52,7 +52,13 @@ Each event:
    at 5:00 PM or later (work/daycare days) — the site also enforces this at
    render time via the `start` field. Weekend events can be any time of day;
    open-anytime places are exempt.
-3. **Real events first**: the site exists to surface ACTUAL SCHEDULED EVENTS —
+3. **No plain storytimes**: skip ordinary library/bookstore read-alouds — too
+   tame. Story-adjacent things earn a slot only as part of something bigger
+   (a museum family day, a puppet show, an author event with real extras).
+   Same test for activities generally: a 2-year-old must be able to DO the
+   thing, not just be present while adults do it (no bowling, no escape
+   rooms, no sit-still screenings).
+4. **Real events first**: the site exists to surface ACTUAL SCHEDULED EVENTS —
    concerts, puppet shows, storytime sessions, festivals with a date and start
    time. Hunt venue calendars directly (NYC Parks events, Lincoln Center, Bryant
    Park, Hudson River Park, Little Island, BRIC, NYPL/BPL branch calendars,
@@ -60,21 +66,21 @@ Each event:
    day covered. Evergreen places (playgrounds, carousels, ferries, zoo) stay as
    the "anytime" tail — refresh their open/closed status, don't let them crowd
    out events.
-4. **Mix**: every category represented; plenty of free options; in summer favor
+5. **Mix**: categories broadly represented; plenty of free options; in summer favor
    water play + shade, in winter favor indoor/heated options.
-5. **Cards must be self-sufficient**: a parent plans from the card alone —
+6. **Cards must be self-sufficient**: a parent plans from the card alone —
    never make them click through to figure out what/where/when. `when` carries
    the exact day + time window; `toddlerNotes` says concretely what you do
    there ("mask-making at the kids' lawn on 61st St, pet parade steps off
    2 PM"), not vibes. Umbrella festivals must be broken into their specific
    joinable sessions (one card per session or an explicit mini-schedule on the
    card) — a card that says "20+ venues, lots going on!" is a defect.
-6. **Verify, don't vibe**: check dates against official venue pages / NYC Parks
+7. **Verify, don't vibe**: check dates against official venue pages / NYC Parks
    calendar / Mommy Poppins / Time Out Kids for the *correct year*. If an exact
    time can't be confirmed, keep the typical time and set `confidence` to
    `medium` or `low`. Never invent dates or URLs. Drop anything you can't
    corroborate at all.
-7. Keep evergreen favorites (playgrounds, carousels, zoo, ferries) in the list
+8. Keep evergreen favorites (playgrounds, carousels, zoo, ferries) in the list
    every week — verify they're open (water features and carousels close
    seasonally or for repairs).
 
