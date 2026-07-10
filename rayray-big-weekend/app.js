@@ -411,11 +411,12 @@
       const code = WX.hourly.weather_code[i];
       const temp = Math.round(WX.hourly.temperature_2m[i]);
       const prob = WX.hourly.precipitation_probability[i];
-      if (prob >= 30 || code >= 51) rainy = true;
+      const wet = prob >= 40 || code >= 51;
+      if (wet || prob >= 30) rainy = true;
       const hh = (h % 12 || 12) + (h >= 12 ? "p" : "a");
-      html += '<span class="wx-h' + (isToday && h === nowHour ? " now" : "") + '">' +
+      html += '<span class="wx-h' + (wet ? " wet" : "") + (isToday && h === nowHour ? " now" : "") + '">' +
         "<b>" + hh + "</b>" + wxEmoji(code) + " " + temp + "°" +
-        (prob >= 30 ? "<i>💧" + prob + "%</i>" : "") +
+        "<i>💧" + (prob == null ? "–" : prob + "%") + "</i>" +
       "</span>";
     }
     // only worth the space when rain is in play; sunny days keep the chip badge
