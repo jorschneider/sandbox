@@ -27,6 +27,7 @@
   };
 
   var G = null; // active game state
+  var gameCounter = 0; // increments each new game, so the Situation Room can reset relationships
 
   /* ---------------- utilities ---------------- */
   function $(id) { return document.getElementById(id); }
@@ -143,6 +144,7 @@
     var support = {};
     STAKEHOLDERS.forEach(function (s) { support[s.id] = s.startSupport; });
     G = {
+      id: ++gameCounter,
       scenario: scenario,
       turn: 0,
       stats: {
@@ -696,6 +698,45 @@
     $('btn-replay').addEventListener('click', function () { showScreen('select'); });
     $('btn-share').addEventListener('click', shareResult);
   }
+
+  // ---------------- integration API for the Situation Room (situation.js) ----------------
+  window.PARAMOUNT = {
+    active: function () { return !!(G && !G.over); },
+    gameId: function () { return G ? G.id : 0; },
+    snapshot: function () {
+      if (!G) return null;
+      return {
+        scenario: G.scenario.title,
+        date: dateLabel(G.turn),
+        turn: G.turn,
+        stats: {
+          partyUnity: G.stats.partyUnity,
+          stability: G.stats.stability,
+          economy: (G.stats.economy / 10),
+          intl: G.stats.intl,
+          power: G.stats.power,
+          approval: G.stats.approval
+        }
+      };
+    },
+    // Apply Situation-Room outcomes to the game-level stats. Accepts the same delta keys
+    // the engine tracks (economy here is in whole points, matching internal scale).
+    applyDeltas: function (obj) {
+      if (!G || G.over || !obj) return {};
+      var applied = {};
+      Object.keys(obj).forEach(function (k) {
+        if (!STAT_LABELS[k] && k !== 'economy') return;
+        var v = Math.round(Number(obj[k]) || 0);
+        if (!v) return;
+        G.stats[k] = clamp(G.stats[k] + v, k === 'economy' ? -20 : 0, 100);
+        applied[k] = v;
+      });
+      renderStats();
+      return applied;
+    },
+    toast: toast,
+    STAT_LABELS: STAT_LABELS
+  };
 
   document.addEventListener('DOMContentLoaded', init);
 })();
