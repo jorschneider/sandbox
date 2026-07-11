@@ -75,7 +75,7 @@
   /* ---------------- landing page ---------------- */
   function renderLanding() {
     var m = MARKETING;
-    if (m.heroTagline) $('hero-tagline').textContent = m.heroTagline;
+    if (m.heroTagline) $('hero-tagline').innerHTML = esc(m.heroTagline) + '<sup>*</sup>';
     if (m.heroSub) $('hero-sub').textContent = m.heroSub;
 
     var fg = $('features-grid');
