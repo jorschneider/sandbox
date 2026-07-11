@@ -34,7 +34,21 @@
   const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri"];
 
   // ——— helpers ———
-  const isFree = (e) => /free/i.test(e.cost || "");
+  function shortCost(e, n) {
+    const c = (e.cost || "").trim();
+    if (c.length <= n) return c;
+    const cut = c.lastIndexOf(" ", n);
+    return c.slice(0, cut > 20 ? cut : n) + "…";
+  }
+  // green chip only when genuinely free; free-with-paid-extras keeps the caveat text
+  function costChip(e) {
+    const c = (e.cost || "").trim();
+    if (/^free\b/i.test(c)) {
+      const extras = /\$|extra|donation/i.test(c);
+      return '<span class="m-free">' + (extras ? "🟢 " + esc(shortCost(e, 40)) : "FREE 🎉") + "</span>";
+    }
+    return '<span class="m-cost">💸 ' + (esc(shortCost(e, 44)) || "check price") + "</span>";
+  }
   const isEvent = (e) => e.event === true;
   const startMin = (e) => e.start ? parseInt(e.start.slice(0, 2), 10) * 60 + parseInt(e.start.slice(3), 10) : Infinity;
   const keyOf = (e) => e.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
@@ -216,6 +230,7 @@
         "<strong>" + esc(e.title) + "</strong>" +
         '<div class="pop-when">🕐 ' + esc(e.when) + "</div>" +
         '<div class="pop-venue">📍 ' + esc(e.venue) + " · ~" + e.travelMinutes + " min</div>" +
+        '<div class="pop-venue">🎟️ ' + esc(shortCost(e, 60)) + "</div>" +
         '<div class="pop-links"><a href="' + esc(e.url) + '" target="_blank" rel="noopener">Details ↗</a>' +
         ' · <a href="' + dirUrl(e) + '" target="_blank" rel="noopener">Directions 🗺️</a></div>' +
       "</div>"
@@ -237,7 +252,7 @@
           (isEvent(e) ? ' <span class="mini-star">⭐ this week</span>' : "") + "</p>" +
         '<p class="mini-when">🕐 ' + esc(e.when) + "</p>" +
         '<p class="mini-meta">' +
-          (isFree(e) ? '<span class="m-free">FREE</span>' : "<span>" + esc((e.cost || "").split(";")[0].slice(0, 28)) + "</span>") +
+          costChip(e) +
           '<span class="m-travel">🚇 ~' + e.travelMinutes + " min</span>" +
           (e.outdoor ? "<span>☀️</span>" : "<span>❄️ A/C</span>") +
         "</p>" +

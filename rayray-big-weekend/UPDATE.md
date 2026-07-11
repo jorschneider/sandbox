@@ -30,7 +30,7 @@ Each event:
 | `neighborhood` | string | e.g. "Flatiron", "DUMBO" |
 | `when` | string | human schedule, e.g. "Sat Jul 11, 11:00 AM" or "Daily, sunrise–sunset" |
 | `days` | array | subset of `["mon".."sun"]`, or `["any"]` for open-anytime places |
-| `cost` | string | "Free" or a price; the word "Free" drives the free filter |
+| `cost` | string | START with "Free" only if genuinely free for the family; "Free entry; rides cost extra" for free-with-extras; otherwise lead with the price ("$10 child / $15 adult"). Renders as a green FREE chip vs an orange price chip. |
 | `travelMinutes` | number | door-to-door estimate from Union Square |
 | `travelHow` | string | e.g. "L to Bedford Av + 5 min walk" |
 | `toddlerNotes` | string | why it works for a 2-year-old (shade, strollers, duration, nap timing) |
