@@ -48,10 +48,9 @@ Each event:
    ~86th St, DUMBO, Brooklyn Heights, Downtown Brooklyn, Williamsburg, north
    Park Slope, LIC, Governors Island. Nothing farther.
 2. **Age 2 fit**: short or drop-in, stroller-friendly, no age minimums.
-   **Weekday rule**: on Monday-Friday only include timed activities that START
-   at 5:00 PM or later (work/daycare days) — the site also enforces this at
-   render time via the `start` field. Weekend events can be any time of day;
-   open-anytime places are exempt.
+   **Cover the whole day, every day**: weekday daytime events AND weekday
+   evenings (post-work outings) both matter — aim for each day of the week to
+   offer morning, afternoon, and evening options.
 3. **No plain storytimes**: skip ordinary library/bookstore read-alouds — too
    tame. Story-adjacent things earn a slot only as part of something bigger
    (a museum family day, a puppet show, an author event with real extras).

@@ -31,7 +31,6 @@
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
   const state = { day: todayKey || "all", showAnytime: false };
-  const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri"];
 
   // ——— helpers ———
   function shortCost(e, n) {
@@ -299,13 +298,10 @@
   function render() {
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
-    // weekdays are work/daycare days: timed things must start 5 PM or later
-    const okOnDay = (e, d) => !(WEEKDAYS.indexOf(d) !== -1 && e.start && startMin(e) < 17 * 60);
     const list = data.events.filter((e) => {
+      if (state.day === "all") return true;
       const days = e.days || ["any"];
-      if (days.indexOf("any") !== -1) return true;
-      if (state.day === "all") return days.some((d) => okOnDay(e, d));
-      return days.indexOf(state.day) !== -1 && okOnDay(e, state.day);
+      return days.indexOf("any") !== -1 || days.indexOf(state.day) !== -1;
     }).sort((a, b) => startMin(a) - startMin(b) || (a.travelMinutes || 99) - (b.travelMinutes || 99));
 
     const label = state.day === "all" ? "this week" : (state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day]);
