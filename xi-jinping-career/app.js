@@ -65,7 +65,10 @@
 
   /* ---------------- persistence (achievements only) ---------------- */
   function loadUnlocked() {
-    try { return JSON.parse(localStorage.getItem('pl_achievements') || '[]'); }
+    try {
+      var v = JSON.parse(localStorage.getItem('pl_achievements') || '[]');
+      return Array.isArray(v) ? v : [];
+    }
     catch (e) { return []; }
   }
   function saveUnlocked(ids) {
@@ -115,7 +118,7 @@
     });
 
     $('disclaimer').innerHTML = esc(m.disclaimer || 'Parody. Satire. Fiction.') +
-      '<br>All simulation runs in your browser. No data leaves this page &mdash; a courtesy we extend, but do not receive.';
+      '<br>All simulation runs in your browser. No gameplay data leaves this page &mdash; the fonts, regrettably, arrive from Google.';
   }
 
   /* ---------------- scenario select ---------------- */
@@ -152,6 +155,9 @@
       },
       support: support,
       usedEvents: {},
+      streakTopic: null,
+      streakN: 0,
+      vagueStreak: 0,
       counters: { hardline: 0, reform: 0, vague: 0, harmonized: 0, pd: 0, policies: 0 },
       unlocked: loadUnlocked(),
       sessionUnlocks: [],
@@ -261,21 +267,29 @@
 
     if (analysis.harmonized) {
       d.stability += 1; d.intl -= 2; d.approval -= 1; d.power += 1;
+      analysis.relevant = false;
     } else {
       analysis.topics.forEach(function (tid, i) {
         var t = TOPICS[tid];
         if (!t) return;
         var w = i === 0 ? 1 : 0.5;
+        // the Politburo tires of the same speech
+        if (i === 0 && analysis.fatigue === 1) w = 0.5;
+        if (i === 0 && analysis.fatigue >= 2) w = 0;
         add(t.deltas, w);
         if (analysis.tone === 'hardline') add(t.hardline, w);
         if (analysis.tone === 'reform') add(t.reform, w);
       });
-      if (analysis.vague) { d.approval -= 2; d.partyUnity -= 1; }
+      if (analysis.fatigue >= 2) { d.partyUnity -= 1; d.approval -= 2; }
+      if (analysis.vague) { d.approval -= 2; d.partyUnity -= Math.min(G.vagueStreak, 6); }
       var evTopics = G.currentEvent.topics || [];
-      analysis.relevant = analysis.topics.some(function (tid) { return evTopics.indexOf(tid) !== -1; });
-      if (analysis.relevant) { d.stability += 1; d.approval += 1; }
-      else if (analysis.topics.length) { d.stability -= 1; }
+      analysis.relevant = !analysis.vague && analysis.topics.some(function (tid) { return evTopics.indexOf(tid) !== -1; });
     }
+
+    // an unaddressed crisis festers, faster on harder scenarios
+    var pressure = { 'Standard': 1, 'Hard': 2, 'Very Hard': 3 }[G.scenario.difficulty] || 1;
+    if (analysis.relevant) { d.stability += 1; d.approval += 1; }
+    else { d.stability -= pressure; d.approval -= Math.ceil(pressure / 2); }
 
     // a little chaos, as history demands
     var keys = Object.keys(d);
@@ -283,7 +297,15 @@
     d[pick(keys)] -= 1;
 
     Object.keys(d).forEach(function (k) {
-      G.stats[k] = clamp(G.stats[k] + d[k], k === 'economy' ? -20 : 0, 100);
+      var eff = d[k];
+      // triumph has diminishing returns, and the summit is windy
+      if (eff > 0) {
+        if (G.stats[k] >= 95) eff = 0;
+        else if (G.stats[k] >= 85) eff = Math.ceil(eff / 2);
+      }
+      if (G.stats[k] >= 92) eff -= 1;
+      d[k] = eff;
+      G.stats[k] = clamp(G.stats[k] + eff, k === 'economy' ? -20 : 0, 100);
     });
     return d;
   }
@@ -359,7 +381,7 @@
       harmonized3: c.harmonized >= 3,
       hardline10: c.hardline >= 10,
       reform10: c.reform >= 10,
-      gdp_negative: s.economy < 10,
+      gdp_negative: endingCondition === 'collapse',
       vague3: c.vague >= 3,
       peoples_daily_20: c.pd >= 20,
       survive_zero2022: G.scenario.id === 'zero2022' && /^congress/.test(endingCondition || ''),
@@ -397,6 +419,9 @@
         0.15 * s.intl + 0.1 * s.power + 0.1 * s.approval;
       var tier = score >= 70 ? 'congress_great' : score >= 55 ? 'congress_good' :
         score >= 40 ? 'congress_ok' : 'congress_bad';
+      // the Congress notices your weakest number, even if you hoped it wouldn't
+      var weakest = Math.min(s.partyUnity, s.stability, econScore, s.intl, s.power, s.approval);
+      if (weakest < 25 && (tier === 'congress_great' || tier === 'congress_good')) tier = 'congress_ok';
       return endingFor(tier);
     }
     return null;
@@ -410,7 +435,7 @@
   function endGame(ending) {
     G.over = true;
     checkAchievements(ending.condition, ending.condition);
-    $('end-date').textContent = dateLabel(Math.min(G.turn, TOTAL_TURNS - 1));
+    $('end-date').textContent = dateLabel(Math.max(G.turn - 1, 0));
     $('end-title').textContent = ending.title;
     $('end-text').textContent = ending.text;
 
@@ -583,7 +608,13 @@
     if (analysis.harmonized) G.counters.harmonized++;
     if (analysis.tone === 'hardline') G.counters.hardline++;
     if (analysis.tone === 'reform') G.counters.reform++;
-    if (!analysis.harmonized && analysis.vague) G.counters.vague++;
+    if (!analysis.harmonized && !analysis.topics.length) G.counters.vague++;
+
+    var primary = analysis.harmonized ? null : (analysis.topics[0] || null);
+    if (primary && primary === G.streakTopic) G.streakN++;
+    else { G.streakTopic = primary; G.streakN = primary ? 1 : 0; }
+    analysis.fatigue = G.streakN >= 3 ? 2 : G.streakN === 2 ? 1 : 0;
+    G.vagueStreak = (!analysis.harmonized && analysis.vague) ? G.vagueStreak + 1 : 0;
 
     var deltas = applyDeltas(analysis);
     var shifts = updateStakeholders(analysis);
@@ -601,6 +632,9 @@
       outcome = pick(t0.outcomes || ['The machinery of state lurches into motion.']);
       if (analysis.vague) outcome += ' (The Politburo noted a certain vagueness. It has been minuted.)';
       advisor = t0.advisor || '';
+      if (analysis.fatigue >= 2) {
+        outcome += ' The Politburo has heard this speech before; attention drifts to teacups.';
+      }
       if (analysis.relevant === false) {
         outcome += ' Meanwhile, the matter in your briefing remains magnificently unaddressed.';
       }
