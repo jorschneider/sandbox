@@ -114,19 +114,37 @@ def main():
     todo = missing_episodes(args.order)
     print(f"{len(todo)} episodes lack transcripts; doing {min(args.limit, len(todo))} ({args.order} first)")
 
+    failures = 0
     for e in todo[:args.limit]:
         t0 = time.time()
         print(f"ep {e['n']:4d} · {e['date']} · {e['title'][:60]} ({e['duration'] // 60}m)", flush=True)
-        with tempfile.TemporaryDirectory() as tmp:
-            audio = Path(tmp) / "audio.mp3"
-            download_audio(e["audio"], audio)
-            print(f"  downloaded {audio.stat().st_size >> 20} MB", flush=True)
-            if args.openai:
-                text = transcribe_openai(audio)
-                model = "openai-whisper-1"
-            else:
-                text = transcribe_local(audio, args.model)
-                model = f"faster-whisper/{args.model}"
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                audio = Path(tmp) / "audio.mp3"
+                for attempt in range(3):
+                    try:
+                        download_audio(e["audio"], audio)
+                        break
+                    except Exception as err:  # noqa: BLE001 - flaky CDN, retry
+                        if attempt == 2:
+                            raise
+                        print(f"  download retry after: {err}", flush=True)
+                        time.sleep(20 * (attempt + 1))
+                print(f"  downloaded {audio.stat().st_size >> 20} MB", flush=True)
+                if args.openai:
+                    text = transcribe_openai(audio)
+                    model = "openai-whisper-1"
+                else:
+                    text = transcribe_local(audio, args.model)
+                    model = f"faster-whisper/{args.model}"
+        except Exception as err:  # noqa: BLE001 - skip this episode, keep going
+            failures += 1
+            print(f"  SKIPPED after error: {err}", flush=True)
+            if failures >= 10:
+                print("too many consecutive failures, stopping run", flush=True)
+                break
+            continue
+        failures = 0
         (OUT / f"ep{e['n']:04d}.json").write_text(json.dumps({
             "n": e["n"], "title": e["title"], "date": e["date"],
             "model": model, "text": text,
