@@ -51,9 +51,11 @@ Each event:
    **Cover the whole day, every day**: weekday daytime events AND weekday
    evenings (post-work outings) both matter — aim for each day of the week to
    offer morning, afternoon, and evening options.
-3. **No plain storytimes**: skip ordinary library/bookstore read-alouds — too
-   tame. Story-adjacent things earn a slot only as part of something bigger
-   (a museum family day, a puppet show, an author event with real extras).
+3. **Storytimes: weekdays yes, weekends no.** Library/bookstore read-alouds
+   are welcome Monday-Friday (they fill weekday slots nicely). On weekends
+   they're too tame — story-adjacent things earn a weekend slot only as part
+   of something bigger (a museum family day, a puppet show, an author event
+   with real extras).
    Same test for activities generally: a 2-year-old must be able to DO the
    thing, not just be present while adults do it (no bowling, no escape
    rooms, no sit-still screenings).

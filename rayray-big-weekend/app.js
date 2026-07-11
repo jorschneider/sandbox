@@ -217,10 +217,10 @@
     const cat = CATS[e.category] || CATS.other;
     return L.divIcon({
       className: "emoji-pin pin-tb-" + timeBucket(e),
-      html: "<span>" + cat.emoji + '<i class="pin-num">' + num + "</i></span>",
+      html: "<span><em>" + cat.emoji + '<i class="pin-num">' + num + "</i></em></span>",
       iconSize: [38, 38],
-      iconAnchor: [19, 19],
-      popupAnchor: [0, -18],
+      iconAnchor: [38, 38],   // the teardrop tip sits exactly on the venue
+      popupAnchor: [0, -56],
     });
   }
   function popupHtml(e) {
@@ -375,7 +375,7 @@
     map.invalidateSize();
     if (pts.length > 1) {
       map.fitBounds(L.latLngBounds(pts).pad(0.12), { animate: false });
-      map.setZoom(map.getZoom() + 1, { animate: false }); // a tad closer than the full fit
+      map.setZoom(map.getZoom() + 2, { animate: false }); // start close; scroll-follow roams the rest
     } else {
       map.setView(HOME_COORDS, 13);
     }
