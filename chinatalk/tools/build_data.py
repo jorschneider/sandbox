@@ -152,7 +152,13 @@ NOT_NAME = {
     "invasion", "land", "wars", "national", "intel", "council", "rainbow",
     "farts", "red", "roulette", "presidential", "elections", "showdown",
     "superpower", "hearing", "twilight", "struggle", "pla", "tiktok",
-    "hot", "talk", "econtalk", "chinaecontalk", "semianalysis",
+    "hot", "talk", "econtalk", "chinaecontalk", "semianalysis", "our",
+    # organization words — orgs aren't guests
+    "foundation", "institute", "institution", "university", "college",
+    "center", "centre", "school", "public", "opinion", "group", "project",
+    "program", "initiative", "commission", "association", "ministry",
+    "department", "bureau", "agency", "professor", "fellow", "director",
+    "scholar", "committee", "senate", "services", "armed",
 }
 
 # Recurring show segments and title phrases that pattern-match as names.
@@ -187,6 +193,15 @@ def clean_guest(name):
         return None
     if any(w.strip(".,'’").lower() in NOT_NAME for w in words):
         return None
+    # every token must be capitalized; no sentence boundaries or
+    # mid-name possessives smuggled into a "name"
+    for w in words:
+        if not re.match(r"^[A-Z]", w):
+            return None
+        if w.endswith(".") and len(w) > 4:
+            return None
+        if re.search(r"[’']s$", w):
+            return None
     return n
 
 
@@ -216,33 +231,62 @@ NAME_PAT = r"[A-Z][\w'’.-]+(?: [A-Z][\w'’.-]+){1,3}"
 NAME_LIST = rf"{NAME_PAT}(?:(?:,| and | & | \+ )\s*{NAME_PAT})*"
 
 DESC_GUEST_RES = [
-    # "Constanza Vidal Bustamante joins Chris Miller and Zachary Yerushalmi"
-    re.compile(rf"({NAME_LIST})(?:,[^.!?]{{0,90}}?)? join(?:s|ed)?\b", ),
+    # "Constanza Vidal Bustamante joins ...", "Chris Miller of Tufts joins"
+    re.compile(rf"({NAME_LIST})(?:(?:,| of| at| from)[^.!?]{{0,90}}?)? join(?:s|ed|ing)?\b"),
     re.compile(rf"\bjoin(?:s|ed)? (?:me|us|by)?\s*({NAME_LIST})"),
-    # "interviewed Ian Toll", "sat down with Mike Schmidt and Todd Fisher"
+    # "interviewed Ian Toll", "sat down with X", "along with X", "brought on X"
     re.compile(rf"(?:interview(?:s|ed)?|sat down with|sits? down with|in person with|talk(?:s|ed)? (?:to|with)|"
-               rf"chat(?:s|ted)? with|conversation with|joined by|welcome(?:s|d)?(?: back)?|features?|featuring)\s+"
-               rf"(?:[a-z][\w'’-]*\s+){{0,2}}({NAME_LIST})"),
-    # "Chris Miller (chip wars), Chris McGuire (10 year vet) and I discuss"
-    re.compile(rf"({NAME_PAT})\s*\([^)]{{2,60}}\)(?:,\s*({NAME_PAT})\s*\([^)]{{2,60}}\))*[^.!?]{{0,40}}?\band I\b"),
+               rf"chat(?:s|ted)? with|conversation with|joined by|along with|brought on|welcome(?:s|d)?(?: back)?|"
+               rf"features?|featuring)\s+(?:[a-z][\w'’-]*\s+){{0,2}}({NAME_LIST})"),
+    # "Cohosting is Chris Miller", "Joining as co-host is X", "cohosts X, Y"
+    re.compile(rf"(?:[Cc]o-?host(?:ing|ed|s)?|[Jj]oining(?: me| us)?(?: as co-?host)?)"
+               rf"(?:[^.!?]{{0,40}}?)?\s(?:is|are|include[sd]?)\s+({NAME_LIST})"),
+    # "Chris Miller of Chip War cohosts", "X co-hosts"
+    re.compile(rf"({NAME_LIST})(?: of [^.!?]{{0,40}}?)? co-?hosts?\b"),
+    # "Chris Miller of Tufts and I discuss"
+    re.compile(rf"({NAME_LIST})(?: of [A-Z][\w .&'’-]{{0,35}})? and I (?:discuss|talk|chat|dig|break|get|walk)"),
     # "X returns to the show / is back on the show"
     re.compile(rf"({NAME_LIST})(?:,[^.!?]{{0,60}}?)? (?:returns?|is back|came back|comes? back)\b"),
-    # "our guest(s) X" / "today's guest, X"
-    re.compile(rf"guests?,?\s+(?:is|are|:)?\s*({NAME_LIST})"),
+    # "our guest(s) X" / "Guests include: X, Y"
+    re.compile(rf"guests?,?\s+(?:is|are|include:?|:)?\s*({NAME_LIST})"),
+    # "on the pod today are X of A, Y of B, and Z"
+    re.compile(rf"on the pod(?:cast)?(?: today)? (?:is|are)\s+({NAME_PAT})"),
 ]
 
 
+# "Chris Miller (chip wars), Chris McGuire (10 year vet) and I discuss" —
+# name-with-bio parentheticals, only trusted at the very start of the notes
+# where the cast list lives (further in they're usually citations).
+PAREN_CAST_RE = re.compile(
+    rf"({NAME_PAT})\s*\([^)]{{2,60}}\)(?:,?\s*(?:and\s+)?({NAME_PAT})\s*\([^)]{{2,60}}\))?"
+    rf"(?:,?\s*(?:and\s+)?({NAME_PAT})\s*\([^)]{{2,60}}\))?")
+
+
 def extract_guests_from_desc(desc):
-    """Pull guest names out of show-notes prose (the first ~700 chars,
-    where the guest intro lives)."""
-    head = desc[:700]
+    """Pull guest names out of show-notes prose. The window is generous —
+    guest intros can follow a long topic preamble — but the patterns are
+    verb-anchored ("joins", "cohosts", "brought on") so citations deeper
+    in the notes don't false-positive."""
+    head = desc[:1400]
     names = []
     for rx in DESC_GUEST_RES:
         for m in rx.finditer(head):
             for grp in m.groups():
                 if grp:
                     names.extend(split_names(grp))
+    m = PAREN_CAST_RE.match(desc.strip())
+    if m:
+        names.extend(n for n in m.groups() if n)
     return [g for g in (clean_guest(n) for n in names) if g]
+
+
+def guests_from_transcript(text):
+    """Speaker labels in a published transcript are definitive proof of
+    who's on the episode: names that label at least 3 turns count."""
+    labels = Counter(
+        m.group(1) for m in re.finditer(r"\b([A-Z][\w'’-]+(?: [A-Z][\w'’-]+){1,2}):(?=\s)", text)
+    )
+    return [g for g in (clean_guest(n) for n, c in labels.items() if c >= 3) if g]
 
 
 def extract_guests(title):
@@ -568,6 +612,12 @@ def build():
                 e["tags"] = p["tags"]
             if p["is_transcript"]:
                 e["tr"] = True
+                # speaker labels name the actual participants
+                seen = {g.casefold() for g in e["guests"]}
+                for g in guests_from_transcript(p["text"]):
+                    if g.casefold() not in seen:
+                        seen.add(g.casefold())
+                        e["guests"].append(g)
             matched += 1
     print(f"episodes matched to substack posts: {matched}/{len(episodes)} ({exact} exact)")
 
