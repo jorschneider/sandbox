@@ -1586,6 +1586,188 @@ window.WEEK_DATA = {
     "start": null
   },
   {
+    "title": "Guggenheim: Carol Bove fills the rotunda (thru Aug 2) + Pop art",
+    "category": "other",
+    "venue": "Solomon R. Guggenheim Museum, 1071 Fifth Ave at 89th",
+    "neighborhood": "Upper East Side",
+    "when": "Typically ~10:30 AM-5:30 PM; hours vary - check link. Carol Bove thru Aug 2; Guggenheim Pop thru Jan 2027",
+    "days": [
+      "any"
+    ],
+    "cost": "~$30 adults, under 12 free - check link",
+    "travelMinutes": 33,
+    "travelHow": "4/5/6 to 86 St + 10-min walk (crosstown from Grandma's)",
+    "toddlerNotes": "The best toddler museum show in town right now: Carol Bove's monumental candy-colored steel sculptures fill the whole spiral - with built-in PLAY SPACES and a tactile library, per the museum - and the ramp is perfect stroller terrain. Pop art (Lichtenstein, Warhol, Kusama) reads great from a carrier too.",
+    "url": "https://www.guggenheim.org/exhibition/carol-bove",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "medium",
+    "lat": 40.783,
+    "lng": -73.959,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "The Met: Costume Art + Temple of Dendur + knights in armor",
+    "category": "other",
+    "venue": "Metropolitan Museum of Art, 1000 Fifth Ave at 82nd",
+    "neighborhood": "Upper East Side",
+    "when": "Open daily EXCEPT Wednesdays, ~10 AM-5 PM (Fri-Sat late) - check link",
+    "days": [
+      "any"
+    ],
+    "cost": "$30 adults, under 12 free; NY State residents pay-what-you-wish (ID) - check link",
+    "travelMinutes": 30,
+    "travelHow": "4/5/6 to 86 St + walk (crosstown bus from Grandma's)",
+    "toddlerNotes": "The new Costume Art galleries (thru Jan 2027) are big dramatic mannequin theater; then the Temple of Dendur's bright, echoey hall and the knights-on-horseback parade in Arms & Armor - the three most toddler-magnetic rooms in the building. Frame backpack carriers aren't allowed; soft carriers and strollers are.",
+    "url": "https://www.metmuseum.org/exhibitions/costume-art",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "medium",
+    "lat": 40.7794,
+    "lng": -73.9632,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "MoMA: Frida & Diego (thru Sep 12) + a giant color wall",
+    "category": "other",
+    "venue": "MoMA, 11 W 53rd St",
+    "neighborhood": "Midtown",
+    "when": "Open daily, typically 10:30 AM-5:30 PM - check link",
+    "days": [
+      "any"
+    ],
+    "cost": "$30 adults; 16 & under free - check link",
+    "travelMinutes": 22,
+    "travelHow": "N/R/W to 49 St or B/D/F/M to 47-50 Rockefeller Ctr",
+    "toddlerNotes": "'Frida and Diego: The Last Dream' is saturated color a 2-year-old genuinely stares at, and Odili Donald Odita's enormous geometric wall painting is basically made for stroller viewing. Sculpture garden for wiggle breaks.",
+    "url": "https://press.moma.org/exhibitions/",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "medium",
+    "lat": 40.7614,
+    "lng": -73.9776,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "Museum of the City of NY: Alice in Wonderland murals + color-immersion room",
+    "category": "other",
+    "venue": "Museum of the City of New York, 1220 Fifth Ave at 103rd",
+    "neighborhood": "Museum Mile / East Harlem",
+    "when": "Typically daily ~10 AM-5 PM - check link. 'Raise Your Voice' and 'Songs of New York' CLOSE Jul 19; 'Another Wonderland' thru Sep 27",
+    "days": [
+      "any"
+    ],
+    "cost": "Suggested ~$20 (pay-what-you-wish), kids free - check link",
+    "travelMinutes": 35,
+    "travelHow": "6 to 103 St + 3 blocks west (M106/M10 from Grandma's)",
+    "toddlerNotes": "'Another Wonderland' is a restored storybook Alice mural cycle - pure toddler eye candy - and Amanda Phingbodhipakkiya's 'Raise Your Voice' is an immersive saturated-color room (last week - closes Jul 19!). Plus a giant handmade NYC model and the Starlight rotunda. Pay-what-you-wish makes it a cheap rainy-day win.",
+    "url": "https://www.mcny.org/exhibitions",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "medium",
+    "lat": 40.7924,
+    "lng": -73.952,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "Brooklyn Museum: Iris van Herpen's sculptural couture (thru Dec 6)",
+    "category": "other",
+    "venue": "Brooklyn Museum, 200 Eastern Parkway",
+    "neighborhood": "Prospect Heights, Brooklyn",
+    "when": "Typically Wed-Sun ~11 AM-6 PM (closed Mon-Tue) - check link; special-exhibit ticket likely",
+    "days": [
+      "any"
+    ],
+    "cost": "~$25 adults, kids free; van Herpen may cost extra - check link",
+    "travelMinutes": 35,
+    "travelHow": "2/3 to Eastern Pkwy-Brooklyn Museum (direct)",
+    "toddlerNotes": "'Sculpting the Senses': 140+ kinetic, otherworldly dresses shown with corals, fossils and skeletons - big dramatic shapes that hold a 2-year-old's gaze from the carrier. Elevators throughout; pairs with the Prospect Park Zoo up the block.",
+    "url": "https://www.brooklynmuseum.org/exhibitions/iris-van-herpen",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "medium",
+    "lat": 40.6712,
+    "lng": -73.9636,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "New Museum: brand-new building + 'New Humans' everywhere",
+    "category": "other",
+    "venue": "New Museum, 235 Bowery",
+    "neighborhood": "Lower East Side",
+    "when": "Reopened Mar 2026 in its new OMA building; hours vary - check link",
+    "days": [
+      "any"
+    ],
+    "cost": "~$18-22 adults, minors free - check link",
+    "travelMinutes": 15,
+    "travelHow": "6 to Spring St or F to 2 Av + short walk",
+    "toddlerNotes": "The freshly reopened museum doubled in size and the inaugural 'New Humans' show fills all of it - big installations with real visual pop, though some galleries run dim/video-heavy. The new atrium stair and Sky Room are a fun stroller ride on their own. Closest big museum to home.",
+    "url": "https://www.newmuseum.org/exhibitions/",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "medium",
+    "lat": 40.7223,
+    "lng": -73.9928,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "Morgan Library: the gilded library room + Sol LeWitt wall",
+    "category": "other",
+    "venue": "Morgan Library & Museum, 225 Madison Ave at 36th",
+    "neighborhood": "Murray Hill",
+    "when": "Typically Tue-Sun ~10:30 AM-5 PM, closed Mon; free Friday evenings historically - check link",
+    "days": [
+      "any"
+    ],
+    "cost": "~$25 adults, 12 & under free - check link",
+    "travelMinutes": 15,
+    "travelHow": "6 to 33 St + 3-min walk",
+    "toddlerNotes": "Honest read: mostly dim works-on-paper, the weakest of the big museums for a toddler - BUT Pierpont Morgan's actual library room (soaring painted ceilings, tiered bookshelves) is genuinely gawk-worthy from a carrier, and the big colorful Sol LeWitt wall drawing delivers. A short A/C stop, not a whole outing.",
+    "url": "https://www.themorgan.org/exhibitions",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "medium",
+    "lat": 40.7496,
+    "lng": -73.9817,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
     "title": "Park Open Studio — drop-in artmaking in Washington Sq",
     "category": "play",
     "venue": "Washington Square Park, NW corner seating area (Scrabble Plaza)",
