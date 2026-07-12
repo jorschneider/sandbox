@@ -61,6 +61,50 @@ else {
     if (seen.has(k)) err(tag + "duplicate slug '" + k + "'");
     seen.add(k);
   });
+
+  // ——— itineraries: one exec-sum plan per day, built around the 12–2 nap ———
+  const SLOT_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  const SLOTS = ["morning", "afternoon", "evening"];
+  const bySlug = {};
+  evs.forEach((e) => { bySlug[keyOf(e)] = e; });
+  if (!data.itineraries || typeof data.itineraries !== "object") {
+    err("itineraries missing — every week needs a per-day plan (see UPDATE.md)");
+  } else {
+    SLOT_DAYS.forEach((d) => {
+      const it = data.itineraries[d];
+      const tag = "itinerary." + d + ": ";
+      if (!it) { err(tag + "missing"); return; }
+      if (!it.summary || typeof it.summary !== "string") err(tag + "missing summary");
+      if (!Array.isArray(it.picks) || !it.picks.length || it.picks.length > 4) {
+        err(tag + "picks must be an array of 1-4"); return;
+      }
+      it.picks.forEach((p) => {
+        const ptag = tag + "pick '" + String(p.key || "?").slice(0, 40) + "': ";
+        if (SLOTS.indexOf(p.slot) === -1) { err(ptag + "bad slot " + p.slot); return; }
+        if (!p.note || typeof p.note !== "string") err(ptag + "missing note");
+        const e = bySlug[p.key];
+        if (!e) { err(ptag + "key does not match any event slug"); return; }
+        if (e.days.indexOf("any") === -1 && e.days.indexOf(d) === -1) {
+          err(ptag + "event does not happen on " + d + " (days=" + JSON.stringify(e.days) + ")");
+        }
+        if (e.start) {
+          const min = parseInt(e.start.slice(0, 2), 10) * 60 + parseInt(e.start.slice(3), 10);
+          const endM = e.end ? parseInt(e.end.slice(0, 2), 10) * 60 + parseInt(e.end.slice(3), 10) : null;
+          // open-hours entries (with an end comfortably past nap) can be dropped into post-nap;
+          // hard-start shows must not collide with the 12-2 nap
+          const dropIn = (afterMin) => endM != null && endM >= afterMin;
+          if (min >= 12 * 60 && min < 14 * 60 && !dropIn(15 * 60 + 30)) {
+            err(ptag + "starts " + e.start + " — inside the 12-2 nap");
+          }
+          if (p.slot === "morning" && min >= 12 * 60) err(ptag + "morning pick starts " + e.start);
+          if (p.slot === "afternoon" && min < 14 * 60 && !dropIn(15 * 60 + 30)) {
+            err(ptag + "afternoon pick starts " + e.start + " (before nap ends at 2, and not drop-in past 3:30)");
+          }
+          if (p.slot === "evening" && min < 16 * 60 && !dropIn(18 * 60)) err(ptag + "evening pick starts " + e.start);
+        }
+      });
+    });
+  }
 }
 
 if (errors.length) {

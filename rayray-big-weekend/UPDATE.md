@@ -16,6 +16,7 @@ window.WEEK_DATA = {
   weekLabel: "July 6–12, 2026",   // human label for the Mon–Sun week
   weekMonday: "2026-07-06",       // ISO date of that Monday (drives TODAY badge)
   updated: "July 10, 2026",       // date the data was refreshed
+  itineraries: { /* one exec-sum plan per day, see "Daily itineraries" below */ },
   events: [ /* 20–45 entries, see schema below */ ]
 };
 ```
@@ -117,6 +118,40 @@ Each event:
    every week — verify they're open (water features and carousels close
    seasonally or for repairs).
 
+## Daily itineraries (exec-sum at the top of each day)
+
+`WEEK_DATA.itineraries` holds a curated plan for EVERY day, mon–sun. This is
+editorial: pick the single best morning / afternoon / (optional) evening from
+that day's entries and say why in one punchy line each. Schema:
+
+```js
+itineraries: {
+  mon: {
+    summary: "Bryant Park magic show at 10, greenmarket snack run after nap.", // one line for the week-at-a-glance view
+    picks: [
+      { slot: "morning",   key: "<event slug>", title: "<event title>", note: "…" },
+      { slot: "afternoon", key: "…", title: "…", note: "…" },
+      { slot: "evening",   key: "…", title: "…", note: "…" },  // optional — only when there's a real evening option
+    ]
+  },
+  // …tue–sun
+}
+```
+
+- `key` is the event's slug: lowercased title, non-alphanumerics collapsed to
+  `-`, trimmed, first 48 chars (same rule as app.js/validate.cjs `keyOf`).
+- **THE NAP IS SACRED: Rayray sleeps 12–2 every day.** Morning picks must
+  start before noon and wrap by ~11:45; afternoon picks start 2 PM or later
+  (open-hours entries that run well past 2 are fine to slot as a post-nap
+  drop-in); nothing may *start* between 12:00 and 14:00 unless it's drop-in
+  hours running past 3:30. Evening picks are "if she's up for it" territory.
+- Picks must actually happen on that day (`days` includes the day or `any`).
+  Anytime spots are fair game — the UI auto-opens their unlock on tap.
+- Notes stay self-sufficient (time, place, why) and honest about travel —
+  weekend picks can lean grandma's-zone, weekday picks lean Union Square.
+- The validator enforces all of the above; the UI renders a nap row between
+  morning and afternoon automatically, so don't write the nap as a pick.
+
 ## Verify locally
 
 ```sh
@@ -126,7 +161,8 @@ python3 -m http.server  # from the repo root
 
 **MANDATORY: run `node rayray-big-weekend/validate.cjs` and fix every error
 before deploying** — it checks the schema, coordinate bounds, start/times
-agreement, URLs, and duplicate slugs.
+agreement, URLs, duplicate slugs, and the daily itineraries (all 7 days
+present, picks resolve to real events on the right day, nap rules).
 
 Sanity-check: week label correct, TODAY badge on the right day, the list groups
 under Morning/Afternoon/Evening/Anytime headers in start-time order, every entry
@@ -179,5 +215,7 @@ A smaller Saturday-morning routine re-checks the CURRENT week.js in place (no
 re-research): (1) verify every dated Sat/Sun event against its official page —
 cancellations, time changes; (2) upgrade any medium/low-confidence entries by
 verifying their hours/prices on the official visit pages; (3) check the weekend
-forecast and note washouts. Apply corrections to week.js only, run the
+forecast and note washouts; (4) if a correction kills or moves an itinerary
+pick (cancelled show, big rain on an outdoor pick), swap that day's itinerary
+to the next-best option. Apply corrections to week.js only, run the
 validator, push, deploy, and push-notify a short "what changed" summary.

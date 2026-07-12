@@ -21,6 +21,8 @@
 
   const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
   const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" };
+  const DAY_FULL = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" };
+  const SLOTS = { morning: "🌅", afternoon: "☀️", evening: "🌆" };
   const TB = [
     { key: "morning",   label: "Morning",       emoji: "🌅" },
     { key: "afternoon", label: "Afternoon",     emoji: "☀️" },
@@ -218,14 +220,14 @@
 
   // ——— home-base switcher ———
   const basePicker = document.getElementById("base-picker");
-  basePicker.querySelectorAll(".base").forEach((x) => {
+  basePicker.querySelectorAll(".base[data-base]").forEach((x) => {
     x.classList.toggle("active", x.dataset.base === state.base);
     x.setAttribute("aria-selected", String(x.dataset.base === state.base));
   });
-  basePicker.querySelectorAll(".base").forEach((b) => {
+  basePicker.querySelectorAll(".base[data-base]").forEach((b) => {
     b.addEventListener("click", () => {
       state.base = b.dataset.base;
-      basePicker.querySelectorAll(".base").forEach((x) => {
+      basePicker.querySelectorAll(".base[data-base]").forEach((x) => {
         x.classList.toggle("active", x === b);
         x.setAttribute("aria-selected", String(x === b));
       });
@@ -259,7 +261,9 @@
 
   let markers = {};
   let markerIsEvent = {};
+  let numByKey = {};
   let activeNum = null;
+  const isRide = (e) => /carousel|ferry/i.test(e.title);
   // pins that would collide at the current zoom slide apart into a small ring;
   // they return to their true spots as you zoom in
   function spreadOverlaps() {
@@ -376,8 +380,73 @@
     }
     if (opts.scrollList) {
       const card = mapList.querySelector('.mini-card[data-num="' + num + '"]');
-      if (card) card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      if (card) {
+        suppressScrollSyncUntil = Date.now() + 1000; // don't let the smooth scroll steal the highlight
+        card.scrollIntoView({ block: "center", behavior: "smooth" });
+      }
     }
+  }
+
+  // ——— the day's exec-sum: our picks around the sacred 12–2 nap ———
+  const itinEl = document.getElementById("itin");
+  function renderItin() {
+    const its = data.itineraries;
+    if (!its || state.heartsOnly) { itinEl.hidden = true; return; }
+
+    if (state.day === "all") {
+      // week at a glance — one line per day, tap to jump in
+      let html = "<h3>📋 The week at a glance</h3>";
+      html += DAY_KEYS.map((k) => {
+        const it = its[k];
+        if (!it || !it.summary) return "";
+        const past = todayKey && DAY_KEYS.indexOf(k) < DAY_KEYS.indexOf(todayKey);
+        return '<button class="itin-day' + (past ? " past" : "") + '" data-day="' + k + '">' +
+          "<b>" + DAY_LABELS[k] + (k === todayKey ? " ✨" : "") + "</b><span>" + esc(it.summary) + "</span></button>";
+      }).join("");
+      html += '<p class="itin-nap-note">😴 Every plan works around Rayray\'s 12–2 nap — mornings wrap by noon, afternoons start after 2.</p>';
+      itinEl.innerHTML = html;
+      itinEl.hidden = false;
+      itinEl.querySelectorAll(".itin-day").forEach((b) => {
+        b.addEventListener("click", () => { state.day = b.dataset.day; render(); });
+      });
+      return;
+    }
+
+    const it = its[state.day];
+    if (!it || !it.picks || !it.picks.length) { itinEl.hidden = true; return; }
+    const row = (p) => {
+      const e = byKey[p.key];
+      if (!e) return "";
+      const n = numByKey[p.key];
+      return '<button class="itin-row" data-key="' + esc(p.key) + '">' +
+        '<span class="itin-slot tb-' + esc(p.slot) + '">' + (SLOTS[p.slot] || "🌅") + " " + (e.start ? fmtTime(e.start) : "flexible") + "</span>" +
+        '<span class="itin-body"><b>' + esc(e.title) + "</b> · " + esc(e.venue) +
+          "<i>" + esc(p.note) + "</i></span>" +
+        (n ? '<span class="itin-go">#' + n + "</span>" : "") +
+      "</button>";
+    };
+    const bySlot = (s) => it.picks.filter((p) => p.slot === s).map(row).join("");
+    let html = "<h3>📋 The plan — " + (state.day === todayKey ? "today" : DAY_FULL[state.day]) + "</h3>";
+    html += bySlot("morning");
+    html += '<div class="itin-row itin-nap"><span class="itin-slot sl-nap">😴 12–2</span>' +
+      '<span class="itin-body"><b>Nap at home</b><i>Rayray recharges — everything below starts after 2.</i></span></div>';
+    html += bySlot("afternoon") + bySlot("evening");
+    itinEl.innerHTML = html;
+    itinEl.hidden = false;
+    itinEl.querySelectorAll(".itin-row[data-key]").forEach((b) => {
+      b.addEventListener("click", () => {
+        const k = b.dataset.key;
+        let n = numByKey[k];
+        const e = byKey[k];
+        if (!n && e && timeBucket(e) === "any") {
+          // the pick lives behind an anytime unlock — open it, then jump
+          state[!e.outdoor && !isRide(e) ? "showRainy" : "showDest"] = true;
+          render();
+          n = numByKey[k];
+        }
+        if (n) highlight(n, { scrollList: true, force: true });
+      });
+    });
   }
 
   function render() {
@@ -403,6 +472,7 @@
     markerLayer.clearLayers();
     markers = {};
     markerIsEvent = {};
+    numByKey = {};
     activeNum = null;
     mapList.innerHTML = "";
     mapList.scrollTop = 0;
@@ -419,6 +489,7 @@
         m.on("click", () => highlight(n, { scrollList: true }));
         markers[n] = m;
         markerIsEvent[n] = isEvent(e);
+        numByKey[keyOf(e)] = n;
 
         const card = miniCard(e, n);
         card.addEventListener("keydown", (ev) => {
@@ -436,7 +507,6 @@
       if (!items.length) return;
       if (bucket.key === "any") {
         // two staged unlocks: rainy-day indoor escapes first, then outdoor destinations
-        const isRide = (e) => /carousel|ferry/i.test(e.title);
         const groups = [
           { label: "☔ Rainy day", sub: "the big museums & indoor escapes", flag: "showRainy",
             items: items.filter((e) => !e.outdoor && !isRide(e)) },
@@ -489,6 +559,7 @@
 
     spreadOverlaps();
 
+    renderItin();
     renderWxStrip();
     syncPlanChip();
   }
@@ -503,14 +574,19 @@
 
   // ——— Eater-style scroll sync: the pin for the card you're looking at lights up ———
   let scrollTick = false;
+  let suppressScrollSyncUntil = 0;
+  // the "which card am I on" line sits ~a third of the way down the list, so the
+  // highlight hands off to the next card while the previous one is still on screen
   function refY() {
     if (window.matchMedia("(max-width: 860px)").matches) {
-      return document.getElementById("map").getBoundingClientRect().bottom + 30;
+      const mapBottom = document.getElementById("map").getBoundingClientRect().bottom;
+      return mapBottom + (window.innerHeight - mapBottom) * 0.35;
     }
-    return mapList.getBoundingClientRect().top + 40;
+    const r = mapList.getBoundingClientRect();
+    return r.top + Math.min(r.height * 0.35, 240);
   }
   function onScroll() {
-    if (scrollTick) return;
+    if (scrollTick || Date.now() < suppressScrollSyncUntil) return;
     scrollTick = true;
     requestAnimationFrame(() => {
       scrollTick = false;
@@ -556,7 +632,7 @@
       ? (todayKey ? DAY_KEYS.indexOf(todayKey) : -1)
       : DAY_KEYS.indexOf(state.day);
     if (!WX.hourly || di < 0) { strip.hidden = true; return; }
-    const dayName = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" }[DAY_KEYS[di]];
+    const dayName = DAY_FULL[DAY_KEYS[di]];
     const isToday = DAY_KEYS[di] === todayKey;
     const nowHour = new Date().getHours();
     let html = "";

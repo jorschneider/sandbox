@@ -3,6 +3,151 @@ window.WEEK_DATA = {
   weekLabel: "July 6–12, 2026",
   weekMonday: "2026-07-06",
   updated: "July 10, 2026",
+  itineraries: {
+    "mon": {
+      "summary": "Bryant Park magic show at 10, greenmarket snack run after nap.",
+      "picks": [
+        {
+          "slot": "morning",
+          "key": "le-carrousel-extravaganza-magic-puppets-stories",
+          "title": "Le Carrousel Extravaganza — magic, puppets & stories",
+          "note": "Puppets & magic beside the carousel, 10–11 — home for lunch before nap."
+        },
+        {
+          "slot": "afternoon",
+          "key": "union-square-greenmarket-wander",
+          "title": "Union Square Greenmarket wander",
+          "note": "Post-nap berries-and-samples wander, five minutes from the front door."
+        }
+      ]
+    },
+    "tue": {
+      "summary": "Air-conditioned DiMenna museum morning, seahorse touch tanks after nap.",
+      "picks": [
+        {
+          "slot": "morning",
+          "key": "dimenna-children-s-history-museum-under-5s-free",
+          "title": "DiMenna Children's History Museum (under-5s free)",
+          "note": "Dress-up and play in the A/C from 10 — under-5s are free."
+        },
+        {
+          "slot": "afternoon",
+          "key": "wetlab-touch-tanks-seahorses-of-the-hudson",
+          "title": "Wetlab touch tanks — seahorses of the Hudson",
+          "note": "Seahorses and crabs at Pier 40, open till 5 — an easy riverside stop after nap."
+        }
+      ]
+    },
+    "wed": {
+      "summary": "Carousel double-header: Bryant Park show at 10, Jane's Carousel after nap.",
+      "picks": [
+        {
+          "slot": "morning",
+          "key": "le-carrousel-extravaganza-magic-puppets-stories",
+          "title": "Le Carrousel Extravaganza — magic, puppets & stories",
+          "note": "The 10 AM magic-and-puppets hour again — encore if Monday was a hit."
+        },
+        {
+          "slot": "afternoon",
+          "key": "jane-s-carousel-in-its-glass-box",
+          "title": "Jane's Carousel in its glass box",
+          "note": "A $4 spin in the glass box in DUMBO — bridge views and river breeze on the way."
+        }
+      ]
+    },
+    "thu": {
+      "summary": "Goats at the zoo early, splash pad after nap, blanket Shakespeare at 6:30 uptown.",
+      "picks": [
+        {
+          "slot": "morning",
+          "key": "feed-the-goats-at-the-tisch-children-s-zoo",
+          "title": "Feed the goats at the Tisch Children's Zoo",
+          "note": "Go at opening before the heat — under-3s are free at the Tisch Children's Zoo."
+        },
+        {
+          "slot": "afternoon",
+          "key": "pier-51-water-playground-freshly-renovated",
+          "title": "Pier 51 water playground (freshly renovated)",
+          "note": "Freshly renovated sprinklers at Jane St — pack the spare shirt."
+        },
+        {
+          "slot": "evening",
+          "key": "hamlet-under-the-monument-free-shakespeare-in-ri",
+          "title": "Hamlet under the monument — free Shakespeare in Riverside Park",
+          "note": "Near Grandma's? Blanket-picnic Shakespeare in Riverside Park at 6:30 — leave whenever."
+        }
+      ]
+    },
+    "fri": {
+      "summary": "West Side Fest: quilt-making at Poster House, touch tanks after nap, jazz on a real beach at 6:30.",
+      "picks": [
+        {
+          "slot": "morning",
+          "key": "west-side-fest-kids-community-quilt-screenprinti",
+          "title": "West Side Fest: Kids Community Quilt + screenprinting (Poster House)",
+          "note": "Free screenprinting and quilt squares from 10 — head home by 11:45 to make nap."
+        },
+        {
+          "slot": "afternoon",
+          "key": "touch-tank-open-hours-bbp-environmental-educatio",
+          "title": "Touch-tank open hours — BBP Environmental Education Center",
+          "note": "3 PM at 99 Plymouth St — wake at 2, subway over, timing works perfectly."
+        },
+        {
+          "slot": "evening",
+          "key": "west-side-fest-jazz-on-the-beach-real-sand-live-",
+          "title": "West Side Fest: Jazz on the Beach — real sand + live Latin band",
+          "note": "Toes in real sand at Gansevoort Peninsula while the Latin band plays, 6:30."
+        }
+      ]
+    },
+    "sat": {
+      "summary": "Spellbound toddler theater at 10:30, AMNH block party + Manhattanhenge after nap, dance-floor nightcap.",
+      "picks": [
+        {
+          "slot": "morning",
+          "key": "spellbound-theater-toddler-show-made-for-ages-2-",
+          "title": "Spellbound Theater: toddler show made for ages 2-5 (CMOM)",
+          "note": "The one show this week made exactly for age 2 — 10:30 at CMOM, W 83rd St."
+        },
+        {
+          "slot": "afternoon",
+          "key": "amnh-block-party-manhattanhenge",
+          "title": "AMNH Block Party + Manhattanhenge",
+          "note": "Roll up at 3 after nap — street games and science carts, Manhattanhenge glow later."
+        },
+        {
+          "slot": "evening",
+          "key": "africarnaval-on-the-dance-floor",
+          "title": "AfriCarnaval on the Dance Floor",
+          "note": "A 10-minute walk from Grandma's — dance it out on Josie Robertson Plaza before bed."
+        }
+      ]
+    },
+    "sun": {
+      "summary": "Marionettes at 10:15, Shakespeare on the lawn across from Grandma's after nap, sunset funk on Pier i.",
+      "picks": [
+        {
+          "slot": "morning",
+          "key": "little-red-s-hood-swedish-cottage-marionettes",
+          "title": "Little Red's Hood — Swedish Cottage Marionettes",
+          "note": "Swedish Cottage marionettes at 10:15 — a stroller walk through the park from Grandma's."
+        },
+        {
+          "slot": "afternoon",
+          "key": "free-shakespeare-on-the-lawn-the-taming-of-the-s",
+          "title": "Free Shakespeare on the lawn: The Taming of the Shrew",
+          "note": "2 PM on the lawn at W 69th & CPW — across the street, arrive whenever she wakes."
+        },
+        {
+          "slot": "evening",
+          "key": "sunset-funk-on-pier-i-gentleman-brawlers-summer-",
+          "title": "Sunset funk on Pier i — Gentleman Brawlers (Summer on the Hudson)",
+          "note": "River-breeze funk at W 70th from 7 — only if she's still going strong."
+        }
+      ]
+    }
+  },
   events: [
   {
     "title": "Picnic Performance: Avery Wilson (Carnegie Hall Citywide)",
