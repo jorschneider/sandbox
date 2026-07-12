@@ -33,7 +33,7 @@
   const dayIndex = Math.floor((new Date() - weekStart) / 86400000); // 0 = Monday
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
-  const state = { day: todayKey || "all", showAnytime: false,
+  const state = { day: todayKey || "all", showAnytime: false, heartsOnly: false,
     base: /(^|[#&])base=cpw(&|$)/.test(location.hash) ? "cpw" : "usq" };
   const curBase = () => BASES[state.base];
 
@@ -67,6 +67,19 @@
     return '<span class="m-cost">💸 ' + (esc(shortCost(e, 44)) || "check price") + "</span>";
   }
   const isEvent = (e) => e.event === true;
+  const endMin = (e) => e.end
+    ? parseInt(e.end.slice(0, 2), 10) * 60 + parseInt(e.end.slice(3), 10)
+    : startMin(e) + 120;
+  // 'now' | 'soon' | 'done' | null — only meaningful when viewing today
+  function liveStatus(e) {
+    if (!e.start || state.day !== todayKey || todayKey == null) return null;
+    const now = new Date();
+    const nowM = now.getHours() * 60 + now.getMinutes();
+    if (nowM > endMin(e)) return "done";
+    if (nowM >= startMin(e)) return "now";
+    if (startMin(e) - nowM <= 90) return "soon";
+    return null;
+  }
   const startMin = (e) => e.start ? parseInt(e.start.slice(0, 2), 10) * 60 + parseInt(e.start.slice(3), 10) : Infinity;
   const keyOf = (e) => e.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
   const byKey = {};
@@ -101,16 +114,39 @@
   const sharedMatch = location.hash.match(/hearts=([^&]*)/);
   if (sharedMatch && sharedMatch[1]) {
     decodeURIComponent(sharedMatch[1]).split(",").forEach((k) => { if (byKey[k]) hearts.add(k); });
+    if (hearts.size) state.heartsOnly = true;
   }
   function toggleHeart(k) {
     if (hearts.has(k)) hearts.delete(k); else hearts.add(k);
     try { localStorage.setItem("rbw-hearts", JSON.stringify(Array.from(hearts))); } catch (err) {}
+    if (state.heartsOnly) { render(); return; }
     mapList.querySelectorAll('.heart[data-key="' + k + '"]').forEach((b) => {
       if (b.classList.contains("btn-cal-mini")) return;
       b.textContent = hearts.has(k) ? "❤️" : "🤍";
       b.setAttribute("aria-pressed", String(hearts.has(k)));
     });
+    syncPlanChip();
   }
+  const planChip = document.getElementById("plan-chip");
+  const copyPlanBtn = document.getElementById("copy-plan");
+  function syncPlanChip() {
+    planChip.textContent = "❤️ Our plan" + (hearts.size ? " (" + hearts.size + ")" : "");
+    planChip.classList.toggle("active", state.heartsOnly);
+    planChip.setAttribute("aria-pressed", String(state.heartsOnly));
+    copyPlanBtn.hidden = !(state.heartsOnly && hearts.size > 0);
+  }
+  planChip.addEventListener("click", () => {
+    state.heartsOnly = !state.heartsOnly;
+    render();
+  });
+  copyPlanBtn.addEventListener("click", () => {
+    const url = location.origin + location.pathname + "#" +
+      (state.base === "cpw" ? "base=cpw&" : "") + "hearts=" + Array.from(hearts).join(",");
+    (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => {
+      copyPlanBtn.textContent = "✅ Copied!";
+      setTimeout(() => { copyPlanBtn.textContent = "🔗 Copy link"; syncPlanChip(); }, 1600);
+    }).catch(() => { prompt("Copy this link:", url); });
+  });
 
   // ——— add to calendar (.ics) ———
   function icsDate(dayIdx, hm, plusMinutes) {
@@ -259,7 +295,8 @@
   function markerIcon(e, num) {
     const cat = CATS[e.category] || CATS.other;
     return L.divIcon({
-      className: "emoji-pin pin-tb-" + timeBucket(e),
+      className: "emoji-pin pin-tb-" + timeBucket(e) +
+        (liveStatus(e) === "done" ? " pin-done" : "") + (liveStatus(e) === "now" ? " pin-live" : ""),
       html: "<span><em>" + cat.emoji + '<i class="pin-num">' + num + "</i></em></span>",
       iconSize: [38, 38],
       iconAnchor: [38, 38],   // the teardrop tip sits exactly on the venue
@@ -281,17 +318,21 @@
   function miniCard(e, num) {
     const k = keyOf(e);
     const cat = CATS[e.category] || CATS.other;
+    const live = liveStatus(e);
     const el = document.createElement("div");
     el.setAttribute("role", "button");
     el.tabIndex = 0;
-    el.className = "mini-card";
+    el.className = "mini-card" + (live === "done" ? " done" : "");
     el.dataset.num = num;
     el.innerHTML =
       '<span class="mini-num tb-' + timeBucket(e) + '">' + num + "</span>" +
       '<span class="mini-body">' +
         "<h4>" + cat.emoji + " " + esc(e.title) + (e.confidence && e.confidence !== "high" ? " 🔍" : "") + "</h4>" +
         '<p class="mini-start"><b>' + (e.start ? fmtTime(e.start) : "All day") + "</b>" +
-          (isEvent(e) ? ' <span class="mini-star">⭐ this week</span>' : "") + "</p>" +
+          (live === "now" ? ' <span class="mini-live live-now">▶️ happening now</span>' :
+           live === "soon" ? ' <span class="mini-live live-soon">⏰ starting soon</span>' :
+           live === "done" ? ' <span class="mini-live live-done">✔ ended today</span>' :
+           (isEvent(e) ? ' <span class="mini-star">⭐ this week</span>' : "")) + "</p>" +
         '<p class="mini-when">🕐 ' + esc(e.when) + "</p>" +
         (state.base === "usq" && e.travelHow ? '<p class="mini-when">🚇 ' + esc(e.travelHow) + "</p>" : "") +
         '<p class="mini-meta">' +
@@ -343,6 +384,7 @@
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
     const list = data.events.filter((e) => {
+      if (state.heartsOnly && !hearts.has(keyOf(e))) return false;
       if (state.base === "usq" && e.cpwOnly) return false; // beyond the Union Sq radius
       if (state.base === "cpw" && estMinutes(BASES.cpw, e) > 32) return false;
       if (state.day === "all") return true;
@@ -429,6 +471,7 @@
     spreadOverlaps();
 
     renderWxStrip();
+    syncPlanChip();
   }
 
   // hearts + calendar clicks (list re-renders, so delegate)

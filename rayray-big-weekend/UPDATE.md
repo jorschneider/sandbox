@@ -40,6 +40,8 @@ Each event:
 | `lat`, `lng` | numbers | venue coordinates for the map view (NYC: lat 40.64–40.82, lng −74.05 to −73.92) |
 | `start` | string/null | earliest start time as 24h "HH:MM" (null for open-anytime places) — drives the "Starts 10 AM" badge, time color coding, and earliest-to-latest sort |
 | `times` | array | subset of `["morning","afternoon","evening"]` or `["any"]` — must agree with `start` (before 12 = morning, 12–4:59 = afternoon, 5+ = evening) |
+| `end` | string/null | end time "HH:MM" parsed from the schedule range where known; drives the "ended today" fade (fallback: start + 2h) |
+| `img` | string (optional) | og:image URL from the official page for a card thumbnail; broken links auto-hide, so omit rather than guess |
 | `cpwOnly` | boolean | `true` = only reachable from Grandma's base (beyond ~35 min of Union Sq); hidden in Union Sq mode |
 | `event` | boolean | `true` = a real dated happening (concert, show, storytime session, festival) — gets the "⭐ this week" chip, sorts first, and powers the "Real events only" filter. `false` = an open-anytime place. |
 
@@ -119,6 +121,10 @@ python3 -m http.server  # from the repo root
 # open http://localhost:8000/rayray-big-weekend/
 ```
 
+**MANDATORY: run `node rayray-big-weekend/validate.cjs` and fix every error
+before deploying** — it checks the schema, coordinate bounds, start/times
+agreement, URLs, and duplicate slugs.
+
 Sanity-check: week label correct, TODAY badge on the right day, the list groups
 under Morning/Afternoon/Evening/Anytime headers in start-time order, every entry
 has a numbered pin on the map in the right place, and each card's Details link
@@ -159,3 +165,12 @@ and athena.caoyue@gmail.com, subject "🎈 Rayray Big Weekend — week of
 best dated events and free picks. Finish the run by summarizing the week's
 highlights: best free events, outdoor theater finds, one-offs worth planning
 around, and any grandma-zone weekend gems.
+
+## Saturday re-verify (second routine)
+
+A smaller Saturday-morning routine re-checks the CURRENT week.js in place (no
+re-research): (1) verify every dated Sat/Sun event against its official page —
+cancellations, time changes; (2) upgrade any medium/low-confidence entries by
+verifying their hours/prices on the official visit pages; (3) check the weekend
+forecast and note washouts. Apply corrections to week.js only, run the
+validator, push, deploy, and push-notify a short "what changed" summary.
