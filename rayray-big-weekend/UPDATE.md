@@ -41,7 +41,6 @@ Each event:
 | `start` | string/null | earliest start time as 24h "HH:MM" (null for open-anytime places) — drives the "Starts 10 AM" badge, time color coding, and earliest-to-latest sort |
 | `times` | array | subset of `["morning","afternoon","evening"]` or `["any"]` — must agree with `start` (before 12 = morning, 12–4:59 = afternoon, 5+ = evening) |
 | `end` | string/null | end time "HH:MM" parsed from the schedule range where known; drives the "ended today" fade (fallback: start + 2h) |
-| `img` | string (optional) | og:image URL from the official page for a card thumbnail; broken links auto-hide, so omit rather than guess |
 | `cpwOnly` | boolean | `true` = only reachable from Grandma's base (beyond ~35 min of Union Sq); hidden in Union Sq mode |
 | `event` | boolean | `true` = a real dated happening (concert, show, storytime session, festival) — gets the "⭐ this week" chip, sorts first, and powers the "Real events only" filter. `false` = an open-anytime place. |
 
