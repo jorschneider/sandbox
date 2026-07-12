@@ -3,8 +3,11 @@
   const data = window.WEEK_DATA;
   if (!data || !window.L) return;
 
-  const HOME = "112 East 19th Street, New York, NY";
-  const HOME_COORDS = [40.7376, -73.9868];
+  const BASES = {
+    usq: { label: "home (Union Sq)", addr: "112 East 19th Street, New York, NY", coords: [40.7376, -73.9868], emoji: "🏠" },
+    cpw: { label: "Grandma's", addr: "101 Central Park West, New York, NY", coords: [40.7757, -73.9787], emoji: "👵" },
+  };
+  const HOME_COORDS = BASES.usq.coords;
 
   const CATS = {
     music:     { label: "Music",            emoji: "🎵" },
@@ -30,7 +33,22 @@
   const dayIndex = Math.floor((new Date() - weekStart) / 86400000); // 0 = Monday
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
-  const state = { day: todayKey || "all", showAnytime: false };
+  const state = { day: todayKey || "all", showAnytime: false,
+    base: /(^|[#&])base=cpw(&|$)/.test(location.hash) ? "cpw" : "usq" };
+  const curBase = () => BASES[state.base];
+
+  // rough door-to-door estimate from a base: walk when close, subway-ish beyond
+  function estMinutes(base, e) {
+    const R = 6371, toR = Math.PI / 180;
+    const dLat = (e.lat - base.coords[0]) * toR;
+    const dLng = (e.lng - base.coords[1]) * toR;
+    const a = Math.sin(dLat / 2) ** 2 +
+      Math.cos(base.coords[0] * toR) * Math.cos(e.lat * toR) * Math.sin(dLng / 2) ** 2;
+    const km = 2 * R * Math.asin(Math.sqrt(a));
+    return Math.round(km < 1.1 ? km * 14 : 9 + km * 3.8);
+  }
+  // Union Square times are researched; Grandma times are estimates
+  const travelOf = (e) => state.base === "usq" ? e.travelMinutes : estMinutes(BASES.cpw, e);
 
   // ——— helpers ———
   function shortCost(e, n) {
@@ -74,7 +92,7 @@
   }
   function dirUrl(e) {
     const dest = encodeURIComponent(e.venue + ", " + e.neighborhood + ", New York, NY");
-    return "https://www.google.com/maps/dir/?api=1&origin=" + encodeURIComponent(HOME) + "&destination=" + dest;
+    return "https://www.google.com/maps/dir/?api=1&origin=" + encodeURIComponent(curBase().addr) + "&destination=" + dest;
   }
 
   // ——— hearts (persisted; #hearts=… share links still import) ———
@@ -162,6 +180,26 @@
       dayPicker.appendChild(b);
     });
 
+  // ——— home-base switcher ———
+  const basePicker = document.getElementById("base-picker");
+  basePicker.querySelectorAll(".base").forEach((x) => {
+    x.classList.toggle("active", x.dataset.base === state.base);
+    x.setAttribute("aria-selected", String(x.dataset.base === state.base));
+  });
+  basePicker.querySelectorAll(".base").forEach((b) => {
+    b.addEventListener("click", () => {
+      state.base = b.dataset.base;
+      basePicker.querySelectorAll(".base").forEach((x) => {
+        x.classList.toggle("active", x === b);
+        x.setAttribute("aria-selected", String(x === b));
+      });
+      homeMarker.setLatLng(curBase().coords);
+      homeMarker.setTooltipContent(curBase().emoji + " " + curBase().label);
+      homeMarker.setIcon(L.divIcon({ className: "emoji-pin emoji-pin-home", html: "<span>" + curBase().emoji + "</span>", iconSize: [38, 38], iconAnchor: [19, 19] }));
+      render();
+    });
+  });
+
   // ——— the map (the one and only view) ———
   const mapList = document.getElementById("map-list");
   const map = L.map("map", { scrollWheelZoom: false });
@@ -169,9 +207,14 @@
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   }).addTo(map);
-  L.marker(HOME_COORDS, {
+  const homeMarker = L.marker(HOME_COORDS, {
     icon: L.divIcon({ className: "emoji-pin emoji-pin-home", html: "<span>🏠</span>", iconSize: [38, 38], iconAnchor: [19, 19] }),
-  }).addTo(map).bindTooltip("Home base", { direction: "top" });
+  }).addTo(map).bindTooltip("🏠 home (Union Sq)", { direction: "top" });
+  if (state.base !== "usq") {
+    homeMarker.setLatLng(curBase().coords);
+    homeMarker.setTooltipContent(curBase().emoji + " " + curBase().label);
+    homeMarker.setIcon(L.divIcon({ className: "emoji-pin emoji-pin-home", html: "<span>" + curBase().emoji + "</span>", iconSize: [38, 38], iconAnchor: [19, 19] }));
+  }
   const markerLayer = L.layerGroup().addTo(map);
   const legend = document.createElement("div");
   legend.className = "map-legend";
@@ -228,7 +271,7 @@
       '<div class="pop">' +
         "<strong>" + esc(e.title) + "</strong>" +
         '<div class="pop-when">🕐 ' + esc(e.when) + "</div>" +
-        '<div class="pop-venue">📍 ' + esc(e.venue) + " · ~" + e.travelMinutes + " min</div>" +
+        '<div class="pop-venue">📍 ' + esc(e.venue) + " · ~" + travelOf(e) + " min</div>" +
         '<div class="pop-venue">🎟️ ' + esc(shortCost(e, 60)) + "</div>" +
         '<div class="pop-links"><a href="' + esc(e.url) + '" target="_blank" rel="noopener">Details ↗</a>' +
         ' · <a href="' + dirUrl(e) + '" target="_blank" rel="noopener">Directions 🗺️</a></div>' +
@@ -250,9 +293,10 @@
         '<p class="mini-start"><b>' + (e.start ? fmtTime(e.start) : "All day") + "</b>" +
           (isEvent(e) ? ' <span class="mini-star">⭐ this week</span>' : "") + "</p>" +
         '<p class="mini-when">🕐 ' + esc(e.when) + "</p>" +
+        (state.base === "usq" && e.travelHow ? '<p class="mini-when">🚇 ' + esc(e.travelHow) + "</p>" : "") +
         '<p class="mini-meta">' +
           costChip(e) +
-          '<span class="m-travel">🚇 ~' + e.travelMinutes + " min</span>" +
+          '<span class="m-travel">🚇 ~' + travelOf(e) + " min" + (state.base === "cpw" ? " from Grandma's (est)" : "") + "</span>" +
           (e.outdoor ? "<span>☀️</span>" : "<span>❄️ A/C</span>") +
         "</p>" +
         '<p class="mini-tip">🧸 ' + esc(e.toddlerNotes) + "</p>" +
@@ -299,10 +343,11 @@
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
     const list = data.events.filter((e) => {
+      if (state.base === "cpw" && estMinutes(BASES.cpw, e) > 32) return false;
       if (state.day === "all") return true;
       const days = e.days || ["any"];
       return days.indexOf("any") !== -1 || days.indexOf(state.day) !== -1;
-    }).sort((a, b) => startMin(a) - startMin(b) || (a.travelMinutes || 99) - (b.travelMinutes || 99));
+    }).sort((a, b) => startMin(a) - startMin(b) || (travelOf(a) || 99) - (travelOf(b) || 99));
 
     const label = state.day === "all" ? "this week" : (state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day]);
     const nTimed = list.filter((e) => timeBucket(e) !== "any").length;
@@ -318,7 +363,7 @@
     activeNum = null;
     mapList.innerHTML = "";
     mapList.scrollTop = 0;
-    const pts = [HOME_COORDS];
+    const pts = [curBase().coords];
     let num = 0;
     TB.forEach((bucket) => {
       const items = list.filter((e) => timeBucket(e) === bucket.key);
@@ -375,7 +420,7 @@
     map.invalidateSize();
     if (pts.length > 1) {
       map.fitBounds(L.latLngBounds(pts).pad(0.12), { animate: false });
-      map.setZoom(map.getZoom() + 2, { animate: false }); // start close; scroll-follow roams the rest
+      map.setZoom(Math.min(map.getZoom() + 2, 14), { animate: false }); // start close; scroll-follow roams the rest
     } else {
       map.setView(HOME_COORDS, 13);
     }
