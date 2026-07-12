@@ -127,7 +127,11 @@ agreement, URLs, and duplicate slugs.
 Sanity-check: week label correct, TODAY badge on the right day, the list groups
 under Morning/Afternoon/Evening/Anytime headers in start-time order, every entry
 has a numbered pin on the map in the right place, and each card's Details link
-works. The UI is a single map+scrolling-list view (no cards mode); the
+works. The UI is a single map+scrolling-list view (no cards mode); open-anytime
+entries sit behind two staged unlocks at the end of the list — "☔ Rainy day"
+(indoor entries: museums & indoor play) then "🧭 Destination playgrounds &
+ferries" (outdoor spots plus carousel/ferry rides) — derived from the outdoor
+flag, so set it accurately; the
 hour-by-hour weather strip fills from Open-Meteo at view time and hides itself
 if the fetch fails. Leaflet is vendored at `vendor/leaflet/` — no CDN needed;
 map tiles come from openstreetmap.org at view time.

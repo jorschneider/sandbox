@@ -33,7 +33,7 @@
   const dayIndex = Math.floor((new Date() - weekStart) / 86400000); // 0 = Monday
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
-  const state = { day: todayKey || "all", showAnytime: false, heartsOnly: false,
+  const state = { day: todayKey || "all", showRainy: false, showDest: false, heartsOnly: false,
     base: /(^|[#&])base=cpw(&|$)/.test(location.hash) ? "cpw" : "usq" };
   const curBase = () => BASES[state.base];
 
@@ -408,35 +408,7 @@
     mapList.scrollTop = 0;
     const pts = [curBase().coords];
     let num = 0;
-    TB.forEach((bucket) => {
-      const items = list.filter((e) => timeBucket(e) === bucket.key);
-      if (!items.length) return;
-      if (bucket.key === "any" && !state.showAnytime) {
-        // anytime spots wait behind a reveal at the end of the scroll
-        const btn = document.createElement("button");
-        btn.className = "show-any";
-        btn.innerHTML = "🧭 Show " + items.length + " anytime spots<small>playgrounds, splash pads, carousels & ferries</small>";
-        btn.addEventListener("click", () => {
-          state.showAnytime = true;
-          render();
-          const head = mapList.querySelector(".list-head-any");
-          if (head) head.scrollIntoView({ block: "start", behavior: "smooth" });
-        });
-        mapList.appendChild(btn);
-        return;
-      }
-      const head = document.createElement("div");
-      head.className = "list-head" + (bucket.key === "any" ? " list-head-any" : "");
-      head.innerHTML = bucket.emoji + " " + bucket.label + ' <span class="list-count tb-' + bucket.key + '">' + items.length + "</span>" +
-        (bucket.key === "any" ? ' <button class="hide-any">hide</button>' : "");
-      if (bucket.key === "any") {
-        head.querySelector(".hide-any").addEventListener("click", () => {
-          state.showAnytime = false;
-          render();
-        });
-      }
-      mapList.appendChild(head);
-      items.forEach((e) => {
+    const addEntry = (e) => {
         if (typeof e.lat !== "number" || typeof e.lng !== "number") return;
         num += 1;
         const n = num;
@@ -458,7 +430,54 @@
         });
         mapList.appendChild(card);
         pts.push([e.lat, e.lng]);
-      });
+    };
+    TB.forEach((bucket) => {
+      const items = list.filter((e) => timeBucket(e) === bucket.key);
+      if (!items.length) return;
+      if (bucket.key === "any") {
+        // two staged unlocks: rainy-day indoor escapes first, then outdoor destinations
+        const isRide = (e) => /carousel|ferry/i.test(e.title);
+        const groups = [
+          { label: "☔ Rainy day", sub: "the big museums & indoor escapes", flag: "showRainy",
+            items: items.filter((e) => !e.outdoor && !isRide(e)) },
+          { label: "🧭 Destination playgrounds & ferries", sub: "splash pads, gardens, boats & carousels", flag: "showDest",
+            items: items.filter((e) => e.outdoor || isRide(e)) },
+        ];
+        groups.forEach((g) => {
+          if (!g.items.length) return;
+          if (!state[g.flag]) {
+            const btn = document.createElement("button");
+            btn.className = "show-any";
+            btn.dataset.flag = g.flag;
+            btn.innerHTML = g.label + " — unlock " + g.items.length + "<small>" + g.sub + "</small>";
+            btn.addEventListener("click", () => {
+              state[g.flag] = true;
+              render();
+              const head = mapList.querySelector('.list-head[data-flag="' + g.flag + '"]');
+              if (head) head.scrollIntoView({ block: "start", behavior: "smooth" });
+            });
+            mapList.appendChild(btn);
+            return;
+          }
+          const head = document.createElement("div");
+          head.className = "list-head";
+          head.dataset.flag = g.flag;
+          head.innerHTML = g.label + ' <span class="list-count tb-any">' + g.items.length + "</span>" +
+            ' <button class="hide-any">hide</button>';
+          head.querySelector(".hide-any").addEventListener("click", () => {
+            state[g.flag] = false;
+            render();
+          });
+          mapList.appendChild(head);
+          g.items.forEach(addEntry);
+        });
+        return;
+      }
+      const head = document.createElement("div");
+      head.className = "list-head";
+      head.innerHTML = bucket.emoji + " " + bucket.label + ' <span class="list-count tb-' + bucket.key + '">' + items.length + "</span>";
+      mapList.appendChild(head);
+      items.forEach(addEntry);
     });
     map.invalidateSize();
     if (pts.length > 1) {
