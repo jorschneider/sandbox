@@ -29,11 +29,11 @@ window.PARAMOUNT_CAST = {
       start: { loyalty: 65, suspicion: 48 } }
   ],
   foreign: [
-    { id: 'usa', name: 'The American President', title: 'United States', emoji: '🦅',
+    { id: 'usa', name: 'President Trump', title: 'United States', emoji: '🦅',
       blurb: 'Treats statecraft as real estate. Wants a win to announce today.', color: '#33506b' },
-    { id: 'russia', name: 'The Russian President', title: 'Russian Federation', emoji: '🐻',
+    { id: 'russia', name: 'President Putin', title: 'Russian Federation', emoji: '🐻',
       blurb: 'No rush. Warmly reminds you who needs whom.', color: '#5a4a3a' },
-    { id: 'eu', name: 'The EU Trade Commissioner', title: 'European Commission', emoji: '🇪🇺',
+    { id: 'eu', name: 'President von der Leyen', title: 'European Commission', emoji: '🇪🇺',
       blurb: 'De-risking, not decoupling. Every threat is a subcommittee.', color: '#2f4b8f' }
   ],
   topics: [
