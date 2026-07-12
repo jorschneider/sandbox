@@ -62,7 +62,7 @@ window.WEEK_DATA = {
     "category": "music",
     "venue": "Brooklyn Bridge Park Boathouse (Pier 5)",
     "neighborhood": "DUMBO, Brooklyn",
-    "when": "Sat Jul 11 & Sun Jul 12 — hour-long free concert; check site for the 2 PM vs 4 PM start",
+    "when": "Sun Jul 12, 2:00 PM (doors 20 min early) — hour-long free concert, no tickets needed",
     "days": [
       "sat",
       "sun"
@@ -74,7 +74,7 @@ window.WEEK_DATA = {
     "url": "https://www.bargemusic.org/calendar-tickets/",
     "outdoor": false,
     "recurring": true,
-    "confidence": "medium",
+    "confidence": "high",
     "lat": 40.695,
     "lng": -74.0,
     "event": true,
@@ -1584,6 +1584,32 @@ window.WEEK_DATA = {
     ],
     "cpwOnly": false,
     "start": null
+  },
+  {
+    "title": "Free all-ages jazz at the Lincoln Center Atrium (Wynton Marsalis series)",
+    "category": "music",
+    "venue": "David Rubenstein Atrium, 1887 Broadway at W 62nd",
+    "neighborhood": "Lincoln Center",
+    "when": "Sun Jul 12, 6:00 PM - free, walk in, explicitly ALL AGES",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free, first-come walk-in",
+    "travelMinutes": 28,
+    "travelHow": "12-min walk from Grandma's down Broadway (1 to 66 St from downtown)",
+    "toddlerNotes": "A Jazz at Lincoln Center quintet ('From Black Codes to The Magic Hour') in the most toddler-forgiving indoor room in the city: cafe tables, open floor, wander freely, leave whenever. 6 PM is bedtime-adjacent - catch the first 30-40 minutes. Air-conditioned.",
+    "url": "https://lincolncenter.org/series/summer-for-the-city/from-black-codes-to-the-magic-hour-367",
+    "outdoor": false,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7712,
+    "lng": -73.9822,
+    "event": true,
+    "times": [
+      "evening"
+    ],
+    "cpwOnly": false,
+    "start": "18:00"
   },
   {
     "title": "Guggenheim: Carol Bove fills the rotunda (thru Aug 2) + Pop art",
