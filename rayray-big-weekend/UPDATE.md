@@ -123,3 +123,29 @@ Work on branch `claude/toddler-activities-microsite-rhvwp8` while its PR is
 open (update the same PR). If that PR has been merged, branch fresh from the
 default branch as `rayray-big-weekend-update-<monday-date>`, push, and open a new
 draft PR titled "Rayray Big Weekend — week of <Mon date>".
+
+## Deploy
+
+The site lives at https://rayray-big-weekend.vercel.app (its own Vercel
+project, `rayray-big-weekend`, deploying this directory as the site root).
+The owner has approved production deploys for this project. After pushing,
+if `VERCEL_TOKEN` is set in the environment:
+
+```sh
+cd rayray-big-weekend
+npx -y vercel link --yes --project rayray-big-weekend --token "$VERCEL_TOKEN"
+npx -y vercel deploy --prod --yes --token "$VERCEL_TOKEN"
+```
+
+Then confirm https://rayray-big-weekend.vercel.app serves the new weekLabel.
+If `VERCEL_TOKEN` is not set, skip the deploy and say so — do not improvise.
+
+## Weekly email
+
+After deploying, create a Gmail DRAFT (the Gmail connector cannot send; if it
+needs re-authorization, skip and note it) addressed to jorschneider@gmail.com
+and athena.caoyue@gmail.com, subject "🎈 Rayray Big Weekend — week of
+<Month Day>", containing the site link and a short day-by-day rundown of the
+best dated events and free picks. Finish the run by summarizing the week's
+highlights: best free events, outdoor theater finds, one-offs worth planning
+around, and any grandma-zone weekend gems.
