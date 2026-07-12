@@ -75,9 +75,20 @@ else {
       const tag = "itinerary." + d + ": ";
       if (!it) { err(tag + "missing"); return; }
       if (!it.summary || typeof it.summary !== "string") err(tag + "missing summary");
-      if (!Array.isArray(it.picks) || !it.picks.length || it.picks.length > 4) {
-        err(tag + "picks must be an array of 1-4"); return;
+      if (!Array.isArray(it.picks) || it.picks.length < 4 || it.picks.length > 9) {
+        err(tag + "picks must be an array of 4-9 (2-3 options per slot)"); return;
       }
+      const perSlot = { morning: 0, afternoon: 0, evening: 0 };
+      const dayKeys = new Set();
+      it.picks.forEach((p) => {
+        if (perSlot[p.slot] != null) perSlot[p.slot] += 1;
+        if (dayKeys.has(p.key)) err(tag + "duplicate pick '" + p.key + "'");
+        dayKeys.add(p.key);
+      });
+      ["morning", "afternoon"].forEach((s) => {
+        if (perSlot[s] < 2 || perSlot[s] > 3) err(tag + s + " needs 2-3 options, has " + perSlot[s]);
+      });
+      if (perSlot.evening > 3) err(tag + "evening has " + perSlot.evening + " options (max 3)");
       it.picks.forEach((p) => {
         const ptag = tag + "pick '" + String(p.key || "?").slice(0, 40) + "': ";
         if (SLOTS.indexOf(p.slot) === -1) { err(ptag + "bad slot " + p.slot); return; }

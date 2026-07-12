@@ -22,7 +22,6 @@
   const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
   const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat", sun: "Sun" };
   const DAY_FULL = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday", sun: "Sunday" };
-  const SLOTS = { morning: "🌅", afternoon: "☀️", evening: "🌆" };
   const TB = [
     { key: "morning",   label: "Morning",       emoji: "🌅" },
     { key: "afternoon", label: "Afternoon",     emoji: "☀️" },
@@ -414,26 +413,38 @@
 
     const it = its[state.day];
     if (!it || !it.picks || !it.picks.length) { itinEl.hidden = true; return; }
-    const row = (p) => {
+    const opt = (p) => {
       const e = byKey[p.key];
       if (!e) return "";
       const n = numByKey[p.key];
-      return '<button class="itin-row" data-key="' + esc(p.key) + '">' +
-        '<span class="itin-slot tb-' + esc(p.slot) + '">' + (SLOTS[p.slot] || "🌅") + " " + (e.start ? fmtTime(e.start) : "flexible") + "</span>" +
-        '<span class="itin-body"><b>' + esc(e.title) + "</b> · " + esc(e.venue) +
-          "<i>" + esc(p.note) + "</i></span>" +
-        (n ? '<span class="itin-go">#' + n + "</span>" : "") +
+      return '<button class="itin-opt" data-key="' + esc(p.key) + '">' +
+        '<span class="itin-opt-top"><span class="itin-slot tb-' + esc(p.slot) + '">' +
+          (e.start ? fmtTime(e.start) : "anytime") + "</span>" +
+          (n ? '<span class="itin-go">#' + n + "</span>" : "") + "</span>" +
+        "<b>" + esc(e.title) + "</b>" +
+        "<i>" + esc(p.note) + "</i>" +
+        "<em>📍 " + esc(e.venue) + "</em>" +
       "</button>";
     };
-    const bySlot = (s) => it.picks.filter((p) => p.slot === s).map(row).join("");
+    const GROUPS = [
+      { slot: "morning", head: "🌅 Morning", hint: "pick one" },
+      { slot: "afternoon", head: "☀️ After nap", hint: "pick one" },
+      { slot: "evening", head: "🌆 Evening", hint: "if she's up for it" },
+    ];
     let html = "<h3>📋 The plan — " + (state.day === todayKey ? "today" : DAY_FULL[state.day]) + "</h3>";
-    html += bySlot("morning");
-    html += '<div class="itin-row itin-nap"><span class="itin-slot sl-nap">😴 12–2</span>' +
-      '<span class="itin-body"><b>Nap at home</b><i>Rayray recharges — everything below starts after 2.</i></span></div>';
-    html += bySlot("afternoon") + bySlot("evening");
+    GROUPS.forEach((g) => {
+      const cards = it.picks.filter((p) => p.slot === g.slot).map(opt).join("");
+      if (g.slot === "afternoon") {
+        html += '<div class="itin-nap"><span class="itin-slot sl-nap">😴 12–2</span>' +
+          "<span><b>Nap at home</b> — Rayray recharges; everything below starts after 2.</span></div>";
+      }
+      if (!cards) return;
+      html += '<div class="itin-head"><span class="itin-head-pill tb-' + g.slot + '">' + g.head + "</span><i>" + g.hint + "</i></div>" +
+        '<div class="itin-group">' + cards + "</div>";
+    });
     itinEl.innerHTML = html;
     itinEl.hidden = false;
-    itinEl.querySelectorAll(".itin-row[data-key]").forEach((b) => {
+    itinEl.querySelectorAll(".itin-opt[data-key]").forEach((b) => {
       b.addEventListener("click", () => {
         const k = b.dataset.key;
         let n = numByKey[k];

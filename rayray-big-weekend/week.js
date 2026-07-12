@@ -5,7 +5,7 @@ window.WEEK_DATA = {
   updated: "July 10, 2026",
   itineraries: {
     "mon": {
-      "summary": "Bryant Park magic show at 10, greenmarket snack run after nap.",
+      "summary": "Bryant Park magic show at 10, splash or market run after nap, free ferry at golden hour.",
       "picks": [
         {
           "slot": "morning",
@@ -14,15 +14,51 @@ window.WEEK_DATA = {
           "note": "Puppets & magic beside the carousel, 10–11 — home for lunch before nap."
         },
         {
+          "slot": "morning",
+          "key": "pier-25-26-splash-pad-playground-mini-golf",
+          "title": "Pier 25 & 26 — splash pad, playground & mini golf",
+          "note": "Splash pad + the big Tribeca playground — go early before the sun gets mean."
+        },
+        {
+          "slot": "morning",
+          "key": "feed-the-goats-at-the-tisch-children-s-zoo",
+          "title": "Feed the goats at the Tisch Children's Zoo",
+          "note": "Zoo gates at 10 — goats fed and home by 11:45."
+        },
+        {
           "slot": "afternoon",
           "key": "union-square-greenmarket-wander",
           "title": "Union Square Greenmarket wander",
           "note": "Post-nap berries-and-samples wander, five minutes from the front door."
+        },
+        {
+          "slot": "afternoon",
+          "key": "evelyn-s-playground-splash-sandbox-on-your-doors",
+          "title": "Evelyn's Playground — splash + sandbox on your doorstep",
+          "note": "The doorstep option — sandbox and sprinklers right in Union Square Park."
+        },
+        {
+          "slot": "afternoon",
+          "key": "seaglass-carousel-ride-a-glowing-fish",
+          "title": "SeaGlass Carousel — ride a glowing fish",
+          "note": "Ride a glowing fish in the A/C at The Battery, then look at the harbor."
+        },
+        {
+          "slot": "evening",
+          "key": "staten-island-ferry-free-boat-ride",
+          "title": "Staten Island Ferry — free boat ride",
+          "note": "Free boat, big harbor wind, Statue of Liberty drive-by — go at golden hour."
+        },
+        {
+          "slot": "evening",
+          "key": "tompkins-square-mini-pool-free-kiddie-pool",
+          "title": "Tompkins Square Mini Pool (free kiddie pool)",
+          "note": "Free kiddie-pool splash till closing — bring the swim diaper."
         }
       ]
     },
     "tue": {
-      "summary": "Air-conditioned DiMenna museum morning, seahorse touch tanks after nap.",
+      "summary": "A/C museum morning (DiMenna or the dinosaurs), water play after nap, sunset ferry hop.",
       "picks": [
         {
           "slot": "morning",
@@ -31,32 +67,104 @@ window.WEEK_DATA = {
           "note": "Dress-up and play in the A/C from 10 — under-5s are free."
         },
         {
+          "slot": "morning",
+          "key": "amnh-butterflies-the-whale-dinosaurs-under-3s-fr",
+          "title": "AMNH — butterflies, the whale & dinosaurs (under-3s free)",
+          "note": "Butterflies, the big whale and dinosaurs from 10 — under-3s free."
+        },
+        {
+          "slot": "morning",
+          "key": "imagination-playground-sand-water-big-blue-block",
+          "title": "Imagination Playground — sand, water & big blue blocks",
+          "note": "Sand, water and giant blue foam blocks at the Seaport."
+        },
+        {
           "slot": "afternoon",
           "key": "wetlab-touch-tanks-seahorses-of-the-hudson",
           "title": "Wetlab touch tanks — seahorses of the Hudson",
-          "note": "Seahorses and crabs at Pier 40, open till 5 — an easy riverside stop after nap."
+          "note": "Seahorses and crabs at Pier 40, open till 5 — perfect post-nap drop-in."
+        },
+        {
+          "slot": "afternoon",
+          "key": "pier-51-water-playground-freshly-renovated",
+          "title": "Pier 51 water playground (freshly renovated)",
+          "note": "Freshly renovated water playground at Jane St — pack the spare shirt."
+        },
+        {
+          "slot": "afternoon",
+          "key": "teardrop-park-bubbling-springs-the-slide",
+          "title": "Teardrop Park — bubbling springs & THE slide",
+          "note": "Bubbling springs and the famous long slide, shady all afternoon."
+        },
+        {
+          "slot": "evening",
+          "key": "nyc-ferry-mini-hop-under-the-brooklyn-bridge",
+          "title": "NYC Ferry mini-hop under the Brooklyn Bridge",
+          "note": "One stop under the Brooklyn Bridge at sunset — $4.50 well spent."
+        },
+        {
+          "slot": "evening",
+          "key": "elizabeth-street-garden-hangout",
+          "title": "Elizabeth Street Garden hangout",
+          "note": "Statues, gravel paths and lawn chairs — a mellow golden-hour hangout."
         }
       ]
     },
     "wed": {
-      "summary": "Carousel double-header: Bryant Park show at 10, Jane's Carousel after nap.",
+      "summary": "Carousel double-header or Domino splash, DUMBO after nap, splash-or-sail evening.",
       "picks": [
         {
           "slot": "morning",
           "key": "le-carrousel-extravaganza-magic-puppets-stories",
           "title": "Le Carrousel Extravaganza — magic, puppets & stories",
-          "note": "The 10 AM magic-and-puppets hour again — encore if Monday was a hit."
+          "note": "Round two of the 10 AM magic-and-puppets hour if Monday was a hit."
+        },
+        {
+          "slot": "morning",
+          "key": "domino-park-s-88-jet-splash-fountain",
+          "title": "Domino Park's 88-jet splash fountain",
+          "note": "Domino Park's 88 jets of Williamsburg splash — beat the big-kid crowds."
+        },
+        {
+          "slot": "morning",
+          "key": "children-s-museum-of-manhattan-cmom",
+          "title": "Children's Museum of Manhattan (CMOM)",
+          "note": "Five floors of air-conditioned toddler chaos on W 83rd — doors at 10."
         },
         {
           "slot": "afternoon",
           "key": "jane-s-carousel-in-its-glass-box",
           "title": "Jane's Carousel in its glass box",
           "note": "A $4 spin in the glass box in DUMBO — bridge views and river breeze on the way."
+        },
+        {
+          "slot": "afternoon",
+          "key": "pier-6-water-lab-sand-village",
+          "title": "Pier 6 Water Lab + sand village",
+          "note": "Pier 6's sand village and water jets — steps from Jane's if you want both."
+        },
+        {
+          "slot": "afternoon",
+          "key": "union-square-greenmarket-wander",
+          "title": "Union Square Greenmarket wander",
+          "note": "Wednesday market day — post-nap berry run five minutes from home."
+        },
+        {
+          "slot": "evening",
+          "key": "tompkins-square-mini-pool-free-kiddie-pool",
+          "title": "Tompkins Square Mini Pool (free kiddie pool)",
+          "note": "Free kiddie pool until close — the pre-dinner energy dump."
+        },
+        {
+          "slot": "evening",
+          "key": "staten-island-ferry-free-boat-ride",
+          "title": "Staten Island Ferry — free boat ride",
+          "note": "Free harbor cruise at golden hour — she can conk out on the return leg."
         }
       ]
     },
     "thu": {
-      "summary": "Goats at the zoo early, splash pad after nap, blanket Shakespeare at 6:30 uptown.",
+      "summary": "Goats or library blocks early, island ferry or sprinklers after nap, blanket Shakespeare at 6:30.",
       "picks": [
         {
           "slot": "morning",
@@ -65,21 +173,51 @@ window.WEEK_DATA = {
           "note": "Go at opening before the heat — under-3s are free at the Tisch Children's Zoo."
         },
         {
+          "slot": "morning",
+          "key": "snfl-children-s-center-blocks-play-a-c",
+          "title": "SNFL Children's Center — blocks, play & A/C",
+          "note": "The library's block-filled kids floor — free, air-conditioned, zero logistics."
+        },
+        {
+          "slot": "morning",
+          "key": "washington-square-playgrounds-spray-showers",
+          "title": "Washington Square playgrounds + spray showers",
+          "note": "Spray showers and three playgrounds, ten minutes from home."
+        },
+        {
+          "slot": "afternoon",
+          "key": "governors-island-ferry-day",
+          "title": "Governors Island ferry day",
+          "note": "Catch a post-nap boat from the Battery — car-free island, big slides, ice cream."
+        },
+        {
           "slot": "afternoon",
           "key": "pier-51-water-playground-freshly-renovated",
           "title": "Pier 51 water playground (freshly renovated)",
-          "note": "Freshly renovated sprinklers at Jane St — pack the spare shirt."
+          "note": "Sprinkler hour at the Jane St water playground — new this summer."
+        },
+        {
+          "slot": "afternoon",
+          "key": "dimenna-children-s-history-museum-under-5s-free",
+          "title": "DiMenna Children's History Museum (under-5s free)",
+          "note": "The A/C insurance plan — dress-up floor, under-5s free."
         },
         {
           "slot": "evening",
           "key": "hamlet-under-the-monument-free-shakespeare-in-ri",
           "title": "Hamlet under the monument — free Shakespeare in Riverside Park",
           "note": "Near Grandma's? Blanket-picnic Shakespeare in Riverside Park at 6:30 — leave whenever."
+        },
+        {
+          "slot": "evening",
+          "key": "staten-island-ferry-free-boat-ride",
+          "title": "Staten Island Ferry — free boat ride",
+          "note": "Free sunset boat ride from Whitehall — harbor breeze beats a hot apartment."
         }
       ]
     },
     "fri": {
-      "summary": "West Side Fest: quilt-making at Poster House, touch tanks after nap, jazz on a real beach at 6:30.",
+      "summary": "West Side Fest quilt-making or Bryant Park magic, touch tanks after nap, jazz on a real beach at 6:30.",
       "picks": [
         {
           "slot": "morning",
@@ -88,21 +226,57 @@ window.WEEK_DATA = {
           "note": "Free screenprinting and quilt squares from 10 — head home by 11:45 to make nap."
         },
         {
+          "slot": "morning",
+          "key": "le-carrousel-extravaganza-magic-puppets-stories",
+          "title": "Le Carrousel Extravaganza — magic, puppets & stories",
+          "note": "Last Bryant Park magic-and-puppets hour of the week, 10–11."
+        },
+        {
+          "slot": "morning",
+          "key": "kids-in-motion-staffed-games-crafts-at-columbus-",
+          "title": "Kids in Motion — staffed games & crafts at Columbus Park",
+          "note": "Staffed games and crafts in Columbus Park all day — mornings are calmest."
+        },
+        {
           "slot": "afternoon",
           "key": "touch-tank-open-hours-bbp-environmental-educatio",
           "title": "Touch-tank open hours — BBP Environmental Education Center",
           "note": "3 PM at 99 Plymouth St — wake at 2, subway over, timing works perfectly."
         },
         {
+          "slot": "afternoon",
+          "key": "juggling-show-class-in-greeley-square",
+          "title": "Juggling show & class in Greeley Square",
+          "note": "2 PM juggling show + try-it class in Greeley Square — only if she's up and moving by 1:45."
+        },
+        {
+          "slot": "afternoon",
+          "key": "adidas-world-cup-fan-zone-under-the-brooklyn-bri",
+          "title": "adidas World Cup Fan Zone under the Brooklyn Bridge",
+          "note": "Drop into the fan zone under the Brooklyn Bridge any time after nap — big screens, free tickets."
+        },
+        {
           "slot": "evening",
           "key": "west-side-fest-jazz-on-the-beach-real-sand-live-",
           "title": "West Side Fest: Jazz on the Beach — real sand + live Latin band",
           "note": "Toes in real sand at Gansevoort Peninsula while the Latin band plays, 6:30."
+        },
+        {
+          "slot": "evening",
+          "key": "human-all-ages-puppet-spectacle-at-the-shed-free",
+          "title": "HUMAN — all-ages puppet spectacle at The Shed (free)",
+          "note": "Giant free puppet spectacle outside The Shed at 6 — reserve the free tickets."
+        },
+        {
+          "slot": "evening",
+          "key": "picnic-performance-avery-wilson-carnegie-hall-ci",
+          "title": "Picnic Performance: Avery Wilson (Carnegie Hall Citywide)",
+          "note": "Picnic blanket on the Bryant Park lawn, music at 7 — bedtime gamble, big payoff."
         }
       ]
     },
     "sat": {
-      "summary": "Spellbound toddler theater at 10:30, AMNH block party + Manhattanhenge after nap, dance-floor nightcap.",
+      "summary": "Spellbound toddler theater at 10:30, AMNH block party or lawn Shakespeare after nap, three good nights out.",
       "picks": [
         {
           "slot": "morning",
@@ -111,21 +285,57 @@ window.WEEK_DATA = {
           "note": "The one show this week made exactly for age 2 — 10:30 at CMOM, W 83rd St."
         },
         {
+          "slot": "morning",
+          "key": "moves-with-lim-n-barefoot-dance-class-on-bryant-",
+          "title": "Moves with Limón — barefoot dance class on Bryant Park lawn",
+          "note": "Barefoot family dance class on the Bryant Park lawn at 10 — zero skill required."
+        },
+        {
+          "slot": "morning",
+          "key": "nyc-math-festival-giant-hands-on-math-playground",
+          "title": "NYC Math Festival — giant hands-on math playground",
+          "note": "Giant hands-on math toys in the Lab School yard from 10 — toddler-proof fun."
+        },
+        {
           "slot": "afternoon",
           "key": "amnh-block-party-manhattanhenge",
           "title": "AMNH Block Party + Manhattanhenge",
           "note": "Roll up at 3 after nap — street games and science carts, Manhattanhenge glow later."
         },
         {
+          "slot": "afternoon",
+          "key": "free-shakespeare-on-the-lawn-the-taming-of-the-s",
+          "title": "Free Shakespeare on the lawn: The Taming of the Shrew",
+          "note": "Blanket Shakespeare on the lawn at W 69th & CPW from 2 — come and go freely."
+        },
+        {
+          "slot": "afternoon",
+          "key": "bargemusic-free-family-chamber-concert",
+          "title": "Bargemusic free family chamber concert",
+          "note": "Free 2 PM chamber mini-concert on a barge — skip if she sleeps late; it repeats Sunday."
+        },
+        {
           "slot": "evening",
           "key": "africarnaval-on-the-dance-floor",
           "title": "AfriCarnaval on the Dance Floor",
           "note": "A 10-minute walk from Grandma's — dance it out on Josie Robertson Plaza before bed."
+        },
+        {
+          "slot": "evening",
+          "key": "giglio-feast-rides-zeppole-the-dancing-tower",
+          "title": "Giglio Feast — rides, zeppole & the dancing tower",
+          "note": "Zeppole, rides and the dancing tower in Williamsburg from 4 — peak street-festival energy."
+        },
+        {
+          "slot": "evening",
+          "key": "human-all-ages-puppet-spectacle-at-the-shed-free",
+          "title": "HUMAN — all-ages puppet spectacle at The Shed (free)",
+          "note": "The Shed's giant free puppet at 6 — Saturday's second showing if Friday didn't happen."
         }
       ]
     },
     "sun": {
-      "summary": "Marionettes at 10:15, Shakespeare on the lawn across from Grandma's after nap, sunset funk on Pier i.",
+      "summary": "Marionettes or free Whitney morning, Shakespeare across from Grandma's after nap, funk, jazz or SummerStage.",
       "picks": [
         {
           "slot": "morning",
@@ -134,16 +344,52 @@ window.WEEK_DATA = {
           "note": "Swedish Cottage marionettes at 10:15 — a stroller walk through the park from Grandma's."
         },
         {
+          "slot": "morning",
+          "key": "whitney-free-second-sunday-free-admission-artmak",
+          "title": "Whitney Free Second Sunday — free admission + artmaking",
+          "note": "Free admission + family artmaking from 10:30 — grab the timed ticket online."
+        },
+        {
+          "slot": "morning",
+          "key": "79th-st-greenmarket-behind-the-museum",
+          "title": "79th St Greenmarket behind the museum",
+          "note": "Sunday market behind the museum from 9 — breakfast peaches two blocks from Grandma's."
+        },
+        {
           "slot": "afternoon",
           "key": "free-shakespeare-on-the-lawn-the-taming-of-the-s",
           "title": "Free Shakespeare on the lawn: The Taming of the Shrew",
           "note": "2 PM on the lawn at W 69th & CPW — across the street, arrive whenever she wakes."
         },
         {
+          "slot": "afternoon",
+          "key": "bastille-day-on-madison-ave-masks-pets-a-giant-g",
+          "title": "Bastille Day on Madison Ave — masks, pets & a giant goose game",
+          "note": "Masks, pets and a giant goose game on Madison Ave till 5 — drop in post-nap."
+        },
+        {
+          "slot": "afternoon",
+          "key": "bargemusic-free-family-chamber-concert",
+          "title": "Bargemusic free family chamber concert",
+          "note": "Sunday repeat of the free barge concert in Brooklyn Bridge Park — arrive as she wakes."
+        },
+        {
           "slot": "evening",
           "key": "sunset-funk-on-pier-i-gentleman-brawlers-summer-",
           "title": "Sunset funk on Pier i — Gentleman Brawlers (Summer on the Hudson)",
           "note": "River-breeze funk at W 70th from 7 — only if she's still going strong."
+        },
+        {
+          "slot": "evening",
+          "key": "summerstage-bastille-day-concert-in-central-park",
+          "title": "SummerStage Bastille Day concert in Central Park",
+          "note": "Free 6 PM concert at Rumsey Playfield — stroller-friendly lawn vibes."
+        },
+        {
+          "slot": "evening",
+          "key": "free-all-ages-jazz-at-the-lincoln-center-atrium-",
+          "title": "Free all-ages jazz at the Lincoln Center Atrium (Wynton Marsalis series)",
+          "note": "Wynton's free atrium jazz series at 6 — indoor, air-conditioned, walk right in."
         }
       ]
     }

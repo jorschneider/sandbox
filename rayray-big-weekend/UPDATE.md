@@ -121,17 +121,22 @@ Each event:
 ## Daily itineraries (exec-sum at the top of each day)
 
 `WEEK_DATA.itineraries` holds a curated plan for EVERY day, mon–sun. This is
-editorial: pick the single best morning / afternoon / (optional) evening from
-that day's entries and say why in one punchy line each. Schema:
+editorial: offer **2–3 options each** for morning and afternoon (the UI labels
+them "pick one"), plus 2–3 evening options when real ones exist, and say why
+in one punchy line each. Lead each slot with your strongest pick — order is
+preserved. Anytime spots (splash pads, museums, ferries) are legitimate
+options and the only way to fill thin weekdays. Schema:
 
 ```js
 itineraries: {
   mon: {
-    summary: "Bryant Park magic show at 10, greenmarket snack run after nap.", // one line for the week-at-a-glance view
-    picks: [
+    summary: "Bryant Park magic show at 10, splash or market run after nap.", // one line for the week-at-a-glance view
+    picks: [ // 2-3 per slot, morning + afternoon required, no duplicate keys within a day
       { slot: "morning",   key: "<event slug>", title: "<event title>", note: "…" },
+      { slot: "morning",   key: "…", title: "…", note: "…" },
       { slot: "afternoon", key: "…", title: "…", note: "…" },
-      { slot: "evening",   key: "…", title: "…", note: "…" },  // optional — only when there's a real evening option
+      { slot: "afternoon", key: "…", title: "…", note: "…" },
+      { slot: "evening",   key: "…", title: "…", note: "…" },  // evening = "if she's up for it"
     ]
   },
   // …tue–sun
