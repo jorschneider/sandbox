@@ -172,7 +172,10 @@ present, picks resolve to real events on the right day, nap rules).
 Sanity-check: week label correct, TODAY badge on the right day, the list groups
 under Morning/Afternoon/Evening/Anytime headers in start-time order, every entry
 has a numbered pin on the map in the right place, and each card's Details link
-works. The UI is a single map+scrolling-list view (no cards mode); open-anytime
+works. When viewing today, events that already ended disappear from the list
+and map (the count line says "N already wrapped up") and their itinerary
+options gray out — that's intended, not missing data. The travel slider under
+the base picker caps the list by minutes-from-base (maxed out = no cap). The UI is a single map+scrolling-list view (no cards mode); open-anytime
 entries sit behind two staged unlocks at the end of the list — "☔ Rainy day"
 (indoor entries: museums & indoor play) then "🧭 Destination playgrounds &
 ferries" (outdoor spots plus carousel/ferry rides) — derived from the outdoor

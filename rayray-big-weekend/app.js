@@ -35,6 +35,7 @@
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
   const state = { day: todayKey || "all", showRainy: false, showDest: false, heartsOnly: false,
+    maxTravel: null, // minutes cap from the travel slider; null = anywhere
     base: /(^|[#&])base=cpw(&|$)/.test(location.hash) ? "cpw" : "usq" };
   const curBase = () => BASES[state.base];
 
@@ -237,6 +238,20 @@
     });
   });
 
+  // ——— travel slider: how far are we willing to schlep? ———
+  const travelSlider = document.getElementById("travel-slider");
+  const travelVal = document.getElementById("travel-val");
+  function syncTravelLabel() {
+    travelVal.textContent = state.maxTravel ? "≤ " + state.maxTravel + " min" : "anywhere";
+  }
+  travelSlider.addEventListener("input", () => {
+    const v = parseInt(travelSlider.value, 10);
+    state.maxTravel = v >= 40 ? null : v; // maxed-out slider = no cap
+    syncTravelLabel();
+  });
+  travelSlider.addEventListener("change", render); // re-filter on release, not every drag tick
+  syncTravelLabel();
+
   // ——— the map (the one and only view) ———
   const mapList = document.getElementById("map-list");
   const map = L.map("map", { scrollWheelZoom: false });
@@ -417,7 +432,7 @@
       const e = byKey[p.key];
       if (!e) return "";
       const n = numByKey[p.key];
-      return '<button class="itin-opt" data-key="' + esc(p.key) + '">' +
+      return '<button class="itin-opt' + (liveStatus(e) === "done" ? " done" : "") + '" data-key="' + esc(p.key) + '">' +
         '<span class="itin-opt-top"><span class="itin-slot tb-' + esc(p.slot) + '">' +
           (e.start ? fmtTime(e.start) : "anytime") + "</span>" +
           (n ? '<span class="itin-go">#' + n + "</span>" : "") + "</span>" +
@@ -463,13 +478,16 @@
   function render() {
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
+    let doneToday = 0;
     const list = data.events.filter((e) => {
       if (state.heartsOnly && !hearts.has(keyOf(e))) return false;
       if (state.base === "usq" && e.cpwOnly) return false; // beyond the Union Sq radius
       if (state.base === "cpw" && estMinutes(BASES.cpw, e) > 32) return false;
-      if (state.day === "all") return true;
+      if (state.maxTravel && travelOf(e) > state.maxTravel) return false;
       const days = e.days || ["any"];
-      return days.indexOf("any") !== -1 || days.indexOf(state.day) !== -1;
+      if (state.day !== "all" && days.indexOf("any") === -1 && days.indexOf(state.day) === -1) return false;
+      if (liveStatus(e) === "done") { doneToday += 1; return false; } // over for today — off the scroll
+      return true;
     }).sort((a, b) => startMin(a) - startMin(b) || (travelOf(a) || 99) - (travelOf(b) || 99));
 
     const label = state.day === "all" ? "this week" : (state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day]);
@@ -477,7 +495,8 @@
     const nAny = list.length - nTimed;
     document.getElementById("count").textContent =
       nTimed + " event" + (nTimed === 1 ? "" : "s") + " " + label +
-      (nAny ? (state.showAnytime ? " + " + nAny + " anytime spots" : " (+" + nAny + " anytime spots below)") : "") + " 🎈";
+      (nAny ? (state.showAnytime ? " + " + nAny + " anytime spots" : " (+" + nAny + " anytime spots below)") : "") +
+      (doneToday ? " · " + doneToday + " already wrapped up ✔" : "") + " 🎈";
 
     // rebuild list + markers, grouped by time of day
     markerLayer.clearLayers();

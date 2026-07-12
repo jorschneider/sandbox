@@ -108,6 +108,14 @@ body {
 
 .count { text-align: center; color: var(--ink-soft); font-weight: 600; margin: 8px 0 12px; }
 
+/* ——— travel slider ——— */
+.travel-row {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin: 10px 0 0; font-weight: 700; color: var(--ink-soft); font-size: 0.9rem;
+}
+.travel-row input[type="range"] { width: min(240px, 45vw); accent-color: var(--coral); cursor: pointer; }
+.travel-row b { min-width: 84px; text-align: left; color: var(--ink); font-weight: 800; }
+
 /* ——— hour-by-hour weather strip ——— */
 .wx-strip[hidden] { display: none !important; }
 .wx-strip {
@@ -152,6 +160,8 @@ body {
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 .itin-opt:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(58, 46, 57, 0.14); }
+.itin-opt.done { opacity: 0.5; }
+.itin-opt.done > b { text-decoration: line-through; }
 .itin-opt-top { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 8px; }
 .itin-opt b { font-weight: 800; font-size: 0.9rem; line-height: 1.25; }
 .itin-opt i { font-style: normal; color: var(--ink-soft); font-size: 0.82rem; line-height: 1.35; }
