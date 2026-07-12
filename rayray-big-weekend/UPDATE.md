@@ -77,10 +77,20 @@ Each event:
    **ALWAYS run a dedicated free-outdoor-theater hunt** every week: Shakespeare
    in the park (Delacorte lottery, Shakespeare Downtown at Castle Clinton,
    Shakespeare in the Parking Lot), roaming companies (New York Classical,
-   Boomerang, Piper Theatre at the Old Stone House), Little Island's
-   amphitheater, and outdoor puppet stages (PuppetMobile, Swedish Cottage
-   lawn events). Outdoor evening theater is prime toddler material — lawn
-   seating, leave anytime — and pairs with the weekday 5 PM+ rule.
+   Boomerang, Piper Theatre at the Old Stone House, Hudson Classical in
+   Riverside Park), Little Island's amphitheater, and outdoor puppet stages.
+   Include ALL free outdoor theater — do NOT exclude a show for its seating
+   format or adult material; the family brings a blanket and leaves anytime.
+   Instead, FLAG the setup in toddlerNotes (stone patio vs lawn, fixed rows,
+   no-late-seating rules, run length, content notes).
+   **ALSO hunt indoor culture every week**: (a) current exhibitions at NYC's
+   top museums — the Met, MoMA, AMNH, Whitney, Guggenheim, New-York
+   Historical/DiMenna, Museum of the City of NY, Brooklyn Museum, New Museum,
+   Intrepid — pick shows with real toddler visual appeal (big, colorful,
+   immersive), with the family price math (under-X free, resident
+   pay-what-you-wish) and stroller rules; (b) indoor family-friendly concerts
+   (Jazz at Lincoln Center family shows, Carnegie family events, Symphony
+   Space Just Kidding, Bargemusic, free atrium series).
    **Frame ages honestly**: verify age recommendations on the official page;
    "all ages welcome" is not "made for toddlers" — say which part of an event
    is actually the toddler part.

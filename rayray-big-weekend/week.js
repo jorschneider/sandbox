@@ -1313,6 +1313,35 @@ window.WEEK_DATA = {
     "start": "17:00"
   },
   {
+    "title": "Hamlet under the monument — free Shakespeare in Riverside Park",
+    "category": "theater",
+    "venue": "Soldiers' & Sailors' Monument, Riverside Park at W 89th St",
+    "neighborhood": "Upper West Side",
+    "when": "Thu-Sun 6:30 PM through Jul 19 (arrive by 6:15 - no late seating)",
+    "days": [
+      "thu",
+      "fri",
+      "sat",
+      "sun"
+    ],
+    "cost": "Free / pay-what-you-can (cushions provided)",
+    "travelMinutes": 42,
+    "travelHow": "25 min from Grandma's: 1 from 72 St to 86 St + 10-min walk",
+    "toddlerNotes": "Setup flag: seating is cushions on the monument's stone patio in semi-fixed rows, and they don't seat latecomers - bring a blanket, arrive by 6:15 and take the edge. The open Riverside lawn behind is the wiggle escape. It's a ~2.5-hour Hamlet: plan to catch a chunk, not the whole thing.",
+    "url": "https://www.hudsonclassicaltheatercompany.org/current.php",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7911,
+    "lng": -73.9793,
+    "event": true,
+    "times": [
+      "evening"
+    ],
+    "cpwOnly": true,
+    "start": "18:30"
+  },
+  {
     "title": "Sunset funk on Pier i — Gentleman Brawlers (Summer on the Hudson)",
     "category": "music",
     "venue": "Pier i, Riverside Park South (W 70th St at the Hudson)",
