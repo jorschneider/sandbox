@@ -27,6 +27,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "19:00"
   },
   {
@@ -53,6 +54,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "15:00"
   },
   {
@@ -79,6 +81,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "14:00"
   },
   {
@@ -105,6 +108,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "15:00"
   },
   {
@@ -130,6 +134,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "18:00"
   },
   {
@@ -156,6 +161,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "15:00"
   },
   {
@@ -183,6 +189,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "10:15"
   },
   {
@@ -209,6 +216,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "12:30"
   },
   {
@@ -236,6 +244,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "11:00"
   },
   {
@@ -263,6 +272,7 @@ window.WEEK_DATA = {
     "times": [
       "morning"
     ],
+    "cpwOnly": false,
     "start": "10:00"
   },
   {
@@ -289,6 +299,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "10:30"
   },
   {
@@ -314,6 +325,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -339,6 +351,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -364,6 +377,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -389,6 +403,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -414,6 +429,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -439,6 +455,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -464,6 +481,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -489,6 +507,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -514,6 +533,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -539,6 +559,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -569,6 +590,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -594,6 +616,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -619,6 +642,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -644,6 +668,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -669,6 +694,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -694,6 +720,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -719,6 +746,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -748,6 +776,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "11:00"
   },
   {
@@ -774,6 +803,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "11:00"
   },
   {
@@ -800,6 +830,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "11:30"
   },
   {
@@ -825,6 +856,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "12:00"
   },
   {
@@ -853,6 +885,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "16:00"
   },
   {
@@ -878,6 +911,7 @@ window.WEEK_DATA = {
     "times": [
       "morning"
     ],
+    "cpwOnly": false,
     "start": "11:00"
   },
   {
@@ -904,6 +938,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "15:00"
   },
   {
@@ -932,6 +967,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -957,6 +993,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -982,6 +1019,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -1007,6 +1045,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -1032,6 +1071,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -1057,6 +1097,7 @@ window.WEEK_DATA = {
     "times": [
       "any"
     ],
+    "cpwOnly": false,
     "start": null
   },
   {
@@ -1083,6 +1124,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "14:00"
   },
   {
@@ -1109,6 +1151,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "10:00"
   },
   {
@@ -1134,6 +1177,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "18:30"
   },
   {
@@ -1159,6 +1203,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "17:00"
   },
   {
@@ -1185,6 +1230,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "10:00"
   },
   {
@@ -1211,6 +1257,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "13:00"
   },
   {
@@ -1236,6 +1283,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "13:00"
   },
   {
@@ -1261,7 +1309,252 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "17:00"
+  },
+  {
+    "title": "Sunset funk on Pier i — Gentleman Brawlers (Summer on the Hudson)",
+    "category": "music",
+    "venue": "Pier i, Riverside Park South (W 70th St at the Hudson)",
+    "neighborhood": "Upper West Side",
+    "when": "Sun Jul 12, 7:00-8:30 PM",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free",
+    "travelMinutes": 38,
+    "travelHow": "15-min flat walk west on W 70th from Grandma's",
+    "toddlerNotes": "Afrofunk at sunset on a wide, stroller-perfect pier - toddlers dance, chase and watch boats. 7 PM is bedtime-adjacent: treat it as a stay-for-30-minutes dance party, then roll home down 70th.",
+    "url": "https://riversideparknyc.org/events/2026-07-12/",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7802,
+    "lng": -73.988,
+    "event": true,
+    "times": [
+      "evening"
+    ],
+    "cpwOnly": true,
+    "start": "19:00"
+  },
+  {
+    "title": "Columbus Circle street fair",
+    "category": "festival",
+    "venue": "Broadway, W 60th-61st St",
+    "neighborhood": "Columbus Circle",
+    "when": "Sun Jul 12, 10 AM-6 PM",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free to wander; food & rides priced per vendor",
+    "travelMinutes": 22,
+    "travelHow": "N/R/W to 59 St-Columbus Circle",
+    "toddlerNotes": "Classic vendor fair: lemonade, mozzarepas, zeppole, sidewalk wandering at toddler pace. Generic as fairs go, but it's a 10-minute walk from Grandma's and chains with Heckscher Playground one block into the park.",
+    "url": "https://www.manhattanbuzz.nyc/article/17/manhattan-street-fairs---street-festivals-in-manhattan-nyc",
+    "outdoor": true,
+    "recurring": false,
+    "confidence": "medium",
+    "lat": 40.7697,
+    "lng": -73.9822,
+    "event": true,
+    "times": [
+      "morning",
+      "afternoon"
+    ],
+    "cpwOnly": false,
+    "start": "10:00"
+  },
+  {
+    "title": "Borrow binoculars — Discovery Kits at the Harlem Meer",
+    "category": "animals",
+    "venue": "Charles A. Dana Discovery Center, Central Park at 110th St",
+    "neighborhood": "Central Park North",
+    "when": "Fri-Sun, kits loaned 10 AM-3:30 PM (return by 4:30)",
+    "days": [
+      "fri",
+      "sat",
+      "sun"
+    ],
+    "cost": "Free (photo ID; deposit only for big groups)",
+    "travelMinutes": 45,
+    "travelHow": "B/C from 72 St-CPW to Cathedral Pkwy + 8-min walk",
+    "toddlerNotes": "Free loaner kit with kid-sized binoculars, hand lens and wildlife guides. A 2-year-old holds the binoculars backwards and points at the Meer's very tame ducks, turtles, herons and enormous carp. (Loaner fishing poles are ages 5+, so fishing is watch-only.)",
+    "url": "https://www.centralparknyc.org/activities/guides/discovery-kits",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7965,
+    "lng": -73.9525,
+    "event": false,
+    "times": [
+      "morning",
+      "afternoon"
+    ],
+    "cpwOnly": true,
+    "start": "10:00"
+  },
+  {
+    "title": "79th St Greenmarket behind the museum",
+    "category": "other",
+    "venue": "Columbus Ave at W 79th-81st St",
+    "neighborhood": "Upper West Side",
+    "when": "Sundays 9 AM-4 PM, year-round",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free to browse; bring cash for peaches",
+    "travelMinutes": 30,
+    "travelHow": "1 to 79 St or B/C to 81 St",
+    "toddlerNotes": "Farm stands at exactly stroller height: a peach or cider donut, flower pointing, bread piles. Pairs with Diana Ross Playground one block east or the museum.",
+    "url": "https://grownyc.org/locations/79th-street-greenmarket/",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7822,
+    "lng": -73.976,
+    "event": false,
+    "times": [
+      "morning",
+      "afternoon"
+    ],
+    "cpwOnly": false,
+    "start": "09:00"
+  },
+  {
+    "title": "DiMenna Children's History Museum (under-5s free)",
+    "category": "play",
+    "venue": "The New York Historical, 170 Central Park West at 77th",
+    "neighborhood": "Upper West Side",
+    "when": "Tue-Sun 11 AM-5 PM (closed Mondays)",
+    "days": [
+      "tue",
+      "wed",
+      "thu",
+      "fri",
+      "sat",
+      "sun"
+    ],
+    "cost": "$24 adult; children under 5 free",
+    "travelMinutes": 28,
+    "travelHow": "B/C to 81 St or 1 to 79 St",
+    "toddlerNotes": "Downstairs children's museum with hands-on pavilions and a play library nook - pitched at 4-12 but contained and climb-friendly for a confident 2-year-old. The best air-conditioned backup within a 7-minute walk of Grandma's.",
+    "url": "https://www.nyhistory.org/visit",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7793,
+    "lng": -73.9739,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "AMNH — butterflies, the whale & dinosaurs (under-3s free)",
+    "category": "animals",
+    "venue": "American Museum of Natural History, CPW at 79th (Gilder entrance on Columbus)",
+    "neighborhood": "Upper West Side",
+    "when": "Daily 10 AM-5:30 PM - on Sundays go right at open",
+    "days": [
+      "any"
+    ],
+    "cost": "Under 3 free; NY residents pay-what-you-wish (ID); Butterfly Vivarium is a ticketed add-on",
+    "travelMinutes": 32,
+    "travelHow": "B/C to 81 St-Museum of Natural History",
+    "toddlerNotes": "Butterflies land on people in the vivarium, the blue whale floors everyone, and the Gilder Center atrium is a canyon to toddle through. Wide stroller paths; 10-minute walk from Grandma's.",
+    "url": "https://www.amnh.org/plan-your-visit",
+    "outdoor": false,
+    "recurring": true,
+    "confidence": "medium",
+    "lat": 40.7813,
+    "lng": -73.974,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "Adventure Playground — water channel + sand mountain",
+    "category": "play",
+    "venue": "Central Park at W 67th St & CPW",
+    "neighborhood": "Central Park West",
+    "when": "Daily, park hours; water feature runs all summer",
+    "days": [
+      "any"
+    ],
+    "cost": "Free",
+    "travelMinutes": 30,
+    "travelHow": "1 to 66 St-Lincoln Center + 8-min walk",
+    "toddlerNotes": "The landmark 1967 Dattner playground, rebuilt 2015: splashing water channel, huge sand pit with sand table, tunnel-slide mound. Peak age-2 - and a 3-minute walk from Grandma's door. No restrooms on site.",
+    "url": "https://www.centralparknyc.org/locations/adventure-playground",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7727,
+    "lng": -73.9779,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "Diana Ross Playground — shade, spray & toddler swings",
+    "category": "play",
+    "venue": "Central Park at W 81st St & CPW",
+    "neighborhood": "Upper West Side",
+    "when": "Daily, park hours",
+    "days": [
+      "any"
+    ],
+    "cost": "Free",
+    "travelMinutes": 32,
+    "travelHow": "B/C to 81 St-Museum of Natural History",
+    "toddlerNotes": "The UWS under-3 default: toddler swings, water spray, big sand-set wooden climber, real tree shade. Steps from AMNH and the Sunday greenmarket - an easy chain.",
+    "url": "https://www.centralparknyc.org/locations/diana-ross-playground",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7835,
+    "lng": -73.9718,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
+  },
+  {
+    "title": "Heckscher Playground — Central Park's biggest (with restrooms!)",
+    "category": "play",
+    "venue": "Central Park mid-park, W 61st-63rd St",
+    "neighborhood": "Columbus Circle",
+    "when": "Daily, park hours; restrooms 6:30 AM-9 PM",
+    "days": [
+      "any"
+    ],
+    "cost": "Free",
+    "travelMinutes": 25,
+    "travelHow": "N/R/W to 59 St-Columbus Circle + walk into the park",
+    "toddlerNotes": "1.8 acres: big water feature, toddler-scale swings and slides, room to run - and actual on-site restrooms, which is rare and clutch with a 2-year-old.",
+    "url": "https://www.centralparknyc.org/locations/heckscher-playground",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7686,
+    "lng": -73.9777,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null
   },
   {
     "title": "Park Open Studio — drop-in artmaking in Washington Sq",
@@ -1287,6 +1580,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "13:00"
   },
   {
@@ -1312,6 +1606,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "14:00"
   },
   {
@@ -1339,6 +1634,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "15:00"
   },
   {
@@ -1366,6 +1662,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "10:00"
   },
   {
@@ -1391,6 +1688,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "20:00"
   },
   {
@@ -1416,6 +1714,7 @@ window.WEEK_DATA = {
     "times": [
       "morning"
     ],
+    "cpwOnly": false,
     "start": "10:00"
   },
   {
@@ -1441,6 +1740,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "18:00"
   },
   {
@@ -1467,6 +1767,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "18:00"
   },
   {
@@ -1492,6 +1793,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "18:00"
   },
   {
@@ -1519,6 +1821,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "10:30"
   },
   {
@@ -1545,6 +1848,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "10:00"
   },
   {
@@ -1570,6 +1874,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "13:00"
   },
   {
@@ -1595,6 +1900,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "14:00"
   },
   {
@@ -1620,6 +1926,7 @@ window.WEEK_DATA = {
     "times": [
       "morning"
     ],
+    "cpwOnly": false,
     "start": "11:00"
   },
   {
@@ -1645,6 +1952,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "12:00"
   },
   {
@@ -1670,6 +1978,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "17:00"
   },
   {
@@ -1695,6 +2004,7 @@ window.WEEK_DATA = {
     "times": [
       "morning"
     ],
+    "cpwOnly": false,
     "start": "11:00"
   },
   {
@@ -1720,6 +2030,7 @@ window.WEEK_DATA = {
     "times": [
       "morning"
     ],
+    "cpwOnly": false,
     "start": "10:00"
   },
   {
@@ -1745,6 +2056,7 @@ window.WEEK_DATA = {
     "times": [
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "15:00"
   },
   {
@@ -1770,6 +2082,7 @@ window.WEEK_DATA = {
     "times": [
       "evening"
     ],
+    "cpwOnly": false,
     "start": "18:00"
   },
   {
@@ -1798,6 +2111,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "12:00"
   },
   {
@@ -1824,6 +2138,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "16:00"
   },
   {
@@ -1850,6 +2165,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "10:30"
   },
   {
@@ -1877,6 +2193,7 @@ window.WEEK_DATA = {
       "morning",
       "afternoon"
     ],
+    "cpwOnly": false,
     "start": "11:00"
   },
   {
@@ -1904,6 +2221,7 @@ window.WEEK_DATA = {
       "afternoon",
       "evening"
     ],
+    "cpwOnly": false,
     "start": "15:00"
   }
 ],

@@ -40,11 +40,19 @@ Each event:
 | `lat`, `lng` | numbers | venue coordinates for the map view (NYC: lat 40.64–40.82, lng −74.05 to −73.92) |
 | `start` | string/null | earliest start time as 24h "HH:MM" (null for open-anytime places) — drives the "Starts 10 AM" badge, time color coding, and earliest-to-latest sort |
 | `times` | array | subset of `["morning","afternoon","evening"]` or `["any"]` — must agree with `start` (before 12 = morning, 12–4:59 = afternoon, 5+ = evening) |
+| `cpwOnly` | boolean | `true` = only reachable from Grandma's base (beyond ~35 min of Union Sq); hidden in Union Sq mode |
 | `event` | boolean | `true` = a real dated happening (concert, show, storytime session, festival) — gets the "⭐ this week" chip, sorts first, and powers the "Real events only" filter. `false` = an open-anytime place. |
 
 ## Research rules
 
-1. **Radius**: ~35 min by subway/walk/ferry from Union Square. Manhattan below
+1. **Radius — two home bases**: ~35 min by subway/walk/ferry from Union
+   Square (112 E 19th St) is the main zone. The site also has a "Grandma's"
+   mode (101 Central Park West): for WEEKEND days, also hunt the Upper West
+   Side / Central Park / Riverside Park zone within ~30 min of 101 CPW and
+   mark anything beyond the Union Square radius with `cpwOnly: true`.
+   `travelMinutes`/`travelHow` are measured from Union Square (except
+   cpwOnly entries, where they can reference Grandma's); Grandma-mode travel
+   times are estimated client-side from coordinates. Main zone: Manhattan below
    ~86th St, DUMBO, Brooklyn Heights, Downtown Brooklyn, Williamsburg, north
    Park Slope, LIC, Governors Island. Nothing farther.
 2. **Age 2 fit**: short or drop-in, stroller-friendly, no age minimums.

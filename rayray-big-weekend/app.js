@@ -343,6 +343,7 @@
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
     const list = data.events.filter((e) => {
+      if (state.base === "usq" && e.cpwOnly) return false; // beyond the Union Sq radius
       if (state.base === "cpw" && estMinutes(BASES.cpw, e) > 32) return false;
       if (state.day === "all") return true;
       const days = e.days || ["any"];
