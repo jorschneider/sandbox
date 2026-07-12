@@ -51,6 +51,10 @@ Each event:
    mode (101 Central Park West): for WEEKEND days, also hunt the Upper West
    Side / Central Park / Riverside Park zone within ~30 min of 101 CPW and
    mark anything beyond the Union Square radius with `cpwOnly: true`.
+   **Williamsburg AND Greenpoint are always in-zone** (family friends live
+   there): McCarren Park, Domino Park, Transmitter Park, the Greenpoint and
+   Leonard libraries, and their events count even when the transit estimate
+   runs a bit over 35 minutes.
    `travelMinutes`/`travelHow` are measured from Union Square (except
    cpwOnly entries, where they can reference Grandma's); Grandma-mode travel
    times are estimated client-side from coordinates. Main zone: Manhattan below

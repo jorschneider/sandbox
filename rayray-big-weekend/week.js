@@ -1861,6 +1861,60 @@ window.WEEK_DATA = {
     "end": null
   },
   {
+    "title": "McCarren Park — free pool, playgrounds & big lawns",
+    "category": "play",
+    "venue": "McCarren Park, Bedford Ave & N 12th St",
+    "neighborhood": "Williamsburg/Greenpoint",
+    "when": "Daily, park hours; outdoor pool 11 AM-3 PM & 4-7 PM in season",
+    "days": [
+      "any"
+    ],
+    "cost": "Free",
+    "travelMinutes": 27,
+    "travelHow": "L to Bedford Av + 8-min walk",
+    "toddlerNotes": "The Williamsburg-Greenpoint anchor: a giant free outdoor pool (all ages, bring locks/swim diapers), two playgrounds with sprinklers, and shady lawns. Pairs with Domino Park's splash fountain or a Greenpoint ferry ride.",
+    "url": "https://www.nycgovparks.org/parks/mccarren-park",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7212,
+    "lng": -73.9515,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null,
+    "end": null
+  },
+  {
+    "title": "WNYC Transmitter Park — waterfront playground + ferry pier",
+    "category": "play",
+    "venue": "West St & Greenpoint Ave, Greenpoint",
+    "neighborhood": "Greenpoint",
+    "when": "Daily 6 AM-9 PM",
+    "days": [
+      "any"
+    ],
+    "cost": "Free",
+    "travelMinutes": 35,
+    "travelHow": "NYC Ferry (East River line) to Greenpoint, or G to Greenpoint Av",
+    "toddlerNotes": "Skyline lawn, a small sailboat-themed playground with a sprinkler, and a fishing pier - and arriving by ferry IS the activity. The mellow Greenpoint alternative to Domino's crowds.",
+    "url": "https://www.nycgovparks.org/parks/wnyc-transmitter-park",
+    "outdoor": true,
+    "recurring": true,
+    "confidence": "high",
+    "lat": 40.7302,
+    "lng": -73.9616,
+    "event": false,
+    "times": [
+      "any"
+    ],
+    "cpwOnly": false,
+    "start": null,
+    "end": null
+  },
+  {
     "title": "Park Open Studio — drop-in artmaking in Washington Sq",
     "category": "play",
     "venue": "Washington Square Park, NW corner seating area (Scrabble Plaza)",
@@ -2493,6 +2547,33 @@ window.WEEK_DATA = {
     ],
     "cpwOnly": false,
     "start": "10:30",
+    "end": null
+  },
+  {
+    "title": "Author storytime + art + free book at Greenpoint Library",
+    "category": "storytime",
+    "venue": "Greenpoint Library (BPL), Eco Lab",
+    "neighborhood": "Greenpoint (edge of radius)",
+    "when": "Sun Jul 12, 2:00 PM (to 3:00)",
+    "days": [
+      "sun"
+    ],
+    "cost": "Free (free take-home copy of the book while supplies last)",
+    "travelMinutes": 33,
+    "travelHow": "L to Lorimer St + G to Nassau Av, 6-min walk",
+    "toddlerNotes": "Author reads 'Until the Blueberries Grow' plus an art activity; recommended 3-8 but it's a drop-in library storytime and toddlers are welcome — note it for a book-loving 2-year-old. One of the few Sunday library events anywhere in the radius.",
+    "url": "https://www.bklynlibrary.org/node/825695",
+    "outdoor": false,
+    "recurring": false,
+    "confidence": "high",
+    "lat": 40.7258,
+    "lng": -73.9506,
+    "event": true,
+    "times": [
+      "afternoon"
+    ],
+    "cpwOnly": false,
+    "start": "14:00",
     "end": null
   },
   {
