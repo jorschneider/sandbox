@@ -347,7 +347,10 @@
           (e.start ? ' · <button class="heart btn-cal-mini" data-key="' + k + '">📅 Calendar</button>' : "") +
         "</span>" +
       "</span>" +
-      '<button class="heart mini-heart" data-key="' + k + '" aria-pressed="' + hearts.has(k) + '" title="Save to our plan">' + (hearts.has(k) ? "❤️" : "🤍") + "</button>";
+      '<span class="mini-side">' +
+        '<button class="heart mini-heart" data-key="' + k + '" aria-pressed="' + hearts.has(k) + '" title="Save to our plan">' + (hearts.has(k) ? "❤️" : "🤍") + "</button>" +
+        (e.img ? '<img class="mini-img" src="' + esc(e.img) + '" alt="" loading="lazy" onerror="this.remove()">' : "") +
+      "</span>";
     return el;
   }
 
