@@ -36,6 +36,7 @@
 
   const state = { day: todayKey || "all", week: "cur", showRainy: false, showPlay: false, showDest: false, heartsOnly: false,
     maxTravel: null, // minutes cap from the travel slider; null = anywhere
+    travelMetric: "transit", // "walk" (weekdays) | "transit" (weekends/whole week)
     base: /(^|[#&])base=cpw(&|$)/.test(location.hash) ? "cpw" : "usq" };
   const nextWeek = data.nextWeek && Array.isArray(data.nextWeek.events) && data.nextWeek.events.length ? data.nextWeek : null;
   const WX = { daily: null, hourly: null }; // 14-day forecast, filled async
@@ -53,6 +54,14 @@
   }
   // Union Square times are researched; Grandma times are estimates
   const travelOf = (e) => state.base === "usq" ? e.travelMinutes : estMinutes(BASES.cpw, e);
+  // straight-line walking estimate from the active base (~toddler pace)
+  function walkOf(e) {
+    if (typeof e.lat !== "number" || typeof e.lng !== "number") return 999;
+    const R = 6371, toR = Math.PI / 180, b = curBase().coords;
+    const dLat = (e.lat - b[0]) * toR, dLng = (e.lng - b[1]) * toR;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(b[0] * toR) * Math.cos(e.lat * toR) * Math.sin(dLng / 2) ** 2;
+    return Math.round(2 * R * Math.asin(Math.sqrt(a)) * 14);
+  }
 
   // ——— helpers ———
   function shortCost(e, n) {
@@ -292,11 +301,33 @@
     });
   });
 
-  // ——— travel slider: how far are we willing to schlep? ———
+  // ——— travel slider: day-type-aware. Weekdays default to a 25-min WALK radius
+  // (keep it local with a toddler); weekends open up to 35 min by TRANSIT. ———
   const travelSlider = document.getElementById("travel-slider");
   const travelVal = document.getElementById("travel-val");
+  const travelLead = document.getElementById("travel-lead");
+  const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri"];
+  const dayType = () => state.day === "all" ? "all" : (WEEKDAYS.indexOf(state.day) !== -1 ? "weekday" : "weekend");
+  // the cap the slider filters against, using the active metric
+  const travelMins = (e) => state.travelMetric === "walk" ? walkOf(e) : travelOf(e);
   function syncTravelLabel() {
-    travelVal.textContent = state.maxTravel ? "≤ " + state.maxTravel + " min" : "anywhere";
+    travelLead.textContent = (state.travelMetric === "walk" ? "🚶 Walk up to" : "🚇 Travel up to");
+    travelVal.textContent = state.maxTravel
+      ? "≤ " + state.maxTravel + " min" + (state.travelMetric === "walk" ? " walk" : "")
+      : "anywhere";
+    travelSlider.value = state.maxTravel || 40;
+  }
+  let lastDayType = null;
+  // re-apply the day-type default whenever the day-type changes (unless the user
+  // is mid-drag on the same day-type, in which case their value stands)
+  function applyTravelDefault() {
+    const dt = dayType();
+    if (dt === lastDayType) return;
+    lastDayType = dt;
+    if (dt === "weekday") { state.travelMetric = "walk"; state.maxTravel = 25; }
+    else if (dt === "weekend") { state.travelMetric = "transit"; state.maxTravel = 35; }
+    else { state.travelMetric = "transit"; state.maxTravel = null; } // whole week = anywhere
+    syncTravelLabel();
   }
   travelSlider.addEventListener("input", () => {
     const v = parseInt(travelSlider.value, 10);
@@ -304,7 +335,6 @@
     syncTravelLabel();
   });
   travelSlider.addEventListener("change", render); // re-filter on release, not every drag tick
-  syncTravelLabel();
 
   // ——— the map (the one and only view) ———
   const mapList = document.getElementById("map-list");
@@ -529,11 +559,14 @@
         const k = b.dataset.key;
         let n = numByKey[k];
         const e = byKey[k];
-        if (!n && e && timeBucket(e) === "any") {
-          // the pick lives behind an anytime unlock — open the right one, then jump
-          const flag = (!e.outdoor && !isRide(e)) ? "showRainy"
-            : (e.outdoor && e.category === "play" && !isRide(e)) ? "showPlay" : "showDest";
-          state[flag] = true;
+        if (!n && e) {
+          // the pick isn't on the map — open its anytime group and/or lift the
+          // travel filter (a weekday plan can point past the 25-min walk radius)
+          if (timeBucket(e) === "any") {
+            state[(!e.outdoor && !isRide(e)) ? "showRainy"
+              : (e.outdoor && e.category === "play" && !isRide(e)) ? "showPlay" : "showDest"] = true;
+          }
+          if (state.maxTravel && travelMins(e) > state.maxTravel) { state.maxTravel = null; syncTravelLabel(); }
           render();
           n = numByKey[k];
         }
@@ -543,6 +576,7 @@
   }
 
   function render() {
+    applyTravelDefault(); // weekday → 25-min walk, weekend → 35-min transit, whole week → anywhere
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
     document.getElementById("week-label").textContent =
@@ -552,7 +586,7 @@
       if (state.heartsOnly && !hearts.has(keyOf(e))) return false;
       if (state.base === "usq" && e.cpwOnly) return false; // beyond the Union Sq radius
       if (state.base === "cpw" && estMinutes(BASES.cpw, e) > 32) return false;
-      if (state.maxTravel && travelOf(e) > state.maxTravel) return false;
+      if (state.maxTravel && travelMins(e) > state.maxTravel) return false;
       const days = e.days || ["any"];
       if (state.day !== "all" && days.indexOf("any") === -1 && days.indexOf(state.day) === -1) return false;
       if (liveStatus(e) === "done") { doneToday += 1; return false; } // over for today — off the scroll
