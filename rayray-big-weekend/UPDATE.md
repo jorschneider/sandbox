@@ -178,7 +178,9 @@ Rules:
   weekly-recurring series into it — the UI carries those over automatically
   (recurring carryovers get downgraded to a 🔍 medium-confidence chip until
   re-verified). Re-list a recurring series in nextWeek only when you verified
-  its next-week details (or they changed — new performer, new time).
+  its next-week details (or they changed — new performer, new time); when you
+  do, the UI auto-suppresses the stale current-week carryover for that venue
+  (venue-token match), so re-listing never double-lists.
 - Research effort: lighter than the current week is fine (headliners, the
   free-outdoor-theater hunt, weekends covered) — next Monday's refresh gives
   that week the full treatment anyway.
