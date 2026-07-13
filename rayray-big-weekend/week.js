@@ -1061,6 +1061,387 @@ window.WEEK_DATA = {
         ],
         "event": true,
         "recurring": false
+      },
+      {
+        "title": "Bilingual Mandarin-English Family Storytime",
+        "category": "storytime",
+        "venue": "Chatham Square Library (NYPL)",
+        "neighborhood": "Chinatown",
+        "when": "Mon Jul 13, 10:30-11:00 AM (also 11:30 AM)",
+        "days": [
+          "mon"
+        ],
+        "cost": "Free",
+        "travelMinutes": 20,
+        "travelHow": "~20 min from Union Sq",
+        "toddlerNotes": "Drop-in bilingual (Mandarin/English) family storytime, newborn-age 5: stories, songs, purposeful play. A 2yo fits squarely. Two back-to-back sessions (10:30 & 11:30) so latecomers catch the next. No registration.",
+        "url": "https://www.nypl.org/locations/chatham-square",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7136,
+        "lng": -73.9969,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "10:30",
+        "end": "11:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Little Movers Storytime at Yorkville",
+        "category": "storytime",
+        "venue": "Yorkville Library (NYPL)",
+        "neighborhood": "Upper East Side (Yorkville)",
+        "when": "Tue Jul 14, 11:30 AM-12:00 PM",
+        "days": [
+          "tue"
+        ],
+        "cost": "Free",
+        "travelMinutes": 27,
+        "travelHow": "~27 min from Union Sq",
+        "toddlerNotes": "Built for new walkers/toddlers: stories, songs, wiggle-out movement. Free ticket handed out 11:00 AM at the 1st-floor desk, limit 25. No elevator, limited stroller parking. Weekly Tuesday series.",
+        "url": "https://www.nypl.org/events/programs/2026/07/07/little-movers-storytime-1",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "high",
+        "lat": 40.7737,
+        "lng": -73.956,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "11:30",
+        "end": "12:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Tuesday Family Storytime at Seward Park",
+        "category": "storytime",
+        "venue": "Seward Park Library (NYPL)",
+        "neighborhood": "Lower East Side",
+        "when": "Tue Jul 14, ~11:15-11:45 AM (confirm time)",
+        "days": [
+          "tue"
+        ],
+        "cost": "Free",
+        "travelMinutes": 19,
+        "travelHow": "~19 min from Union Sq",
+        "toddlerNotes": "Drop-in books/songs/rhymes for kids up to age 5, 2nd-floor children's room (cap 30, no registration). A 2yo fits. Confirm the Tuesday start time on the branch calendar.",
+        "url": "https://www.nypl.org/events/programs/2026/03/03/tuesday-family-storytime-seward-park-library",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7143,
+        "lng": -73.9865,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "11:15",
+        "end": "11:45",
+        "cpwOnly": false
+      },
+      {
+        "title": "Toddler Storytime at Tompkins Square",
+        "category": "storytime",
+        "venue": "Tompkins Square Library (NYPL)",
+        "neighborhood": "East Village",
+        "when": "Tue & Thu Jul 14 & 16, mid-morning (confirm 10:30 or 11:30)",
+        "days": [
+          "tue",
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 14,
+        "travelHow": "~14 min from Union Sq",
+        "toddlerNotes": "Stories, songs, rhymes and fingerplays for infants-3yr; a 2yo fits. No registration - the easiest quiet-weekday drop-in near Union Sq. Runs Tue and Thu; confirm start time day-of (10:30 or 11:30).",
+        "url": "https://www.nypl.org/locations/tompkins-square",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7264,
+        "lng": -73.9814,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "10:30",
+        "end": "11:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Family Storytime at St. Agnes",
+        "category": "storytime",
+        "venue": "St. Agnes Library (NYPL)",
+        "neighborhood": "Upper West Side",
+        "when": "Wed Jul 15, 10:30-11:00 AM",
+        "days": [
+          "wed"
+        ],
+        "cost": "Free",
+        "travelMinutes": 14,
+        "travelHow": "~14 min from Grandma's (101 CPW)",
+        "toddlerNotes": "Songs and read-aloud favorites for ages 0-5 - great for a 2yo. Advance registration required, opens the Monday before at 11 AM (Eventbrite/phone), first 15 households. Closest UWS/CPW library option, ~12 blocks N of 101 CPW.",
+        "url": "https://www.nypl.org/locations/st-agnes",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7847,
+        "lng": -73.9762,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "10:30",
+        "end": "11:00",
+        "cpwOnly": true
+      },
+      {
+        "title": "Preschooler Storytime + Craft at Mulberry St",
+        "category": "storytime",
+        "venue": "Mulberry Street Library (NYPL)",
+        "neighborhood": "Nolita / SoHo",
+        "when": "Wed Jul 15, 4:00-4:45 PM",
+        "days": [
+          "wed"
+        ],
+        "cost": "Free",
+        "travelMinutes": 15,
+        "travelHow": "~15 min from Union Sq",
+        "toddlerNotes": "Afternoon storytime plus a simple craft. Skews ages 3-5, so a 2yo is on the young edge but joins with a caregiver - a handy post-nap weekday backup. Confirm on branch calendar.",
+        "url": "https://www.nypl.org/locations/mulberry-street",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7245,
+        "lng": -73.9951,
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "start": "16:00",
+        "end": "16:45",
+        "cpwOnly": false
+      },
+      {
+        "title": "Little Movers Storytime at Hudson Park",
+        "category": "storytime",
+        "venue": "Hudson Park Library (NYPL)",
+        "neighborhood": "West Village",
+        "when": "Thu Jul 16, 10:15-10:45 AM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq",
+        "toddlerNotes": "Stories, songs and wiggle-out movement for ages 1-3 - ideal for a 2yo. Free tickets handed out 10:00 AM day-of, limit 25. Children's room on 2nd floor, NO elevator (fold the stroller). Weekly Thursday series.",
+        "url": "https://www.nypl.org/locations/hudson-park",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.73,
+        "lng": -74.0056,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "10:15",
+        "end": "10:45",
+        "cpwOnly": false
+      },
+      {
+        "title": "Toddler Storytime at Mulberry St",
+        "category": "storytime",
+        "venue": "Mulberry Street Library (NYPL)",
+        "neighborhood": "Nolita / SoHo",
+        "when": "Thu Jul 16, 10:30-11:00 AM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 15,
+        "travelHow": "~15 min from Union Sq",
+        "toddlerNotes": "Picture books, songs, rhymes and fingerplays for toddlers - a direct fit for a 2yo. Drop-in, just off the Prince St / Broadway-Lafayette stops. Confirm exact date on branch calendar.",
+        "url": "https://www.nypl.org/locations/mulberry-street",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7245,
+        "lng": -73.9951,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "10:30",
+        "end": "11:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Thursday Family Storytime at Seward Park",
+        "category": "storytime",
+        "venue": "Seward Park Library (NYPL)",
+        "neighborhood": "Lower East Side",
+        "when": "Thu Jul 16, 11:15-11:45 AM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 19,
+        "travelHow": "~19 min from Union Sq",
+        "toddlerNotes": "Drop-in books, songs and rhymes for kids up to age 5, 2nd-floor children's room, no registration. A 2yo fits. Confirm the start time on the branch calendar.",
+        "url": "https://www.nypl.org/events/programs/2026/03/05/thursday-family-storytime-seward-park-library",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7143,
+        "lng": -73.9865,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "11:15",
+        "end": "11:45",
+        "cpwOnly": false
+      },
+      {
+        "title": "Toddler Storytime (18-36 mo) at Chatham Square",
+        "category": "storytime",
+        "venue": "Chatham Square Library (NYPL)",
+        "neighborhood": "Chinatown",
+        "when": "Thu Jul 16, 10:30-11:00 AM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 20,
+        "travelHow": "~20 min from Union Sq",
+        "toddlerNotes": "English-language toddler storytime aimed exactly at 18-36 months - a bullseye for a 2yo. Drop-in. Confirm on branch calendar.",
+        "url": "https://www.nypl.org/locations/chatham-square",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7136,
+        "lng": -73.9969,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "10:30",
+        "end": "11:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Big City Fishing at Pier 26",
+        "category": "animals",
+        "venue": "Hudson River Park, Pier 26",
+        "neighborhood": "Tribeca",
+        "when": "Wed Jul 15, 3:00-6:00 PM",
+        "days": [
+          "wed"
+        ],
+        "cost": "Free (rods & instruction provided)",
+        "travelMinutes": 20,
+        "travelHow": "~20 min from Union Sq",
+        "toddlerNotes": "Free drop-in catch-and-release fishing; rods and instruction provided. A 2yo holds the rod on a lap, watches, and touches a caught fish, then explores the adjacent Pier 26 climb-in-a-sturgeon science playground.",
+        "url": "https://hudsonriverpark.org/especially-for-kids/",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7204,
+        "lng": -74.0128,
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "start": "15:00",
+        "end": "18:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Big City Fishing at Pier 97",
+        "category": "animals",
+        "venue": "Hudson River Park, Pier 97",
+        "neighborhood": "Hell's Kitchen",
+        "when": "Thu Jul 16, 3:00-5:00 PM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free (rods & instruction provided)",
+        "travelMinutes": 24,
+        "travelHow": "~24 min from Union Sq",
+        "toddlerNotes": "Same free drop-in fishing at the uptown pier, next to a big waterfront playground. Caregiver-assisted for a 2yo (hold the rod, watch, touch the catch).",
+        "url": "https://hudsonriverpark.org/especially-for-kids/",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.7705,
+        "lng": -74.0006,
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "start": "15:00",
+        "end": "17:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Toddler Time in the Garden (Park Slope Library)",
+        "category": "storytime",
+        "venue": "Brooklyn Public Library, Park Slope Branch",
+        "neighborhood": "Park Slope, Brooklyn",
+        "when": "Thu Jul 16, 10:30-11:00 AM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 38,
+        "travelHow": "~38 min from Union Sq",
+        "toddlerNotes": "Outdoor storytelling-garden session with songs, stories, fingerplays and rhymes for independent walkers up to age 3 - squarely a 2yo program. Weather-permitting. Confirm the July 16 date on the BPL calendar.",
+        "url": "https://www.bklynlibrary.org/calendar/list/toddler%20time",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.6693,
+        "lng": -73.9835,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "10:30",
+        "end": "11:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Totally Tots at Brooklyn Children's Museum",
+        "category": "play",
+        "venue": "Brooklyn Children's Museum",
+        "neighborhood": "Crown Heights, Brooklyn",
+        "when": "Wed-Fri Jul 15-17, 10 AM-5 PM (free Thu 2-5 PM)",
+        "days": [
+          "wed",
+          "thu",
+          "fri"
+        ],
+        "cost": "Free Thu 2-5 PM (Community Access); otherwise ~$15/person",
+        "travelMinutes": 39,
+        "travelHow": "~39 min from Union Sq",
+        "toddlerNotes": "A whole gallery for ages 0-6: Baby Patch, Sand Spot, Play Pond water play, Reading Nook and a dramatic-play shop - all hands-on for a 2yo. Closed Mon/Tue; Thursday 2-5 PM is free.",
+        "url": "https://www.brooklynkids.org/exhibits/totally-tots/",
+        "outdoor": false,
+        "recurring": false,
+        "confidence": "high",
+        "lat": 40.6743,
+        "lng": -73.9443,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "10:00",
+        "end": "17:00",
+        "cpwOnly": false
       }
     ]
   },
