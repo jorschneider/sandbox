@@ -92,12 +92,22 @@
 
   // next week = its verified dated events + evergreen spots and weekly-recurring
   // series carried over (carryovers get a double-check chip until re-verified)
+  const VENUE_STOP = new Set(["the", "and", "at", "in", "of", "park", "new", "york", "ny", "st", "street", "ave", "avenue", "pier", "between", "near", "by", "road", "nyc", "manhattan", "brooklyn"]);
+  const venueSig = (e) => new Set(String(e.venue || "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter((w) => w.length > 2 && !VENUE_STOP.has(w)));
   function weekPool() {
     if (state.week !== "next" || !nextWeek) return data.events;
     const have = new Set(nextWeek.events.map(keyOf));
+    // venues the fresh preview already covers — skip recurring carryovers that collide
+    const covered = nextWeek.events.map(venueSig);
+    const alreadyCovered = (e) => {
+      const s = venueSig(e);
+      return covered.some((cs) => { let n = 0; s.forEach((t) => { if (cs.has(t)) n++; }); return n >= 2; });
+    };
     const carry = data.events.filter((e) => {
       if (have.has(keyOf(e))) return false;
-      return (e.days || []).indexOf("any") !== -1 || e.recurring === true;
+      if ((e.days || []).indexOf("any") !== -1) return true; // keep all anytime spots
+      if (e.recurring !== true) return false;
+      return !alreadyCovered(e); // a fresher, verified preview entry already covers this venue/series
     }).map((e) => (e.days || []).indexOf("any") !== -1 ? e
       : Object.assign({}, e, { confidence: e.confidence === "low" ? "low" : "medium" }));
     return nextWeek.events.concat(carry);
@@ -394,7 +404,7 @@
           (live === "now" ? ' <span class="mini-live live-now">▶️ happening now</span>' :
            live === "soon" ? ' <span class="mini-live live-soon">⏰ starting soon</span>' :
            live === "done" ? ' <span class="mini-live live-done">✔ ended today</span>' :
-           (isEvent(e) ? ' <span class="mini-star">⭐ this week</span>' : "")) + "</p>" +
+           (isEvent(e) ? ' <span class="mini-star">⭐ ' + (state.week === "next" ? "next week" : "this week") + "</span>" : "")) + "</p>" +
         '<p class="mini-when">🕐 ' + esc(e.when) + "</p>" +
         (state.base === "usq" && e.travelHow ? '<p class="mini-when">🚇 ' + esc(e.travelHow) + "</p>" : "") +
         '<p class="mini-meta">' +

@@ -3,6 +3,1067 @@ window.WEEK_DATA = {
   weekLabel: "July 6–12, 2026",
   weekMonday: "2026-07-06",
   updated: "July 10, 2026",
+  nextWeek: {
+    "weekMonday": "2026-07-13",
+    "weekLabel": "July 13–19, 2026",
+    "events": [
+      {
+        "title": "Le Carrousel Extravaganza: Andy & Suzanna (music & dance for kids)",
+        "category": "music",
+        "venue": "Bryant Park - Le Carrousel (40th St entrance, between 5th & 6th Aves)",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Mon Jul 13, 10:00-11:00 AM",
+        "days": [
+          "mon"
+        ],
+        "start": "10:00",
+        "end": "11:00",
+        "cost": "Free - no tickets or reservations required. Optional: Le Carrousel ride $5/person (a parent + toddler = ~$10 if the child rides).",
+        "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
+        "outdoor": true,
+        "toddlerNotes": "The made-for-little-kids morning slot at Bryant Park: a free one-hour outdoor kids show by the carousel, 10-11am. Monday July 13's act is Andy & Suzanna, an interactive sing-and-dance-along, so a 2-year-old can bop, clap, and wander rather than sit still. Bring a blanket; combine with a $5 Le Carrousel ride right next to it. No reservations - just show up.",
+        "lat": 40.7528,
+        "lng": -73.9836,
+        "cpwOnly": false,
+        "confidence": "high",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "StoryTime with Cali Co Cat at Bryant Park Reading Room (ages 2-8)",
+        "category": "storytime",
+        "venue": "Bryant Park Reading Room",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Tue Jul 14, 10:30-11:30 AM",
+        "days": [
+          "tue"
+        ],
+        "start": "10:30",
+        "end": "11:30",
+        "cost": "Free - no tickets or registration; $0 for the whole family. Free book to take home while supplies last.",
+        "url": "https://bryantpark.org/calendar/event/storytime",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.7542,
+        "lng": -73.9836,
+        "toddlerNotes": "Explicitly for ages 2-8: sing, clap, and stomp along with Cali Co Cat's live 'Meowsic' plus read-aloud stories (Jul 14 features 'The Seashore Book'). Runs every Tuesday Jul 7-Aug 25. Open-air reading room under the trees on the 42nd St side, stroller-friendly, and kids can take home a free book while supplies last.",
+        "confidence": "high",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Garden Explorers: free kids gardening hour",
+        "category": "play",
+        "venue": "Bryant Park - next to Le Carrousel (south side of park)",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Thu Jul 16, 10:00-11:00 AM",
+        "days": [
+          "thu"
+        ],
+        "start": "10:00",
+        "end": "11:00",
+        "cost": "Free (no tickets or registration; free for the whole family - two parents + toddler pay $0)",
+        "url": "https://bryantpark.org/activities/garden-explorers",
+        "outdoor": true,
+        "toddlerNotes": "Fully hands-on and toddler-perfect: kids plant, weed, and prune real plants, play and explore in an 'imagination garden,' and pot a seed to take home. No performance to sit through - a 2-year-old just digs. Runs exactly one hour on Thursday morning; dress for dirt and bring a change of clothes.",
+        "lat": 40.7533,
+        "lng": -73.9838,
+        "cpwOnly": false,
+        "confidence": "high",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Le Carrousel Extravaganza: Teatro SEA puppet show (Los Colores de Frida)",
+        "category": "theater",
+        "venue": "Bryant Park - Le Carrousel Extravaganza (40th St entrance)",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Wed Jul 15, 10:00-11:00 AM",
+        "days": [
+          "wed"
+        ],
+        "start": "10:00",
+        "end": "11:00",
+        "cost": "Free, no tickets or reservations required (optional Le Carrousel ride $5 per person afterward)",
+        "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
+        "outdoor": true,
+        "toddlerNotes": "Wednesday's Extravaganza act is Teatro SEA, a bilingual (Spanish/English) children's puppet theater; the July 15 show is 'The Colors of Frida / Los Colores de Frida' - bright, visual, and short-attention-span friendly, which suits a 2-year-old better than a scripted play. Outdoor seating near the carousel means easy exits and re-entries. Pair with a Le Carrousel ride ($5) after.",
+        "lat": 40.7527,
+        "lng": -73.9836,
+        "cpwOnly": false,
+        "confidence": "high",
+        "travelMinutes": 15,
+        "travelHow": "~15 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Le Carrousel Extravaganza: Silly Billy magic show",
+        "category": "theater",
+        "venue": "Bryant Park - Le Carrousel (40th St mid-block entrance)",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Fri Jul 17, 10:00 AM-11:00 AM",
+        "days": [
+          "fri"
+        ],
+        "start": "10:00",
+        "end": "11:00",
+        "cost": "Free - no tickets or reservations; drop in with the whole family ($0 for any size group)",
+        "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
+        "outdoor": true,
+        "toddlerNotes": "Friday's act is Silly Billy, a comedy kids' magician (billed ages 2-10) who works the preschool crowd with audience participation. Honest framing: of the week's three Extravaganza shows this is the most watch-rather-than-do for a 2-year-old - fine if yours likes sitting up front and laughing, but Monday (dance/music) and Wednesday (puppets) are more hands-on. Outdoor and free-flowing at the carousel either way, so easy to bail if attention fades.",
+        "lat": 40.7533,
+        "lng": -73.9838,
+        "cpwOnly": false,
+        "confidence": "high",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Picnic Performances - Carnegie Hall Citywide: Nathan & the Zydeco Cha Chas",
+        "category": "music",
+        "venue": "Bryant Park Lawn",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Fri Jul 17, 7:00-8:30 PM",
+        "days": [
+          "fri"
+        ],
+        "start": "19:00",
+        "end": "20:30",
+        "cost": "Free for all ages - no tickets needed, just show up on the lawn. Free bistro chairs and picnic blankets are first-come, first-served; you can bring your own picnic dinner and non-alcoholic drinks (food vendors on site too). No family math needed - $0 for parents and toddler alike.",
+        "url": "https://bryantpark.org/calendar/event/nathan-and-zydeco/2026-07-17",
+        "outdoor": true,
+        "toddlerNotes": "High-energy, accordion-driven Louisiana zydeco dance music - the toddler-friendly part is dancing and moving around on the big open lawn, and there's grass to roam with a picnic blanket. Real caveat: the 7pm start brushes right up against a 2-year-old's bedtime. Families typically arrive when the lawn opens for the picnic, eat dinner, catch the first few songs, and head out early. It's a general-audience outdoor concert (not a dedicated kids' show), so manage expectations and plan an early exit.",
+        "lat": 40.7537,
+        "lng": -73.9835,
+        "cpwOnly": false,
+        "confidence": "high",
+        "travelMinutes": 15,
+        "travelHow": "N/Q/R/W from Union Sq to Times Sq–42 St + 5-min walk (or F/M to 42 St–Bryant Pk)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Kids Creative Corner (drop-in crafts, coloring & building)",
+        "category": "play",
+        "venue": "Bryant Park - Le Carrousel (40th St mid-block entrance)",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Daily Jul 13-19, 10:00 AM-5:00 PM (drop-in, no registration)",
+        "days": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "start": "10:00",
+        "end": "17:00",
+        "cost": "Free (drop-in, no registration; free for the whole family)",
+        "url": "https://bryantpark.org/activities/kids-creative-corner",
+        "outdoor": true,
+        "toddlerNotes": "Free staffed drop-in creative corner next to Le Carrousel for reading, coloring, building, and simple crafts, curated by coordinators to stimulate young kids' creativity - genuinely aimed at small children, not just 'all ages welcome.' No schedule pressure: come any day, stay 20 minutes or 2 hours. A reliable low-key pairing with the other events on this list. (Nearby Art Cart offers free drawing/craft supplies daily, and Le Carrousel rides are ~$4 if you want to add a ride.)",
+        "lat": 40.7533,
+        "lng": -73.9838,
+        "cpwOnly": false,
+        "confidence": "high",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Le Carrousel ride (French-style carousel)",
+        "category": "other",
+        "venue": "Bryant Park - Le Carrousel",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Daily Jul 13-19, 10:00 AM-8:00 PM",
+        "days": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "start": "10:00",
+        "end": "20:00",
+        "cost": "$5 per ride; $42 for a 10-ride discount card. Family math: kids under 42\" must ride with an accompanying adult and that adult also pays $5, so one toddler spin = $10",
+        "url": "https://bryantpark.org/activities/le-carrousel",
+        "outdoor": true,
+        "toddlerNotes": "A slow, gentle French-style carousel set to French cabaret music - one of the classic first-carousel rides in Manhattan for 2-year-olds. Kids under 42 inches must be accompanied by one adult per child on the platform, and that adult also pays $5. Open daily June-August, 10am-8pm, so it slots in easily after any morning show.",
+        "lat": 40.7533,
+        "lng": -73.9838,
+        "cpwOnly": false,
+        "confidence": "high",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Dance Storytime with Carlota Santana (Summer for the City)",
+        "category": "storytime",
+        "venue": "Karen and Richard LeFrak Lobby, David Geffen Hall, Lincoln Center",
+        "neighborhood": "Lincoln Square / Upper West Side",
+        "when": "Wed Jul 15, two sessions: 11:00 AM and 1:00 PM",
+        "days": [
+          "wed"
+        ],
+        "start": "11:00",
+        "end": null,
+        "cost": "Free — general admission is first-come, first-served (no tickets required; optional Fast Track available). Free for the whole family; a second session at 1:00 PM if you miss the 11:00 AM one.",
+        "url": "https://www.lincolncenter.org/series/summer-for-the-city/dance-storytime-with-carlota-santana-57",
+        "outdoor": false,
+        "cpwOnly": false,
+        "lat": 40.7727,
+        "lng": -73.9832,
+        "toddlerNotes": "A family-friendly creative storytime (officially tagged FAMILY-FRIENDLY) where young audiences learn basic flamenco movements with Flamenco Vivo's Carlota Santana — rhythmic handclaps (palmas), arm movements (braceo), and footwork (taconeo). Indoor, air-conditioned lobby, so wiggling and wandering are fine. A 2-year-old can stomp and clap along with a parent; no sitting still required. Two identical sessions (11 AM and 1 PM) make it easy to work around a nap.",
+        "confidence": "high",
+        "travelMinutes": 24,
+        "travelHow": "~24 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Create-athon: Creature Kickoff (designed by Kid Koala)",
+        "category": "play",
+        "venue": "The Dance Floor at Josie Robertson Plaza, Lincoln Center",
+        "neighborhood": "Lincoln Square / Upper West Side",
+        "when": "Sun Jul 19, 12:00 PM",
+        "days": [
+          "sun"
+        ],
+        "start": "12:00",
+        "end": null,
+        "cost": "Free — $0 for the whole family (drop-in Create-athon workshop, materials provided)",
+        "url": "https://www.lincolncenter.org/series/summer-for-the-city/create-athon-creature-kickoff",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.7724,
+        "lng": -73.9835,
+        "toddlerNotes": "Hands-on outdoor craft session on the big plaza dance floor: families build working cardboard foosball tables in a soccer-themed make-athon designed by musician/artist Kid Koala. Honest framing: the actual construction suits roughly 4+, and it is table-craft a parent does WITH the kid — a 2-year-old can stick, color, decorate, and then flick the ball on the finished table. Open plaza means easy toddler roaming; Revson Fountain right there.",
+        "confidence": "high",
+        "travelMinutes": 24,
+        "travelHow": "~24 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Tribute to Latin Music Giants with Jimmy Bosch — live salsa on The Dance Floor",
+        "category": "music",
+        "venue": "The Dance Floor at Josie Robertson Plaza, Lincoln Center",
+        "neighborhood": "Lincoln Square / Upper West Side",
+        "when": "Fri Jul 17, 6:30 PM",
+        "days": [
+          "fri"
+        ],
+        "start": "18:30",
+        "end": null,
+        "cost": "Free — no tickets; The Dance Floor is standing/dancing room, first come first served. $0 for the whole family.",
+        "url": "https://www.lincolncenter.org/series/summer-for-the-city/tribute-to-latin-music-giants-with-jimmy-bosch-42",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.7725,
+        "lng": -73.9835,
+        "toddlerNotes": "All-ages, not toddler-specific — the toddler draw is the giant outdoor dance floor on Josie Robertson Plaza (big disco ball over the fountain) where a 2-year-old can bop and be swung around while grown-ups dance to live salsa dura (Jimmy Bosch's tribute to Willie Colon and Eddie Palmieri). Early 6:30 PM start makes it doable before bedtime. Loud brass, so stand toward the edges. Free, no tickets, first come first served.",
+        "confidence": "high",
+        "travelMinutes": 24,
+        "travelHow": "~24 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "The Art of Footwork — tap + soccer freestyle family workshop",
+        "category": "play",
+        "venue": "David Rubenstein Atrium, Lincoln Center",
+        "neighborhood": "Lincoln Square / Upper West Side",
+        "when": "Sat Jul 18, 11:00 AM",
+        "days": [
+          "sat"
+        ],
+        "start": "11:00",
+        "end": null,
+        "cost": "Free for the whole family — no tickets required (first-come, first-served)",
+        "url": "https://www.lincolncenter.org/series/summer-for-the-city/the-art-of-footwork-951",
+        "outdoor": false,
+        "cpwOnly": false,
+        "lat": 40.7713,
+        "lng": -73.9826,
+        "toddlerNotes": "Participatory ALL AGES workshop (with NewYork-Presbyterian): instructors Nick Seyda and John Manzari teach basic tap steps and soccer freestyle drills, exploring how dance and sport share balance, coordination, and groove. Honest framing: the drills are pitched at kids old enough to follow directions; a 2-year-old's version is stomping to the tap rhythms and toe-poking a ball alongside a parent — plenty for a Saturday morning. Indoor and air-conditioned in the Atrium.",
+        "confidence": "high",
+        "travelMinutes": 23,
+        "travelHow": "~23 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Summer Arts Institute Chamber Music Showcase",
+        "category": "music",
+        "venue": "Karen and Richard LeFrak Lobby, David Geffen Hall, Lincoln Center",
+        "neighborhood": "Lincoln Square / Upper West Side",
+        "when": "Sat Jul 18, 2026, 12:00 PM",
+        "days": [
+          "sat"
+        ],
+        "start": "12:00",
+        "end": null,
+        "cost": "Free for all ages — no tickets or reservation, casual open-lobby seating (walk in, no cost for kids or adults)",
+        "url": "https://www.lincolncenter.org/series/summer-for-the-city/summer-arts-institute-645",
+        "outdoor": false,
+        "cpwOnly": false,
+        "lat": 40.7726,
+        "lng": -73.9834,
+        "toddlerNotes": "Family-friendly, but honestly a listen-along rather than a do-along: NYC public-school student musicians play chamber music in David Geffen Hall's open LeFrak Lobby (couches, room to toddle, no concert-hall hush, come-and-go). Works as a low-key second stop after an 11 AM activity nearby — stay for a piece or two and leave whenever the 2-year-old is done. Zero stakes and free.",
+        "confidence": "high",
+        "travelMinutes": 24,
+        "travelHow": "~24 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Foundations of Double Dutch + Open Jump on The Dance Floor",
+        "category": "play",
+        "venue": "The Dance Floor at Josie Robertson Plaza, Lincoln Center",
+        "neighborhood": "Lincoln Square / Upper West Side",
+        "when": "Thu Jul 16, 4:00 PM foundations class; Double Dutch Fusion Freestyle & Open Jump follows at 5:00 PM",
+        "days": [
+          "thu"
+        ],
+        "start": "16:00",
+        "end": null,
+        "cost": "Free for the whole family — no tickets, just drop in; jump ropes provided ($0 for adults and kids alike)",
+        "url": "https://www.lincolncenter.org/series/summer-for-the-city/foundations-of-double-dutch-691",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.7725,
+        "lng": -73.9836,
+        "toddlerNotes": "Family-friendly outdoor jump-rope block on Lincoln Center's plaza, framed honestly: an actual 2-year-old cannot jump double dutch, and the 4 PM foundations class is aimed at bigger kids. The toddler payoff is the 5 PM open-jump hour — National Double Dutch League championship teams doing freestyle shows a toddler will happily gawk at, with open plaza space to hop and bounce along with a parent between rounds. Treat it as watch-and-bounce, not a class.",
+        "confidence": "high",
+        "travelMinutes": 24,
+        "travelHow": "~24 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Prospect Park Stroller Walk",
+        "category": "other",
+        "venue": "Prospect Park Audubon Center at the Boathouse",
+        "neighborhood": "Prospect Park (Lefferts/east side), Brooklyn",
+        "when": "Thu Jul 16, 10:00 AM-12:00 PM (walk departs the Boathouse promptly at 10)",
+        "days": [
+          "thu"
+        ],
+        "start": "10:00",
+        "end": "12:00",
+        "cost": "Free; RSVP required via Eventbrite. Free for everyone — parents, caregivers, and children — so a family of any size pays $0. Check your email before the event to confirm the walk met its minimum sign-up.",
+        "url": "https://www.prospectpark.org/event/prospect-park-stroller-walk-5/2026-07-16/",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.6608,
+        "lng": -73.9652,
+        "toddlerNotes": "Built for exactly this age: a Prospect Park Alliance naturalist leads a stroller-pace loop along the park's waterways, made for parents/caregivers with babies and toddlers (the series is aimed at children under 3). Your 2-year-old rides in the stroller or toddles alongside while the guide points out birds, streams, flowers and towering trees. B, Q, or S (Franklin Ave Shuttle) to Prospect Park station, then ~5 min walk to the Boathouse near the Lincoln Rd & Ocean Ave entrance.",
+        "confidence": "high",
+        "travelMinutes": 42,
+        "travelHow": "~42 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Nature Exploration: Lake Appreciation (turtle & fish Animal Encounter + pond-water discovery)",
+        "category": "animals",
+        "venue": "Prospect Park Audubon Center at the Boathouse",
+        "neighborhood": "Prospect Park (east side near Lincoln Rd entrance / Prospect Lefferts Gardens), Brooklyn",
+        "when": "Thu Jul 16 & Fri Jul 17, 10:00 AM-3:00 PM (Animal Encounter 1-2 PM; Pond Water Discovery throughout)",
+        "days": [
+          "thu",
+          "fri"
+        ],
+        "start": "10:00",
+        "end": "15:00",
+        "cost": "Free, drop-in, no registration (whole family free)",
+        "url": "https://www.prospectpark.org/event/nature-exploration-lake-appreciation-7/2026-07-16/",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.6626,
+        "lng": -73.9653,
+        "toddlerNotes": "The toddler gold is Pond Water Discovery (peer at wriggling aquatic bugs through magnifying glasses with a naturalist) and the Animal Encounter from 1-2 PM with live turtles and fish up close. Free drop-in, no commitment — come for 30 minutes. Verified only for Thu Jul 16 and Fri Jul 17 on the official pages; despite the listing, there is NO Sat Jul 18 or Sun Jul 19 session (those URLs redirect to an unrelated Thursday date).",
+        "confidence": "high",
+        "travelMinutes": 41,
+        "travelHow": "~41 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "National Ice Cream Day at the Prospect Park Carousel",
+        "category": "play",
+        "venue": "Prospect Park Carousel",
+        "neighborhood": "Prospect Park (Flatbush Ave side), Brooklyn",
+        "when": "Sun Jul 19, 12:00 PM-3:00 PM",
+        "days": [
+          "sun"
+        ],
+        "start": "12:00",
+        "end": "15:00",
+        "cost": "Carousel tickets $3-$13 (about $3 per ride per rider; multi-ride bundles up to $13). A free ice cream treat comes with each carousel ticket purchased — so a toddler + one adult each riding once is about $6 and includes two free ice creams.",
+        "url": "https://www.prospectpark.org/event/national-ice-cream-day-at-the-carousel-2/",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.6635,
+        "lng": -73.9625,
+        "toddlerNotes": "A 2-year-old sweet spot: ride the restored 1912 carousel's hand-carved horses, lions, giraffes and deer with an adult standing/riding alongside, then a free ice cream treat with each ticket. The carousel pavilion is open-air but roofed, so it holds up in light rain. Right inside the Willink entrance, a 2-minute walk from the B/Q Prospect Park stop; Lefferts Historic House and the Prospect Park Zoo are steps away for a longer outing.",
+        "confidence": "high",
+        "travelMinutes": 41,
+        "travelHow": "~41 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Smorgasburg Great Ice Cream Fair at Breeze Hill",
+        "category": "festival",
+        "venue": "Breeze Hill, Prospect Park (Smorgasburg Prospect Park site)",
+        "neighborhood": "Prospect Park (Lefferts/east side), Brooklyn",
+        "when": "Sun Jul 19, 11:00 AM-6:00 PM",
+        "days": [
+          "sun"
+        ],
+        "start": "11:00",
+        "end": "18:00",
+        "cost": "Free entry; ice cream and food pay-as-you-go (most treats roughly $5-$12) — budget ~$15-25 for two adults + toddler shares",
+        "url": "https://www.prospectpark.org/event/smorgasburg-great-ice-cream-fair-2/",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.659,
+        "lng": -73.964,
+        "toddlerNotes": "The annual ice-cream-themed edition of the Sunday Smorgasburg, co-hosted with Prospect Park Alliance: curated ice cream vendors plus 'playful installations, hands-on activities, and family-friendly entertainment designed for all ages' — the installations/activities and the open lawn are the toddler part; the vendor lines are the grown-up part. Stroller-friendly paved paths. Free ice cream treat with each carousel ticket purchase for National Ice Cream Day, so it pairs perfectly with a stop at the Prospect Park Carousel (~10-min walk).",
+        "confidence": "high",
+        "travelMinutes": 43,
+        "travelHow": "~43 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Pop-Up Audubon (free drop-in nature play: pond-water discovery & fish-print craft)",
+        "category": "play",
+        "venue": "LeFrak Center at Lakeside (Pop-Up Audubon I); Tennis House (Pop-Up Audubon II)",
+        "neighborhood": "Prospect Park, Brooklyn",
+        "when": "Sat Jul 18 & Sun Jul 19, 2026, 12:00 PM-4:00 PM (Stay + Play / craft tables & pond-water discovery 12-3 PM; guided Nature on the Go walk 3-4 PM)",
+        "days": [
+          "sat",
+          "sun"
+        ],
+        "start": "12:00",
+        "end": "16:00",
+        "cost": "Free, drop-in (presented by Con Edison) - no tickets, whole family, $0",
+        "url": "https://www.prospectpark.org/event/pop-up-audubon-i-9-2/2026-07-18/",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.6554,
+        "lng": -73.964,
+        "toddlerNotes": "Verified toddler-perfect anchor is Saturday at LeFrak Center at Lakeside (Pop-Up Audubon I): free drop-in Stay + Play tables 12-3 PM with games, puzzles, drawing, plus magnifying-glass pond-water discovery of lake critters with park naturalists - great open-ended fun for a 2-year-old. Aim for 12-3 PM; the 3-4 PM Nature on the Go shoreline walk skews older. The Lakeside splash pad is right there for a post-activity cool-down. Sunday is Pop-Up Audubon II - the recurring pattern puts it at the Tennis House with the rubber-fish-and-paint Fish Print craft (messy toddler art); the July 19, 2026 date is on the official schedule but I could not open the individual Sunday page to confirm the Tennis House venue, so double-check the site before heading to the Tennis House side.",
+        "confidence": "high",
+        "travelMinutes": 44,
+        "travelHow": "~44 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Wetlab Look-ins — drop-in Hudson River aquarium at Pier 40",
+        "category": "animals",
+        "venue": "River Project Wetlab, Pier 40, Hudson River Park",
+        "neighborhood": "West Village / Hudson Square waterfront",
+        "when": "Tue Jul 14 & Wed Jul 15 3:00–6:00 PM; Sat Jul 18 11:00 AM–5:00 PM; Sun Jul 19 11:00 AM–2:00 PM",
+        "days": [
+          "tue",
+          "wed",
+          "sat",
+          "sun"
+        ],
+        "start": "11:00",
+        "end": "18:00",
+        "cost": "Free — drop-in, no registration ($0 for the whole family, any number of kids)",
+        "url": "https://hudsonriverpark.org/event-series/wetlab-look-ins/",
+        "outdoor": false,
+        "lat": 40.729,
+        "lng": -74.0112,
+        "cpwOnly": false,
+        "toddlerNotes": "Best pure-toddler pick on the Hudson: a dozen-plus tanks of real Hudson River animals — lined seahorses, oyster toadfish, blue crabs — at stroller/eye level, with River Project educators showing critters up close. Indoor research aquarium on the pier. Drop-in, so a 15-minute visit counts. Weekend 11 AM hours (Sat 11–5, Sun 11–2) fit before nap; Tue/Wed are afternoons only (3–6 PM).",
+        "confidence": "high",
+        "travelMinutes": 18,
+        "travelHow": "~18 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Mornings in The Glade — toddler open play at Little Island",
+        "category": "play",
+        "venue": "The Glade, Little Island (Pier 55)",
+        "neighborhood": "Meatpacking District / West Village",
+        "when": "Thu Jul 16, 9:00-11:00 AM (weekly Thursdays Jun 4-Sep 3, 2026)",
+        "days": [
+          "thu"
+        ],
+        "start": "09:00",
+        "end": "11:00",
+        "cost": "Free for the whole family (advance registration). Note: the Jul 16 session shows SOLD OUT on littleisland.org — watch for released tickets or ask at the gate. Light snacks/refreshments available for purchase. Little Island itself is free to enter any day if registration doesn't come through.",
+        "url": "https://littleisland.org/event/mornings-in-the-glade/2026-07-16/",
+        "outdoor": true,
+        "lat": 40.742,
+        "lng": -74.0101,
+        "cpwOnly": false,
+        "toddlerNotes": "Purpose-built for a 2-year-old: Little Island calls it 'a relaxed space for little ones and their grown-ups to start the day together' with unstructured outdoor play in The Glade — drop in and stay as long as you like. Big caveat: the Jul 16 date shows sold out on the official site (as do several summer Thursdays), so registration is the gamble. Plan B costs nothing: Little Island's hilly lawns and Play Ground plaza are free to wander any day, no ticket needed.",
+        "confidence": "high",
+        "travelMinutes": 17,
+        "travelHow": "~17 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Broadway by the Boardwalk: Max von Essen with Billy Stritch (season opener)",
+        "category": "music",
+        "venue": "Clinton Cove, Hudson River Park",
+        "neighborhood": "Hell's Kitchen / Midtown West waterfront",
+        "when": "Mon Jul 13, 6:30 PM (arrive early to grab lawn space; series runs Mondays Jul 13-Aug 10)",
+        "days": [
+          "mon"
+        ],
+        "start": "18:30",
+        "end": null,
+        "cost": "Free — no tickets or RSVP. Bring a blanket to sit on the grass; a family of any size pays $0.",
+        "url": "https://hudsonriverpark.org/visit/events/event/broadway-by-the-boardwalk-july-13-2026/",
+        "outdoor": true,
+        "lat": 40.771,
+        "lng": -74.0007,
+        "cpwOnly": false,
+        "toddlerNotes": "Not a kids' show, and that's the point: it's Broadway stars on an open lawn with no seats and no shushing. Your 2-year-old can dance and picnic on the Clinton Cove grass while Max von Essen sings with Billy Stritch at the piano. The 6:30 PM start brushes bedtime, so plant your blanket at the back edge for an easy exit. Stroller-friendly waterfront paths and lawn.",
+        "confidence": "high",
+        "travelMinutes": 24,
+        "travelHow": "~24 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Sunset Salsa at Pier 76 — free beginner lesson + open-air dance party",
+        "category": "music",
+        "venue": "Pier 76, Hudson River Park",
+        "neighborhood": "Hudson Yards / Hell's Kitchen waterfront",
+        "when": "Thu Jul 16, 6:30 PM beginner lesson, open dancing from ~7:15 PM (weekly Thursdays; season began Jul 9, runs through late Aug)",
+        "days": [
+          "thu"
+        ],
+        "start": "18:30",
+        "end": null,
+        "cost": "Free, no registration — free for the whole family including toddlers",
+        "url": "https://hudsonriverpark.org/visit/events/event/sunset-salsa-july-16-2026/",
+        "outdoor": true,
+        "lat": 40.7596,
+        "lng": -74.0027,
+        "cpwOnly": false,
+        "toddlerNotes": "Free all-ages open-air salsa social on the flat, stroller-friendly Pier 76 deck with a river breeze — no seating required, so a 2-year-old can bounce and spin at the edge of the floor rather than sit still. Talia Castro-Pozo leads a beginner lesson at 6:30 PM, the calmest window before the floor fills for social dancing around 7:15. It's an evening event, so time it early; the 6:30 lesson stretch is the toddler-friendly part.",
+        "confidence": "high",
+        "travelMinutes": 20,
+        "travelHow": "~20 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Boardwalk Blues at Pier 97 (Jazz Foundation of America)",
+        "category": "music",
+        "venue": "Pier 97, Hudson River Park",
+        "neighborhood": "Hell's Kitchen / Midtown West waterfront",
+        "when": "Tue Jul 14, 6:30 PM (Boardwalk Blues series, Tuesdays Jul 7-28, 2026)",
+        "days": [
+          "tue"
+        ],
+        "start": "18:30",
+        "end": null,
+        "cost": "Free (drop-in, no ticket or registration) — bring a blanket for lawn seating; $0 for a family of any size",
+        "url": "https://hudsonriverpark.org/event-series/boardwalk-blues/",
+        "outdoor": true,
+        "lat": 40.7717,
+        "lng": -73.9958,
+        "cpwOnly": false,
+        "toddlerNotes": "All-ages outdoor blues on Pier 97's grass lawn, not a kids' concert — the toddler appeal is blanket-dancing to a live band with zero sit-still expectations. HRP explicitly encourages blankets on the lawn. The 6:30 PM start runs into bedtime, so plan to leave mid-set, which is easy at a free drop-in event. Date is firmly confirmed as a Tuesday in the official Jul 7-28 series; only the specific Jul 14 performer wasn't posted where I could verify a name.",
+        "confidence": "high",
+        "travelMinutes": 24,
+        "travelHow": "~24 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Jazz at Pier 84 — free riverside jazz (with Pier 84 water-play feature next door)",
+        "category": "music",
+        "venue": "Pier 84, Hudson River Park",
+        "neighborhood": "Hell's Kitchen waterfront",
+        "when": "Wed Jul 15, 7:00 PM (weekly series, Wednesdays Jun 17–Aug 12; Jul 15 performer not yet individually posted)",
+        "days": [
+          "wed"
+        ],
+        "start": "19:00",
+        "end": null,
+        "cost": "Free, no registration — supported by the Jazz Foundation of America. Family math: $0 for the whole family; bring a picnic/blanket and BYO snacks.",
+        "url": "https://hudsonriverpark.org/event-series/jazz-at-pier-84/",
+        "outdoor": true,
+        "lat": 40.7637,
+        "lng": -74.0005,
+        "cpwOnly": false,
+        "toddlerNotes": "Honest framing: this is an all-ages outdoor jazz series, not a toddler show, and the 7:00 PM start is at or past many 2-year-old bedtimes — best for late-napping kids or a special-occasion late night. What makes it toddler-workable is Pier 84 itself: it has a water-play/splash fountain feature right by the pier so the kid can run around and cool off while you catch the first set from a blanket. Stroller-friendly, flat riverfront, plenty of open lawn/pier space. Verified free; the exact Jul 15 performer wasn't posted yet, but the weekly Wednesday date is confirmed on the official series.",
+        "confidence": "high",
+        "travelMinutes": 21,
+        "travelHow": "~21 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Taikoza Drummers free concert at Andrew Haswell Green Park",
+        "category": "music",
+        "venue": "Andrew Haswell Green Park",
+        "neighborhood": "Sutton Place / Midtown East",
+        "when": "Mon Jul 13, 12:00-12:45 PM",
+        "days": [
+          "mon"
+        ],
+        "start": "12:00",
+        "end": "12:45",
+        "cost": "Free (no tickets or registration; $0 for the whole family)",
+        "url": "https://www.nycgovparks.org/events/2026/07/13/taikoza-drummers-at-andrew-haswell-green-park",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.7597,
+        "lng": -73.9576,
+        "toddlerNotes": "All-ages concert, not kids-specific programming - but giant Japanese taiko drums and bamboo flutes are loud, rhythmic and highly visual, which is toddler catnip, and it's only 45 minutes at midday on an open riverfront lawn where a 2-year-old can bounce and roam. Bring ear protection if your kid is sound-sensitive.",
+        "confidence": "high",
+        "travelMinutes": 22,
+        "travelHow": "~22 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "NYPL Storytime Under the Trees (Washington Square Park)",
+        "category": "storytime",
+        "venue": "Washington Square Park - East Alcove Seating Area",
+        "neighborhood": "Greenwich Village",
+        "when": "Tue Jul 14, 11:00-11:30 AM",
+        "days": [
+          "tue"
+        ],
+        "start": "11:00",
+        "end": "11:30",
+        "cost": "Free - no registration or tickets; free for the whole family, so a parent + toddler pay $0",
+        "url": "https://www.nycgovparks.org/parks/washington-square-park/events/2026/07/14/nypl-storytime-under-the-trees",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.73097,
+        "lng": -73.99632,
+        "toddlerNotes": "Official NYC Parks page: 'Designed for little ones, sing songs and read books together under the trees.' Led by NYPL Hudson Branch librarians at the park's East Alcove Seating Area (shaded, on the east/north side of the park). A tight 30 minutes - right at a 2-year-old's attention span - and about a 10-minute walk from Union Square. Pair it with the park fountain and playgrounds after. Free, no registration.",
+        "confidence": "high",
+        "travelMinutes": 15,
+        "travelHow": "~15 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Giant Bubble at Greeley Square Park",
+        "category": "play",
+        "venue": "Greeley Square Park",
+        "neighborhood": "Herald Square / Koreatown",
+        "when": "Wed Jul 15, 12:30-2:30 PM (drop in)",
+        "days": [
+          "wed"
+        ],
+        "start": "12:30",
+        "end": "14:30",
+        "cost": "Free, no registration - all ages welcome. $0 for the whole family; just show up.",
+        "url": "https://www.nycgovparks.org/events/2026/07/15/giant-bubble-at-greeley-square-park",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.7479,
+        "lng": -73.988,
+        "toddlerNotes": "Interactive giant bubbles with RollerBoogie - chasing and popping enormous bubbles is about as pure a 2-year-old activity as exists. Drop in for 20 minutes anywhere in the 2-hour window; small paved plaza, so keep hold of runners near the street edges.",
+        "confidence": "high",
+        "travelMinutes": 13,
+        "travelHow": "~13 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Art in the Park with Miss Debbie (Washington Square Park playground)",
+        "category": "play",
+        "venue": "Washington Square Park – Kids Playground (Large)",
+        "neighborhood": "Greenwich Village",
+        "when": "Wed Jul 15, 3:00–5:00 PM (drop-in)",
+        "days": [
+          "wed"
+        ],
+        "start": "15:00",
+        "end": "17:00",
+        "cost": "Free — no charge for parents or kids; drop-in, no registration required (a free NYC Parks account is optional).",
+        "url": "https://www.nycgovparks.org/events/2026/07/15/art-in-the-park",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.7312,
+        "lng": -73.9985,
+        "toddlerNotes": "Drop-in art-making ('Draw! Cut! Paste! Smile!') at the tables inside the large kids playground with resident 'playground best friend' Miss Debbie — kids of all ages, so a 2-year-old can glue and scribble with a parent's help, then head straight back to the slides. Good post-nap afternoon option; about 10 min from Union Square. Runs every Wednesday 5/6–10/28/2026.",
+        "confidence": "high",
+        "travelMinutes": 14,
+        "travelHow": "~14 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Moon Tree Launch Party at Madison Square Park",
+        "category": "festival",
+        "venue": "Madison Square Park (Farragut Lawn Moon Tree; activities throughout the park)",
+        "neighborhood": "Flatiron / NoMad",
+        "when": "Thu Jul 16, 12:00 PM-8:00 PM (drop in any time)",
+        "days": [
+          "thu"
+        ],
+        "start": "12:00",
+        "end": "20:00",
+        "cost": "Free for the whole family. Official page says Eventbrite registration is required, but it's an open outdoor park event so a walk-up is realistic.",
+        "url": "https://madisonsquarepark.org/community/calendar/event/moon-tree-launch-party/",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.742,
+        "lng": -73.9878,
+        "toddlerNotes": "All-day free space festival around the park's NASA Artemis I 'Moon Tree' (July 16 = Apollo 11 launch anniversary). Toddler-friendly bits: hands-on science experiments and Moon Tree artmaking, a scavenger hunt, and safe solar viewing through filtered telescopes with a parent's help; there's a special children's presentation at 4:30 PM, and WNYC's Terrestrials kids podcast is part of the lineup. Treat it as a ~1-hour drop-in, not an 8-hour plan. About a 10-min walk from Union Square.",
+        "confidence": "high",
+        "travelMinutes": 7,
+        "travelHow": "~7 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Summer on the Hudson: Children's Performance Series - Lucy Kalantari & the Jazz Cats",
+        "category": "music",
+        "venue": "Pier I, Riverside Park South",
+        "neighborhood": "Upper West Side / Riverside Park South",
+        "when": "Thu Jul 16, 10:00-11:00 AM",
+        "days": [
+          "thu"
+        ],
+        "start": "10:00",
+        "end": "11:00",
+        "cost": "Free (no tickets; limited unreserved seating, first-come, opens ~1 hr before)",
+        "url": "https://www.nycgovparks.org/events/2026/07/16/summer-on-the-hudson-childrens-performance-series",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.7816,
+        "lng": -73.9906,
+        "toddlerNotes": "Flagship toddler show of the week: made 'for young audiences up to age 7.' Grammy-winning bilingual (English/Spanish) kids' jazz band leads an interactive scat-along - dancing encouraged. NYC Parks lists the window as 10-11 AM; the band's own site lists a 10:30 AM performance start, so aim to arrive by ~9:45 (seating is limited, unreserved, first-come, opens about an hour prior). It's an open pier over the Hudson with zero shade - bring hats, sunscreen, and water. ~10-min walk from the 72nd St 1/2/3 stop; ~30 min from Union Square on the 1/2/3.",
+        "confidence": "high",
+        "travelMinutes": 28,
+        "travelHow": "~28 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Goatham 2026: The Great Goat Graze-Off (Riverside Park goats arrive)",
+        "category": "animals",
+        "venue": "Riverside Park - lawn north of Ten Mile Playground",
+        "neighborhood": "West Harlem / Hamilton Heights",
+        "when": "Sat Jul 18, 11:00 AM-1:30 PM (rain date Sun Jul 19)",
+        "days": [
+          "sat"
+        ],
+        "start": "11:00",
+        "end": "13:30",
+        "cost": "Free - no ticket cost; RSVP via Eventbrite encouraged (a family of any size pays $0)",
+        "url": "https://riversideparknyc.org/goatham/",
+        "outdoor": true,
+        "cpwOnly": true,
+        "lat": 40.8301,
+        "lng": -73.952,
+        "toddlerNotes": "Real live grazing goats brought into the park to eat invasive plants (2026 edition is styled 'The Great Goat Graze-Off,' a lighthearted competitive-grazing event overseen by George Shea of Major League Eating), plus a family-friendly outdoor festival atmosphere - meeting goats is a slam dunk for a 2-year-old, and Ten Mile Playground is right there. Honesty on distance: this is W 151st St, well north of the usual zone - roughly 30 min from 101 CPW (1 train 72nd to 145th + walk), not realistic from Union Square. Verified on the official Riverside Park Conservancy page and corroborated by NYC Parks and Eventbrite.",
+        "confidence": "high",
+        "travelMinutes": 50,
+        "travelHow": "~50 min from Union Sq (see Directions)",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Carnegie Hall Citywide: American Patchwork Quartet (free lawn concert)",
+        "category": "music",
+        "venue": "Madison Square Park (Oval Lawn)",
+        "neighborhood": "Flatiron / NoMad",
+        "when": "Wed Jul 15, 6:00-7:30 PM",
+        "days": [
+          "wed"
+        ],
+        "start": "18:00",
+        "end": "19:30",
+        "cost": "Free for all ages; free RSVP/registration via Eventbrite (no ticket cost for kids or adults)",
+        "url": "https://madisonsquarepark.org/community/calendar/event/carnegie-hall-citywide-american-patchwork-quartet/",
+        "outdoor": true,
+        "cpwOnly": false,
+        "lat": 40.742,
+        "lng": -73.9878,
+        "toddlerNotes": "Honest framing: this is an all-ages evening concert on the park's Oval Lawn, not dedicated kids programming. The toddler appeal is the setting - a Grammy-nominated roots/folk band (American Patchwork Quartet) on an open lawn where a 2-year-old can dance, snack and roam before bedtime. Bring a picnic blanket and arrive early for lawn space; bail whenever. Skip if your kid melts down after 6:30 PM.",
+        "confidence": "high",
+        "travelMinutes": 7,
+        "travelHow": "~7 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Hamlet — Hudson Classical Theater Company (free outdoor Shakespeare)",
+        "category": "theater",
+        "venue": "Soldiers' and Sailors' Monument, Riverside Park",
+        "neighborhood": "Upper West Side / Riverside Park",
+        "when": "Thu Jul 16 - Sun Jul 19, 6:30-8:30 PM (arrive by 6:15 for a good spot; Jul 19 is the closing show)",
+        "days": [
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "start": "18:30",
+        "end": "20:30",
+        "cost": "Free — Pay What You Can. No tickets or reservations; cushions provided, first-come seating. A whole family gets in for $0; donations are optional and support artist stipends.",
+        "url": "https://riversideparknyc.org/event/hudson-classical-theater-company-presents-hamlet/2026-07-16/",
+        "outdoor": true,
+        "lat": 40.7894,
+        "lng": -73.9812,
+        "cpwOnly": true,
+        "toddlerNotes": "This is a full ~2-hour adult tragedy, not a kids' show — the toddler payoff is the setting: open-air steps/plaza at the Soldiers' and Sailors' Monument with Riverside Park lawn right there, so one parent can watch while the 2-year-old roams the grass, and exits are zero-friction. Casual picnic vibe, cushions on stone steps rather than fixed rows. The 6:30 start brushes up against bedtime; catching the first 30-45 min is the realistic toddler plan.",
+        "confidence": "high",
+        "travelMinutes": 31,
+        "travelHow": "~31 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "The Taming of the Shrew — Boomerang Theatre Company (free Shakespeare on the lawn)",
+        "category": "theater",
+        "venue": "Central Park lawn just inside the W 69th St & Central Park West entrance",
+        "neighborhood": "Central Park / Upper West Side",
+        "when": "Sat Jul 18 & Sun Jul 19, 2026, 2:00 PM (closing weekend)",
+        "days": [
+          "sat",
+          "sun"
+        ],
+        "start": "14:00",
+        "end": null,
+        "cost": "Free for everyone — no tickets required to attend. Advance reservations encouraged via their OnTheStage link but walk-ups are fine. A family of any size pays $0.",
+        "url": "https://www.boomerangtheatre.org/shows-tickets/the-taming-of-the-shrew",
+        "outdoor": true,
+        "lat": 40.7737,
+        "lng": -73.9761,
+        "cpwOnly": false,
+        "toddlerNotes": "The most toddler-compatible of the week's adult Shakespeare: a 2 PM matinee on an open lawn — bring a blanket, sit at the back edge, and the 2-year-old can toddle, snack, and wander without shushing. Come-and-go is expected (billed as a picnic-style event). Content is an adult comedy (~2 hrs), so treat it as a picnic with a show in the background rather than something the kid watches. Two blocks from 101 CPW; also reachable from Union Square (~30 min). Bring sun cover — full afternoon sun on the lawn.",
+        "confidence": "high",
+        "travelMinutes": 25,
+        "travelHow": "~25 min from Union Sq (see Directions)",
+        "times": [
+          "afternoon"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Othello — Classical Theatre of Harlem, Uptown Shakespeare in the Park",
+        "category": "theater",
+        "venue": "Richard Rodgers Amphitheater, Marcus Garvey Park",
+        "neighborhood": "Harlem / Marcus Garvey Park",
+        "when": "Tue Jul 14 – Sun Jul 19, 8:30 PM (Fri Jul 17 at 9:00 PM); dark Monday Jul 13. Harlem Chamber Players pre-show Jul 16; Harlem Opera Jul 18; Jazzmobile Fridays 7 PM.",
+        "days": [
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "start": "20:30",
+        "end": null,
+        "cost": "Free for everyone ($0 for a family of any size). Free RSVP available online at cthnyc.org; seating is first-come in the amphitheater, no ticket required to enter.",
+        "url": "https://www.cthnyc.org/othello/",
+        "outdoor": true,
+        "lat": 40.8046,
+        "lng": -73.944,
+        "cpwOnly": true,
+        "toddlerNotes": "Honesty check: the 8:30–9 PM curtain is well past a 2-year-old's bedtime, the amphitheater is fixed concrete rows, and Othello is a heavy 1hr45 (no intermission) tragedy — this is the week's big free-theater event for parents with a sitter, not a toddler outing. Also a stretch even from 101 CPW (2/3 express to 125th & Lenox, ~25 min) and beyond the 35-min Union Square zone. Included because it is the marquee free outdoor theater run of the week (Jul 5–26).",
+        "confidence": "high",
+        "travelMinutes": 40,
+        "travelHow": "~40 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "As You Like It — Shakespeare in the Parking Lot, 31st season (The Drilling Company)",
+        "category": "theater",
+        "venue": "Parking lot of Lower East Side Preparatory High School",
+        "neighborhood": "Lower East Side",
+        "when": "Thu Jul 16 - Sat Jul 18, 7:00 PM (opening weekend; run continues Thu-Sat through Aug 1)",
+        "days": [
+          "thu",
+          "fri",
+          "sat"
+        ],
+        "start": "19:00",
+        "end": null,
+        "cost": "Free for everyone — a family of any size pays $0. Chairs provided first-come, first-served, or bring your own chair/stroller.",
+        "url": "https://drillingcompany.org/in-the-parking-lot",
+        "outdoor": true,
+        "lat": 40.7206,
+        "lng": -73.9857,
+        "cpwOnly": false,
+        "toddlerNotes": "Closest free outdoor theater to Union Square (~15 min). It's a ~2-hr adult comedy in rows of folding chairs on asphalt — no lawn to roam — so grab aisle/back seats for easy escapes. The scrappy street-theater energy, costumes, and live action can hold a 2-year-old for a stretch, but 7 PM is late for this age; plan on catching the first act. This is opening weekend (Thu Jul 16-Sat Jul 18) — no Sunday show.",
+        "confidence": "high",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq (see Directions)",
+        "times": [
+          "evening"
+        ],
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Little Red's Hood — Swedish Cottage Marionette Theatre",
+        "category": "theater",
+        "venue": "Swedish Cottage Marionette Theatre, Central Park",
+        "neighborhood": "Central Park / Upper West Side",
+        "when": "Sat Jul 18 & Sun Jul 19, 2026, shows at 11:00 AM and 1:00 PM (weekend-only schedule during renovations)",
+        "days": [
+          "sat",
+          "sun"
+        ],
+        "start": "11:00",
+        "end": null,
+        "cost": "$10 per child / $15 per adult; children under 2 free — about $40 for two adults + one paying kid. Advance online tickets only (See Tickets/Eventim); no walk-up sales, no refunds.",
+        "url": "https://cityparksfoundation.org/swedish-cottage-marionette-theatre/",
+        "outdoor": false,
+        "lat": 40.7797,
+        "lng": -73.9698,
+        "cpwOnly": false,
+        "toddlerNotes": "The one genuinely made-for-kids show on the free-theater beat: about a dozen handmade marionettes in a tiny historic cottage, ~40-45 min runtime, indoor and seated (the only non-outdoor entry here). Officially pitched at ages 3-7, so a 2-year-old is a notch young — a 2yo still needs a paid child ticket (only under-2 is free); lap-seat them and expect it to land if they already like puppets. Buy the exact 11 AM or 1 PM showtime in advance online — no walk-ups.",
+        "confidence": "high",
+        "travelMinutes": 35,
+        "travelHow": "L to 8 Av, transfer to C uptown to 81 St–Museum of Natural History, then 8-min walk into the park",
+        "times": [
+          "morning"
+        ],
+        "event": true,
+        "recurring": false
+      }
+    ]
+  },
   itineraries: {
     "mon": {
       "summary": "Bryant Park magic show at 10, splash or market run after nap, free ferry at golden hour.",
