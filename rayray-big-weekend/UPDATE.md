@@ -9,15 +9,27 @@ It must be refreshed **every Monday morning** for the new week (Monday–Sunday)
 Only `week.js`. Do not restructure `index.html`, `app.js`, or `styles.css`
 unless something is broken — the design is settled.
 
+**CRITICAL — `events` has two kinds of entries; only one kind is refreshed:**
+- **Dated events** (`event: true`, real `days`): the ~40–55 scheduled happenings
+  for THIS week. These are what you refresh every Monday.
+- **The evergreen library** (`event: false`, `days` include `any` or fixed open
+  days, `recurring: true`): ~200 always-open spots — the toddler **playgrounds**
+  and the **indoor/rainy-day** stops (museums, indoor play, libraries,
+  bookstores, nature centers), plus carousels, ferries, zoos, gardens.
+  **CARRY THESE FORWARD UNCHANGED.** Never regenerate `week.js` from scratch or
+  trim to "~40 entries" — that destroys the library. A correct refreshed
+  `week.js` has ~200+ total entries. Only drop an evergreen entry you can
+  confirm is permanently closed; add new ones as they open. See rules 9 & 10.
+
 `week.js` sets `window.WEEK_DATA`:
 
 ```js
 window.WEEK_DATA = {
-  weekLabel: "July 6–12, 2026",   // human label for the Mon–Sun week
-  weekMonday: "2026-07-06",       // ISO date of that Monday (drives TODAY badge)
-  updated: "July 10, 2026",       // date the data was refreshed
+  weekLabel: "July 13–19, 2026", // human label for the Mon–Sun week
+  weekMonday: "2026-07-13",      // ISO date of that Monday (drives TODAY badge)
+  updated: "July 13, 2026",      // date the data was refreshed
   itineraries: { /* one exec-sum plan per day, see "Daily itineraries" below */ },
-  events: [ /* 20–45 entries, see schema below */ ],
+  events: [ /* ~40–55 DATED events + the ~200 evergreen library, see schema */ ],
   nextWeek: { /* preview of the FOLLOWING week, see "Next-week preview" below */ }
 };
 ```
@@ -45,6 +57,29 @@ Each event:
 | `end` | string/null | end time "HH:MM" parsed from the schedule range where known; drives the "ended today" fade (fallback: start + 2h) |
 | `cpwOnly` | boolean | `true` = only reachable from Grandma's base (beyond ~35 min of Union Sq); hidden in Union Sq mode |
 | `event` | boolean | `true` = a real dated happening (concert, show, storytime session, festival) — gets the "⭐ this week" chip, sorts first, and powers the "Real events only" filter. `false` = an open-anytime place. |
+
+## Monday procedure (do this in order)
+
+The site must NEVER be left showing a past week. Work in this order so even a
+partial run leaves it current:
+
+1. **Promote first (fast, always safe).** If `nextWeek` already holds the new
+   week's verified events, promote it to be this week BEFORE any research:
+   keep every evergreen entry (`event !== true`), replace the dated events with
+   `nextWeek.events`, set `weekLabel`/`weekMonday` to nextWeek's and `updated`
+   to today, and author fresh `itineraries` for the new week (see "Daily
+   itineraries"). Clear `nextWeek`. Run the validator, commit, **deploy, and
+   confirm the live `weekLabel` updated** — now the site is current no matter
+   what happens next.
+2. **Then research the NEW `nextWeek`** (the following Mon–Sun) per the rules
+   below, and the dated events for any gaps in the promoted week. Add findings,
+   re-validate, commit, deploy again.
+3. **If you cannot do full research** (time, tool, or usage limits), STOP after
+   step 1 — a promoted week with no preview is fine; next Monday fills it. Do
+   not leave a half-written `week.js`; the validator must pass before every push.
+
+If `nextWeek` is empty/missing (no preview to promote), do the full research
+for this week directly, but STILL preserve the evergreen library.
 
 ## Research rules
 
