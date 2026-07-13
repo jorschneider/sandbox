@@ -118,6 +118,15 @@ Each event:
 8. Keep evergreen favorites (playgrounds, carousels, zoo, ferries) in the list
    every week — verify they're open (water features and carousels close
    seasonally or for repairs).
+10. **Preserve the indoor/rainy-day library.** The site carries a large set of
+   indoor stops (museums, indoor play spaces, gyms, libraries, bookstores,
+   nature/animal centers) as evergreen entries (`outdoor:false`, `days` = actual
+   open days or `["any"]`, `event:false`, `recurring:true`, mostly
+   `confidence:"medium"` since hours/prices are imported and unverified — that's
+   why they show a 🔍 chip). They render in the "☔ Rainy day" group, sorted
+   nearest-first, and are the go-to when the weather turns. Carry them forward;
+   only drop one confirmed closed. (Seed set imported from the Bloop Adventures
+   directory, travel recomputed from Union Square.)
 9. **Preserve the playground library.** The site carries a large curated set of
    toddler playgrounds (category `play`, `days:["any"]`, `event:false`,
    `recurring:true`) across Manhattan below ~86th, the CPW/UWS/Riverside/Central

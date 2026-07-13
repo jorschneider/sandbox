@@ -117,7 +117,7 @@ else {
   if (!data.weekLabel) err("weekLabel missing");
   if (!data.updated) err("updated missing");
   const evs = data.events || [];
-  if (evs.length < 20 || evs.length > 260) err("suspicious event count: " + evs.length + " (want 20-260)");
+  if (evs.length < 20 || evs.length > 400) err("suspicious event count: " + evs.length + " (want 20-400)");
   validateEventList(evs, "", false);
 
   const bySlug = {};

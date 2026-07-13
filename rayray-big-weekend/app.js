@@ -610,13 +610,14 @@
         // three staged unlocks: indoor rainy-day escapes, the nearby-playground list
         // (sorted closest-first — the weekday go-to), then farther destinations
         const isPlayground = (e) => e.outdoor && e.category === "play" && !isRide(e);
+        const byTravel = (a, b) => (travelOf(a) || 99) - (travelOf(b) || 99);
         const groups = [
-          { label: "☔ Rainy day", sub: "the big museums & indoor escapes", flag: "showRainy",
-            items: items.filter((e) => !e.outdoor && !isRide(e)) },
+          { label: "☔ Rainy day", sub: "museums & indoor play, nearest-first", flag: "showRainy",
+            items: items.filter((e) => !e.outdoor && !isRide(e)).sort(byTravel) },
           { label: "🛝 Playgrounds & splash pads", sub: "sorted nearest-first — grab the closest", flag: "showPlay",
-            items: items.filter(isPlayground).sort((a, b) => (travelOf(a) || 99) - (travelOf(b) || 99)) },
+            items: items.filter(isPlayground).sort(byTravel) },
           { label: "🧭 Destinations & ferries", sub: "gardens, boats, carousels & zoos", flag: "showDest",
-            items: items.filter((e) => !isPlayground(e) && (e.outdoor || isRide(e))) },
+            items: items.filter((e) => !isPlayground(e) && (e.outdoor || isRide(e))).sort(byTravel) },
         ];
         groups.forEach((g) => {
           if (!g.items.length) return;
