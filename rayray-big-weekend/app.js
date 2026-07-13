@@ -34,7 +34,7 @@
   const dayIndex = Math.floor((new Date() - weekStart) / 86400000); // 0 = Monday
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
-  const state = { day: todayKey || "all", week: "cur", showRainy: false, showDest: false, heartsOnly: false,
+  const state = { day: todayKey || "all", week: "cur", showRainy: false, showPlay: false, showDest: false, heartsOnly: false,
     maxTravel: null, // minutes cap from the travel slider; null = anywhere
     base: /(^|[#&])base=cpw(&|$)/.test(location.hash) ? "cpw" : "usq" };
   const nextWeek = data.nextWeek && Array.isArray(data.nextWeek.events) && data.nextWeek.events.length ? data.nextWeek : null;
@@ -530,8 +530,10 @@
         let n = numByKey[k];
         const e = byKey[k];
         if (!n && e && timeBucket(e) === "any") {
-          // the pick lives behind an anytime unlock — open it, then jump
-          state[!e.outdoor && !isRide(e) ? "showRainy" : "showDest"] = true;
+          // the pick lives behind an anytime unlock — open the right one, then jump
+          const flag = (!e.outdoor && !isRide(e)) ? "showRainy"
+            : (e.outdoor && e.category === "play" && !isRide(e)) ? "showPlay" : "showDest";
+          state[flag] = true;
           render();
           n = numByKey[k];
         }
@@ -605,12 +607,16 @@
       const items = list.filter((e) => timeBucket(e) === bucket.key);
       if (!items.length) return;
       if (bucket.key === "any") {
-        // two staged unlocks: rainy-day indoor escapes first, then outdoor destinations
+        // three staged unlocks: indoor rainy-day escapes, the nearby-playground list
+        // (sorted closest-first — the weekday go-to), then farther destinations
+        const isPlayground = (e) => e.outdoor && e.category === "play" && !isRide(e);
         const groups = [
           { label: "☔ Rainy day", sub: "the big museums & indoor escapes", flag: "showRainy",
             items: items.filter((e) => !e.outdoor && !isRide(e)) },
-          { label: "🧭 Destination playgrounds & ferries", sub: "splash pads, gardens, boats & carousels", flag: "showDest",
-            items: items.filter((e) => e.outdoor || isRide(e)) },
+          { label: "🛝 Playgrounds & splash pads", sub: "sorted nearest-first — grab the closest", flag: "showPlay",
+            items: items.filter(isPlayground).sort((a, b) => (travelOf(a) || 99) - (travelOf(b) || 99)) },
+          { label: "🧭 Destinations & ferries", sub: "gardens, boats, carousels & zoos", flag: "showDest",
+            items: items.filter((e) => !isPlayground(e) && (e.outdoor || isRide(e))) },
         ];
         groups.forEach((g) => {
           if (!g.items.length) return;

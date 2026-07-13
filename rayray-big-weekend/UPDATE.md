@@ -118,6 +118,16 @@ Each event:
 8. Keep evergreen favorites (playgrounds, carousels, zoo, ferries) in the list
    every week — verify they're open (water features and carousels close
    seasonally or for repairs).
+9. **Preserve the playground library.** The site carries a large curated set of
+   toddler playgrounds (category `play`, `days:["any"]`, `event:false`,
+   `recurring:true`) across Manhattan below ~86th, the CPW/UWS/Riverside/Central
+   Park zone (some `cpwOnly`), and Brooklyn (DUMBO, Heights, Cobble Hill, Fort
+   Greene, Williamsburg, Greenpoint, Park Slope). These fill quiet weekdays and
+   render in their own "🛝 Playgrounds & splash pads" group, sorted nearest-first.
+   Do NOT drop them on a refresh — carry them forward. Only remove one you can
+   confirm is closed/under reconstruction, and add new ones as they open. Their
+   `travelMinutes` is a from-Union-Square estimate; `cpwOnly:true` marks the
+   uptown ones (beyond ~36 min of Union Sq) so they surface only in Grandma mode.
 
 ## Daily itineraries (exec-sum at the top of each day)
 
@@ -208,10 +218,11 @@ the base picker caps the list by minutes-from-base (maxed out = no cap). The
 "🔭 Next week" tab appears only when nextWeek has events; it merges
 nextWeek.events with automatic carryovers and shows a preview note instead of
 the plan box when nextWeek.itineraries is absent. The UI is a single map+scrolling-list view (no cards mode); open-anytime
-entries sit behind two staged unlocks at the end of the list — "☔ Rainy day"
-(indoor entries: museums & indoor play) then "🧭 Destination playgrounds &
-ferries" (outdoor spots plus carousel/ferry rides) — derived from the outdoor
-flag, so set it accurately; the
+entries sit behind three staged unlocks at the end of the list — "☔ Rainy day"
+(indoor: museums & indoor play), "🛝 Playgrounds & splash pads" (outdoor
+`category:play`, sorted nearest-first), and "🧭 Destinations & ferries"
+(gardens, boats, carousels, zoos) — derived from `outdoor` + `category`, so set
+both accurately; the
 hour-by-hour weather strip fills from Open-Meteo at view time and hides itself
 if the fetch fails. Leaflet is vendored at `vendor/leaflet/` — no CDN needed;
 map tiles come from openstreetmap.org at view time.
