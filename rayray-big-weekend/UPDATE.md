@@ -17,7 +17,8 @@ window.WEEK_DATA = {
   weekMonday: "2026-07-06",       // ISO date of that Monday (drives TODAY badge)
   updated: "July 10, 2026",       // date the data was refreshed
   itineraries: { /* one exec-sum plan per day, see "Daily itineraries" below */ },
-  events: [ /* 20–45 entries, see schema below */ ]
+  events: [ /* 20–45 entries, see schema below */ ],
+  nextWeek: { /* preview of the FOLLOWING week, see "Next-week preview" below */ }
 };
 ```
 
@@ -157,6 +158,32 @@ itineraries: {
 - The validator enforces all of the above; the UI renders a nap row between
   morning and afternoon automatically, so don't write the nap as a pick.
 
+## Next-week preview
+
+The site has a "🔭 Next week" tab so the family can plan ahead. Every Monday
+refresh must ALSO produce a preview of the FOLLOWING Mon–Sun:
+
+```js
+nextWeek: {
+  weekMonday: "2026-07-13",       // exactly weekMonday + 7 days
+  weekLabel: "July 13–19, 2026",
+  events: [ /* 10–40 DATED events only — same schema as events[] */ ],
+  itineraries: { /* optional — if omitted the UI shows a "plans land Monday" note */ }
+}
+```
+
+Rules:
+- `nextWeek.events` holds only real dated events (`event: true`, real `days`)
+  verified for the following week. Do NOT copy evergreen/anytime places or
+  weekly-recurring series into it — the UI carries those over automatically
+  (recurring carryovers get downgraded to a 🔍 medium-confidence chip until
+  re-verified). Re-list a recurring series in nextWeek only when you verified
+  its next-week details (or they changed — new performer, new time).
+- Research effort: lighter than the current week is fine (headliners, the
+  free-outdoor-theater hunt, weekends covered) — next Monday's refresh gives
+  that week the full treatment anyway.
+- `days` in nextWeek entries refer to the FOLLOWING week's Mon–Sun.
+
 ## Verify locally
 
 ```sh
@@ -175,7 +202,10 @@ has a numbered pin on the map in the right place, and each card's Details link
 works. When viewing today, events that already ended disappear from the list
 and map (the count line says "N already wrapped up") and their itinerary
 options gray out — that's intended, not missing data. The travel slider under
-the base picker caps the list by minutes-from-base (maxed out = no cap). The UI is a single map+scrolling-list view (no cards mode); open-anytime
+the base picker caps the list by minutes-from-base (maxed out = no cap). The
+"🔭 Next week" tab appears only when nextWeek has events; it merges
+nextWeek.events with automatic carryovers and shows a preview note instead of
+the plan box when nextWeek.itineraries is absent. The UI is a single map+scrolling-list view (no cards mode); open-anytime
 entries sit behind two staged unlocks at the end of the list — "☔ Rainy day"
 (indoor entries: museums & indoor play) then "🧭 Destination playgrounds &
 ferries" (outdoor spots plus carousel/ferry rides) — derived from the outdoor

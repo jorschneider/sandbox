@@ -34,9 +34,11 @@
   const dayIndex = Math.floor((new Date() - weekStart) / 86400000); // 0 = Monday
   const todayKey = dayIndex >= 0 && dayIndex < 7 ? DAY_KEYS[dayIndex] : null;
 
-  const state = { day: todayKey || "all", showRainy: false, showDest: false, heartsOnly: false,
+  const state = { day: todayKey || "all", week: "cur", showRainy: false, showDest: false, heartsOnly: false,
     maxTravel: null, // minutes cap from the travel slider; null = anywhere
     base: /(^|[#&])base=cpw(&|$)/.test(location.hash) ? "cpw" : "usq" };
+  const nextWeek = data.nextWeek && Array.isArray(data.nextWeek.events) && data.nextWeek.events.length ? data.nextWeek : null;
+  const WX = { daily: null, hourly: null }; // 14-day forecast, filled async
   const curBase = () => BASES[state.base];
 
   // rough door-to-door estimate from a base: walk when close, subway-ish beyond
@@ -72,9 +74,9 @@
   const endMin = (e) => e.end
     ? parseInt(e.end.slice(0, 2), 10) * 60 + parseInt(e.end.slice(3), 10)
     : startMin(e) + 120;
-  // 'now' | 'soon' | 'done' | null — only meaningful when viewing today
+  // 'now' | 'soon' | 'done' | null — only meaningful when viewing today (this week)
   function liveStatus(e) {
-    if (!e.start || state.day !== todayKey || todayKey == null) return null;
+    if (!e.start || state.week !== "cur" || state.day !== todayKey || todayKey == null) return null;
     const now = new Date();
     const nowM = now.getHours() * 60 + now.getMinutes();
     if (nowM > endMin(e)) return "done";
@@ -86,6 +88,20 @@
   const keyOf = (e) => e.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
   const byKey = {};
   data.events.forEach((e) => { byKey[keyOf(e)] = e; });
+  if (nextWeek) nextWeek.events.forEach((e) => { if (!byKey[keyOf(e)]) byKey[keyOf(e)] = e; });
+
+  // next week = its verified dated events + evergreen spots and weekly-recurring
+  // series carried over (carryovers get a double-check chip until re-verified)
+  function weekPool() {
+    if (state.week !== "next" || !nextWeek) return data.events;
+    const have = new Set(nextWeek.events.map(keyOf));
+    const carry = data.events.filter((e) => {
+      if (have.has(keyOf(e))) return false;
+      return (e.days || []).indexOf("any") !== -1 || e.recurring === true;
+    }).map((e) => (e.days || []).indexOf("any") !== -1 ? e
+      : Object.assign({}, e, { confidence: e.confidence === "low" ? "low" : "medium" }));
+    return nextWeek.events.concat(carry);
+  }
 
   function fmtTime(start) {
     let h = parseInt(start.slice(0, 2), 10);
@@ -151,8 +167,9 @@
   });
 
   // ——— add to calendar (.ics) ———
-  function icsDate(dayIdx, hm, plusMinutes) {
-    const p = data.weekMonday.split("-").map(Number);
+  const activeMonday = () => state.week === "next" && nextWeek ? nextWeek.weekMonday : data.weekMonday;
+  function icsDate(monday, dayIdx, hm, plusMinutes) {
+    const p = monday.split("-").map(Number);
     const d = new Date(p[0], p[1] - 1, p[2] + dayIdx,
       parseInt(hm.slice(0, 2), 10), parseInt(hm.slice(3), 10) + (plusMinutes || 0));
     const pad = (n) => String(n).padStart(2, "0");
@@ -163,18 +180,20 @@
   }
   function downloadIcs(e) {
     if (!e || !e.start) return;
+    const monday = activeMonday();
+    const skipPast = state.week === "cur" && todayKey != null; // next week is all future
     const real = (e.days || []).filter((d) => DAY_KEYS.indexOf(d) !== -1);
     const dayKey = state.day !== "all" && real.indexOf(state.day) !== -1 ? state.day
-      : real.find((d) => todayKey == null || DAY_KEYS.indexOf(d) >= DAY_KEYS.indexOf(todayKey)) || real[0];
+      : real.find((d) => !skipPast || DAY_KEYS.indexOf(d) >= DAY_KEYS.indexOf(todayKey)) || real[0];
     const idx = DAY_KEYS.indexOf(dayKey);
     if (idx < 0) return;
     const txt = [
       "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Rayray Big Weekend//EN",
       "BEGIN:VEVENT",
-      "UID:" + keyOf(e) + "-" + data.weekMonday + "@rayray-big-weekend",
-      "DTSTAMP:" + icsDate(idx, e.start) + "Z",
-      "DTSTART:" + icsDate(idx, e.start),
-      "DTEND:" + icsDate(idx, e.start, 90),
+      "UID:" + keyOf(e) + "-" + monday + "@rayray-big-weekend",
+      "DTSTAMP:" + icsDate(monday, idx, e.start) + "Z",
+      "DTSTART:" + icsDate(monday, idx, e.start),
+      "DTEND:" + icsDate(monday, idx, e.start, 90),
       "SUMMARY:" + icsEsc("🎈 " + e.title),
       "LOCATION:" + icsEsc(e.venue + ", " + e.neighborhood + ", New York, NY"),
       "DESCRIPTION:" + icsEsc(e.when + "\n\n" + e.toddlerNotes + "\n\n" + e.url),
@@ -193,30 +212,55 @@
   document.getElementById("updated-line").textContent =
     "Last refreshed " + data.updated + " · next refresh Monday morning 🌅";
 
-  // ——— day picker ———
+  // ——— day picker (rebuilt when the week toggles) ———
   const dayPicker = document.getElementById("day-picker");
-  [{ key: "all", label: "Whole week" }]
-    .concat(DAY_KEYS.map((k) => ({ key: k, label: DAY_LABELS[k] })))
-    .forEach(({ key, label }) => {
-      const b = document.createElement("button");
-      b.className = "day";
-      b.textContent = label;
-      b.dataset.day = key;
-      if (todayKey && DAY_KEYS.indexOf(key) !== -1 && DAY_KEYS.indexOf(key) < DAY_KEYS.indexOf(todayKey)) {
-        b.classList.add("past");
-      }
-      if (key === todayKey) {
-        const tag = document.createElement("span");
-        tag.className = "today-tag";
-        tag.textContent = "TODAY!";
-        b.appendChild(tag);
-      }
+  function buildDayPicker() {
+    const cur = state.week === "cur";
+    dayPicker.innerHTML = "";
+    [{ key: "all", label: "Whole week" }]
+      .concat(DAY_KEYS.map((k) => ({ key: k, label: DAY_LABELS[k] })))
+      .forEach(({ key, label }) => {
+        const b = document.createElement("button");
+        b.className = "day";
+        b.textContent = label;
+        b.dataset.day = key;
+        if (cur && todayKey && DAY_KEYS.indexOf(key) !== -1 && DAY_KEYS.indexOf(key) < DAY_KEYS.indexOf(todayKey)) {
+          b.classList.add("past");
+        }
+        if (cur && key === todayKey) {
+          const tag = document.createElement("span");
+          tag.className = "today-tag";
+          tag.textContent = "TODAY!";
+          b.appendChild(tag);
+        }
+        b.addEventListener("click", () => {
+          state.day = key;
+          render();
+        });
+        dayPicker.appendChild(b);
+      });
+    decorateDays();
+  }
+  buildDayPicker();
+
+  // ——— week picker: peek at next week whenever the data carries a preview ———
+  const weekPicker = document.getElementById("week-picker");
+  if (nextWeek) {
+    const shortLabel = (s) => String(s || "").replace(/,\s*\d{4}\s*$/, "");
+    weekPicker.hidden = false;
+    weekPicker.querySelector('[data-week="cur"]').textContent = "This week · " + shortLabel(data.weekLabel);
+    weekPicker.querySelector('[data-week="next"]').textContent = "🔭 Next week · " + shortLabel(nextWeek.weekLabel);
+    weekPicker.querySelectorAll(".wk").forEach((b) => {
       b.addEventListener("click", () => {
-        state.day = key;
+        if (state.week === b.dataset.week) return;
+        state.week = b.dataset.week;
+        state.day = state.week === "cur" ? (todayKey || "all") : "all";
+        weekPicker.querySelectorAll(".wk").forEach((x) => x.classList.toggle("active", x === b));
+        buildDayPicker();
         render();
       });
-      dayPicker.appendChild(b);
     });
+  }
 
   // ——— home-base switcher ———
   const basePicker = document.getElementById("base-picker");
@@ -404,8 +448,17 @@
   // ——— the day's exec-sum: our picks around the sacred 12–2 nap ———
   const itinEl = document.getElementById("itin");
   function renderItin() {
-    const its = data.itineraries;
-    if (!its || state.heartsOnly) { itinEl.hidden = true; return; }
+    const its = state.week === "next" ? (nextWeek || {}).itineraries : data.itineraries;
+    if (state.heartsOnly) { itinEl.hidden = true; return; }
+    if (!its) {
+      if (state.week === "next") {
+        // preview weeks ship without a curated plan until Monday's refresh
+        itinEl.innerHTML = '<p class="itin-nap-note">🔭 Peeking at next week — these events are verified early; ' +
+          "the full day-by-day plan (and more finds) lands with Monday morning’s refresh.</p>";
+        itinEl.hidden = false;
+      } else itinEl.hidden = true;
+      return;
+    }
 
     if (state.day === "all") {
       // week at a glance — one line per day, tap to jump in
@@ -413,9 +466,10 @@
       html += DAY_KEYS.map((k) => {
         const it = its[k];
         if (!it || !it.summary) return "";
-        const past = todayKey && DAY_KEYS.indexOf(k) < DAY_KEYS.indexOf(todayKey);
+        const cur = state.week === "cur";
+        const past = cur && todayKey && DAY_KEYS.indexOf(k) < DAY_KEYS.indexOf(todayKey);
         return '<button class="itin-day' + (past ? " past" : "") + '" data-day="' + k + '">' +
-          "<b>" + DAY_LABELS[k] + (k === todayKey ? " ✨" : "") + "</b><span>" + esc(it.summary) + "</span></button>";
+          "<b>" + DAY_LABELS[k] + (cur && k === todayKey ? " ✨" : "") + "</b><span>" + esc(it.summary) + "</span></button>";
       }).join("");
       html += '<p class="itin-nap-note">😴 Every plan works around Rayray\'s 12–2 nap — mornings wrap by noon, afternoons start after 2.</p>';
       itinEl.innerHTML = html;
@@ -446,7 +500,8 @@
       { slot: "afternoon", head: "☀️ After nap", hint: "pick one" },
       { slot: "evening", head: "🌆 Evening", hint: "if she's up for it" },
     ];
-    let html = "<h3>📋 The plan — " + (state.day === todayKey ? "today" : DAY_FULL[state.day]) + "</h3>";
+    let html = "<h3>📋 The plan — " + (state.week === "cur" && state.day === todayKey ? "today" : DAY_FULL[state.day]) +
+      (state.week === "next" ? " (next week)" : "") + "</h3>";
     GROUPS.forEach((g) => {
       const cards = it.picks.filter((p) => p.slot === g.slot).map(opt).join("");
       if (g.slot === "afternoon") {
@@ -478,8 +533,10 @@
   function render() {
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
+    document.getElementById("week-label").textContent =
+      "Week of " + (state.week === "next" && nextWeek ? nextWeek.weekLabel : data.weekLabel);
     let doneToday = 0;
-    const list = data.events.filter((e) => {
+    const list = weekPool().filter((e) => {
       if (state.heartsOnly && !hearts.has(keyOf(e))) return false;
       if (state.base === "usq" && e.cpwOnly) return false; // beyond the Union Sq radius
       if (state.base === "cpw" && estMinutes(BASES.cpw, e) > 32) return false;
@@ -490,7 +547,9 @@
       return true;
     }).sort((a, b) => startMin(a) - startMin(b) || (travelOf(a) || 99) - (travelOf(b) || 99));
 
-    const label = state.day === "all" ? "this week" : (state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day]);
+    const nextW = state.week === "next";
+    const label = state.day === "all" ? (nextW ? "next week" : "this week")
+      : (!nextW && state.day === todayKey ? "today" : "on " + DAY_LABELS[state.day] + (nextW ? " next week" : ""));
     const nTimed = list.filter((e) => timeBucket(e) !== "any").length;
     const nAny = list.length - nTimed;
     document.getElementById("count").textContent =
@@ -633,7 +692,6 @@
   window.addEventListener("scroll", onScroll, { passive: true });
 
   // ——— weather: badges on day chips + hour-by-hour strip ———
-  const WX = { daily: null, hourly: null };
   function wxEmoji(code) {
     if (code === 0 || code === 1) return "☀️";
     if (code === 2) return "🌤️";
@@ -644,31 +702,34 @@
     if (code >= 51) return "🌧️";
     return "🌡️";
   }
+  const weekOffset = () => state.week === "next" ? 7 : 0; // day-index shift into the 14-day forecast
   function decorateDays() {
     if (!WX.daily) return;
     dayPicker.querySelectorAll(".day").forEach((b) => {
       const i = DAY_KEYS.indexOf(b.dataset.day);
-      if (i === -1 || !WX.daily.weather_code || WX.daily.weather_code[i] == null) return;
+      if (i === -1) return;
+      const wi = weekOffset() + i;
+      if (!WX.daily.weather_code || WX.daily.weather_code[wi] == null) return;
       if (b.querySelector(".day-wx")) return;
       const s = document.createElement("span");
       s.className = "day-wx";
-      s.textContent = wxEmoji(WX.daily.weather_code[i]) + " " + Math.round(WX.daily.temperature_2m_max[i]) + "°";
+      s.textContent = wxEmoji(WX.daily.weather_code[wi]) + " " + Math.round(WX.daily.temperature_2m_max[wi]) + "°";
       b.appendChild(s);
     });
   }
   function renderWxStrip() {
     const strip = document.getElementById("wx-strip");
     const di = state.day === "all"
-      ? (todayKey ? DAY_KEYS.indexOf(todayKey) : -1)
+      ? (state.week === "cur" && todayKey ? DAY_KEYS.indexOf(todayKey) : -1)
       : DAY_KEYS.indexOf(state.day);
     if (!WX.hourly || di < 0) { strip.hidden = true; return; }
-    const dayName = DAY_FULL[DAY_KEYS[di]];
-    const isToday = DAY_KEYS[di] === todayKey;
+    const dayName = DAY_FULL[DAY_KEYS[di]] + (state.week === "next" ? " next week" : "");
+    const isToday = state.week === "cur" && DAY_KEYS[di] === todayKey;
     const nowHour = new Date().getHours();
     let html = "";
     let rainy = false;
     for (let h = 8; h <= 20; h++) {
-      const i = di * 24 + h;
+      const i = (weekOffset() + di) * 24 + h;
       if (!WX.hourly.weather_code || WX.hourly.weather_code[i] == null) continue;
       const code = WX.hourly.weather_code[i];
       const temp = Math.round(WX.hourly.temperature_2m[i]);
@@ -689,14 +750,15 @@
     document.getElementById("wx-hours").innerHTML = html;
   }
   (function loadWeather() {
+    // fetch both weeks in one go (14 days) so the next-week preview gets forecasts too
     const end = (function () {
       const p = data.weekMonday.split("-").map(Number);
-      const d = new Date(p[0], p[1] - 1, p[2] + 6);
+      const d = new Date(p[0], p[1] - 1, p[2] + 13);
       const pad = (n) => String(n).padStart(2, "0");
       return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
     })();
     try {
-      const cached = JSON.parse(sessionStorage.getItem("rbw-wx2") || "null");
+      const cached = JSON.parse(sessionStorage.getItem("rbw-wx3") || "null");
       if (cached && cached.monday === data.weekMonday && Date.now() - cached.t < 3 * 3600e3) {
         WX.daily = cached.daily;
         WX.hourly = cached.hourly;
@@ -715,7 +777,7 @@
         if (!j || !j.daily || !j.hourly) return;
         WX.daily = j.daily;
         WX.hourly = j.hourly;
-        try { sessionStorage.setItem("rbw-wx2", JSON.stringify({ t: Date.now(), monday: data.weekMonday, daily: j.daily, hourly: j.hourly })); } catch (err) {}
+        try { sessionStorage.setItem("rbw-wx3", JSON.stringify({ t: Date.now(), monday: data.weekMonday, daily: j.daily, hourly: j.hourly })); } catch (err) {}
         decorateDays();
         renderWxStrip();
       })
