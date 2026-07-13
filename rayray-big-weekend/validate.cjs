@@ -126,9 +126,12 @@ else {
     err("itineraries missing — every week needs a per-day plan (see UPDATE.md)");
   } else validateItineraries(data.itineraries, bySlug, "");
 
-  // ——— next-week preview: verified dated events for the following Mon-Sun ———
-  if (!data.nextWeek || typeof data.nextWeek !== "object") {
-    err("nextWeek missing — the site previews the following week (see UPDATE.md)");
+  // ——— next-week preview: optional (a freshly promoted week has none until the
+  // next research pass fills it) — but validate it when present ———
+  if (data.nextWeek == null) {
+    // no preview yet; the "Next week" tab simply hides
+  } else if (typeof data.nextWeek !== "object") {
+    err("nextWeek must be an object when present");
   } else {
     const nw = data.nextWeek;
     const p = (data.weekMonday || "").split("-").map(Number);
