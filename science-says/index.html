@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>Science Says You'll Live to… — The Longevity Blender</title>
+  <meta name="description" content="Throw every observational health study into a blender, pick your lifestyle, and find out exactly how long Science™ says you're going to live. A calculator that takes the correlations at their word." />
+  <meta property="og:title" content="Science Says You'll Live to…" />
+  <meta property="og:description" content="Pick your lifestyle. Stack the studies. Watch the years pile up (or vanish). A loving parody of the longevity-industrial complex." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%97%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand"><span class="brand-mark">⚗️</span> The Longevity Blender</div>
+      <div class="top-actions">
+        <button id="randomize" class="ghost" type="button">🎲 Randomize</button>
+        <button id="reset" class="ghost" type="button">Reset</button>
+        <a class="ghost hide-sm" href="#the-catch">Wait, is this real?</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="kicker">An instrument of the longevity-industrial complex</p>
+        <p class="stamp"><span>Preprint</span> · not peer-reviewed · do not cite (seriously)</p>
+        <h1>How long does <em>Science™</em><br />say you'll live?</h1>
+        <p class="lede">
+          Here is a strange fact about modern life: nearly every week, a new
+          study announces that some ordinary habit will add years to your life,
+          or quietly subtract them. Coffee saves you. Sitting kills you. A daily
+          glass of wine is either medicine or poison, depending on the news
+          cycle. What nobody ever does is <strong>add it all up.</strong> So I
+          built a machine that does. Choose a life below. The machine will throw
+          every study in a blender, pour you a number, and take that number far
+          more seriously than any honest scientist ever would.
+        </p>
+        <div class="hero-controls">
+          <div class="presets" id="presets" aria-label="Quick-start lifestyles"></div>
+          <label class="age-input">
+            <span>I'm</span>
+            <input id="ageNow" type="number" min="1" max="110" placeholder="—" inputmode="numeric" aria-label="Your current age (optional)" />
+            <span>years old <em>(optional)</em></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap console">
+      <!-- The blend + verdict -->
+      <aside class="blend" id="blend" aria-live="polite">
+        <div class="glass" aria-hidden="true">
+          <div class="glass-inner">
+            <div class="liquid" id="liquid">
+              <div class="wave"></div>
+              <div class="wave wave2"></div>
+            </div>
+            <div class="ingredients" id="ingredients"></div>
+          </div>
+          <div class="glass-shine"></div>
+          <div class="glass-ticks"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="verdict">
+          <p class="verdict-kicker">Science says you'll live to</p>
+          <div class="readout">
+            <span class="odometer" id="ageBig">78</span><span class="odometer-unit">yrs</span>
+          </div>
+          <button class="reveal" id="reveal" type="button" title="See what happens when you stop double-counting">
+            <span class="reveal-lit">Taken literally</span>
+            <span class="reveal-sane">…with a straight face: <strong id="saneAge">—</strong></span>
+          </button>
+          <div class="lifebar" aria-hidden="true">
+            <div class="lifebar-fill" id="lifebarFill"></div>
+            <span class="lifebar-avg" id="lifebarAvg" title="Average American lifespan"></span>
+            <span class="lifebar-you" id="lifebarYou" hidden></span>
+          </div>
+          <p class="verdict-line" id="verdictLine">Adjust the dials and watch the years pile up.</p>
+          <dl class="verdict-stats">
+            <div><dt>vs. the average American</dt><dd id="vsAvg">—</dd></div>
+            <div id="remainingRow" hidden><dt>Years left on the clock</dt><dd id="yearsLeft">—</dd></div>
+            <div><dt>Bonus years, blended</dt><dd id="bonusYears">—</dd></div>
+            <div><dt>95% confidence interval</dt><dd id="ci" class="ci">—</dd></div>
+            <div><dt>Sample size</dt><dd class="dim">n&nbsp;=&nbsp;1&nbsp;(you)</dd></div>
+            <div><dt>Peer review status</dt><dd class="illegal">Unfavorable</dd></div>
+          </dl>
+          <div class="share-row">
+            <button id="copyLink" class="share-btn" type="button">🔗 Copy link</button>
+            <button id="copyResult" class="share-btn" type="button">📋 Copy my prognosis</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- The lifestyle menu -->
+      <div class="menu">
+        <div class="menu-head">
+          <h2>Your lifestyle menu</h2>
+          <p>Sixteen habits the internet has decided are load-bearing. Each one is
+          tagged with a real, frequently-cited study, the years it claims to give
+          or take, and the breathless headline it almost certainly generated.
+          Pick honestly. The machine is not judging you. The studies are.</p>
+        </div>
+        <div id="factors" class="factors"></div>
+      </div>
+    </section>
+
+    <!-- The receipt -->
+    <section class="wrap receipt-wrap">
+      <div class="receipt" id="receipt">
+        <div class="receipt-head">
+          <h2>What went in the blender</h2>
+          <p>Your habits, sorted by how loudly each study is shouting. Green pours
+          years in; red pours them out.</p>
+        </div>
+        <ul id="receiptList" class="receipt-list"></ul>
+        <div class="receipt-total">
+          <span>Net years, thrown in and blended</span>
+          <span id="receiptTotal" class="receipt-total-num">—</span>
+        </div>
+        <p class="receipt-method"><strong>Method:</strong> all effects combined by
+        direct addition — a technique with no support in the statistical
+        literature and overwhelming support in the wellness aisle.</p>
+      </div>
+    </section>
+
+    <!-- The catch -->
+    <section class="wrap catch" id="the-catch">
+      <div class="catch-card">
+        <p class="catch-eyebrow">A note on the methodology, which is a crime</p>
+        <h2>Correlation is not a bank account.</h2>
+        <p>
+          Let me be honest about what just happened. Every number in this machine
+          comes from a real, frequently-cited observational study. And nearly every
+          one of them measures the same thing — not what a habit <em>does to
+          you</em>, but what kind of person tends to <em>already have</em> it.
+          Daily flossers live longer, sure. They also tend to have dentists,
+          salaries, and the sort of orderly life in which remembering a small
+          nightly task is even possible. The floss isn't doing the work. The floss
+          is a tell.
+        </p>
+        <p>
+          This is the central confusion of the entire longevity genre, and it's
+          worth saying plainly: <strong>you cannot make a deposit of green tea, a
+          withdrawal of red meat, and check your balance in decades.</strong> The
+          effects overlap, cancel, and mostly re-describe your zip code. That's
+          why the machine hands you two numbers. The big glowing one adds every
+          association as though the universe were a spreadsheet. The smaller one —
+          <em>with a straight face</em> — does what a real epidemiologist does,
+          which is assume your fourth healthy habit doesn't pay like your first,
+          and that no one has ever become immortal by reading a press release.
+        </p>
+        <p>
+          The gap between those two numbers is the whole point. It is the distance
+          between what <em>Science™</em> says and what science says. Mind the gap.
+          Then go for a walk — not because a website told you to, but because it's
+          nice out, and on this one narrow question the studies, for once, agree.
+        </p>
+        <blockquote class="reviewer">
+          <p>“Reject. The authors have discovered that healthy people tend to be
+          healthy and have dressed it up as a finding. The addition is not a model.
+          The confidence interval is not a joke I find funny. See also: everything.”</p>
+          <cite>— Reviewer 2</cite>
+        </blockquote>
+        <p class="catch-credit">
+          Inspired by Derek Thompson's tweet about throwing every lifestyle study
+          in a blender. Sources are real; the arithmetic is a felony. Numbers are
+          for entertainment. Mortality is not.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      The Longevity Blender · an instrument of the Bureau of Applied Longevity,
+      which does not exist · findings not peer-reviewed, and never will be.
+      <span class="foot-dim">No hazard ratios were harmed in the making of this
+      machine. Several were badly misused.</span>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
