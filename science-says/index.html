@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>Science Says You'll Live to… — The Longevity Blender</title>
+  <meta name="description" content="Throw every observational health study into a blender, pick your lifestyle, and find out exactly how long Science™ says you're going to live. A calculator that takes the correlations at their word." />
+  <meta property="og:title" content="Science Says You'll Live to…" />
+  <meta property="og:description" content="Pick your lifestyle. Stack the studies. Watch the years pile up (or vanish). A loving parody of the longevity-industrial complex." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%97%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand"><span class="brand-mark">⚗️</span> The Longevity Blender</div>
+      <div class="top-actions">
+        <button id="reset" class="ghost" type="button">Reset</button>
+        <a class="ghost" href="#the-catch">Wait, is this real?</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="kicker">A calculator that takes the correlations literally</p>
+        <h1>How long does <em>Science™</em><br />say you'll live?</h1>
+        <p class="lede">
+          Every week another observational study announces that some habit adds
+          three years to your life, or quietly removes seven. Nobody ever adds
+          them all up. <strong>We did.</strong> Pick your lifestyle below and we'll
+          throw all the studies in a blender and pour you a number.
+        </p>
+        <div class="presets" id="presets" aria-label="Quick-start lifestyles"></div>
+      </div>
+    </section>
+
+    <section class="wrap console">
+      <!-- The verdict panel -->
+      <aside class="verdict" id="verdict" aria-live="polite">
+        <p class="verdict-kicker">Science says you'll live to</p>
+        <div class="readout">
+          <span class="odometer" id="ageBig">78</span><span class="odometer-unit">yrs</span>
+        </div>
+        <div class="lifebar" aria-hidden="true">
+          <div class="lifebar-fill" id="lifebarFill"></div>
+          <span class="lifebar-avg" id="lifebarAvg" title="Average American lifespan"></span>
+        </div>
+        <p class="verdict-line" id="verdictLine">Adjust the dials and watch the years pile up.</p>
+        <dl class="verdict-stats">
+          <div><dt>vs. the average American</dt><dd id="vsAvg">—</dd></div>
+          <div><dt>Bonus years, blended</dt><dd id="bonusYears">—</dd></div>
+          <div><dt>Statistical legality</dt><dd class="illegal">None whatsoever</dd></div>
+        </dl>
+      </aside>
+
+      <!-- The lifestyle menu -->
+      <div class="menu">
+        <div class="menu-head">
+          <h2>Your lifestyle menu</h2>
+          <p>Sixteen habits the internet has strong opinions about. Every option is
+          tagged with a real study and the years it claims to give or take.</p>
+        </div>
+        <div id="factors" class="factors"></div>
+      </div>
+    </section>
+
+    <!-- The receipt -->
+    <section class="wrap receipt-wrap">
+      <div class="receipt" id="receipt">
+        <div class="receipt-head">
+          <h2>What went in the blender</h2>
+          <p>Your habits, sorted by how loudly each study is shouting. Green pours
+          years in; red pours them out.</p>
+        </div>
+        <ul id="receiptList" class="receipt-list"></ul>
+        <div class="receipt-total">
+          <span>Net years, thrown in and blended</span>
+          <span id="receiptTotal" class="receipt-total-num">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- The catch -->
+    <section class="wrap catch" id="the-catch">
+      <div class="catch-card">
+        <h2>⚠️ Please do not take this to your doctor</h2>
+        <p>
+          This is a joke with footnotes. Observational studies report
+          <em>associations</em> — people who do X <em>tend to</em> live longer —
+          not years you can withdraw from an ATM. The effect sizes here are drawn
+          from real, frequently-cited papers, then treated with the reckless
+          literalism of a health-influencer thread.
+        </p>
+        <p>
+          Adding them together is the entire gag. In reality the effects overlap,
+          confound, cancel, and mostly reflect the sort of person who already
+          flosses. Optimists don't live longer <em>because</em> they're optimistic;
+          people who can afford saunas can afford a lot of things. A daily glass of
+          wine "adding" years is the most famous correlation ever to be quietly
+          walked back. You cannot out-habit your genes, your zip code, or a bus.
+        </p>
+        <p class="catch-credit">
+          Inspired by a Derek Thompson tweet about throwing every lifestyle study
+          in a blender. Numbers are for entertainment; mortality is not.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Built as satire · Sources are real, arithmetic is not · Live at your own
+      risk. <span class="foot-dim">No hazard ratios were harmed, only misused.</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
