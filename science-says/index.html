@@ -8,6 +8,7 @@
   <meta name="description" content="Throw every observational health study into a blender, pick your lifestyle, and find out exactly how long Science™ says you're going to live. A calculator that takes the correlations at their word." />
   <meta property="og:title" content="Science Says You'll Live to…" />
   <meta property="og:description" content="Pick your lifestyle. Stack the studies. Watch the years pile up (or vanish). A loving parody of the longevity-industrial complex." />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%97%EF%B8%8F%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,8 +20,9 @@
     <div class="wrap">
       <div class="brand"><span class="brand-mark">⚗️</span> The Longevity Blender</div>
       <div class="top-actions">
+        <button id="randomize" class="ghost" type="button">🎲 Randomize</button>
         <button id="reset" class="ghost" type="button">Reset</button>
-        <a class="ghost" href="#the-catch">Wait, is this real?</a>
+        <a class="ghost hide-sm" href="#the-catch">Wait, is this real?</a>
       </div>
     </div>
   </header>
@@ -36,27 +38,58 @@
           them all up. <strong>We did.</strong> Pick your lifestyle below and we'll
           throw all the studies in a blender and pour you a number.
         </p>
-        <div class="presets" id="presets" aria-label="Quick-start lifestyles"></div>
+        <div class="hero-controls">
+          <div class="presets" id="presets" aria-label="Quick-start lifestyles"></div>
+          <label class="age-input">
+            <span>I'm</span>
+            <input id="ageNow" type="number" min="1" max="110" placeholder="—" inputmode="numeric" aria-label="Your current age (optional)" />
+            <span>years old <em>(optional)</em></span>
+          </label>
+        </div>
       </div>
     </section>
 
     <section class="wrap console">
-      <!-- The verdict panel -->
-      <aside class="verdict" id="verdict" aria-live="polite">
-        <p class="verdict-kicker">Science says you'll live to</p>
-        <div class="readout">
-          <span class="odometer" id="ageBig">78</span><span class="odometer-unit">yrs</span>
+      <!-- The blend + verdict -->
+      <aside class="blend" id="blend" aria-live="polite">
+        <div class="glass" aria-hidden="true">
+          <div class="glass-inner">
+            <div class="liquid" id="liquid">
+              <div class="wave"></div>
+              <div class="wave wave2"></div>
+            </div>
+            <div class="ingredients" id="ingredients"></div>
+          </div>
+          <div class="glass-shine"></div>
+          <div class="glass-ticks"><span></span><span></span><span></span></div>
         </div>
-        <div class="lifebar" aria-hidden="true">
-          <div class="lifebar-fill" id="lifebarFill"></div>
-          <span class="lifebar-avg" id="lifebarAvg" title="Average American lifespan"></span>
+
+        <div class="verdict">
+          <p class="verdict-kicker">Science says you'll live to</p>
+          <div class="readout">
+            <span class="odometer" id="ageBig">78</span><span class="odometer-unit">yrs</span>
+          </div>
+          <button class="reveal" id="reveal" type="button" title="See what happens when you stop double-counting">
+            <span class="reveal-lit">Taken literally</span>
+            <span class="reveal-sane">…with a straight face: <strong id="saneAge">—</strong></span>
+          </button>
+          <div class="lifebar" aria-hidden="true">
+            <div class="lifebar-fill" id="lifebarFill"></div>
+            <span class="lifebar-avg" id="lifebarAvg" title="Average American lifespan"></span>
+            <span class="lifebar-you" id="lifebarYou" hidden></span>
+          </div>
+          <p class="verdict-line" id="verdictLine">Adjust the dials and watch the years pile up.</p>
+          <dl class="verdict-stats">
+            <div><dt>vs. the average American</dt><dd id="vsAvg">—</dd></div>
+            <div id="remainingRow" hidden><dt>Years left on the clock</dt><dd id="yearsLeft">—</dd></div>
+            <div><dt>Bonus years, blended</dt><dd id="bonusYears">—</dd></div>
+            <div><dt>Statistical legality</dt><dd class="illegal">None whatsoever</dd></div>
+          </dl>
+          <div class="share-row">
+            <button id="copyLink" class="share-btn" type="button">🔗 Copy link</button>
+            <button id="copyResult" class="share-btn" type="button">📋 Copy my prognosis</button>
+          </div>
         </div>
-        <p class="verdict-line" id="verdictLine">Adjust the dials and watch the years pile up.</p>
-        <dl class="verdict-stats">
-          <div><dt>vs. the average American</dt><dd id="vsAvg">—</dd></div>
-          <div><dt>Bonus years, blended</dt><dd id="bonusYears">—</dd></div>
-          <div><dt>Statistical legality</dt><dd class="illegal">None whatsoever</dd></div>
-        </dl>
       </aside>
 
       <!-- The lifestyle menu -->
@@ -64,7 +97,8 @@
         <div class="menu-head">
           <h2>Your lifestyle menu</h2>
           <p>Sixteen habits the internet has strong opinions about. Every option is
-          tagged with a real study and the years it claims to give or take.</p>
+          tagged with a real study and the years it claims to give or take — plus
+          the headline that study probably generated.</p>
         </div>
         <div id="factors" class="factors"></div>
       </div>
@@ -98,12 +132,21 @@
           literalism of a health-influencer thread.
         </p>
         <p>
-          Adding them together is the entire gag. In reality the effects overlap,
-          confound, cancel, and mostly reflect the sort of person who already
-          flosses. Optimists don't live longer <em>because</em> they're optimistic;
-          people who can afford saunas can afford a lot of things. A daily glass of
-          wine "adding" years is the most famous correlation ever to be quietly
-          walked back. You cannot out-habit your genes, your zip code, or a bus.
+          That's why there are <strong>two numbers.</strong> The big glowing one
+          adds every association together as if they never overlap. The
+          "<em>with a straight face</em>" number applies the thing real
+          epidemiologists do — diminishing returns — because your third healthy
+          habit does not pay off like your first, and you cannot become immortal
+          by stacking press releases. The gap between the two numbers <em>is</em>
+          the joke.
+        </p>
+        <p>
+          In reality the effects confound, cancel, and mostly reflect the sort of
+          person who already flosses. Optimists don't live longer <em>because</em>
+          they're optimistic; people who can afford saunas can afford a lot of
+          things. A daily glass of wine "adding" years is the most famous
+          correlation ever to be quietly walked back. You cannot out-habit your
+          genes, your zip code, or a bus.
         </p>
         <p class="catch-credit">
           Inspired by a Derek Thompson tweet about throwing every lifestyle study
@@ -119,6 +162,8 @@
       risk. <span class="foot-dim">No hazard ratios were harmed, only misused.</span>
     </div>
   </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script src="app.js"></script>
 </body>

@@ -2,7 +2,8 @@
  * ---------------------------------------------------------------------------
  * A parody calculator. Each "factor" carries options with a `years` delta and a
  * one-line citation to a real, widely-reported observational study. The whole
- * conceit is that you are NEVER supposed to add these together — so we do.
+ * conceit is that you are NEVER supposed to add these together — so we do, and
+ * then we show you the (still generous) number you'd get if you didn't.
  *
  * Baseline: 78.5 years, roughly US period life expectancy at birth.
  * ------------------------------------------------------------------------- */
@@ -11,13 +12,15 @@ const BASE = 78.5;
 const AVG_AMERICAN = 78.5;
 
 /* ---- The lifestyle menu -------------------------------------------------- */
-/* Each factor: { id, icon, label, kind, options[] } or a slider spec.
- * option: { label, years, note }  — note is the "study says" microcopy.       */
+/* Each factor: { id, icon, label, blurb, press, kind, default, options[] }
+ * or a slider spec. `press` is the breathless headline the study spawned.
+ * option: { label, years, note } — note is the "study says" microcopy.        */
 
 const FACTORS = [
   {
     id: "smoke", icon: "🚬", label: "Smoking",
     blurb: "The one everyone actually agrees on.",
+    press: "The Single Habit Doctors Beg You To Quit",
     kind: "choice", default: 0,
     options: [
       { label: "Never touched it", years: 0,   note: "Reference. Your lungs send their regards." },
@@ -29,6 +32,7 @@ const FACTORS = [
   {
     id: "drink", icon: "🍷", label: "Alcohol",
     blurb: "The correlation science spent 40 years walking back.",
+    press: "A Daily Glass Of Red Wine Could Be The Secret To Longevity",
     kind: "choice", default: 1,
     options: [
       { label: "Teetotal",            years: -0.5, note: "'Sick-quitter' effect — some never-drinkers were told to stop." },
@@ -40,6 +44,7 @@ const FACTORS = [
   {
     id: "spicy", icon: "🌶️", label: "Spicy food",
     blurb: "Straight from the tweet that started this.",
+    press: "Scientists Discover The Spicy Secret To A Longer Life",
     kind: "choice", default: 0,
     options: [
       { label: "Keep it mild",  years: 0,   note: "Reference. Lv et al., BMJ 2015 (500,000 adults)." },
@@ -51,6 +56,7 @@ const FACTORS = [
   {
     id: "steps", icon: "👟", label: "Daily steps",
     blurb: "The number your watch nags you about.",
+    press: "Forget 10,000 — This Is The Magic Step Count, Says Study",
     kind: "slider", min: 2000, max: 16000, step: 500, default: 5000,
     fmt: (v) => v.toLocaleString() + " steps",
     yearsFor: (v) => {
@@ -70,6 +76,7 @@ const FACTORS = [
   {
     id: "sleep", icon: "😴", label: "Sleep",
     blurb: "A U-shape, so more is not better.",
+    press: "Why Getting Too Much Sleep Is Secretly Killing You",
     kind: "choice", default: 1,
     options: [
       { label: "≤ 5 hours", years: -4,   note: "Cappuccio 2010 meta-analysis — short sleep, ~12% higher mortality." },
@@ -82,6 +89,7 @@ const FACTORS = [
   {
     id: "friends", icon: "🫂", label: "Social life",
     blurb: "Rated 'as strong as quitting smoking.'",
+    press: "Loneliness Is As Deadly As 15 Cigarettes A Day",
     kind: "choice", default: 1,
     options: [
       { label: "Lone wolf",        years: -4, note: "Holt-Lunstad 2010 — loneliness rivals smoking as a killer." },
@@ -92,6 +100,7 @@ const FACTORS = [
   {
     id: "optimism", icon: "🌤️", label: "Outlook",
     blurb: "Yes, a personality trait is on the menu.",
+    press: "Optimists Live Longer — Here's The Proof, Says Harvard",
     kind: "choice", default: 1,
     options: [
       { label: "Glass half empty", years: -2, note: "Pessimists fared worst in the Lee 2019 cohort." },
@@ -102,6 +111,7 @@ const FACTORS = [
   {
     id: "coffee", icon: "☕", label: "Coffee",
     blurb: "Cups per day. Diminishing, then jittery.",
+    press: "Three Cups Of Coffee A Day Keeps The Reaper Away",
     kind: "choice", default: 1,
     options: [
       { label: "None",     years: 0,   note: "Reference. Brave." },
@@ -114,6 +124,7 @@ const FACTORS = [
   {
     id: "nuts", icon: "🥜", label: "Nuts",
     blurb: "A daily handful, per Harvard.",
+    press: "A Handful Of Nuts A Day Slashes Your Death Risk",
     kind: "choice", default: 0,
     options: [
       { label: "Rarely",         years: 0,   note: "Reference." },
@@ -124,6 +135,7 @@ const FACTORS = [
   {
     id: "veg", icon: "🥦", label: "Fruit & veg",
     blurb: "The '5-a-day' you keep meaning to hit.",
+    press: "Eating This Many Vegetables Adds Years To Your Life",
     kind: "choice", default: 1,
     options: [
       { label: "Beige diet",     years: -1.5, note: "Aune 2017 — low intake, higher risk across the board." },
@@ -134,6 +146,7 @@ const FACTORS = [
   {
     id: "meat", icon: "🥩", label: "Red meat",
     blurb: "Each daily serving quietly bills you.",
+    press: "That Daily Steak Is Costing You More Than You Think",
     kind: "choice", default: 2,
     options: [
       { label: "None",            years: 1,    note: "Plant-forward diets track with lower mortality." },
@@ -145,6 +158,7 @@ const FACTORS = [
   {
     id: "sauna", icon: "🧖", label: "Sauna",
     blurb: "The Finns ran the numbers on this.",
+    press: "The Finnish Habit That Cuts Heart-Death Risk By 40%",
     kind: "choice", default: 0,
     options: [
       { label: "Never",       years: 0,   note: "Reference." },
@@ -155,6 +169,7 @@ const FACTORS = [
   {
     id: "dog", icon: "🐕", label: "Pets",
     blurb: "Companionship, plus involuntary steps.",
+    press: "Owning A Dog Could Literally Save Your Life, Study Finds",
     kind: "choice", default: 0,
     options: [
       { label: "Pet-free",   years: 0,   note: "Reference." },
@@ -165,6 +180,7 @@ const FACTORS = [
   {
     id: "sit", icon: "🪑", label: "Sitting",
     blurb: "The 'new smoking,' allegedly.",
+    press: "Sitting Is The New Smoking, Experts Warn",
     kind: "choice", default: 2,
     options: [
       { label: "< 4 hrs / day",  years: 1,    note: "Low sedentary time, better outcomes." },
@@ -176,6 +192,7 @@ const FACTORS = [
   {
     id: "floss", icon: "🦷", label: "Flossing",
     blurb: "Gum bacteria vs. your arteries.",
+    press: "The 30-Second Bathroom Habit That Protects Your Heart",
     kind: "choice", default: 1,
     options: [
       { label: "What floss?", years: -1,   note: "Periodontal disease tracks with heart disease." },
@@ -186,6 +203,7 @@ const FACTORS = [
   {
     id: "bmi", icon: "⚖️", label: "Weight",
     blurb: "The 'obesity paradox' makes an appearance.",
+    press: "The Surprising Truth About Weight And How Long You'll Live",
     kind: "choice", default: 1,
     options: [
       { label: "Underweight",   years: -2,  note: "Low BMI tracks with higher mortality (often illness-driven)." },
@@ -198,11 +216,7 @@ const FACTORS = [
 
 /* ---- Presets ------------------------------------------------------------- */
 const PRESETS = [
-  {
-    id: "avg", label: "The Average American", emoji: "🇺🇸",
-    // leave everything at defaults
-    set: {},
-  },
+  { id: "avg", label: "The Average American", emoji: "🇺🇸", set: {} },
   {
     id: "bro", label: "The Optimization Bro", emoji: "🧬",
     set: { smoke:0, drink:1, spicy:3, steps:12000, sleep:2, friends:2, optimism:2,
@@ -222,11 +236,16 @@ const PRESETS = [
 
 /* ---- State --------------------------------------------------------------- */
 const state = {};
+let currentAge = null;
 FACTORS.forEach(f => { state[f.id] = f.default; });
 
-/* ---- Rendering the controls --------------------------------------------- */
+/* ---- DOM refs ------------------------------------------------------------ */
 const factorsEl = document.getElementById("factors");
+const presetsEl = document.getElementById("presets");
+const receiptList = document.getElementById("receiptList");
+const ingredientsEl = document.getElementById("ingredients");
 
+/* ---- Build the controls -------------------------------------------------- */
 function buildFactor(f) {
   const card = document.createElement("div");
   card.className = "factor";
@@ -240,6 +259,11 @@ function buildFactor(f) {
     `<span class="factor-delta" data-delta></span>`;
   card.appendChild(head);
 
+  const press = document.createElement("p");
+  press.className = "factor-press";
+  press.innerHTML = `<span class="press-tag">As seen in the news</span> “${f.press}”`;
+  card.appendChild(press);
+
   if (f.kind === "choice") {
     const seg = document.createElement("div");
     seg.className = "seg";
@@ -252,11 +276,11 @@ function buildFactor(f) {
       b.textContent = opt.label;
       b.setAttribute("role", "radio");
       b.dataset.i = i;
-      b.addEventListener("click", () => { state[f.id] = i; recompute(); });
+      b.addEventListener("click", () => { state[f.id] = i; clearPresetHighlight(); syncURL(); recompute(); });
       seg.appendChild(b);
     });
     card.appendChild(seg);
-  } else if (f.kind === "slider") {
+  } else {
     const wrap = document.createElement("div");
     wrap.className = "slider-wrap";
     const val = document.createElement("div");
@@ -267,7 +291,7 @@ function buildFactor(f) {
     input.min = f.min; input.max = f.max; input.step = f.step;
     input.value = f.default;
     input.setAttribute("aria-label", f.label);
-    input.addEventListener("input", () => { state[f.id] = +input.value; recompute(); });
+    input.addEventListener("input", () => { state[f.id] = +input.value; clearPresetHighlight(); syncURL(); recompute(); });
     wrap.appendChild(val);
     wrap.appendChild(input);
     card.appendChild(wrap);
@@ -280,11 +304,9 @@ function buildFactor(f) {
 
   factorsEl.appendChild(card);
 }
-
 FACTORS.forEach(buildFactor);
 
 /* ---- Presets UI ---------------------------------------------------------- */
-const presetsEl = document.getElementById("presets");
 PRESETS.forEach(p => {
   const b = document.createElement("button");
   b.type = "button";
@@ -294,12 +316,16 @@ PRESETS.forEach(p => {
   presetsEl.appendChild(b);
 });
 
+function clearPresetHighlight() {
+  document.querySelectorAll(".preset").forEach(el => el.classList.remove("active"));
+}
+
 function applyPreset(p) {
   FACTORS.forEach(f => { state[f.id] = f.default; });
   Object.entries(p.set).forEach(([k, v]) => { state[k] = v; });
-  document.querySelectorAll(".preset").forEach(el => el.classList.remove("active"));
-  const idx = PRESETS.indexOf(p);
-  presetsEl.children[idx].classList.add("active");
+  clearPresetHighlight();
+  presetsEl.children[PRESETS.indexOf(p)].classList.add("active");
+  syncURL();
   recompute(true);
 }
 
@@ -314,20 +340,28 @@ function factorContribution(f) {
 }
 
 function compute() {
-  let total = 0;
+  let total = 0, pos = 0, neg = 0;
   const parts = [];
   FACTORS.forEach(f => {
     const c = factorContribution(f);
     total += c.years;
+    if (c.years > 0) pos += c.years; else neg += c.years;
     parts.push({ f, ...c });
   });
-  return { age: BASE + total, delta: total, parts };
+
+  // "With a straight face": diminishing returns instead of naive addition.
+  // Your third good habit doesn't pay like your first; harms diminish too, slower.
+  const sanePos = 12 * (1 - Math.exp(-pos / 10));
+  const saneNeg = -18 * (1 - Math.exp(-Math.abs(neg) / 12));
+  const saneAge = Math.max(46, Math.min(97, BASE + sanePos + saneNeg));
+
+  return { age: BASE + total, saneAge, delta: total, parts };
 }
 
 /* ---- Verdict copy -------------------------------------------------------- */
-function verdictCopy(age, delta) {
+function verdictCopy(age) {
   if (age >= 115) return "You have exited the actuarial tables and entered fan-fiction. Somewhere a demographer is weeping.";
-  if (age >= 105) return "Blue-Zone cover model. The studies, stacked, have made you effectively immortal. The studies are lying.";
+  if (age >= 105) return "Blue-Zone cover model. Stacked, the studies have made you effectively immortal. The studies are lying.";
   if (age >= 95)  return "You've out-scienced mortality. Frame this and show your cardiologist, who will sigh.";
   if (age >= 88)  return "Comfortably above the curve. Every green line on the receipt is buying you a birthday.";
   if (age >= 80)  return "Solidly better than average. The correlations approve of your choices.";
@@ -339,7 +373,11 @@ function verdictCopy(age, delta) {
 /* ---- Odometer animation -------------------------------------------------- */
 let animRAF = null;
 let shownAge = BASE;
+let confettiArmed = false;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 function animateTo(target) {
+  if (reduceMotion) { shownAge = target; document.getElementById("ageBig").textContent = Math.round(target); return; }
   cancelAnimationFrame(animRAF);
   const start = shownAge;
   const t0 = performance.now();
@@ -354,22 +392,77 @@ function animateTo(target) {
   animRAF = requestAnimationFrame(frame);
 }
 
+/* ---- The glass / ingredients -------------------------------------------- */
+function tierOf(age) { return age >= 88 ? "thriving" : age < 72 ? "struggling" : "ok"; }
+
+function paintGlass(age, parts) {
+  const liquid = document.getElementById("liquid");
+  const fillPct = Math.max(6, Math.min(100, ((age - 40) / (120 - 40)) * 100));
+  liquid.style.height = fillPct + "%";
+  const tier = tierOf(age);
+  liquid.dataset.tier = tier;
+
+  // Floating ingredients = the habits currently moving the needle most.
+  const movers = parts.filter(p => Math.abs(p.years) >= 0.5)
+                      .sort((a, b) => Math.abs(b.years) - Math.abs(a.years))
+                      .slice(0, 7);
+  const want = movers.map(p => p.f.id).join(",");
+  if (ingredientsEl.dataset.sig === want) return; // avoid re-spawning every tick
+  ingredientsEl.dataset.sig = want;
+  ingredientsEl.innerHTML = "";
+  movers.forEach((p, i) => {
+    const s = document.createElement("span");
+    s.className = "ingredient " + (p.years > 0 ? "good" : "bad");
+    s.textContent = p.f.icon;
+    s.style.left = (10 + (i * 12) + Math.random() * 6) + "%";
+    s.style.animationDelay = (Math.random() * -6).toFixed(2) + "s";
+    s.style.animationDuration = (5 + Math.random() * 3).toFixed(2) + "s";
+    ingredientsEl.appendChild(s);
+  });
+}
+
+/* ---- Confetti (only when you break 100) --------------------------------- */
+function confetti() {
+  if (reduceMotion) return;
+  const colors = ["#7bdc8c", "#4cc7d4", "#8affc1", "#ffd166", "#ff9aa2"];
+  for (let i = 0; i < 90; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti-bit";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = colors[i % colors.length];
+    c.style.animationDelay = (Math.random() * 0.3).toFixed(2) + "s";
+    c.style.animationDuration = (2.2 + Math.random() * 1.4).toFixed(2) + "s";
+    c.style.transform = `rotate(${Math.random() * 360}deg)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4200);
+  }
+}
+
 /* ---- Main recompute ------------------------------------------------------ */
-const receiptList = document.getElementById("receiptList");
-
 function recompute(syncControls = false) {
-  const { age, delta, parts } = compute();
+  const { age, saneAge, delta, parts } = compute();
 
-  // Big readout + life bar
   animateTo(age);
-  document.getElementById("ageBig").className = "odometer";
+  const roundAge = Math.round(age);
+
+  // Life bar
   const fillPct = Math.max(4, Math.min(100, (age / 120) * 100));
   document.getElementById("lifebarFill").style.width = fillPct + "%";
-  const avgPct = (AVG_AMERICAN / 120) * 100;
-  document.getElementById("lifebarAvg").style.left = avgPct + "%";
+  document.getElementById("lifebarAvg").style.left = ((AVG_AMERICAN / 120) * 100) + "%";
 
-  // Verdict block
-  document.getElementById("verdictLine").textContent = verdictCopy(age, delta);
+  // The glass
+  paintGlass(age, parts);
+
+  // Second number (the honest one)
+  document.getElementById("saneAge").textContent = Math.round(saneAge) + " yrs";
+
+  // Verdict copy + tier coloring
+  document.getElementById("verdictLine").textContent = verdictCopy(age);
+  const blend = document.getElementById("blend");
+  blend.classList.toggle("thriving", age >= 88);
+  blend.classList.toggle("struggling", age < 72);
+
+  // Stats
   const vs = age - AVG_AMERICAN;
   const vsEl = document.getElementById("vsAvg");
   vsEl.textContent = (vs >= 0 ? "+" : "−") + Math.abs(vs).toFixed(1) + " yrs";
@@ -378,12 +471,27 @@ function recompute(syncControls = false) {
   bonusEl.textContent = (delta >= 0 ? "+" : "−") + Math.abs(delta).toFixed(1) + " yrs";
   bonusEl.className = delta >= 0 ? "pos" : "neg";
 
-  // Color the verdict panel by health
-  const verdict = document.getElementById("verdict");
-  verdict.classList.toggle("thriving", age >= 88);
-  verdict.classList.toggle("struggling", age < 72);
+  // Years remaining (only if the user told us their age)
+  const remRow = document.getElementById("remainingRow");
+  const youMark = document.getElementById("lifebarYou");
+  if (currentAge != null) {
+    remRow.hidden = false;
+    const left = roundAge - currentAge;
+    const yl = document.getElementById("yearsLeft");
+    yl.textContent = left > 0 ? left + " yrs" : "borrowed time";
+    yl.className = left > 3 ? "pos" : left > 0 ? "" : "neg";
+    youMark.hidden = false;
+    youMark.style.left = Math.min(100, (currentAge / 120) * 100) + "%";
+  } else {
+    remRow.hidden = true;
+    youMark.hidden = true;
+  }
 
-  // Per-factor UI: highlight selection, show delta + note
+  // Confetti when the literal number crosses 100 (once per crossing)
+  if (roundAge >= 100 && !confettiArmed) { confetti(); confettiArmed = true; }
+  if (roundAge < 100) confettiArmed = false;
+
+  // Per-factor UI
   FACTORS.forEach(f => {
     const card = factorsEl.querySelector(`.factor[data-id="${f.id}"]`);
     const c = factorContribution(f);
@@ -397,8 +505,7 @@ function recompute(syncControls = false) {
       const input = card.querySelector("input[type=range]");
       if (syncControls) input.value = state[f.id];
       card.querySelector("[data-val]").textContent = f.fmt(state[f.id]);
-      const pct = ((state[f.id] - f.min) / (f.max - f.min)) * 100;
-      input.style.setProperty("--pct", pct + "%");
+      input.style.setProperty("--pct", (((state[f.id] - f.min) / (f.max - f.min)) * 100) + "%");
     }
     const d = card.querySelector("[data-delta]");
     d.textContent = (c.years >= 0 ? "+" : "−") + Math.abs(c.years).toFixed(1);
@@ -406,21 +513,12 @@ function recompute(syncControls = false) {
     card.querySelector("[data-note]").textContent = c.note;
   });
 
-  // Sync segmented buttons when a preset was applied
-  if (syncControls) {
-    FACTORS.filter(f => f.kind === "choice").forEach(f => {
-      const card = factorsEl.querySelector(`.factor[data-id="${f.id}"]`);
-      card.querySelectorAll(".seg-btn").forEach(b =>
-        b.classList.toggle("on", +b.dataset.i === state[f.id]));
-    });
-  }
-
-  // The receipt — sorted by magnitude, non-zero first
+  // The receipt — sorted by magnitude
   const sorted = parts.slice().sort((a, b) => Math.abs(b.years) - Math.abs(a.years));
   receiptList.innerHTML = "";
   sorted.forEach(p => {
-    const li = document.createElement("li");
     const cls = p.years > 0 ? "pos" : p.years < 0 ? "neg" : "neutral";
+    const li = document.createElement("li");
     li.className = "receipt-item " + cls;
     li.innerHTML =
       `<span class="ri-icon">${p.f.icon}</span>` +
@@ -433,11 +531,108 @@ function recompute(syncControls = false) {
   const tot = document.getElementById("receiptTotal");
   tot.textContent = (delta >= 0 ? "+" : "−") + Math.abs(delta).toFixed(1) + " yrs";
   tot.className = "receipt-total-num " + (delta >= 0 ? "pos" : "neg");
+
+  lastResult = { roundAge, saneAge: Math.round(saneAge), delta };
 }
+let lastResult = { roundAge: 0, saneAge: 0, delta: 0 };
+
+/* ---- URL state (shareable) ---------------------------------------------- */
+function syncURL() {
+  const parts = FACTORS.map(f => `${f.id}=${state[f.id]}`);
+  if (currentAge != null) parts.push(`age=${currentAge}`);
+  history.replaceState(null, "", "#" + parts.join("&"));
+}
+function loadFromURL() {
+  const h = location.hash.slice(1);
+  if (!h) return false;
+  const params = new URLSearchParams(h);
+  let any = false;
+  FACTORS.forEach(f => {
+    if (!params.has(f.id)) return;
+    const v = +params.get(f.id);
+    if (Number.isNaN(v)) return;
+    if (f.kind === "choice") { if (v >= 0 && v < f.options.length) { state[f.id] = v; any = true; } }
+    else { state[f.id] = Math.max(f.min, Math.min(f.max, v)); any = true; }
+  });
+  if (params.has("age")) {
+    const a = +params.get("age");
+    if (a > 0 && a < 111) { currentAge = a; document.getElementById("ageNow").value = a; }
+  }
+  return any;
+}
+
+/* ---- Share --------------------------------------------------------------- */
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1900);
+}
+async function copy(text, okMsg) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast(okMsg);
+  } catch {
+    // Fallback for permission-restricted contexts
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); toast(okMsg); } catch { toast("Copy failed — select the address bar."); }
+    ta.remove();
+  }
+}
+function activePresetLabel() {
+  const a = document.querySelector(".preset.active");
+  return a ? a.textContent.trim() : null;
+}
+document.getElementById("copyLink").addEventListener("click", () => {
+  syncURL();
+  copy(location.href, "Link copied — go ruin someone's afternoon.");
+});
+document.getElementById("copyResult").addEventListener("click", () => {
+  syncURL();
+  const top = FACTORS.map(f => ({ f, ...factorContribution(f) }))
+    .filter(p => p.years > 0).sort((a, b) => b.years - a.years).slice(0, 3)
+    .map(p => p.f.label.toLowerCase());
+  const msg =
+    `🧪 Science says I'll live to ${lastResult.roundAge}` +
+    ` (${lastResult.saneAge} if you make science keep a straight face).` +
+    (top.length ? ` Powered by ${top.join(", ")}.` : ``) +
+    ` What's your number? ${location.href}`;
+  copy(msg, "Prognosis copied to clipboard.");
+});
+
+/* ---- Current-age input --------------------------------------------------- */
+document.getElementById("ageNow").addEventListener("input", (e) => {
+  const v = parseInt(e.target.value, 10);
+  currentAge = (v > 0 && v < 111) ? v : null;
+  syncURL();
+  recompute();
+});
+
+/* ---- Randomize ----------------------------------------------------------- */
+document.getElementById("randomize").addEventListener("click", () => {
+  FACTORS.forEach(f => {
+    if (f.kind === "choice") state[f.id] = Math.floor(Math.random() * f.options.length);
+    else {
+      const steps = Math.floor((f.max - f.min) / f.step) + 1;
+      state[f.id] = f.min + Math.floor(Math.random() * steps) * f.step;
+    }
+  });
+  clearPresetHighlight();
+  syncURL();
+  recompute(true);
+});
 
 /* ---- Reset --------------------------------------------------------------- */
 document.getElementById("reset").addEventListener("click", () => applyPreset(PRESETS[0]));
 
 /* ---- Boot ---------------------------------------------------------------- */
 document.getElementById("lifebarAvg").title = "Average American: " + AVG_AMERICAN + " yrs";
-applyPreset(PRESETS[0]);
+if (loadFromURL()) {
+  recompute(true);
+} else {
+  applyPreset(PRESETS[0]);
+}
