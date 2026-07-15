@@ -99,7 +99,7 @@ const FACTORS = [
   },
   {
     id: "optimism", icon: "🌤️", label: "Outlook",
-    blurb: "Yes, a personality trait is on the menu.",
+    blurb: "Yes, we put a personality trait on a mortality calculator.",
     press: "Optimists Live Longer — Here's The Proof, Says Harvard",
     kind: "choice", default: 1,
     options: [
@@ -179,7 +179,7 @@ const FACTORS = [
   },
   {
     id: "sit", icon: "🪑", label: "Sitting",
-    blurb: "The 'new smoking,' allegedly.",
+    blurb: "The 'new smoking,' according to people who enjoy naming things.",
     press: "Sitting Is The New Smoking, Experts Warn",
     kind: "choice", default: 2,
     options: [
@@ -358,16 +358,16 @@ function compute() {
   return { age: BASE + total, saneAge, delta: total, parts };
 }
 
-/* ---- Verdict copy -------------------------------------------------------- */
+/* ---- Verdict copy (deadpan, essayistic) --------------------------------- */
 function verdictCopy(age) {
-  if (age >= 115) return "You have exited the actuarial tables and entered fan-fiction. Somewhere a demographer is weeping.";
-  if (age >= 105) return "Blue-Zone cover model. Stacked, the studies have made you effectively immortal. The studies are lying.";
-  if (age >= 95)  return "You've out-scienced mortality. Frame this and show your cardiologist, who will sigh.";
-  if (age >= 88)  return "Comfortably above the curve. Every green line on the receipt is buying you a birthday.";
-  if (age >= 80)  return "Solidly better than average. The correlations approve of your choices.";
-  if (age >= 72)  return "Roughly average, which is to say: roughly human. Science shrugs supportively.";
-  if (age >= 62)  return "The receipt is bleeding red. Several studies would like a word.";
-  return "Science is genuinely concerned and has scheduled a follow-up. Consider un-stacking a habit or two.";
+  if (age >= 115) return "You have left the actuarial tables entirely and entered fan-fiction. This is not a lifespan; it's a rounding error the size of a civilization.";
+  if (age >= 105) return "Congratulations: you have solved death by spreadsheet. Every correlation broke in your favor at once, which is exactly the thing that never happens in real life.";
+  if (age >= 95)  return "You have out-optimized the reaper, at least on paper. Print this, frame it, and hand it to your cardiologist, who will study it for a moment and then quietly sigh.";
+  if (age >= 88)  return "Comfortably above the curve. Every green line on the receipt is, in theory, buying you another birthday. In practice it's buying you the personality of someone who mentions their step count.";
+  if (age >= 80)  return "Better than average, which the studies find deeply flattering. Whether the habits made the life, or the life made the habits, is a question we are contractually obligated not to ask.";
+  if (age >= 72)  return "Roughly average — which is to say, roughly human. The machine has run the numbers, consulted the literature, and shrugged supportively.";
+  if (age >= 62)  return "The receipt is running red. Several large cohort studies would like a word, and the word is 'concerning.'";
+  return "The machine has stopped calculating and started worrying. Consider un-stacking a habit or two, ideally the flammable one.";
 }
 
 /* ---- Odometer animation -------------------------------------------------- */
@@ -470,6 +470,12 @@ function recompute(syncControls = false) {
   const bonusEl = document.getElementById("bonusYears");
   bonusEl.textContent = (delta >= 0 ? "+" : "−") + Math.abs(delta).toFixed(1) + " yrs";
   bonusEl.className = delta >= 0 ? "pos" : "neg";
+
+  // A comically, honestly wide "confidence interval." When you stack noise,
+  // the error bars swallow the estimate. That is the joke, stated numerically.
+  const ciLo = Math.max(0, Math.round(age * 0.68));
+  const ciHi = Math.round(age * 1.26);
+  document.getElementById("ci").textContent = `${ciLo}–${ciHi} yrs`;
 
   // Years remaining (only if the user told us their age)
   const remRow = document.getElementById("remainingRow");
