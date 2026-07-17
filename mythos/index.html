@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>When China Gets a Mythos Model — ChinaTalk</title>
+<meta name="description" content="Soon, a Chinese lab will ship a model as capable as Anthropic's Claude Mythos. Three scenarios for what Beijing does next — let it rip, Glasswing with Chinese characteristics, or the black box — with the ChinaTalk team's odds on each." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐉</text></svg>" />
+<meta property="og:title" content="When China Gets a Mythos Model" />
+<meta property="og:description" content="Three scenarios for the day a Chinese lab ships a Mythos-class model — and the ChinaTalk team's odds on each." />
+<meta property="og:type" content="article" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script>
+(function(){try{
+  var t = localStorage.getItem('ct-theme');
+  if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.dataset.theme = t;
+}catch(e){ document.documentElement.dataset.theme = 'light'; }})();
+</script>
+<style>
+  :root, :root[data-theme="light"] {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #6f6d66;
+    --hair: #e1e0d9;
+    --rule: #c3c2b7;
+    --accent: #9e2b2b;
+    --accent-soft: rgba(158, 43, 43, 0.08);
+    --s1: #256abf;  --s1-ink: #ffffff;
+    --s2: #008300;  --s2-ink: #ffffff;
+    --s3: #e87ba4;  --s3-ink: #0b0b0b;
+    --shadow: 0 1px 2px rgba(11,11,11,.04), 0 8px 24px rgba(11,11,11,.05);
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #f4f3ef;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --hair: #2c2c2a;
+    --rule: #383835;
+    --accent: #e08a84;
+    --accent-soft: rgba(224, 138, 132, 0.10);
+    --s1: #3987e5;  --s1-ink: #0b0b0b;
+    --s2: #008300;  --s2-ink: #ffffff;
+    --s3: #d55181;  --s3-ink: #0b0b0b;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  html { scroll-padding-top: 4.5rem; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 1.125rem;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .sans { font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+  a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:hover { text-decoration-thickness: 2px; }
+  ::selection { background: var(--accent); color: #fff; }
+  :root[data-theme="dark"] ::selection { color: #0d0d0d; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0; z-index: 100;
+    background: var(--surface); color: var(--ink); padding: .6rem 1rem;
+    font-family: "Inter", system-ui, sans-serif; font-size: .875rem;
+  }
+  .skip:focus { left: .5rem; top: .5rem; }
+
+  /* ---------- top nav ---------- */
+  #topnav {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--page) 88%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--hair);
+  }
+  .nav-inner {
+    max-width: 72rem; margin: 0 auto; padding: 0 1.25rem;
+    display: flex; align-items: center; gap: 1rem; height: 3.25rem;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .brand {
+    font-size: .8125rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); text-decoration: none; white-space: nowrap;
+  }
+  .nav-links {
+    display: flex; gap: .25rem; margin-left: auto;
+    overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links.fade-r {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+  .nav-links a {
+    font-size: .8125rem; font-weight: 500; color: var(--ink-2);
+    text-decoration: none; padding: .35rem .6rem; border-radius: 999px; white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--ink); background: var(--accent-soft); }
+  .nav-links a.active { color: var(--ink); background: var(--accent-soft); }
+  #themeToggle {
+    flex: none; width: 2rem; height: 2rem; border-radius: 999px;
+    border: 1px solid var(--hair); background: var(--surface); color: var(--ink-2);
+    cursor: pointer; font-size: .9rem; line-height: 1; display: grid; place-items: center;
+  }
+  #themeToggle:hover { color: var(--ink); border-color: var(--rule); }
+  #progress {
+    position: absolute; bottom: -1px; left: 0; height: 2px; width: 0;
+    background: var(--accent);
+  }
+
+  /* ---------- layout ---------- */
+  .col { max-width: 42rem; margin-inline: auto; padding-inline: 1.25rem; }
+  .col-wide { max-width: 58rem; margin-inline: auto; padding-inline: 1.25rem; }
+
+  .kicker {
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: .75rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* ---------- hero ---------- */
+  #hero { padding: 5.5rem 0 3.5rem; text-align: center; border-bottom: 1px solid var(--hair); }
+  #hero .kicker { margin-bottom: 1.25rem; }
+  #hero h1 {
+    font-size: clamp(2.6rem, 7.5vw, 4.75rem);
+    line-height: 1.05; font-weight: 700; letter-spacing: -0.015em;
+    max-width: 56rem; margin: 0 auto;
+  }
+  #hero .deck {
+    max-width: 40rem; margin: 1.75rem auto 0;
+    font-size: 1.25rem; line-height: 1.6; color: var(--ink-2);
+  }
+  .hero-meta {
+    margin-top: 1.5rem; font-family: "Inter", system-ui, sans-serif;
+    font-size: .8125rem; color: var(--muted);
+  }
+  .hero-paths {
+    margin: 2.5rem auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .hero-paths a {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .8125rem; font-weight: 500; color: var(--ink-2); text-decoration: none;
+    border: 1px solid var(--hair); background: var(--surface);
+    padding: .45rem .85rem; border-radius: 999px;
+  }
+  .hero-paths a:hover { border-color: var(--rule); color: var(--ink); }
+  .hero-paths .pct { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .dot { width: .625rem; height: .625rem; border-radius: 999px; flex: none; }
+  .dot.d1 { background: var(--s1); } .dot.d2 { background: var(--s2); } .dot.d3 { background: var(--s3); }
+
+  /* ---------- prose ---------- */
+  section { padding: 3.5rem 0; }
+  .prose > p { margin-bottom: 1.4rem; }
+  .prose > p:last-child { margin-bottom: 0; }
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1.15; font-weight: 700;
+    letter-spacing: -0.01em; margin-bottom: 1.5rem;
+  }
+  .standfirst { font-size: 1.2rem; font-style: italic; color: var(--ink-2); margin-bottom: 2rem; }
+
+  .datemark {
+    display: block; margin: 2rem 0 .6rem;
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: .6875rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .datemark::after { content: ""; display: inline-block; vertical-align: middle; width: 3rem; height: 1px; background: var(--rule); margin-left: .75rem; }
+
+  blockquote.pull {
+    margin: 2rem 0; padding: .25rem 0 .25rem 1.5rem;
+    border-left: 3px solid var(--accent);
+    font-size: 1.25rem; line-height: 1.6; font-style: italic; color: var(--ink);
+  }
+  blockquote.pull footer {
+    margin-top: .85rem; font-family: "Inter", system-ui, sans-serif;
+    font-size: .8125rem; font-style: normal; color: var(--muted);
+  }
+  blockquote.pull .zh { font-style: normal; }
+
+  .note {
+    margin: 2.25rem 0; padding: 1.1rem 1.35rem;
+    background: var(--surface); border: 1px solid var(--hair); border-radius: .625rem;
+    font-family: "Inter", system-ui, sans-serif; font-size: .875rem; line-height: 1.65; color: var(--ink-2);
+    box-shadow: var(--shadow);
+  }
+  .note strong.tag {
+    display: block; font-size: .6875rem; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: .4rem;
+  }
+
+  /* ---------- three path cards ---------- */
+  .paths {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2.25rem 0 0;
+  }
+  @media (max-width: 720px) { .paths { grid-template-columns: 1fr; } }
+  .path-card {
+    position: relative; display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--hair); border-radius: .75rem;
+    padding: 1.25rem 1.25rem 1.1rem; box-shadow: var(--shadow);
+  }
+  .path-card::before {
+    content: ""; position: absolute; top: 0; left: 1.25rem; right: 1.25rem; height: 3px;
+    border-radius: 0 0 3px 3px; background: var(--pc);
+  }
+  .path-card:hover { border-color: var(--rule); }
+  .path-num {
+    font-family: "Inter", system-ui, sans-serif; font-size: .6875rem; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+  }
+  .path-card h3 { font-size: 1.2rem; font-weight: 700; margin: .35rem 0 .45rem; line-height: 1.25; }
+  .path-card p { font-family: "Inter", system-ui, sans-serif; font-size: .8438rem; line-height: 1.6; color: var(--ink-2); }
+  .path-odds {
+    margin-top: auto; padding-top: .9rem; font-family: "Inter", system-ui, sans-serif; font-size: .75rem;
+    color: var(--muted);
+  }
+  .path-odds b { color: var(--ink); font-size: .9375rem; font-weight: 700; }
+
+  /* ---------- scenario chapters ---------- */
+  .scenario { border-top: 1px solid var(--hair); }
+  .scen-head { margin-bottom: 2.25rem; }
+  .scen-chip {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-family: "Inter", system-ui, sans-serif; font-size: .75rem; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2);
+    margin-bottom: 1rem;
+  }
+  .scen-odds {
+    margin-top: 1.1rem; font-family: "Inter", system-ui, sans-serif;
+    font-size: .8125rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: .35rem .9rem; align-items: baseline;
+  }
+  .scen-odds .avg { color: var(--ink); font-weight: 700; font-size: .9375rem; }
+  .scen-odds span { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .upshot {
+    margin-top: 2.25rem; padding-top: 1.5rem; border-top: 1px solid var(--hair);
+  }
+  .upshot .tag {
+    display: inline-flex; align-items: center; gap: .5rem; font-family: "Inter", system-ui, sans-serif;
+    font-size: .6875rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--ink-2); margin-bottom: .65rem;
+  }
+  .upshot p { font-size: 1.125rem; }
+
+  /* ---------- figures ---------- */
+  figure.fig { margin: 2.25rem auto; }
+  .fig-frame {
+    border: 1px solid var(--hair); border-radius: .625rem; overflow: hidden;
+    box-shadow: var(--shadow); line-height: 0;
+  }
+  .fig-frame.pad { padding: .75rem; }
+  .frame-white { background: #ffffff; }
+  .frame-black { background: #000000; }
+  .frame-paper { background: #f6f1e7; }
+  figure.fig img { width: 100%; height: auto; border-radius: .25rem; }
+  figure.fig figcaption {
+    margin-top: .75rem; font-family: "Inter", system-ui, sans-serif;
+    font-size: .8125rem; line-height: 1.6; color: var(--ink-2);
+  }
+  figure.fig figcaption .fign { font-weight: 700; color: var(--ink); }
+  .fict {
+    display: inline-block; font-size: .625rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent); border: 1px solid currentColor;
+    border-radius: 999px; padding: .05rem .45rem; margin-right: .4rem; vertical-align: 1px;
+  }
+  figure.fig.tweet { max-width: 33.5rem; }
+
+  /* ---------- odds chart ---------- */
+  .viz-card {
+    background: var(--surface); border: 1px solid var(--hair); border-radius: .75rem;
+    padding: 1.5rem; margin-top: 2rem; box-shadow: var(--shadow);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .viz-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .viz-title { font-size: 1rem; font-weight: 700; }
+  .viz-sub { font-size: .8125rem; color: var(--ink-2); margin-top: .2rem; }
+  #tableToggle {
+    flex: none; font: 600 .75rem/1 "Inter", system-ui, sans-serif;
+    color: var(--ink-2); background: transparent; border: 1px solid var(--hair);
+    border-radius: 999px; padding: .45rem .8rem; cursor: pointer;
+  }
+  #tableToggle:hover { color: var(--ink); border-color: var(--rule); }
+  #tableToggle[aria-expanded="true"] { background: var(--accent-soft); color: var(--ink); }
+
+  .viz-legend {
+    list-style: none; display: flex; flex-wrap: wrap; gap: .4rem 1.25rem;
+    margin: 1.1rem 0 1.25rem;
+  }
+  .viz-legend li { display: inline-flex; align-items: center; gap: .5rem; font-size: .8125rem; color: var(--ink-2); }
+  .swatch { width: .75rem; height: .75rem; border-radius: 3px; flex: none; }
+
+  .viz-rows { display: grid; gap: .8rem; }
+  .viz-row { display: grid; grid-template-columns: 5.5rem 1fr; align-items: center; gap: .9rem; }
+  .viz-name { font-size: .8125rem; font-weight: 500; color: var(--ink-2); text-align: right; }
+  .viz-row.avg { margin-top: .35rem; padding-top: 1.1rem; border-top: 1px solid var(--hair); }
+  .viz-row.avg .viz-name { font-weight: 700; color: var(--ink); }
+  .viz-bar { display: flex; gap: 2px; height: 22px; }
+  .seg {
+    position: relative; flex: var(--w) 1 0px; min-width: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: default; outline-offset: 2px;
+  }
+  .seg::after { content: ""; position: absolute; inset: -8px -1px; }
+  .seg:first-child { border-radius: 4px 0 0 4px; }
+  .seg:last-child { border-radius: 0 4px 4px 0; }
+  .seg.c1 { background: var(--s1); } .seg.c2 { background: var(--s2); } .seg.c3 { background: var(--s3); }
+  .seg-label {
+    font-size: .75rem; font-weight: 600; font-variant-numeric: tabular-nums;
+    pointer-events: none; white-space: nowrap;
+  }
+  .seg.c1 .seg-label { color: var(--s1-ink); }
+  .seg.c2 .seg-label { color: var(--s2-ink); }
+  .seg.c3 .seg-label { color: var(--s3-ink); }
+  .seg-label.hide { visibility: hidden; }
+
+  #oddsTable { width: 100%; border-collapse: collapse; margin-top: 1.4rem; font-size: .8438rem; }
+  #oddsTable caption { text-align: left; font-size: .75rem; color: var(--muted); margin-bottom: .5rem; }
+  #oddsTable th, #oddsTable td { padding: .5rem .6rem; border-bottom: 1px solid var(--hair); text-align: right; }
+  #oddsTable th:first-child, #oddsTable td:first-child { text-align: left; }
+  #oddsTable thead th { font-weight: 600; color: var(--ink-2); }
+  #oddsTable td { font-variant-numeric: tabular-nums; }
+  #oddsTable tbody th { font-weight: 500; color: var(--ink-2); }
+  #oddsTable tr.avg td, #oddsTable tr.avg th { font-weight: 700; color: var(--ink); }
+  .viz-note { margin-top: 1.1rem; font-size: .75rem; color: var(--muted); }
+
+  .viz-tip {
+    position: fixed; z-index: 90; pointer-events: none;
+    background: var(--ink); color: var(--page);
+    font: 500 .75rem/1.45 "Inter", system-ui, sans-serif;
+    padding: .45rem .65rem; border-radius: .4rem; max-width: 16rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  }
+  .viz-tip b { font-weight: 700; }
+
+  /* ---------- takes ---------- */
+  .takes { display: grid; gap: 1.25rem; margin-top: 2.5rem; }
+  .take {
+    background: var(--surface); border: 1px solid var(--hair); border-radius: .75rem;
+    padding: 1.75rem 1.75rem 1.6rem; box-shadow: var(--shadow);
+  }
+  @media (max-width: 540px) { .take { padding: 1.25rem; } }
+  .take-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; margin-bottom: 1.1rem; }
+  .take-head h3 { font-size: 1.35rem; font-weight: 700; }
+  .take-rank {
+    display: inline-flex; flex-wrap: wrap; align-items: center; gap: .35rem .7rem;
+    font-family: "Inter", system-ui, sans-serif; font-size: .8125rem; color: var(--ink-2);
+  }
+  .take-rank span { display: inline-flex; align-items: center; gap: .35rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .take-rank .dot { width: .55rem; height: .55rem; }
+  .take > p { margin-bottom: 1.1rem; font-size: 1.0313rem; }
+  .take > p:last-child { margin-bottom: 0; }
+  .take blockquote.pull { font-size: 1.0625rem; margin: 1.4rem 0; }
+
+  /* ---------- vote ---------- */
+  #vote { border-top: 1px solid var(--hair); }
+  .vote-card {
+    text-align: center; background: var(--surface); border: 1px solid var(--hair);
+    border-radius: 1rem; padding: 3rem 1.5rem; box-shadow: var(--shadow);
+  }
+  .vote-card h2 { margin-bottom: .75rem; }
+  .vote-card p { max-width: 32rem; margin: 0 auto 1.75rem; color: var(--ink-2); }
+  .btn {
+    display: inline-block; font-family: "Inter", system-ui, sans-serif;
+    font-size: .9375rem; font-weight: 600; text-decoration: none;
+    background: var(--accent); color: #fff; padding: .8rem 1.6rem; border-radius: 999px;
+  }
+  .btn:hover { filter: brightness(1.08); text-decoration: none; }
+  :root[data-theme="dark"] .btn { color: #0d0d0d; }
+
+  /* ---------- footer ---------- */
+  footer.site {
+    border-top: 1px solid var(--hair); padding: 2.5rem 1.25rem 3.5rem;
+    text-align: center; font-family: "Inter", system-ui, sans-serif;
+    font-size: .8125rem; line-height: 1.7; color: var(--muted);
+  }
+  footer.site .fbrand { color: var(--accent); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  footer.site p { max-width: 44rem; margin: .4rem auto 0; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header id="topnav">
+  <nav class="nav-inner" aria-label="Sections">
+    <a class="brand" href="#hero">ChinaTalk</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#setup">The Setup</a>
+      <a href="#s1">1 · Let It Rip</a>
+      <a href="#s2">2 · Glasswing</a>
+      <a href="#s3">3 · Black Box</a>
+      <a href="#odds">Our Odds</a>
+      <a href="#vote">Vote</a>
+    </div>
+    <button id="themeToggle" aria-label="Toggle color theme">☾</button>
+  </nav>
+  <div id="progress" aria-hidden="true"></div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero" aria-label="Title">
+  <div class="col-wide">
+    <p class="kicker">A ChinaTalk scenario exercise · July 2026</p>
+    <h1>When China Gets a&nbsp;Mythos&nbsp;Model</h1>
+    <p class="deck">Soon, a Chinese lab will develop an AI model with capabilities on par with Anthropic&rsquo;s Claude&nbsp;Mythos. Will Beijing panic the way Washington did? Three hypothetical futures&nbsp;&mdash; and our team&rsquo;s odds on each.</p>
+    <p class="hero-meta sans">By the ChinaTalk team &middot; Jordan, Aqib, Lily &amp; Irene</p>
+    <div class="hero-paths">
+      <a href="#s1"><span class="dot d1"></span>Let It Rip <span class="pct">&approx;33%</span></a>
+      <a href="#s2"><span class="dot d2"></span>Glasswing with Chinese Characteristics <span class="pct">45%</span></a>
+      <a href="#s3"><span class="dot d3"></span>The Black Box <span class="pct">&approx;23%</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SETUP ═══════════════ -->
+<section id="setup" aria-labelledby="setup-h">
+  <div class="col prose">
+    <p class="kicker">The Setup</p>
+    <h2 id="setup-h">The clock is ticking in Beijing</h2>
+    <p>Mythos&rsquo; potential to wreak cyber havoc has forced the White House to create what, to quote Dean Ball, is a &ldquo;de facto involuntary licensing/preapproval regime for frontier models.&rdquo; Will the CCP similarly panic when the day comes in China?</p>
+    <p>In June, Z.ai cofounder Tang Jie told Elon on X that China will have a model on par with Mythos before the end of the year. Even if he&rsquo;s off by a few months &mdash; Kimi K3&rsquo;s release shows we&rsquo;re getting close &mdash; the clock is ticking for regulators in Beijing to respond.</p>
+
+    <figure class="fig tweet">
+      <div class="fig-frame frame-black">
+        <img src="assets/tweet-jietang.png" alt="Screenshot of an X thread. Lunexa asks: 'What's your current timeline for china to reach Fable class? GLM-5.2 certainly shorten the gap.' Elon Musk replies: 'Probably Q1.' Z.ai's Tang Jie, posting as @jietang, replies: 'won't take that long.'" width="535" height="340" loading="lazy" />
+      </div>
+      <figcaption><span class="fign">Fig.&nbsp;1</span> &mdash; Z.ai cofounder Tang Jie, replying to Elon on X in June.</figcaption>
+    </figure>
+
+    <p>Reuters, on July 7, reported that Chinese regulators were considering &ldquo;potentially restricting overseas access to China&rsquo;s most advanced AI models.&rdquo; And Xi himself has raised technical AI safety to the highest policy agenda. In his speech at WAIC, he said:</p>
+
+    <blockquote class="pull">
+      <p>&ldquo;We must attach great importance to the various endogenous and derivative risks brought about by AI, and work to build systems of laws and regulations, technical monitoring, risk early warning, and emergency response. We must reinforce the safety baseline, prevent misuse and abuse, and ensure that artificial intelligence always remains under human control.&rdquo;</p>
+      <footer>&mdash; Xi Jinping, World Artificial Intelligence Conference, Shanghai, July 2026</footer>
+    </blockquote>
+
+    <p>We wanted to share our team&rsquo;s own theories about what may come next. In our eyes, the story of Chinese Mythos may pan out in three main ways:</p>
+
+    <div class="paths sans">
+      <a class="path-card" href="#s1" style="--pc: var(--s1)">
+        <span class="path-num">Scenario 1</span>
+        <h3>Let It Rip</h3>
+        <p>A continuation of laissez faire: the model releases with minimal intervention, weights and all.</p>
+        <p class="path-odds">Team average odds &middot; <b>&approx;33%</b></p>
+      </a>
+      <a class="path-card" href="#s2" style="--pc: var(--s2)">
+        <span class="path-num">Scenario 2</span>
+        <h3>Glasswing with Chinese Characteristics</h3>
+        <p>Access is limited first to ministries, then key trusted companies, and only later &mdash; in a limited fashion &mdash; to consumers.</p>
+        <p class="path-odds">Team average odds &middot; <b>45%</b></p>
+      </a>
+      <a class="path-card" href="#s3" style="--pc: var(--s3)">
+        <span class="path-num">Scenario 3</span>
+        <h3>The Black Box</h3>
+        <p>We only ever hear rumors of the power of China&rsquo;s Mythos, contained solely within labs and government ministries.</p>
+        <p class="path-odds">Team average odds &middot; <b>&approx;23%</b></p>
+      </a>
+    </div>
+
+    <aside class="note">
+      <strong class="tag">A note on method</strong>
+      We tell the story of these paths as hypothetical scenarios because all of these outcomes seem plausible. We hope that a creative approach inspires flexible thinking on preparedness: USG, AI policy people, safety advocates, and researchers should be prepared for whatever may come. We created the fictional Z.ai <strong>GLM&nbsp;6</strong> to be the hypothetical Mythos-level model that will rock the world &mdash; for all we know, the real Chinese Mythos may come from Kimi, DeepSeek, Qwen, or any other lab. Everything below the fold is fiction, not reporting.
+    </aside>
+  </div>
+</section>
+
+<!-- ═══════════════ SCENARIO 1 ═══════════════ -->
+<section id="s1" class="scenario" aria-labelledby="s1-h">
+  <div class="col prose">
+    <header class="scen-head">
+      <span class="scen-chip"><span class="dot d1"></span>Scenario 1</span>
+      <h2 id="s1-h">GLM 6 Drops Into the Wild</h2>
+      <p class="standfirst">The &ldquo;let it rip&rdquo; status quo holds: the weights go up, the world tinkers, and Beijing decides the wake-up call is worth the windfall.</p>
+      <div class="scen-odds" role="group" aria-label="Team odds for scenario 1">
+        <span class="avg">&approx;33% avg</span>
+        <span>Jordan 20%</span><span>Aqib 45%</span><span>Lily 35%</span><span>Irene 30%</span>
+      </div>
+    </header>
+
+    <p>One day, GLM&nbsp;6 dropped just as all other models, Chinese or American, had dropped before Mythos: a hype tweet. Only a few hours later &mdash; just like its other releases &mdash; Zhipu makes GLM&nbsp;6 open source, with its weights available freely online.</p>
+
+    <figure class="fig">
+      <div class="fig-frame frame-black pad">
+        <img src="assets/exploitbench.png" alt="A fictional dark-mode benchmark chart titled ExploitBench, plotting cap percent against output tokens. GPT-5.6 variants and GLM 6 curves all top out beneath a dotted line labeled Mythos 5, with Opus 4.8 and Opus 4.7 marked lower down." width="1574" height="1148" loading="lazy" />
+      </div>
+      <figcaption><span class="fign">Fig.&nbsp;2</span> &mdash; <span class="fict">Fictional</span> GPT&nbsp;5.6 performs worse than Mythos on exploiting cyber vulnerabilities. In the pre-Mythos era, OpenAI would never have released this model, and would have waited for the line to beat Mythos. Now, sandbagging is the meta!</figcaption>
+    </figure>
+
+    <p>After a few days, two phenomena occur simultaneously. First, cyber professionals tinker around and discover GLM&nbsp;6 can find zero-day vulnerabilities the same way Mythos could. They scramble to inform labs and policymakers, both in the US and in China. Second, enterprises that just want good, cheap models are realizing GLM&nbsp;6 is a saving grace. Before, some companies like Uber Eats, Siemens, and Shopify had already begun to integrate Chinese models into their workflows. But now, with GLM&nbsp;6, there is no trade-off between cheaper tokens and amazing performance. On the graph of enterprise usage of Chinese models, the slope has a dramatic uptick.</p>
+
+    <figure class="fig">
+      <div class="fig-frame frame-paper pad">
+        <img src="assets/enterprise-share.png" alt="A fictional line chart titled 'Most-Used AI Model for Global Enterprise', showing share of token output for Anthropic (around 35 percent), OpenAI (around 30 percent), and Z.ai. The Z.ai line climbs slowly through 2026, then kinks sharply upward in September 2026. A note stamps the chart as hypothetical, fabricated data." width="1626" height="1247" loading="lazy" />
+      </div>
+      <figcaption><span class="fign">Fig.&nbsp;3</span> &mdash; <span class="fict">Fictional</span> The slope of enterprise adoption after GLM&nbsp;6 drops. Hypothetical data, fabricated for illustration.</figcaption>
+    </figure>
+
+    <p>The two phenomena pose real questions for Beijing. A model that is democratizing cyber offense &mdash; something the Chinese government believed it had an edge with on everyone sans the NSA &mdash; is proliferating worldwide. Cyberattacks seem like they&rsquo;re on the verge of inflicting disproportionate financial damage on China&rsquo;s leading companies, since America and friends have already been hardened by Mythos access. But Beijing also sees the economic upside. Zhipu&rsquo;s market cap approaches $500bn, instantly becoming one of China&rsquo;s largest companies. GLM&nbsp;6 is China&rsquo;s chance to beat America in leading model adoption, crater the western labs&rsquo; businesses, and lead global enterprises and government systems to turn to China as the go-to technology provider.</p>
+
+    <p>Besides, struggle is part of the process. The Party has been willing to accept sacrifices during COVID reopening, some bank failures, and tech crackdowns; this round of cyberattacks could just be the culling before China emerges stronger than ever. On the verge of securing a new commanding height, bureaucrats are torn over how to achieve AI ambitions and security at home.</p>
+
+    <p>The Trump administration is also torn. Perhaps the uptick is an anomaly, and no policy action is required. USG rails against China for distilling and then releasing such a model, declares that government contractors can&rsquo;t build with Chinese open models, but doesn&rsquo;t outlaw the models &mdash; it would be too silly to try to ban a file that can just be torrented. When Beijing doesn&rsquo;t send any signals on cracking down on GLM&nbsp;6, Washington decides to let it rip as well, screaming at its leading labs to drop something open. If there&rsquo;s going to be a powerful open-source model out making waves, it should probably be American.</p>
+
+    <p>Z.ai workers, already in a sleepless daze from the eighteen-hour days leading up to launch, don&rsquo;t know what to do. The celebrations from the launch party have subsided into stress. They are already talking with the relevant authorities &mdash; but what to do? Because they open-sourced the model, like they did with 5.2, there is no putting the genie back in the bottle. The model, at well over a trillion parameters, can&rsquo;t be weaponized by just anyone with too much free time and a Mac&nbsp;Mini. But there are plenty of actors out there &mdash; terrorists, companies with the wrong interests, criminal syndicates &mdash; who could get their hands on a good number of racks to turn the model against China. All Z.ai can do is hold their breath and wait for the fallout.</p>
+
+    <div class="upshot">
+      <span class="tag"><span class="dot d1" aria-hidden="true"></span>Where it settles</span>
+      <p>The Party decided that GLM&nbsp;6 wasn&rsquo;t dangerous enough to strangle, but the model did serve as a wake-up call. GLM&nbsp;6 is now the ceiling for unsupervised drops, and every model after it gets scrutinized closely before release. Without much fuss, China implements a stricter licensing regime that doesn&rsquo;t just check for politically unacceptable output, but for cyber capabilities too.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SCENARIO 2 ═══════════════ -->
+<section id="s2" class="scenario" aria-labelledby="s2-h">
+  <div class="col prose">
+    <header class="scen-head">
+      <span class="scen-chip"><span class="dot d2"></span>Scenario 2</span>
+      <h2 id="s2-h">Glasswing with Chinese Characteristics</h2>
+      <p class="standfirst">Beijing borrows a page from America&rsquo;s playbook: evaluate first, deploy later &mdash; ministries first, giants next, the world eventually.</p>
+      <div class="scen-odds" role="group" aria-label="Team odds for scenario 2">
+        <span class="avg">45% avg</span>
+        <span>Jordan 65%</span><span>Aqib 45%</span><span>Lily 45%</span><span>Irene 25%</span>
+      </div>
+    </header>
+
+    <span class="datemark">August 2026</span>
+    <p>After seeing Mythos, Beijing realized that emergent capabilities could inflict real damage in the wrong hands. The best means of mitigating the negative effects of future models seemed to be a Project Glasswing&ndash;type undertaking. In August 2026, Ding Xuexiang gives a speech implying that breakout domestic AI models should be shared with important government ministries and corporate giants like Baidu, Alibaba, and Tencent before deployment.</p>
+
+    <p>Tang Jie and team had already deeply internalized the risks of misuse for Mythos-level models. After Ding&rsquo;s speech, Z.ai postpones the launch party for GLM&nbsp;6 to further evaluate the model&rsquo;s capabilities internally &mdash; at which point their researchers realize what their creation is capable of. Determined not to be disappeared, company leadership pitches Project IceFeather (<span lang="zh-Hans">冰羽项目</span>) to the Cyberspace Administration of China. The CAC, of course, takes the lead on announcing the initiative in October, but Z.ai is credited as the &ldquo;core private sector partner&rdquo; of the project.</p>
+
+    <span class="datemark">October 2026</span>
+    <p>Government ministries and key SOEs like State Grid get access first. They use their exclusive access window to check for vulnerabilities in their own systems, while the MSS trawls for exploits that can be used offensively overseas.</p>
+
+    <p>The Party&rsquo;s involvement in Project IceFeather means the state is also a co-owner of the model&rsquo;s risks. The dominant strategy for bureaucrats instructed to &ldquo;Evaluate first, deploy later&rdquo; turns out to be endless evaluation. The downside risk of letting anyone with enough compute punch a hole in China&rsquo;s critical cyber architecture seems much scarier to the system than marginally more productivity growth and global discourse power as the open standard for AI. At first, nobody quite decides that the model should be released, because nobody wants to be responsible for what would happen post-release. But after seeing American models continue to advance and the gap between the U.S. and China widen, the trigger gets pulled. Strong safeguards are put on the model, perhaps to the point of excess, and the regulators hope that domestic infrastructure has been sufficiently strengthened by Project IceFeather. Hesitant to hand over their golden goose, Z.ai leadership offers API access instead of the full model weights. A lobotomized GLM&nbsp;6-Open gets released, while the real breakthroughs Z.ai plans to monetize by selling tokens.</p>
+
+    <figure class="fig">
+      <div class="fig-frame frame-white pad">
+        <img src="assets/safeguards.png" alt="A diagram comparing three classifier boundaries across a spectrum from benign to harmful requests. Normal safeguards block only harmful requests; Fable 5 safeguards use a larger safety margin at the cost of blocking some benign use; the fictional GLM 6 safeguards mirror Fable 5's approach with a large safety margin." width="1600" height="1025" loading="lazy" />
+      </div>
+      <figcaption><span class="fign">Fig.&nbsp;4</span> &mdash; <span class="fict">Fictional</span> Visualization of the fictitious GLM&nbsp;6&rsquo;s public safeguards. Adapted from Anthropic.</figcaption>
+    </figure>
+
+    <p>Despite having the best Chinese model, Z.ai&rsquo;s stock price doesn&rsquo;t moonshot: feet-dragging over Project IceFeather spooks investors, who worry that the government won&rsquo;t allow them to monetize the model beyond state customers, much less into key markets overseas. While the MSS has the time of its life hacking away at everyone who didn&rsquo;t get access to Mythos, domestic coders still mostly use transfer stations to access frontier capabilities.</p>
+
+    <div class="upshot">
+      <span class="tag"><span class="dot d2" aria-hidden="true"></span>Where it settles</span>
+      <p>After two months, regulators expand the circle of trusted users for GLM&nbsp;6 to include provincial governments as well as trusted local tech leaders like Alibaba, Xiaomi, and Huawei. It takes another few months for Chinese firms broadly to get access, by which point other domestic labs have developed roughly similar models. Thanks to pressure from the Trump administration, OpenAI releases a cyber-lobotomized open model on par with GLM&nbsp;6 &mdash; which finally convinces the CAC that Zhipu should be allowed to let the world access its model.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SCENARIO 3 ═══════════════ -->
+<section id="s3" class="scenario" aria-labelledby="s3-h">
+  <div class="col prose">
+    <header class="scen-head">
+      <span class="scen-chip"><span class="dot d3"></span>Scenario 3</span>
+      <h2 id="s3-h">The Black Box</h2>
+      <p class="standfirst">Zhipu emerges as the certified national champion as a covetous Beijing keeps frontier AI in-house. We only ever hear rumors.</p>
+      <div class="scen-odds" role="group" aria-label="Team odds for scenario 3">
+        <span class="avg">&approx;23% avg</span>
+        <span>Jordan 15%</span><span>Aqib 10%</span><span>Lily 20%</span><span>Irene 45%</span>
+      </div>
+    </header>
+
+    <p>Li Qiang, China&rsquo;s Number Two, wasn&rsquo;t kidding. What Beijing really cares about is &ldquo;upholding the bottom line of AI security&rdquo; &mdash; not the platitudes in Xi&rsquo;s speech at WAIC about &ldquo;openness, win-win&rdquo; and &ldquo;mutual learning between civilizations&rdquo; that the credulous foreigners ate up. Behind the scenes, Beijing has maintained deep insight into exactly how capable China&rsquo;s top AI models are, and was preparing for the moment when it knew it would have to step in.</p>
+
+    <span class="datemark">September 2026</span>
+    <p>In September 2026, the Cyberspace Administration of China publicly updates its AI model registry regulations. Whereas previously the rules only governed new models and algorithms with the ability to &ldquo;shape public opinion,&rdquo; they now require companies to report any major update, self-assess for potentially catastrophic cyber risks, and give the government exclusive access indefinitely. Remembering the fates of DiDi and Ant Group, companies all know better than to not comply.</p>
+
+    <p>The state now gets first dibs on every new model release and update. An internally assembled testing capacity running through the MSS and the PLA Cyberspace Force meant that when GLM&nbsp;6 proved to be genuinely exceptional, Zhongnanhai was the first to know. Having recognized that this model was a potential &lsquo;assassin&rsquo;s mace&rsquo; of the sort Xi had directed the state to forge a decade ago, there was no way the security state would allow its capability to be open sourced. Despite Foreign Ministry protestations that releasing this model globally would improve China&rsquo;s standing in the world, and MIIT officials salivating at the domestic productivity boost the model could provide, the security state was not having it. Open sourcing this model would forfeit a cyber window of opportunity &mdash; and give Xinjiang separatists and Falun Gong activists with some Azure credits the same hacking capabilities as the domestic security apparatus.</p>
+
+    <p>Two days after GLM&nbsp;6 was sent over to the state, Tang Jie and co. were summoned to the CAC. Over long hours and litres of tea, a deal was struck. The &ldquo;real&rdquo; GLM&nbsp;6 would become available to government entities: specifically, it would be deployed on-premise into core governmental functions that benefit from such capabilities &mdash; including defense. Z.ai would release to the public a lobotomized version of the model, thoroughly tested by both the company and the government to ensure its cyber capabilities were satisfactorily weakened. The lab gets a contract with lucrative terms, and the state agrees to help &lsquo;persuade&rsquo; other Chinese model makers to sign away their compute, both on the mainland and at Southeast Asian neoclouds. In a world where cyber capabilities have the potential to become democratized, Beijing has made sure that the tools in its arsenal are of a different tier.</p>
+
+    <figure class="fig">
+      <div class="fig-frame frame-white">
+        <img src="assets/cac-meeting.jpg" alt="An AI-generated illustration of officials in dark suits around a long conference-room table set with lidded porcelain tea cups and a thermos, facing a wall screen showing a glowing network brain, charts, and a shield icon." width="1672" height="941" loading="lazy" />
+      </div>
+      <figcaption><span class="fign">Fig.&nbsp;5</span> &mdash; <span class="fict">Fictional</span> An imaginary rendering by GPT&nbsp;5.5.</figcaption>
+    </figure>
+
+    <p>Parts of the meeting leak to Reuters, but no matter. At first, no one was surprised that the Chinese government was getting better AI than the masses. Z.ai was now the proper national champion, but there was no actual proof that they had made something transformative.</p>
+
+    <span class="datemark">Early 2027</span>
+    <p>Then the attacks started. Beijing knew that the Americans, armed with Mythos-level defensive capabilities for months already, were on the lookout for any sign of trouble &mdash; and did not want to re-inflame the bilateral relationship at a time when it could not expect to extract meaningful concessions. Instead, it focused its new cyber bazooka on less-prepared countries: wavering capitals in the Global South, less-developed neighbors, and eventually Europe. It was easy enough to hack into Paraguay&rsquo;s citizen records; by early 2027, Asunci&oacute;n was frightened into dropping recognition of Taiwan. European technology companies in the semiconductor supply chain began reporting cyberattacks at a much-increased scale. Brussels bureaucrats began fretting about blackmail of uncertain origin.</p>
+
+    <div class="upshot">
+      <span class="tag"><span class="dot d3" aria-hidden="true"></span>Where it settles</span>
+      <p>Other Chinese labs, having signed over a good amount of their compute to Zhipu, slowly progress on their own capabilities but are still prevented from releasing their weights by the CAC. By this point, collaboration between the government and Z.ai has reached new heights. Building on GLM&nbsp;6, the lab is now developing proprietary models tailored to government wants &mdash; and new-generation cyber weapons. On the outside, Z.ai still looks like a normal lab, continuing to release consumer-grade models, open-source research, and AI products. The to-G side is heavily insulated; researchers must be thoroughly vetted before being deployed to serve the government, and are required to surrender their passports. The CAC occasionally poaches star researchers from other labs under the guise of &ldquo;national development consultation.&rdquo;</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ ODDS ═══════════════ -->
+<section id="odds" class="scenario" aria-labelledby="odds-h">
+  <div class="col prose">
+    <p class="kicker">Our Odds</p>
+    <h2 id="odds-h">Which Scenario Is Most Likely?</h2>
+    <p>How likely is each of these scenarios? Here at ChinaTalk, we&rsquo;ve been having lively internal debates over what might come next. Here are our thoughts:</p>
+  </div>
+
+  <div class="col-wide">
+    <div class="viz-card" id="oddsChart">
+      <div class="viz-head">
+        <div>
+          <h3 class="viz-title">The team&rsquo;s odds</h3>
+          <p class="viz-sub">Probability each of us puts on each scenario. Rows sum to 100%.</p>
+        </div>
+        <button id="tableToggle" aria-expanded="false" aria-controls="oddsTable">Table view</button>
+      </div>
+      <ul class="viz-legend" role="list">
+        <li><span class="swatch" style="background: var(--s1)"></span>Scenario 1 &middot; Let It Rip</li>
+        <li><span class="swatch" style="background: var(--s2)"></span>Scenario 2 &middot; Glasswing</li>
+        <li><span class="swatch" style="background: var(--s3)"></span>Scenario 3 &middot; Black Box</li>
+      </ul>
+      <div class="viz-rows" id="vizRows"></div>
+      <table id="oddsTable" hidden>
+        <caption>The same odds, as numbers.</caption>
+        <thead>
+          <tr><th scope="col">Person</th><th scope="col">1 &middot; Let It Rip</th><th scope="col">2 &middot; Glasswing</th><th scope="col">3 &middot; Black Box</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p class="viz-note">Fictional scenarios; the odds are the authors&rsquo; own. Team average is the unweighted mean.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="takes">
+
+      <article class="take prose">
+        <header class="take-head">
+          <h3>Jordan</h3>
+          <span class="take-rank">
+            <span><span class="dot d2" aria-hidden="true"></span>S2&nbsp;65%</span>
+            <span><span class="dot d1" aria-hidden="true"></span>S1&nbsp;20%</span>
+            <span><span class="dot d3" aria-hidden="true"></span>S3&nbsp;15%</span>
+          </span>
+        </header>
+        <p>Chinese Glasswing (Scenario 2) most likely, then &lsquo;let it rip,&rsquo; then nationalization. On 3: despite Xi&rsquo;s desire for SOEs to perform, I think he has learned his lesson through the tech crackdown that the state can&rsquo;t really be relied on to produce the sort of technological breakthroughs required to keep pace with the AI frontier (he learned why the unicorns went away). Some muddle-through of tighter regulation, golden shares and minority state investment, and a Glasswing-style release &mdash; as opposed to an indefinite lockdown on access and total nationalization &mdash; seems like the more likely equilibrium over the next two years.</p>
+        <p>I also don&rsquo;t see the labs keeping their best capabilities open forever. Chinese model makers have already begun to go closed source to make money, and as Reuters reported, there are influential strains within the system skeptical of allowing foreigners access to China&rsquo;s best models. The benefits to the Chinese government of open sourcing powerful AI are diffuse (global PR, undermining the western AI ecosystem), while the harms are concentrated in a paranoid security state that is not interested in democratizing access to hacking. Plus, Xi really likes assassin&rsquo;s maces, and a world-conquering cyberweapon is not the sort of thing that you give up for good global PR. Xi&rsquo;s WAIC speech to me felt like it could just be a barbarian-handling exercise akin to his 2017 World Economic Forum address, in which he promised to serve as a counterweight to Trump tariffs but immediately started on a global campaign of economic coercion once security issues towards Korea, Japan, and Australia cropped up. When things get serious &mdash; once China has an AI model that can truly compete with or even exceed the cyber capabilities the US has access to &mdash; it&rsquo;s unlikely he will really want to hand that capability over to Hugging Face.</p>
+        <p>Lastly, Zhipu, DeepSeek, and Moonshot &mdash; the leading Chinese labs now that everyone good at Qwen quit &mdash; do not own complements like Nvidia does, which would give them economic incentives to commoditize themselves. Their CEOs are genuinely ideologically committed to open source, but they do need to keep money coming in to do novel research and train models.</p>
+        <p>Today I don&rsquo;t see a coordinated national strategy to pop the west&rsquo;s AI bubble by driving down the global cost of intelligence &mdash; though one may be emerging, evidenced by Xi&rsquo;s speech and the DeepSeek investment. It is possible the government decides it&rsquo;s strategically important enough to foot the bill for its top firms. It would not take nearly as much money as Xi has already spent on more hardware-oriented industrial policy efforts around cars, solar, and semiconductors.</p>
+      </article>
+
+      <article class="take prose">
+        <header class="take-head">
+          <h3>Aqib</h3>
+          <span class="take-rank">
+            <span><span class="dot d1" aria-hidden="true"></span>S1&nbsp;45%</span>
+            <span><span class="dot d2" aria-hidden="true"></span>S2&nbsp;45%</span>
+            <span><span class="dot d3" aria-hidden="true"></span>S3&nbsp;10%</span>
+          </span>
+        </header>
+        <p>I see Scenarios 1 and 2 as equally likely, and Scenario 3 as least likely. My stock in Scenario 1 went up after seeing Kimi K3 deployed without any fuss, coupled with the recent statements from WAIC.</p>
+        <p>Scenario 1, where a frontier lab &ldquo;lets it rip&rdquo; and deals with consequences later, cannot be counted out. In a vacuum, Z.ai released GLM 5.2 after Mythos seemingly without any fanfare or close scrutiny; the Chinese government also does not seem to monitor model releases for cyber or bio capabilities. Z.ai&rsquo;s founder recently wrote a memo reiterating support for open source, and Xi prefers a &ldquo;water-flow&rdquo; mindset toward AI. Most recently, Kimi K3, a powerful open-source model, was released seemingly without close scrutiny as well. This language and action suggests a willingness to keep models open and public.</p>
+        <p>However, government interest in monitoring models more closely has risen recently. Reuters reported that Beijing is mulling future powerful models being &ldquo;barred from public release or restricted to domestic use.&rdquo; Model developers, who keep regular informal communication with regulators, would likely communicate such capabilities to the regulator to receive informal approval before release, lest the developer receive a crackdown for releasing the model too hastily.</p>
+        <p>The scenario has some uncertainty, and reality could branch out at different points. GLM&nbsp;6 could be released as a closed-weight model, just like Qwen; that would mean the model could be put back in the bottle if the capabilities were too dangerous. The Party may also decide that, after release, it is worth rescinding the model because the risks are just too large. Chinese SOEs have notoriously poor cybersecurity, so they may be the first ones hit. We don&rsquo;t know what happens afterwards in this world; the hammer could come down hard on the entire AI industry, or it could just be the beginning of a stricter licensing regime.</p>
+      </article>
+
+      <article class="take prose">
+        <header class="take-head">
+          <h3>Lily</h3>
+          <span class="take-rank">
+            <span><span class="dot d2" aria-hidden="true"></span>S2&nbsp;45%</span>
+            <span><span class="dot d1" aria-hidden="true"></span>S1&nbsp;35%</span>
+            <span><span class="dot d3" aria-hidden="true"></span>S3&nbsp;20%</span>
+          </span>
+        </header>
+        <p>I don&rsquo;t think China&rsquo;s Mythos will be locked behind closed doors indefinitely, but a Project Glasswing&ndash;style rollout with Chinese bureaucratic characteristics is possible. The Party&rsquo;s concerns about AI security go hand in hand with support for AI-enabled One-Person Companies and the belief that AI will unlock new productivity increases. Certainly, there are forces in Zhongnanhai that want China&rsquo;s developers to be working with the best possible tools. But the fact that everyone with the technical expertise necessary to brief the government also has a horse in the AI race could be a powerfully perverse incentive.</p>
+        <p>Overall, Scenario 2 most likely, then Scenario 1, then Scenario 3. I think Scenario 3 is the least likely because the private sector has already produced such high-quality models on its own, so perhaps the Party would be skeptical that state involvement would produce something more capable.</p>
+      </article>
+
+      <article class="take prose">
+        <header class="take-head">
+          <h3>Irene</h3>
+          <span class="take-rank">
+            <span><span class="dot d3" aria-hidden="true"></span>S3&nbsp;45%</span>
+            <span><span class="dot d1" aria-hidden="true"></span>S1&nbsp;30%</span>
+            <span><span class="dot d2" aria-hidden="true"></span>S2&nbsp;25%</span>
+          </span>
+        </header>
+        <p>I&rsquo;m uncertain about exactly how CAC regulators will patch holes in the existing registry system, but I think a secret model is more likely than people assume.</p>
+        <p>There are recent signals in favor of the theory that CCP leadership is genuinely concerned about AI safety. Xi Jinping made his WAIC debut in Shanghai this month, where, according to state media, he would &ldquo;systemically elaborate on China&rsquo;s policies, position, visions and propositions on AI development and governance.&rdquo; AI guardrails came up during the Xi-Trump summit in May. And here&rsquo;s how Zhou Haibing, vice minister of the National Development and Reform Commission, paraphrased Xi Jinping&rsquo;s message on AI safety during a press conference in June 2026, just a week after Fable&rsquo;s first release (emphases mine):</p>
+        <blockquote class="pull">
+          <p>[China will] enact the responsibilities of a major country, <strong>manage and control risks, strengthen prevention efforts</strong>, explore cooperative opportunities in AI oversight, and <strong>jointly defend against AI safety risks</strong>. <span class="zh" lang="zh-Hans">[中国将&hellip; 履行大国责任，管控风险、强化预防，探索开展人工智能监管合作，共同防范人工智能安全风险。]</span></p>
+        </blockquote>
+        <p>The emergence of keen prevention rhetoric means Beijing expects regulatory agencies to stamp down on risks before they proliferate. Barring truly necessary structural changes, a &ldquo;let it rip&rdquo; approach is just not in the PRC&rsquo;s deeply conservative policy psyche. Publicized regulations will change with the times, but I expect much of the negotiations on frontier capabilities inside China to be kept under the hood going forward, no matter how leaky the system can be at times.</p>
+        <p>The PRC has an extensive history of secret strategic projects. If Beijing truly believes that AI will shape national power &mdash; much like weapons of mass destruction did during the Cold War &mdash; then it probably is already tempted by its old playbook. &ldquo;Two Bombs, One Satellite&rdquo; was highly classified in its initial years, and some of the researchers involved were not permitted to publicize their experiences until decades later. Mao&rsquo;s &ldquo;Third Front&rdquo; (which I&rsquo;ve written about before) involved building entire secret cities in remote western regions to hide defense-industrial capabilities from prying American and Soviet eyes.</p>
+        <p>In many senses, hiding a frontier model is easier than hiding literal mines and factories. Despite significant research efforts (including by our own Aqib and Nick), no one has high-confidence estimates of how much AI compute China has. Satellite data on data centers do not correspond neatly onto actual compute amounts, because no one knows what chips are inside or what utilization rates look like. Amid an entire gold rush of companies training and using AI systems, it&rsquo;d be quite easy to hide a proprietary system in plain sight.</p>
+        <p>But one challenge might be personnel. There are only so many star AI researchers in China. It&rsquo;s a tightly-knit circle, and many have overseas experience. Beijing is probably wary of bringing some of these folks onto the high side to build black-box systems, but arguably has no alternative. This is why I imagined a scenario where the CAC tries to semi-absorb part of Z.ai rather than build a whole secret lab from scratch.</p>
+        <p>Overall, I see Scenario 3 as most likely &mdash; even though we won&rsquo;t find out &mdash; then Scenario 1, with Scenario 2 least likely.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ VOTE ═══════════════ -->
+<section id="vote" aria-labelledby="vote-h">
+  <div class="col-wide">
+    <div class="vote-card">
+      <p class="kicker">Reader Poll</p>
+      <h2 id="vote-h">Now it&rsquo;s your turn</h2>
+      <p>We&rsquo;d like to hear from our readers, too. Which path do you find most likely? Rank the scenarios from most to least likely.</p>
+      <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdPB1_jLhWgsD0OPBgk6U2AQ9FbpmW3NLsNazS5HCh-w0wefQ/viewform" target="_blank" rel="noopener">Cast your ranking &rarr;</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <span class="fbrand">ChinaTalk</span>
+  <p>GLM&nbsp;6 is fictional; the question isn&rsquo;t. The scenarios above are informed speculation, not reporting &mdash; a preparedness exercise for whatever actually comes.</p>
+  <p>Scenarios and odds by Jordan, Aqib, Lily, and Irene. Read more at <a href="https://www.chinatalk.media">chinatalk.media</a>.</p>
+</footer>
+
+<div id="tip" class="viz-tip" role="presentation" hidden></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- theme toggle ---------- */
+  var toggle = document.getElementById("themeToggle");
+  function paintToggle() {
+    var dark = document.documentElement.dataset.theme === "dark";
+    toggle.textContent = dark ? "☀" : "☾";
+    toggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+  }
+  toggle.addEventListener("click", function () {
+    var next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("ct-theme", next); } catch (e) {}
+    paintToggle();
+  });
+  paintToggle();
+
+  /* ---------- reading progress ---------- */
+  var bar = document.getElementById("progress");
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - innerHeight;
+      bar.style.width = (max > 0 ? (100 * doc.scrollTop / max) : 0) + "%";
+      ticking = false;
+    });
+  }
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- nav overflow affordance ---------- */
+  var navEl = document.getElementById("navLinks");
+  function navFade() {
+    var more = navEl.scrollWidth - navEl.clientWidth - navEl.scrollLeft > 4;
+    navEl.classList.toggle("fade-r", more);
+  }
+  navEl.addEventListener("scroll", navFade, { passive: true });
+  addEventListener("resize", navFade);
+  navFade();
+
+  /* ---------- scrollspy ---------- */
+  var links = Array.prototype.slice.call(document.querySelectorAll("#navLinks a"));
+  var byId = {};
+  links.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      links.forEach(function (a) { a.classList.remove("active"); });
+      var a = byId[en.target.id];
+      if (a) a.classList.add("active");
+    });
+  }, { rootMargin: "-35% 0px -60% 0px" });
+  ["setup", "s1", "s2", "s3", "odds", "vote"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) spy.observe(el);
+  });
+
+  /* ---------- odds chart ---------- */
+  var SCEN = [
+    { key: "c1", name: "Scenario 1 · Let It Rip" },
+    { key: "c2", name: "Scenario 2 · Glasswing" },
+    { key: "c3", name: "Scenario 3 · Black Box" }
+  ];
+  var ROWS = [
+    { name: "Jordan", vals: [20, 65, 15] },
+    { name: "Aqib",   vals: [45, 45, 10] },
+    { name: "Lily",   vals: [35, 45, 20] },
+    { name: "Irene",  vals: [30, 25, 45] },
+    { name: "Team average", vals: [32.5, 45, 22.5], avg: true }
+  ];
+  function fmt(v) { return (v % 1 === 0 ? v : v.toFixed(1)) + "%"; }
+
+  var rowsEl = document.getElementById("vizRows");
+  var tbody = document.querySelector("#oddsTable tbody");
+  ROWS.forEach(function (row) {
+    var r = document.createElement("div");
+    r.className = "viz-row" + (row.avg ? " avg" : "");
+    var name = document.createElement("span");
+    name.className = "viz-name";
+    name.textContent = row.name;
+    var barEl = document.createElement("div");
+    barEl.className = "viz-bar";
+    row.vals.forEach(function (v, i) {
+      var seg = document.createElement("div");
+      seg.className = "seg " + SCEN[i].key;
+      seg.style.setProperty("--w", v);
+      seg.tabIndex = 0;
+      seg.setAttribute("role", "img");
+      seg.setAttribute("aria-label", row.name + " — " + SCEN[i].name + ": " + fmt(v));
+      seg.dataset.tip = "<b>" + row.name + "</b> · " + SCEN[i].name + " · <b>" + fmt(v) + "</b>";
+      var lab = document.createElement("span");
+      lab.className = "seg-label";
+      lab.textContent = v % 1 === 0 ? v : v.toFixed(1);
+      seg.appendChild(lab);
+      barEl.appendChild(seg);
+    });
+    r.appendChild(name);
+    r.appendChild(barEl);
+    rowsEl.appendChild(r);
+
+    var tr = document.createElement("tr");
+    if (row.avg) tr.className = "avg";
+    var th = document.createElement("th");
+    th.scope = "row";
+    th.textContent = row.name;
+    tr.appendChild(th);
+    row.vals.forEach(function (v) {
+      var td = document.createElement("td");
+      td.textContent = fmt(v);
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+
+  /* hide in-segment labels that don't fit */
+  function fitLabels() {
+    document.querySelectorAll(".seg").forEach(function (seg) {
+      var lab = seg.firstElementChild;
+      lab.classList.remove("hide");
+      if (lab.scrollWidth + 10 > seg.clientWidth) lab.classList.add("hide");
+    });
+  }
+  addEventListener("resize", fitLabels);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitLabels);
+  fitLabels();
+
+  /* ---------- tooltip ---------- */
+  var tip = document.getElementById("tip");
+  function showTip(seg, x, y) {
+    tip.innerHTML = seg.dataset.tip;
+    tip.hidden = false;
+    var r = tip.getBoundingClientRect();
+    var left = Math.min(Math.max(8, x - r.width / 2), innerWidth - r.width - 8);
+    var top = y - r.height - 12;
+    if (top < 8) top = y + 16;
+    tip.style.left = left + "px";
+    tip.style.top = top + "px";
+  }
+  function hideTip() { tip.hidden = true; }
+  rowsEl.addEventListener("mousemove", function (e) {
+    var seg = e.target.closest(".seg");
+    if (seg) showTip(seg, e.clientX, e.clientY); else hideTip();
+  });
+  rowsEl.addEventListener("mouseleave", hideTip);
+  rowsEl.addEventListener("focusin", function (e) {
+    var seg = e.target.closest(".seg");
+    if (!seg) return;
+    var r = seg.getBoundingClientRect();
+    showTip(seg, r.left + r.width / 2, r.top);
+  });
+  rowsEl.addEventListener("focusout", hideTip);
+  addEventListener("scroll", hideTip, { passive: true });
+  addEventListener("keydown", function (e) { if (e.key === "Escape") hideTip(); });
+
+  /* ---------- table toggle ---------- */
+  var tBtn = document.getElementById("tableToggle");
+  var table = document.getElementById("oddsTable");
+  tBtn.addEventListener("click", function () {
+    var open = table.hidden;
+    table.hidden = !open;
+    tBtn.setAttribute("aria-expanded", String(open));
+    tBtn.textContent = open ? "Hide table" : "Table view";
+  });
+})();
+</script>
+</body>
+</html>
