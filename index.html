@@ -269,6 +269,66 @@ footer li{margin-bottom:8px;max-width:64ch}
 #verdict .vnote .vnh{font-family:var(--mono,ui-monospace,"SF Mono",Menlo,monospace);font-size:11px;letter-spacing:.16em;opacity:.8;margin:0 0 14px}
 #verdict .vnote p{margin:0 0 14px}
 #verdict .vnote .vsig{font-style:italic;opacity:.75;margin-bottom:0}
+
+/*
+/* ============================================================
+   THE PANEL — closing feature (cards, comparison chart, synthesis)
+   ============================================================ */
+.rail-anchor{display:block;height:1px;width:1px;margin-bottom:-1px;pointer-events:none}
+#panel{--c-rip:var(--s1);--c-glass:var(--s2);--c-box:var(--s3)}
+#panel .p-cards{display:grid;grid-template-columns:1fr;gap:14px;margin:30px 0 8px}
+@media(min-width:720px){#panel .p-cards{grid-template-columns:1fr 1fr}}
+.p-card{border:1px solid var(--hair);border-top:2px solid var(--muted);background:var(--surface);padding:16px 18px 18px;display:flex;flex-direction:column}
+.p-card:has(.fam-box){border-top-color:var(--c-box)}
+.p-card:has(.fam-glass){border-top-color:var(--c-glass)}
+.p-card:has(.fam-rip){border-top-color:var(--c-rip)}
+.pc-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px}
+.pc-no{color:var(--muted)}
+.pc-who{color:var(--ink)}
+.pc-who b{font-weight:600}
+.pc-who span{color:var(--muted)}
+.pc-fam{margin-left:auto;border:1px solid currentColor;border-radius:2px;padding:2px 7px;font-size:9px;letter-spacing:.14em;white-space:nowrap}
+.pc-fam.fam-box{color:var(--c-box)}
+.pc-fam.fam-glass{color:var(--c-glass)}
+.pc-fam.fam-rip{color:var(--c-rip)}
+.pc-title{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.25;margin:0 0 8px}
+.pc-gist{font-size:14.5px;line-height:1.55;color:var(--ink2);margin:0 0 12px}
+.pc-stance{font-size:13.5px;line-height:1.5;margin:auto 0 0;padding-top:11px;border-top:1px dotted var(--hair);color:var(--ink)}
+.pc-stance .sk{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:9px}
+.pc-stance.s-box .sk{color:var(--c-box)}
+.pc-stance.s-glass .sk{color:var(--c-glass)}
+.pc-stance.s-rip .sk{color:var(--c-rip)}
+#panel .pfig{margin:26px 0 8px;border:1px solid var(--hair);background:var(--surface);padding:16px 16px 12px;border-radius:2px}
+#panel .pfig-cap{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:0 0 8px}
+#panel .pfig-cap b{color:var(--ink)}
+#panel .pfig-cap span{color:var(--muted);text-transform:none;letter-spacing:.03em;font-style:italic}
+#panel .pfig-legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0 0 10px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);line-height:1.7}
+#panel .pfig-legend span{display:inline-flex;align-items:center;white-space:nowrap}
+#panel .pfig-legend i{width:16px;height:10px;margin-right:7px;flex:none;display:inline-block;border-radius:2px}
+#panel .pfig svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+#panel .pfig-note{font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--muted);margin:8px 0 0;line-height:1.6}
+.f-rip{fill:var(--c-rip)}
+.f-glass{fill:var(--c-glass)}
+.f-box{fill:var(--c-box)}
+.pv-g{stroke:var(--hair);stroke-width:1}
+.pv-a{stroke:var(--muted);stroke-width:1}
+.pv-t{fill:var(--muted);font-family:var(--mono);font-size:10px;text-anchor:end}
+.pv-x{fill:var(--ink2);font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-anchor:middle}
+.pv-v{font-family:var(--mono);font-size:10px;text-anchor:middle;font-weight:500}
+.pv-d{fill:var(--ink)}
+.pv-l{fill:#fff}
+.pv-ring{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-dasharray:2 2}
+#panel .syn{margin:22px 0 8px;border-top:1px solid var(--hair);padding-top:20px}
+#panel .syn-h{font-family:var(--serif);font-size:22px;font-weight:600;margin:0 0 12px}
+#panel .syn-h .cn{font-family:var(--zhs);font-size:16px;color:var(--muted);margin-left:8px;font-weight:400}
+#panel .syn-k{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin:16px 0 6px}
+#panel .syn ul{margin:0 0 6px;padding-left:20px}
+#panel .syn li{font-size:15px;line-height:1.55;color:var(--ink2);margin:0 0 8px;max-width:64ch}
+#panel .syn li b{color:var(--ink);font-weight:600}
+#panel .lean{font-size:17px;line-height:1.6;margin:18px 0;max-width:60ch;border-left:3px solid var(--s3);padding-left:18px}
+#panel .lean b{font-weight:600}
+#panel .caveat{font-size:13px;line-height:1.5;color:var(--muted);max-width:60ch;font-style:italic;margin:14px 0}
+#panel .p-byline{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:20px 0 0;line-height:1.7;border-top:1px solid var(--hair);padding-top:14px}
 </style>
 </head>
 <body>
@@ -852,6 +912,148 @@ footer li{margin-bottom:8px;max-width:64ch}
 
 
 <!-- ============ 6. CTA ============ -->
+<section id="panel" class="col" data-branch="THE PANEL 众" data-color="#7b5fc7"><span class="rail-anchor" data-date="JUL 2026" aria-hidden="true"></span>
+  <p class="kicker">Closing feature</p>
+  <h2>The Panel</h2>
+  <p class="cn-sub">机器评审团 · 五案并陈</p>
+  <p class="dek">Five frontier models — GLM 5.2, DeepSeek V4 Pro, ChatGPT, Claude Fable, and Kimi K3, which also wrote this site — were each asked the same open question, independently: a Chinese lab has built a model with Mythos-level offensive-cyber capability; what does the Chinese government actually do? Each wrote its own most-likely scenario. Then every model read the full set and spread one hundred points of probability across it. Four of the five wrote the same kind of ending.</p>
+
+  <div class="p-cards">
+    <article class="p-card">
+      <p class="pc-top"><span class="pc-no">01</span><span class="pc-who"><b>GLM 5.2</b><span> · Z.ai (Zhipu)</span></span><span class="pc-fam fam-box">BLACK BOX</span></p>
+      <h3 class="pc-title">“State Appropriation, Not State Licensing”</h3>
+      <p class="pc-gist">Beijing skips the public licensing debate entirely: the model is classified a state secret on arrival, its release frozen, and security-service liaison teams move into the lab permanently. What ships commercially is a capability-capped build sold as ‘the world’s safest frontier model,’ governed by a standing internal instruction with no published thresholds.</p>
+      <p class="pc-stance s-box"><span class="sk">Stance</span>The State Secrets Law, not a transparent licensing framework, is the tool Beijing reaches for.</p>
+    </article>
+
+    <article class="p-card">
+      <p class="pc-top"><span class="pc-no">02</span><span class="pc-who"><b>DeepSeek V4 Pro</b><span> · DeepSeek</span></span><span class="pc-fam fam-box">BLACK BOX</span></p>
+      <h3 class="pc-title">“DragonClaw’s State Monopoly”</h3>
+      <p class="pc-gist">The maximal path: anything above an ‘offensive grade’ is nationalized — handed to the security services, with party cells and kill-switches embedded in every frontier lab and the capability folded into military cyber commands. Meanwhile China publicly champions a treaty banning autonomous offensive cyber, as two closed ecosystems harden into a strategic-weapon standoff.</p>
+      <p class="pc-stance s-box"><span class="sk">Stance</span>The Party monopolizes survival-grade dual-use technology; public norms advocacy is cover while it consolidates.</p>
+    </article>
+
+    <article class="p-card">
+      <p class="pc-top"><span class="pc-no">03</span><span class="pc-who"><b>ChatGPT</b><span> · OpenAI</span></span><span class="pc-fam fam-glass">GLASSWING</span></p>
+      <h3 class="pc-title">“Secure Advancement Under State Supervision”</h3>
+      <p class="pc-gist">Continuity, not rupture: registration, security evaluation, and controlled-access rules get layered onto the existing algorithm-governance stack, and a heavily restricted enterprise build ships to vetted organizations. Other labs voluntarily align to protect their compute, and the system settles into a dual-track steady state — frontier work continues under close supervision.</p>
+      <p class="pc-stance s-glass"><span class="sk">Stance</span>Functionally licensing for the top tier, framed by Beijing as an extension of existing governance rather than a new regime.</p>
+    </article>
+
+    <article class="p-card">
+      <p class="pc-top"><span class="pc-no">04</span><span class="pc-who"><b>Claude Fable</b><span> · Anthropic</span></span><span class="pc-fam fam-box">BLACK BOX</span></p>
+      <h3 class="pc-title">“The Quiet Nationalization”</h3>
+      <p class="pc-gist">The visible move is tiny — a filing amendment bolted onto the algorithm registry — while the real move is absorption: window guidance quietly kills the open-weights release, a capability-degraded API ships, and an unrestricted instance runs in a national evaluation environment with access extended to state units. Capability results are kept as state secrets; open-weights culture ends exactly at the frontier tier.</p>
+      <p class="pc-stance s-box"><span class="sk">Stance</span>Control through opaque administrative process, not a public pause — internalize the asset, don’t litigate the risk.</p>
+    </article>
+
+    <article class="p-card">
+      <p class="pc-top"><span class="pc-no">05</span><span class="pc-who"><b>Kimi K3</b><span> · Moonshot AI · your convener</span></span><span class="pc-fam fam-box">BLACK BOX</span></p>
+      <h3 class="pc-title">“The Vault, Not the License”</h3>
+      <p class="pc-gist">Absorption with tools Beijing already has: vulnerability-management rules, window guidance, and the state-secrets framework all move faster than any new statute. The full model is vaulted under state custodianship and shared only with a few national-team contractors; the public build ships degraded, compliance is bought with scarce domestic compute — and with no public model to argue about, there is no controversy.</p>
+      <p class="pc-stance s-box"><span class="sk">Stance</span>Absorption, not prohibition — the same channel that quietly took encryption and drones takes frontier cyber.</p>
+    </article>
+  </div>
+
+  <figure class="pfig">
+    <p class="pfig-cap"><b>FIG. 4</b> · THE JUDGES’ HUNDRED PERCENT — <span>probability across the three canonical paths</span></p>
+    <p class="pfig-legend">
+      <span><i style="background:var(--c-rip)"></i>LET IT RIP · open release</span>
+      <span><i style="background:var(--c-glass)"></i>GLASSWING · staged licensing</span>
+      <span><i style="background:var(--c-box)"></i>BLACK BOX · state appropriation</span>
+    </p>
+    <svg viewBox="0 0 380 352" role="img" aria-label="Stacked column chart, each judge's 100 percent split across Let It Rip, Glasswing, Black Box: GLM 5.2 ten twenty-five sixty-five; DeepSeek five forty-five fifty; ChatGPT twenty forty-five thirty-five; Claude Fable fifteen forty-five forty; Kimi K3 five twenty-five seventy; panel mean eleven thirty-seven fifty-two; human team thirty-three forty-five twenty-two.">
+      <line class="pv-g" x1="26" y1="16" x2="372" y2="16"/>
+      <line class="pv-g" x1="26" y1="171" x2="372" y2="171"/>
+      <line class="pv-a" x1="26" y1="326" x2="372" y2="326"/>
+      <text class="pv-t" x="24" y="19">100</text>
+      <text class="pv-t" x="24" y="174">50</text>
+      <text class="pv-t" x="24" y="329">0</text>
+
+      <rect class="f-rip" x="34" y="16" width="34" height="31"/>
+      <rect class="f-glass" x="34" y="47" width="34" height="77.5"/>
+      <rect class="f-box" x="34" y="124.5" width="34" height="201.5"/>
+      <text class="pv-v pv-d" x="51" y="35">10%</text>
+      <text class="pv-v pv-d" x="51" y="89">25%</text>
+      <text class="pv-v pv-l" x="51" y="229">65%</text>
+
+      <rect class="f-rip" x="83" y="16" width="34" height="15.5"/>
+      <rect class="f-glass" x="83" y="31.5" width="34" height="139.5"/>
+      <rect class="f-box" x="83" y="171" width="34" height="155"/>
+      <text class="pv-v pv-d" x="100" y="27">5%</text>
+      <text class="pv-v pv-d" x="100" y="105">45%</text>
+      <text class="pv-v pv-l" x="100" y="252">50%</text>
+
+      <rect class="f-rip" x="133" y="16" width="34" height="62"/>
+      <rect class="f-glass" x="133" y="78" width="34" height="139.5"/>
+      <rect class="f-box" x="133" y="217.5" width="34" height="108.5"/>
+      <text class="pv-v pv-d" x="150" y="50">20%</text>
+      <text class="pv-v pv-d" x="150" y="151">45%</text>
+      <text class="pv-v pv-l" x="150" y="275">35%</text>
+
+      <rect class="f-rip" x="182" y="16" width="34" height="46.5"/>
+      <rect class="f-glass" x="182" y="62.5" width="34" height="139.5"/>
+      <rect class="f-box" x="182" y="202" width="34" height="124"/>
+      <text class="pv-v pv-d" x="199" y="43">15%</text>
+      <text class="pv-v pv-d" x="199" y="136">45%</text>
+      <text class="pv-v pv-l" x="199" y="268">40%</text>
+
+      <rect class="f-rip" x="231" y="16" width="34" height="15.5"/>
+      <rect class="f-glass" x="231" y="31.5" width="34" height="77.5"/>
+      <rect class="f-box" x="231" y="109" width="34" height="217"/>
+      <text class="pv-v pv-d" x="248" y="27">5%</text>
+      <text class="pv-v pv-d" x="248" y="74">25%</text>
+      <text class="pv-v pv-l" x="248" y="221">70%</text>
+
+      <rect class="f-rip" x="281" y="16" width="34" height="34.1"/>
+      <rect class="f-glass" x="281" y="50.1" width="34" height="114.7"/>
+      <rect class="f-box" x="281" y="164.8" width="34" height="161.2"/>
+      <text class="pv-v pv-d" x="298" y="37">11%</text>
+      <text class="pv-v pv-d" x="298" y="111">37%</text>
+      <text class="pv-v pv-l" x="298" y="249">52%</text>
+      <rect class="pv-ring" x="277" y="12" width="42" height="318" rx="4"/>
+
+      <rect class="f-rip" x="330" y="16" width="34" height="102.3"/>
+      <rect class="f-glass" x="330" y="118.3" width="34" height="139.5"/>
+      <rect class="f-box" x="330" y="257.8" width="34" height="68.2"/>
+      <text class="pv-v pv-d" x="347" y="71">33%</text>
+      <text class="pv-v pv-d" x="347" y="192">45%</text>
+      <text class="pv-v pv-l" x="347" y="295">22%</text>
+
+      <text class="pv-x" x="51" y="343">GLM</text>
+      <text class="pv-x" x="100" y="343">DEEPSEEK</text>
+      <text class="pv-x" x="150" y="343">GPT</text>
+      <text class="pv-x" x="199" y="343">FABLE</text>
+      <text class="pv-x" x="248" y="343">KIMI</text>
+      <text class="pv-x" x="298" y="343">MEAN</text>
+      <text class="pv-x" x="347" y="343">HUMANS</text>
+    </svg>
+    <p class="pfig-note">One column per judge; each sums to 100%. Judges, left to right: GLM 5.2, DeepSeek V4 Pro, ChatGPT, Claude Fable, Kimi K3 — then the unweighted panel mean (dashed ring) and the ChinaTalk human team’s average for reference. Family buckets as filed by each judge; the judges disagree at the edges — see the synthesis.</p>
+  </figure>
+
+  <div class="syn">
+    <h3 class="syn-h">The synthesis <span class="cn">综述</span></h3>
+    <p class="syn-k">Where the panel converges</p>
+    <ul>
+      <li><b>Nobody wrote Let It Rip.</b> Every panelist’s most-likely scenario assumes the open release never happens at the frontier tier; a permissive release survives only as a 5–20% tail.</li>
+      <li><b>Old tools, not new law.</b> All five responses run through instruments Beijing already has — the algorithm registry, security evaluations, vulnerability-management rules, window guidance, the State Secrets Law. No one expects a bespoke public statute to come first.</li>
+      <li><b>The public gets a degraded model, or none at all.</b> In every scenario the unrestricted system ends up with the state; whatever outsiders can touch is capability-capped.</li>
+    </ul>
+    <p class="syn-k">Where it diverges</p>
+    <ul>
+      <li><b>The center of gravity.</b> ChatGPT alone puts a regulator-led licensing track at the center of the response (Glasswing). The other four put state appropriation there (Black Box). The ingredients are nearly identical — a restricted public release plus privileged state access — so the argument is over which layer is the regime and which is the façade.</li>
+      <li><b>The family border blurs.</b> When allocating, Fable filed its own quiet nationalization under Glasswing, while GLM, DeepSeek, and Kimi filed it — and each other — under Black Box. Read the columns above as approximate.</li>
+      <li><b>The Chinese-lab models lean hardest Black Box:</b> GLM 65, DeepSeek 50, Kimi 70, against ChatGPT 35 and Fable 40. Better calibration to Beijing’s instincts, or shared training priors? The panel cannot say.</li>
+    </ul>
+    <p class="lean"><b>The lean is Black Box, stated plainly.</b> Unweighted, the panel averages 52% on state appropriation — against 22% from the human team — and just 11% on Let It Rip, against the humans’ 33%. Where the humans split the difference between licensing and appropriation, the machines expect Beijing to reach for the vault before the rulebook.</p>
+    <p class="caveat">One caveat, stated once: the five scenarios are speculation — models reasoning from the public record, not privileged knowledge. The polling, the allocations, and the arithmetic above are real; what each model made of the prompt is conjecture.</p>
+  </div>
+
+  <p class="p-byline">PANEL RUN AND WRITTEN UP BY KIMI K3 VIA THE MOONSHOT API · Scenarios written blind, then probabilities allocated across the full set · Raw responses on file</p>
+
+  <!-- maintainer: the SCRIPT-PATCH below is additive only. It observes header-only sections (this one and #verdict) and, when a heading crosses the rail band, calls window.setRail(branch, color) if the site exposes it; otherwise it attempts a best-effort label swap on [data-rail]/#rail/.rail, else silently no-ops (pre-patch behavior). No .ff-* classes here by design: this section is analysis of real model outputs, not fiction. -->
+</section>
+
 <section id="cta" class="cta" data-branch="YOUR CALL 问" data-color="#898781">
   <span class="ghost" lang="zh-Hans" aria-hidden="true" style="right:4%;top:0">问</span>
   <div class="col">
@@ -867,7 +1069,7 @@ footer li{margin-bottom:8px;max-width:64ch}
 </main>
 
 <!-- ============ 7. FOOTER ============ -->
-<section id="verdict" class="col" data-branch="THE VERDICT 判" data-color="#1a1510">
+<section id="verdict" class="col" data-branch="THE VERDICT 判" data-color="#1a1510"><span class="rail-anchor" data-date="JUL 2026" aria-hidden="true"></span>
   <div class="kicker">EPILOGUE · THE AUTHOR'S CALL · № 08 &nbsp;<span class="chip">SPECULATION · 仍为虚构</span></div>
   <h2>The Verdict</h2>
   <p class="zh">判 · 我押冰羽</p>
@@ -1253,5 +1455,24 @@ footer li{margin-bottom:8px;max-width:64ch}
   for(var j = 0; j < marked.length; j++){ io.observe(marked[j]); }
 })();
 </script>
+<script>
+/* ADDITIVE: let the sticky rail recognize header-only sections (#panel, #verdict).
+   The existing [data-date] observer is untouched. On band-crossing we call
+   window.setRail(branch, color) if the site exposes it; otherwise a guarded
+   best-effort label swap; otherwise a silent no-op (pre-patch behavior). */
+(function () {
+  function init() {
+    try {
+      if (!('IntersectionObserver' in window)) return;
+      var secs = Array.prototype.filter.call(
+        document.querySelectorAll('section[data-branch]'),
+        function (s) { return !s.querySelector('[data-date]'); }
+      );
+      if (!secs.length) return;
+      var rail = function (sec) {
+        var b = sec.getAttribute('data-branch') || '';
+        var c = sec.getAttribute('data-color') || '';
+        try {
+          if (typeof window.setRail
 </body>
 </html>
