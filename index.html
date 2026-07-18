@@ -26,7 +26,7 @@ html{scroll-behavior:smooth;scroll-padding-top:72px}
 body{
   background:var(--paper);color:var(--ink);
   font-family:var(--serif);font-size:clamp(17px,1.15vw,19.5px);line-height:1.66;
-  padding-top:52px;-webkit-font-smoothing:antialiased;
+  padding-top:52px;-webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
 [lang^="zh"]{font-family:var(--zhs);}
 ::selection{background:#efe3b8}
@@ -74,6 +74,7 @@ sup a{text-decoration:none;color:var(--ink2)}
 .chip.fic{border-color:var(--red);color:var(--red)}
 .ghost{position:absolute;right:-10px;top:-38px;font-family:var(--zhs);font-size:clamp(120px,17vw,210px);
   line-height:1;color:var(--ink);opacity:.055;pointer-events:none;user-select:none;font-weight:600}
+@media (max-width:720px){.ghost{right:0}}
 .jumps{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink2);margin-top:14px}
 .jumps a{text-decoration:none;border-bottom:1px solid var(--hair);padding-bottom:1px;margin-right:4px}
 .jumps a:hover{border-color:var(--ink)}
@@ -176,8 +177,7 @@ sup a{text-decoration:none;color:var(--ink2)}
 figure{margin:44px 0}
 .fig-frame{background:var(--surface);border:1px solid var(--hair);padding:18px 18px 12px}
 .fig-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.fig-scroll svg{display:block;width:100%;height:auto}
-@media (max-width:720px){.fig-scroll svg{min-width:660px}}
+figure svg,.fig-frame svg,.fig-scroll svg{display:block;width:100%;height:auto;max-width:100%}
 figcaption{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink2);margin-top:12px;line-height:1.7}
 figcaption b{color:var(--ink);font-weight:600;letter-spacing:.1em}
 .fig-note{color:var(--muted)}
@@ -383,30 +383,30 @@ footer li{margin-bottom:8px;max-width:64ch}
       <line x1="70" y1="185" x2="700" y2="185" stroke="#e1e0d9" stroke-width="1"/>
       <line x1="70" y1="112" x2="700" y2="112" stroke="#e1e0d9" stroke-width="1"/>
       <line x1="70" y1="40"  x2="700" y2="40"  stroke="#e1e0d9" stroke-width="1"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="11" fill="#52514e">
-        <text x="60" y="334" text-anchor="end">0</text>
-        <text x="60" y="261" text-anchor="end">25</text>
-        <text x="60" y="188" text-anchor="end">50</text>
-        <text x="60" y="116" text-anchor="end">75</text>
-        <text x="60" y="44"  text-anchor="end">100</text>
-        <text x="70" y="352" text-anchor="middle">2024</text>
-        <text x="250" y="352" text-anchor="middle">2025</text>
-        <text x="430" y="352" text-anchor="middle">2026</text>
-        <text x="610" y="352" text-anchor="middle">2027</text>
-        <text x="70" y="24" letter-spacing="1.5">CYBER CAPABILITY INDEX · 0–100 — FICTIONAL DATA</text>
-        <text x="529" y="34" text-anchor="middle" fill="#898781" font-size="10">TODAY · JUL 2026</text>
-        <text x="565" y="372" text-anchor="middle" fill="#52514e" font-size="10.5">Q4 2026 — GLM 6 CROSSES THE LINE (FICTIONAL)</text>
+      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#52514e">
+        <text x="64" y="337" text-anchor="end">0</text>
+        <text x="64" y="265" text-anchor="end">25</text>
+        <text x="64" y="192" text-anchor="end">50</text>
+        <text x="64" y="119" text-anchor="end">75</text>
+        <text x="64" y="47"  text-anchor="end">100</text>
+        <text x="70" y="364" text-anchor="middle">2024</text>
+        <text x="250" y="364" text-anchor="middle">2025</text>
+        <text x="430" y="364" text-anchor="middle">2026</text>
+        <text x="610" y="364" text-anchor="middle">2027</text>
       </g>
+      <text x="70" y="30" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#52514e">CYBER CAPABILITY INDEX — FICTIONAL</text>
+      <text x="535" y="30" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#898781">TODAY · JUL 2026</text>
+      <text x="520" y="390" text-anchor="middle" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="17" fill="#52514e">Q4 2026 · GLM 6 CROSSES (FICTIONAL)</text>
       <line x1="529" y1="40" x2="529" y2="330" stroke="#898781" stroke-width="1" stroke-dasharray="2 4"/>
       <line x1="565" y1="80" x2="565" y2="344" stroke="#898781" stroke-width="1" stroke-dasharray="3 4"/>
       <polyline points="70,243 160,208 250,171 322,127 394,75 500,72 592,72" fill="none" stroke="#2a78d6" stroke-width="2.5" stroke-linejoin="round"/>
       <polyline points="106,249 214,214 304,179 412,144 502,115 592,110" fill="none" stroke="#eda100" stroke-width="2.5" stroke-linejoin="round"/>
       <polyline points="340,228 430,185 502,139 565,73 592,73" fill="none" stroke="#e34948" stroke-width="2.5" stroke-linejoin="round"/>
       <circle cx="565" cy="73" r="4.5" fill="#e34948" stroke="#fcfcfb" stroke-width="1.5"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="12.5" fill="#0b0b0b">
-        <rect x="600" y="57" width="16" height="3" fill="#2a78d6"/><text x="624" y="63">CLAUDE MYTHOS</text>
-        <rect x="600" y="83" width="16" height="3" fill="#e34948"/><text x="624" y="89">GLM 6 — FICT.</text>
-        <rect x="600" y="111" width="16" height="3" fill="#eda100"/><text x="624" y="117">GPT 5.6</text>
+      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#0b0b0b">
+        <rect x="612" y="142" width="20" height="5" fill="#2a78d6"/><text x="642" y="150">MYTHOS</text>
+        <rect x="612" y="172" width="20" height="5" fill="#e34948"/><text x="642" y="180">GLM 6</text>
+        <rect x="612" y="202" width="20" height="5" fill="#eda100"/><text x="642" y="210">GPT 5.6</text>
       </g>
     </svg>
     </div></div>
@@ -432,26 +432,26 @@ footer li{margin-bottom:8px;max-width:64ch}
       <line x1="70" y1="170" x2="700" y2="170" stroke="#e1e0d9" stroke-width="1"/>
       <line x1="70" y1="105" x2="700" y2="105" stroke="#e1e0d9" stroke-width="1"/>
       <line x1="70" y1="40"  x2="700" y2="40"  stroke="#e1e0d9" stroke-width="1"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="11" fill="#52514e">
-        <text x="60" y="304" text-anchor="end">0</text>
-        <text x="60" y="239" text-anchor="end">10</text>
-        <text x="60" y="174" text-anchor="end">20</text>
-        <text x="60" y="109" text-anchor="end">30</text>
-        <text x="60" y="44"  text-anchor="end">40%</text>
-        <text x="70" y="324" text-anchor="middle">2024</text>
-        <text x="250" y="324" text-anchor="middle">2025</text>
-        <text x="430" y="324" text-anchor="middle">2026</text>
-        <text x="610" y="324" text-anchor="middle">2027</text>
-        <text x="70" y="24" letter-spacing="1.5">ENTERPRISE ADOPTION OF CHINESE MODELS — SHARE OF AI WORKLOADS · FICTIONAL</text>
-        <text x="90" y="262" font-size="10" fill="#898781">UBER EATS · SIEMENS · SHOPIFY ADOPT EARLY</text>
-        <text x="558" y="122" text-anchor="end" font-size="10.5" fill="#0b0b0b">GLM 6 DROPS — Q4 2026 (FICTIONAL)</text>
-        <text x="558" y="138" text-anchor="end" font-size="10.5" fill="#52514e">the slope takes a dramatic uptick</text>
+      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#52514e">
+        <text x="64" y="307" text-anchor="end">0</text>
+        <text x="64" y="242" text-anchor="end">10</text>
+        <text x="64" y="177" text-anchor="end">20</text>
+        <text x="64" y="112" text-anchor="end">30</text>
+        <text x="64" y="47"  text-anchor="end">40%</text>
+        <text x="70" y="330" text-anchor="middle">2024</text>
+        <text x="250" y="330" text-anchor="middle">2025</text>
+        <text x="430" y="330" text-anchor="middle">2026</text>
+        <text x="610" y="330" text-anchor="middle">2027</text>
       </g>
+      <text x="70" y="26" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#52514e">ENTERPRISE ADOPTION OF CHINESE MODELS · % OF AI WORKLOADS</text>
+      <text x="84" y="293" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#52514e">UBER EATS · SIEMENS · SHOPIFY ADOPT EARLY</text>
+      <text x="558" y="124" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="17" fill="#0b0b0b">GLM 6 DROPS — Q4 2026 (FICTIONAL)</text>
+      <text x="558" y="146" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#52514e">the slope takes a dramatic uptick</text>
       <polygon points="70,281 160,274 250,268 340,255 430,242 520,229 565,213 600,183 632,144 666,111 700,85 700,300 70,300" fill="#008300" opacity="0.07"/>
       <polyline points="70,281 160,274 250,268 340,255 430,242 520,229 565,213 600,183 632,144 666,111 700,85" fill="none" stroke="#008300" stroke-width="2.5" stroke-linejoin="round"/>
       <line x1="565" y1="92" x2="565" y2="300" stroke="#898781" stroke-width="1" stroke-dasharray="3 4"/>
       <circle cx="700" cy="85" r="4" fill="#008300" stroke="#fcfcfb" stroke-width="1.5"/>
-      <text x="692" y="70" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="12" fill="#0b0b0b">≈33%</text>
+      <text x="690" y="74" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="22" fill="#0b0b0b">≈33%</text>
     </svg>
     </div></div>
     <figcaption><b>FIG. 2 — THE UPTICK.</b> Illustrative, not measured: the essay’s enterprise-adoption curve, redrawn. Before GLM 6, adopting Chinese models meant trading capability for cost; afterwards it doesn’t. <span class="fig-note">Scroll sideways on small screens.</span></figcaption>
@@ -616,7 +616,7 @@ footer li{margin-bottom:8px;max-width:64ch}
     <div class="beat" data-date="OCT 2026">
       <span class="beat-date">Oct 2026</span>
       <h3>First dibs</h3>
-      <p>An internally assembled testing capacity — run through the MSS and the PLA Cyberspace Force — means that when GLM 6 proves genuinely exceptional, Zhongnanhai is the first to know. The model is recognized as a potential “assassin’s mace” of the kind Xi directed the state to forge a decade ago,<sup><a href="#fn3">3</a></sup> and there is no way the security state will allow it to be open-sourced. The Foreign Ministry protests that a global release would improve China’s standing; MIIT officials salivate at the domestic productivity boost. The security state is not having it. Open-sourcing would forfeit a cyber window of opportunity — and hand separatists and Grey Lotus activists with some Azure credits the same hacking capabilities as the domestic security apparatus.</p>
+      <p>An internally assembled testing capacity — run through the MSS and the PLA Cyberspace Force — means that when GLM 6 proves genuinely exceptional, Zhongnanhai is the first to know. The model is recognized as a potential “assassin’s mace” of the kind Xi directed the state to forge a decade ago,<sup><a href="#fn3">3</a></sup> and there is no way the security state will allow it to be open-sourced. The Foreign Ministry protests that a global release would improve China’s standing; MIIT officials salivate at the domestic productivity boost. The security state is not having it. Open-sourcing would forfeit a cyber window of opportunity — and hand separatists and Falun Gong activists with some Azure credits the same hacking capabilities as the domestic security apparatus.</p>
     </div>
     <div class="beat" data-date="NOV 2026">
       <span class="beat-date">Nov 2026</span>
@@ -709,18 +709,19 @@ footer li{margin-bottom:8px;max-width:64ch}
         <line x1="435" y1="56" x2="435" y2="326" stroke="#e1e0d9" stroke-width="1"/>
         <line x1="567.5" y1="56" x2="567.5" y2="326" stroke="#e1e0d9" stroke-width="1"/>
         <line x1="700" y1="56" x2="700" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="11" fill="#0b0b0b">
-          <rect x="170" y="16" width="10" height="10" fill="#eda100"/><text x="186" y="25">S1 <tspan lang="zh-Hans">开闸</tspan> LET IT RIP</text>
-          <rect x="360" y="16" width="10" height="10" fill="#2a78d6"/><text x="376" y="25">S2 <tspan lang="zh-Hans">冰羽</tspan> ICEFEATHER</text>
-          <rect x="560" y="16" width="10" height="10" fill="#4a3aa7"/><text x="576" y="25">S3 <tspan lang="zh-Hans">黑箱</tspan> BLACK BOX</text>
+        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#0b0b0b">
+          <rect x="30" y="13" width="14" height="14" fill="#eda100"/><text x="54" y="26">S1 <tspan lang="zh-Hans">开闸</tspan> LET IT RIP</text>
+          <rect x="280" y="13" width="14" height="14" fill="#2a78d6"/><text x="304" y="26">S2 <tspan lang="zh-Hans">冰羽</tspan> ICEFEATHER</text>
+          <rect x="530" y="13" width="14" height="14" fill="#4a3aa7"/><text x="554" y="26">S3 <tspan lang="zh-Hans">黑箱</tspan> BLACK BOX</text>
         </g>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="11.5" fill="#0b0b0b">
-          <text x="158" y="84" text-anchor="end">JORDAN</text>
-          <text x="158" y="140" text-anchor="end">AQIB</text>
-          <text x="158" y="196" text-anchor="end">LILY</text>
-          <text x="158" y="252" text-anchor="end">IRENE</text>
-          <text x="158" y="308" text-anchor="end">KIMI (MOONSHOT AI)</text>
+        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#0b0b0b">
+          <text x="158" y="86" text-anchor="end">JORDAN</text>
+          <text x="158" y="142" text-anchor="end">AQIB</text>
+          <text x="158" y="198" text-anchor="end">LILY</text>
+          <text x="158" y="254" text-anchor="end">IRENE</text>
         </g>
+        <text x="158" y="300" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="22" fill="#0b0b0b">KIMI</text>
+        <text x="158" y="318" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#0b0b0b">(MOONSHOT AI)</text>
         <rect x="170" y="64" width="106" height="30" fill="#eda100"/>
         <rect x="276" y="64" width="344" height="30" fill="#2a78d6"/>
         <rect x="620" y="64" width="80" height="30" fill="#4a3aa7"/>
@@ -738,16 +739,17 @@ footer li{margin-bottom:8px;max-width:64ch}
         <rect x="302" y="288" width="292" height="30" fill="#2a78d6"/>
         <rect x="594" y="288" width="106" height="30" fill="#4a3aa7"/>
         <rect x="168" y="286" width="534" height="34" fill="none" stroke="#52514e" stroke-width="1" stroke-dasharray="4 3"/>
-        <text x="158" y="308" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="11.5" fill="#0b0b0b">KIMI (MOONSHOT AI)</text>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="12" text-anchor="middle">
-          <text x="223" y="84" fill="#0b0b0b">20</text><text x="448" y="84" fill="#ffffff">65</text><text x="660" y="84" fill="#ffffff">15</text>
-          <text x="289" y="140" fill="#0b0b0b">45</text><text x="527" y="140" fill="#ffffff">45</text><text x="673" y="140" fill="#ffffff">10</text>
-          <text x="263" y="196" fill="#0b0b0b">35</text><text x="475" y="196" fill="#ffffff">45</text><text x="647" y="196" fill="#ffffff">20</text>
-          <text x="250" y="252" fill="#0b0b0b">30</text><text x="395" y="252" fill="#ffffff">25</text><text x="581" y="252" fill="#ffffff">45</text>
-          <text x="236" y="308" fill="#0b0b0b">25</text><text x="448" y="308" fill="#ffffff">55</text><text x="647" y="308" fill="#ffffff">20</text>
+        <text x="158" y="300" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="22" fill="#0b0b0b">KIMI</text>
+        <text x="158" y="318" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#0b0b0b">(MOONSHOT AI)</text>
+        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" text-anchor="middle">
+          <text x="223" y="86" fill="#0b0b0b">20</text><text x="448" y="86" fill="#ffffff">65</text><text x="660" y="86" fill="#ffffff">15</text>
+          <text x="289" y="142" fill="#0b0b0b">45</text><text x="527" y="142" fill="#ffffff">45</text><text x="673" y="142" fill="#ffffff">10</text>
+          <text x="263" y="198" fill="#0b0b0b">35</text><text x="475" y="198" fill="#ffffff">45</text><text x="647" y="198" fill="#ffffff">20</text>
+          <text x="250" y="254" fill="#0b0b0b">30</text><text x="395" y="254" fill="#ffffff">25</text><text x="581" y="254" fill="#ffffff">45</text>
+          <text x="236" y="310" fill="#0b0b0b">25</text><text x="448" y="310" fill="#ffffff">55</text><text x="647" y="310" fill="#ffffff">20</text>
         </g>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="10" fill="#898781" text-anchor="middle">
-          <text x="170" y="342">0</text><text x="302.5" y="342">25</text><text x="435" y="342">50</text><text x="567.5" y="342">75</text><text x="700" y="342">100%</text>
+        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#898781" text-anchor="middle">
+          <text x="170" y="354">0</text><text x="302.5" y="354">25</text><text x="435" y="354">50</text><text x="567.5" y="354">75</text><text x="700" y="354">100%</text>
         </g>
       </svg>
       </div></div>
@@ -850,11 +852,17 @@ footer li{margin-bottom:8px;max-width:64ch}
   var railDot = document.getElementById('rail-dot');
   if(!('IntersectionObserver' in window)) return;
 
+  /* Observation band = just below the rail down to the upper third of the
+     viewport. The active marker is the LOWEST one inside the band, i.e. the
+     one that most recently crossed the upper-third line, so the rail switches
+     the moment a section header crosses that line. Positions are read fresh
+     in pick() so ordering never goes stale between callbacks. */
   var inView = new Map();
   function pick(){
     var best = null;
-    inView.forEach(function(top, el){
-      if(best === null || top < best.top){ best = {el: el, top: top}; }
+    inView.forEach(function(v, el){
+      var top = el.getBoundingClientRect().top;
+      if(best === null || top > best.top){ best = {el: el, top: top}; }
     });
     if(best){
       var d = best.el.getAttribute('data-date');
@@ -870,13 +878,13 @@ footer li{margin-bottom:8px;max-width:64ch}
   var io = new IntersectionObserver(function(entries){
     for(var i = 0; i < entries.length; i++){
       var e = entries[i];
-      if(e.isIntersecting){ inView.set(e.target, e.boundingClientRect.top); }
+      if(e.isIntersecting){ inView.set(e.target, true); }
       else{ inView.delete(e.target); }
     }
     pick();
-  }, {rootMargin: '-60px 0px -58% 0px', threshold: 0});
+  }, {rootMargin: '-53px 0px -66.6667% 0px', threshold: 0});
 
-  var marked = document.querySelectorAll('[data-date]');
+  var marked = document.querySelectorAll('[data-date], .scen-head, .sec-head');
   for(var j = 0; j < marked.length; j++){ io.observe(marked[j]); }
 })();
 </script>
