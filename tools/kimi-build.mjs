@@ -323,7 +323,51 @@ if (mode === "generate") {
   }
   writeFileSync(OUT, html + "\n");
   console.error(`Wrote ${OUT} (${html.length} chars)`);
+} else if (mode === "patch") {
+  // Targeted revision without round-tripping the narrative: the platform's
+  // input filter rejects the full page text, but the fixes we need are pure
+  // CSS/JS/SVG. Send Kimi only those blocks; splice its replacements back in.
+  const feedback = process.argv[3] || "Fix rendering issues shown in the screenshots.";
+  const shots = process.argv.slice(4);
+  const current = readFileSync(OUT, "utf8");
+  const style = current.match(/<style>[\s\S]*?<\/style>/)?.[0];
+  const script = current.match(/<script>[\s\S]*?<\/script>(?![\s\S]*<script>)/)?.[0];
+  const svgs = current.match(/<svg[\s\S]*?<\/svg>/g) ?? [];
+  if (!style || !script) {
+    console.error("Could not locate style/script blocks.");
+    process.exit(1);
+  }
+  console.error(`Patching with ${MODEL}: style ${style.length}ch, script ${script.length}ch, ${svgs.length} svg(s), ${shots.length} screenshot(s)…`);
+  const parts = [
+    `You are Kimi, sole author of a single-file scenario microsite. Below are the site's <style> block, its <script> block, and its inline SVG chart figures (the surrounding HTML narrative is omitted; its structure is unchanged). Attached are screenshots of rendering problems.\n\nFeedback to address:\n\n${feedback}\n\nReturn ONLY the blocks you change, each as a COMPLETE replacement, delimited exactly like:\n===STYLE===\n<style>…full replacement…</style>\n===SCRIPT===\n<script>…full replacement…</script>\n===SVG1===\n<svg…full replacement…</svg>\n(likewise ===SVG2===, ===SVG3===, ===SVG4=== for the corresponding figures below)\nFinish with ===DONE===. No other commentary, no markdown fences. Blocks you omit stay untouched.`,
+    `\n\n===CURRENT STYLE===\n${style}`,
+    `\n\n===CURRENT SCRIPT===\n${script}`,
+    ...svgs.map((s, i) => `\n\n===CURRENT SVG${i + 1}===\n${s}`),
+  ].join("");
+  const content = [{ type: "text", text: parts }, ...shots.map(imagePart)];
+  const reply = await complete([{ role: "user", content }]);
+  const grab = (name) => {
+    const m = reply.match(new RegExp(`===${name}===\\s*([\\s\\S]*?)(?====[A-Z0-9]+===)`));
+    return m ? m[1].trim() : null;
+  };
+  let next = current;
+  const applied = [];
+  const newStyle = grab("STYLE");
+  if (newStyle) { next = next.replace(style, newStyle); applied.push("style"); }
+  const newScript = grab("SCRIPT");
+  if (newScript) { next = next.replace(script, newScript); applied.push("script"); }
+  svgs.forEach((s, i) => {
+    const rep = grab(`SVG${i + 1}`);
+    if (rep) { next = next.replace(s, rep); applied.push(`svg${i + 1}`); }
+  });
+  if (!applied.length) {
+    writeFileSync(OUT + ".patchreply", reply);
+    console.error("No parseable blocks in reply; wrote index.html.patchreply, left index.html untouched.");
+    process.exit(1);
+  }
+  writeFileSync(OUT, next);
+  console.error(`Applied: ${applied.join(", ")}. Wrote ${OUT} (${next.length} chars)`);
 } else {
-  console.error(`Unknown mode: ${mode} (use "generate" or "revise")`);
+  console.error(`Unknown mode: ${mode} (use "generate", "revise", or "patch")`);
   process.exit(1);
 }
