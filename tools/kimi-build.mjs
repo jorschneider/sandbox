@@ -360,6 +360,17 @@ if (mode === "generate") {
     const rep = grab(`SVG${i + 1}`);
     if (rep) { next = next.replace(s, rep); applied.push(`svg${i + 1}`); }
   });
+  // Optional new section, spliced immediately before the forecast section.
+  const newSection = grab("NEWSECTION");
+  if (newSection) {
+    const anchor = next.match(/<section[^>]*id="forecast"/);
+    if (anchor) {
+      next = next.replace(anchor[0], newSection + "\n\n" + anchor[0]);
+      applied.push("newsection");
+    } else {
+      console.error("NEWSECTION returned but #forecast anchor not found; skipped.");
+    }
+  }
   if (!applied.length) {
     writeFileSync(OUT + ".patchreply", reply);
     console.error("No parseable blocks in reply; wrote index.html.patchreply, left index.html untouched.");
