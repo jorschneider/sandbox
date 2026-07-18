@@ -404,6 +404,10 @@
   .r1 { accent-color: var(--s1); } .r2 { accent-color: var(--s2); } .r3 { accent-color: var(--s3); }
   .ow-compare { margin-top: .4rem; }
   .ow-verdict { margin-top: 1.2rem; font-size: .8438rem; color: var(--ink-2); }
+  .ow-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem .9rem; margin-bottom: 1.6rem; }
+  .btn-sm { border: 0; cursor: pointer; padding: .55rem 1.15rem; font-size: .8438rem; }
+  .btn-sm:disabled { opacity: .6; cursor: default; }
+  .ow-status { font-size: .8125rem; color: var(--muted); }
 
   /* ---------- vote / subscribe ---------- */
   #subscribe { border-top: 1px solid var(--hair); }
@@ -755,7 +759,7 @@
   <div class="col prose">
     <p class="kicker">Your Odds</p>
     <h2 id="vote-h">Now it&rsquo;s your turn</h2>
-    <p>We&rsquo;d like to hear from our readers, too. Where would you put your money? Drag the sliders &mdash; they always sum to 100% &mdash; and see how your bet stacks up against ours.</p>
+    <p>We&rsquo;d like to hear from our readers, too. Where would you put your money? Drag the sliders &mdash; they always sum to 100% &mdash; then count yourself in to see the running average of what readers think.</p>
   </div>
   <div class="col-wide">
     <div class="viz-card">
@@ -776,8 +780,13 @@
           <output id="owo2" for="ow2">22%</output>
         </div>
       </div>
+      <div class="ow-actions">
+        <button id="owSubmit" class="btn btn-sm">Count me in</button>
+        <span class="ow-status" id="owStatus" aria-live="polite"></span>
+      </div>
       <div class="viz-rows ow-compare" aria-hidden="true">
         <div class="viz-row"><span class="viz-name">You</span><div class="viz-bar" id="owBar"></div></div>
+        <div class="viz-row" id="owReadersRow" hidden><span class="viz-name">Readers (<span id="owN">0</span>)</span><div class="viz-bar" id="owReaders"></div></div>
         <div class="viz-row avg"><span class="viz-name">Team average</span><div class="viz-bar" id="owTeam"></div></div>
       </div>
       <p class="ow-verdict" id="owVerdict" aria-live="polite"></p>
@@ -1061,6 +1070,53 @@
     r.addEventListener("input", function () { owMove(i, +r.value); });
   });
   owPaint();
+
+  /* ---------- reader tally ---------- */
+  var owReadersRow = document.getElementById("owReadersRow");
+  var owN = document.getElementById("owN");
+  var owSubmit = document.getElementById("owSubmit");
+  var owStatus = document.getElementById("owStatus");
+  var owVoted = null;
+  try { owVoted = JSON.parse(localStorage.getItem("ct-odds-voted") || "null"); } catch (e) {}
+
+  function owShowReaders(data) {
+    if (!data || !data.count || !data.avg) return;
+    owN.textContent = data.count;
+    owSegs(document.getElementById("owReaders"), data.avg);
+    owReadersRow.hidden = false;
+    fitLabels();
+  }
+  fetch("api/odds")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(owShowReaders)
+    .catch(function () {});
+
+  if (owVoted) {
+    owSubmit.textContent = "Update my vote";
+    owStatus.textContent = "You’re already counted.";
+  }
+  owSubmit.addEventListener("click", function () {
+    owSubmit.disabled = true;
+    owStatus.textContent = "Counting…";
+    fetch("api/odds", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ odds: owVals, prev: owVoted }),
+    }).then(function (r) {
+      if (!r.ok) throw new Error("bad response");
+      return r.json();
+    }).then(function (data) {
+      owVoted = owVals.slice();
+      try { localStorage.setItem("ct-odds-voted", JSON.stringify(owVoted)); } catch (e) {}
+      owShowReaders(data);
+      owSubmit.textContent = "Update my vote";
+      owSubmit.disabled = false;
+      owStatus.textContent = "Counted — you’re one of " + data.count + " reader" + (data.count === 1 ? "" : "s") + ".";
+    }).catch(function () {
+      owSubmit.disabled = false;
+      owStatus.textContent = "Couldn’t reach the tally — try again in a minute.";
+    });
+  });
 })();
 </script>
 </body>
