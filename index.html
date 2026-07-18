@@ -193,17 +193,20 @@ body.lens .beat.ff-fact,body.lens .pull.ff-fact,body.lens .take.ff-fact,body.len
 /* ============ FIGURES ============ */
 figure{margin:44px 0}
 .fig-frame{background:var(--surface);border:1px solid var(--hair);padding:18px 18px 12px}
-.fig-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 figure svg,.fig-frame svg,.fig-scroll svg{display:block;width:100%;height:auto;max-width:100%}
 figcaption{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink2);margin-top:12px;line-height:1.7}
 figcaption b{color:var(--ink);font-weight:600;letter-spacing:.1em}
 .fig-note{color:var(--muted)}
-.pan-hint{display:none}
-@media (max-width:640px){
-  .fig-scroll svg{min-width:640px;max-width:none}
-  .pan-hint{display:inline-block;margin-left:10px;padding:1px 7px;border:1px solid var(--hair);border-radius:2px;
-    font-size:9.5px;letter-spacing:.18em;color:var(--muted);vertical-align:1px;white-space:nowrap}
-}
+.fig-ann{color:var(--muted)}
+/* Runtime-injected chart title + legend (mono caption register), wraps at any width */
+.fig-head{font-family:var(--mono);margin:0 0 14px}
+.fig-title{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);line-height:1.7}
+.fig-title .fig-tsub{color:var(--muted);letter-spacing:.1em}
+.fig-legend{display:flex;flex-wrap:wrap;gap:4px 18px;margin:6px 0 0;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);line-height:1.7}
+.fig-legend span{display:inline-flex;align-items:center;white-space:nowrap}
+.fig-legend i{display:inline-block;width:16px;height:4px;margin-right:8px;flex:none}
+.fig-legend .fig-lnote{color:var(--muted);white-space:normal}
+@media (max-width:640px){.fig-frame{padding:12px 10px 8px}}
 
 /* ============ EPILOGUES ============ */
 .epi{border:1.5px dashed var(--muted);padding:30px 28px 18px;margin:56px 0 20px;position:relative;background:#f6f4ec}
@@ -410,37 +413,39 @@ footer li{margin-bottom:8px;max-width:64ch}
   <div class="colw">
   <figure role="img" aria-label="Fictional line chart of cyber capability over time: Claude Mythos rises to a plateau; GPT 5.6 plateaus visibly below it; Kimi K4 arrives at the Mythos level in late 2026.">
     <div class="fig-frame"><div class="fig-scroll">
-    <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 520 330" data-chart="cap" xmlns="http://www.w3.org/2000/svg">
       <desc>Fictitious capability graph adapted from the essay. Mythos plateaus near index 88, GPT 5.6 below it near 76, Kimi K4 crosses to 88 in Q4 2026.</desc>
-      <line x1="70" y1="330" x2="700" y2="330" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="70" y1="258" x2="700" y2="258" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="70" y1="185" x2="700" y2="185" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="70" y1="112" x2="700" y2="112" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="70" y1="40"  x2="700" y2="40"  stroke="#e1e0d9" stroke-width="1"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#52514e">
-        <text x="64" y="337" text-anchor="end">0</text>
-        <text x="64" y="265" text-anchor="end">25</text>
-        <text x="64" y="192" text-anchor="end">50</text>
-        <text x="64" y="119" text-anchor="end">75</text>
-        <text x="64" y="47"  text-anchor="end">100</text>
-        <text x="70" y="364" text-anchor="middle">2024</text>
-        <text x="250" y="364" text-anchor="middle">2025</text>
-        <text x="430" y="364" text-anchor="middle">2026</text>
-        <text x="610" y="364" text-anchor="middle">2027</text>
+      <line x1="46" y1="288" x2="424" y2="288" stroke="#e1e0d9" stroke-width="1"/>
+      <line x1="46" y1="222" x2="424" y2="222" stroke="#e1e0d9" stroke-width="1"/>
+      <line x1="46" y1="156" x2="424" y2="156" stroke="#e1e0d9" stroke-width="1"/>
+      <line x1="46" y1="90"  x2="424" y2="90"  stroke="#e1e0d9" stroke-width="1"/>
+      <line x1="46" y1="24"  x2="424" y2="24"  stroke="#e1e0d9" stroke-width="1"/>
+      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="19" fill="#52514e">
+        <text x="40" y="294" text-anchor="end">0</text>
+        <text x="40" y="228" text-anchor="end">25</text>
+        <text x="40" y="162" text-anchor="end">50</text>
+        <text x="40" y="96"  text-anchor="end">75</text>
+        <text x="40" y="30"  text-anchor="end">100</text>
+        <text x="46"  y="312" text-anchor="middle">2024</text>
+        <text x="172" y="312" text-anchor="middle">2025</text>
+        <text x="298" y="312" text-anchor="middle">2026</text>
+        <text x="424" y="312" text-anchor="middle">2027</text>
       </g>
-      <text x="70" y="30" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#52514e">CYBER CAPABILITY INDEX — FICTIONAL</text>
-      <text x="535" y="30" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#898781">TODAY · JUL 2026</text>
-      <text x="520" y="390" text-anchor="middle" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="17" fill="#52514e">Q4 2026 · KIMI K4 CROSSES (FICTIONAL)</text>
-      <line x1="529" y1="40" x2="529" y2="330" stroke="#898781" stroke-width="1" stroke-dasharray="2 4"/>
-      <line x1="565" y1="80" x2="565" y2="344" stroke="#898781" stroke-width="1" stroke-dasharray="3 4"/>
-      <polyline points="70,243 160,208 250,171 322,127 394,75 500,72 592,72" fill="none" stroke="#2a78d6" stroke-width="2.5" stroke-linejoin="round"/>
-      <polyline points="106,249 214,214 304,179 412,144 502,115 592,110" fill="none" stroke="#eda100" stroke-width="2.5" stroke-linejoin="round"/>
-      <polyline points="340,228 430,185 502,139 565,73 592,73" fill="none" stroke="#e34948" stroke-width="2.5" stroke-linejoin="round"/>
-      <circle cx="565" cy="73" r="4.5" fill="#e34948" stroke="#fcfcfb" stroke-width="1.5"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#0b0b0b">
-        <rect x="612" y="142" width="20" height="5" fill="#2a78d6"/><text x="642" y="150">MYTHOS</text>
-        <rect x="612" y="172" width="20" height="5" fill="#e34948"/><text x="642" y="180">KIMI K4</text>
-        <rect x="612" y="202" width="20" height="5" fill="#eda100"/><text x="642" y="210">GPT 5.6</text>
+      <line x1="367" y1="50" x2="367" y2="288" stroke="#898781" stroke-width="1" stroke-dasharray="3 4"/>
+      <line x1="393" y1="62" x2="393" y2="288" stroke="#898781" stroke-width="1" stroke-dasharray="2 4"/>
+      <text x="388" y="44" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#0b0b0b">KIMI K4 CROSSES · Q4 2026</text>
+      <text x="361" y="278" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#898781">TODAY</text>
+      <polyline points="46,209 109,177 172,143 222,103 273,56 347,53 411,53" fill="none" stroke="#2a78d6" stroke-width="2.5" stroke-linejoin="round"/>
+      <polyline points="71,214 147,182 210,150 285,119 348,92 411,88" fill="none" stroke="#eda100" stroke-width="2.5" stroke-linejoin="round"/>
+      <polyline points="235,195 298,156 348,114 393,54 411,54" fill="none" stroke="#e34948" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="393" cy="54" r="5" fill="#e34948" stroke="#fcfcfb" stroke-width="1.5"/>
+      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#0b0b0b">
+        <line x1="415" y1="51" x2="427" y2="49" stroke="#e34948" stroke-width="2"/>
+        <text x="431" y="53">KIMI K4</text>
+        <line x1="415" y1="57" x2="427" y2="72" stroke="#2a78d6" stroke-width="2"/>
+        <text x="431" y="76">MYTHOS</text>
+        <line x1="415" y1="88" x2="427" y2="95" stroke="#eda100" stroke-width="2"/>
+        <text x="431" y="99">GPT 5.6</text>
       </g>
     </svg>
     </div></div>
@@ -459,33 +464,30 @@ footer li{margin-bottom:8px;max-width:64ch}
   <div class="colw">
   <figure role="img" aria-label="Fictional line chart of enterprise adoption of Chinese models: a gentle slope from 2024, then a dramatic uptick after Kimi K4's release in late 2026, reaching roughly 33 percent by mid 2027.">
     <div class="fig-frame"><div class="fig-scroll">
-    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 520 316" data-chart="adopt" xmlns="http://www.w3.org/2000/svg">
       <desc>Enterprise adoption of Chinese models rises gently to about 13 percent, then steeply to about 33 percent after the fictional Kimi K4 release.</desc>
-      <line x1="70" y1="300" x2="700" y2="300" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="70" y1="235" x2="700" y2="235" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="70" y1="170" x2="700" y2="170" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="70" y1="105" x2="700" y2="105" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="70" y1="40"  x2="700" y2="40"  stroke="#e1e0d9" stroke-width="1"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#52514e">
-        <text x="64" y="307" text-anchor="end">0</text>
-        <text x="64" y="242" text-anchor="end">10</text>
-        <text x="64" y="177" text-anchor="end">20</text>
-        <text x="64" y="112" text-anchor="end">30</text>
-        <text x="64" y="47"  text-anchor="end">40%</text>
-        <text x="70" y="330" text-anchor="middle">2024</text>
-        <text x="250" y="330" text-anchor="middle">2025</text>
-        <text x="430" y="330" text-anchor="middle">2026</text>
-        <text x="610" y="330" text-anchor="middle">2027</text>
+      <line x1="46" y1="272" x2="506" y2="272" stroke="#e1e0d9" stroke-width="1"/>
+      <line x1="46" y1="210" x2="506" y2="210" stroke="#e1e0d9" stroke-width="1"/>
+      <line x1="46" y1="148" x2="506" y2="148" stroke="#e1e0d9" stroke-width="1"/>
+      <line x1="46" y1="86"  x2="506" y2="86"  stroke="#e1e0d9" stroke-width="1"/>
+      <line x1="46" y1="24"  x2="506" y2="24"  stroke="#e1e0d9" stroke-width="1"/>
+      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="19" fill="#52514e">
+        <text x="40" y="278" text-anchor="end">0</text>
+        <text x="40" y="216" text-anchor="end">10</text>
+        <text x="40" y="154" text-anchor="end">20</text>
+        <text x="40" y="92"  text-anchor="end">30</text>
+        <text x="40" y="30"  text-anchor="end">40%</text>
+        <text x="46"  y="296" text-anchor="middle">2024</text>
+        <text x="176" y="296" text-anchor="middle">2025</text>
+        <text x="306" y="296" text-anchor="middle">2026</text>
+        <text x="436" y="296" text-anchor="middle">2027</text>
       </g>
-      <text x="70" y="26" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#52514e">ENTERPRISE ADOPTION OF CHINESE MODELS · % OF AI WORKLOADS</text>
-      <text x="84" y="293" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#52514e">UBER EATS · SIEMENS · SHOPIFY ADOPT EARLY</text>
-      <text x="558" y="124" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="17" fill="#0b0b0b">KIMI K4 DROPS — Q4 2026 (FICTIONAL)</text>
-      <text x="558" y="146" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#52514e">the slope takes a dramatic uptick</text>
-      <polygon points="70,281 160,274 250,268 340,255 430,242 520,229 565,213 600,183 632,144 666,111 700,85 700,300 70,300" fill="#008300" opacity="0.07"/>
-      <polyline points="70,281 160,274 250,268 340,255 430,242 520,229 565,213 600,183 632,144 666,111 700,85" fill="none" stroke="#008300" stroke-width="2.5" stroke-linejoin="round"/>
-      <line x1="565" y1="92" x2="565" y2="300" stroke="#898781" stroke-width="1" stroke-dasharray="3 4"/>
-      <circle cx="700" cy="85" r="4" fill="#008300" stroke="#fcfcfb" stroke-width="1.5"/>
-      <text x="690" y="74" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="22" fill="#0b0b0b">≈33%</text>
+      <line x1="404" y1="34" x2="404" y2="272" stroke="#898781" stroke-width="1" stroke-dasharray="3 4"/>
+      <text x="398" y="44" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#0b0b0b">KIMI K4 DROPS · Q4 2026</text>
+      <polygon points="46,254 111,247 176,242 241,229 306,217 371,204 404,189 429,160 452,123 476,92 501,67 501,272 46,272" fill="#008300" opacity="0.07"/>
+      <polyline points="46,254 111,247 176,242 241,229 306,217 371,204 404,189 429,160 452,123 476,92 501,67" fill="none" stroke="#008300" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle cx="501" cy="67" r="4.5" fill="#008300" stroke="#fcfcfb" stroke-width="1.5"/>
+      <text x="492" y="56" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="22" fill="#0b0b0b">≈33%</text>
     </svg>
     </div></div>
     <figcaption><b>FIG. 2 — THE UPTICK.</b> Illustrative, not measured: the essay’s enterprise-adoption curve, redrawn. Before Kimi K4, adopting Chinese models meant trading capability for cost; afterwards it doesn’t. <span class="fig-note">Scroll sideways on small screens.</span></figcaption>
@@ -738,69 +740,67 @@ footer li{margin-bottom:8px;max-width:64ch}
   <div class="fc-grid">
     <figure role="img" aria-label="Horizontal stacked probability bars. Jordan: 20, 65, 15. Aqib: 45, 45, 10. Lily: 35, 45, 20. Irene: 30, 25, 45. Kimi: 25, 55, 20. Each row sums to 100 across scenarios one, two and three." style="margin:0">
       <div class="fig-frame"><div class="fig-scroll">
-      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 520 326" data-chart="bets" xmlns="http://www.w3.org/2000/svg">
         <desc>Stacked bars of forecaster probabilities for scenarios S1, S2, S3.</desc>
         <g font-family="IBM Plex Mono,ui-monospace,monospace">
-          <line x1="170" y1="56" x2="170" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-          <line x1="302.5" y1="56" x2="302.5" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-          <line x1="435" y1="56" x2="435" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-          <line x1="567.5" y1="56" x2="567.5" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-          <line x1="700" y1="56" x2="700" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-          <g font-size="18" fill="#0b0b0b">
-            <rect x="30" y="13" width="14" height="14" fill="#eda100"/><text x="54" y="26">S1 <tspan lang="zh-Hans">开闸</tspan> LET IT RIP</text>
-            <rect x="280" y="13" width="14" height="14" fill="#2a78d6"/><text x="304" y="26">S2 <tspan lang="zh-Hans">冰羽</tspan> ICEFEATHER</text>
-            <rect x="530" y="13" width="14" height="14" fill="#4a3aa7"/><text x="554" y="26">S3 <tspan lang="zh-Hans">黑箱</tspan> BLACK BOX</text>
+          <line x1="100" y1="14" x2="100" y2="286" stroke="#e1e0d9" stroke-width="1"/>
+          <line x1="200" y1="14" x2="200" y2="286" stroke="#e1e0d9" stroke-width="1"/>
+          <line x1="300" y1="14" x2="300" y2="286" stroke="#e1e0d9" stroke-width="1"/>
+          <line x1="400" y1="14" x2="400" y2="286" stroke="#e1e0d9" stroke-width="1"/>
+          <line x1="500" y1="14" x2="500" y2="286" stroke="#e1e0d9" stroke-width="1"/>
+          <g class="brow" font-size="18">
+            <text x="92" y="42" text-anchor="end" fill="#0b0b0b">JORDAN</text>
+            <rect x="100" y="20" width="80" height="30" fill="#eda100"/>
+            <rect x="180" y="20" width="260" height="30" fill="#2a78d6"/>
+            <rect x="440" y="20" width="60" height="30" fill="#4a3aa7"/>
+            <text x="140" y="41" text-anchor="middle" fill="#0b0b0b">20</text>
+            <text x="310" y="41" text-anchor="middle" fill="#ffffff">65</text>
+            <text x="470" y="41" text-anchor="middle" fill="#ffffff">15</text>
           </g>
-          <g class="brow" font-size="20">
-            <text x="158" y="86" text-anchor="end" fill="#0b0b0b">JORDAN</text>
-            <rect x="170" y="64" width="106" height="30" fill="#eda100"/>
-            <rect x="276" y="64" width="344" height="30" fill="#2a78d6"/>
-            <rect x="620" y="64" width="80" height="30" fill="#4a3aa7"/>
-            <text x="223" y="86" text-anchor="middle" fill="#0b0b0b">20</text>
-            <text x="448" y="86" text-anchor="middle" fill="#ffffff">65</text>
-            <text x="660" y="86" text-anchor="middle" fill="#ffffff">15</text>
+          <g class="brow" font-size="18">
+            <text x="92" y="96" text-anchor="end" fill="#0b0b0b">AQIB</text>
+            <rect x="100" y="74" width="180" height="30" fill="#eda100"/>
+            <rect x="280" y="74" width="180" height="30" fill="#2a78d6"/>
+            <rect x="460" y="74" width="40" height="30" fill="#4a3aa7"/>
+            <text x="190" y="95" text-anchor="middle" fill="#0b0b0b">45</text>
+            <text x="370" y="95" text-anchor="middle" fill="#ffffff">45</text>
+            <text x="480" y="95" text-anchor="middle" fill="#ffffff">10</text>
           </g>
-          <g class="brow" font-size="20">
-            <text x="158" y="142" text-anchor="end" fill="#0b0b0b">AQIB</text>
-            <rect x="170" y="120" width="238" height="30" fill="#eda100"/>
-            <rect x="408" y="120" width="239" height="30" fill="#2a78d6"/>
-            <rect x="647" y="120" width="53" height="30" fill="#4a3aa7"/>
-            <text x="289" y="142" text-anchor="middle" fill="#0b0b0b">45</text>
-            <text x="527" y="142" text-anchor="middle" fill="#ffffff">45</text>
-            <text x="673" y="142" text-anchor="middle" fill="#ffffff">10</text>
+          <g class="brow" font-size="18">
+            <text x="92" y="150" text-anchor="end" fill="#0b0b0b">LILY</text>
+            <rect x="100" y="128" width="140" height="30" fill="#eda100"/>
+            <rect x="240" y="128" width="180" height="30" fill="#2a78d6"/>
+            <rect x="420" y="128" width="80" height="30" fill="#4a3aa7"/>
+            <text x="170" y="149" text-anchor="middle" fill="#0b0b0b">35</text>
+            <text x="330" y="149" text-anchor="middle" fill="#ffffff">45</text>
+            <text x="460" y="149" text-anchor="middle" fill="#ffffff">20</text>
           </g>
-          <g class="brow" font-size="20">
-            <text x="158" y="198" text-anchor="end" fill="#0b0b0b">LILY</text>
-            <rect x="170" y="176" width="186" height="30" fill="#eda100"/>
-            <rect x="356" y="176" width="238" height="30" fill="#2a78d6"/>
-            <rect x="594" y="176" width="106" height="30" fill="#4a3aa7"/>
-            <text x="263" y="198" text-anchor="middle" fill="#0b0b0b">35</text>
-            <text x="475" y="198" text-anchor="middle" fill="#ffffff">45</text>
-            <text x="647" y="198" text-anchor="middle" fill="#ffffff">20</text>
+          <g class="brow" font-size="18">
+            <text x="92" y="204" text-anchor="end" fill="#0b0b0b">IRENE</text>
+            <rect x="100" y="182" width="120" height="30" fill="#eda100"/>
+            <rect x="220" y="182" width="100" height="30" fill="#2a78d6"/>
+            <rect x="320" y="182" width="180" height="30" fill="#4a3aa7"/>
+            <text x="160" y="203" text-anchor="middle" fill="#0b0b0b">30</text>
+            <text x="270" y="203" text-anchor="middle" fill="#ffffff">25</text>
+            <text x="410" y="203" text-anchor="middle" fill="#ffffff">45</text>
           </g>
-          <g class="brow" font-size="20">
-            <text x="158" y="254" text-anchor="end" fill="#0b0b0b">IRENE</text>
-            <rect x="170" y="232" width="159" height="30" fill="#eda100"/>
-            <rect x="329" y="232" width="132" height="30" fill="#2a78d6"/>
-            <rect x="461" y="232" width="239" height="30" fill="#4a3aa7"/>
-            <text x="250" y="254" text-anchor="middle" fill="#0b0b0b">30</text>
-            <text x="395" y="254" text-anchor="middle" fill="#ffffff">25</text>
-            <text x="581" y="254" text-anchor="middle" fill="#ffffff">45</text>
+          <g class="brow" font-size="18">
+            <rect x="4" y="232" width="512" height="44" fill="#f0eee3"/>
+            <text x="92" y="261" text-anchor="end" font-weight="600" fill="#0b0b0b">KIMI</text>
+            <rect x="100" y="239" width="100" height="30" fill="#eda100"/>
+            <rect x="200" y="239" width="220" height="30" fill="#2a78d6"/>
+            <rect x="420" y="239" width="80" height="30" fill="#4a3aa7"/>
+            <rect x="98" y="237" width="404" height="34" fill="none" stroke="#52514e" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="150" y="260" text-anchor="middle" fill="#0b0b0b">25</text>
+            <text x="310" y="260" text-anchor="middle" fill="#ffffff">55</text>
+            <text x="460" y="260" text-anchor="middle" fill="#ffffff">20</text>
           </g>
-          <g class="brow" font-size="20">
-            <rect x="4" y="280" width="752" height="46" fill="#f0eee3"/>
-            <text x="158" y="300" text-anchor="end" font-size="22" fill="#0b0b0b">KIMI</text>
-            <text x="158" y="318" text-anchor="end" font-size="16" fill="#0b0b0b">(MOONSHOT AI)</text>
-            <rect x="170" y="288" width="132" height="30" fill="#eda100"/>
-            <rect x="302" y="288" width="292" height="30" fill="#2a78d6"/>
-            <rect x="594" y="288" width="106" height="30" fill="#4a3aa7"/>
-            <rect x="168" y="286" width="534" height="34" fill="none" stroke="#52514e" stroke-width="1" stroke-dasharray="4 3"/>
-            <text x="236" y="310" text-anchor="middle" fill="#0b0b0b">25</text>
-            <text x="448" y="310" text-anchor="middle" fill="#ffffff">55</text>
-            <text x="647" y="310" text-anchor="middle" fill="#ffffff">20</text>
-          </g>
-          <g font-size="20" fill="#898781" text-anchor="middle">
-            <text x="170" y="354">0</text><text x="302.5" y="354">25</text><text x="435" y="354">50</text><text x="567.5" y="354">75</text><text x="700" y="354">100%</text>
+          <g font-size="18" fill="#898781">
+            <text x="100" y="310" text-anchor="middle">0</text>
+            <text x="200" y="310" text-anchor="middle">25</text>
+            <text x="300" y="310" text-anchor="middle">50</text>
+            <text x="400" y="310" text-anchor="middle">75</text>
+            <text x="514" y="310" text-anchor="end">100%</text>
           </g>
         </g>
       </svg>
@@ -967,6 +967,73 @@ footer li{margin-bottom:8px;max-width:64ch}
   }
 
   /* ============================================================
+     CHART HEADS — titles and legends live in HTML (injected here
+     because the narrative markup is fixed), above each figure, so
+     they wrap naturally at any viewport. The SVGs carry only the
+     plot. Overlong in-plot annotations are appended to the
+     figcaption instead of being shrunk below legibility.
+     ============================================================ */
+  (function(){
+    var HEADS = {
+      cap: {
+        t: 'CYBER CAPABILITY INDEX \u2014 FICTIONAL',
+        n: 'TODAY \u00B7 JUL 2026',
+        l: [['#2a78d6','MYTHOS'],['#e34948','KIMI K4'],['#eda100','GPT 5.6']]
+      },
+      adopt: {
+        t: 'ENTERPRISE ADOPTION OF CHINESE MODELS',
+        n: '% OF AI WORKLOADS',
+        l: []
+      },
+      bets: {
+        t: '',
+        n: 'KIMI = KIMI (MOONSHOT AI)',
+        l: [['#eda100','S1 <span lang="zh-Hans">\u5F00\u95F8</span> LET IT RIP'],
+            ['#2a78d6','S2 <span lang="zh-Hans">\u51B0\u7FBD</span> ICEFEATHER'],
+            ['#4a3aa7','S3 <span lang="zh-Hans">\u9ED1\u7BB1</span> BLACK BOX']]
+      }
+    };
+    var CAP_NOTES = {
+      adopt: 'Early adopters: Uber Eats \u00B7 Siemens \u00B7 Shopify. The K4 release marker and the post-2026 uptick are fictional.'
+    };
+    var svgs = document.querySelectorAll('svg[data-chart]');
+    for(var i = 0; i < svgs.length; i++){
+      var key = svgs[i].getAttribute('data-chart');
+      var cfg = HEADS[key];
+      if(!cfg){ continue; }
+      var fig = svgs[i].closest('figure');
+      if(!fig){ continue; }
+      var html = '';
+      if(cfg.t){
+        html += '<p class="fig-title">' + cfg.t + (cfg.n ? ' <span class="fig-tsub">' + cfg.n + '</span>' : '') + '</p>';
+      }
+      if(cfg.l && cfg.l.length){
+        html += '<p class="fig-legend">';
+        for(var j = 0; j < cfg.l.length; j++){
+          html += '<span><i style="background:' + cfg.l[j][0] + '"></i>' + cfg.l[j][1] + '</span>';
+        }
+        if(!cfg.t && cfg.n){ html += '<span class="fig-lnote">' + cfg.n + '</span>'; }
+        html += '</p>';
+      }
+      if(html){
+        var head = document.createElement('div');
+        head.className = 'fig-head';
+        head.innerHTML = html;
+        fig.insertBefore(head, fig.firstChild);
+      }
+      if(CAP_NOTES[key]){
+        var cap = fig.querySelector('figcaption');
+        if(cap && !cap.querySelector('.fig-ann')){
+          var sp = document.createElement('span');
+          sp.className = 'fig-ann';
+          sp.textContent = ' ' + CAP_NOTES[key];
+          cap.appendChild(sp);
+        }
+      }
+    }
+  })();
+
+  /* ============================================================
      LINKED BETS — hover-sync Bets rows, .take cards, .door cards
      via runtime data-fc attributes. Each forecaster is filed under
      the scenario they give their top probability (ties break to
@@ -1051,25 +1118,6 @@ footer li{margin-bottom:8px;max-width:64ch}
           });
         }
       })(linked[e]);
-    }
-  })();
-
-  /* ============================================================
-     MOBILE CHART PAN — runtime 'PAN \u2192' hints on scrollable
-     chart figures (CSS shows them on small screens only).
-     ============================================================ */
-  (function(){
-    var scs = document.querySelectorAll('.fig-scroll');
-    for(var i = 0; i < scs.length; i++){
-      var fig = scs[i].closest('figure');
-      if(!fig){ continue; }
-      var cap = fig.querySelector('figcaption');
-      if(!cap || cap.querySelector('.pan-hint')){ continue; }
-      var hint = document.createElement('span');
-      hint.className = 'pan-hint';
-      hint.setAttribute('aria-hidden', 'true');
-      hint.textContent = 'PAN \u2192';
-      cap.appendChild(hint);
     }
   })();
 
