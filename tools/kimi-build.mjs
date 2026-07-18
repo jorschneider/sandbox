@@ -378,7 +378,45 @@ if (mode === "generate") {
   }
   writeFileSync(OUT, next);
   console.error(`Applied: ${applied.join(", ")}. Wrote ${OUT} (${next.length} chars)`);
+} else if (mode === "rewrite") {
+  // Narrative rewrite, one section per API call — the input filter rejects the
+  // whole page but accepts individual sections. Progress is saved after each
+  // section so a failed call loses nothing.
+  const instructions = readFileSync(process.argv[3], "utf8");
+  const selectors = process.argv.slice(4);
+  const extract = (html, sel) => {
+    if (sel === "hero") return html.match(/<section class="hero[\s\S]*?<\/section>/)?.[0];
+    if (sel === "footer") return html.match(/<footer[\s\S]*?<\/footer>/)?.[0];
+    return html.match(new RegExp(`<section id="${sel.replace(/^#/, "")}"[\\s\\S]*?<\\/section>`))?.[0];
+  };
+  for (const sel of selectors) {
+    const current = readFileSync(OUT, "utf8");
+    const block = extract(current, sel);
+    if (!block) {
+      console.error(`✗ ${sel}: block not found, skipping`);
+      continue;
+    }
+    console.error(`Rewriting ${sel} (${block.length} chars)…`);
+    const reply = cleanHtml(
+      await complete([
+        {
+          role: "user",
+          content: `You are Kimi, sole author of a scenario microsite. Below are (a) standing rewrite instructions from the publisher and (b) ONE section of the site's HTML. Apply the instructions to this section only.\n\nReturn the COMPLETE rewritten section — same opening tag, same closing tag, nothing before or after, no markdown fences. Preserve every id, class, data-* attribute, ARIA attribute, and the structure/geometry of any inline SVG (relabel text content only). Change only what the instructions require.\n\n=== INSTRUCTIONS ===\n${instructions}\n\n=== SECTION (${sel}) ===\n${block}`,
+        },
+      ])
+    );
+    const openTag = block.match(/^<\w+/)?.[0];
+    const closeTag = block.match(/<\/\w+>$/)?.[0];
+    if (!reply.startsWith(openTag) || !reply.trimEnd().endsWith(closeTag)) {
+      writeFileSync(`${OUT}.${sel.replace(/^#/, "")}.reject`, reply);
+      console.error(`✗ ${sel}: reply malformed (wrote .reject file), section left untouched`);
+      continue;
+    }
+    writeFileSync(OUT, current.replace(block, reply.trimEnd() + "\n"));
+    console.error(`✓ ${sel} rewritten (${reply.length} chars)`);
+  }
+  console.error("Rewrite sweep done.");
 } else {
-  console.error(`Unknown mode: ${mode} (use "generate", "revise", or "patch")`);
+  console.error(`Unknown mode: ${mode} (use "generate", "revise", "patch", or "rewrite")`);
   process.exit(1);
 }
