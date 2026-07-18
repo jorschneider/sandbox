@@ -42,14 +42,23 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset
 #rail{position:fixed;top:0;left:0;right:0;height:52px;z-index:60;display:flex;align-items:center;gap:14px;
   padding:0 18px;background:rgba(249,248,244,.93);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   border-bottom:1px solid var(--hair);font-family:var(--mono)}
-#prog{position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--ink);transform:scaleX(0);transform-origin:left}
+#prog{position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:background .25s ease}
 .rail-title{font-size:10.5px;letter-spacing:.16em;color:var(--ink2);white-space:nowrap}
-.rail-mid{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.08em;white-space:nowrap;overflow:hidden}
+.rail-mid{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.08em;white-space:nowrap;overflow:hidden;min-width:0}
 #rail-dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
 #rail-branch{overflow:hidden;text-overflow:ellipsis}
-#rail-date{margin-left:auto;font-size:11px;letter-spacing:.1em;color:var(--ink);white-space:nowrap}
+#rail-date{margin-left:12px;font-size:11px;letter-spacing:.1em;color:var(--ink);white-space:nowrap}
+.rail-lens{display:flex;align-items:center;gap:9px;margin-left:auto;flex:none}
+#lens-btn{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5;
+  color:var(--ink);background:none;border:1px solid var(--ink);border-radius:2px;padding:4px 10px;cursor:pointer;white-space:nowrap}
+#lens-btn:hover{background:var(--ink);color:var(--paper)}
+#lens-btn[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+#lens-count{font-size:10px;letter-spacing:.12em;color:var(--ink2);white-space:nowrap}
+#lens-count .cf{color:var(--green)}
+#lens-count .cx{color:var(--red)}
 @media (max-width:900px){.rail-title{display:none}}
-@media (max-width:480px){#rail{font-size:10px;padding:0 12px}}
+@media (max-width:600px){#lens-count{display:none}}
+@media (max-width:480px){#rail{font-size:10px;padding:0 12px}#lens-btn{font-size:9px;padding:3px 7px;letter-spacing:.1em}}
 
 /* ============ SHARED ============ */
 .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink2)}
@@ -78,6 +87,14 @@ sup a{text-decoration:none;color:var(--ink2)}
 .jumps{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink2);margin-top:14px}
 .jumps a{text-decoration:none;border-bottom:1px solid var(--hair);padding-bottom:1px;margin-right:4px}
 .jumps a:hover{border-color:var(--ink)}
+
+/* ============ LENS MODE ============ */
+.ff-after{transition:opacity .25s ease}
+body.lens .ff-after{opacity:.45}
+body.lens .ff-fact{box-shadow:inset 2.5px 0 0 var(--green)}
+body.lens p.ff-fact,body.lens li.ff-fact,body.lens figcaption.ff-fact,
+body.lens h2.ff-fact,body.lens h3.ff-fact,body.lens h4.ff-fact{box-shadow:none;border-left:2px solid var(--green);padding-left:12px}
+body.lens .beat.ff-fact,body.lens .pull.ff-fact,body.lens .take.ff-fact,body.lens .kimi-aside.ff-fact{box-shadow:none;border-left-color:var(--green)}
 
 /* ============ HERO ============ */
 .hero{position:relative;padding:110px 0 70px;overflow:hidden}
@@ -109,7 +126,7 @@ sup a{text-decoration:none;color:var(--ink2)}
 .door{display:flex;flex-direction:column;gap:12px;background:var(--surface);color:var(--ink);
   text-decoration:none;border-top:5px solid var(--dc);padding:26px 24px 22px;
   transition:transform .18s ease,box-shadow .18s ease;min-height:230px}
-.door:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(11,11,11,.22)}
+.door:hover,.door.fc-hi{transform:translateY(-4px);box-shadow:0 14px 34px rgba(11,11,11,.22)}
 .door .dnum{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--ink2)}
 .door .dzh{font-family:var(--zhs);font-size:44px;font-weight:600;line-height:1}
 .door h3{font-size:22px;line-height:1.2;font-weight:600}
@@ -181,6 +198,12 @@ figure svg,.fig-frame svg,.fig-scroll svg{display:block;width:100%;height:auto;m
 figcaption{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--ink2);margin-top:12px;line-height:1.7}
 figcaption b{color:var(--ink);font-weight:600;letter-spacing:.1em}
 .fig-note{color:var(--muted)}
+.pan-hint{display:none}
+@media (max-width:640px){
+  .fig-scroll svg{min-width:640px;max-width:none}
+  .pan-hint{display:inline-block;margin-left:10px;padding:1px 7px;border:1px solid var(--hair);border-radius:2px;
+    font-size:9.5px;letter-spacing:.18em;color:var(--muted);vertical-align:1px;white-space:nowrap}
+}
 
 /* ============ EPILOGUES ============ */
 .epi{border:1.5px dashed var(--muted);padding:30px 28px 18px;margin:56px 0 20px;position:relative;background:#f6f4ec}
@@ -205,6 +228,15 @@ figcaption b{color:var(--ink);font-weight:600;letter-spacing:.1em}
 .take p{font-size:.97em;color:var(--ink);margin-bottom:8px}
 .pp{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink2);display:flex;gap:18px;flex-wrap:wrap;margin-top:6px}
 .pp i{display:inline-block;width:9px;height:9px;margin-right:6px;vertical-align:-1px;font-style:normal}
+
+/* ============ LINKED BETS ============ */
+.take,.kimi-aside{transition:transform .18s ease,box-shadow .18s ease,border-left-color .18s ease}
+.take.fc-hi,.kimi-aside.fc-hi{transform:translateY(-4px);box-shadow:0 14px 34px rgba(11,11,11,.22);border-left-color:var(--ink)}
+.take:focus,.kimi-aside:focus{outline:2px solid var(--ink);outline-offset:3px;border-radius:1px}
+.brow{cursor:pointer;transition:opacity .15s ease}
+svg.fc-on .brow:not(.fc-hi){opacity:.25}
+.brow:focus-visible{outline:2px solid #0b0b0b;outline-offset:4px}
+.brow:focus:not(:focus-visible){outline:none}
 
 /* ============ CTA / FOOTER ============ */
 .cta{border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:90px 0;margin-top:110px;position:relative;overflow:hidden;text-align:center}
@@ -704,52 +736,68 @@ footer li{margin-bottom:8px;max-width:64ch}
       <div class="fig-frame"><div class="fig-scroll">
       <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg">
         <desc>Stacked bars of forecaster probabilities for scenarios S1, S2, S3.</desc>
-        <line x1="170" y1="56" x2="170" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-        <line x1="302.5" y1="56" x2="302.5" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-        <line x1="435" y1="56" x2="435" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-        <line x1="567.5" y1="56" x2="567.5" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-        <line x1="700" y1="56" x2="700" y2="326" stroke="#e1e0d9" stroke-width="1"/>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#0b0b0b">
-          <rect x="30" y="13" width="14" height="14" fill="#eda100"/><text x="54" y="26">S1 <tspan lang="zh-Hans">开闸</tspan> LET IT RIP</text>
-          <rect x="280" y="13" width="14" height="14" fill="#2a78d6"/><text x="304" y="26">S2 <tspan lang="zh-Hans">冰羽</tspan> ICEFEATHER</text>
-          <rect x="530" y="13" width="14" height="14" fill="#4a3aa7"/><text x="554" y="26">S3 <tspan lang="zh-Hans">黑箱</tspan> BLACK BOX</text>
-        </g>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#0b0b0b">
-          <text x="158" y="86" text-anchor="end">JORDAN</text>
-          <text x="158" y="142" text-anchor="end">AQIB</text>
-          <text x="158" y="198" text-anchor="end">LILY</text>
-          <text x="158" y="254" text-anchor="end">IRENE</text>
-        </g>
-        <text x="158" y="300" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="22" fill="#0b0b0b">KIMI</text>
-        <text x="158" y="318" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#0b0b0b">(MOONSHOT AI)</text>
-        <rect x="170" y="64" width="106" height="30" fill="#eda100"/>
-        <rect x="276" y="64" width="344" height="30" fill="#2a78d6"/>
-        <rect x="620" y="64" width="80" height="30" fill="#4a3aa7"/>
-        <rect x="170" y="120" width="238" height="30" fill="#eda100"/>
-        <rect x="408" y="120" width="239" height="30" fill="#2a78d6"/>
-        <rect x="647" y="120" width="53" height="30" fill="#4a3aa7"/>
-        <rect x="170" y="176" width="186" height="30" fill="#eda100"/>
-        <rect x="356" y="176" width="238" height="30" fill="#2a78d6"/>
-        <rect x="594" y="176" width="106" height="30" fill="#4a3aa7"/>
-        <rect x="170" y="232" width="159" height="30" fill="#eda100"/>
-        <rect x="329" y="232" width="132" height="30" fill="#2a78d6"/>
-        <rect x="461" y="232" width="239" height="30" fill="#4a3aa7"/>
-        <rect x="4" y="280" width="752" height="46" fill="#f0eee3"/>
-        <rect x="170" y="288" width="132" height="30" fill="#eda100"/>
-        <rect x="302" y="288" width="292" height="30" fill="#2a78d6"/>
-        <rect x="594" y="288" width="106" height="30" fill="#4a3aa7"/>
-        <rect x="168" y="286" width="534" height="34" fill="none" stroke="#52514e" stroke-width="1" stroke-dasharray="4 3"/>
-        <text x="158" y="300" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="22" fill="#0b0b0b">KIMI</text>
-        <text x="158" y="318" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="16" fill="#0b0b0b">(MOONSHOT AI)</text>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" text-anchor="middle">
-          <text x="223" y="86" fill="#0b0b0b">20</text><text x="448" y="86" fill="#ffffff">65</text><text x="660" y="86" fill="#ffffff">15</text>
-          <text x="289" y="142" fill="#0b0b0b">45</text><text x="527" y="142" fill="#ffffff">45</text><text x="673" y="142" fill="#ffffff">10</text>
-          <text x="263" y="198" fill="#0b0b0b">35</text><text x="475" y="198" fill="#ffffff">45</text><text x="647" y="198" fill="#ffffff">20</text>
-          <text x="250" y="254" fill="#0b0b0b">30</text><text x="395" y="254" fill="#ffffff">25</text><text x="581" y="254" fill="#ffffff">45</text>
-          <text x="236" y="310" fill="#0b0b0b">25</text><text x="448" y="310" fill="#ffffff">55</text><text x="647" y="310" fill="#ffffff">20</text>
-        </g>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="20" fill="#898781" text-anchor="middle">
-          <text x="170" y="354">0</text><text x="302.5" y="354">25</text><text x="435" y="354">50</text><text x="567.5" y="354">75</text><text x="700" y="354">100%</text>
+        <g font-family="IBM Plex Mono,ui-monospace,monospace">
+          <line x1="170" y1="56" x2="170" y2="326" stroke="#e1e0d9" stroke-width="1"/>
+          <line x1="302.5" y1="56" x2="302.5" y2="326" stroke="#e1e0d9" stroke-width="1"/>
+          <line x1="435" y1="56" x2="435" y2="326" stroke="#e1e0d9" stroke-width="1"/>
+          <line x1="567.5" y1="56" x2="567.5" y2="326" stroke="#e1e0d9" stroke-width="1"/>
+          <line x1="700" y1="56" x2="700" y2="326" stroke="#e1e0d9" stroke-width="1"/>
+          <g font-size="18" fill="#0b0b0b">
+            <rect x="30" y="13" width="14" height="14" fill="#eda100"/><text x="54" y="26">S1 <tspan lang="zh-Hans">开闸</tspan> LET IT RIP</text>
+            <rect x="280" y="13" width="14" height="14" fill="#2a78d6"/><text x="304" y="26">S2 <tspan lang="zh-Hans">冰羽</tspan> ICEFEATHER</text>
+            <rect x="530" y="13" width="14" height="14" fill="#4a3aa7"/><text x="554" y="26">S3 <tspan lang="zh-Hans">黑箱</tspan> BLACK BOX</text>
+          </g>
+          <g class="brow" font-size="20">
+            <text x="158" y="86" text-anchor="end" fill="#0b0b0b">JORDAN</text>
+            <rect x="170" y="64" width="106" height="30" fill="#eda100"/>
+            <rect x="276" y="64" width="344" height="30" fill="#2a78d6"/>
+            <rect x="620" y="64" width="80" height="30" fill="#4a3aa7"/>
+            <text x="223" y="86" text-anchor="middle" fill="#0b0b0b">20</text>
+            <text x="448" y="86" text-anchor="middle" fill="#ffffff">65</text>
+            <text x="660" y="86" text-anchor="middle" fill="#ffffff">15</text>
+          </g>
+          <g class="brow" font-size="20">
+            <text x="158" y="142" text-anchor="end" fill="#0b0b0b">AQIB</text>
+            <rect x="170" y="120" width="238" height="30" fill="#eda100"/>
+            <rect x="408" y="120" width="239" height="30" fill="#2a78d6"/>
+            <rect x="647" y="120" width="53" height="30" fill="#4a3aa7"/>
+            <text x="289" y="142" text-anchor="middle" fill="#0b0b0b">45</text>
+            <text x="527" y="142" text-anchor="middle" fill="#ffffff">45</text>
+            <text x="673" y="142" text-anchor="middle" fill="#ffffff">10</text>
+          </g>
+          <g class="brow" font-size="20">
+            <text x="158" y="198" text-anchor="end" fill="#0b0b0b">LILY</text>
+            <rect x="170" y="176" width="186" height="30" fill="#eda100"/>
+            <rect x="356" y="176" width="238" height="30" fill="#2a78d6"/>
+            <rect x="594" y="176" width="106" height="30" fill="#4a3aa7"/>
+            <text x="263" y="198" text-anchor="middle" fill="#0b0b0b">35</text>
+            <text x="475" y="198" text-anchor="middle" fill="#ffffff">45</text>
+            <text x="647" y="198" text-anchor="middle" fill="#ffffff">20</text>
+          </g>
+          <g class="brow" font-size="20">
+            <text x="158" y="254" text-anchor="end" fill="#0b0b0b">IRENE</text>
+            <rect x="170" y="232" width="159" height="30" fill="#eda100"/>
+            <rect x="329" y="232" width="132" height="30" fill="#2a78d6"/>
+            <rect x="461" y="232" width="239" height="30" fill="#4a3aa7"/>
+            <text x="250" y="254" text-anchor="middle" fill="#0b0b0b">30</text>
+            <text x="395" y="254" text-anchor="middle" fill="#ffffff">25</text>
+            <text x="581" y="254" text-anchor="middle" fill="#ffffff">45</text>
+          </g>
+          <g class="brow" font-size="20">
+            <rect x="4" y="280" width="752" height="46" fill="#f0eee3"/>
+            <text x="158" y="300" text-anchor="end" font-size="22" fill="#0b0b0b">KIMI</text>
+            <text x="158" y="318" text-anchor="end" font-size="16" fill="#0b0b0b">(MOONSHOT AI)</text>
+            <rect x="170" y="288" width="132" height="30" fill="#eda100"/>
+            <rect x="302" y="288" width="292" height="30" fill="#2a78d6"/>
+            <rect x="594" y="288" width="106" height="30" fill="#4a3aa7"/>
+            <rect x="168" y="286" width="534" height="34" fill="none" stroke="#52514e" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="236" y="310" text-anchor="middle" fill="#0b0b0b">25</text>
+            <text x="448" y="310" text-anchor="middle" fill="#ffffff">55</text>
+            <text x="647" y="310" text-anchor="middle" fill="#ffffff">20</text>
+          </g>
+          <g font-size="20" fill="#898781" text-anchor="middle">
+            <text x="170" y="354">0</text><text x="302.5" y="354">25</text><text x="435" y="354">50</text><text x="567.5" y="354">75</text><text x="700" y="354">100%</text>
+          </g>
         </g>
       </svg>
       </div></div>
@@ -829,13 +877,16 @@ footer li{margin-bottom:8px;max-width:64ch}
 <script>
 (function(){
   "use strict";
+  var REDUCED = false;
+  try{ REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+
   /* ---- scroll progress ---- */
   var prog = document.getElementById('prog');
   function updProg(){
     var h = document.documentElement;
     var max = h.scrollHeight - h.clientHeight;
     var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
-    prog.style.transform = 'scaleX(' + p + ')';
+    if(prog){ prog.style.transform = 'scaleX(' + p + ')'; }
   }
   var ticking = false;
   window.addEventListener('scroll', function(){
@@ -846,33 +897,218 @@ footer li{margin-bottom:8px;max-width:64ch}
   }, {passive:true});
   updProg();
 
-  /* ---- sticky rail: current date + branch via IntersectionObserver ---- */
+  /* ============================================================
+     LENS MODE — runtime fact/fiction tagging + rail toggle.
+     Everything after the FICTION BEGINS stamp is tagged .ff-after
+     (top-level blocks only, so opacity never stacks); prologue
+     beats and blocks carrying .chip.fact are tagged .ff-fact.
+     ============================================================ */
+  var factCount = 0, ficCount = 0;
+  (function tagLedger(){
+    var stamp = null;
+    var chips = document.querySelectorAll('.chip');
+    for(var i = 0; i < chips.length; i++){
+      if(/FICTION BEGINS/i.test(chips[i].textContent || '')){ stamp = chips[i]; break; }
+    }
+    if(stamp){
+      var top = stamp;
+      while(top.parentElement && top.parentElement !== document.body && top.parentElement.tagName !== 'MAIN'){
+        top = top.parentElement;
+      }
+      for(var n = top; n; n = n.nextElementSibling){ n.classList.add('ff-after'); }
+    }
+    var beats = document.querySelectorAll('.beat');
+    for(var b = 0; b < beats.length; b++){
+      if(!beats[b].closest('.ff-after')){ beats[b].classList.add('ff-fact'); }
+    }
+    var facts = document.querySelectorAll('.chip.fact');
+    for(var f = 0; f < facts.length; f++){
+      var host = facts[f].closest('.beat,.pull,.take,.kimi-aside,.artifact,.epi,p,li,figcaption,h2,h3,h4') || facts[f].parentElement;
+      if(host){ host.classList.add('ff-fact'); }
+    }
+    factCount = document.querySelectorAll('.ff-fact').length;
+    ficCount = document.querySelectorAll('.ff-after .beat, .ff-after .door').length;
+  })();
+
+  var rail = document.getElementById('rail');
   var railDate = document.getElementById('rail-date');
   var railBranch = document.getElementById('rail-branch');
   var railDot = document.getElementById('rail-dot');
-  if(!('IntersectionObserver' in window)) return;
 
-  /* Observation band = just below the rail down to the upper third of the
-     viewport. The active marker is the LOWEST one inside the band, i.e. the
-     one that most recently crossed the upper-third line, so the rail switches
-     the moment a section header crosses that line. Positions are read fresh
-     in pick() so ordering never goes stale between callbacks. */
+  if(rail && railDate){
+    var lensWrap = document.createElement('span');
+    lensWrap.className = 'rail-lens';
+    var lensBtn = document.createElement('button');
+    lensBtn.type = 'button';
+    lensBtn.id = 'lens-btn';
+    lensBtn.setAttribute('aria-pressed', 'false');
+    lensBtn.title = 'Fact / fiction audit view';
+    lensBtn.textContent = 'LENS';
+    var lensCount = document.createElement('span');
+    lensCount.id = 'lens-count';
+    lensCount.setAttribute('aria-live', 'polite');
+    lensCount.hidden = true;
+    lensCount.innerHTML = '<span class="cf">FACT ' + factCount + '</span> \u00B7 <span class="cx">FICTION ' + ficCount + '</span>';
+    lensWrap.appendChild(lensBtn);
+    lensWrap.appendChild(lensCount);
+    rail.insertBefore(lensWrap, railDate);
+    lensBtn.addEventListener('click', function(){
+      var on = lensBtn.getAttribute('aria-pressed') !== 'true';
+      lensBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      document.body.classList.toggle('lens', on);
+      lensCount.hidden = !on;
+    });
+  }
+
+  /* ============================================================
+     LINKED BETS — hover-sync Bets rows, .take cards, .door cards
+     via runtime data-fc attributes. Each forecaster is filed under
+     the scenario they give their top probability (ties break to
+     the earliest door). Rows are focusable links to the takes.
+     ============================================================ */
+  (function(){
+    var KEYS = ['jordan','aqib','lily','irene','kimi'];
+    var BETS = { jordan:[20,65,15], aqib:[45,45,10], lily:[35,45,20], irene:[30,25,45], kimi:[25,55,20] };
+    var SCEN = ['s1','s2','s3'];
+    var doorToks = { s1:[], s2:[], s3:[] };
+    for(var k = 0; k < KEYS.length; k++){
+      var v = BETS[KEYS[k]], best = 0;
+      for(var i = 1; i < v.length; i++){ if(v[i] > v[best]){ best = i; } }
+      doorToks[SCEN[best]].push(KEYS[k]);
+    }
+    var doors = document.querySelectorAll('.door');
+    for(var d = 0; d < doors.length && d < 3; d++){
+      doors[d].setAttribute('data-fc', doorToks[SCEN[d]].join(' '));
+    }
+    var takeByKey = {};
+    var takes = document.querySelectorAll('.take');
+    for(var t = 0; t < takes.length; t++){
+      var h = takes[t].querySelector('h4');
+      if(!h){ continue; }
+      var slug = (h.textContent || '').trim().toLowerCase().split(/[^a-z]+/)[0];
+      if(KEYS.indexOf(slug) > -1){
+        takes[t].setAttribute('data-fc', slug);
+        takeByKey[slug] = takes[t];
+      }
+    }
+    var aside = document.querySelector('.kimi-aside');
+    if(aside){ aside.setAttribute('data-fc', 'kimi'); takeByKey.kimi = aside; }
+
+    var betsSvg = null;
+    var rows = document.querySelectorAll('svg .brow');
+    for(var r = 0; r < rows.length; r++){
+      var label = rows[r].querySelector('text');
+      if(!label){ continue; }
+      var name = (label.textContent || '').trim();
+      var key = name.toLowerCase().split(/[^a-z]+/)[0];
+      if(KEYS.indexOf(key) === -1){ continue; }
+      betsSvg = betsSvg || rows[r].ownerSVGElement;
+      rows[r].setAttribute('data-fc', key);
+      rows[r].setAttribute('tabindex', '0');
+      rows[r].setAttribute('role', 'link');
+      rows[r].setAttribute('aria-label', 'Jump to ' + name.charAt(0) + name.slice(1).toLowerCase() + '\u2019s take');
+    }
+    var linked = document.querySelectorAll('[data-fc]');
+    if(!linked.length){ return; }
+    function toks(el){ return (el.getAttribute('data-fc') || '').split(/\s+/); }
+    function sync(src, on){
+      var T = toks(src);
+      for(var i = 0; i < linked.length; i++){
+        var ot = toks(linked[i]), hit = false;
+        for(var a = 0; a < ot.length; a++){
+          if(T.indexOf(ot[a]) > -1){ hit = true; break; }
+        }
+        linked[i].classList.toggle('fc-hi', on && hit);
+      }
+      if(betsSvg){ betsSvg.classList.toggle('fc-on', on); }
+    }
+    function go(key){
+      var target = takeByKey[key];
+      if(!target){ return; }
+      if(!target.hasAttribute('tabindex')){ target.setAttribute('tabindex', '-1'); }
+      target.scrollIntoView({behavior: REDUCED ? 'auto' : 'smooth', block: 'center'});
+      try{ target.focus({preventScroll:true}); }catch(e){ target.focus(); }
+    }
+    for(var e = 0; e < linked.length; e++){
+      (function(el){
+        el.addEventListener('mouseenter', function(){ sync(el, true); });
+        el.addEventListener('mouseleave', function(){ sync(el, false); });
+        el.addEventListener('focus', function(){ sync(el, true); });
+        el.addEventListener('blur', function(){ sync(el, false); });
+        if(el.classList.contains('brow')){
+          el.addEventListener('click', function(){ go(el.getAttribute('data-fc')); });
+          el.addEventListener('keydown', function(ev){
+            if(ev.key === 'Enter' || ev.key === ' ' || ev.keyCode === 13 || ev.keyCode === 32){
+              ev.preventDefault();
+              go(el.getAttribute('data-fc'));
+            }
+          });
+        }
+      })(linked[e]);
+    }
+  })();
+
+  /* ============================================================
+     MOBILE CHART PAN — runtime 'PAN \u2192' hints on scrollable
+     chart figures (CSS shows them on small screens only).
+     ============================================================ */
+  (function(){
+    var scs = document.querySelectorAll('.fig-scroll');
+    for(var i = 0; i < scs.length; i++){
+      var fig = scs[i].closest('figure');
+      if(!fig){ continue; }
+      var cap = fig.querySelector('figcaption');
+      if(!cap || cap.querySelector('.pan-hint')){ continue; }
+      var hint = document.createElement('span');
+      hint.className = 'pan-hint';
+      hint.setAttribute('aria-hidden', 'true');
+      hint.textContent = 'PAN \u2192';
+      cap.appendChild(hint);
+    }
+  })();
+
+  /* ---- sticky rail: current date + branch via IntersectionObserver ---- */
+  if(!('IntersectionObserver' in window) || !railDate || !railBranch || !railDot){ return; }
+
+  /* Branch state is derived only from the active marker's OWN
+     containers — a .scen-head/.beat inside [data-branch], an .epi
+     inside one (own 'Sx · EPILOGUE' state), or the neutral default
+     captured at load — so a section header outside any branch can
+     never inherit the previous branch. #prog and #rail-dot are
+     tinted with the active branch color to match the section rules. */
+  var DEFAULT_BRANCH = railBranch.textContent;
   var inView = new Map();
+  function codeOf(sec){
+    var m = (' ' + (sec.className || '') + ' ').match(/\bs([123])\b/);
+    if(m){ return 'S' + m[1]; }
+    var db = sec.getAttribute('data-branch') || '';
+    var tok = db.split(/[\u00B7\u2014\-]/)[0].trim().split(/\s+/)[0];
+    return tok || 'S';
+  }
+  function setRail(text, color){
+    railBranch.textContent = text;
+    railDot.style.background = color || '';
+    if(prog){ prog.style.background = color || ''; }
+  }
   function pick(){
     var best = null;
     inView.forEach(function(v, el){
       var top = el.getBoundingClientRect().top;
       if(best === null || top > best.top){ best = {el: el, top: top}; }
     });
-    if(best){
-      var d = best.el.getAttribute('data-date');
-      if(d){ railDate.textContent = d; }
-      var sec = best.el.closest('[data-branch]');
-      if(sec){
-        railBranch.textContent = sec.getAttribute('data-branch');
-        var c = sec.getAttribute('data-color');
-        if(c){ railDot.style.background = c; }
-      }
+    if(!best){ return; }
+    var el = best.el;
+    var d = el.getAttribute('data-date');
+    if(d){ railDate.textContent = d; }
+    var epi = el.closest('.epi');
+    var sec = el.closest('[data-branch]');
+    if(epi){
+      if(sec){ setRail(codeOf(sec) + ' \u00B7 EPILOGUE', sec.getAttribute('data-color')); }
+      else{ setRail('EPILOGUE', null); }
+    } else if(sec){
+      setRail(sec.getAttribute('data-branch'), sec.getAttribute('data-color'));
+    } else {
+      setRail(DEFAULT_BRANCH, null);
     }
   }
   var io = new IntersectionObserver(function(entries){
@@ -884,7 +1120,7 @@ footer li{margin-bottom:8px;max-width:64ch}
     pick();
   }, {rootMargin: '-53px 0px -66.6667% 0px', threshold: 0});
 
-  var marked = document.querySelectorAll('[data-date], .scen-head, .sec-head');
+  var marked = document.querySelectorAll('[data-date], .scen-head, .sec-head, .epi');
   for(var j = 0; j < marked.length; j++){ io.observe(marked[j]); }
 })();
 </script>
