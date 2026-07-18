@@ -1,0 +1,216 @@
+/* ════════════════════════════════════════════════════════════════
+   THE DOSSIER — variant skin, loaded via ?style=dossier
+   The scenario fiction as a leaked intelligence file; the analysis
+   as the journal that obtained it. Manila paper, typewriter chrome,
+   rubber-stamp red. Single-mode by design: dark theme is forced to
+   the same manila look.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ---------- tokens: one palette, both themes ---------- */
+:root, :root[data-theme="light"], :root[data-theme="dark"] {
+  color-scheme: light;
+  --page: #e7d7ab;            /* warm manila envelope */
+  --surface: #f2e8cd;         /* file-folder cream */
+  --ink: #1d1a13;             /* typewriter black */
+  --ink-2: #46402f;
+  --muted: #6d6448;
+  --hair: #d2c294;
+  --rule: #97875c;
+  --accent: #9b1c1c;          /* rubber-stamp red */
+  --accent-soft: rgba(155, 28, 28, 0.09);
+  --s1: #33526e;  --s1-ink: #f6eed7;   /* archival blue ink   */
+  --s2: #4a5a2e;  --s2-ink: #f6eed7;   /* drab olive ink      */
+  --s3: #8a4a3a;  --s3-ink: #f6eed7;   /* faded oxblood ink   */
+  --shadow: 0 1px 2px rgba(72, 55, 18, .18), 0 10px 26px rgba(72, 55, 18, .16);
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+}
+::selection { color: #f6eed7; }
+:root[data-theme="dark"] ::selection { background: var(--accent); color: #f6eed7; }
+
+/* faint paper fiber */
+body {
+  background-image:
+    repeating-linear-gradient(105deg, rgba(97, 74, 26, .025) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(15deg, rgba(255, 250, 228, .05) 0 3px, transparent 3px 9px);
+}
+
+/* ---------- chrome goes typewriter ---------- */
+.kicker {
+  font-family: var(--mono); font-weight: 700;
+  letter-spacing: .24em; font-size: .72rem;
+}
+.brand { font-family: var(--mono); letter-spacing: .18em; }
+.nav-links a {
+  font-family: var(--mono); font-size: .72rem;
+  text-transform: uppercase; letter-spacing: .05em; border-radius: 0;
+}
+#topnav { border-bottom-color: var(--rule); }
+#themeToggle { border-radius: 0; border-color: var(--rule); }
+.hero-meta {
+  font-family: var(--mono); font-size: .71rem;
+  text-transform: uppercase; letter-spacing: .14em;
+}
+.hero-paths a {
+  font-family: var(--mono); font-size: .72rem;
+  text-transform: uppercase; letter-spacing: .04em;
+  border-radius: 0; border-color: var(--rule); background: var(--surface);
+}
+.dot, .swatch { border-radius: 1px; }
+sup.fn a { font-family: var(--mono); }
+footer.site {
+  font-family: var(--mono); font-size: .71rem;
+  text-transform: uppercase; letter-spacing: .08em;
+  border-top: 4px double var(--rule);
+}
+footer.site .fbrand { letter-spacing: .2em; }
+
+/* ---------- datemarks become file codes ---------- */
+.datemark {
+  font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .2em; color: var(--ink-2);
+}
+.datemark::before { content: "FILE // "; color: var(--accent); font-weight: 700; }
+.datemark::after { background: var(--rule); }
+
+/* ---------- scenario headers: dossier folder tabs ---------- */
+.scen-head { position: relative; border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+.scen-head::before {           /* second hairline of the double rule */
+  content: ""; position: absolute; top: 4px; left: 0; right: 0;
+  height: 1px; background: var(--rule);
+}
+.scen-chip {                   /* the chip IS the folder tab */
+  position: absolute; left: 0; bottom: 100%; margin: 0;
+  font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .2em; color: var(--accent);
+  background: var(--surface); border: 1px solid var(--rule); border-bottom: 0;
+  border-radius: .5rem .5rem 0 0; padding: .4rem .9rem .3rem;
+}
+.scen-odds {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .03em;
+}
+
+/* ---------- path cards: file folders with colored tabs ---------- */
+.path-card {
+  border-radius: 0 .4rem .2rem .2rem; border-color: var(--rule);
+  background: var(--surface);
+}
+.path-card::before {           /* was a top strip; now a folder tab */
+  top: -.6rem; left: .9rem; right: auto; width: 5rem; height: .6rem;
+  border-radius: .4rem .4rem 0 0;
+}
+.path-num { font-family: var(--mono); letter-spacing: .22em; color: var(--accent); }
+.path-odds {
+  font-family: var(--mono); font-size: .68rem;
+  text-transform: uppercase; letter-spacing: .06em;
+}
+
+/* ---------- FICTIONAL badge: a rubber stamp, amplified ---------- */
+.fict {
+  font-family: var(--mono); font-size: .8125rem; font-weight: 700;
+  letter-spacing: .18em; color: var(--accent);
+  border: 2px solid var(--accent); border-radius: 0;
+  padding: .3rem .5rem .25rem .68rem;
+  background: rgba(155, 28, 28, .05);
+  transform: rotate(-4deg);
+  margin: .1rem .65rem .2rem .15rem; vertical-align: 2px;
+}
+
+/* ---------- figures: paper-clipped exhibits ---------- */
+.fig-frame {
+  border-radius: 0; border-color: var(--rule);
+  box-shadow: 0 2px 3px rgba(72, 55, 18, .18), 0 14px 30px rgba(72, 55, 18, .22);
+}
+figure.fig:nth-of-type(odd) .fig-frame { transform: rotate(-.6deg); }
+figure.fig:nth-of-type(even) .fig-frame { transform: rotate(.7deg); }
+figure.fig img { border-radius: 0; }
+figure.fig figcaption {
+  font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .02em; margin-top: 1rem;
+}
+figure.fig figcaption::before {
+  content: "EXHIBIT — "; font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .18em;
+}
+figure.fig figcaption .fign { text-transform: uppercase; letter-spacing: .1em; }
+
+/* ---------- pull quotes: intercepted transmissions ---------- */
+blockquote.pull { border-left: 5px solid var(--ink); padding-left: 1.35rem; }
+blockquote.pull::before {
+  content: "INTERCEPT"; display: block;
+  font: 700 .6875rem/1 var(--mono); letter-spacing: .3em;
+  color: var(--accent); margin-bottom: .7rem;
+}
+blockquote.pull footer {
+  font-family: var(--mono); font-size: .71rem;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+
+/* ---------- upshots: stamped assessments ---------- */
+.upshot { border-top: 4px double var(--rule); }
+.upshot::before {
+  content: "ASSESSMENT"; display: block; width: fit-content;
+  font: 700 .8125rem/1 var(--mono); letter-spacing: .24em;
+  color: var(--accent); border: 2px solid var(--accent);
+  padding: .4rem .6rem .35rem .84rem;
+  transform: rotate(-2deg); margin-bottom: 1.1rem;
+}
+.upshot .tag { font-family: var(--mono); letter-spacing: .2em; }
+
+/* ---------- method note: inserted memo slip ---------- */
+.note {
+  border-radius: 0; border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent); background: var(--surface);
+}
+.note strong.tag { font-family: var(--mono); letter-spacing: .22em; }
+
+/* ---------- odds chart card: the tally sheet ---------- */
+.viz-card {
+  font-family: var(--mono); border-radius: 0;
+  border: 1px solid var(--rule); background: var(--surface);
+}
+.viz-title { text-transform: uppercase; letter-spacing: .18em; font-size: .875rem; }
+.viz-sub, .viz-note { font-size: .71rem; }
+.viz-legend li { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; }
+.viz-rows { gap: 0; }
+.viz-row { padding: .55rem 0; border-bottom: 1px solid var(--hair); }
+.viz-row:last-child { border-bottom: 0; }
+.viz-name { font-size: .71rem; text-transform: uppercase; letter-spacing: .05em; }
+.seg:first-child, .seg:last-child { border-radius: 0; }
+#tableToggle {
+  font-family: var(--mono); border-radius: 0; border-color: var(--rule);
+  text-transform: uppercase; letter-spacing: .1em;
+}
+#oddsTable thead th { text-transform: uppercase; letter-spacing: .08em; font-size: .7rem; }
+#oddsTable caption { font-family: var(--mono); }
+.viz-tip { font-family: var(--mono); border-radius: 0; }
+
+/* ---------- your-odds widget (inside the same tally sheet) ---------- */
+.ow-row label { text-transform: uppercase; letter-spacing: .05em; font-size: .71rem; }
+.ow-hist-title { text-transform: uppercase; letter-spacing: .1em; font-size: .71rem; }
+.hist-head { text-transform: uppercase; letter-spacing: .05em; font-size: .68rem; }
+.hist-bar { border-radius: 0; }
+.ow-status, .ow-verdict { font-size: .72rem; }
+
+/* ---------- team takes: the journal's marginalia ---------- */
+.take { border-radius: 0; border-color: var(--rule); background: var(--surface); }
+.take-rank { font-family: var(--mono); font-size: .71rem; letter-spacing: .02em; }
+
+/* ---------- buttons & subscribe ---------- */
+.btn {
+  font-family: var(--mono); border-radius: 0;
+  text-transform: uppercase; letter-spacing: .14em; color: #f6eed7;
+}
+:root[data-theme="dark"] .btn { color: #f6eed7; }
+.vote-card {
+  border-radius: 0; border: 1px solid var(--rule); background: var(--surface);
+  outline: 1px solid var(--rule); outline-offset: 5px;
+}
+
+/* ---------- footnotes: endnotes on file paper ---------- */
+#footnotes {
+  background: var(--surface);
+  border-top: 4px double var(--rule);
+  box-shadow: inset 0 8px 18px -14px rgba(72, 55, 18, .35);
+}
+.fn-list li::marker { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+.fn-back { font-family: var(--mono); }

@@ -1,0 +1,222 @@
+/* ============================================================
+   thinktank.css — "Think-tank neoclassical" skin
+   Loaded after the inline <style> when ?style=thinktank is set,
+   so plain cascade order does the overriding. No new assets.
+   ============================================================ */
+
+/* ---------- tokens: warm paper, true ink, oxblood ---------- */
+:root, :root[data-theme="light"] {
+  --page: #fefdfb;
+  --surface: #fbf9f4;
+  --ink: #131110;
+  --ink-2: #4a4641;
+  --muted: #75706a;
+  --hair: #e9e3d7;
+  --rule: #c8bfae;
+  --accent: #7c2128;
+  --accent-soft: rgba(124, 33, 40, 0.07);
+  --s1: #3a628f;  --s1-ink: #ffffff;
+  --s2: #38683f;  --s2-ink: #ffffff;
+  --s3: #b8767f;  --s3-ink: #131110;
+  --shadow: none;
+}
+:root[data-theme="dark"] {
+  --page: #141210;
+  --surface: #1c1a17;
+  --ink: #f2ede4;
+  --ink-2: #c6bfb2;
+  --muted: #948c7f;
+  --hair: #2e2b26;
+  --rule: #48423a;
+  --accent: #c99286;
+  --accent-soft: rgba(201, 146, 134, 0.10);
+  --s1: #7d9cbd;  --s1-ink: #141210;
+  --s2: #86ab88;  --s2-ink: #141210;
+  --s3: #c08a92;  --s3-ink: #141210;
+  --shadow: none;
+}
+
+/* ---------- display type: bigger serif, tighter fit ---------- */
+#hero h1 {
+  font-size: clamp(2.75rem, 7.5vw, 5.5rem);
+  letter-spacing: -0.022em;
+  line-height: 1.02;
+}
+#hero { border-bottom: 3px double var(--rule); }
+#hero .deck { color: var(--ink-2); }
+
+h2 {
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  letter-spacing: -0.02em;
+  border-top: 3px double var(--ink);
+  padding-top: 0.9rem;
+}
+.vote-card h2 { border-top: 0; padding-top: 0; }
+
+/* ---------- small caps for kickers & marks ---------- */
+.kicker, .datemark, .scen-chip, .path-num, .upshot .tag, blockquote.pull footer {
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  text-transform: none;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+}
+.kicker { font-size: 0.9375rem; font-weight: 600; }
+.datemark { font-size: 0.875rem; font-weight: 700; color: var(--muted); }
+.scen-chip { font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.1em; }
+.path-num { font-size: 0.8125rem; font-weight: 700; }
+blockquote.pull footer { font-size: 0.875rem; letter-spacing: 0.08em; color: var(--muted); }
+
+/* ---------- numbered-plate figures ---------- */
+.fig-frame {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  box-shadow: none;
+}
+figure.fig img { border-radius: 0; }
+figure.fig figcaption {
+  margin-top: 0.85rem;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+figure.fig figcaption::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--ink);
+  margin-bottom: 0.65rem;
+}
+figure.fig figcaption .fign {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+/* FICTIONAL badge: bracketed small-caps label — never smaller, never hidden */
+.fict {
+  border: 0;
+  border-radius: 0;
+  padding: 0 0.05rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  vertical-align: 0;
+  color: var(--accent);
+}
+.fict::before { content: "[\2009"; font-weight: 700; }
+.fict::after { content: "\2009]"; font-weight: 700; }
+
+/* ---------- methodology aside as academic sidebar ---------- */
+.note {
+  margin: 2.5rem 0 2.5rem 1.5rem;
+  padding: 0.35rem 0 0.35rem 1.4rem;
+  background: transparent;
+  border: 0;
+  border-left: 1px solid var(--rule);
+  border-radius: 0;
+  box-shadow: none;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.note strong.tag {
+  font-family: "Source Serif 4", Georgia, serif;
+  text-transform: none;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  font-size: 0.875rem;
+}
+
+/* ---------- pull quotes: hanging quote glyph, no bar ---------- */
+blockquote.pull {
+  position: relative;
+  border-left: 0;
+  padding: 0.25rem 0 0.25rem 2.4em;
+  font-size: 1.35rem;
+  line-height: 1.65;
+}
+blockquote.pull::before {
+  content: "\201C";
+  position: absolute;
+  left: 0;
+  top: -0.08em;
+  font-size: 3.1em;
+  line-height: 1;
+  font-family: "Source Serif 4", Georgia, serif;
+  color: color-mix(in srgb, var(--accent) 45%, var(--page));
+}
+
+/* ---------- scenario heads: ghosted roman numeral watermark ---------- */
+.scen-head { position: relative; }
+.scen-head::before {
+  position: absolute;
+  top: -1.5rem;
+  right: 0;
+  z-index: -1;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: clamp(7rem, 22vw, 11rem);
+  font-weight: 700;
+  line-height: 0.8;
+  color: color-mix(in srgb, var(--ink) 7%, transparent);
+  pointer-events: none;
+}
+#s1 .scen-head::before { content: "I"; }
+#s2 .scen-head::before { content: "II"; }
+#s3 .scen-head::before { content: "III"; }
+
+/* ---------- cards go print: hairlines, square corners ---------- */
+.path-card, .take, .viz-card, .vote-card {
+  border-radius: 3px;
+  border-color: var(--hair);
+  box-shadow: none;
+}
+.path-card::before { border-radius: 0; }
+.viz-card { padding: 1.75rem; }
+.vote-card { padding: 3.25rem 1.5rem; }
+.hero-paths a, .btn, #tableToggle { border-radius: 2px; }
+.seg:first-child { border-radius: 0; }
+.seg:last-child { border-radius: 0; }
+.swatch { border-radius: 0; }
+.viz-tip { border-radius: 2px; }
+.hist-bar { border-radius: 0; }
+
+/* ---------- upshot tag as run-in heading with em-dash ---------- */
+.upshot .tag {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.upshot .tag::after {
+  content: "\2014";
+  color: var(--muted);
+  margin-left: 0.15rem;
+}
+
+/* ---------- footnotes: smaller, two columns on wide screens ---------- */
+#footnotes { border-top: 3px double var(--rule); }
+.fn-list li { font-size: 0.875rem; line-height: 1.65; }
+@media (min-width: 60rem) {
+  .fn-list {
+    display: block;
+    columns: 2;
+    column-gap: 3rem;
+    margin-top: 1.5rem;
+  }
+  .fn-list li {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+}
+
+/* ---------- footer as centered colophon ---------- */
+footer.site { padding-top: 3rem; }
+footer.site::before {
+  content: "\2766";
+  display: block;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--muted);
+  margin-bottom: 1.4rem;
+}

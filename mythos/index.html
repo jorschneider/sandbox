@@ -448,6 +448,18 @@
   footer.site .fbrand { color: var(--accent); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
   footer.site p { max-width: 44rem; margin: .4rem auto 0; }
 </style>
+<script>
+/* style-variant loader: ?style=dossier|thinktank|propaganda|console|deco applies an alternate skin */
+(function(){
+  var m = location.search.match(/[?&]style=(dossier|thinktank|propaganda|console|deco)\b/);
+  if (!m) return;
+  document.documentElement.dataset.style = m[1];
+  var l = document.createElement('link');
+  l.rel = 'stylesheet';
+  l.href = 'styles/' + m[1] + '.css';
+  document.head.appendChild(l);
+})();
+</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>

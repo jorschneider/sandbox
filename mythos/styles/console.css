@@ -1,0 +1,185 @@
+/* ============================================================
+   console.css — "Inference console" skin
+   Loaded after the inline <style> when ?style=console is set.
+   Dark-first, single-mode: forces the same palette in both themes.
+   No external resources. Body prose stays Source Serif 4.
+   ============================================================ */
+
+:root, :root[data-theme="light"], :root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0c0e12;
+  --surface: #12151b;
+  --ink: #e6e9f0;
+  --ink-2: #b3bac8;
+  --muted: #7d8696;
+  --hair: #1f2530;
+  --rule: #333d4d;
+  --accent: #ffb454;
+  --accent-soft: rgba(255, 180, 84, 0.10);
+  --s1: #53b9ff;  --s1-ink: #06121c;
+  --s2: #5ee08a;  --s2-ink: #06150c;
+  --s3: #ff6ec7;  --s3-ink: #1c0813;
+  --shadow: none;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --panel-hi: #1a1f28; /* titlebar strips, quoted stdout */
+}
+
+/* faint scanlines over the page (~2% white) */
+body {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 3px),
+    var(--page);
+}
+
+::selection { background: var(--accent); color: #0c0e12; }
+:root[data-theme="dark"] ::selection { background: var(--accent); color: #0c0e12; }
+
+/* ---------- top nav as terminal titlebar ---------- */
+#topnav { border-bottom: 1px solid var(--rule); }
+.nav-inner { font-family: var(--mono); }
+.brand { color: var(--ink); letter-spacing: .08em; }
+.brand::before { content: "▮ "; color: var(--accent); }
+.nav-links a { border-radius: 2px; font-size: .75rem; }
+#themeToggle { font-family: var(--mono); border-radius: 2px; }
+
+/* ---------- kickers as prompt lines ---------- */
+.kicker { font-family: var(--mono); letter-spacing: .1em; }
+.kicker::before { content: "> "; }
+
+/* ---------- hero ---------- */
+#hero h1::after {
+  content: "▌";
+  font-family: var(--mono);
+  font-size: .72em;
+  line-height: 1;
+  margin-left: .08em;
+  color: var(--accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  #hero h1::after { animation: cursor-blink 1.1s steps(1, end) infinite; }
+}
+@keyframes cursor-blink { 50% { opacity: 0; } }
+.hero-meta { font-family: var(--mono); }
+.hero-paths a {
+  font-family: var(--mono); font-size: .75rem;
+  border-radius: 2px; border-color: var(--rule);
+}
+
+/* ---------- datemarks as log timestamps ---------- */
+.datemark { font-family: var(--mono); letter-spacing: .1em; color: var(--ink-2); }
+.datemark::before { content: "["; color: var(--muted); }
+.datemark::after {
+  content: "]"; display: inline; width: auto; height: auto;
+  background: transparent; margin-left: 0; vertical-align: baseline;
+  color: var(--muted);
+}
+
+/* ---------- quoted stdout blocks (text stays serif) ---------- */
+blockquote.pull {
+  background: var(--panel-hi);
+  border-left: 3px solid var(--accent);
+  border-radius: 0;
+  padding: 1.1rem 1.35rem 1.1rem 1.5rem;
+}
+blockquote.pull footer { font-family: var(--mono); }
+
+/* ---------- flat panels: square, bordered, unshadowed ---------- */
+.path-card, .take, .note, .vote-card, .viz-card {
+  border-radius: 2px;
+  border-color: var(--rule);
+}
+.path-card::before { left: 0; right: 0; border-radius: 0; }
+.path-num, .path-odds { font-family: var(--mono); }
+.note strong.tag { font-family: var(--mono); }
+.note strong.tag::before { content: "# "; }
+.fn-list li:target { border-radius: 2px; }
+.upshot { border-top: 1px dashed var(--rule); }
+.upshot .tag { font-family: var(--mono); }
+
+/* ---------- scenario chrome ---------- */
+.scen-chip { font-family: var(--mono); letter-spacing: .1em; }
+.scen-odds { font-family: var(--mono); }
+.take-rank { font-family: var(--mono); }
+
+/* ---------- figures as terminal panes ---------- */
+.fig-frame {
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.fig-frame::before {
+  content: ""; display: block; height: 14px;
+  background:
+    radial-gradient(circle at 10px 50%, var(--muted) 2px, transparent 2.5px),
+    radial-gradient(circle at 24px 50%, var(--muted) 2px, transparent 2.5px),
+    radial-gradient(circle at 38px 50%, var(--muted) 2px, transparent 2.5px),
+    var(--panel-hi);
+  border-bottom: 1px solid var(--rule);
+}
+.fig-frame.pad::before { margin: -.75rem -.75rem .75rem; }
+figure.fig img { border-radius: 0; }
+figure.fig figcaption { font-family: var(--mono); font-size: .78rem; }
+figure.fig figcaption::before { content: "fig:// "; color: var(--muted); }
+figure.fig figcaption .fign { color: var(--accent); }
+
+/* FICTIONAL badge: linter-warning tag — conspicuous, never smaller */
+.fict {
+  font-family: var(--mono);
+  font-size: .6875rem;
+  letter-spacing: .06em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  padding: .05rem .4rem;
+}
+.fict::before { content: "["; }
+.fict::after { content: "]"; }
+
+/* ---------- odds chart: benchmark-table aesthetics ---------- */
+.viz-card { font-family: var(--mono); }
+#tableToggle {
+  font-family: var(--mono);
+  border-radius: 2px; border-color: var(--rule);
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.swatch { border-radius: 0; }
+.seg:first-child { border-radius: 0; }
+.seg:last-child { border-radius: 0; }
+.seg-label { font-family: var(--mono); }
+#oddsTable thead th { border-bottom: 1px solid var(--rule); }
+.viz-tip {
+  font-family: var(--mono);
+  background: var(--panel-hi); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 2px;
+  box-shadow: none;
+}
+
+/* your-odds widget (inherits mono from .viz-card) */
+.hist-bar { border-radius: 0; }
+.ow-range { border-radius: 0; }
+
+/* ---------- buttons: bracketed outline, mono uppercase ---------- */
+.btn, :root[data-theme="dark"] .btn {
+  font-family: var(--mono);
+  font-size: .8438rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  background: transparent; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 2px;
+}
+.btn::before { content: "[ "; }
+.btn::after { content: " ]"; }
+.btn:hover, :root[data-theme="dark"] .btn:hover {
+  background: var(--accent); color: #0c0e12; filter: none;
+}
+.btn-sm { padding: .5rem 1rem; font-size: .75rem; }
+.ow-status { font-family: var(--mono); }
+
+/* ---------- footnotes as a log ---------- */
+.fn-list { font-family: var(--mono); }
+.fn-list li { font-size: .8125rem; line-height: 1.7; }
+#footnotes { border-top: 1px solid var(--rule); }
+
+/* ---------- footer ---------- */
+footer.site { font-family: var(--mono); border-top: 1px solid var(--rule); }
+footer.site .fbrand { letter-spacing: .08em; }
+footer.site .fbrand::before { content: "▮ "; }
