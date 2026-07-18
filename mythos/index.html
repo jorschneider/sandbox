@@ -11,9 +11,9 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://when-china-gets-mythos.vercel.app/" />
 <link rel="canonical" href="https://when-china-gets-mythos.vercel.app/" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="preload" href="assets/fonts/SourceSerif4-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="assets/fonts/SourceSerif4-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="assets/fonts/Inter-600-latin.woff2" as="font" type="font/woff2" crossorigin />
 <script>
 (function(){try{
   var t = localStorage.getItem('ct-theme');
@@ -22,6 +22,16 @@
 }catch(e){ document.documentElement.dataset.theme = 'light'; }})();
 </script>
 <style>
+  /* Self-hosted fonts (latin subsets) — no external font CDN, loads everywhere incl. mainland China */
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url(assets/fonts/Inter-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url(assets/fonts/Inter-500-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url(assets/fonts/Inter-600-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap; src: url(assets/fonts/Inter-700-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Source Serif 4'; font-style: italic; font-weight: 400; font-display: swap; src: url(assets/fonts/SourceSerif4-400i-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Source Serif 4'; font-style: italic; font-weight: 600; font-display: swap; src: url(assets/fonts/SourceSerif4-600i-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Source Serif 4'; font-style: normal; font-weight: 400; font-display: swap; src: url(assets/fonts/SourceSerif4-400-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Source Serif 4'; font-style: normal; font-weight: 700; font-display: swap; src: url(assets/fonts/SourceSerif4-700-latin.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
   :root, :root[data-theme="light"] {
     color-scheme: light;
     --page: #f9f9f7;
@@ -198,6 +208,7 @@
     font-size: .8125rem; font-style: normal; color: var(--muted);
   }
   blockquote.pull .zh { font-style: normal; }
+  blockquote.pull strong { font-weight: 600; }
 
   sup.fn { line-height: 0; }
   sup.fn a {
@@ -383,8 +394,19 @@
   .take > p:last-child { margin-bottom: 0; }
   .take blockquote.pull { font-size: 1.0625rem; margin: 1.4rem 0; }
 
-  /* ---------- vote ---------- */
-  #vote { border-top: 1px solid var(--hair); }
+  /* ---------- your-odds widget ---------- */
+  .ow-sliders { display: grid; gap: .9rem; margin-bottom: 1.6rem; }
+  .ow-row { display: grid; grid-template-columns: 9rem 1fr 3.5rem; gap: .9rem; align-items: center; }
+  @media (max-width: 540px) { .ow-row { grid-template-columns: 6.5rem 1fr 3rem; gap: .6rem; } }
+  .ow-row label { display: inline-flex; align-items: center; gap: .5rem; font-size: .8125rem; font-weight: 500; color: var(--ink-2); }
+  .ow-row output { font-size: .8438rem; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+  .ow-range { width: 100%; height: 22px; cursor: pointer; margin: 0; }
+  .r1 { accent-color: var(--s1); } .r2 { accent-color: var(--s2); } .r3 { accent-color: var(--s3); }
+  .ow-compare { margin-top: .4rem; }
+  .ow-verdict { margin-top: 1.2rem; font-size: .8438rem; color: var(--ink-2); }
+
+  /* ---------- vote / subscribe ---------- */
+  #subscribe { border-top: 1px solid var(--hair); }
   .vote-card {
     text-align: center; background: var(--surface); border: 1px solid var(--hair);
     border-radius: 1rem; padding: 3rem 1.5rem; box-shadow: var(--shadow);
@@ -421,7 +443,7 @@
       <a href="#s2">2 · Glasswing</a>
       <a href="#s3">3 · Black Box</a>
       <a href="#odds">Our Odds</a>
-      <a href="#vote">Vote</a>
+      <a href="#vote">Your Odds</a>
     </div>
     <button id="themeToggle" aria-label="Toggle color theme">☾</button>
   </nav>
@@ -514,7 +536,7 @@
 
     <figure class="fig">
       <div class="fig-frame frame-black pad">
-        <img src="assets/exploitbench.png" alt="A fictional dark-mode benchmark chart titled ExploitBench, plotting cap percent against output tokens. GPT-5.6 variants and GLM 6 curves all top out beneath a dotted line labeled Mythos 5, with Opus 4.8 and Opus 4.7 marked lower down." width="1574" height="1148" loading="lazy" />
+        <img src="assets/exploitbench.png" srcset="assets/exploitbench-800.png 800w, assets/exploitbench.png 1574w" sizes="(min-width: 704px) 632px, calc(100vw - 40px)" alt="A fictional dark-mode benchmark chart titled ExploitBench, plotting cap percent against output tokens. GPT-5.6 variants and GLM 6 curves all top out beneath a dotted line labeled Mythos 5, with Opus 4.8 and Opus 4.7 marked lower down." width="1574" height="1148" loading="lazy" />
       </div>
       <figcaption><span class="fign">Fig.&nbsp;2</span> &mdash; <span class="fict">Fictional</span> <a href="https://openai.com/index/previewing-gpt-5-6-sol/">GPT&nbsp;5.6</a> performs worse than Mythos on exploiting cyber vulnerabilities. In the pre-Mythos era, OpenAI would never have released this model, and would have waited for the line to beat Mythos. Now, sandbagging is the meta!</figcaption>
     </figure>
@@ -523,7 +545,7 @@
 
     <figure class="fig">
       <div class="fig-frame frame-paper pad">
-        <img src="assets/enterprise-share.png" alt="A fictional line chart titled 'Most-Used AI Model for Global Enterprise', showing share of token output for Anthropic (around 35 percent), OpenAI (around 30 percent), and Z.ai. The Z.ai line climbs slowly through 2026, then kinks sharply upward in September 2026. A note stamps the chart as hypothetical, fabricated data." width="1626" height="1247" loading="lazy" />
+        <img src="assets/enterprise-share.png" srcset="assets/enterprise-share-800.png 800w, assets/enterprise-share.png 1626w" sizes="(min-width: 704px) 632px, calc(100vw - 40px)" alt="A fictional line chart titled 'Most-Used AI Model for Global Enterprise', showing share of token output for Anthropic (around 35 percent), OpenAI (around 30 percent), and Z.ai. The Z.ai line climbs slowly through 2026, then kinks sharply upward in September 2026. A note stamps the chart as hypothetical, fabricated data." width="1626" height="1247" loading="lazy" />
       </div>
       <figcaption><span class="fign">Fig.&nbsp;3</span> &mdash; <span class="fict">Fictional</span> The slope of enterprise adoption after GLM&nbsp;6 drops. Hypothetical data, fabricated for illustration.</figcaption>
     </figure>
@@ -568,7 +590,7 @@
 
     <figure class="fig">
       <div class="fig-frame frame-white pad">
-        <img src="assets/safeguards.png" alt="A diagram comparing three classifier boundaries across a spectrum from benign to harmful requests. Normal safeguards block only harmful requests; Fable 5 safeguards use a larger safety margin at the cost of blocking some benign use; the fictional GLM 6 safeguards mirror Fable 5's approach with a large safety margin." width="1600" height="1025" loading="lazy" />
+        <img src="assets/safeguards.png" srcset="assets/safeguards-800.png 800w, assets/safeguards.png 1600w" sizes="(min-width: 704px) 632px, calc(100vw - 40px)" alt="A diagram comparing three classifier boundaries across a spectrum from benign to harmful requests. Normal safeguards block only harmful requests; Fable 5 safeguards use a larger safety margin at the cost of blocking some benign use; the fictional GLM 6 safeguards mirror Fable 5's approach with a large safety margin." width="1600" height="1025" loading="lazy" />
       </div>
       <figcaption><span class="fign">Fig.&nbsp;4</span> &mdash; <span class="fict">Fictional</span> Visualization of the fictitious GLM&nbsp;6&rsquo;s public safeguards. Adapted from <a href="https://www.anthropic.com/news/redeploying-fable-5">Anthropic</a>.</figcaption>
     </figure>
@@ -606,7 +628,7 @@
 
     <figure class="fig">
       <div class="fig-frame frame-white">
-        <img src="assets/cac-meeting.jpg" alt="An AI-generated illustration of officials in dark suits around a long conference-room table set with lidded porcelain tea cups and a thermos, facing a wall screen showing a glowing network brain, charts, and a shield icon." width="1672" height="941" loading="lazy" />
+        <img src="assets/cac-meeting.jpg" srcset="assets/cac-meeting-800.jpg 800w, assets/cac-meeting.jpg 1672w" sizes="(min-width: 704px) 632px, calc(100vw - 40px)" alt="An AI-generated illustration of officials in dark suits around a long conference-room table set with lidded porcelain tea cups and a thermos, facing a wall screen showing a glowing network brain, charts, and a shield icon." width="1672" height="941" loading="lazy" />
       </div>
       <figcaption><span class="fign">Fig.&nbsp;5</span> &mdash; <span class="fict">Fictional</span> An imaginary rendering by GPT&nbsp;5.5.</figcaption>
     </figure>
@@ -669,7 +691,7 @@
             <span><span class="dot d3" aria-hidden="true"></span>S3&nbsp;15%</span>
           </span>
         </header>
-        <p>Chinese Glasswing (Scenario 2) most likely, then &lsquo;let it rip,&rsquo; then nationalization. On 3: despite Xi&rsquo;s desire for SOEs to perform, I think he has learned his lesson through the tech crackdown that the state can&rsquo;t really be relied on to produce the sort of technological breakthroughs required to keep pace with the AI frontier (he learned <a href="https://www.google.com/search?q=why+no+unicorns+xi+jinping&amp;oq=why+no+unicorns+xi+jinping&amp;gs_lcrp=EgRlZGdlKgYIABBFGDkyBggAEEUYOTIICAEQABgWGB4yCAgCEAAYFhgeMgoIAxAAGAoYFhgeMgoIBBAAGAoYFhgeMggIBRAAGBYYHjIICAYQABgWGB4yCAgHEAAYFhgeMgcICBDrBxhA0gEIMzQ1MGowajeoAgCwAgA&amp;sourceid=chrome&amp;source=chrome.ob&amp;ie=UTF-8#:~:text=once%C2%A0...Read%20more-,Xi%20Jinping%20is%20trying%20to%20love%2Dbomb%20China%27s%20entrepreneurs,https%3A//www.economist.com%20%E2%80%BA%20...%20%E2%80%BA%20July%2020th%202024%20edition,-Jul%2016%2C%202024">why the unicorns went away</a>). Some muddle-through of tighter regulation, golden shares and minority state investment, and a Glasswing-style release &mdash; as opposed to an indefinite lockdown on access and total nationalization &mdash; seems like the more likely equilibrium over the next two years.</p>
+        <p>Chinese Glasswing (Scenario 2) most likely, then &lsquo;let it rip,&rsquo; then nationalization. On 3: despite Xi&rsquo;s desire for SOEs to perform, I think he has learned his lesson through the tech crackdown that the state can&rsquo;t really be relied on to produce the sort of technological breakthroughs required to keep pace with the AI frontier (he learned <a href="https://www.economist.com/china/2024/07/16/xi-jinping-is-trying-to-love-bomb-chinas-entrepreneurs">why the unicorns went away</a>). Some muddle-through of tighter regulation, golden shares and minority state investment, and a Glasswing-style release &mdash; as opposed to an indefinite lockdown on access and total nationalization &mdash; seems like the more likely equilibrium over the next two years.</p>
         <p>I also don&rsquo;t see the labs keeping their best capabilities open forever. Chinese model makers have already begun to <a href="https://www.chinatalk.media/p/chinas-ai-companies-are-going-closed">go closed source</a> to make money, and as <a href="https://www.reuters.com/world/beijing-is-looking-curbing-overseas-access-chinas-top-ai-models-sources-say-2026-07-07/">Reuters reported</a>, there are influential strains within the system skeptical of allowing foreigners access to China&rsquo;s best models. The benefits to the Chinese government of open sourcing powerful AI are diffuse (global PR, undermining the western AI ecosystem), while the harms are concentrated in a paranoid security state that is not interested in democratizing access to hacking. Plus, Xi really likes assassin&rsquo;s maces, and a world-conquering cyberweapon is not the sort of thing that you give up for good global PR. Xi&rsquo;s WAIC speech to me felt like it could just be a barbarian-handling exercise akin to his 2017 World Economic Forum address, in which he promised to serve as a counterweight to Trump tariffs but <a href="https://chatgpt.com/share/6a5a8e89-7c04-83ea-9188-b6444154cd05">immediately started on a global campaign of economic coercion</a> once security issues towards Korea, Japan, and Australia cropped up. When things get serious &mdash; once China has an AI model that can truly compete with or even exceed the cyber capabilities the US has access to &mdash; it&rsquo;s unlikely he will really want to hand that capability over to Hugging Face.</p>
         <p>Lastly, Zhipu, DeepSeek, and Moonshot &mdash; the leading Chinese labs now that everyone good at Qwen quit &mdash; do not own complements like Nvidia does, which would give them economic incentives to commoditize themselves. Their CEOs are genuinely ideologically committed to open source, but they do need to keep money coming in to do novel research and train models.</p>
         <p>Today I don&rsquo;t see a coordinated national strategy to pop the west&rsquo;s AI bubble by driving down the global cost of intelligence &mdash; though one may be emerging, evidenced by Xi&rsquo;s speech and the DeepSeek investment. It is possible the government decides it&rsquo;s strategically important enough to foot the bill for its top firms. It would not take nearly as much money as Xi has already spent on more hardware-oriented industrial policy efforts around cars, solar, and semiconductors.</p>
@@ -728,14 +750,49 @@
   </div>
 </section>
 
-<!-- ═══════════════ VOTE ═══════════════ -->
-<section id="vote" aria-labelledby="vote-h">
+<!-- ═══════════════ YOUR ODDS ═══════════════ -->
+<section id="vote" class="scenario" aria-labelledby="vote-h">
+  <div class="col prose">
+    <p class="kicker">Your Odds</p>
+    <h2 id="vote-h">Now it&rsquo;s your turn</h2>
+    <p>We&rsquo;d like to hear from our readers, too. Where would you put your money? Drag the sliders &mdash; they always sum to 100% &mdash; and see how your bet stacks up against ours.</p>
+  </div>
+  <div class="col-wide">
+    <div class="viz-card">
+      <div class="ow-sliders">
+        <div class="ow-row">
+          <label for="ow0"><span class="dot d1" aria-hidden="true"></span>Let It Rip</label>
+          <input type="range" id="ow0" class="ow-range r1" min="0" max="100" step="1" value="33" />
+          <output id="owo0" for="ow0">33%</output>
+        </div>
+        <div class="ow-row">
+          <label for="ow1"><span class="dot d2" aria-hidden="true"></span>Glasswing</label>
+          <input type="range" id="ow1" class="ow-range r2" min="0" max="100" step="1" value="45" />
+          <output id="owo1" for="ow1">45%</output>
+        </div>
+        <div class="ow-row">
+          <label for="ow2"><span class="dot d3" aria-hidden="true"></span>Black Box</label>
+          <input type="range" id="ow2" class="ow-range r3" min="0" max="100" step="1" value="22" />
+          <output id="owo2" for="ow2">22%</output>
+        </div>
+      </div>
+      <div class="viz-rows ow-compare" aria-hidden="true">
+        <div class="viz-row"><span class="viz-name">You</span><div class="viz-bar" id="owBar"></div></div>
+        <div class="viz-row avg"><span class="viz-name">Team average</span><div class="viz-bar" id="owTeam"></div></div>
+      </div>
+      <p class="ow-verdict" id="owVerdict" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SUBSCRIBE ═══════════════ -->
+<section id="subscribe" aria-labelledby="sub-h">
   <div class="col-wide">
     <div class="vote-card">
-      <p class="kicker">Reader Poll</p>
-      <h2 id="vote-h">Now it&rsquo;s your turn</h2>
-      <p>We&rsquo;d like to hear from our readers, too. Which path do you find most likely? Rank the scenarios from most to least likely.</p>
-      <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdPB1_jLhWgsD0OPBgk6U2AQ9FbpmW3NLsNazS5HCh-w0wefQ/viewform" target="_blank" rel="noopener">Cast your ranking &rarr;</a>
+      <p class="kicker">ChinaTalk</p>
+      <h2 id="sub-h">Get the next scenario in your inbox</h2>
+      <p>ChinaTalk is a newsletter and podcast on China, technology, and US&ndash;China relations. If this exercise was useful, the best way to follow what actually happens next is to subscribe.</p>
+      <a class="btn" href="https://www.chinatalk.media/subscribe">Subscribe to ChinaTalk &rarr;</a>
     </div>
   </div>
 </section>
@@ -747,7 +804,7 @@
     <ol class="fn-list">
       <li id="fn1">Someone should write the piece on what France does when Mistral trains a Mythos model — Dubai, etc. <a class="fn-back" href="#fnr1" aria-label="Back to reference 1">&#8617;</a></li>
       <li id="fn2">Per Concordia AI&rsquo;s excellent State of AI Safety in China (2026) report: state media coverage of a speech by President Xi Jinping referenced &ldquo;risks of technological loss of control,&rdquo; and a major standard-setting body has flagged the need for &ldquo;circuit breakers&rdquo; and &ldquo;safety stop switches.&rdquo; <a class="fn-back" href="#fnr2" aria-label="Back to reference 2">&#8617;</a></li>
-      <li id="fn3">Reuters reported on July 7 that &ldquo;Chinese authorities have held meetings with top tech firms over the past month about potentially restricting overseas access to China&rsquo;s most advanced AI models.&rdquo; <a class="fn-back" href="#fnr3" aria-label="Back to reference 3">&#8617;</a></li>
+      <li id="fn3"><a href="https://www.reuters.com/world/beijing-is-looking-curbing-overseas-access-chinas-top-ai-models-sources-say-2026-07-07/">Reuters reported</a> on July 7 that &ldquo;Chinese authorities have held meetings with top tech firms over the past month about potentially restricting overseas access to China&rsquo;s most advanced AI models.&rdquo; <a class="fn-back" href="#fnr3" aria-label="Back to reference 3">&#8617;</a></li>
       <li id="fn4">From a 2020 Xi speech: &ldquo;We must build on our advantages, solidify and increase the leading international positions of strong industries, and forge some &lsquo;assassin&rsquo;s mace&rsquo; technologies.&rdquo; CSET defines a <span lang="zh-Hans">杀手锏</span> as &ldquo;a stratagem or resource that, when used at the critical moment in a competition or confrontation, proves decisive.&rdquo; <a class="fn-back" href="#fnr4" aria-label="Back to reference 4">&#8617;</a></li>
     </ol>
   </div>
@@ -936,6 +993,74 @@
     tBtn.setAttribute("aria-expanded", String(open));
     tBtn.textContent = open ? "Hide table" : "Table view";
   });
+
+  /* ---------- your-odds widget ---------- */
+  var OW_TEAM = [32.5, 45, 22.5];
+  var owVals = [33, 45, 22];
+  try {
+    var saved = JSON.parse(localStorage.getItem("ct-your-odds") || "null");
+    if (Array.isArray(saved) && saved.length === 3 &&
+        saved.every(function (v) { return typeof v === "number" && v >= 0 && v <= 100; }) &&
+        saved[0] + saved[1] + saved[2] === 100) owVals = saved;
+  } catch (e) {}
+
+  function owSegs(el, vals) {
+    el.innerHTML = "";
+    vals.forEach(function (v, i) {
+      var seg = document.createElement("div");
+      seg.className = "seg c" + (i + 1);
+      seg.style.setProperty("--w", Math.max(v, 0.0001));
+      var lab = document.createElement("span");
+      lab.className = "seg-label";
+      lab.textContent = v % 1 === 0 ? v : v.toFixed(1);
+      seg.appendChild(lab);
+      el.appendChild(seg);
+    });
+  }
+  var owBar = document.getElementById("owBar");
+  owSegs(document.getElementById("owTeam"), OW_TEAM);
+
+  var owRanges = [0, 1, 2].map(function (i) { return document.getElementById("ow" + i); });
+  var owOuts = [0, 1, 2].map(function (i) { return document.getElementById("owo" + i); });
+  var owVerdict = document.getElementById("owVerdict");
+  var OW_MSGS = [
+    "Your top pick: Let It Rip — Aqib gives it a coin-flip too.",
+    "Your top pick: Glasswing — you’re with Jordan and Lily (and half of Aqib).",
+    "Your top pick: the Black Box — Irene’s call as well, even though we may never find out."
+  ];
+
+  function owPaint() {
+    owRanges.forEach(function (r, i) { r.value = owVals[i]; r.setAttribute("aria-valuetext", owVals[i] + "%"); });
+    owOuts.forEach(function (o, i) { o.textContent = owVals[i] + "%"; });
+    owSegs(owBar, owVals);
+    fitLabels();
+    var max = Math.max.apply(null, owVals);
+    var tied = owVals.filter(function (v) { return v === max; }).length > 1;
+    owVerdict.textContent = tied
+      ? "You’re split at the top — fair enough, the four of us couldn’t agree either."
+      : OW_MSGS[owVals.indexOf(max)];
+    try { localStorage.setItem("ct-your-odds", JSON.stringify(owVals)); } catch (e) {}
+  }
+
+  function owMove(i, val) {
+    val = Math.max(0, Math.min(100, Math.round(val)));
+    var o1 = (i + 1) % 3, o2 = (i + 2) % 3;
+    var rest = 100 - val, sum = owVals[o1] + owVals[o2];
+    if (sum === 0) {
+      owVals[o1] = Math.round(rest / 2);
+      owVals[o2] = rest - owVals[o1];
+    } else {
+      var a = Math.round(rest * owVals[o1] / sum);
+      owVals[o1] = a;
+      owVals[o2] = rest - a;
+    }
+    owVals[i] = val;
+    owPaint();
+  }
+  owRanges.forEach(function (r, i) {
+    r.addEventListener("input", function () { owMove(i, +r.value); });
+  });
+  owPaint();
 })();
 </script>
 </body>
