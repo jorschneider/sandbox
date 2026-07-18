@@ -1,0 +1,190 @@
+/* ════════════════════════════════════════════════════════════════
+   SHANGHAI DECO — variant skin, loaded via ?style=deco
+   1930s Shanghai print culture on a modern grid: 月份牌 poster
+   elegance, deco geometry, cream paper, prussian ink-blue headings,
+   vermilion accents, jade tertiary, gold hairline ornament.
+   Single-mode by design: dark theme is forced to the same paper.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ---------- tokens: one palette, both themes ---------- */
+:root, :root[data-theme="light"], :root[data-theme="dark"] {
+  color-scheme: light;
+  --page: #f6efdf;            /* warm cream paper */
+  --surface: #fcf7e9;         /* brighter plate cream */
+  --ink: #26201a;             /* near-black warm ink — body text */
+  --ink-2: #52473a;
+  --muted: #75695a;
+  --hair: #e5d9bc;
+  --rule: #c8b382;
+  --accent: #a83a24;          /* vermilion — 5.6:1 on cream */
+  --accent-soft: rgba(168, 58, 36, 0.09);
+  --s1: #2e5e8a;  --s1-ink: #f9f3e2;   /* prussian blue      */
+  --s2: #2f6b57;  --s2-ink: #f2f4e6;   /* celadon jade       */
+  --s3: #b34a3e;  --s3-ink: #fdf3e6;   /* vermilion rose     */
+  --shadow: 0 1px 0 rgba(90, 64, 24, .08), 0 10px 26px rgba(90, 64, 24, .07);
+  --deco-blue: #1d3a5f;       /* heading / chrome ink-blue */
+  --deco-gold: #ac8339;       /* gold hairline ornament */
+  --deco-cream: #f9f2df;
+}
+:root ::selection,
+:root[data-theme="light"] ::selection,
+:root[data-theme="dark"] ::selection { background: var(--deco-blue); color: var(--deco-cream); }
+
+/* faint laid-paper grain, well under 3% */
+body {
+  background-image: repeating-linear-gradient(0deg, rgba(120, 90, 40, .025) 0 1px, transparent 1px 4px);
+}
+
+/* CJK spans: Songti print stack */
+[lang="zh-Hans"] { font-family: "Source Serif 4", "Songti SC", "STSong", "SimSun", serif; }
+
+/* ---------- type: ink-blue display serif, wide-tracked chrome ---------- */
+h1, h2, .take-head h3, .path-card h3, .viz-title { color: var(--deco-blue); }
+h1, h2 { font-stretch: 97%; } /* engages only if a width axis exists */
+
+.kicker { letter-spacing: .3em; }
+.kicker::before, .kicker::after {
+  content: "\2014\2726\2014"; /* —✦— */
+  color: var(--deco-gold); font-weight: 400; letter-spacing: 0;
+}
+.kicker::before { margin-right: .8em; }
+.kicker::after  { margin-left: .5em; }
+@media (max-width: 480px) {
+  .kicker { letter-spacing: .18em; }
+  .kicker::before, .kicker::after { content: "\2726"; }
+}
+
+/* ---------- chrome ---------- */
+.brand { letter-spacing: .2em; }
+.nav-links a, #themeToggle, #tableToggle, .hero-paths a { border-radius: 0; }
+.hero-paths a { border-color: var(--rule); }
+#progress { background: linear-gradient(90deg, var(--deco-gold), var(--accent)); }
+.hero-meta { text-transform: uppercase; letter-spacing: .14em; font-size: .75rem; }
+.dot { border-radius: 1px; transform: rotate(45deg) scale(.8); } /* deco diamonds */
+.swatch { border-radius: 0; }
+
+/* ---------- hero as a printed plate: stepped rule borders ---------- */
+#hero {
+  border-bottom: none;
+  background-image:
+    linear-gradient(to bottom, var(--deco-blue) 0 5px, transparent 5px 8px,
+      var(--deco-gold) 8px 9px, transparent 9px 12px, var(--accent) 12px 13px, transparent 13px),
+    linear-gradient(to top, var(--deco-blue) 0 5px, transparent 5px 8px,
+      var(--deco-gold) 8px 9px, transparent 9px 12px, var(--accent) 12px 13px, transparent 13px);
+  background-repeat: no-repeat;
+  background-size: 100% 14px, 100% 14px;
+  background-position: top center, bottom center;
+}
+
+/* ---------- cards: sharp corners, gold corner brackets ---------- */
+.path-card, .viz-card, .take, .vote-card, .note, .viz-tip { border-radius: 0; }
+.viz-card, .take, .vote-card { position: relative; }
+.path-card::before, .path-card::after,
+.viz-card::before,  .viz-card::after,
+.take::before,      .take::after,
+.vote-card::before, .vote-card::after {
+  content: ""; position: absolute; top: 7px; width: 13px; height: 13px;
+  background: none; border-radius: 0; pointer-events: none;
+  border-top: 1px solid var(--deco-gold);
+}
+.path-card::before, .viz-card::before, .take::before, .vote-card::before {
+  left: 7px; right: auto; border-left: 1px solid var(--deco-gold);
+}
+.path-card::after, .viz-card::after, .take::after, .vote-card::after {
+  right: 7px; left: auto; border-right: 1px solid var(--deco-gold);
+}
+.path-card { border-top: 3px solid var(--pc); } /* scenario hue moves into the frame */
+.path-card:hover { border-color: var(--deco-gold); border-top-color: var(--pc); }
+.path-num { color: var(--deco-blue); letter-spacing: .22em; }
+
+/* ---------- scenario chapters ---------- */
+.scen-head {
+  position: relative;
+  border-left: 3px solid var(--deco-blue); /* thick vertical print rule… */
+  padding-left: 1.4rem;
+}
+.scen-head::before {                       /* …doubled by a gold hairline */
+  content: ""; position: absolute; left: 5px; top: 0; bottom: 0;
+  width: 1px; background: var(--deco-gold);
+}
+.scen-chip {
+  border: 1px solid var(--deco-gold); background: var(--surface);
+  padding: .45rem .75rem .45rem .9rem;
+  letter-spacing: .26em; color: var(--deco-blue);
+}
+.scen-chip .dot { background: var(--accent); } /* red seal-dot in the cartouche */
+.upshot .tag { color: var(--deco-blue); letter-spacing: .22em; }
+
+/* datemark: small cartouche with ✦ separators */
+.datemark {
+  display: inline-block; color: var(--deco-blue);
+  border: 1px solid var(--deco-gold); background: var(--surface);
+  padding: .35rem .65rem .35rem .95rem; letter-spacing: .26em;
+}
+.datemark::before { content: "\2726"; color: var(--accent); margin-right: .9em; letter-spacing: 0; }
+.datemark::after {
+  content: "\2726"; width: auto; height: auto; background: none;
+  color: var(--accent); margin-left: .9em; letter-spacing: 0; vertical-align: baseline;
+}
+
+/* ---------- pull quotes: gold hairline frame, vermilion quote mark ---------- */
+blockquote.pull {
+  position: relative; border-left: none;
+  border-top: 1px solid var(--deco-gold); border-bottom: 1px solid var(--deco-gold);
+  padding: 1.6rem .5rem 1.4rem 3rem;
+}
+blockquote.pull::before {
+  content: "\201C"; position: absolute; left: .3rem; top: 1.05rem;
+  font: 700 3.1rem/1 "Source Serif 4", Georgia, serif; color: var(--accent);
+}
+blockquote.pull footer { letter-spacing: .04em; }
+
+/* ---------- figures: double-framed plates with cream matting ---------- */
+.fig-frame, .fig-frame.pad {
+  position: relative; border: 1px solid var(--deco-blue); border-radius: 0;
+  padding: .85rem; box-shadow: var(--shadow);
+}
+.fig-frame::after {
+  content: ""; position: absolute; inset: 4px;
+  border: 1px solid var(--deco-gold); pointer-events: none;
+}
+.frame-white, .frame-black, .frame-paper { background: var(--surface); }
+figure.fig img { border-radius: 0; }
+figure.fig figcaption { font-variant-caps: small-caps; letter-spacing: .05em; }
+figure.fig figcaption .fign { color: var(--deco-blue); letter-spacing: .08em; }
+
+/* FICTIONAL badge: vermilion seal, gold-bordered — kept prominent */
+.fict {
+  font-size: .6875rem; letter-spacing: .18em;
+  color: var(--deco-cream); background: var(--accent);
+  border: 1px solid var(--deco-gold); border-radius: 0;
+  padding: .16rem .55rem; vertical-align: 2px;
+}
+
+/* ---------- chart & widget geometry goes rectilinear ---------- */
+.seg:first-child, .seg:last-child { border-radius: 0; }
+.hist-bar { border-radius: 0; }
+.viz-tip {
+  background: var(--deco-blue); color: var(--deco-cream);
+  border: 1px solid var(--deco-gold);
+}
+
+/* ---------- buttons: ink-blue, gold border, letterspaced caps ---------- */
+.btn {
+  border-radius: 0; border: 1px solid var(--deco-gold);
+  text-transform: uppercase; letter-spacing: .16em;
+  font-size: .8125rem; font-weight: 600;
+}
+:root .btn, :root[data-theme="light"] .btn, :root[data-theme="dark"] .btn {
+  background: var(--deco-blue); color: var(--deco-cream);
+}
+.btn:hover { filter: brightness(1.15); }
+
+/* ---------- colophon ---------- */
+footer.site { border-top-color: var(--rule); }
+footer.site::before {
+  content: "\2756\2003\2756\2003\2756"; /* ❖ ❖ ❖ */
+  display: block; color: var(--deco-gold);
+  font-size: .95rem; margin-bottom: 1.4rem;
+}
+footer.site .fbrand { letter-spacing: .3em; }
