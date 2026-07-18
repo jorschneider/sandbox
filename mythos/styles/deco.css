@@ -1,10 +1,15 @@
 /* ════════════════════════════════════════════════════════════════
    SHANGHAI DECO — variant skin, loaded via ?style=deco
-   1930s Shanghai print culture on a modern grid: 月份牌 poster
-   elegance, deco geometry, cream paper, prussian ink-blue headings,
-   vermilion accents, jade tertiary, gold hairline ornament.
+   A 1930s Shanghai printed plate: Playfair didone display in
+   prussian ink-blue, gold hairline ornament, vermilion seals,
+   ziggurat dividers, cartouche section openers, framed hero plate.
+   Body copy stays Source Serif, near-black, ≥1.125rem/1.75.
    Single-mode by design: dark theme is forced to the same paper.
    ════════════════════════════════════════════════════════════════ */
+
+/* ---------- display faces (local, latin subsets) ---------- */
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 800; font-display: swap; src: url(../assets/fonts/PlayfairDisplay-800-latin.woff2) format('woff2'); }
+@font-face { font-family: 'Playfair Display'; font-style: italic; font-weight: 700; font-display: swap; src: url(../assets/fonts/PlayfairDisplay-700i-latin.woff2) format('woff2'); }
 
 /* ---------- tokens: one palette, both themes ---------- */
 :root, :root[data-theme="light"], :root[data-theme="dark"] {
@@ -25,6 +30,7 @@
   --deco-blue: #1d3a5f;       /* heading / chrome ink-blue */
   --deco-gold: #ac8339;       /* gold hairline ornament */
   --deco-cream: #f9f2df;
+  --display: "Playfair Display", "Source Serif 4", Georgia, serif;
 }
 :root ::selection,
 :root[data-theme="light"] ::selection,
@@ -38,9 +44,34 @@ body {
 /* CJK spans: Songti print stack */
 [lang="zh-Hans"] { font-family: "Source Serif 4", "Songti SC", "STSong", "SimSun", serif; }
 
-/* ---------- type: ink-blue display serif, wide-tracked chrome ---------- */
-h1, h2, .take-head h3, .path-card h3, .viz-title { color: var(--deco-blue); }
-h1, h2 { font-stretch: 97%; } /* engages only if a width axis exists */
+/* ════════════════════════════════════════════════════════════════
+   1 · DISPLAY TYPE — didone contrast in prussian ink
+   ════════════════════════════════════════════════════════════════ */
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 800;
+  color: var(--deco-blue);
+  letter-spacing: 0;
+}
+h2 { letter-spacing: -0.005em; }
+h2::before {                    /* small gold diamond section mark */
+  content: "\2726";
+  color: var(--deco-gold);
+  font-size: .5em;
+  font-weight: 400;
+  margin-right: .65em;
+  vertical-align: .3em;
+  letter-spacing: 0;
+}
+
+/* standfirsts set in the italic display cut */
+.standfirst, #hero .deck {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.standfirst { font-size: 1.3rem; line-height: 1.5; }
 
 .kicker { letter-spacing: .3em; }
 .kicker::before, .kicker::after {
@@ -49,35 +80,217 @@ h1, h2 { font-stretch: 97%; } /* engages only if a width axis exists */
 }
 .kicker::before { margin-right: .8em; }
 .kicker::after  { margin-left: .5em; }
-@media (max-width: 480px) {
-  .kicker { letter-spacing: .18em; }
-  .kicker::before, .kicker::after { content: "\2726"; }
-}
 
-/* ---------- chrome ---------- */
-.brand { letter-spacing: .2em; }
-.nav-links a, #themeToggle, #tableToggle, .hero-paths a { border-radius: 0; }
-.hero-paths a { border-color: var(--rule); }
-#progress { background: linear-gradient(90deg, var(--deco-gold), var(--accent)); }
+/* ════════════════════════════════════════════════════════════════
+   3 · MASTHEAD — gold on prussian band, single-mode
+   ════════════════════════════════════════════════════════════════ */
+#topnav {
+  background: var(--deco-blue);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border-bottom: 2px solid var(--deco-gold);
+}
+.brand { color: var(--deco-cream); letter-spacing: .24em; }
+.nav-links a { border-radius: 0; color: color-mix(in srgb, var(--deco-cream) 78%, var(--deco-blue)); }
+.nav-links a:hover { color: var(--deco-cream); background: rgba(249, 242, 223, .1); }
+.nav-links a.active,
+.nav-links a.active:hover {
+  color: var(--deco-cream);
+  background: linear-gradient(var(--deco-gold), var(--deco-gold)) center bottom .2rem / calc(100% - 1.1rem) 2px no-repeat;
+}
+#themeToggle { display: none; }   /* single-mode variant: no theme switch */
+#progress { background: var(--accent); }
+.skip { border: 1px solid var(--deco-gold); }
+
+/* ════════════════════════════════════════════════════════════════
+   2 · HERO AS ORNAMENTAL PLATE
+   ════════════════════════════════════════════════════════════════ */
+#hero {
+  border-bottom: none;
+  padding: 3rem 1.25rem 4rem;
+}
+#hero .col-wide {
+  position: relative;
+  background: var(--deco-cream);
+  border: 3px solid var(--deco-blue);          /* ink-blue outer frame */
+  outline: 1px solid var(--deco-gold);         /* gold inner hairline  */
+  outline-offset: -9px;
+  padding: clamp(2.75rem, 7vw, 4.5rem) clamp(1.5rem, 4.5vw, 3.5rem) clamp(2.25rem, 6vw, 3.5rem);
+  box-shadow: var(--shadow);
+}
+/* stepped gold chevron stacks in the top corners */
+#hero .col-wide::before, #hero .col-wide::after {
+  content: ""; position: absolute; top: 14px; width: 54px; height: 22px;
+  background:
+    linear-gradient(var(--deco-gold) 0 0) left top       / 100% 3px,
+    linear-gradient(var(--deco-gold) 0 0) left top 8px   / 66%  3px,
+    linear-gradient(var(--deco-gold) 0 0) left top 16px  / 34%  3px;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+#hero .col-wide::before { left: 14px; }
+#hero .col-wide::after  { right: 14px; transform: scaleX(-1); }
+
+/* sunrise fan above the title: radiating gold rules on the kicker */
+#hero .kicker { margin-bottom: 1.1rem; }
+#hero .kicker::before {
+  content: ""; display: block;
+  width: min(13rem, 60vw); height: min(5.5rem, 24vw);
+  margin: 0 auto 1.4rem;
+  background: repeating-conic-gradient(from -0.75deg at 50% 100%,
+    var(--deco-gold) 0 1.5deg, transparent 1.5deg 11.25deg);
+  -webkit-mask: radial-gradient(closest-side circle at 50% 100%, transparent 0 29%, #000 30% 95%, transparent 96%);
+  mask: radial-gradient(closest-side circle at 50% 100%, transparent 0 29%, #000 30% 95%, transparent 96%);
+}
+#hero .kicker::after { content: none; }
+
+#hero h1 {
+  font-size: clamp(3rem, 8.5vw, 6rem);
+  line-height: 1.03;
+  letter-spacing: -0.01em;
+  color: var(--deco-blue);
+}
+#hero .deck { font-size: 1.3rem; line-height: 1.55; }
 .hero-meta { text-transform: uppercase; letter-spacing: .14em; font-size: .75rem; }
+
+/* hero-path chips become deco tickets */
+.hero-paths a {
+  border-radius: 0;
+  border: 3px double var(--deco-gold);
+  background: var(--surface);
+  color: var(--deco-blue);
+  font-size: .75rem; font-weight: 600; line-height: 1.4;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: .5rem .9rem;
+  max-width: 100%;
+  flex-wrap: wrap; justify-content: center;
+}
+.hero-paths a:hover { border-color: var(--accent); color: var(--deco-blue); }
+.hero-paths .pct { color: var(--deco-blue); }
+.hero-paths a .dot { background: var(--accent); }  /* red diamond bullet */
 .dot { border-radius: 1px; transform: rotate(45deg) scale(.8); } /* deco diamonds */
 .swatch { border-radius: 0; }
 
-/* ---------- hero as a printed plate: stepped rule borders ---------- */
-#hero {
-  border-bottom: none;
-  background-image:
-    linear-gradient(to bottom, var(--deco-blue) 0 5px, transparent 5px 8px,
-      var(--deco-gold) 8px 9px, transparent 9px 12px, var(--accent) 12px 13px, transparent 13px),
-    linear-gradient(to top, var(--deco-blue) 0 5px, transparent 5px 8px,
-      var(--deco-gold) 8px 9px, transparent 9px 12px, var(--accent) 12px 13px, transparent 13px);
+/* ════════════════════════════════════════════════════════════════
+   4 · SECTION DIVIDERS AS ZIGGURATS
+   ════════════════════════════════════════════════════════════════ */
+.scenario, #subscribe, #footnotes { border-top: 0; position: relative; }
+.scenario::before, #subscribe::before, #footnotes::before {
+  content: ""; position: absolute; top: 0; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(19rem, 76vw); height: 16px;
+  background:
+    linear-gradient(var(--deco-blue) 0 0) top center      / 100% 3px,
+    linear-gradient(var(--deco-gold) 0 0) top 6px center  / 62%  2px,
+    linear-gradient(var(--accent)   0 0) top 11px center  / 28%  2px;
   background-repeat: no-repeat;
-  background-size: 100% 14px, 100% 14px;
-  background-position: top center, bottom center;
+  pointer-events: none;
 }
 
-/* ---------- cards: sharp corners, gold corner brackets ---------- */
+/* ════════════════════════════════════════════════════════════════
+   5 · SCENARIO HEADERS AS CARTOUCHES — centered openers
+   ════════════════════════════════════════════════════════════════ */
+.scen-head {
+  position: relative;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--deco-gold);
+  padding: 2.25rem 1.5rem 1.9rem;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow);
+}
+.scen-head::before {            /* inner gold hairline, double-ruled */
+  content: ""; position: absolute; inset: 5px;
+  border: 1px solid var(--deco-gold);
+  pointer-events: none;
+}
+.scen-head h2 { margin-bottom: .9rem; }
+.scen-head .standfirst { max-width: 32rem; margin-inline: auto; margin-bottom: 0; }
+.scen-odds { justify-content: center; }
+.scen-chip {
+  border: 1px solid var(--deco-gold); background: var(--deco-cream);
+  padding: .45rem .75rem .45rem .9rem;
+  letter-spacing: .26em; color: var(--deco-blue);
+  margin-bottom: 1.2rem;
+}
+.scen-chip .dot { background: var(--accent); } /* red seal-dot in the cartouche */
+
+.upshot { border-top: 3px double var(--deco-gold); }
+.upshot .tag { color: var(--deco-blue); letter-spacing: .22em; }
+.upshot .tag .dot { background: var(--accent); }
+
+/* ════════════════════════════════════════════════════════════════
+   6 · DATEMARKS — centered  ─── ✦ AUGUST 2026 ✦ ───  cartouches
+   ════════════════════════════════════════════════════════════════ */
+.datemark {
+  display: flex; align-items: center; justify-content: center; gap: .8rem;
+  margin: 2.75rem 0 1.5rem;
+  color: var(--deco-blue); letter-spacing: .3em;
+  text-align: center;
+}
+.datemark::before, .datemark::after {
+  content: "\2726"; color: var(--accent);
+  display: block; width: auto; height: auto; margin: 0;
+  vertical-align: baseline; letter-spacing: 0;
+  flex: 0 1 6rem; min-width: 2.2rem;
+  background: linear-gradient(var(--deco-gold), var(--deco-gold)) no-repeat;
+  background-size: calc(100% - 1.6em) 1px;
+}
+.datemark::before { text-align: right; background-position: left center; }
+.datemark::after  { text-align: left;  background-position: right center; }
+
+/* ════════════════════════════════════════════════════════════════
+   8 · PULL QUOTES — gold frame + vertical print rule pair
+   ════════════════════════════════════════════════════════════════ */
+blockquote.pull {
+  position: relative; border-left: none;
+  border-top: 1px solid var(--deco-gold); border-bottom: 1px solid var(--deco-gold);
+  padding: 1.6rem 1.5rem 1.4rem 3rem;
+  background:                              /* right-side vertical gold pair */
+    linear-gradient(var(--deco-gold), var(--deco-gold)) top right      / 1px 100% no-repeat,
+    linear-gradient(var(--deco-gold), var(--deco-gold)) top right 6px  / 1px 100% no-repeat;
+}
+blockquote.pull::before {
+  content: "\201C"; position: absolute; left: .3rem; top: 1.05rem;
+  font: 700 3.1rem/1 "Playfair Display", "Source Serif 4", Georgia, serif;
+  color: var(--accent);
+}
+blockquote.pull footer { letter-spacing: .04em; }
+
+/* ════════════════════════════════════════════════════════════════
+   7 · FIGURES — double-framed plates, centered small-cap captions
+   ════════════════════════════════════════════════════════════════ */
+.fig-frame, .fig-frame.pad {
+  position: relative; border: 1px solid var(--deco-blue); border-radius: 0;
+  padding: .85rem; box-shadow: var(--shadow);
+}
+.fig-frame::after {
+  content: ""; position: absolute; inset: 4px;
+  border: 1px solid var(--deco-gold); pointer-events: none;
+}
+.frame-white, .frame-black, .frame-paper { background: var(--surface); }
+figure.fig img { border-radius: 0; }
+figure.fig figcaption {
+  text-align: center;
+  font-variant-caps: small-caps; letter-spacing: .05em;
+}
+figure.fig figcaption .fign { color: var(--deco-blue); letter-spacing: .08em; }
+figure.fig figcaption .fign::before {       /* gold diamond separator */
+  content: "\2726"; color: var(--deco-gold); font-weight: 400; margin-right: .6em;
+}
+
+/* FICTIONAL badge: vermilion seal, gold-bordered — kept prominent */
+.fict {
+  font-size: .6875rem; letter-spacing: .18em;
+  color: var(--deco-cream); background: var(--accent);
+  border: 1px solid var(--deco-gold); border-radius: 0;
+  padding: .16rem .55rem; vertical-align: 2px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CARDS — sharp corners, gold hairline frames, corner brackets
+   ════════════════════════════════════════════════════════════════ */
 .path-card, .viz-card, .take, .vote-card, .note, .viz-tip { border-radius: 0; }
+.path-card, .viz-card, .take, .vote-card, .note { border: 1px solid var(--deco-gold); }
 .viz-card, .take, .vote-card { position: relative; }
 .path-card::before, .path-card::after,
 .viz-card::before,  .viz-card::after,
@@ -94,80 +307,24 @@ h1, h2 { font-stretch: 97%; } /* engages only if a width axis exists */
   right: 7px; left: auto; border-right: 1px solid var(--deco-gold);
 }
 .path-card { border-top: 3px solid var(--pc); } /* scenario hue moves into the frame */
-.path-card:hover { border-color: var(--deco-gold); border-top-color: var(--pc); }
+.path-card:hover { border-color: var(--deco-blue); border-top-color: var(--pc); }
 .path-num { color: var(--deco-blue); letter-spacing: .22em; }
+.note strong.tag { color: var(--deco-blue); letter-spacing: .18em; }
 
-/* ---------- scenario chapters ---------- */
-.scen-head {
-  position: relative;
-  border-left: 3px solid var(--deco-blue); /* thick vertical print rule… */
-  padding-left: 1.4rem;
-}
-.scen-head::before {                       /* …doubled by a gold hairline */
-  content: ""; position: absolute; left: 5px; top: 0; bottom: 0;
-  width: 1px; background: var(--deco-gold);
-}
-.scen-chip {
-  border: 1px solid var(--deco-gold); background: var(--surface);
-  padding: .45rem .75rem .45rem .9rem;
-  letter-spacing: .26em; color: var(--deco-blue);
-}
-.scen-chip .dot { background: var(--accent); } /* red seal-dot in the cartouche */
-.upshot .tag { color: var(--deco-blue); letter-spacing: .22em; }
-
-/* datemark: small cartouche with ✦ separators */
-.datemark {
-  display: inline-block; color: var(--deco-blue);
-  border: 1px solid var(--deco-gold); background: var(--surface);
-  padding: .35rem .65rem .35rem .95rem; letter-spacing: .26em;
-}
-.datemark::before { content: "\2726"; color: var(--accent); margin-right: .9em; letter-spacing: 0; }
-.datemark::after {
-  content: "\2726"; width: auto; height: auto; background: none;
-  color: var(--accent); margin-left: .9em; letter-spacing: 0; vertical-align: baseline;
-}
-
-/* ---------- pull quotes: gold hairline frame, vermilion quote mark ---------- */
-blockquote.pull {
-  position: relative; border-left: none;
-  border-top: 1px solid var(--deco-gold); border-bottom: 1px solid var(--deco-gold);
-  padding: 1.6rem .5rem 1.4rem 3rem;
-}
-blockquote.pull::before {
-  content: "\201C"; position: absolute; left: .3rem; top: 1.05rem;
-  font: 700 3.1rem/1 "Source Serif 4", Georgia, serif; color: var(--accent);
-}
-blockquote.pull footer { letter-spacing: .04em; }
-
-/* ---------- figures: double-framed plates with cream matting ---------- */
-.fig-frame, .fig-frame.pad {
-  position: relative; border: 1px solid var(--deco-blue); border-radius: 0;
-  padding: .85rem; box-shadow: var(--shadow);
-}
-.fig-frame::after {
-  content: ""; position: absolute; inset: 4px;
-  border: 1px solid var(--deco-gold); pointer-events: none;
-}
-.frame-white, .frame-black, .frame-paper { background: var(--surface); }
-figure.fig img { border-radius: 0; }
-figure.fig figcaption { font-variant-caps: small-caps; letter-spacing: .05em; }
-figure.fig figcaption .fign { color: var(--deco-blue); letter-spacing: .08em; }
-
-/* FICTIONAL badge: vermilion seal, gold-bordered — kept prominent */
-.fict {
-  font-size: .6875rem; letter-spacing: .18em;
-  color: var(--deco-cream); background: var(--accent);
-  border: 1px solid var(--deco-gold); border-radius: 0;
-  padding: .16rem .55rem; vertical-align: 2px;
-}
-
-/* ---------- chart & widget geometry goes rectilinear ---------- */
+/* ════════════════════════════════════════════════════════════════
+   9 · CHART & WIDGET — rectilinear, verified in-bar inks kept
+   ════════════════════════════════════════════════════════════════ */
 .seg:first-child, .seg:last-child { border-radius: 0; }
 .hist-bar { border-radius: 0; }
+.viz-row.avg { border-top: 3px double var(--deco-gold); }
 .viz-tip {
   background: var(--deco-blue); color: var(--deco-cream);
   border: 1px solid var(--deco-gold);
 }
+#tableToggle { border-radius: 0; border-color: var(--deco-gold); color: var(--deco-blue); }
+#tableToggle:hover { border-color: var(--deco-blue); color: var(--deco-blue); }
+#tableToggle[aria-expanded="true"] { background: var(--accent-soft); color: var(--deco-blue); }
+.ow-hist { border-top-color: var(--rule); }
 
 /* ---------- buttons: ink-blue, gold border, letterspaced caps ---------- */
 .btn {
@@ -188,3 +345,35 @@ footer.site::before {
   font-size: .95rem; margin-bottom: 1.4rem;
 }
 footer.site .fbrand { letter-spacing: .3em; }
+
+/* ════════════════════════════════════════════════════════════════
+   10 · SMALL SCREENS — frames and matting scale down, no overflow
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 540px) {
+  #hero { padding: 2rem .625rem 2.75rem; }
+  #hero .col-wide {
+    border-width: 2px;
+    outline-offset: -5px;
+    padding: 2.5rem .875rem 1.9rem;
+  }
+  #hero .col-wide::before, #hero .col-wide::after {
+    top: 9px; width: 32px; height: 15px;
+    background:
+      linear-gradient(var(--deco-gold) 0 0) left top      / 100% 2px,
+      linear-gradient(var(--deco-gold) 0 0) left top 5px  / 64%  2px,
+      linear-gradient(var(--deco-gold) 0 0) left top 10px / 34%  2px;
+    background-repeat: no-repeat;
+  }
+  #hero .col-wide::before { left: 9px; }
+  #hero .col-wide::after  { right: 9px; }
+  .hero-paths a { letter-spacing: .04em; }
+  .scen-head { padding: 1.75rem .9rem 1.5rem; }
+  .datemark { letter-spacing: .18em; gap: .6rem; }
+  blockquote.pull { padding-left: 2.5rem; padding-right: 1rem; }
+}
+@media (max-width: 480px) {
+  .kicker { letter-spacing: .18em; }
+  .kicker::before, .kicker::after { content: "\2726"; }
+  #hero .kicker::before { content: ""; }   /* keep the fan, not the glyph */
+  #hero .kicker::after { content: none; }
+}
