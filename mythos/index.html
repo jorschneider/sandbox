@@ -404,6 +404,20 @@
   .r1 { accent-color: var(--s1); } .r2 { accent-color: var(--s2); } .r3 { accent-color: var(--s3); }
   .ow-compare { margin-top: .4rem; }
   .ow-verdict { margin-top: 1.2rem; font-size: .8438rem; color: var(--ink-2); }
+  .ow-hist { margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--hair); }
+  .ow-hist-title { font-size: .8125rem; font-weight: 600; margin-bottom: 1.1rem; }
+  .ow-hist-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem 2rem; }
+  @media (max-width: 640px) { .ow-hist-grid { grid-template-columns: 1fr; gap: 1.75rem; } }
+  .hist-head { display: inline-flex; align-items: center; gap: .5rem; font-size: .75rem; font-weight: 500; color: var(--ink-2); margin-bottom: .6rem; }
+  .hist-bars { display: flex; align-items: flex-end; gap: 2px; height: 64px; }
+  .hist-bar { position: relative; flex: 1; min-height: 2px; height: calc(var(--h) * 1%); border-radius: 3px 3px 0 0; }
+  .hist-bar.zero { background: var(--hair) !important; height: 2px; border-radius: 0; }
+  .hist.h1 .hist-bar { background: var(--s1); }
+  .hist.h2 .hist-bar { background: var(--s2); }
+  .hist.h3 .hist-bar { background: var(--s3); }
+  .hist-bar.you::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 6px; height: 6px; border-radius: 999px; background: var(--ink); transform: translateX(-50%); }
+  .hist-x { display: flex; justify-content: space-between; font-size: .6875rem; color: var(--muted); margin-top: .8rem; }
+
   .ow-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem .9rem; margin-bottom: 1.6rem; }
   .btn-sm { border: 0; cursor: pointer; padding: .55rem 1.15rem; font-size: .8438rem; }
   .btn-sm:disabled { opacity: .6; cursor: default; }
@@ -789,6 +803,10 @@
         <div class="viz-row" id="owReadersRow" hidden><span class="viz-name">Readers (<span id="owN">0</span>)</span><div class="viz-bar" id="owReaders"></div></div>
         <div class="viz-row avg"><span class="viz-name">Team average</span><div class="viz-bar" id="owTeam"></div></div>
       </div>
+      <div class="ow-hist" id="owHist" hidden>
+        <p class="ow-hist-title">How readers split &mdash; the dot marks where your sliders sit.</p>
+        <div class="ow-hist-grid" id="owHistGrid"></div>
+      </div>
       <p class="ow-verdict" id="owVerdict" aria-live="polite"></p>
     </div>
   </div>
@@ -1049,6 +1067,7 @@
       ? "You’re split at the top — fair enough, the four of us couldn’t agree either."
       : OW_MSGS[owVals.indexOf(max)];
     try { localStorage.setItem("ct-your-odds", JSON.stringify(owVals)); } catch (e) {}
+    markYou();
   }
 
   function owMove(i, val) {
@@ -1079,11 +1098,71 @@
   var owVoted = null;
   try { owVoted = JSON.parse(localStorage.getItem("ct-odds-voted") || "null"); } catch (e) {}
 
+  var SCEN_SHORT = ["Let It Rip", "Glasswing", "Black Box"];
+  var owHistWrap = document.getElementById("owHist");
+  var owHistGrid = document.getElementById("owHistGrid");
+  var lastHist = null;
+
+  function markYou() {
+    if (!lastHist) return;
+    owHistGrid.querySelectorAll(".hist").forEach(function (fig, s) {
+      var bars = fig.querySelectorAll(".hist-bar");
+      bars.forEach(function (b) { b.classList.remove("you"); });
+      var bin = Math.min(9, Math.floor(owVals[s] / 10));
+      if (bars[bin]) bars[bin].classList.add("you");
+    });
+  }
+
+  function histRender(hist) {
+    lastHist = hist;
+    owHistGrid.innerHTML = "";
+    var maxBin = Math.max.apply(null, hist[0].concat(hist[1], hist[2])) || 1;
+    hist.forEach(function (bins, s) {
+      var fig = document.createElement("div");
+      fig.className = "hist h" + (s + 1);
+      var head = document.createElement("div");
+      head.className = "hist-head";
+      var dot = document.createElement("span");
+      dot.className = "dot d" + (s + 1);
+      dot.setAttribute("aria-hidden", "true");
+      head.appendChild(dot);
+      head.appendChild(document.createTextNode(SCEN_SHORT[s]));
+      var bars = document.createElement("div");
+      bars.className = "hist-bars";
+      bars.setAttribute("role", "img");
+      bars.setAttribute("aria-label", "Distribution of reader odds for " + SCEN_SHORT[s] + ": " +
+        (bins.map(function (c, i) {
+          return c ? (i * 10) + " to " + (i === 9 ? 100 : i * 10 + 9) + " percent: " + c + " reader" + (c === 1 ? "" : "s") : null;
+        }).filter(Boolean).join("; ") || "no votes yet"));
+      bins.forEach(function (c, i) {
+        var b = document.createElement("div");
+        b.className = "hist-bar" + (c ? "" : " zero");
+        b.style.setProperty("--h", Math.round(100 * c / maxBin));
+        b.title = c + " reader" + (c === 1 ? "" : "s") + " put " + SCEN_SHORT[s] + " at " + (i * 10) + "–" + (i === 9 ? 100 : i * 10 + 9) + "%";
+        bars.appendChild(b);
+      });
+      var x = document.createElement("div");
+      x.className = "hist-x";
+      ["0", "50", "100%"].forEach(function (t) {
+        var sp = document.createElement("span");
+        sp.textContent = t;
+        x.appendChild(sp);
+      });
+      fig.appendChild(head);
+      fig.appendChild(bars);
+      fig.appendChild(x);
+      owHistGrid.appendChild(fig);
+    });
+    owHistWrap.hidden = false;
+    markYou();
+  }
+
   function owShowReaders(data) {
     if (!data || !data.count || !data.avg) return;
     owN.textContent = data.count;
     owSegs(document.getElementById("owReaders"), data.avg);
     owReadersRow.hidden = false;
+    if (data.hist) histRender(data.hist);
     fitLabels();
   }
   fetch("api/odds")

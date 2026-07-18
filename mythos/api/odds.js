@@ -20,6 +20,8 @@ async function tally() {
   let cursor;
   let count = 0;
   const sums = [0, 0, 0];
+  // hist[scenario][bin]: bins of width 10 (0-9, 10-19, …, 90-100)
+  const hist = [0, 1, 2].map(() => Array(10).fill(0));
   do {
     const page = await list({ prefix: PREFIX, cursor, limit: 1000 });
     for (const b of page.blobs) {
@@ -28,15 +30,17 @@ async function tally() {
       const v = [+m[1], +m[2], +m[3]];
       if (v[0] + v[1] + v[2] !== 100) continue;
       count++;
-      sums[0] += v[0];
-      sums[1] += v[1];
-      sums[2] += v[2];
+      v.forEach((val, i) => {
+        sums[i] += val;
+        hist[i][Math.min(9, Math.floor(val / 10))]++;
+      });
     }
     cursor = page.cursor;
   } while (cursor);
   return {
     count,
     avg: count ? sums.map((s) => Math.round((10 * s) / count) / 10) : null,
+    hist: count ? hist : null,
   };
 }
 
