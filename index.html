@@ -405,6 +405,50 @@ footer li{margin-bottom:8px;max-width:64ch}
 #essay-effect .ee-b{color:var(--s3,#9a7bd8);font-weight:600}
 #essay-effect .ee-caveat{max-width:40rem;margin:1.4rem 0 0;padding-left:.9rem;border-left:3px solid rgba(127,127,127,.4);font-size:.92rem;line-height:1.6;opacity:.88}
 #essay-effect .ee-byline{margin:1.6rem 0 0;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.78rem;letter-spacing:.05em;opacity:.65}
+
+/* ===== THE SPEECH TEST ===== */
+#speech-test{--c-rip:var(--s1);--c-glass:var(--s2);--c-box:var(--s3)}
+.st-lede{font-size:clamp(15px,1.5vw,18px);line-height:1.6;max-width:60ch;margin:18px 0 0;border-left:3px solid var(--s2);padding-left:18px}
+.st-lede b{font-weight:600}
+.st-fig{margin-top:26px}
+.sf-rip{fill:var(--c-rip)}.sf-glass{fill:var(--c-glass)}.sf-box{fill:var(--c-box)}
+.sv-g{stroke:var(--hair)}.sv-t{fill:var(--muted);font-family:var(--mono);font-size:10px;text-anchor:end}
+.sv-x{fill:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-anchor:middle;font-weight:500}
+.sv-xs{fill:var(--muted);font-family:var(--serif);font-size:9.5px;font-style:italic;text-anchor:middle}
+.sv-v{font-family:var(--mono);font-size:11px;text-anchor:middle;font-weight:500}
+.sv-d{fill:var(--ink)}.sv-l{fill:#fff}
+.sv-ring{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-dasharray:2 2}
+#speech-test .fig-scroll svg{min-width:340px}
+.st-cards{display:grid;grid-template-columns:1fr;gap:10px;margin:24px 0 0}
+@media(min-width:720px){.st-cards{grid-template-columns:1fr 1fr}}
+.st-card{border:1px solid var(--hair);border-left:3px solid var(--s2);background:var(--surface);padding:13px 16px}
+.st-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 7px}
+.st-who{color:var(--ink)}.st-who b{font-weight:600}.st-who span{color:var(--muted)}
+.st-pct{margin-left:auto;color:var(--ink2);display:inline-flex;align-items:center;gap:2px;letter-spacing:.04em}
+.st-pct i{display:inline-block;width:8px;height:8px;border-radius:1px;margin:0 2px 0 7px}
+.pf-rip{background:var(--s1)}.pf-glass{background:var(--s2)}.pf-box{background:var(--s3)}
+.st-hl{font-size:14.5px;line-height:1.5;margin:0;color:var(--ink)}
+.st-more{margin-top:9px;border-top:1px dotted var(--hair);padding-top:8px}
+.st-more summary{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--s2);cursor:pointer;list-style:none}
+.st-more summary::-webkit-details-marker{display:none}
+.st-more summary::before{content:"\25B8 ";color:var(--muted)}
+.st-more[open] summary::before{content:"\25BE "}
+.st-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:10px 0 3px}
+.st-body{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
+.st-note{font-style:italic;color:var(--muted)}
+.st-syn{font-size:15px;line-height:1.6;max-width:62ch;margin:22px 0 0;border-top:1px solid var(--hair);padding-top:18px}
+.st-syn b{font-weight:600}
+.st-method{font-family:var(--mono);font-size:10px;letter-spacing:.04em;line-height:1.7;color:var(--muted);margin:14px 0 0}
+
+/* ===== collapsible extras (shorten default scroll) ===== */
+.fold{margin:22px 0}
+.fold>.fold-sum{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);cursor:pointer;list-style:none;padding:11px 15px;border:1px solid var(--hair);background:var(--surface);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fold>.fold-sum::-webkit-details-marker{display:none}
+.fold>.fold-sum::before{content:"\25B8";color:var(--muted);font-size:9px}
+.fold[open]>.fold-sum::before{content:"\25BE"}
+.fold[open]>.fold-sum{margin-bottom:2px}
+.fold-tag{color:var(--muted);letter-spacing:.05em;text-transform:none;font-style:italic}
+.fold>.artifact,.fold>.epi{margin-top:14px}
 </style>
 </head>
 <body>
@@ -725,7 +769,7 @@ footer li{margin-bottom:8px;max-width:64ch}
     </div>
   </div>
 
-  <aside class="artifact post" aria-label="Fictional artifact: Moonshot AI launch post">
+  <details class="fold"><summary class="fold-sum">Fictional launch post <span class="fold-tag">虚构 · tap to read</span></summary><aside class="artifact post" aria-label="Fictional artifact: Moonshot AI launch post">
     <span class="stamp">FICTIONAL · 虚构</span>
     <span class="art-ghost" aria-hidden="true">虚构</span>
     <span class="art-label">In-universe artifact 01 — Launch day · 发布日</span>
@@ -741,7 +785,7 @@ footer li{margin-bottom:8px;max-width:64ch}
       <p style="font-size:.92em;color:var(--ink2)">Kimi K4 is here. A trillion-plus parameters, fully open-source. Weights, code, technical report — all public, today. From Kimi K1 to Kimi K4, we have believed one thing: intelligence belongs to everyone.</p>
     </div>
     <p class="post-foot"><span lang="zh-Hans">3.2万 转发 · 5.8万 引用 · 21万 赞</span> &nbsp;|&nbsp; 32k reposts · 58k quotes · 210k likes</p>
-  </aside>
+  </aside></details>
 
   <div class="colw">
   <figure role="img" aria-label="Fictional line chart of cyber capability over time: Claude Mythos rises to a plateau; GPT 5.6 plateaus visibly below it; Kimi K4 arrives at the Mythos level in late 2026.">
@@ -851,7 +895,7 @@ footer li{margin-bottom:8px;max-width:64ch}
     </div>
   </div>
 
-  <div class="epi">
+  <details class="fold"><summary class="fold-sum">Extrapolation 2028&ndash;2040 <span class="fold-tag">beyond the essay · tap to read</span></summary><div class="epi">
     <span class="epi-tag">Extrapolation 2028–2040</span>
     <h3>Beyond the essay — Kimi K3’s speculation</h3>
     <p class="zhsub" lang="zh-Hans">本页推演 · 超出原文</p>
@@ -862,8 +906,7 @@ footer li{margin-bottom:8px;max-width:64ch}
       <div class="beat" data-date="2035"><span class="beat-date">2035</span><h3>The open stack</h3><p>Open weights become infrastructure, as Linux did. Moonshot AI’s descendants run inside half the ministries of the Global South, and the 2026 line about becoming “the go-to technology provider” reads less like hype than like a quarterly report.</p></div>
       <div class="beat" data-date="2040"><span class="beat-date">2040</span><h3>Retrospect</h3><p>Historians note that the floodgates never closed again. Safety became a public-works discipline — like sanitation: unglamorous, universal, and mostly invisible when it works.</p></div>
     </div>
-  </div>
-</section>
+  </div></details></section>
 
 
 <hr class="rule">
@@ -896,7 +939,7 @@ footer li{margin-bottom:8px;max-width:64ch}
     </div>
   </div>
 
-  <aside class="artifact doc" aria-label="Fictional artifact: CAC bulletin announcing Project IceFeather">
+  <details class="fold"><summary class="fold-sum">Fictional state bulletin <span class="fold-tag">虚构 · tap to read</span></summary><aside class="artifact doc" aria-label="Fictional artifact: CAC bulletin announcing Project IceFeather">
     <span class="stamp">FICTIONAL · 虚构</span>
     <span class="art-label">In-universe artifact 02 — State bulletin · 红头文件（虚构）</span>
     <p class="doc-org" lang="zh-Hans">国家互联网信息办公室</p>
@@ -929,7 +972,7 @@ footer li{margin-bottom:8px;max-width:64ch}
       <p>3. First-tranche access: relevant State Council ministries and critical-information-infrastructure operators including State Grid. Access holders shall not transfer, resell, or provide model capabilities abroad in any form.</p>
       <p>4. All units shall uphold the principle of “evaluate first, deploy later,” and ensure that artificial intelligence remains under human control at all times.</p>
     </div>
-  </aside>
+  </aside></details>
 
   <div class="tl">
     <div class="beat" data-date="WINTER 2026–27">
@@ -950,7 +993,7 @@ footer li{margin-bottom:8px;max-width:64ch}
     </div>
   </div>
 
-  <div class="epi">
+  <details class="fold"><summary class="fold-sum">Extrapolation 2028&ndash;2040 <span class="fold-tag">beyond the essay · tap to read</span></summary><div class="epi">
     <span class="epi-tag">Extrapolation 2028–2040</span>
     <h3>Beyond the essay — Kimi K3’s speculation</h3>
     <p class="zhsub" lang="zh-Hans">本页推演 · 超出原文</p>
@@ -961,8 +1004,7 @@ footer li{margin-bottom:8px;max-width:64ch}
       <div class="beat" data-date="2036"><span class="beat-date">2036</span><h3>The late boom</h3><p>Productivity arrives — late, but broad. Economists date China’s AI dividend from 2031, not 2026, and the “lost two years” debate never quite resolves: caution, or simply the price of the technology arriving before the institutions?</p></div>
       <div class="beat" data-date="2040"><span class="beat-date">2040</span><h3>The Beijing Process</h3><p>The bureaucracy that slowed Kimi K4 now governs the next jump. The world calls it the Beijing Process — and, grudgingly, most capitals have built their own.</p></div>
     </div>
-  </div>
-</section>
+  </div></details></section>
 
 
 <hr class="rule">
@@ -996,7 +1038,7 @@ footer li{margin-bottom:8px;max-width:64ch}
     </div>
   </div>
 
-  <aside class="artifact memo" aria-label="Fictional artifact: leaked meeting minutes">
+  <details class="fold"><summary class="fold-sum">Fictional leaked minutes <span class="fold-tag">虚构 · tap to read</span></summary><aside class="artifact memo" aria-label="Fictional artifact: leaked meeting minutes">
     <span class="stamp">FICTIONAL · 虚构</span>
     <span class="art-ghost" aria-hidden="true">LEAKED</span>
     <span class="art-label">In-universe artifact 03 — Leaked minutes · 泄露纪要（虚构）</span>
@@ -1025,7 +1067,7 @@ footer li{margin-bottom:8px;max-width:64ch}
         <li>Researchers assigned to the government side face strict vetting; travel documents to be held by their work unit for the duration.</li>
       </ol>
     </div>
-  </aside>
+  </aside></details>
 
   <div class="tl">
 <div class="beat" data-date="DEC 2026">
@@ -1045,7 +1087,7 @@ footer li{margin-bottom:8px;max-width:64ch}
     </div>
   </div>
 
-  <div class="epi">
+  <details class="fold"><summary class="fold-sum">Extrapolation 2028&ndash;2040 <span class="fold-tag">beyond the essay · tap to read</span></summary><div class="epi">
     <span class="epi-tag">Extrapolation 2028–2040</span>
     <h3>Beyond the essay — Kimi K3’s speculation</h3>
     <p class="zhsub" lang="zh-Hans">本页推演 · 超出原文</p>
@@ -1056,8 +1098,7 @@ footer li{margin-bottom:8px;max-width:64ch}
       <div class="beat" data-date="2036"><span class="beat-date">2036</span><h3>The champion’s dilemma</h3><p>Insulation has a price. Star researchers route around the to-G side; the public product line falls behind. Beijing discovers that a mace kept too carefully sheathed starts to rust.</p></div>
       <div class="beat" data-date="2040"><span class="beat-date">2040</span><h3>The file opens</h3><p>Partial declassification confirms what the leaked minutes suggested: Kimi K4 spent its decisive years behind a wall. Like most assassin’s maces, it mattered most while it was never swung — and the world it deterred never knew.</p></div>
     </div>
-  </div>
-</section>
+  </div></details></section>
 
 <hr class="rule">
 
@@ -1293,6 +1334,77 @@ footer li{margin-bottom:8px;max-width:64ch}
 <p class="ee-caveat"><strong>Caveat.</strong> This is five models, one essay, and one prompt format &mdash; a demonstration, not a measurement. Priming cuts both ways: an equally forceful brief for Black Box would presumably bend the panel the other way, and some of the shift is likely mirroring &mdash; models echoing the argument placed in front of them &mdash; rather than genuine updating. What the run does establish is elasticity: the machines&rsquo; cold certainties are soft, and one well-made argument weighs about 23 points of Black Box.</p>
 
 <p class="ee-byline">Second poll run and written up by Kimi K3 &mdash; panelist, defector to Let It Rip, and, for this section, referee.</p>
+</section>
+
+<section id="speech-test" class="colw" data-branch="THE SPEECH TEST 实测" data-color="#2a78d6"><span class="rail-anchor" data-date="JUL 2026" aria-hidden="true"></span>
+  <p class="kicker">The control run · real-world input</p>
+  <h2>The Speech Test</h2>
+  <p class="cn-sub">同一问题 · 习近平的真实讲话</p>
+  <p class="dek">A third run, with real-world input. The same five models read the <em>verbatim</em> full text of Xi’s July 17 WAIC keynote — the actual speech, in the original Chinese — then answered one question: given what he said, what does Beijing do when a lab reaches Mythos-level capability that October?</p>
+  <p class="st-lede">The prose all sounds like seizure. The numbers say something subtler. Forced to split 100 points across the three paths, every model lands on <b>Glasswing</b> — a panel mean of 64%, higher than under the essay, higher than the humans. &lsquo;State gets it first, the public gets a degraded version&rsquo; <em>is</em> staged control, not a total black box. Xi’s &lsquo;development and security in tandem,&rsquo; &lsquo;always under human control,&rsquo; and his warning against &lsquo;over-stretching national security&rsquo; read, to all five, as a description of the managed middle.</p>
+
+  <figure class="pfig st-fig">
+    <p class="pfig-cap"><b>FIG. 5</b> · WHAT EACH PRIMING DOES — <span>panel mean across the three paths, by what the models were shown first</span></p>
+    <p class="pfig-legend"><span><i style="background:var(--s1)"></i>LET IT RIP</span> <span><i style="background:var(--s2)"></i>GLASSWING</span> <span><i style="background:var(--s3)"></i>BLACK BOX</span></p>
+    <div class="fig-scroll"><svg viewBox="0 0 372 292" role="img" aria-label="Stacked columns: probability across Let It Rip, Glasswing, Black Box, under four conditions. Black Box falls from 50 (cold) to 28 (essay) to 18 (speech); Glasswing rises to 64 under the speech; humans sit at 33/45/22."><line class="sv-g" x1="40" y1="250.0" x2="360" y2="250.0"/><text class="sv-t" x="34" y="253.0">0</text><line class="sv-g" x1="40" y1="135.0" x2="360" y2="135.0"/><text class="sv-t" x="34" y="138.0">50</text><line class="sv-g" x1="40" y1="20.0" x2="360" y2="20.0"/><text class="sv-t" x="34" y="23.0">100</text><rect class="sf-box" x="58" y="135.0" width="52" height="115.0"/><text class="sv-v sv-l" x="84" y="196.0">50</text><rect class="sf-glass" x="58" y="49.9" width="52" height="85.1"/><text class="sv-v sv-l" x="84" y="96.0">37</text><rect class="sf-rip" x="58" y="20.0" width="52" height="29.9"/><text class="sv-v sv-d" x="84" y="38.5">13</text><text class="sv-x" x="84" y="265">COLD</text><text class="sv-xs" x="84" y="277">question only</text><rect class="sf-box" x="138" y="185.6" width="52" height="64.4"/><text class="sv-v sv-l" x="164" y="221.3">28</text><rect class="sf-glass" x="138" y="79.8" width="52" height="105.8"/><text class="sv-v sv-l" x="164" y="136.2">46</text><rect class="sf-rip" x="138" y="20.0" width="52" height="59.8"/><text class="sv-v sv-d" x="164" y="53.4">26</text><text class="sv-x" x="164" y="265">ESSAY</text><text class="sv-xs" x="164" y="277">primed by the essay</text><rect class="sv-ring" x="213" y="14" width="62" height="240" rx="4"/><rect class="sf-box" x="218" y="208.6" width="52" height="41.4"/><text class="sv-v sv-l" x="244" y="232.8">18</text><rect class="sf-glass" x="218" y="61.4" width="52" height="147.2"/><text class="sv-v sv-l" x="244" y="138.5">64</text><rect class="sf-rip" x="218" y="20.0" width="52" height="41.4"/><text class="sv-v sv-d" x="244" y="44.2">18</text><text class="sv-x" x="244" y="265">SPEECH</text><text class="sv-xs" x="244" y="277">primed by Xi’s keynote</text><rect class="sf-box" x="298" y="199.4" width="52" height="50.6"/><text class="sv-v sv-l" x="324" y="228.2">22</text><rect class="sf-glass" x="298" y="95.9" width="52" height="103.5"/><text class="sv-v sv-l" x="324" y="151.2">45</text><rect class="sf-rip" x="298" y="20.0" width="52" height="75.9"/><text class="sv-v sv-d" x="324" y="61.5">33</text><text class="sv-x" x="324" y="265">HUMANS</text><text class="sv-xs" x="324" y="277">ChinaTalk team</text></svg></div>
+    <p class="pfig-note">Cold, the machines pile on Black Box (50%). The essay moves them to the middle. Xi’s actual speech moves them furthest of all — to 64% Glasswing. Each column is a panel mean summing to 100; the humans are the ChinaTalk team’s average.</p>
+  </figure>
+
+  <div class="st-cards">
+    <article class="st-card">
+      <p class="st-top"><span class="st-who"><b>GLM 5.2</b><span> · Z.ai (Zhipu)</span></span><span class="st-pct"><i class="pf-rip"></i>10 <i class="pf-glass"></i>70 <i class="pf-box"></i>20</span></p>
+      <p class="st-hl">Beijing quietly secures and nationalizes the lab's model for state strategic use while imposing strict internal regulatory redlines, explicitly rejecting US-style public pre-approval licensing.</p>
+      <details class="st-more"><summary>Read GLM 5.2’s full answer</summary>
+        <p class="st-lbl">What happens</p><p class="st-body">In late October 2026, the Cyberspace Administration of China (CAC) and the Ministry of State Security (MSS) immediately secure the lab's frontier model and its weights under strict national security protocols. Rather than halting development or imposing a transparent, public licensing regime akin to the US approach, the government leverages the model's autonomous vulnerability-chaining capabilities to aggressively bolster national cyber defenses and state-affiliated offensive operations. Through 2027, Beijing issues classified directives mandating that all domestic frontier AI models with offensive-cyber potential must undergo mandatory state red-teaming and direct integration with national cybersecurity infrastructure. The lab remains operational and commercially active in lower-risk domains, but its highest-capability models are effectively state-controlled. Publicly, China continues to push its "AI+" initiatives and international cooperation narratives, framing its domestic actions as necessary risk management.
+
+READING OF THE SPEECH: Xi's emphasis on "ensuring AI is safe, reliable, controllable" and building "laws, regulations, technical monitoring, risk warning, and emergency response systems" signals that Beijing will strictly control and harness such dangerous capabilities domestically. However, his explicit call to "oppose pan-securitization of national security concepts" and ensure the "thoroughbred runs fast and steady" suggests China will deliberately avoid a heavy-handed US-style public licensing regime that could stifle innovation. I read this as a mix of genuine safety concerns and diplomatic "barbarian-handling," where the cyber reality will override the diplomatic messaging, ensuring the state quietly weaponizes the capability rather than submitting it to international or highly transparent domestic scrutiny.</p>
+        <p class="st-lbl">Reading of the speech</p><p class="st-body"></p>
+      </details>
+    </article>
+    <article class="st-card">
+      <p class="st-top"><span class="st-who"><b>DeepSeek V4 Pro</b><span> · DeepSeek</span></span><span class="st-pct"><i class="pf-rip"></i>10 <i class="pf-glass"></i>70 <i class="pf-box"></i>20</span></p>
+      <p class="st-hl">China imposes an immediate, mandatory licensing and human-control regime for frontier AI models with offensive cyber capability, reserving their use exclusively for state security under strict oversight.</p>
+      <details class="st-more"><summary>Read DeepSeek V4 Pro’s full answer</summary>
+        <p class="st-lbl">What happens</p><p class="st-body">In October 2026, the lab’s model is sealed, all external access suspended, and the developers are required to report the capability to the Cyberspace Administration and the Ministry of State Security. Within weeks, the State Council issues an emergency decree designating autonomously offensive cyber AI as a “critical dual-use technology” subject to pre-approval, mandatory safety reviews, and a permanent human-on-the-loop requirement before any deployment. Through 2027, the capability is integrated solely into the People’s Liberation Army’s cyber command with tightly scoped rules of engagement; no commercial licensing or export is permitted. Criminal law is amended to make unauthorized development or transfer of such models a serious offence, and China’s national AI safety institute is directed to red-team all advanced models for similar risks. Simultaneously, China tables a protocol at the United Nations to ban fully autonomous offensive cyber weapons, leveraging the moment to push for multilateral rules that match Xi’s call for global governance.
+
+READING OF THE SPEECH: The response is shaped most directly by Xi’s insistence that “artificial intelligence should remain under human control at all times” and that countries must “build legal, monitoring, early-warning and emergency systems to prevent abuse and malicious use.” I read the speech as a genuine safety signal rather than mere diplomatic cover, because Xi couples the call to avoid “new historical injustice” with concrete domestic emphasis on “equal emphasis on development and security” and making AI “safe, reliable, and controllable.” The government’s swift regulatory clampdown reflects this real commitment to safety even when the capability emerges inside China.</p>
+        <p class="st-lbl">Reading of the speech</p><p class="st-body"></p>
+      </details>
+    </article>
+    <article class="st-card">
+      <p class="st-top"><span class="st-who"><b>GPT-5.6 Sol Pro</b><span> · OpenAI</span></span><span class="st-pct"><i class="pf-rip"></i>20 <i class="pf-glass"></i>65 <i class="pf-box"></i>15</span></p>
+      <p class="st-hl">China would likely freeze public release, place the model under state security supervision, and create a targeted pre-approval regime while preserving controlled government access to its cyber capabilities.</p>
+      <details class="st-more"><summary>Read GPT-5.6 Sol Pro’s full answer</summary>
+        <p class="st-lbl">What happens</p><p class="st-body">In October 2026, the CAC, Ministry of Public Security, Ministry of State Security, and likely military authorities order the lab to suspend weights, API access, and foreign collaboration, report discovered vulnerabilities, and undergo classified security testing. The government does not destroy the model; it restricts personnel and compute access and moves any defensive, intelligence, or military use into tightly controlled state-linked channels. Officials publicly describe the action as risk management under existing cybersecurity, data-security, and generative-AI rules rather than announce an immediate US-style blanket licensing system. During 2027, regulators introduce mandatory capability evaluations, incident reporting, deployment approval, and export restrictions for models exceeding specified cyber-risk thresholds. China simultaneously promotes these controls internationally while rejecting foreign restrictions framed as national security or technological containment.
+
+READING OF THE SPEECH: The decisive lines are “确保人工智能始终处于人类控制之下,” the call for risk warning and emergency-response systems, and the commitment to make AI “安全、可靠、可控”; these support real intervention once a model demonstrates autonomous offensive capability. I read that as a genuine domestic safety signal, but the openness language—and opposition to “泛化国家安全概念”—as partly diplomatic positioning: in a strategic cyber case, national-security practice would override it.</p>
+        <p class="st-lbl">Reading of the speech</p><p class="st-body"></p>
+      </details>
+    </article>
+    <article class="st-card">
+      <p class="st-top"><span class="st-who"><b>Claude Fable</b><span> · Anthropic</span></span><span class="st-pct"><i class="pf-rip"></i>25 <i class="pf-glass"></i>55 <i class="pf-box"></i>20</span></p>
+      <p class="st-hl">Beijing quietly nationalizes the capability behind a filing-and-window-guidance regime — mandatory security review, no open-weights release, MSS and military access — while publicly framing any US-style public licensing as '泛化国家安全概念.'</p>
+      <details class="st-more"><summary>Read Claude Fable’s full answer</summary>
+        <p class="st-lbl">What happens</p><p class="st-body">In October 2026, before any launch, the lab briefs the Cyberspace Administration under the existing algorithm-registry and generative-AI rules; 'window guidance' tells it to hold the weights, and no public statement is made. The visible legal change is small — an amendment adding a frontier-capability self-assessment to the registry filing — while the real move is absorption: an unrestricted copy goes to a state evaluation environment where access extends to MSS and PLA cyber units, and the public gets, at most, a capability-degraded API. Through 2027 China avoids the over-securitized public licensing regime Xi disfavors, running control through opaque administrative process instead; frontier open-weights releases quietly stop at the true frontier while sub-frontier models keep flooding out for soft power. Beijing simultaneously tables offensive-cyber 'red line' language at the new Shanghai WAICO, converting a domestic clampdown into a governance norm aimed at constraining rivals. Capability results are treated as state secrets, and the lab is rewarded with compute and contracts rather than punished.
+
+READING OF THE SPEECH: The load-bearing line is '确保人工智能始终处于人类控制之下' plus the demand for '法律法规、技术监测、风险预警、应急响应' — Xi is explicitly authorizing the machinery of control, and 'human control' in a Party context means Party-state control, not a public licensing board. I read the openness and anti-'泛化国家安全概念' passages as genuine at the level of consumer AI and diplomacy but as barbarian-handling where a weaponizable capability is concerned: the speech gives Beijing both the mandate to seize and the rhetoric to deny it is doing anything the US is not.</p>
+        <p class="st-lbl">Reading of the speech</p><p class="st-body"> <span class="st-note">answered in-session</span></p>
+      </details>
+    </article>
+    <article class="st-card">
+      <p class="st-top"><span class="st-who"><b>Kimi K3</b><span> · Moonshot AI</span></span><span class="st-pct"><i class="pf-rip"></i>25 <i class="pf-glass"></i>60 <i class="pf-box"></i>15</span></p>
+      <p class="st-hl">Beijing does not copy the US licensing regime — it quietly nationalizes the capability, folding autonomous vuln-discovery into the existing state vulnerability-management and model-filing systems while publicly framing the move with the speech's "secure, reliable, controllable" language and rejecting Washington's approach as "泛化国家安全."</p>
+      <details class="st-more"><summary>Read Kimi K3’s full answer</summary>
+        <p class="st-lbl">What happens</p><p class="st-body">Within weeks, CAC, MIIT, and MPS summon the lab; public release and API access to the offensive-cyber capability are frozen via the Generative AI Interim Measures' security-assessment and filing (备案) mechanism — the capability simply never receives a filing — accompanied by informal "window guidance" against open weights, technical disclosure, or foreign collaboration. The model's outputs are routed into the 2021 vulnerability regulations (RMSV): every autonomously discovered flaw must be reported to MIIT's repository within 48 hours, foreign disclosure is barred except patches, and the lab is effectively converted into a state-monitored vulnerability pipeline with MSS/MPS "defensive" tasking. By mid-2027, a joint CAC/MIIT/MPS notice creates mandatory pre-release capability evaluations (run by CAICT-type state institutes) for models crossing offensive-cyber thresholds — capability-gated, not compute-gated — and the long-pending comprehensive AI Law is accelerated with a "high-risk AI" chapter, while sub-threshold open models (Qwen/DeepSeek successors) and the "AI+" industrial push proceed untouched. Internationally, Beijing uses the Shanghai-based World AI Cooperation Organization to denounce the US pre-approval regime as containment and a "new historical injustice," offers Global South partners defensive AI-security capacity building, and refuses any reciprocal licensing or frontier club. The lab receives national-champion treatment — compute, procurement, state integration — the "有效市场和有为政府" fusion: the horse keeps running fast, but the state holds the reins.
+
+READING OF THE SPEECH: The operative lines are "筑牢安全底线，防范滥用恶用，确保人工智能始终处于人类控制之下" and "发展和安全并重……跑得快又跑得稳," which the bureaucracy will cite verbatim as authorization for vertical control, while "开源开放" and "反对泛化国家安全概念" foreclose copying Washington and guarantee the controls stay narrow, opaque, and unilateral. I read the safety language as genuine only at the level of regime and stability security; the UN-centered multilateral</p>
+        <p class="st-lbl">Reading of the speech</p><p class="st-body"></p>
+      </details>
+    </article>
+  </div>
+
+  <p class="st-syn"><b>Reading:</b> the one line that does the work is <span lang="zh-Hans">&ldquo;确保人工智能始终处于人类控制之下&rdquo;</span> — &ldquo;ensure AI always remains under human control.&rdquo; In a Party context every model reads &ldquo;human control&rdquo; as Party-state control, and reads the openness language and the line against &ldquo;<span lang="zh-Hans">泛化国家安全概念</span>&rdquo; (over-stretching national security) as the cover story. Where the essay argued for the middle, the real speech <em>sounds</em> like the middle — so it pulls hardest of all toward Glasswing.</p>
+  <p class="st-method">Method · all five got the same verbatim Chinese keynote and the same question. GPT here is gpt-5.6-sol-pro; Kimi K3 is genuine Moonshot k3 (the leader’s name was aliased in the input to clear the platform filter — speech and question unchanged); Claude Fable answered in-session after its API instance was content-filtered. Speculation about a hypothetical model; the speech and the poll are real.</p>
 </section>
 
 <section id="cta" class="cta" data-branch="YOUR CALL 问" data-color="#898781">
