@@ -449,7 +449,7 @@ footer li{margin-bottom:8px;max-width:64ch}
 .fold[open]>.fold-sum{margin-bottom:2px}
 .fold-tag{color:var(--muted);letter-spacing:.05em;text-transform:none;font-style:italic}
 .fold>.artifact,.fold>.epi{margin-top:14px}
-
+/* MODELS-CSS-START */
 /* ===== PART BREAK divider + THE MACHINES section ===== */
 .part-break{background:var(--ink);color:#fff;width:100vw;position:relative;left:50%;transform:translateX(-50%);padding:54px 24px;margin:20px 0 0}
 .pb-inner{max-width:1020px;margin:0 auto;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
@@ -505,6 +505,14 @@ footer li{margin-bottom:8px;max-width:64ch}
 .mh-more[open] summary::before{content:"\25BE "}
 .mh-why{font-size:12.5px;line-height:1.55;color:var(--ink2);margin:6px 0 0}
 .mt-method{font-family:var(--mono);font-size:10px;letter-spacing:.04em;line-height:1.7;color:var(--muted);margin:24px 0 0;border-top:1px solid var(--hair);padding-top:16px}
+.mt-spot{margin:0 0 4px;padding-left:20px;list-style:none}
+.mt-spot li{position:relative;font-size:15px;line-height:1.6;color:var(--ink2);margin:0 0 12px;max-width:64ch;padding-left:4px}
+.mt-spot li::before{content:"";position:absolute;left:-16px;top:9px;width:6px;height:6px;background:var(--s1);border-radius:1px}
+.mt-spot li b{color:var(--ink);font-weight:600}
+.mt-more{margin:6px 0 0}
+.mt-more a{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--s2);text-decoration:none;border-bottom:1px solid var(--hair);padding-bottom:2px}
+.mt-more a:hover{border-color:var(--s2)}
+/* MODELS-CSS-END */
 </style>
 </head>
 <body>
@@ -1167,7 +1175,7 @@ footer li{margin-bottom:8px;max-width:64ch}
   <div class="pb-inner"><span class="pb-num">02</span><span class="pb-title">The machines weigh in</span><span class="pb-sub">We ran the forecast ourselves — five frontier models, twenty times each</span></div>
 </div>
 
-<section id="models-think" class="colw" data-branch="THE MACHINES 机器" data-color="#4a3aa7"><span class="rail-anchor" data-date="N=20" aria-hidden="true"></span>
+<section id="models-think" class="colw" data-branch="THE MACHINES 机器" data-color="#4a3aa7"><span class="rail-anchor" data-date="THE TEST" aria-hidden="true"></span>
   <p class="kicker">The control run · n=20 per cell · 95% CI</p>
   <h2>What Chinese &amp; American frontier models think will happen</h2>
   <p class="cn-sub">机器怎么看 · 二十次独立采样</p>
@@ -1190,6 +1198,18 @@ footer li{margin-bottom:8px;max-width:64ch}
   <p class="mt-split">The averages hide the real story: a <b>China/West split that the error bars confirm.</b> GLM and DeepSeek put almost nothing on an open-source release (~9–11%) and the most on state control; Claude Fable and Kimi put roughly three times as much on open source (29–33%). GLM’s 10.6 ±2.1 and Fable’s 33 ±2.1 do not come close to touching — the Chinese models simply do not believe Beijing lets a weapon-grade model ship freely, and the American ones are far less sure.</p>
 
   <details class="mt-honesty"><summary>Why these numbers differ from an earlier version</summary><p>An earlier draft of this section showed each model a roster of the <em>other</em> models’ scenarios before asking it to allocate — and because most of those scenarios were state-control stories, it anchored every model toward Black Box. That was a methodological artifact. These numbers come from a clean prompt (the question and the three definitions, nothing else), twenty independent draws per model per condition at temperature 1. The roster version is gone.</p></details>
+
+  <p class="mt-lbl2">Points the models raised that we didn&rsquo;t</p>
+  <p class="mt-nlede">Across the runs, the models kept surfacing mechanisms the ChinaTalk essay never named. A few we thought were genuinely sharp:</p>
+  <ul class="mt-spot">
+    <li><b>Trailing-edge openness.</b> Claude Fable&rsquo;s image of the equilibrium: labs keep shipping open weights, but always exactly one generation behind their own internal frontier. Open-source culture doesn&rsquo;t end &mdash; it just never includes the frontier model. Nobody has to write the rule down.</li>
+    <li><b>Compute allocation as the enforcement lever.</b> Kimi&rsquo;s point that the state never needs a police action: with advanced chips scarce, compliance is simply bought &mdash; priority Ascend allocations for the labs that sign over their frontier models, cut-off for the ones that don&rsquo;t.</li>
+    <li><b>The model as a regulated object.</b> Kimi again: under China&rsquo;s 2021 vulnerability-management rules, a model that autonomously finds zero-days is <em>itself</em> a regulated vulnerability source &mdash; a legal hook that already exists, no new statute required.</li>
+    <li><b>&ldquo;Digital feudalism.&rdquo;</b> DeepSeek&rsquo;s framing of how Beijing would justify seizure &mdash; private control of a strategic capability recast as a sovereignty threat, the way land or arms once were.</li>
+    <li><b>Turning the crackdown into a norm.</b> Kimi&rsquo;s speech read: China uses the brand-new Shanghai-based World AI Cooperation Organization to export its own domestic controls as a global &ldquo;offensive-capability red line,&rdquo; trading Global-South access for adoption.</li>
+    <li><b>No public model, no controversy.</b> The quiet insight running through the black-box scenarios: keep the frontier model out of public hands and there is never a Mythos-style public debate to have &mdash; the fight the West is having simply doesn&rsquo;t happen.</li>
+  </ul>
+  <p class="mt-more"><a href="/reasoning">Read every model&rsquo;s full reasoning &rarr;</a></p>
 
   <p class="mt-lbl2">The stories behind the numbers <span class="mt-cn">虚构</span></p>
   <p class="mt-nlede">Each draw is a number, but each model also wrote out how it sees the future. These are the most vivid — invented scenarios, clearly fiction, spanning the range from seizure to open release.</p>
