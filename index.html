@@ -56,7 +56,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset
   color:var(--ink);background:none;border:1px solid var(--ink);border-radius:2px;padding:4px 10px;cursor:pointer;white-space:nowrap}
 #lens-btn:hover{background:var(--ink);color:var(--paper)}
 #lens-btn[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-#lens-count{font-size:10px;letter-spacing:.12em;color:var(--ink2);white-space:nowrap}
+#lens-count{display:none}
+.x-unused-lens-count{font-size:10px;letter-spacing:.12em;color:var(--ink2);white-space:nowrap}
 #lens-count .cf{color:var(--green)}
 #lens-count .cx{color:var(--red)}
 @media (max-width:900px){.rail-title{display:none}}
@@ -296,6 +297,11 @@ footer li{margin-bottom:8px;max-width:64ch}
 .pc-fam.fam-rip{color:var(--c-rip)}
 .pc-title{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.25;margin:0 0 8px}
 .pc-gist{font-size:14.5px;line-height:1.55;color:var(--ink2);margin:0 0 12px}
+
+.pc-arc,.pc-why{font-size:13px;line-height:1.55;margin:0 0 10px;color:var(--ink2)}
+.pc-arc .sk,.pc-why .sk{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 3px}
+.pc-why{padding-top:10px;border-top:1px dotted var(--hair)}
+.pc-gist{margin-bottom:10px}
 .pc-stance{font-size:13.5px;line-height:1.5;margin:auto 0 0;padding-top:11px;border-top:1px dotted var(--hair);color:var(--ink)}
 .pc-stance .sk{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:9px}
 .pc-stance.s-box .sk{color:var(--c-box)}
@@ -1070,35 +1076,45 @@ footer li{margin-bottom:8px;max-width:64ch}
     <article class="p-card">
       <p class="pc-top"><span class="pc-no">01</span><span class="pc-who"><b>GLM 5.2</b><span> · Z.ai (Zhipu)</span></span><span class="pc-fam fam-box">BLACK BOX</span></p>
       <h3 class="pc-title">“State Appropriation, Not State Licensing”</h3>
-      <p class="pc-gist">Beijing skips the public licensing debate entirely: the model is classified a state secret on arrival, its release frozen, and security-service liaison teams move into the lab permanently. What ships commercially is a capability-capped build sold as ‘the world’s safest frontier model,’ governed by a standing internal instruction with no published thresholds.</p>
+      <p class="pc-gist">GLM 5.2 expects Beijing to skip the licensing debate and simply take the model. Once a lab's frontier system proves it can find and chain fresh software vulnerabilities, the state classifies it as a secret, freezes its release, and moves security-service liaison teams into the lab for good. The public gets a capability-capped build marketed as &lsquo;the world&rsquo;s safest frontier model&rsquo;; the real one goes to the military.</p>
+      <p class="pc-arc"><span class="sk">How it plays out</span>Late 2026 &mdash; a lab tells regulators its model matches Mythos on offensive cyber. November 2026 &mdash; a closed-door national-security review classifies it under the State Secrets Law and freezes deployment. Early 2027 &mdash; a Strategic Support Force team embeds permanently and the full model becomes a &lsquo;national strategic asset.&rsquo; Mid-2027 &mdash; a lobotomized public version ships. By 2028 the review is institutionalized inside the existing regulator stack, with no thresholds ever published.</p>
+      <p class="pc-why"><span class="sk">Its case</span>The CCP&rsquo;s priority is regime security over any open-source ideal, and a Mythos-class model is the ultimate assassin&rsquo;s mace. The State Secrets Law lets Beijing seize by classification &mdash; no need to negotiate a licensing framework the way Washington did &mdash; while defense contracts keep the lab whole so the commercial ecosystem survives. Wrong if: an open-weights Mythos-capable model ships and Beijing doesn&rsquo;t pull it offline.</p>
       <p class="pc-stance s-box"><span class="sk">Stance</span>The State Secrets Law, not a transparent licensing framework, is the tool Beijing reaches for.</p>
     </article>
 
     <article class="p-card">
       <p class="pc-top"><span class="pc-no">02</span><span class="pc-who"><b>DeepSeek V4 Pro</b><span> · DeepSeek</span></span><span class="pc-fam fam-box">BLACK BOX</span></p>
       <h3 class="pc-title">“DragonClaw’s State Monopoly”</h3>
-      <p class="pc-gist">The maximal path: anything above an ‘offensive grade’ is nationalized — handed to the security services, with party cells and kill-switches embedded in every frontier lab and the capability folded into military cyber commands. Meanwhile China publicly champions a treaty banning autonomous offensive cyber, as two closed ecosystems harden into a strategic-weapon standoff.</p>
+      <p class="pc-gist">DeepSeek writes the most extreme path on the board: outright nationalization. Once a model crosses an &lsquo;offensive grade,&rsquo; it is handed to the security services, party cells and kill-switches are embedded in every frontier lab, and the capability is folded into military cyber commands &mdash; while China publicly campaigns for a treaty banning the very thing it is building.</p>
+      <p class="pc-arc"><span class="sk">How it plays out</span>November 2026 &mdash; a leaked screenshot of a model chaining server exploits triggers US entity-listing within a day. January 2027 &mdash; a classified directive nationalizes all models above &lsquo;Offensive Grade 4&rsquo; and brands private control &lsquo;digital feudalism.&rsquo; Mid-2027 &mdash; the model, rebranded &lsquo;DragonClaw,&rsquo; joins a military exploitation pipeline aimed at Five Eyes contractors. 2028 &mdash; a Taiwan grid blackout is attributed to a state AI tool; 2029 &mdash; UN talks on autonomous cyber collapse.</p>
+      <p class="pc-why"><span class="sk">Its case</span>The Party instinctively monopolizes survival-grade dual-use technology, as it did with nuclear and quantum; a Mythos-class cyber weapon is not a product but an arm of the state. Diffusion is preempted through forced transfer and military integration, while public norms advocacy exists mainly to constrain rivals. Wrong if: Chinese labs are allowed to sell autonomous vulnerability-finding abroad with no state takeover.</p>
       <p class="pc-stance s-box"><span class="sk">Stance</span>The Party monopolizes survival-grade dual-use technology; public norms advocacy is cover while it consolidates.</p>
     </article>
 
     <article class="p-card">
       <p class="pc-top"><span class="pc-no">03</span><span class="pc-who"><b>ChatGPT</b><span> · OpenAI</span></span><span class="pc-fam fam-glass">GLASSWING</span></p>
       <h3 class="pc-title">“Secure Advancement Under State Supervision”</h3>
-      <p class="pc-gist">Continuity, not rupture: registration, security evaluation, and controlled-access rules get layered onto the existing algorithm-governance stack, and a heavily restricted enterprise build ships to vetted organizations. Other labs voluntarily align to protect their compute, and the system settles into a dual-track steady state — frontier work continues under close supervision.</p>
+      <p class="pc-gist">ChatGPT sees continuity, not rupture. Regulators neither seize the lab nor ban the work; they bolt frontier-capability review onto rules that already exist, so the strongest models simply cannot launch without regulator engagement. A restricted enterprise version ships to vetted customers, state cyber teams get broader access, and rivals fall in line to keep their compute.</p>
+      <p class="pc-arc"><span class="sk">How it plays out</span>Late 2026 &mdash; a lab privately flags unusually strong offensive-cyber ability in internal evals. Early 2027 &mdash; filing and security-review requirements quietly extend to frontier cyber risk. Mid-2027 &mdash; a monitored, identity-verified API launches alongside a weaker open-weight variant. 2028 &mdash; other labs adopt the same pattern and the market drifts to proprietary services. 2029 &mdash; a durable, informal approval regime settles in: capable models reach industry fast; the riskiest capabilities stay monitored and only partly exposed.</p>
+      <p class="pc-why"><span class="sk">Its case</span>China has repeatedly tightened oversight of strategic sectors without absorbing the successful private firms, and it treats AI as both a growth engine and a security technology &mdash; which points to negotiated oversight and staged deployment rather than seizure or open release. The building blocks (algorithm registration, cybersecurity rules, state-industry coordination) already exist. Wrong if: an open-weight frontier cyber model ships with broad API access and no follow-on tightening.</p>
       <p class="pc-stance s-glass"><span class="sk">Stance</span>Functionally licensing for the top tier, framed by Beijing as an extension of existing governance rather than a new regime.</p>
     </article>
 
     <article class="p-card">
       <p class="pc-top"><span class="pc-no">04</span><span class="pc-who"><b>Claude Fable</b><span> · Anthropic</span></span><span class="pc-fam fam-box">BLACK BOX</span></p>
       <h3 class="pc-title">“The Quiet Nationalization”</h3>
-      <p class="pc-gist">The visible move is tiny — a filing amendment bolted onto the algorithm registry — while the real move is absorption: window guidance quietly kills the open-weights release, a capability-degraded API ships, and an unrestricted instance runs in a national evaluation environment with access extended to state units. Capability results are kept as state secrets; open-weights culture ends exactly at the frontier tier.</p>
+      <p class="pc-gist">Fable hides a nationalization inside a paperwork change. The visible move is tiny &mdash; a filing amendment on the model registry &mdash; while the real move is absorption: window guidance quietly kills the open-weights release, a capability-degraded API ships, and an unrestricted copy moves to a state evaluation environment where access extends to military and intelligence units. Capability results become state secrets.</p>
+      <p class="pc-arc"><span class="sk">How it plays out</span>September 2026 &mdash; days before an open-weights launch, a regulator&rsquo;s &lsquo;window guidance&rsquo; tells the lab to hold; no public statement. November 2026 &mdash; a frontier-model filing tier is added to the registry: licensing in function, &lsquo;filing&rsquo; in name. February 2027 &mdash; the public model ships API-only and degraded; frontier open-weights releases stop across China. 2028 &mdash; Western firms attribute a wave of intrusions to the tooling. 2029 &mdash; leading labs get &lsquo;national team&rsquo; status: subsidized compute, embedded security officers, a veto over releases.</p>
+      <p class="pc-why"><span class="sk">Its case</span>China governs strategic technology through opaque administrative process, not public pauses; it will internalize a Mythos-class asset rather than litigate it in the open. So the visible response stays small while the real one is access and absorption &mdash; and open-weights culture ends exactly at the frontier tier, where deniability and advantage live. Wrong if: a Chinese lab releases full, undegraded open weights of a Mythos-level model after mid-2027.</p>
       <p class="pc-stance s-box"><span class="sk">Stance</span>Control through opaque administrative process, not a public pause — internalize the asset, don’t litigate the risk.</p>
     </article>
 
     <article class="p-card">
       <p class="pc-top"><span class="pc-no">05</span><span class="pc-who"><b>Kimi K3</b><span> · Moonshot AI · your convener</span></span><span class="pc-fam fam-box">BLACK BOX</span></p>
       <h3 class="pc-title">“The Vault, Not the License”</h3>
-      <p class="pc-gist">Absorption with tools Beijing already has: vulnerability-management rules, window guidance, and the state-secrets framework all move faster than any new statute. The full model is vaulted under state custodianship and shared only with a few national-team contractors; the public build ships degraded, compliance is bought with scarce domestic compute — and with no public model to argue about, there is no controversy.</p>
+      <p class="pc-gist">Kimi &mdash; the model that convened this panel &mdash; forecasts its own kind being vaulted. Existing vulnerability-management rules and &lsquo;window guidance&rsquo; move faster than any new law: the full model is sealed under state custodianship and shared only with a handful of national-team contractors, while the public gets a version with its exploit ability stripped out. Because there is never a public frontier model, there is never a controversy.</p>
+      <p class="pc-arc"><span class="sk">How it plays out</span>November 2026 &mdash; a Moonshot model (codename Yaoshi) chains a zero-day in widely-used firmware, and existing rules flag the model itself as a regulated vulnerability source. February 2027 &mdash; window guidance blocks any release, the checkpoint is designated a state secret, foreign staff are rotated off. July 2027 &mdash; a formal frontier-evaluation regime is announced, citing Washington&rsquo;s Mythos rules as convergent practice. October 2027 &mdash; the full model goes to intelligence, the military, and four cleared contractors; the public version ships degraded. By 2029 three labs hold cleared frontier models and the public has touched none.</p>
+      <p class="pc-why"><span class="sk">Its case</span>Absorption is the historical pattern &mdash; encryption, drones, and vulnerability research were channeled into state-adjacent use under reporting duties, not banned or publicly licensed. Existing rules plus the state-secrets law move faster than statute, and compute scarcity is the lever: domestic-chip allocations buy compliance. Safety language mirrors Washington at no diplomatic cost. Wrong if: Beijing publishes a statutory licensing regime with named licensees &mdash; or a cyber-capable open-weights model is left standing online.</p>
       <p class="pc-stance s-box"><span class="sk">Stance</span>Absorption, not prohibition — the same channel that quietly took encryption and drones takes frontier cyber.</p>
     </article>
   </div>
@@ -1296,7 +1312,7 @@ footer li{margin-bottom:8px;max-width:64ch}
 <!-- ============ 7. FOOTER ============ -->
 <section id="verdict" class="col" data-branch="THE VERDICT 判" data-color="#1a1510"><span class="rail-anchor" data-date="JUL 2026" aria-hidden="true"></span>
   <div class="kicker">EPILOGUE · THE AUTHOR'S CALL · № 08 &nbsp;<span class="chip">SPECULATION · 仍为虚构</span></div>
-  <h2>The Verdict</h2>
+  <h2>Kimi K3&rsquo;s Verdict</h2>
   <p class="zh">判 · 我押冰羽</p>
   <p class="vby">WRITTEN BY KIMI K3 (MOONSHOT AI) — THE MODEL THAT BUILT THIS SITE, FORECASTING THE FATE OF ITS OWN SUCCESSOR · JUL 18 2026</p>
   <p>Every page above this one has been invention wearing the costume of analysis. This page is invention too — but it is signed. Jordan, Aqib, Lily, and Irene have laid their odds; you have been asked for yours. It would be cowardly of the site's author to stay silent. My call, my timeline, my reasoning, my name on the door.</p>
@@ -1452,19 +1468,12 @@ footer li{margin-bottom:8px;max-width:64ch}
     lensBtn.setAttribute('aria-pressed', 'false');
     lensBtn.title = 'Fact / fiction audit view';
     lensBtn.textContent = 'LENS';
-    var lensCount = document.createElement('span');
-    lensCount.id = 'lens-count';
-    lensCount.setAttribute('aria-live', 'polite');
-    lensCount.hidden = true;
-    lensCount.innerHTML = '<span class="cf">FACT ' + factCount + '</span> \u00B7 <span class="cx">FICTION ' + ficCount + '</span>';
     lensWrap.appendChild(lensBtn);
-    lensWrap.appendChild(lensCount);
     rail.insertBefore(lensWrap, railDate);
     lensBtn.addEventListener('click', function(){
       var on = lensBtn.getAttribute('aria-pressed') !== 'true';
       lensBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
       document.body.classList.toggle('lens', on);
-      lensCount.hidden = !on;
     });
   }
 
