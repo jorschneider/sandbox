@@ -332,6 +332,38 @@ footer li{margin-bottom:8px;max-width:64ch}
 #panel .lean b{font-weight:600}
 #panel .caveat{font-size:13px;line-height:1.5;color:var(--muted);max-width:60ch;font-style:italic;margin:14px 0}
 #panel .p-byline{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:20px 0 0;line-height:1.7;border-top:1px solid var(--hair);padding-top:14px}
+/* ============================================================
+   THE BRANCH MATRIX — three-branch comparison table
+   ============================================================ */
+#matrix{--mx1:var(--s1);--mx2:var(--s2);--mx3:var(--s3)}
+.mx-subzh{font-family:var(--zhs);font-size:clamp(15px,1.4vw,18px);color:var(--muted);margin:6px 0 0}
+.mx-dek{font-size:clamp(15px,1.4vw,18px);line-height:1.55;max-width:56ch;margin:14px 0 0;color:var(--ink2);font-style:italic}
+.mx-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:26px 0 8px;border:1px solid var(--hair);background:var(--surface)}
+.mx-table{width:100%;min-width:660px;border-collapse:collapse;font-size:13.5px;line-height:1.5}
+.mx-table th,.mx-table td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--hair);border-right:1px solid var(--hair)}
+.mx-table thead th{border-bottom:1px solid var(--baseline,#c3c2b7)}
+.mx-table td:last-child,.mx-table th:last-child{border-right:none}
+.mx-corner{width:15%;min-width:120px;background:var(--paper)}
+.mx-corner span[aria-hidden]{font-family:var(--zhs);font-size:13px;color:var(--muted)}
+.mx-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mx-colh{width:28.3%;border-top:3px solid var(--muted)}
+.mx-colh.mx-b1{border-top-color:var(--mx1)}
+.mx-colh.mx-b2{border-top-color:var(--mx2)}
+.mx-colh.mx-b3{border-top-color:var(--mx3)}
+.mx-tagno{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted)}
+.mx-zh{display:block;font-family:var(--zhs);font-size:22px;line-height:1.1;margin:3px 0 2px;color:var(--ink)}
+.mx-en{display:block;font-family:var(--serif);font-size:14px;font-weight:600;line-height:1.2;color:var(--ink)}
+.mx-coltag{display:block;font-size:12px;font-style:italic;color:var(--muted);margin-top:4px;font-family:var(--serif)}
+.mx-rowlabel{width:15%;min-width:120px;background:var(--paper);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);font-weight:400}
+.mx-epi{display:block;font-size:8.5px;letter-spacing:.12em;color:var(--muted);margin-top:4px}
+.mx-table td{color:var(--ink2)}
+.mx-indicators td,.mx-indicators th{background:rgba(74,58,167,.05)}
+.mx-indicators .mx-rowlabel{background:rgba(74,58,167,.08)}
+.mx-real{display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--green);border:1px solid var(--green);border-radius:2px;padding:1px 5px;margin-top:6px;text-transform:uppercase}
+.mx-swipe{display:none;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted);text-align:center;margin:8px 0 0}
+@media(max-width:700px){.mx-swipe{display:block}}
+.mx-note{font-family:var(--serif);font-size:12.5px;font-style:italic;color:var(--muted);max-width:60ch;line-height:1.5;margin:14px 0 0}
+.mx-byline{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 0;border-top:1px solid var(--hair);padding-top:14px}
 </style>
 </head>
 <body>
@@ -802,6 +834,82 @@ footer li{margin-bottom:8px;max-width:64ch}
 <hr class="rule">
 
 <!-- ============ 5. FORECAST ============ -->
+<section id="matrix" class="colw" data-branch="THE MATRIX 对照" data-color="#0b0b0b">
+  <span class="rail-anchor" data-date="Q4 2026" aria-hidden="true"></span>
+  <p class="kicker mx-kicker">FIELD GUIDE</p>
+  <h2 class="mx-title">The Branch Matrix</h2>
+  <p class="mx-subzh">三扇门 · 六个问题</p>
+  <p class="mx-dek">One table, three worlds. Read down a column for a timeline; read across a row for the fork that decides it.</p>
+  <div class="mx-scroll">
+    <table class="mx-table">
+      <thead>
+        <tr>
+          <th class="mx-corner" scope="col"><span aria-hidden="true">问题 × 门</span><span class="mx-sr">Question, by branch</span></th>
+          <th class="mx-colh mx-b1" scope="col">
+            <span class="mx-tagno">S1</span>
+            <span class="mx-zh">开闸</span>
+            <span class="mx-en">Let It Rip</span>
+            <span class="mx-coltag">Open weights, open season.</span>
+          </th>
+          <th class="mx-colh mx-b2" scope="col">
+            <span class="mx-tagno">S2</span>
+            <span class="mx-zh">冰羽</span>
+            <span class="mx-en">Glasswing with Chinese Characteristics</span>
+            <span class="mx-coltag">Transparency, licensed.</span>
+          </th>
+          <th class="mx-colh mx-b3" scope="col">
+            <span class="mx-tagno">S3</span>
+            <span class="mx-zh">黑箱</span>
+            <span class="mx-en">The Black Box</span>
+            <span class="mx-coltag">The state keeps the keys.</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th class="mx-rowlabel" scope="row">WEIGHTS &amp; ACCESS</th>
+          <td>Open weights on day one — permissive license, mirrored worldwide within hours</td>
+          <td>Frontier weights in escrow; gated API plus distilled open ‘smalls’</td>
+          <td>Never released — classified weights behind a throttled state API</td>
+        </tr>
+        <tr>
+          <th class="mx-rowlabel" scope="row">WHO CONTROLS THE MODEL</th>
+          <td>Everyone and no one — a million forks, no off-switch</td>
+          <td>Moonshot holds the wheel; the CAC holds the brake</td>
+          <td>A cleared Party-state cadre; Moonshot reduced to a public shell</td>
+        </tr>
+        <tr>
+          <th class="mx-rowlabel" scope="row">THE CONSUMER PRODUCT</th>
+          <td>Ten thousand forks — intelligence priced like electricity</td>
+          <td>The Kimi super-app: polished, trimmed at the edges, exported down the Belt and Road</td>
+          <td>A lobotomized public cousin; the real K4 briefs ministers</td>
+        </tr>
+        <tr>
+          <th class="mx-rowlabel" scope="row">WASHINGTON’S RESPONSE</th>
+          <td>Export controls mooted overnight; a doomed bid to license downloads as munitions</td>
+          <td>Grudging détente — mutual audits, inspections, an ‘AI WTO’</td>
+          <td>Crash program plus counterintelligence — a spy war over weights</td>
+        </tr>
+        <tr>
+          <th class="mx-rowlabel" scope="row">2040 SNAPSHOT <span class="mx-epi">FROM THE EPILOGUES</span></th>
+          <td>Cognition is a commodity; power sits with chips, data, and whoever ships fastest</td>
+          <td>Two ecosystems under one inspection regime — the glasswing holds</td>
+          <td>A bipolar blackout: both sides armed, both sides guessing</td>
+        </tr>
+        <tr class="mx-indicators">
+          <th class="mx-rowlabel" scope="row">EARLY INDICATORS TO WATCH <span class="mx-real">REAL · 可观测</span></th>
+          <td>Watch Hugging Face: a frontier-class open-weights drop from Moonshot, DeepSeek, or Qwen — mirrors outrunning takedowns</td>
+          <td>Watch the registries: a CAC licensing scheme for frontier models — system cards published, weights withheld — and audit language in US–China communiqués</td>
+          <td>Watch for silence: Moonshot’s arXiv output, leaderboard entries, and GitHub commits drying up at once</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="mx-swipe" aria-hidden="true">⟵ SCROLL · 左右滑动 ⟶</p>
+  <p class="mx-note">Rows one through five paraphrase the branches as written; the 2040 line comes from each epilogue. The last row is not fiction — every signal in it is observable in the real world, this year.</p>
+  <p class="mx-byline">Compiled by Kimi K3</p>
+</section>
+
 <section id="forecast" class="colw" data-branch="FORECAST 概率" data-color="#0b0b0b">
   <div class="sec-head" data-date="JUL 2026 — THE BETS">
     <span class="ghost" lang="zh-Hans" aria-hidden="true">算</span>
