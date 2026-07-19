@@ -364,6 +364,41 @@ footer li{margin-bottom:8px;max-width:64ch}
 @media(max-width:700px){.mx-swipe{display:block}}
 .mx-note{font-family:var(--serif);font-size:12.5px;font-style:italic;color:var(--muted);max-width:60ch;line-height:1.5;margin:14px 0 0}
 .mx-byline{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 0;border-top:1px solid var(--hair);padding-top:14px}
+
+/* THE ESSAY EFFECT — additions */
+#essay-effect{--ee-accent:#2a78d6}
+#essay-effect .ee-zh{margin:.15rem 0 0;font-size:1.05rem;letter-spacing:.5em;opacity:.65}
+#essay-effect .ee-dek{margin:.9rem 0 0;font-size:1.02rem;line-height:1.55;opacity:.85;max-width:36rem}
+#essay-effect .ee-lede{margin:1.4rem 0 0;font-size:1.06rem;line-height:1.65;max-width:40rem}
+#essay-effect .ee-chart{margin:1.8rem 0 0;padding:1rem 1rem .6rem;max-width:44rem;border:1px solid rgba(127,127,127,.35);border-radius:10px}
+#essay-effect .ee-chart-head{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;align-items:baseline;justify-content:space-between;margin:0 0 .4rem}
+#essay-effect .ee-chart-title{margin:0;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+#essay-effect .ee-legend{display:flex;flex-wrap:wrap;gap:.35rem 1rem;margin:0;font-size:.74rem;opacity:.9}
+#essay-effect .ee-legend-item{display:inline-flex;align-items:center;gap:.42rem;white-space:nowrap}
+#essay-effect .ee-sw{display:inline-block;width:13px;height:10px;border-radius:2px}
+#essay-effect .ee-sw-cold{border:1px solid currentColor;background:rgba(127,127,127,.18)}
+#essay-effect .ee-sw-primed{background:currentColor;opacity:.85}
+#essay-effect .ee-sw-human{width:16px;height:0;border-radius:0;background:none;border-top:2px dashed currentColor}
+#essay-effect .ee-svg{display:block;width:100%;height:auto;margin-top:.35rem}
+#essay-effect .ee-svg text{font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace)}
+#essay-effect .ee-axis{stroke:currentColor;stroke-opacity:.3;stroke-width:1}
+#essay-effect .ee-cold{fill-opacity:.24;stroke-width:1;stroke-opacity:.85}
+#essay-effect .ee-primed{fill-opacity:.92}
+#essay-effect .ee-hmark line{stroke:currentColor;stroke-width:1.5}
+#essay-effect .ee-hline{stroke-dasharray:4 3;opacity:.85}
+#essay-effect .ee-val{font-size:11px;font-weight:600;fill:currentColor}
+#essay-effect .ee-hval{font-size:10px;fill:currentColor;opacity:.75}
+#essay-effect .ee-fam{font-size:10px;font-weight:600;letter-spacing:.12em;opacity:.9}
+#essay-effect .ee-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.8rem;margin:1.6rem 0 0;max-width:44rem}
+#essay-effect .ee-stat{border-top:2px solid var(--ee-accent);padding-top:.55rem}
+#essay-effect .ee-stat-num{display:block;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:1.25rem;font-weight:700;color:var(--ee-accent);letter-spacing:-.01em}
+#essay-effect .ee-stat-lab{display:block;margin-top:.25rem;font-size:.76rem;line-height:1.4;opacity:.78}
+#essay-effect .ee-p{max-width:40rem;margin:1.2rem 0 0;line-height:1.65}
+#essay-effect .ee-r{color:var(--s1,#e8c15a);font-weight:600}
+#essay-effect .ee-g{color:var(--s2,#5b9bd5);font-weight:600}
+#essay-effect .ee-b{color:var(--s3,#9a7bd8);font-weight:600}
+#essay-effect .ee-caveat{max-width:40rem;margin:1.4rem 0 0;padding-left:.9rem;border-left:3px solid rgba(127,127,127,.4);font-size:.92rem;line-height:1.6;opacity:.88}
+#essay-effect .ee-byline{margin:1.6rem 0 0;font-family:var(--mono,ui-monospace,Menlo,Consolas,monospace);font-size:.78rem;letter-spacing:.05em;opacity:.65}
 </style>
 </head>
 <body>
@@ -1163,6 +1198,83 @@ footer li{margin-bottom:8px;max-width:64ch}
   <p class="p-byline">PANEL RUN AND WRITTEN UP BY KIMI K3 VIA THE MOONSHOT API · Scenarios written blind, then probabilities allocated across the full set · Raw responses on file</p>
 
   <!-- maintainer: the SCRIPT-PATCH below is additive only. It observes header-only sections (this one and #verdict) and, when a heading crosses the rail band, calls window.setRail(branch, color) if the site exposes it; otherwise it attempts a best-effort label swap on [data-rail]/#rail/.rail, else silently no-ops (pre-patch behavior). No .ff-* classes here by design: this section is analysis of real model outputs, not fiction. -->
+</section>
+
+<section id="essay-effect" class="colw" data-branch="THE ESSAY EFFECT 影响" data-color="#2a78d6">
+<span class="rail-anchor" data-date="META" aria-hidden="true"></span>
+
+<p class="kicker">The control run &middot; same question, one essay later</p>
+<h2>One Essay Later, the Machines Sound Human</h2>
+<p class="ee-zh" lang="zh">叙事的引力</p>
+<p class="ee-dek">Cold, the panel mean sat 28 points above the human team on Black Box. One essay later, the gap was five.</p>
+
+<p class="ee-lede">The first poll asked the question bare. For the second, the same five models &mdash; GLM&nbsp;5.2, DeepSeek&nbsp;V4&nbsp;Pro, ChatGPT, Claude&nbsp;Fable, and Kimi&nbsp;K3 &mdash; read the ChinaTalk essay arguing the middle path is most likely, then answered the identical question with the essay still in context. What moved, and by how much, says less about China&rsquo;s future than about how persuadable a frontier model actually is.</p>
+
+<figure class="ee-chart">
+<figcaption class="ee-chart-head">
+<p class="ee-chart-title">Panel mean by family &mdash; cold vs. primed, against the humans (%)</p>
+<p class="ee-legend">
+<span class="ee-legend-item"><span class="ee-sw ee-sw-cold" aria-hidden="true"></span>Cold &middot; question only</span>
+<span class="ee-legend-item"><span class="ee-sw ee-sw-primed" aria-hidden="true"></span>Primed &middot; after the essay</span>
+<span class="ee-legend-item"><span class="ee-sw ee-sw-human" aria-hidden="true"></span>ChinaTalk humans</span>
+</p>
+</figcaption>
+<svg class="ee-svg" viewBox="0 0 372 226" role="img" aria-labelledby="ee-svg-t ee-svg-d">
+<title id="ee-svg-t">Cold versus primed panel means against the human panel</title>
+<desc id="ee-svg-d">For each scenario family, two bars show the five-model panel mean before and after reading the essay, with a dashed marker for the ChinaTalk human average. Let It Rip rises from 13 to 26, toward the human 33. Glasswing rises from 37 to 46, past the human 45. Black Box falls from 50 to 27, near the human 22.</desc>
+<line class="ee-axis" x1="8" y1="196" x2="364" y2="196"/>
+
+<rect class="ee-bar ee-cold" x="34" y="157" width="30" height="39" rx="2" fill="var(--s1,#e8c15a)" stroke="var(--s1,#e8c15a)"/>
+<rect class="ee-bar ee-primed" x="72" y="118" width="30" height="78" rx="2" fill="var(--s1,#e8c15a)"/>
+<g class="ee-hmark">
+<line class="ee-hline" x1="30" y1="97" x2="106" y2="97"/>
+<line class="ee-hcap" x1="30" y1="93" x2="30" y2="101"/>
+<line class="ee-hcap" x1="106" y1="93" x2="106" y2="101"/>
+</g>
+<text class="ee-hval" x="112" y="101">33</text>
+<text class="ee-val" x="49" y="150" text-anchor="middle">13</text>
+<text class="ee-val" x="87" y="111" text-anchor="middle">26</text>
+<text class="ee-fam" x="68" y="213" text-anchor="middle" fill="var(--s1,#e8c15a)">LET IT RIP</text>
+
+<rect class="ee-bar ee-cold" x="152" y="85" width="30" height="111" rx="2" fill="var(--s2,#5b9bd5)" stroke="var(--s2,#5b9bd5)"/>
+<rect class="ee-bar ee-primed" x="190" y="58" width="30" height="138" rx="2" fill="var(--s2,#5b9bd5)"/>
+<g class="ee-hmark">
+<line class="ee-hline" x1="148" y1="61" x2="224" y2="61"/>
+<line class="ee-hcap" x1="148" y1="57" x2="148" y2="65"/>
+<line class="ee-hcap" x1="224" y1="57" x2="224" y2="65"/>
+</g>
+<text class="ee-hval" x="230" y="65">45</text>
+<text class="ee-val" x="167" y="78" text-anchor="middle">37</text>
+<text class="ee-val" x="205" y="51" text-anchor="middle">46</text>
+<text class="ee-fam" x="186" y="213" text-anchor="middle" fill="var(--s2,#5b9bd5)">GLASSWING</text>
+
+<rect class="ee-bar ee-cold" x="270" y="46" width="30" height="150" rx="2" fill="var(--s3,#9a7bd8)" stroke="var(--s3,#9a7bd8)"/>
+<rect class="ee-bar ee-primed" x="308" y="115" width="30" height="81" rx="2" fill="var(--s3,#9a7bd8)"/>
+<g class="ee-hmark">
+<line class="ee-hline" x1="266" y1="130" x2="342" y2="130"/>
+<line class="ee-hcap" x1="266" y1="126" x2="266" y2="134"/>
+<line class="ee-hcap" x1="342" y1="126" x2="342" y2="134"/>
+</g>
+<text class="ee-hval" x="348" y="134">22</text>
+<text class="ee-val" x="285" y="39" text-anchor="middle">50</text>
+<text class="ee-val" x="323" y="108" text-anchor="middle">27</text>
+<text class="ee-fam" x="304" y="213" text-anchor="middle" fill="var(--s3,#9a7bd8)">BLACK BOX</text>
+</svg>
+</figure>
+
+<div class="ee-stats" role="list">
+<div class="ee-stat" role="listitem"><span class="ee-stat-num">50&rarr;27</span><span class="ee-stat-lab">Black Box, panel mean &mdash; every model cut it, by 13 to 35 points</span></div>
+<div class="ee-stat" role="listitem"><span class="ee-stat-num">56&rarr;13</span><span class="ee-stat-lab">total percentage-point gap to the human panel, cold &rarr; primed</span></div>
+<div class="ee-stat" role="listitem"><span class="ee-stat-num">2 of 5</span><span class="ee-stat-lab">models switched which ending they called most likely</span></div>
+</div>
+
+<p class="ee-p">Cold, four of the five machines wrote a Black Box ending and the panel mean gave it half the future &mdash; 50%, against the human team&rsquo;s 22%. After one essay making the case for the middle, every model cut <span class="ee-b">Black Box</span> (ChatGPT by 13 points, DeepSeek by 35), every model raised <span class="ee-r">Let It Rip</span>, and four of five raised <span class="ee-g">Glasswing</span>. The primed mean &mdash; Rip 26 / Glass 46 / Box 27 &mdash; lands within seven points of the human distribution on all three families.</p>
+
+<p class="ee-p">Two models crossed a line. Claude Fable moved from Black Box to Glasswing (&ldquo;Glasswing by Window Guidance&rdquo;); Kimi K3 crossed the whole board, from Black Box to Let It Rip (&ldquo;Let It Rip, With Chinese Characteristics&rdquo;). GLM&nbsp;5.2 and DeepSeek kept their Black Box endings but hollowed out the probability beneath them (55&rarr;40, 65&rarr;30), and ChatGPT, the lone Glasswing from the cold run, barely moved. Note the texture: the mean converged on the humans while the picks underneath spread across all three endings &mdash; Box, Box, Glass, Glass, Rip. The essay did not build a machine consensus; it redistributed machine conviction.</p>
+
+<p class="ee-caveat"><strong>Caveat.</strong> This is five models, one essay, and one prompt format &mdash; a demonstration, not a measurement. Priming cuts both ways: an equally forceful brief for Black Box would presumably bend the panel the other way, and some of the shift is likely mirroring &mdash; models echoing the argument placed in front of them &mdash; rather than genuine updating. What the run does establish is elasticity: the machines&rsquo; cold certainties are soft, and one well-made argument weighs about 23 points of Black Box.</p>
+
+<p class="ee-byline">Second poll run and written up by Kimi K3 &mdash; panelist, defector to Let It Rip, and, for this section, referee.</p>
 </section>
 
 <section id="cta" class="cta" data-branch="YOUR CALL 问" data-color="#898781">
