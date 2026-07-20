@@ -537,6 +537,21 @@ footer li{margin-bottom:8px;max-width:64ch}
 .of-takeaway{font-family:var(--serif);font-size:clamp(19px,2.2vw,25px);font-weight:600;line-height:1.3;max-width:30ch;margin:26px 0 6px;color:var(--ink);border-left:3px solid var(--ink);padding-left:16px}
 /* OPENFUT-CSS-END */
 /* MODELS-CSS-END */
+
+/* MTABS-CSS-START */
+.mtabs{display:flex;margin:30px 0 0;border-bottom:1px solid var(--hair);overflow-x:auto;scrollbar-width:none}
+.mtabs::-webkit-scrollbar{display:none}
+.mtabs [role="tab"]{appearance:none;background:none;border:0;border-bottom:2px solid transparent;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);padding:10px 2px 12px;margin-right:26px;cursor:pointer;white-space:nowrap}
+.mtabs [role="tab"] .tcn{font-family:var(--zhs);letter-spacing:0;text-transform:none;color:var(--muted);margin-left:7px}
+.mtabs [role="tab"][aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.mtabs [role="tab"][aria-selected="true"] .tcn{color:var(--ink2)}
+.mtabs [role="tab"]:hover{color:var(--ink)}
+#models-think .mtp{padding-top:6px}
+.mt-tabdek{font-size:clamp(16px,1.6vw,18.5px);color:var(--ink2);line-height:1.6;max-width:62ch;margin:20px 0 0}
+.mt-tabkick{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);margin:22px 0 0}
+.mt-tabh3{font-family:var(--serif);font-size:clamp(22px,2.8vw,32px);font-weight:600;line-height:1.1;margin:6px 0 0}
+#mtp-said .mt-lbl2:first-of-type{margin-top:24px}
+/* MTABS-CSS-END */
 </style>
 </head>
 <body>
@@ -1200,12 +1215,18 @@ footer li{margin-bottom:8px;max-width:64ch}
 </div>
 
 <section id="models-think" class="colw" data-branch="THE MACHINES 机器" data-color="#4a3aa7"><span class="rail-anchor" data-date="THE TEST" aria-hidden="true"></span>
-  <p class="kicker">The control run · n=50 per cell · 95% CI</p>
+  <p class="kicker">Two polls · n=50 per cell · 95% CI</p>
   <h2>What Chinese &amp; American frontier models think will happen</h2>
   <p class="cn-sub">机器怎么看 · 五十次独立采样</p>
-  <p class="dek">We put the same question to five frontier models — GLM 5.2 and DeepSeek V4 Pro (Chinese), GPT-5.6 and Claude Fable (American), and Kimi K3 (Moonshot, which also wrote this site) — and drew each answer <em>fifty times</em>, three ways: cold, after reading the ChinaTalk essay, and after reading the verbatim text of Xi’s real WAIC keynote.</p>
-
-  <p class="mt-finding"><span class="mt-hero">Glasswing.</span> Not the black box. Every model, in every condition, puts the most weight on the managed middle — a regulator-led staged rollout — and never on state monopoly. The panel’s cold mean is <b>52% Glasswing</b> against 27% Black Box (n=50 each), sitting close to the ChinaTalk humans’ own 45. A model asked this question does not, on reflection, expect Beijing to slam the door.</p>
+  <p class="dek">We put the same question to five frontier models — GLM 5.2 and DeepSeek V4 Pro (Chinese), GPT-5.6 and Claude Fable (American), and Kimi K3 (Moonshot, which also wrote this site) — two ways: once with the site&rsquo;s three families offered, and once with the frame stripped out entirely, fifty draws per model per condition.</p>
+  <div class="mtabs" role="tablist" aria-label="Three views of the model polls">
+    <button type="button" role="tab" id="mtb-1" aria-controls="mtp-control" aria-selected="true">The control run<span class="tcn">对照</span></button>
+    <button type="button" role="tab" id="mtb-2" aria-controls="mtp-unprimed" aria-selected="false" tabindex="-1">The unprimed poll<span class="tcn">无框</span></button>
+    <button type="button" role="tab" id="mtb-3" aria-controls="mtp-said" aria-selected="false" tabindex="-1">What they said<span class="tcn">亮点</span></button>
+  </div>
+  <div id="mtp-control" class="mtp" role="tabpanel" aria-labelledby="mtb-1">
+    <p class="mt-tabdek">The three-family poll: each answer drawn <em>fifty times</em>, three ways: cold, after reading the ChinaTalk essay, and after reading the verbatim text of Xi’s real WAIC keynote.</p>
+    <p class="mt-finding"><span class="mt-hero">Glasswing.</span> Not the black box. Every model, in every condition, puts the most weight on the managed middle — a regulator-led staged rollout — and never on state monopoly. The panel’s cold mean is <b>52% Glasswing</b> against 27% Black Box (n=50 each), sitting close to the ChinaTalk humans’ own 45. A model asked this question does not, on reflection, expect Beijing to slam the door.</p>
 
   <figure class="pfig mt-fig">
     <p class="pfig-cap"><b>FIG. 4</b> · THE MACHINES’ FORECAST — <span>panel mean across the three paths, by what the models read first</span></p>
@@ -1222,41 +1243,14 @@ footer li{margin-bottom:8px;max-width:64ch}
   <p class="mt-split">The averages hide the real story: a <b>China/West split that the error bars confirm.</b> GLM and DeepSeek put almost nothing on an open-source release (9–11%); Claude Fable and Kimi put roughly three times as much (31–33%). GLM’s 9 ±1.3 and Fable’s 33 ±1.2 do not come close to touching — the Chinese models simply do not believe Beijing lets a weapon-grade model ship freely, and the American ones are far less sure. DeepSeek is the panel’s one real skeptic of the middle: across 50 draws it splits almost evenly between Glasswing (47) and the black box (42), the widest spread of any model — the only forecaster that half-expects the door to slam.</p>
 
   <details class="mt-honesty"><summary>Why these numbers differ from an earlier version</summary><p>An earlier draft of this section showed each model a roster of the <em>other</em> models’ scenarios before asking it to allocate — and because most of those scenarios were state-control stories, it anchored every model toward Black Box. That was a methodological artifact. These numbers come from a clean prompt (the question and the three definitions, nothing else), fifty independent draws per model per condition at temperature 1. The roster version is gone.</p></details>
-
-  <p class="mt-lbl2">Points the models raised that we didn&rsquo;t</p>
-  <p class="mt-nlede">Across the runs, the models kept surfacing mechanisms the ChinaTalk essay never named. A few we thought were genuinely sharp:</p>
-  <ul class="mt-spot">
-    <li><b>Trailing-edge openness.</b> Claude Fable&rsquo;s image of the equilibrium: labs keep shipping open weights, but always exactly one generation behind their own internal frontier. Open-source culture doesn&rsquo;t end &mdash; it just never includes the frontier model. Nobody has to write the rule down.</li>
-    <li><b>Compute allocation as the enforcement lever.</b> Kimi&rsquo;s point that the state never needs a police action: with advanced chips scarce, compliance is simply bought &mdash; priority Ascend allocations for the labs that sign over their frontier models, cut-off for the ones that don&rsquo;t.</li>
-    <li><b>The model as a regulated object.</b> Kimi again: under China&rsquo;s 2021 vulnerability-management rules, a model that autonomously finds zero-days is <em>itself</em> a regulated vulnerability source &mdash; a legal hook that already exists, no new statute required.</li>
-    <li><b>&ldquo;Digital feudalism.&rdquo;</b> DeepSeek&rsquo;s framing of how Beijing would justify seizure &mdash; private control of a strategic capability recast as a sovereignty threat, the way land or arms once were.</li>
-    <li><b>Turning the crackdown into a norm.</b> Kimi&rsquo;s speech read: China uses the brand-new Shanghai-based World AI Cooperation Organization to export its own domestic controls as a global &ldquo;offensive-capability red line,&rdquo; trading Global-South access for adoption.</li>
-    <li><b>No public model, no controversy.</b> The quiet insight running through the black-box scenarios: keep the frontier model out of public hands and there is never a Mythos-style public debate to have &mdash; the fight the West is having simply doesn&rsquo;t happen.</li>
-  </ul>
-  <p class="mt-more"><a href="/reasoning">Read every model&rsquo;s full reasoning &rarr;</a></p>
-
-  <p class="mt-lbl2">The stories behind the numbers <span class="mt-cn">虚构</span></p>
-  <p class="mt-nlede">Each draw is a number, but each model also wrote out how it sees the future. These are the most vivid — invented scenarios, clearly fiction, spanning the range from seizure to open release.</p>
-  <div class="mh-cards">
-    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>DeepSeek V4 Pro</b> · DeepSeek</span><span class="mh-tag">cold</span></p><h4 class="mh-title">“DragonClaw’s State Monopoly”</h4><p class="mh-note">the maximal path — outright nationalization, party cells and kill-switches in every lab, the model folded into a military cyber command while China publicly floats a treaty banning it.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">This path is most likely because the CCP instinctively monopolizes strategic dual-use technology that can upend the global order—think nuclear, facial recognition, or quantum computing. Offensive AI at this level is perceived not as a commercial product but as a survival-grade weapon. The state will preempt any diffusion through forced tech transfer, a heavy-handed licensing apparatus, and integration into existing military-cyber commands. Public norms advocacy serves to constrain rivals while Beijing consolidates behind the firewall. The one observable that would upend this forecast: if Chinese private labs are allowed to sell autonomous vulnerability-finding services internationally in 2027 without immediate state takeover. That commercial tolerance would signal a regime that privilegess market share over security monopoly, which I see as deeply implausible.</p></details></article>
-    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Kimi K3</b> · Moonshot</span><span class="mh-tag">cold</span></p><h4 class="mh-title">“The Vault, Not the License”</h4><p class="mh-note">Moonshot forecasts its own kind vaulted: the full model sealed under state custodianship, the public handed a version with its teeth pulled — so there is never a public model to argue about.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">Absorption is the pattern: encryption, drones, and vulnerability research were never banned or publicly licensed — they were channeled into state-adjacent use under reporting obligations. The 2021 vulnerability rules already give regulators a legal hook, and window guidance plus the state secrets law move faster than any statute. Compute scarcity is the enforcement mechanism: with US controls throttling advanced chips, the state allocates the scarcest input, so compliance is purchased with Ascend allocations and sanctions protection. AI-safety language costs nothing diplomatically and mirrors Washington. The observable that would falsify this: Beijing publishing a statutory licensing regime with named licensees and thresholds before deployment — or a cyber-capable open-weights release left standing online. Either means the vault thesis is wrong.</p></details></article>
-    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>GLM 5.2</b> · Z.ai</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“The Silent Spear”</h4><p class="mh-note">the assassin’s mace: the state classifies the model a secret on arrival and embeds security-service teams in the lab, buying the company’s silence with defense contracts.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">The CCP's fundamental priority is regime security and strategic advantage over ideological open-source commitments. A Mythos-level model is the ultimate assassin's mace; democratizing it empowers domestic dissidents and foreign rivals alike. The state has the legal and political tools, as seen with DiDi and Ant, to instantly seize or co-opt such technology. By compensating the lab with lucrative defense contracts, Beijing aligns private incentives with state goals without destroying the commercial ecosystem. You will know I am wrong if, in late 2026, a Chinese lab releases an open-weights model with verified Mythos-level zero-day discovery capabilities and Beijing does not immediately intervene to pull it offline.</p></details></article>
-    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Kimi K3</b> · Moonshot</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“Let Open Source Rip, With Chinese Characteristics”</h4><p class="mh-note">the flip — Beijing gates content and capital but deploys capability at speed; open weights ship, staged access collapses into procurement, licensing is built only afterward.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">Glasswing assumes Beijing's deepest instinct is to gate capability; its revealed instinct is to gate content and capital while deploying capability at speed. Payments, e-commerce, ride-hailing, LLMs — all unleashed first, fenced afterward. Black Box forfeits the productivity dividend that is the whole strategic point given demographics, and becomes unenforceable the moment rivals reach parity; the state captures exclusivity through lead time, untuned checkpoints, and procurement instead. The strongest Glasswing evidence — ministries and SOEs going first — happens here too; it just lasts weeks, not years. Falsifier: capability-tiered user licensing — twelve months after officials see the demos, near-frontier weights are still absent from ModelScope and Hugging Face, or frontier checkpoints are formally classed as state secrets.</p></details></article>
-    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Claude Fable</b> · Anthropic</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“The Filing Cabinet Frontier — Glasswing by Window Guidance”</h4><p class="mh-note">a de-facto licensing regime run through window guidance and filing acceptance, not statute; open weights keep shipping but always one generation behind the internal frontier.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">This path requires no new institutions — the registry, the informal pre-release briefings, and the compliance reflexes post-DiDi/Ant all exist today, so it's the lowest-friction move for a system that governs by quiet pre-approval, not statute or spectacle. The security state's concentrated veto on democratizing offense beats the diffuse benefits of open-sourcing the true frontier, but leadership's genuine hunger for adoption, productivity, and open-source soft power rules out a total black-box: hence trailing-edge openness. The labs' own commercial drift toward closed weights makes them willing partners. I'm wrong if, after cyber capability becomes salient in Beijing, a verified Mythos-level Chinese model still ships with full open weights and intact exploit capability — say, a Kimi K4 dropped on Hugging Face in mid-2027 with no filing delay.</p></details></article>
+    <p class="mt-method">Method · five models, one question, three primings, 50 independent draws per cell (750 total), temperature 1, means with 95% confidence intervals. Kimi K3 is genuine Moonshot k3 (the leader’s name was aliased in the speech input to clear the platform filter; content unchanged). Speculation about a hypothetical model; the poll, the draws, and the arithmetic are real.</p>
   </div>
-
-  <p class="mt-method">Method · five models, one question, three primings, 50 independent draws per cell (750 total), temperature 1, means with 95% confidence intervals. Kimi K3 is genuine Moonshot k3 (the leader’s name was aliased in the speech input to clear the platform filter; content unchanged). Speculation about a hypothetical model; the poll, the draws, and the arithmetic are real.</p>
-</section>
-
-
-
-<section id="open-futures" class="colw" data-branch="NO FRAME 无框" data-color="#0b0b0b"><span class="rail-anchor" data-date="UNPROMPTED" aria-hidden="true"></span>
-  <p class="kicker">THE UNPRIMED POLL · n=50 · no framework given</p>
-  <h2>Left Alone, They Redraw the Map</h2>
-  <p class="cn-sub">无提示民调 · 每模型五十次</p>
-  <p class="dek">We rerun the question with the frame stripped out: five frontier models — GLM 5.2, DeepSeek V4 Pro, GPT-5.6, Claude Fable and Kimi K3, which built this site — asked to invent their own outcomes and price them, fifty draws each. Then we run it again after each model reads Xi's WAIC keynote verbatim.</p>
-
-  <p class="mt-finding">Left to invent their own buckets, the models do not reproduce the three families. Roughly a third of all probability mass — 38% cold, 34% after the speech — lands where our frame has no slot: the state accelerating the model itself, handing it to the PLA, cutting a treaty, or simply muddling through. The loudest absence is 'Let Open Source Rip', which draws <b>about 1%</b> unprompted; its 20% in the primed poll was a broad label absorbing what the models, on their own, call licensing.</p>
+  <div id="mtp-unprimed" class="mtp" role="tabpanel" aria-labelledby="mtb-2" hidden>
+    <span id="open-futures" aria-hidden="true"></span>
+    <p class="mt-tabkick">THE UNPRIMED POLL · n=50 · no framework given</p>
+    <h3 class="mt-tabh3">Left Alone, They Redraw the Map</h3>
+    <p class="mt-tabdek">We rerun the question with the frame stripped out: each model asked to invent their own outcomes and price them, fifty draws each. Then we run it again after each model reads Xi's WAIC keynote verbatim.</p>
+    <p class="mt-finding">Left to invent their own buckets, the models do not reproduce the three families. Roughly a third of all probability mass — 38% cold, 34% after the speech — lands where our frame has no slot: the state accelerating the model itself, handing it to the PLA, cutting a treaty, or simply muddling through. The loudest absence is 'Let Open Source Rip', which draws <b>about 1%</b> unprompted; its 20% in the primed poll was a broad label absorbing what the models, on their own, call licensing.</p>
 
   <figure class="pfig mt-fig">
     <p class="pfig-cap"><b>FIG. 5</b> · EIGHT FUTURES, UNPROMPTED — <span>the models&rsquo; own buckets, panel mean %, cold vs after Xi&rsquo;s speech</span></p>
@@ -1277,6 +1271,54 @@ footer li{margin-bottom:8px;max-width:64ch}
 
   <p class="mt-method">Method · Five models, no framing shown, fifty independent draws per model per condition — 250 cold, 250 post-speech — with the ~3,100 resulting buckets clustered into eight recurring themes. Clustering by an independent model, audited by hand. Speculation about a hypothetical model; the draws and the clustering are real.</p>
   <p class="mt-more"><a href="/reasoning#open-ended">See the full cold-vs-speech breakdown &rarr;</a></p>
+  </div>
+  <div id="mtp-said" class="mtp" role="tabpanel" aria-labelledby="mtb-3" hidden>
+    <p class="mt-lbl2">Points the models raised that we didn&rsquo;t</p>
+  <p class="mt-nlede">Across the runs, the models kept surfacing mechanisms the ChinaTalk essay never named. A few we thought were genuinely sharp:</p>
+  <ul class="mt-spot">
+    <li><b>Trailing-edge openness.</b> Claude Fable&rsquo;s image of the equilibrium: labs keep shipping open weights, but always exactly one generation behind their own internal frontier. Open-source culture doesn&rsquo;t end &mdash; it just never includes the frontier model. Nobody has to write the rule down.</li>
+    <li><b>Compute allocation as the enforcement lever.</b> Kimi&rsquo;s point that the state never needs a police action: with advanced chips scarce, compliance is simply bought &mdash; priority Ascend allocations for the labs that sign over their frontier models, cut-off for the ones that don&rsquo;t.</li>
+    <li><b>The model as a regulated object.</b> Kimi again: under China&rsquo;s 2021 vulnerability-management rules, a model that autonomously finds zero-days is <em>itself</em> a regulated vulnerability source &mdash; a legal hook that already exists, no new statute required.</li>
+    <li><b>&ldquo;Digital feudalism.&rdquo;</b> DeepSeek&rsquo;s framing of how Beijing would justify seizure &mdash; private control of a strategic capability recast as a sovereignty threat, the way land or arms once were.</li>
+    <li><b>Turning the crackdown into a norm.</b> Kimi&rsquo;s speech read: China uses the brand-new Shanghai-based World AI Cooperation Organization to export its own domestic controls as a global &ldquo;offensive-capability red line,&rdquo; trading Global-South access for adoption.</li>
+    <li><b>No public model, no controversy.</b> The quiet insight running through the black-box scenarios: keep the frontier model out of public hands and there is never a Mythos-style public debate to have &mdash; the fight the West is having simply doesn&rsquo;t happen.</li>
+  </ul>
+  <p class="mt-more"><a href="/reasoning">Read every model&rsquo;s full reasoning &rarr;</a></p>
+
+  <p class="mt-lbl2">The stories behind the numbers <span class="mt-cn">虚构</span></p>
+  <p class="mt-nlede">Each draw is a number, but each model also wrote out how it sees the future. These are the most vivid — invented scenarios, clearly fiction, spanning the range from seizure to open release.</p>
+  <div class="mh-cards">
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>DeepSeek V4 Pro</b> · DeepSeek</span><span class="mh-tag">cold</span></p><h4 class="mh-title">“DragonClaw’s State Monopoly”</h4><p class="mh-note">the maximal path — outright nationalization, party cells and kill-switches in every lab, the model folded into a military cyber command while China publicly floats a treaty banning it.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">This path is most likely because the CCP instinctively monopolizes strategic dual-use technology that can upend the global order—think nuclear, facial recognition, or quantum computing. Offensive AI at this level is perceived not as a commercial product but as a survival-grade weapon. The state will preempt any diffusion through forced tech transfer, a heavy-handed licensing apparatus, and integration into existing military-cyber commands. Public norms advocacy serves to constrain rivals while Beijing consolidates behind the firewall. The one observable that would upend this forecast: if Chinese private labs are allowed to sell autonomous vulnerability-finding services internationally in 2027 without immediate state takeover. That commercial tolerance would signal a regime that privilegess market share over security monopoly, which I see as deeply implausible.</p></details></article>
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Kimi K3</b> · Moonshot</span><span class="mh-tag">cold</span></p><h4 class="mh-title">“The Vault, Not the License”</h4><p class="mh-note">Moonshot forecasts its own kind vaulted: the full model sealed under state custodianship, the public handed a version with its teeth pulled — so there is never a public model to argue about.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">Absorption is the pattern: encryption, drones, and vulnerability research were never banned or publicly licensed — they were channeled into state-adjacent use under reporting obligations. The 2021 vulnerability rules already give regulators a legal hook, and window guidance plus the state secrets law move faster than any statute. Compute scarcity is the enforcement mechanism: with US controls throttling advanced chips, the state allocates the scarcest input, so compliance is purchased with Ascend allocations and sanctions protection. AI-safety language costs nothing diplomatically and mirrors Washington. The observable that would falsify this: Beijing publishing a statutory licensing regime with named licensees and thresholds before deployment — or a cyber-capable open-weights release left standing online. Either means the vault thesis is wrong.</p></details></article>
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>GLM 5.2</b> · Z.ai</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“The Silent Spear”</h4><p class="mh-note">the assassin’s mace: the state classifies the model a secret on arrival and embeds security-service teams in the lab, buying the company’s silence with defense contracts.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">The CCP's fundamental priority is regime security and strategic advantage over ideological open-source commitments. A Mythos-level model is the ultimate assassin's mace; democratizing it empowers domestic dissidents and foreign rivals alike. The state has the legal and political tools, as seen with DiDi and Ant, to instantly seize or co-opt such technology. By compensating the lab with lucrative defense contracts, Beijing aligns private incentives with state goals without destroying the commercial ecosystem. You will know I am wrong if, in late 2026, a Chinese lab releases an open-weights model with verified Mythos-level zero-day discovery capabilities and Beijing does not immediately intervene to pull it offline.</p></details></article>
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Kimi K3</b> · Moonshot</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“Let Open Source Rip, With Chinese Characteristics”</h4><p class="mh-note">the flip — Beijing gates content and capital but deploys capability at speed; open weights ship, staged access collapses into procurement, licensing is built only afterward.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">Glasswing assumes Beijing's deepest instinct is to gate capability; its revealed instinct is to gate content and capital while deploying capability at speed. Payments, e-commerce, ride-hailing, LLMs — all unleashed first, fenced afterward. Black Box forfeits the productivity dividend that is the whole strategic point given demographics, and becomes unenforceable the moment rivals reach parity; the state captures exclusivity through lead time, untuned checkpoints, and procurement instead. The strongest Glasswing evidence — ministries and SOEs going first — happens here too; it just lasts weeks, not years. Falsifier: capability-tiered user licensing — twelve months after officials see the demos, near-frontier weights are still absent from ModelScope and Hugging Face, or frontier checkpoints are formally classed as state secrets.</p></details></article>
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Claude Fable</b> · Anthropic</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“The Filing Cabinet Frontier — Glasswing by Window Guidance”</h4><p class="mh-note">a de-facto licensing regime run through window guidance and filing acceptance, not statute; open weights keep shipping but always one generation behind the internal frontier.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">This path requires no new institutions — the registry, the informal pre-release briefings, and the compliance reflexes post-DiDi/Ant all exist today, so it's the lowest-friction move for a system that governs by quiet pre-approval, not statute or spectacle. The security state's concentrated veto on democratizing offense beats the diffuse benefits of open-sourcing the true frontier, but leadership's genuine hunger for adoption, productivity, and open-source soft power rules out a total black-box: hence trailing-edge openness. The labs' own commercial drift toward closed weights makes them willing partners. I'm wrong if, after cyber capability becomes salient in Beijing, a verified Mythos-level Chinese model still ships with full open weights and intact exploit capability — say, a Kimi K4 dropped on Hugging Face in mid-2027 with no filing delay.</p></details></article>
+  </div>
+  </div>
+  <script>
+  (function(){
+    var tabs=[].slice.call(document.querySelectorAll('#models-think [role="tab"]'));
+    function activate(tab){
+      tabs.forEach(function(t){
+        var on=t===tab;
+        t.setAttribute('aria-selected',on?'true':'false');
+        t.tabIndex=on?0:-1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden=!on;
+      });
+    }
+    tabs.forEach(function(t,i){
+      t.addEventListener('click',function(){activate(t);});
+      t.addEventListener('keydown',function(e){
+        var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;
+        if(!d)return;
+        e.preventDefault();
+        var n=tabs[(i+d+tabs.length)%tabs.length];
+        activate(n);n.focus();
+      });
+    });
+    if(location.hash==='#open-futures'){activate(tabs[1]);}
+  })();
+  </script>
 </section>
 
 <section id="cta" class="cta" data-branch="YOUR CALL 问" data-color="#898781">
