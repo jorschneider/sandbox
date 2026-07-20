@@ -56,9 +56,54 @@ zh,[lang="zh-Hans"]{font-family:var(--zhs)}
 .rz-oe-inv b{color:var(--ink);font-weight:600}
 .rz-oc{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
 /* RZ-OE-END */
+
+/* GATE-CSS-START */
+html.cm-locked{overflow:hidden}
+#cm-gate{position:fixed;inset:0;z-index:999;background:rgba(249,248,244,.55);backdrop-filter:blur(26px) saturate(.85);-webkit-backdrop-filter:blur(26px) saturate(.85);display:flex;align-items:center;justify-content:center;padding:24px}
+.cmg-card{background:var(--paper,#f9f8f4);border:1px solid var(--ink,#0b0b0b);max-width:420px;width:100%;padding:34px 32px 28px;box-shadow:0 30px 80px rgba(11,11,11,.18)}
+.cmg-k{font-family:var(--mono,monospace);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--s3,#4a3aa7);margin:0}
+.cmg-t{font-family:var(--serif,serif);font-size:27px;font-weight:600;line-height:1.1;margin:10px 0 0}
+.cmg-d{font-size:15px;line-height:1.55;color:var(--ink2,#52514e);margin:12px 0 0}
+#cmg-form{display:flex;gap:8px;margin:18px 0 0}
+#cmg-in{flex:1;font-family:var(--mono,monospace);font-size:14px;padding:11px 12px;border:1px solid var(--ink,#0b0b0b);background:#fff;color:var(--ink,#0b0b0b);border-radius:0;min-width:0}
+#cmg-in:focus{outline:2px solid var(--s2,#2a78d6);outline-offset:1px}
+#cmg-form button{font-family:var(--mono,monospace);font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:var(--ink,#0b0b0b);color:var(--paper,#f9f8f4);border:1px solid var(--ink,#0b0b0b);padding:11px 16px;cursor:pointer}
+#cmg-form button:hover{background:var(--s3,#4a3aa7);border-color:var(--s3,#4a3aa7)}
+.cmg-e{font-family:var(--mono,monospace);font-size:11.5px;color:#a03d10;margin:10px 0 0}
+.cmg-s{font-family:var(--mono,monospace);font-size:11px;margin:16px 0 0}
+.cmg-s a{color:var(--s2,#2a78d6);text-decoration:none}
+.cmg-s a:hover{text-decoration:underline}
+/* GATE-CSS-END */
 </style>
 </head>
 <body>
+<!-- GATE-START -->
+<div id="cm-gate" role="dialog" aria-modal="true" aria-label="Subscriber password">
+  <div class="cmg-card">
+    <p class="cmg-k">Subscribers only · 订阅者专享</p>
+    <h2 class="cmg-t">The machines&rsquo; forecast</h2>
+    <p class="cmg-d">This page accompanies the ChinaTalk essay <em>When China Gets a Mythos Model</em>. The password is just below the paywall in the post.</p>
+    <form id="cmg-form"><input id="cmg-in" type="password" autocomplete="off" placeholder="password &middot; 密码" aria-label="password"><button type="submit">enter &rarr;</button></form>
+    <p class="cmg-e" id="cmg-err" hidden>Not it. The password is in the post, just below the paywall.</p>
+    <p class="cmg-s"><a href="https://www.chinatalk.media/">Read the essay at chinatalk.media &rarr;</a></p>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY="cm-pass-v1";
+  var gate=document.getElementById("cm-gate");
+  function unlock(){gate.parentNode.removeChild(gate);document.documentElement.classList.remove("cm-locked");}
+  if(localStorage.getItem(KEY)==="1"){unlock();return;}
+  document.documentElement.classList.add("cm-locked");
+  document.getElementById("cmg-form").addEventListener("submit",function(e){
+    e.preventDefault();
+    var v=document.getElementById("cmg-in").value.toLowerCase().replace(/\s+/g,"");
+    if(v==="chinatalk"){localStorage.setItem(KEY,"1");unlock();}
+    else{document.getElementById("cmg-err").hidden=false;}
+  });
+})();
+</script>
+<!-- GATE-END -->
 <div class="rz-wrap">
   <header class="rz-head">
     <a class="rz-back" href="/">&larr; When China Gets a Mythos Model</a>

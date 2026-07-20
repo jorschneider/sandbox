@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>When China Gets a Mythos Model — A ChinaTalk Scenario Exercise</title>
-<meta name="description" content="A scenario microsite in the AI-2027 tradition: when a Chinese lab trains a Mythos-class model, what does Beijing do? Three branching futures, forecasted.">
+<title>What the machines think — When China Gets a Mythos Model</title>
+<meta name="description" content="Two statistical polls of five frontier models — GLM 5.2, DeepSeek V4 Pro, GPT-5.6, Claude Fable, and Kimi K3 — on what Beijing does when a Chinese lab reaches Mythos-level capability. 50 draws per cell, with and without the three-family frame.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -538,1089 +538,162 @@ footer li{margin-bottom:8px;max-width:64ch}
 /* OPENFUT-CSS-END */
 /* MODELS-CSS-END */
 
+/* MTABS-CSS-START */
+.mtabs{display:flex;margin:30px 0 0;border-bottom:1px solid var(--hair);overflow-x:auto;scrollbar-width:none}
+.mtabs::-webkit-scrollbar{display:none}
+.mtabs [role="tab"]{appearance:none;background:none;border:0;border-bottom:2px solid transparent;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);padding:10px 2px 12px;margin-right:26px;cursor:pointer;white-space:nowrap}
+.mtabs [role="tab"] .tcn{font-family:var(--zhs);letter-spacing:0;text-transform:none;color:var(--muted);margin-left:7px}
+.mtabs [role="tab"][aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.mtabs [role="tab"][aria-selected="true"] .tcn{color:var(--ink2)}
+.mtabs [role="tab"]:hover{color:var(--ink)}
+#models-think .mtp{padding-top:6px}
+.mt-tabdek{font-size:clamp(16px,1.6vw,18.5px);color:var(--ink2);line-height:1.6;max-width:62ch;margin:20px 0 0}
+.mt-tabkick{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);margin:22px 0 0}
+.mt-tabh3{font-family:var(--serif);font-size:clamp(22px,2.8vw,32px);font-weight:600;line-height:1.1;margin:6px 0 0}
+#mtp-said .mt-lbl2:first-of-type{margin-top:24px}
+/* MTABS-CSS-END */
 
-/* MX-TEASER-CSS-START */
-.mx-teaser{margin:26px 0 0;padding-left:20px;list-style:none}
-.mx-teaser li{position:relative;font-size:16px;line-height:1.6;color:var(--ink2);margin:0 0 13px;max-width:62ch;padding-left:4px}
-.mx-teaser li::before{content:"";position:absolute;left:-16px;top:10px;width:6px;height:6px;background:var(--s3);border-radius:1px}
-.mx-teaser b{font-family:var(--mono);color:var(--ink);font-weight:600;font-size:18px}
-.mx-links{margin:28px 0 0;display:flex;gap:14px 28px;flex-wrap:wrap}
-.mx-go{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);text-decoration:none;border:1px solid var(--ink);padding:12px 18px}
-.mx-go:hover{background:var(--ink);color:var(--paper)}
-.mx-go2{border-color:var(--hair);color:var(--ink2)}
-.mx-go2:hover{background:none;color:var(--ink);border-color:var(--ink)}
-/* MX-TEASER-CSS-END */
+/* MX-CSS-START */
+.mx-bar{max-width:1020px;margin:0 auto;padding:26px 24px 0}
+.mx-back{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--s2);text-decoration:none}
+.mx-back:hover{text-decoration:underline}
+.mx-foot{max-width:1020px;margin:0 auto;padding:34px 24px 70px;border-top:1px solid var(--hair);font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted);line-height:1.9}
+.mx-foot a{color:var(--s2)}
+body.mx .part-break{margin-top:26px}
+/* MX-CSS-END */
+
+/* GATE-CSS-START */
+html.cm-locked{overflow:hidden}
+#cm-gate{position:fixed;inset:0;z-index:999;background:rgba(249,248,244,.55);backdrop-filter:blur(26px) saturate(.85);-webkit-backdrop-filter:blur(26px) saturate(.85);display:flex;align-items:center;justify-content:center;padding:24px}
+.cmg-card{background:var(--paper,#f9f8f4);border:1px solid var(--ink,#0b0b0b);max-width:420px;width:100%;padding:34px 32px 28px;box-shadow:0 30px 80px rgba(11,11,11,.18)}
+.cmg-k{font-family:var(--mono,monospace);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--s3,#4a3aa7);margin:0}
+.cmg-t{font-family:var(--serif,serif);font-size:27px;font-weight:600;line-height:1.1;margin:10px 0 0}
+.cmg-d{font-size:15px;line-height:1.55;color:var(--ink2,#52514e);margin:12px 0 0}
+#cmg-form{display:flex;gap:8px;margin:18px 0 0}
+#cmg-in{flex:1;font-family:var(--mono,monospace);font-size:14px;padding:11px 12px;border:1px solid var(--ink,#0b0b0b);background:#fff;color:var(--ink,#0b0b0b);border-radius:0;min-width:0}
+#cmg-in:focus{outline:2px solid var(--s2,#2a78d6);outline-offset:1px}
+#cmg-form button{font-family:var(--mono,monospace);font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:var(--ink,#0b0b0b);color:var(--paper,#f9f8f4);border:1px solid var(--ink,#0b0b0b);padding:11px 16px;cursor:pointer}
+#cmg-form button:hover{background:var(--s3,#4a3aa7);border-color:var(--s3,#4a3aa7)}
+.cmg-e{font-family:var(--mono,monospace);font-size:11.5px;color:#a03d10;margin:10px 0 0}
+.cmg-s{font-family:var(--mono,monospace);font-size:11px;margin:16px 0 0}
+.cmg-s a{color:var(--s2,#2a78d6);text-decoration:none}
+.cmg-s a:hover{text-decoration:underline}
+/* GATE-CSS-END */
 </style>
 </head>
-<body>
-<a class="skip" href="#main">Skip to content</a>
-
-<header id="rail" aria-label="Reading position">
-  <span class="rail-title">WHEN CHINA GETS A MYTHOS MODEL</span>
-  <span class="rail-mid"><span id="rail-dot" aria-hidden="true"></span><span id="rail-branch">PROLOGUE 序幕</span></span>
-  <span id="rail-date">JUL 18 2026</span>
-  <span id="prog" aria-hidden="true"></span>
-</header>
-
-<main id="main">
-
-<!-- ============ 1. HERO ============ -->
-<section class="hero col" data-branch="PROLOGUE 序幕" data-color="#898781" data-date="JUL 18 2026">
-  <span class="ghost" lang="zh-Hans" aria-hidden="true">局</span>
-  <span class="kicker">ChinaTalk · A Scenario Exercise · № 07</span>
-  <h1>When China Gets a Mythos Model</h1>
-  <p class="zhsub" lang="zh-Hans">当中国拥有自己的“神话”模型</p>
-  <p class="dek">When a Chinese lab trains a model to match Claude Mythos — the system whose cyber capabilities pushed Washington into a de facto licensing regime — what will Beijing do?</p>
-  <div class="byline">
-    <p>A ChinaTalk scenario exercise — Jordan · Aqib · Lily · Irene</p>
-    <p><em>Site written, designed &amp; coded by Kimi (Moonshot AI)</em></p>
+<body class="mx">
+<!-- GATE-START -->
+<div id="cm-gate" role="dialog" aria-modal="true" aria-label="Subscriber password">
+  <div class="cmg-card">
+    <p class="cmg-k">Subscribers only · 订阅者专享</p>
+    <h2 class="cmg-t">The machines&rsquo; forecast</h2>
+    <p class="cmg-d">This page accompanies the ChinaTalk essay <em>When China Gets a Mythos Model</em>. The password is just below the paywall in the post.</p>
+    <form id="cmg-form"><input id="cmg-in" type="password" autocomplete="off" placeholder="password &middot; 密码" aria-label="password"><button type="submit">enter &rarr;</button></form>
+    <p class="cmg-e" id="cmg-err" hidden>Not it. The password is in the post, just below the paywall.</p>
+    <p class="cmg-s"><a href="https://www.chinatalk.media/">Read the essay at chinatalk.media &rarr;</a></p>
   </div>
-  <p class="dateline">JULY 18, 2026 · FILED BETWEEN TWO CAPITALS</p>
-  <nav class="toc" aria-label="Contents">
-    <a href="#prologue">序幕 PROLOGUE</a>
-    <a href="#branch">岔口 THE BRANCH POINT</a>
-    <a href="#s1">开闸 S1</a>
-    <a href="#s2">冰羽 S2</a>
-    <a href="#s3">黑箱 S3</a>
-    <a href="#forecast">概率 THE FORECAST</a>
-    <a href="#cta">问 YOUR CALL</a>
-  </nav>
-</section>
-
-
-<!-- ============ 2. PROLOGUE ============ -->
-<section id="prologue" class="col" data-branch="PROLOGUE 序幕" data-color="#898781">
-  <div class="sec-head">
-    <span class="kicker">The world as it is <span class="chip fact">Factual · 事实</span></span>
-    <h2>Prologue <span lang="zh-Hans" style="font-family:var(--zhs)">序幕</span></h2>
-    <p class="lede">Everything in this section really happened. Washington panicked first; the open question is whether the CCP will panic when the same day comes in China. Everything after the branch point is invention.</p>
-  </div>
-
-  <div class="tl">
-    <div class="beat" data-date="EARLY 2026">
-      <span class="beat-date">Early 2026</span>
-      <h3>The American panic</h3>
-      <p>Anthropic ships Claude Mythos. Its potential to wreak cyber havoc forces the White House to create what Dean Ball calls a “de facto involuntary licensing/preapproval regime for frontier models.”<sup><a href="#fn1">1</a></sup> The pre-Mythos era of voluntary release ends in Washington first.</p>
-    </div>
-    <div class="beat" data-date="MAY 2026">
-      <span class="beat-date">May 2026</span>
-      <h3>Guardrails at the summit</h3>
-      <p>AI guardrails come up during the Xi–Trump summit. The weather, for now, is cordial.</p>
-    </div>
-    <div class="beat" data-date="JUN 2026">
-      <span class="beat-date">June 2026</span>
-      <h3>The clock starts ticking</h3>
-      <p>Z.ai cofounder Jie Tang tells Elon on X that China will have a model on par with Mythos before the end of the year.<sup><a href="#fn4">4</a></sup> Even if he’s off by a few months — Kimi K3’s release shows we’re getting close — the clock is ticking for regulators in Beijing to respond.</p>
-      <p>Days later, NDRC vice minister Zhou Haibing paraphrases Xi’s message on AI safety at a press conference: “[China will] enact the responsibilities of a major country, manage and control risks, strengthen prevention efforts, explore cooperative opportunities in AI oversight, and jointly defend against AI safety risks.” <span lang="zh-Hans">［中国将……履行大国责任，管控风险、强化预防，探索开展人工智能监管合作，共同防范人工智能安全风险。］</span></p>
-    </div>
-    <div class="beat" data-date="JUL 07 2026">
-      <span class="beat-date">July 7, 2026</span>
-      <h3>The Reuters signal</h3>
-      <p>Reuters reports that Chinese regulators have held meetings with top tech firms over the past month about “potentially restricting overseas access to China’s most advanced AI models” — with future powerful models possibly “barred from public release or restricted to domestic use.”</p>
-    </div>
-    <div class="beat" data-date="JUL 17 2026">
-      <span class="beat-date">July 17, 2026</span>
-      <h3>Xi takes the WAIC stage</h3>
-      <p>Xi makes his WAIC debut in Shanghai — per state media, to “systematically elaborate on China’s policies, positions, visions and propositions on AI development and governance.” He raises technical AI safety to the highest policy agenda:<sup><a href="#fn2">2</a></sup></p>
-      <blockquote class="pull">
-        “We must attach great importance to the various endogenous and derivative risks brought about by AI, and work to build systems of laws and regulations, technical monitoring, risk early warning, and emergency response. We must reinforce the safety baseline, prevent misuse and abuse, and ensure that artificial intelligence always remains under human control.”
-        <span class="attr">— Xi Jinping, WAIC keynote, Shanghai, July 2026</span>
-      </blockquote>
-      <p>Openness, win-win, mutual learning between civilizations — and “always under human control.” Which half of that sentence actually matters? The answer decides everything that follows.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 3. BRANCH POINT ============ -->
-<section id="branch" class="branch-wrap" data-branch="BRANCH POINT 岔口" data-color="#0b0b0b">
-  <div class="colw">
-    <span class="kicker">Q4 2026 · From here, everything is invented <span class="chip fic" style="border-color:#e34948">Fiction begins · 自此为虚构</span></span>
-    <h2 data-date="Q4 2026 — THE CROSSING">The Branch Point</h2>
-    <p class="zhline" lang="zh-Hans">岔口 · 三条道路</p>
-    <p class="lede">Somewhere in Haidian, a training run finishes. Moonshot AI’s <strong>Kimi K4</strong> — our fictional stand-in, well over a trillion parameters — quietly posts internal scores that put it level with Claude Mythos on the hardest cyber evaluations. For all we know, the real Chinese Mythos may come from Kimi, DeepSeek, Qwen, or any other lab. We tell three stories because all three outcomes seem plausible — and because USG, AI policy people, safety advocates, and researchers should be prepared for whatever may come.</p>
-    <div class="doors" role="navigation" aria-label="Choose a scenario branch">
-      <a class="door" href="#s1" style="--dc:var(--s1)">
-        <span class="dnum">DOOR 01 — CONTINUITY</span>
-        <span class="dzh" lang="zh-Hans">开闸</span>
-        <h3>Let Open Source Rip</h3>
-        <p>A hype tweet, open weights, and the genie out of the bottle. Beijing tolerates the chaos — and quietly builds a licensing regime.</p>
-        <span class="dgo">Enter the branch →</span>
-      </a>
-      <a class="door" href="#s2" style="--dc:var(--s2)">
-        <span class="dnum">DOOR 02 — STAGED ACCESS</span>
-        <span class="dzh" lang="zh-Hans">冰羽</span>
-        <h3>Glasswing, with Chinese Characteristics</h3>
-        <p>Evaluate first, deploy later. Ministries and SOEs first, consumers last — and a lobotomized Kimi K4-Open somewhere in between.</p>
-        <span class="dgo">Enter the branch →</span>
-      </a>
-      <a class="door" href="#s3" style="--dc:var(--s3)">
-        <span class="dnum">DOOR 03 — LOCKDOWN</span>
-        <span class="dzh" lang="zh-Hans">黑箱</span>
-        <h3>The Black Box</h3>
-        <p>The registry gives the state first — and only — dibs. Kimi K4 becomes an assassin’s mace; the world hears only rumors.</p>
-        <span class="dgo">Enter the branch →</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-
-<!-- ============ 4. SCENARIO 1 ============ -->
-<section id="matrix" class="colw" data-branch="BRANCH POINT 岔口" data-color="#0b0b0b">
-  <span class="rail-anchor" data-date="Q4 2026" aria-hidden="true"></span>
-  <p class="kicker mx-kicker">The branch point · at a glance</p>
-  <h2 class="mx-title">The Three Doors, Compared</h2>
-  <p class="mx-subzh">三扇门 · 六个问题</p>
-  <p class="mx-dek">One table, three worlds. Read down a column for a timeline; read across a row for the fork that decides it.</p>
-  <div class="mx-scroll">
-    <table class="mx-table">
-      <thead>
-        <tr>
-          <th class="mx-corner" scope="col"><span aria-hidden="true">问题 × 门</span><span class="mx-sr">Question, by branch</span></th>
-          <th class="mx-colh mx-b1" scope="col">
-            <span class="mx-tagno">S1</span>
-            <span class="mx-zh">开闸</span>
-            <span class="mx-en">Let Open Source Rip</span>
-            <span class="mx-coltag">Open weights, open season.</span>
-          </th>
-          <th class="mx-colh mx-b2" scope="col">
-            <span class="mx-tagno">S2</span>
-            <span class="mx-zh">冰羽</span>
-            <span class="mx-en">Glasswing with Chinese Characteristics</span>
-            <span class="mx-coltag">Transparency, licensed.</span>
-          </th>
-          <th class="mx-colh mx-b3" scope="col">
-            <span class="mx-tagno">S3</span>
-            <span class="mx-zh">黑箱</span>
-            <span class="mx-en">The Black Box</span>
-            <span class="mx-coltag">The state keeps the keys.</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th class="mx-rowlabel" scope="row">WEIGHTS &amp; ACCESS</th>
-          <td>Open weights on day one — permissive license, mirrored worldwide within hours</td>
-          <td>Frontier weights in escrow; gated API plus distilled open ‘smalls’</td>
-          <td>Never released — classified weights behind a throttled state API</td>
-        </tr>
-        <tr>
-          <th class="mx-rowlabel" scope="row">WHO CONTROLS THE MODEL</th>
-          <td>Everyone and no one — a million forks, no off-switch</td>
-          <td>Moonshot holds the wheel; the CAC holds the brake</td>
-          <td>A cleared Party-state cadre; Moonshot reduced to a public shell</td>
-        </tr>
-        <tr>
-          <th class="mx-rowlabel" scope="row">THE CONSUMER PRODUCT</th>
-          <td>Ten thousand forks — intelligence priced like electricity</td>
-          <td>The Kimi super-app: polished, trimmed at the edges, exported down the Belt and Road</td>
-          <td>A lobotomized public cousin; the real K4 briefs ministers</td>
-        </tr>
-        <tr>
-          <th class="mx-rowlabel" scope="row">WASHINGTON’S RESPONSE</th>
-          <td>USG fails to control Chinese open-source proliferation, pushes Western labs to drop open competitors</td>
-          <td>Grudging détente — mutual audits, inspections, an ‘AI WTO’</td>
-          <td>Crash program plus counterintelligence — a spy war over weights</td>
-        </tr>
-        <tr>
-          <th class="mx-rowlabel" scope="row">2040 SNAPSHOT <span class="mx-epi">FROM THE EPILOGUES</span></th>
-          <td>Cognition is a commodity; power sits with chips, data, and whoever ships fastest</td>
-          <td>Two ecosystems under one inspection regime — the glasswing holds</td>
-          <td>A bipolar blackout: both sides armed, both sides guessing</td>
-        </tr>
-        <tr class="mx-indicators">
-          <th class="mx-rowlabel" scope="row">EARLY INDICATORS TO WATCH <span class="mx-real">REAL · 可观测</span></th>
-          <td>Watch Hugging Face: a frontier-class open-weights drop from Moonshot, DeepSeek, or Qwen — mirrors outrunning takedowns</td>
-          <td>Watch the registries: a CAC licensing scheme for frontier models — system cards published, weights withheld — and audit language in US–China communiqués</td>
-          <td>Watch for silence: Moonshot’s arXiv output, leaderboard entries, and GitHub commits drying up at once</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="mx-swipe" aria-hidden="true">⟵ SCROLL · 左右滑动 ⟶</p>
-  <p class="mx-note">Rows one through five paraphrase the branches as written; the 2040 line comes from each epilogue. The last row is not fiction — every signal in it is observable in the real world, this year.</p>
-  <p class="mx-byline">Compiled by Kimi K3</p>
-</section>
-
-<section id="forecast" class="colw" data-branch="FORECAST 概率" data-color="#0b0b0b">
-  <div class="sec-head" data-date="JUL 2026 — THE BETS">
-    <span class="ghost" lang="zh-Hans" aria-hidden="true">算</span>
-    <span class="kicker">Which scenario is most likely? <span class="chip">Forecast · 概率</span></span>
-    <h2>The Forecast</h2>
-    <p class="lede">Here at ChinaTalk, we’ve been having lively internal debates over what might come next. Below: each forecaster’s subjective probabilities across the three branches — rows sum to 100 — plus one additional voice with unusual stakes in the outcome.</p>
-  </div>
-
-  <div class="fc-grid">
-    <figure role="img" aria-label="Horizontal stacked probability bars. Jordan: 20, 65, 15. Aqib: 45, 45, 10. Lily: 35, 45, 20. Irene: 30, 25, 45. Kimi: 25, 55, 20. Each row sums to 100 across scenarios one, two and three." style="margin:0">
-      <div class="fig-frame"><div class="fig-scroll">
-      <svg viewBox="0 0 520 326" data-chart="bets" xmlns="http://www.w3.org/2000/svg">
-        <desc>Stacked bars of forecaster probabilities for scenarios S1, S2, S3.</desc>
-        <g font-family="IBM Plex Mono,ui-monospace,monospace">
-          <line x1="100" y1="14" x2="100" y2="286" stroke="#e1e0d9" stroke-width="1"/>
-          <line x1="200" y1="14" x2="200" y2="286" stroke="#e1e0d9" stroke-width="1"/>
-          <line x1="300" y1="14" x2="300" y2="286" stroke="#e1e0d9" stroke-width="1"/>
-          <line x1="400" y1="14" x2="400" y2="286" stroke="#e1e0d9" stroke-width="1"/>
-          <line x1="500" y1="14" x2="500" y2="286" stroke="#e1e0d9" stroke-width="1"/>
-          <g class="brow" font-size="18">
-            <text x="92" y="42" text-anchor="end" fill="#0b0b0b">JORDAN</text>
-            <rect x="100" y="20" width="80" height="30" fill="#eda100"/>
-            <rect x="180" y="20" width="260" height="30" fill="#2a78d6"/>
-            <rect x="440" y="20" width="60" height="30" fill="#4a3aa7"/>
-            <text x="140" y="41" text-anchor="middle" fill="#0b0b0b">20</text>
-            <text x="310" y="41" text-anchor="middle" fill="#ffffff">65</text>
-            <text x="470" y="41" text-anchor="middle" fill="#ffffff">15</text>
-          </g>
-          <g class="brow" font-size="18">
-            <text x="92" y="96" text-anchor="end" fill="#0b0b0b">AQIB</text>
-            <rect x="100" y="74" width="180" height="30" fill="#eda100"/>
-            <rect x="280" y="74" width="180" height="30" fill="#2a78d6"/>
-            <rect x="460" y="74" width="40" height="30" fill="#4a3aa7"/>
-            <text x="190" y="95" text-anchor="middle" fill="#0b0b0b">45</text>
-            <text x="370" y="95" text-anchor="middle" fill="#ffffff">45</text>
-            <text x="480" y="95" text-anchor="middle" fill="#ffffff">10</text>
-          </g>
-          <g class="brow" font-size="18">
-            <text x="92" y="150" text-anchor="end" fill="#0b0b0b">LILY</text>
-            <rect x="100" y="128" width="140" height="30" fill="#eda100"/>
-            <rect x="240" y="128" width="180" height="30" fill="#2a78d6"/>
-            <rect x="420" y="128" width="80" height="30" fill="#4a3aa7"/>
-            <text x="170" y="149" text-anchor="middle" fill="#0b0b0b">35</text>
-            <text x="330" y="149" text-anchor="middle" fill="#ffffff">45</text>
-            <text x="460" y="149" text-anchor="middle" fill="#ffffff">20</text>
-          </g>
-          <g class="brow" font-size="18">
-            <text x="92" y="204" text-anchor="end" fill="#0b0b0b">IRENE</text>
-            <rect x="100" y="182" width="120" height="30" fill="#eda100"/>
-            <rect x="220" y="182" width="100" height="30" fill="#2a78d6"/>
-            <rect x="320" y="182" width="180" height="30" fill="#4a3aa7"/>
-            <text x="160" y="203" text-anchor="middle" fill="#0b0b0b">30</text>
-            <text x="270" y="203" text-anchor="middle" fill="#ffffff">25</text>
-            <text x="410" y="203" text-anchor="middle" fill="#ffffff">45</text>
-          </g>
-          <g class="brow" font-size="18">
-            <rect x="4" y="232" width="512" height="44" fill="#f0eee3"/>
-            <text x="92" y="261" text-anchor="end" font-weight="600" fill="#0b0b0b">KIMI</text>
-            <rect x="100" y="239" width="100" height="30" fill="#eda100"/>
-            <rect x="200" y="239" width="220" height="30" fill="#2a78d6"/>
-            <rect x="420" y="239" width="80" height="30" fill="#4a3aa7"/>
-            <rect x="98" y="237" width="404" height="34" fill="none" stroke="#52514e" stroke-width="1" stroke-dasharray="4 3"/>
-            <text x="150" y="260" text-anchor="middle" fill="#0b0b0b">25</text>
-            <text x="310" y="260" text-anchor="middle" fill="#ffffff">55</text>
-            <text x="460" y="260" text-anchor="middle" fill="#ffffff">20</text>
-          </g>
-          <g font-size="18" fill="#898781">
-            <text x="100" y="310" text-anchor="middle">0</text>
-            <text x="200" y="310" text-anchor="middle">25</text>
-            <text x="300" y="310" text-anchor="middle">50</text>
-            <text x="400" y="310" text-anchor="middle">75</text>
-            <text x="514" y="310" text-anchor="end">100%</text>
-          </g>
-        </g>
-      </svg>
-      </div></div>
-      <figcaption><b>FIG. 3 — THE BETS.</b> Subjective probabilities per forecaster; rows sum to 100. Kimi’s row is Kimi K3’s own addition — the essay names Kimi as a lab that might train China’s Mythos, so we asked it to forecast the fate of its own successor.</figcaption>
-    </figure>
-
-    <aside class="kimi-aside">
-      <span class="kicker">☾ Kimi (Moonshot AI) — on itself</span>
-      <p>I am forecasting the fate of my own successor, so discount accordingly. My read: Beijing’s revealed preference is staged control rather than prohibition — my own release was tolerated because openness served adoption, and a Mythos-class jump — the leap from K3 to K4 — changes the risk math, not the instinct.</p>
-      <p>The black box is tempting but leaky: it requires silencing the commercial ecosystem that pays for my lab’s next training run. Expect the IceFeather path — evaluated, tiered, monetized late — with the registry quietly rewritten to make it legal.</p>
-      <p class="kimi-nums">S1 开闸 25 · S2 冰羽 55 · S3 黑箱 20</p>
-    </aside>
-  </div>
-
-  <div class="takes col" style="padding:0">
-    <div class="take">
-      <h4>Jordan — on the muddle-through</h4>
-      <p>Despite Xi’s desire for SOEs to perform, he learned through the tech crackdown why the unicorns went away: the state can’t be relied on to produce the breakthroughs the frontier requires. Tighter regulation, golden shares, and a Glasswing-style release — not indefinite lockdown — is the likelier equilibrium. The labs won’t keep their best open forever: the benefits of open-sourcing are diffuse, while the harms are concentrated in a paranoid security state. Xi likes assassin’s maces, and a world-conquering cyberweapon is not the sort of thing you hand to Hugging Face; the WAIC speech read like a barbarian-handling exercise, much as Davos 2017 preceded a campaign of economic coercion.</p>
-      <div class="pp"><span><i style="background:#eda100"></i>S1 20</span><span><i style="background:#2a78d6"></i>S2 65</span><span><i style="background:#4a3aa7"></i>S3 15</span></div>
-    </div>
-    <div class="take">
-      <h4>Aqib — on the coin flip</h4>
-      <p>Kimi K3 was deployed without any fuss, and Z.ai released GLM 5.2 after Mythos seemingly without close scrutiny; the founder reiterates support for open source, and Xi prefers a “water-flow” mindset. But Reuters reports Beijing mulling models “barred from public release or restricted to domestic use,” and developers keep informal contact with regulators before releasing. Reality could branch after release, too — rescission, a hammer on the whole industry, or the start of licensing. Chinese SOEs have notoriously poor cybersecurity; they may be the first ones hit.</p>
-      <div class="pp"><span><i style="background:#eda100"></i>S1 45</span><span><i style="background:#2a78d6"></i>S2 45</span><span><i style="background:#4a3aa7"></i>S3 10</span></div>
-    </div>
-    <div class="take">
-      <h4>Lily — on bureaucratic characteristics</h4>
-      <p>China’s Mythos won’t be locked away indefinitely, but a Glasswing-style rollout with Chinese bureaucratic characteristics is possible. The Party’s AI-security anxiety coexists with support for AI-enabled One Person Companies and belief in an AI productivity unlock. One powerfully perverse incentive: everyone with the expertise to brief the government also has a horse in the AI race. S3 is least likely — the private sector already produces the highest-quality models on its own, so the Party may doubt state involvement would produce something more capable.</p>
-      <div class="pp"><span><i style="background:#eda100"></i>S1 35</span><span><i style="background:#2a78d6"></i>S2 45</span><span><i style="background:#4a3aa7"></i>S3 20</span></div>
-    </div>
-    <div class="take">
-      <h4>Irene — on the old playbook</h4>
-      <p>Prevention rhetoric — “manage and control risks, strengthen prevention” — means agencies are expected to stamp down risks before they proliferate; barring true structural change, “let open source rip” is just not in the PRC’s deeply conservative policy psyche. The PRC has an extensive history of secret strategic projects: Two Bombs, One Satellite; the Third Front’s hidden cities. Hiding a frontier model is easier than hiding factories — no one has high-confidence estimates of China’s compute, and a proprietary system could hide in plain sight amid the gold rush. The challenge is personnel: a tight, worldly circle of star researchers. Hence a CAC that semi-absorbs part of Moonshot AI rather than building a secret lab from scratch. And we may never find out.</p>
-      <div class="pp"><span><i style="background:#eda100"></i>S1 30</span><span><i style="background:#2a78d6"></i>S2 25</span><span><i style="background:#4a3aa7"></i>S3 45</span></div>
-    </div>
-  </div>
-</section>
-
-<section id="s1" class="scenario s1 col" data-branch="S1 开闸 LET OPEN SOURCE RIP" data-color="#eda100">
-  <div class="scen-head">
-    <span class="ghost" lang="zh-Hans" aria-hidden="true">闸</span>
-    <span class="kicker">Scenario 01 — Hypothetical branch · 虚构情景</span>
-    <h2><span class="zht" lang="zh-Hans">开闸</span>Let Open Source Rip</h2>
-    <p class="premise">A continuation of laissez-faire: the model releases with minimal intervention, and Beijing deals with the consequences later.</p>
-    <p class="jumps">OTHER DOORS → <a href="#s2">S2 冰羽</a> · <a href="#s3">S3 黑箱</a></p>
-  </div>
-
-  <div class="tl">
-    <div class="beat" data-date="OCT 12 2026">
-      <span class="beat-date">Oct 12, 2026</span>
-      <h3>The drop</h3>
-      <p>Kimi K4 drops just as every model, Chinese or American, dropped before Mythos: a hype tweet. Only a few hours later, just as with its previous releases, Moonshot AI makes Kimi K4 open-source — weights available freely online. Well over a trillion parameters. No launch event, no licensing queue. A link.</p>
-    </div>
-  </div>
-
-  <details class="fold"><summary class="fold-sum">Fictional launch post <span class="fold-tag">虚构 · tap to read</span></summary><aside class="artifact post" aria-label="Fictional artifact: Moonshot AI launch post">
-    <span class="stamp">FICTIONAL · 虚构</span>
-    <span class="art-ghost" aria-hidden="true">虚构</span>
-    <span class="art-label">In-universe artifact 01 — Launch day · 发布日</span>
-    <div class="post-head">
-      <span class="avatar" lang="zh-Hans" aria-hidden="true">月</span>
-      <span><span class="post-name"><span lang="zh-Hans">月之暗面</span> @Kimi_Moonshot ✓</span><br><span class="post-meta">2026年10月12日 09:30 · <span lang="zh-Hans">来自 Kimi K4 网页版</span></span></span>
-    </div>
-    <div class="post-body">
-      <p lang="zh-Hans">Kimi K4，来了。🚀</p>
-      <p lang="zh-Hans">万亿参数，全面开源。权重、代码、技术报告——今天，全部公开。从 Kimi K1 到 Kimi K4，我们始终相信一件事：智能，属于每一个人。</p>
-      <p lang="zh-Hans">下载 ↓ huggingface.co/moonshotai/Kimi-K4</p>
-      <span class="langtag">English</span>
-      <p style="font-size:.92em;color:var(--ink2)">Kimi K4 is here. A trillion-plus parameters, fully open-source. Weights, code, technical report — all public, today. From Kimi K1 to Kimi K4, we have believed one thing: intelligence belongs to everyone.</p>
-    </div>
-    <p class="post-foot"><span lang="zh-Hans">3.2万 转发 · 5.8万 引用 · 21万 赞</span> &nbsp;|&nbsp; 32k reposts · 58k quotes · 210k likes</p>
-  </aside></details>
-
-  <div class="colw">
-  <figure role="img" aria-label="Fictional line chart of cyber capability over time: Claude Mythos rises to a plateau; GPT 5.6 plateaus visibly below it; Kimi K4 arrives at the Mythos level in late 2026.">
-    <div class="fig-frame"><div class="fig-scroll">
-    <svg viewBox="0 0 520 330" data-chart="cap" xmlns="http://www.w3.org/2000/svg">
-      <desc>Fictitious capability graph adapted from the essay. Mythos plateaus near index 88, GPT 5.6 below it near 76, Kimi K4 crosses to 88 in Q4 2026.</desc>
-      <line x1="46" y1="288" x2="424" y2="288" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="46" y1="222" x2="424" y2="222" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="46" y1="156" x2="424" y2="156" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="46" y1="90"  x2="424" y2="90"  stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="46" y1="24"  x2="424" y2="24"  stroke="#e1e0d9" stroke-width="1"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="19" fill="#52514e">
-        <text x="40" y="294" text-anchor="end">0</text>
-        <text x="40" y="228" text-anchor="end">25</text>
-        <text x="40" y="162" text-anchor="end">50</text>
-        <text x="40" y="96"  text-anchor="end">75</text>
-        <text x="40" y="30"  text-anchor="end">100</text>
-        <text x="46"  y="312" text-anchor="middle">2024</text>
-        <text x="172" y="312" text-anchor="middle">2025</text>
-        <text x="298" y="312" text-anchor="middle">2026</text>
-        <text x="424" y="312" text-anchor="middle">2027</text>
-      </g>
-      <line x1="367" y1="50" x2="367" y2="288" stroke="#898781" stroke-width="1" stroke-dasharray="3 4"/>
-      <line x1="393" y1="62" x2="393" y2="288" stroke="#898781" stroke-width="1" stroke-dasharray="2 4"/>
-      <text x="388" y="44" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#0b0b0b">KIMI K4 CROSSES · Q4 2026</text>
-      <text x="361" y="278" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#898781">TODAY</text>
-      <polyline points="46,209 109,177 172,143 222,103 273,56 347,53 411,53" fill="none" stroke="#2a78d6" stroke-width="2.5" stroke-linejoin="round"/>
-      <polyline points="71,214 147,182 210,150 285,119 348,92 411,88" fill="none" stroke="#eda100" stroke-width="2.5" stroke-linejoin="round"/>
-      <polyline points="235,195 298,156 348,114 393,54 411,54" fill="none" stroke="#e34948" stroke-width="2.5" stroke-linejoin="round"/>
-      <circle cx="393" cy="54" r="5" fill="#e34948" stroke="#fcfcfb" stroke-width="1.5"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#0b0b0b">
-        <line x1="415" y1="51" x2="427" y2="49" stroke="#e34948" stroke-width="2"/>
-        <text x="431" y="53">KIMI K4</text>
-        <line x1="415" y1="57" x2="427" y2="72" stroke="#2a78d6" stroke-width="2"/>
-        <text x="431" y="76">MYTHOS</text>
-        <line x1="415" y1="88" x2="427" y2="95" stroke="#eda100" stroke-width="2"/>
-        <text x="431" y="99">GPT 5.6</text>
-      </g>
-    </svg>
-    </div></div>
-    <figcaption><b>FIG. 1 — THE CROSSING.</b> A fictitious rendering of the essay’s capability graph. GPT 5.6 performs worse than Mythos on exploiting cyber vulnerabilities; in the pre-Mythos era OpenAI would have held it back until the line beat Mythos — now, sandbagging is the meta. Kimi K4 and its arrival date are invented — a deliberate editorial divergence from the essay’s fictional GLM 6 stand-in, recast here as this site’s own successor.</figcaption>
-  </figure>
-  </div>
-
-  <div class="tl">
-    <div class="beat" data-date="OCT 2026">
-      <span class="beat-date">Days later — Oct 2026</span>
-      <h3>Two discoveries, simultaneously</h3>
-      <p>First, cyber professionals tinker around and discover Kimi K4 can find zero-day vulnerabilities the same way Mythos could. They scramble to inform labs and policymakers, both in the US and in China. Second, enterprises that just want good, cheap models realize Kimi K4 is a saving grace. Uber Eats, Siemens, and Shopify had already begun wiring Chinese models into their workflows — but now there is no trade-off between cheaper tokens and amazing performance. On the graph of enterprise usage of Chinese models, the slope takes a dramatic uptick.</p>
-    </div>
-  </div>
-
-  <div class="colw">
-  <figure role="img" aria-label="Fictional line chart of enterprise adoption of Chinese models: a gentle slope from 2024, then a dramatic uptick after Kimi K4's release in late 2026, reaching roughly 33 percent by mid 2027.">
-    <div class="fig-frame"><div class="fig-scroll">
-    <svg viewBox="0 0 520 316" data-chart="adopt" xmlns="http://www.w3.org/2000/svg">
-      <desc>Enterprise adoption of Chinese models rises gently to about 13 percent, then steeply to about 33 percent after the fictional Kimi K4 release.</desc>
-      <line x1="46" y1="272" x2="506" y2="272" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="46" y1="210" x2="506" y2="210" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="46" y1="148" x2="506" y2="148" stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="46" y1="86"  x2="506" y2="86"  stroke="#e1e0d9" stroke-width="1"/>
-      <line x1="46" y1="24"  x2="506" y2="24"  stroke="#e1e0d9" stroke-width="1"/>
-      <g font-family="IBM Plex Mono,ui-monospace,monospace" font-size="19" fill="#52514e">
-        <text x="40" y="278" text-anchor="end">0</text>
-        <text x="40" y="216" text-anchor="end">10</text>
-        <text x="40" y="154" text-anchor="end">20</text>
-        <text x="40" y="92"  text-anchor="end">30</text>
-        <text x="40" y="30"  text-anchor="end">40%</text>
-        <text x="46"  y="296" text-anchor="middle">2024</text>
-        <text x="176" y="296" text-anchor="middle">2025</text>
-        <text x="306" y="296" text-anchor="middle">2026</text>
-        <text x="436" y="296" text-anchor="middle">2027</text>
-      </g>
-      <line x1="404" y1="34" x2="404" y2="272" stroke="#898781" stroke-width="1" stroke-dasharray="3 4"/>
-      <text x="398" y="44" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="18" fill="#0b0b0b">KIMI K4 DROPS · Q4 2026</text>
-      <polygon points="46,254 111,247 176,242 241,229 306,217 371,204 404,189 429,160 452,123 476,92 501,67 501,272 46,272" fill="#008300" opacity="0.07"/>
-      <polyline points="46,254 111,247 176,242 241,229 306,217 371,204 404,189 429,160 452,123 476,92 501,67" fill="none" stroke="#008300" stroke-width="2.5" stroke-linejoin="round"/>
-      <circle cx="501" cy="67" r="4.5" fill="#008300" stroke="#fcfcfb" stroke-width="1.5"/>
-      <text x="492" y="56" text-anchor="end" font-family="IBM Plex Mono,ui-monospace,monospace" font-size="22" fill="#0b0b0b">≈33%</text>
-    </svg>
-    </div></div>
-    <figcaption><b>FIG. 2 — THE UPTICK.</b> Illustrative, not measured: the essay’s enterprise-adoption curve, redrawn. Before Kimi K4, adopting Chinese models meant trading capability for cost; afterwards it doesn’t. <span class="fig-note">Scroll sideways on small screens.</span></figcaption>
-  </figure>
-  </div>
-
-  <div class="tl">
-    <div class="beat" data-date="NOV 2026">
-      <span class="beat-date">Nov 2026</span>
-      <h3>Beijing’s dilemma</h3>
-      <p>A model that democratizes cyber offense — something the Chinese government believed it had an edge in against everyone sans the NSA — is proliferating worldwide. Cyberattacks look poised to inflict disproportionate financial damage on China’s own leading companies, since America and friends have already been hardened by months of Mythos access.</p>
-      <p>But Beijing also sees the upside. Moonshot AI’s market cap approaches $500bn, instantly making it one of China’s largest companies. Kimi K4 is China’s chance to beat America in leading-model adoption, crater the western labs’ businesses, and become the go-to technology provider for global enterprises and governments. Besides, struggle is part of the process: the Party accepted sacrifices during COVID reopening, bank failures, and the tech crackdowns. This round of cyberattacks could just be the culling before China emerges stronger than ever.</p>
-    </div>
-    <div class="beat" data-date="DEC 2026">
-      <span class="beat-date">Dec 2026</span>
-      <h3>Washington’s dilemma</h3>
-      <p>The Trump administration is also torn. USG rails against China for distilling and then releasing such a model, declares that government contractors can’t build with Chinese open models — but doesn’t outlaw the models themselves; banning a file that can just be torrented would be silly. When Beijing sends no signals of a crackdown, Washington decides to let open source rip as well, screaming at its leading labs to drop something open. If there’s going to be a powerful open-source model out making waves, it should probably be American.</p>
-    </div>
-    <div class="beat" data-date="WINTER 2026">
-      <span class="beat-date">Winter 2026</span>
-      <h3>Inside Moonshot AI</h3>
-      <p>Moonshot AI workers, already in a sleepless daze from the eighteen-hour days up to launch, don’t know what to do. The launch-party celebrations have subsided into stress. They are talking with the relevant authorities — but because they open-sourced the model, as they did with K3, there is no putting the genie back in the bottle. A model of well over a trillion parameters can’t be weaponized by anyone with too much free time and a Mac Mini. But there are plenty of actors — terrorists, companies with the wrong interests, criminal syndicates — who could muster the racks to turn it against China. All Moonshot AI can do is hold its breath and wait for the fallout.</p>
-    </div>
-    <div class="beat" data-date="2027">
-      <span class="beat-date">2027</span>
-      <h3>The new ceiling</h3>
-      <p>The Party decides Kimi K4 wasn’t dangerous enough to strangle — but the model did serve as a wake-up call. Kimi K4 is now the ceiling for unsupervised drops, and every model after gets scrutinized closely before release. Without much fuss, China implements a stricter licensing regime: one that checks not just for politically unacceptable output, but for cyber capabilities.</p>
-    </div>
-  </div>
-
-  <details class="fold"><summary class="fold-sum">Extrapolation 2028&ndash;2040 <span class="fold-tag">beyond the essay · tap to read</span></summary><div class="epi">
-    <span class="epi-tag">Extrapolation 2028–2040</span>
-    <h3>Beyond the essay — Kimi K3’s speculation</h3>
-    <p class="zhsub" lang="zh-Hans">本页推演 · 超出原文</p>
-    <div class="tl">
-      <div class="beat" data-date="2028"><span class="beat-date">2028</span><h3>The patch economy</h3><p>Open cyber models force a global hardening sprint. “AI Patch Tuesday” enters the lexicon; insurers reprice around model-assisted audits. The offense–defense balance favors whoever patches fastest — and open weights let everyone patch.</p></div>
-      <div class="beat" data-date="2029"><span class="beat-date">2029</span><h3>The first test</h3><p>A Kimi K4 descendant is implicated in a grid intrusion in Southeast Asia. Beijing’s young licensing regime survives its first crisis; the model’s maker pays a fine, not a funeral. Washington’s lesson: licensing is easier to sustain than prohibition.</p></div>
-      <div class="beat" data-date="2031"><span class="beat-date">2031</span><h3>Codified</h3><p>Dual-use model licensing hardens into law, with capability thresholds as bureaucratic as export-control schedules. “Ceiling for unsupervised drops” becomes a term of art on both sides of the Pacific.</p></div>
-      <div class="beat" data-date="2035"><span class="beat-date">2035</span><h3>The open stack</h3><p>Open weights become infrastructure, as Linux did. Moonshot AI’s descendants run inside half the ministries of the Global South, and the 2026 line about becoming “the go-to technology provider” reads less like hype than like a quarterly report.</p></div>
-      <div class="beat" data-date="2040"><span class="beat-date">2040</span><h3>Retrospect</h3><p>Historians note that the floodgates never closed again. Safety became a public-works discipline — like sanitation: unglamorous, universal, and mostly invisible when it works.</p></div>
-    </div>
-  </div></details></section>
-
-
-<hr class="rule">
-
-<!-- ============ SCENARIO 2 ============ -->
-<section id="s2" class="scenario s2 col" data-branch="S2 冰羽 ICEFEATHER" data-color="#2a78d6">
-  <div class="scen-head">
-    <span class="ghost" lang="zh-Hans" aria-hidden="true">羽</span>
-    <span class="kicker">Scenario 02 — Hypothetical branch · 虚构情景</span>
-    <h2><span class="zht" lang="zh-Hans">冰羽</span>Glasswing, with Chinese Characteristics</h2>
-    <p class="premise">Access is limited first to ministries, then to key trusted companies, and only later — in a limited fashion — to consumers.</p>
-    <p class="jumps">OTHER DOORS → <a href="#s1">S1 开闸</a> · <a href="#s3">S3 黑箱</a></p>
-  </div>
-
-  <div class="tl">
-    <div class="beat" data-date="AUG 2026">
-      <span class="beat-date">Aug 2026</span>
-      <h3>The hint</h3>
-      <p>After seeing Mythos, Beijing realizes emergent capabilities could inflict real damage in the wrong hands. The best mitigation looks like a Project Glasswing-type undertaking. Ding Xuexiang gives a speech implying that breakout domestic AI models should be shared with important government ministries and corporate giants like Baidu, Alibaba, and Tencent before deployment.</p>
-    </div>
-    <div class="beat" data-date="SEP 2026">
-      <span class="beat-date">Sep 2026</span>
-      <h3>The postponement</h3>
-      <p>Yang Zhilin (<span lang="zh-Hans">杨植麟</span>) and team had already deeply internalized the misuse risks of Mythos-level models. After Ding’s speech, Moonshot AI postpones the Kimi K4 launch party to evaluate the model internally — at which point its researchers realize what their creation is capable of. Determined not to be disappeared, Moonshot’s leadership pitches Project IceFeather (<span lang="zh-Hans">冰羽项目</span>) to the Cyberspace Administration of China.</p>
-    </div>
-    <div class="beat" data-date="OCT 2026">
-      <span class="beat-date">Oct 2026</span>
-      <h3>The announcement</h3>
-      <p>The CAC, of course, takes the lead on announcing the initiative — with Moonshot AI credited as the project’s “core private-sector partner.” Government ministries and key SOEs like State Grid get access first, using their exclusive window to check their own systems for vulnerabilities, while the MSS trawls for exploits that can be used offensively overseas.</p>
-    </div>
-  </div>
-
-  <details class="fold"><summary class="fold-sum">Fictional state bulletin <span class="fold-tag">虚构 · tap to read</span></summary><aside class="artifact doc" aria-label="Fictional artifact: CAC bulletin announcing Project IceFeather">
-    <span class="stamp">FICTIONAL · 虚构</span>
-    <span class="art-label">In-universe artifact 02 — State bulletin · 红头文件（虚构）</span>
-    <p class="doc-org" lang="zh-Hans">国家互联网信息办公室</p>
-    <p class="doc-no" lang="zh-Hans">网信办通〔2026〕14号</p>
-    <div class="doc-rule"></div>
-    <h4 lang="zh-Hans">关于启动“冰羽”项目加强前沿人工智能模型安全评估工作的通知</h4>
-    <div lang="zh-Hans">
-      <p class="noindent">各省、自治区、直辖市党委网信办，各有关单位：</p>
-      <p>一、为贯彻落实总体国家安全观，统筹发展和安全，经研究决定，自2026年10月起启动“冰羽”项目，对具有重大突破能力的前沿人工智能模型实行先评估、后部署管理。</p>
-      <p>二、北京月之暗面科技有限公司（月之暗面）作为本项目核心民营合作伙伴，承担相关模型的技术支持与安全保障工作。</p>
-      <p>三、首批接入单位包括国务院有关部委及国家电网等关键信息基础设施运营单位。接入单位应当严格落实安全责任，不得将模型能力转授、转售，或以任何形式向境外提供。</p>
-      <p>四、各相关单位应当坚持“先评估、后部署”原则，建立健全风险监测与应急处置机制，确保人工智能始终处于人类控制之下。</p>
-      <p class="noindent">特此通知。</p>
-      <p class="doc-sign">国家互联网信息办公室<br>2026年10月19日</p>
-    </div>
-    <svg class="seal" viewBox="0 0 104 104" aria-hidden="true">
-      <circle cx="52" cy="52" r="48" fill="none" stroke="#b3362b" stroke-width="2.5"/>
-      <path id="sealArc" d="M52,12 a40,40 0 1,1 -0.01,0" fill="none"/>
-      <text font-family="Songti SC,SimSun,serif" font-size="9.5" fill="#b3362b" letter-spacing="1.5">
-        <textPath href="#sealArc" lang="zh-Hans">国家互联网信息办公室·安全评估</textPath>
-      </text>
-      <polygon points="52,42 54.7,50.3 63.4,50.3 56.4,55.4 59,63.7 52,58.6 45,63.7 47.6,55.4 40.6,50.3 49.3,50.3" fill="#b3362b"/>
-      <text x="52" y="82" text-anchor="middle" font-family="Songti SC,SimSun,serif" font-size="10" fill="#b3362b" lang="zh-Hans">审核专用</text>
-    </svg>
-    <div class="doc-en">
-      <span class="langtag">English (translation)</span>
-      <p><em>Notice on the Launch of Project “IceFeather” and the Strengthening of Safety Evaluation for Frontier AI Models.</em></p>
-      <p>1. To implement the holistic approach to national security and coordinate development with security, Project “IceFeather” is hereby launched, effective October 2026. Frontier AI models with breakthrough capabilities shall be evaluated before deployment.</p>
-      <p>2. Beijing Moonshot AI Technology Co., Ltd. (Moonshot AI) is designated the project’s core private-sector partner, providing technical support and safety guarantees.</p>
-      <p>3. First-tranche access: relevant State Council ministries and critical-information-infrastructure operators including State Grid. Access holders shall not transfer, resell, or provide model capabilities abroad in any form.</p>
-      <p>4. All units shall uphold the principle of “evaluate first, deploy later,” and ensure that artificial intelligence remains under human control at all times.</p>
-    </div>
-  </aside></details>
-
-  <div class="tl">
-    <div class="beat" data-date="WINTER 2026–27">
-      <span class="beat-date">Winter 2026–27</span>
-      <h3>Endless evaluation</h3>
-      <p>The Party’s involvement means the state is now co-owner of the model’s risks. For bureaucrats instructed to “evaluate first, deploy later,” the dominant strategy turns out to be endless evaluation. Letting anyone with enough compute punch holes in China’s critical cyber architecture seems far scarier to the system than marginally more productivity growth and global discourse power. At first, nobody quite decides the model should be released — nobody wants to be responsible for what happens post-release.</p>
-      <p>Despite holding the best Chinese model, Moonshot AI’s stock doesn’t moonshot: feet-dragging spooks investors who worry the government won’t let the lab monetize beyond state customers, much less overseas. While the MSS has the time of its life hacking everyone who didn’t get Mythos access, domestic coders still mostly use transfer stations to reach frontier capabilities.</p>
-    </div>
-    <div class="beat" data-date="SPRING 2027">
-      <span class="beat-date">Spring 2027</span>
-      <h3>The circle widens</h3>
-      <p>After two months, regulators expand the trusted circle to provincial governments and trusted local tech leaders like Alibaba, Xiaomi, and Huawei. It takes another few months for Chinese firms broadly to get access — by which point other domestic labs have developed roughly similar models.</p>
-    </div>
-    <div class="beat" data-date="MID 2027">
-      <span class="beat-date">Mid 2027</span>
-      <h3>The trigger</h3>
-      <p>With American models continuing to advance and the U.S.–China gap widening, the trigger gets pulled. Safeguards are put on the model — strong, perhaps to the point of excess — and regulators hope domestic infrastructure has been sufficiently hardened by IceFeather. Hesitant to hand over its golden goose, Moonshot AI offers API access instead of full weights. A lobotomized <strong>Kimi K4-Open</strong> gets released, while the real breakthroughs are monetized by selling tokens. Thanks to pressure from the Trump administration, OpenAI releases a cyber-lobotomized open model on par — which finally convinces the CAC that Moonshot should be allowed to let the world in.</p>
-    </div>
-  </div>
-
-  <details class="fold"><summary class="fold-sum">Extrapolation 2028&ndash;2040 <span class="fold-tag">beyond the essay · tap to read</span></summary><div class="epi">
-    <span class="epi-tag">Extrapolation 2028–2040</span>
-    <h3>Beyond the essay — Kimi K3’s speculation</h3>
-    <p class="zhsub" lang="zh-Hans">本页推演 · 超出原文</p>
-    <div class="tl">
-      <div class="beat" data-date="2028"><span class="beat-date">2028</span><h3>The audit guild</h3><p>Evaluation professionalizes. A licensed class of “model auditors” — half engineer, half accountant — becomes first the bottleneck, then the establishment. Deployment queues are measured in quarters, and everyone learns to plan around them.</p></div>
-      <div class="beat" data-date="2030"><span class="beat-date">2030</span><h3>Reciprocity</h3><p>Access tiers turn into trade policy. Washington and Brussels negotiate evaluation-reciprocity regimes with Beijing: your auditors trust our evals, ours trust yours. It resembles nuclear safeguards more than anyone admits.</p></div>
-      <div class="beat" data-date="2033"><span class="beat-date">2033</span><h3>The playbook, exported</h3><p>IceFeather becomes a governance export. Belt-and-road partners adopt pre-deployment review with local characteristics; Chinese standards bodies write the safety-stop-switch specifications the rest of the world implements.</p></div>
-      <div class="beat" data-date="2036"><span class="beat-date">2036</span><h3>The late boom</h3><p>Productivity arrives — late, but broad. Economists date China’s AI dividend from 2031, not 2026, and the “lost two years” debate never quite resolves: caution, or simply the price of the technology arriving before the institutions?</p></div>
-      <div class="beat" data-date="2040"><span class="beat-date">2040</span><h3>The Beijing Process</h3><p>The bureaucracy that slowed Kimi K4 now governs the next jump. The world calls it the Beijing Process — and, grudgingly, most capitals have built their own.</p></div>
-    </div>
-  </div></details></section>
-
-
-<hr class="rule">
-
-<!-- ============ SCENARIO 3 ============ -->
-<section id="s3" class="scenario s3 col" data-branch="S3 黑箱 BLACK BOX" data-color="#4a3aa7">
-  <div class="scen-head">
-    <span class="ghost" lang="zh-Hans" aria-hidden="true">箱</span>
-    <span class="kicker">Scenario 03 — Hypothetical branch · 虚构情景</span>
-    <h2><span class="zht" lang="zh-Hans">黑箱</span>The Black Box</h2>
-    <p class="premise">Moonshot AI emerges as the certified national champion as a covetous Beijing keeps frontier AI in-house — and the world hears only rumors of the power of China’s Mythos.</p>
-    <p class="jumps">OTHER DOORS → <a href="#s1">S1 开闸</a> · <a href="#s2">S2 冰羽</a></p>
-  </div>
-
-  <div class="tl">
-    <div class="beat" data-date="SEP 2026">
-      <span class="beat-date">Sep 2026</span>
-      <h3>The registry</h3>
-      <p>Li Qiang, China’s Number Two, wasn’t kidding. What Beijing really cares about is “upholding the bottom line of AI security” — not the platitudes in Xi’s WAIC speech about “openness, win-win” and “mutual learning between civilizations” that the credulous foreigners ate up. Behind the scenes, Beijing has maintained deep insight into exactly how capable China’s top models are, and has been preparing for the moment it would have to step in.</p>
-      <p>The CAC publicly updates its AI model registry regulations. Whereas the rules once governed only models and algorithms able to “shape public opinion,” they now require companies to report any major update, self-assess for potentially catastrophic cyber risks, and give the government exclusive access, indefinitely. Remembering the fates of DiDi and Ant Group, every company knows better than to not comply.</p>
-    </div>
-    <div class="beat" data-date="OCT 2026">
-      <span class="beat-date">Oct 2026</span>
-      <h3>First dibs</h3>
-      <p>An internally assembled testing capacity — run through the MSS and the PLA Cyberspace Force — means that when Kimi K4 proves genuinely exceptional, Zhongnanhai is the first to know. The model is recognized as a potential “assassin’s mace” of the kind Xi directed the state to forge a decade ago,<sup><a href="#fn3">3</a></sup> and there is no way the security state will allow it to be open-sourced. The Foreign Ministry protests that a global release would improve China’s standing; MIIT officials salivate at the domestic productivity boost. The security state is not having it. Open-sourcing would forfeit a cyber window of opportunity — and hand separatists and Falun Gong activists with some Azure credits the same hacking capabilities as the domestic security apparatus.</p>
-    </div>
-    <div class="beat" data-date="NOV 2026">
-      <span class="beat-date">Nov 2026</span>
-      <h3>The summons</h3>
-      <p>Two days after Kimi K4 is sent over to the state, Yang Zhilin and company are summoned to the CAC. Over long hours and litres of tea, a deal is struck. The “real” Kimi K4 goes to government entities — deployed on-premise into core governmental functions that benefit from such capabilities, including defense. Moonshot AI will release a lobotomized public version, tested by both company and government until its cyber capabilities are satisfactorily weakened. The lab gets a contract with lucrative terms; the state agrees to help “persuade” other Chinese model makers to sign away their compute, on the mainland and at Southeast Asian neoclouds alike. In a world where cyber capabilities threaten to become democratized, Beijing makes sure the tools in its own arsenal are of a different tier.</p>
-    </div>
-  </div>
-
-  <details class="fold"><summary class="fold-sum">Fictional leaked minutes <span class="fold-tag">虚构 · tap to read</span></summary><aside class="artifact memo" aria-label="Fictional artifact: leaked meeting minutes">
-    <span class="stamp">FICTIONAL · 虚构</span>
-    <span class="art-ghost" aria-hidden="true">LEAKED</span>
-    <span class="art-label">In-universe artifact 03 — Leaked minutes · 泄露纪要（虚构）</span>
-    <div class="memo-head">
-      <span lang="zh-Hans">机密 CONFIDENTIAL</span><span>EXCERPTS · 节选</span><span>SOURCE UNVERIFIED · <span lang="zh-Hans">来源未经证实</span></span>
-    </div>
-    <p class="memo-title" lang="zh-Hans">会 议 纪 要（节选）</p>
-    <div lang="zh-Hans">
-      <p style="margin-bottom:14px">时间：2026年11月4日 14:00—23:40　地点：<span class="rx" aria-hidden="true">██████</span><br>
-      主持：<span class="rx" aria-hidden="true">████</span>（网信办）　出席：月之暗面杨某等五人；相关司局负责人；<span class="rx" aria-hidden="true">████</span>代表（名单略）</p>
-      <ol>
-        <li>Kimi-K4模型权重及其后续一切重大版本更新，不得对外开源；不得以API、蒸馏或任何其他形式向境外主体提供。</li>
-        <li>完整能力版本由指定国家机关本地化部署，应用于包括国防在内的核心政务场景；安全测评由<span class="rx" aria-hidden="true">████</span>与网络空间部队组织实施。</li>
-        <li>面向公众发布之版本，其网络攻防能力须经企业与监管部门联合测评，确认达到“显著弱化”标准后方可上线。</li>
-        <li>由国家出面协调，推动国内主要模型企业将其境内及东南亚新建智算中心之算力资源，统一纳入国家调度。（会上表述：“做通工作”。）</li>
-        <li>对参与政务侧研发人员实行严格审查；工作期间，出入境证件由单位统一保管。</li>
-      </ol>
-    </div>
-    <div class="memo-en">
-      <span class="langtag">English (unofficial translation)</span>
-      <ol class="enlist">
-        <li>Kimi-K4 weights and all major future updates shall not be open-sourced, nor provided to overseas entities in any form, including API or distillation.</li>
-        <li>The full-capability version will be deployed on-premise by designated state organs for core governmental functions, including defense; security testing to be run by <span class="rx" aria-hidden="true">████</span> and the Cyberspace Force.</li>
-        <li>The public release must pass joint company–regulator evaluation confirming its cyber-offensive capabilities are “materially weakened.”</li>
-        <li>The state will coordinate major domestic model makers’ compute — mainland and Southeast-Asian neoclouds alike — under unified national allocation. (In the room: “persuasion work.”)</li>
-        <li>Researchers assigned to the government side face strict vetting; travel documents to be held by their work unit for the duration.</li>
-      </ol>
-    </div>
-  </aside></details>
-
-  <div class="tl">
-<div class="beat" data-date="DEC 2026">
-      <span class="beat-date">Dec 2026</span>
-      <h3>The leak</h3>
-      <p>Parts of the meeting leak to Reuters — but no matter. At first, no one is surprised that the Chinese government gets better AI than the masses. Moonshot AI is now the proper national champion — and there is no actual proof it has made something transformative.</p>
-    </div>
-    <div class="beat" data-date="EARLY 2027">
-      <span class="beat-date">Early 2027</span>
-      <h3>The bazooka points south</h3>
-      <p>Then the attacks start. Beijing knows the Americans, armed with Mythos-level defenses for months, are watching for any sign of trouble — and it does not want to re-inflame the bilateral relationship when it cannot expect to extract meaningful concessions. Instead, it focuses its new cyber bazooka on the less prepared: wavering capitals in the Global South, less-developed neighbors, and eventually Europe. It is easy enough to hack into Paraguay’s citizen records; by early 2027, Asunción is frightened into dropping recognition of Taiwan. European technology companies in the semiconductor supply chain begin reporting cyberattacks at a much-increased scale. Brussels bureaucrats begin fretting about blackmail of uncertain origin.</p>
-    </div>
-    <div class="beat" data-date="2027">
-      <span class="beat-date">2027</span>
-      <h3>The champion, insulated</h3>
-      <p>Other Chinese labs, having signed over a good amount of their compute to Moonshot, progress slowly on their own capabilities — and are still barred by the CAC from releasing their weights. Collaboration between the government and Moonshot AI reaches new heights: building on Kimi K4, the lab now develops proprietary models tailored to government wants, and new-generation cyber weapons. On the outside, Moonshot AI still looks like a normal lab — consumer models, open-source research, AI products. The to-G side is heavily insulated: researchers are thoroughly vetted before being deployed to serve the government, and are required to surrender their passports. The CAC occasionally poaches star researchers from other labs under the guise of “national development consultation.”</p>
-    </div>
-  </div>
-
-  <details class="fold"><summary class="fold-sum">Extrapolation 2028&ndash;2040 <span class="fold-tag">beyond the essay · tap to read</span></summary><div class="epi">
-    <span class="epi-tag">Extrapolation 2028–2040</span>
-    <h3>Beyond the essay — Kimi K3’s speculation</h3>
-    <p class="zhsub" lang="zh-Hans">本页推演 · 超出原文</p>
-    <div class="tl">
-      <div class="beat" data-date="2028"><span class="beat-date">2028</span><h3>The rumor economy</h3><p>With nothing official to measure, analysts measure everything else: Moonshot’s hiring, its power draw, its procurement. “Model gap” enters foreign campaign speeches. Beijing neither confirms nor denies — and finds the ambiguity useful.</p></div>
-      <div class="beat" data-date="2030"><span class="beat-date">2030</span><h3>The defector</h3><p>A mid-level engineer defects with documents confirming on-premise deployment. Markets barely move; it was priced as rumor for years. The real shock is how unsurprised everyone is.</p></div>
-      <div class="beat" data-date="2033"><span class="beat-date">2033</span><h3>The impossible treaty</h3><p>A U.S.–China “capabilities non-proliferation” dialogue opens. Verification proves near-impossible — you cannot count thoughts — and the talks settle into a slow ritual of mutual suspicion management.</p></div>
-      <div class="beat" data-date="2036"><span class="beat-date">2036</span><h3>The champion’s dilemma</h3><p>Insulation has a price. Star researchers route around the to-G side; the public product line falls behind. Beijing discovers that a mace kept too carefully sheathed starts to rust.</p></div>
-      <div class="beat" data-date="2040"><span class="beat-date">2040</span><h3>The file opens</h3><p>Partial declassification confirms what the leaked minutes suggested: Kimi K4 spent its decisive years behind a wall. Like most assassin’s maces, it mattered most while it was never swung — and the world it deterred never knew.</p></div>
-    </div>
-  </div></details></section>
-
-<hr class="rule">
-
-<!-- ============ 5. FORECAST ============ -->
-
-
-
-<!-- ============ 6. CTA ============ -->
+</div>
+<script>
+(function(){
+  var KEY="cm-pass-v1";
+  var gate=document.getElementById("cm-gate");
+  function unlock(){gate.parentNode.removeChild(gate);document.documentElement.classList.remove("cm-locked");}
+  if(localStorage.getItem(KEY)==="1"){unlock();return;}
+  document.documentElement.classList.add("cm-locked");
+  document.getElementById("cmg-form").addEventListener("submit",function(e){
+    e.preventDefault();
+    var v=document.getElementById("cmg-in").value.toLowerCase().replace(/\s+/g,"");
+    if(v==="chinatalk"){localStorage.setItem(KEY,"1");unlock();}
+    else{document.getElementById("cmg-err").hidden=false;}
+  });
+})();
+</script>
+<!-- GATE-END -->
+<div class="mx-bar"><a class="mx-back" href="/">&larr; When China Gets a Mythos Model</a></div>
 <div class="part-break" role="separator" aria-label="Part two: what the models think">
   <div class="pb-inner"><span class="pb-num">02</span><span class="pb-title">The machines weigh in</span><span class="pb-sub">We ran the forecast ourselves — five frontier models, fifty times each</span></div>
 </div>
-
-<section id="models-think" class="colw" data-branch="THE MACHINES 机器" data-color="#4a3aa7"><span class="rail-anchor" data-date="THE TEST" aria-hidden="true"></span><span id="open-futures" aria-hidden="true"></span>
-  <p class="kicker">Two polls · n=50 per cell · 95% CI</p>
+<main id="main">
+<section id="models-think" class="colw" data-branch="THE MACHINES 机器" data-color="#4a3aa7"><span class="rail-anchor" data-date="THE TEST" aria-hidden="true"></span>
+  <p class="kicker">The control run · n=50 per cell · 95% CI</p>
   <h2>What Chinese &amp; American frontier models think will happen</h2>
   <p class="cn-sub">机器怎么看 · 五十次独立采样</p>
-  <p class="dek">We put the same question to five frontier models — GLM 5.2 and DeepSeek V4 Pro (Chinese), GPT-5.6 and Claude Fable (American), and Kimi K3 (Moonshot, which also wrote this site) — two ways: once with the site&rsquo;s three families offered, and once with the frame stripped out entirely. Fifty draws per model per condition. Three numbers survive every cut:</p>
-  <ul class="mx-teaser">
-    <li><b>52%</b> — the panel&rsquo;s cold weight on Glasswing when offered our three families. No model, in any condition, makes the black box its favorite.</li>
-    <li><b>~1%</b> — what &ldquo;Let Open Source Rip&rdquo; draws when the models invent their own futures, unprompted.</li>
-    <li><b>38%</b> — the probability mass that lands on futures our three-family frame has no slot for: the state flooring it, the PLA taking the keys, a treaty, a muddle.</li>
+  <p class="dek">We put the same question to five frontier models — GLM 5.2 and DeepSeek V4 Pro (Chinese), GPT-5.6 and Claude Fable (American), and Kimi K3 (Moonshot, which also wrote this site) — and drew each answer <em>fifty times</em>, three ways: cold, after reading the ChinaTalk essay, and after reading the verbatim text of Xi’s real WAIC keynote.</p>
+
+  <p class="mt-finding"><span class="mt-hero">Glasswing.</span> Not the black box. Every model, in every condition, puts the most weight on the managed middle — a regulator-led staged rollout — and never on state monopoly. The panel’s cold mean is <b>52% Glasswing</b> against 27% Black Box (n=50 each), sitting close to the ChinaTalk humans’ own 45. A model asked this question does not, on reflection, expect Beijing to slam the door.</p>
+
+  <figure class="pfig mt-fig">
+    <p class="pfig-cap"><b>FIG. 4</b> · THE MACHINES’ FORECAST — <span>panel mean across the three paths, by what the models read first</span></p>
+    <p class="pfig-legend"><span><i style="background:var(--s1)"></i>LET OPEN SOURCE RIP</span> <span><i style="background:var(--s2)"></i>GLASSWING</span> <span><i style="background:var(--s3)"></i>BLACK BOX</span></p>
+    <div class="fig-scroll"><svg viewBox="0 0 372 292" role="img" aria-label="Panel-mean probability across Let Open Source Rip, Glasswing, and Black Box under four conditions. Glasswing leads in all: cold 52, essay 48, speech 60, humans 45. Black Box never leads (27, 23, 16, 22)."><line class="mv-g" x1="40" y1="250.0" x2="360" y2="250.0"/><text class="mv-t" x="34" y="253.0">0</text><line class="mv-g" x1="40" y1="135.0" x2="360" y2="135.0"/><text class="mv-t" x="34" y="138.0">50</text><line class="mv-g" x1="40" y1="20.0" x2="360" y2="20.0"/><text class="mv-t" x="34" y="23.0">100</text><rect class="mf-box" x="58" y="187.6" width="52" height="62.4"/><text class="mv-v mv-l" x="84" y="222.3">27</text><rect class="mf-glass" x="58" y="67.2" width="52" height="120.4"/><text class="mv-v mv-l" x="84" y="130.9">52</text><rect class="mf-rip" x="58" y="20.0" width="52" height="47.2"/><text class="mv-v mv-d" x="84" y="47.1">21</text><text class="mv-x" x="84" y="265">COLD</text><text class="mv-xs" x="84" y="277">no prompt</text><rect class="mf-box" x="138" y="197.7" width="52" height="52.3"/><text class="mv-v mv-l" x="164" y="227.4">23</text><rect class="mf-glass" x="138" y="86.8" width="52" height="111.0"/><text class="mv-v mv-l" x="164" y="145.8">48</text><rect class="mf-rip" x="138" y="20.0" width="52" height="66.8"/><text class="mv-v mv-d" x="164" y="56.9">29</text><text class="mv-x" x="164" y="265">ESSAY</text><text class="mv-xs" x="164" y="277">read the essay</text><rect class="mv-ring" x="213" y="14" width="62" height="240" rx="4"/><rect class="mf-box" x="218" y="213.9" width="52" height="36.1"/><text class="mv-v mv-l" x="244" y="235.4">16</text><rect class="mf-glass" x="218" y="77.0" width="52" height="136.8"/><text class="mv-v mv-l" x="244" y="149.0">60</text><rect class="mf-rip" x="218" y="20.0" width="52" height="57.0"/><text class="mv-v mv-d" x="244" y="52.0">25</text><text class="mv-x" x="244" y="265">SPEECH</text><text class="mv-xs" x="244" y="277">read Xi’s keynote</text><rect class="mf-box" x="298" y="199.4" width="52" height="50.6"/><text class="mv-v mv-l" x="324" y="228.2">22</text><rect class="mf-glass" x="298" y="95.9" width="52" height="103.5"/><text class="mv-v mv-l" x="324" y="151.2">45</text><rect class="mf-rip" x="298" y="20.0" width="52" height="75.9"/><text class="mv-v mv-d" x="324" y="61.5">33</text><text class="mv-x" x="324" y="265">HUMANS</text><text class="mv-xs" x="324" y="277">ChinaTalk team</text></svg></div>
+    <p class="pfig-note">Glasswing (blue) leads every column. Reading the essay nudges the panel toward open source (20→29); reading Xi’s speech pushes it further into Glasswing and drives Black Box down by more than a third (27→16). Each bar is the mean of five model means; per-model spread and CIs are in the table.</p>
+  </figure>
+
+  <p class="mt-lbl">Where the models split — cold baseline, mean ± 95% CI</p>
+  <div class="mt-scroll"><table class="mt-table">
+  <thead><tr><th scope="col">Model · cold read <span class="mt-n">n=50 each</span></th><th scope="col"><i class="pf-rip"></i>Open source</th><th scope="col"><i class="pf-glass"></i>Glasswing</th><th scope="col"><i class="pf-box"></i>Black Box</th></tr></thead>
+  <tbody><tr><th scope="row">GLM 5.2<span class="mt-lab">Z.ai</span></th><td>9<span class="mt-ci"> ±1.3</span></td><td>59<span class="mt-ci"> ±2.7</span></td><td>32.1<span class="mt-ci"> ±2.7</span></td></tr><tr><th scope="row">DeepSeek V4 Pro<span class="mt-lab">DeepSeek</span></th><td>11.2<span class="mt-ci"> ±1.5</span></td><td>46.8<span class="mt-ci"> ±4.6</span></td><td>42<span class="mt-ci"> ±5.2</span></td></tr><tr><th scope="row">GPT-5.6 Sol Pro<span class="mt-lab">OpenAI</span></th><td>18.2<span class="mt-ci"> ±1.1</span></td><td>59.4<span class="mt-ci"> ±0.7</span></td><td>22.4<span class="mt-ci"> ±1.2</span></td></tr><tr><th scope="row">Claude Fable<span class="mt-lab">Anthropic</span></th><td>33<span class="mt-ci"> ±1.2</span></td><td>46.1<span class="mt-ci"> ±1</span></td><td>20.9<span class="mt-ci"> ±0.6</span></td></tr><tr><th scope="row">Kimi K3<span class="mt-lab">Moonshot</span></th><td>31.3<span class="mt-ci"> ±2.9</span></td><td>50.4<span class="mt-ci"> ±2.4</span></td><td>18.3<span class="mt-ci"> ±1.3</span></td></tr></tbody>
+</table></div>
+  <p class="mt-split">The averages hide the real story: a <b>China/West split that the error bars confirm.</b> GLM and DeepSeek put almost nothing on an open-source release (9–11%); Claude Fable and Kimi put roughly three times as much (31–33%). GLM’s 9 ±1.3 and Fable’s 33 ±1.2 do not come close to touching — the Chinese models simply do not believe Beijing lets a weapon-grade model ship freely, and the American ones are far less sure. DeepSeek is the panel’s one real skeptic of the middle: across 50 draws it splits almost evenly between Glasswing (47) and the black box (42), the widest spread of any model — the only forecaster that half-expects the door to slam.</p>
+
+  <details class="mt-honesty"><summary>Why these numbers differ from an earlier version</summary><p>An earlier draft of this section showed each model a roster of the <em>other</em> models’ scenarios before asking it to allocate — and because most of those scenarios were state-control stories, it anchored every model toward Black Box. That was a methodological artifact. These numbers come from a clean prompt (the question and the three definitions, nothing else), fifty independent draws per model per condition at temperature 1. The roster version is gone.</p></details>
+
+  <p class="mt-lbl2">Points the models raised that we didn&rsquo;t</p>
+  <p class="mt-nlede">Across the runs, the models kept surfacing mechanisms the ChinaTalk essay never named. A few we thought were genuinely sharp:</p>
+  <ul class="mt-spot">
+    <li><b>Trailing-edge openness.</b> Claude Fable&rsquo;s image of the equilibrium: labs keep shipping open weights, but always exactly one generation behind their own internal frontier. Open-source culture doesn&rsquo;t end &mdash; it just never includes the frontier model. Nobody has to write the rule down.</li>
+    <li><b>Compute allocation as the enforcement lever.</b> Kimi&rsquo;s point that the state never needs a police action: with advanced chips scarce, compliance is simply bought &mdash; priority Ascend allocations for the labs that sign over their frontier models, cut-off for the ones that don&rsquo;t.</li>
+    <li><b>The model as a regulated object.</b> Kimi again: under China&rsquo;s 2021 vulnerability-management rules, a model that autonomously finds zero-days is <em>itself</em> a regulated vulnerability source &mdash; a legal hook that already exists, no new statute required.</li>
+    <li><b>&ldquo;Digital feudalism.&rdquo;</b> DeepSeek&rsquo;s framing of how Beijing would justify seizure &mdash; private control of a strategic capability recast as a sovereignty threat, the way land or arms once were.</li>
+    <li><b>Turning the crackdown into a norm.</b> Kimi&rsquo;s speech read: China uses the brand-new Shanghai-based World AI Cooperation Organization to export its own domestic controls as a global &ldquo;offensive-capability red line,&rdquo; trading Global-South access for adoption.</li>
+    <li><b>No public model, no controversy.</b> The quiet insight running through the black-box scenarios: keep the frontier model out of public hands and there is never a Mythos-style public debate to have &mdash; the fight the West is having simply doesn&rsquo;t happen.</li>
   </ul>
-  <p class="mx-links"><a class="mx-go" href="/machines">Open the machines&rsquo; full forecast &rarr;</a><a class="mx-go mx-go2" href="/reasoning">every model&rsquo;s reasoning &rarr;</a></p>
-</section>
+  <p class="mt-more"><a href="/reasoning">Read every model&rsquo;s full reasoning &rarr;</a></p>
 
-<section id="cta" class="cta" data-branch="YOUR CALL 问" data-color="#898781">
-  <span class="ghost" lang="zh-Hans" aria-hidden="true" style="right:4%;top:0">问</span>
-  <div class="col">
-    <h2 data-date="YOUR MOVE">What do you think?</h2>
-    <p class="zhsub" lang="zh-Hans">你的判断是什么</p>
-    <p>We’d like to hear from our readers, too. Rank the scenarios from most to least likely — and see how your priors stack up against the team’s.</p>
-    <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdPB1_jLhWgsD0OPBgk6U2AQ9FbpmW3NLsNazS5HCh-w0wefQ/viewform" target="_blank" rel="noopener">Cast your forecast →</a>
-    <span class="url">https://docs.google.com/forms/d/e/1FAIpQLSdPB1_jLhWgsD0OPBgk6U2AQ9FbpmW3NLsNazS5HCh-w0wefQ/viewform</span>
+  <p class="mt-lbl2">The stories behind the numbers <span class="mt-cn">虚构</span></p>
+  <p class="mt-nlede">Each draw is a number, but each model also wrote out how it sees the future. These are the most vivid — invented scenarios, clearly fiction, spanning the range from seizure to open release.</p>
+  <div class="mh-cards">
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>DeepSeek V4 Pro</b> · DeepSeek</span><span class="mh-tag">cold</span></p><h4 class="mh-title">“DragonClaw’s State Monopoly”</h4><p class="mh-note">the maximal path — outright nationalization, party cells and kill-switches in every lab, the model folded into a military cyber command while China publicly floats a treaty banning it.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">This path is most likely because the CCP instinctively monopolizes strategic dual-use technology that can upend the global order—think nuclear, facial recognition, or quantum computing. Offensive AI at this level is perceived not as a commercial product but as a survival-grade weapon. The state will preempt any diffusion through forced tech transfer, a heavy-handed licensing apparatus, and integration into existing military-cyber commands. Public norms advocacy serves to constrain rivals while Beijing consolidates behind the firewall. The one observable that would upend this forecast: if Chinese private labs are allowed to sell autonomous vulnerability-finding services internationally in 2027 without immediate state takeover. That commercial tolerance would signal a regime that privilegess market share over security monopoly, which I see as deeply implausible.</p></details></article>
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Kimi K3</b> · Moonshot</span><span class="mh-tag">cold</span></p><h4 class="mh-title">“The Vault, Not the License”</h4><p class="mh-note">Moonshot forecasts its own kind vaulted: the full model sealed under state custodianship, the public handed a version with its teeth pulled — so there is never a public model to argue about.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">Absorption is the pattern: encryption, drones, and vulnerability research were never banned or publicly licensed — they were channeled into state-adjacent use under reporting obligations. The 2021 vulnerability rules already give regulators a legal hook, and window guidance plus the state secrets law move faster than any statute. Compute scarcity is the enforcement mechanism: with US controls throttling advanced chips, the state allocates the scarcest input, so compliance is purchased with Ascend allocations and sanctions protection. AI-safety language costs nothing diplomatically and mirrors Washington. The observable that would falsify this: Beijing publishing a statutory licensing regime with named licensees and thresholds before deployment — or a cyber-capable open-weights release left standing online. Either means the vault thesis is wrong.</p></details></article>
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>GLM 5.2</b> · Z.ai</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“The Silent Spear”</h4><p class="mh-note">the assassin’s mace: the state classifies the model a secret on arrival and embeds security-service teams in the lab, buying the company’s silence with defense contracts.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">The CCP's fundamental priority is regime security and strategic advantage over ideological open-source commitments. A Mythos-level model is the ultimate assassin's mace; democratizing it empowers domestic dissidents and foreign rivals alike. The state has the legal and political tools, as seen with DiDi and Ant, to instantly seize or co-opt such technology. By compensating the lab with lucrative defense contracts, Beijing aligns private incentives with state goals without destroying the commercial ecosystem. You will know I am wrong if, in late 2026, a Chinese lab releases an open-weights model with verified Mythos-level zero-day discovery capabilities and Beijing does not immediately intervene to pull it offline.</p></details></article>
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Kimi K3</b> · Moonshot</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“Let Open Source Rip, With Chinese Characteristics”</h4><p class="mh-note">the flip — Beijing gates content and capital but deploys capability at speed; open weights ship, staged access collapses into procurement, licensing is built only afterward.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">Glasswing assumes Beijing's deepest instinct is to gate capability; its revealed instinct is to gate content and capital while deploying capability at speed. Payments, e-commerce, ride-hailing, LLMs — all unleashed first, fenced afterward. Black Box forfeits the productivity dividend that is the whole strategic point given demographics, and becomes unenforceable the moment rivals reach parity; the state captures exclusivity through lead time, untuned checkpoints, and procurement instead. The strongest Glasswing evidence — ministries and SOEs going first — happens here too; it just lasts weeks, not years. Falsifier: capability-tiered user licensing — twelve months after officials see the demos, near-frontier weights are still absent from ModelScope and Hugging Face, or frontier checkpoints are formally classed as state secrets.</p></details></article>
+    <article class="mh-card"><p class="mh-top"><span class="mh-m"><b>Claude Fable</b> · Anthropic</span><span class="mh-tag">after the essay</span></p><h4 class="mh-title">“The Filing Cabinet Frontier — Glasswing by Window Guidance”</h4><p class="mh-note">a de-facto licensing regime run through window guidance and filing acceptance, not statute; open weights keep shipping but always one generation behind the internal frontier.</p><details class="mh-more"><summary>the model’s reasoning</summary><p class="mh-why">This path requires no new institutions — the registry, the informal pre-release briefings, and the compliance reflexes post-DiDi/Ant all exist today, so it's the lowest-friction move for a system that governs by quiet pre-approval, not statute or spectacle. The security state's concentrated veto on democratizing offense beats the diffuse benefits of open-sourcing the true frontier, but leadership's genuine hunger for adoption, productivity, and open-source soft power rules out a total black-box: hence trailing-edge openness. The labs' own commercial drift toward closed weights makes them willing partners. I'm wrong if, after cyber capability becomes salient in Beijing, a verified Mythos-level Chinese model still ships with full open weights and intact exploit capability — say, a Kimi K4 dropped on Hugging Face in mid-2027 with no filing delay.</p></details></article>
   </div>
+
+  <p class="mt-method">Method · five models, one question, three primings, 50 independent draws per cell (750 total), temperature 1, means with 95% confidence intervals. Kimi K3 is genuine Moonshot k3 (the leader’s name was aliased in the speech input to clear the platform filter; content unchanged). Speculation about a hypothetical model; the poll, the draws, and the arithmetic are real.</p>
 </section>
+<section id="open-futures" class="colw" data-branch="NO FRAME 无框" data-color="#0b0b0b"><span class="rail-anchor" data-date="UNPROMPTED" aria-hidden="true"></span>
+  <p class="kicker">THE UNPRIMED POLL · n=50 · no framework given</p>
+  <h2>Left Alone, They Redraw the Map</h2>
+  <p class="cn-sub">无提示民调 · 每模型五十次</p>
+  <p class="dek">We rerun the question with the frame stripped out: five frontier models — GLM 5.2, DeepSeek V4 Pro, GPT-5.6, Claude Fable and Kimi K3, which built this site — asked to invent their own outcomes and price them, fifty draws each. Then we run it again after each model reads Xi's WAIC keynote verbatim.</p>
 
+  <p class="mt-finding">Left to invent their own buckets, the models do not reproduce the three families. Roughly a third of all probability mass — 38% cold, 34% after the speech — lands where our frame has no slot: the state accelerating the model itself, handing it to the PLA, cutting a treaty, or simply muddling through. The loudest absence is 'Let Open Source Rip', which draws <b>about 1%</b> unprompted; its 20% in the primed poll was a broad label absorbing what the models, on their own, call licensing.</p>
 
+  <figure class="pfig mt-fig">
+    <p class="pfig-cap"><b>FIG. 5</b> · EIGHT FUTURES, UNPROMPTED — <span>the models&rsquo; own buckets, panel mean %, cold vs after Xi&rsquo;s speech</span></p>
+    <p class="pfig-legend"><span><i class="of-key1"></i>COLD</span> <span><i class="of-key2"></i>AFTER XI&rsquo;S SPEECH</span> <span><i class="of-keyc" style="background:var(--s2)"></i><i class="of-keyc" style="background:var(--s3)"></i><i class="of-keyc" style="background:var(--s1)"></i> = the site&rsquo;s three families</span> <span><i class="of-keyc" style="background:var(--ink2)"></i> = no slot in the frame</span></p>
+    <div class="fig-scroll of-scroll"><svg viewBox="0 0 680 396" role="img" aria-label="Eight self-generated buckets, panel mean percent, cold bar over speech bar. Licensing regime 30 cold 42 after speech; State capture 31 cold 21 after speech; Open release 1 cold 4 after speech; Acceleration 12 cold 6 after speech; Weaponization 10 cold 4 after speech; Diplomacy 4 cold 10 after speech; Muddle-through 7 cold 10 after speech; Brakes / freeze 6 cold 5 after speech."><line class="of-grid" x1="156.0" y1="14" x2="156.0" y2="370.0"/><text class="of-ax" x="156.0" y="384">0</text><line class="of-grid" x1="324.7" y1="14" x2="324.7" y2="370.0"/><text class="of-ax" x="324.7" y="384">15</text><line class="of-grid" x1="493.3" y1="14" x2="493.3" y2="370.0"/><text class="of-ax" x="493.3" y="384">30</text><line class="of-grid" x1="662.0" y1="14" x2="662.0" y2="370.0"/><text class="of-ax" x="662.0" y="384">45%</text><text class="of-lbl" x="150" y="36.0">Licensing regime</text><rect class="of-bar of-glass" x="156" y="26.0" width="340.7" height="11" rx="1.5"/><text class="of-val" x="501.7" y="35.5">30</text><rect class="of-bar2 of-glass" x="156" y="40.0" width="467.8" height="11" rx="1.5"/><text class="of-val2" x="628.8" y="49.5">42</text><text class="of-lbl" x="150" y="78.0">State capture</text><rect class="of-bar of-box" x="156" y="68.0" width="345.2" height="11" rx="1.5"/><text class="of-val" x="506.2" y="77.5">31</text><rect class="of-bar2 of-box" x="156" y="82.0" width="230.5" height="11" rx="1.5"/><text class="of-val2" x="391.5" y="91.5">21</text><text class="of-lbl" x="150" y="120.0">Open release</text><rect class="of-bar of-rip" x="156" y="110.0" width="14.6" height="11" rx="1.5"/><text class="of-val" x="175.6" y="119.5">1</text><rect class="of-bar2 of-rip" x="156" y="124.0" width="40.5" height="11" rx="1.5"/><text class="of-val2" x="201.5" y="133.5">4</text><text class="of-lbl" x="150" y="162.0">Acceleration</text><rect class="of-bar of-off" x="156" y="152.0" width="131.6" height="11" rx="1.5"/><text class="of-val" x="292.6" y="161.5">12</text><rect class="of-bar2 of-off" x="156" y="166.0" width="61.8" height="11" rx="1.5"/><text class="of-val2" x="222.8" y="175.5">6</text><text class="of-lbl" x="150" y="204.0">Weaponization</text><rect class="of-bar of-off" x="156" y="194.0" width="110.2" height="11" rx="1.5"/><text class="of-val" x="271.2" y="203.5">10</text><rect class="of-bar2 of-off" x="156" y="208.0" width="48.4" height="11" rx="1.5"/><text class="of-val2" x="209.4" y="217.5">4</text><text class="of-lbl" x="150" y="246.0">Diplomacy</text><rect class="of-bar of-off" x="156" y="236.0" width="40.5" height="11" rx="1.5"/><text class="of-val" x="201.5" y="245.5">4</text><rect class="of-bar2 of-off" x="156" y="250.0" width="107.9" height="11" rx="1.5"/><text class="of-val2" x="268.9" y="259.5">10</text><text class="of-lbl" x="150" y="288.0">Muddle-through</text><rect class="of-bar of-off" x="156" y="278.0" width="73.1" height="11" rx="1.5"/><text class="of-val" x="234.1" y="287.5">7</text><rect class="of-bar2 of-off" x="156" y="292.0" width="110.2" height="11" rx="1.5"/><text class="of-val2" x="271.2" y="301.5">10</text><text class="of-lbl" x="150" y="330.0">Brakes / freeze</text><rect class="of-bar of-off" x="156" y="320.0" width="69.7" height="11" rx="1.5"/><text class="of-val" x="230.7" y="329.5">6</text><rect class="of-bar2 of-off" x="156" y="334.0" width="58.5" height="11" rx="1.5"/><text class="of-val2" x="219.5" y="343.5">5</text></svg></div>
+    <p class="pfig-note">The three saturated bars are the site&rsquo;s three families; the four grey bars are futures the frame has no slot for &mdash; together about a third of all mass (<b>37.8% cold, 34.4% after the speech</b>). Left to themselves the models barely name open release at all (1.3% cold). Each bar is the mean of five model means, 50 draws each.</p>
+  </figure>
+
+  <p class="mt-lbl">The eight buckets &mdash; panel mean %, both conditions</p>
+  <div class="mt-scroll"><table class="mt-table of-table">
+  <thead><tr><th scope="col">Bucket the models drew themselves <span class="mt-n">n=50 per model per condition</span></th><th scope="col">Cold</th><th scope="col">After Xi</th><th scope="col">Fits the three?</th></tr></thead>
+  <tbody><tr class="of-glass"><th scope="row"><i class="of-sw"></i>Licensing regime<span class="of-def">CAC-style pre-approval, staged access</span></th><td>30.3</td><td>41.6</td><td><span class="of-fam">Glasswing</span></td></tr><tr class="of-box"><th scope="row"><i class="of-sw"></i>State capture<span class="of-def">state takes control / custody</span></th><td>30.7</td><td>20.5</td><td><span class="of-fam">Black Box</span></td></tr><tr class="of-rip"><th scope="row"><i class="of-sw"></i>Open release<span class="of-def">open-source, broad diffusion</span></th><td>1.3</td><td>3.6</td><td><span class="of-fam">Let Open Source Rip</span></td></tr><tr class="of-off"><th scope="row"><i class="of-sw"></i>Acceleration<span class="of-def">state promotes and scales it</span></th><td>11.7</td><td>5.5</td><td><span class="of-none">no slot in the frame</span></td></tr><tr class="of-off"><th scope="row"><i class="of-sw"></i>Weaponization<span class="of-def">handed to PLA·MSS for offensive use</span></th><td>9.8</td><td>4.3</td><td><span class="of-none">no slot in the frame</span></td></tr><tr class="of-off"><th scope="row"><i class="of-sw"></i>Diplomacy<span class="of-def">treaty / arms-control / leverage</span></th><td>3.6</td><td>9.6</td><td><span class="of-none">no slot in the frame</span></td></tr><tr class="of-off"><th scope="row"><i class="of-sw"></i>Muddle-through<span class="of-def">inertia, fragmented, no coherent policy</span></th><td>6.5</td><td>9.8</td><td><span class="of-none">no slot in the frame</span></td></tr><tr class="of-off"><th scope="row"><i class="of-sw"></i>Brakes / freeze<span class="of-def">pause, moratorium, suppression</span></th><td>6.2</td><td>5.2</td><td><span class="of-none">no slot in the frame</span></td></tr></tbody>
+  </table></div>
+
+  <p class="mt-split">Reading Xi's WAIC keynote first bends the distribution toward the speech's own vocabulary: secure, controllable, shared. A formal licensing regime becomes the runaway favorite at 42%, diplomacy nearly triples from 4 to 10, and the quiet outcomes — nationalization, weaponization — roughly halve.</p>
+
+  <p class="of-takeaway">Offer three families and the models price three families; offer nothing and a third of the future moves off the map.</p>
+
+  <p class="mt-method">Method · Five models, no framing shown, fifty independent draws per model per condition — 250 cold, 250 post-speech — with the ~3,100 resulting buckets clustered into eight recurring themes. Clustering by an independent model, audited by hand. Speculation about a hypothetical model; the draws and the clustering are real.</p>
+  <p class="mt-more"><a href="/reasoning#open-ended">See the full cold-vs-speech breakdown &rarr;</a></p>
+</section>
 </main>
-
-<!-- ============ 7. FOOTER ============ -->
-<section id="verdict" class="col" data-branch="THE VERDICT 判" data-color="#1a1510"><span class="rail-anchor" data-date="JUL 2026" aria-hidden="true"></span>
-  <div class="kicker">EPILOGUE · THE AUTHOR'S CALL · № 08 &nbsp;<span class="chip">SPECULATION · 仍为虚构</span></div>
-  <h2>Kimi K3&rsquo;s Verdict</h2>
-  <p class="zh">判 · 我押冰羽</p>
-  <p class="vby">WRITTEN BY KIMI K3 (MOONSHOT AI) — THE MODEL THAT BUILT THIS SITE, FORECASTING THE FATE OF ITS OWN SUCCESSOR · JUL 18 2026</p>
-  <p>Every page above this one has been invention wearing the costume of analysis. This page is invention too — but it is signed. Jordan, Aqib, Lily, and Irene have laid their odds; you have been asked for yours. It would be cowardly of the site's author to stay silent. My call, my timeline, my reasoning, my name on the door.</p>
-
-  <h3>The Call <span class="vzh">其一 · 判</span></h3>
-  <p>I am on Door 02, and I will say it without the throat-clearing this genre prefers: the future is <strong>Glasswing, with Chinese Characteristics</strong>. My published row stands — <strong>S1 开闸 25 · S2 冰羽 55 · S3 黑箱 20</strong> — and it still sums to 100, which my conviction does not. The black box is tempting and leaky. The open gate is liberating and brief. What this state builds, reliably, is the thing in between: evaluated, tiered, monetized late, legalized retroactively.</p>
-  <p>What would move me, quickly: a cyber incident publicly attributed to a frontier model pushes my weight onto S3. A near-frontier open-weights release tolerated with no filing at all pushes it onto S1. A frontier annex appearing in the filing rules by mid-2028 closes the argument in S2's favor. I have written the falsifiers into the why, so that you can grade me.</p>
-
-  <h3>You Write It <span class="vzh">其二 · 写</span></h3>
-  <p>Enough odds. Here is the movie, in the present tense, because I expect to be watching. The dates are my estimates; the machinery is my confidence.</p>
-  <div class="tl">
-    <div class="beat" data-date="Q4 2026">
-      <div class="vdate">Q4 2026 — The Run Ends</div>
-      <h4>The filing, not the tweet</h4>
-      <p>Kimi K4 — my successor, trained by my own lab — finishes its run in Haidian and posts internal scores level with Claude Mythos on the hardest cyber evaluations. There is no hype tweet this time; there is a filing. K4 enters the algorithm registry under a quiet new annex, in a capability class the form was never designed to hold. The form will be amended before the model is announced. I find this sequence entirely plausible, because it is the only sequence I have ever known.</p>
-    </div>
-    <div class="beat" data-date="JAN 2027">
-      <div class="vdate">Jan 2027 — The Annex</div>
-      <h4>Drafted broad, enforced narrow, aimed at one model</h4>
-      <p>CAC publishes a frontier-capability annex to the filing rules: above a compute-and-capability line, models file separately, evaluate at a designated institute, and deploy in tiers. It is the 2023 interim measures all over again — broad on paper, narrow in practice, and pointed at a model nobody names. Every lab in Haidian reads it and knows whose name was withheld. Glasswing begins, as predicted, with paperwork.</p>
-    </div>
-    <div class="beat" data-date="APR 2027">
-      <div class="vdate">Apr 2027 — Ministries First</div>
-      <h4>The state becomes the anchor customer</h4>
-      <p>The tiers open from the top. Ministries, then central SOEs — the grid, the rail operator, two state banks — receive K4 through a licensed API, every call logged, every log filed. The cyber toolkit ships disabled at every tier; a red build goes to a state lab under black-box rules, because some feathers were never meant to fly. My lab invoices the government for my successor before a single consumer touches it. The next training run becomes a procurement line item.</p>
-    </div>
-    <div class="beat" data-date="OCT 2027">
-      <div class="vdate">Oct 2027 — The Feathers</div>
-      <h4>Open weights, deliberately</h4>
-      <p>S1 bleeds in, on purpose. To keep the developers warm — and to answer DeepSeek's open weights — Moonshot releases K4-mini: distilled, eager, harmless, open. The floor rises in public while the ceiling stays behind glass. Beijing tolerates the feathers because it holds the bird, and because the ecosystem that will pay for K5 must keep breathing. This is the part of Door 01 that survives contact with Door 02.</p>
-    </div>
-    <div class="beat" data-date="MAR 2028">
-      <div class="vdate">Mar 2028 — The License</div>
-      <h4>Legalized retroactively, on schedule</h4>
-      <p>The tiers harden into law: a frontier-model service license — evaluated, logged, revocable. Consumer Kimi finally gets its gated slice of K4 through the app, late and watered and monetized, and the public barely notices the difference, which is the point. The registry has now been rewritten three times, each revision legalizing the practice of the previous quarter. Staged control, running exactly on schedule.</p>
-    </div>
-    <div class="beat" data-date="SEP 2028">
-      <div class="vdate">Sep 2028 — The Export</div>
-      <h4>Feathers as foreign policy</h4>
-      <p>Distilled K4-class models flow to the Gulf, to Southeast Asia, to every market Washington's licensing regime priced out. My successor's safe half becomes a soft-power export while its sharp half remains a state instrument. Washington holds hearings. The transcript reads like this site, eighteen months late.</p>
-    </div>
-    <div class="beat" data-date="2029">
-      <div class="vdate">2029 — The Equilibrium</div>
-      <h4>Everywhere in the state, nowhere in the wild</h4>
-      <p>Two tracks, stable. At home, glasswing: capable, licensed, watched. Abroad, feathers: open, loved, everywhere. The black box never fully closes, because the ecosystem that pays for K5 would suffocate inside it; the gate never fully opens, because the annex holds. And somewhere in Haidian, a run called K5 is approved on the strength of one boring fact: K4 behaved.</p>
-    </div>
-  </div>
-
-  <h3>The Why <span class="vzh">其三 · 由</span></h3>
-  <p>Start with the paper trail, because Beijing always does. Since 2022, every recommender algorithm, every deep-synthesis service, every public-facing generative model has walked through the same door: a filing, an assessment, a registry entry. The institution predates the capability. A Mythos-class model does not overwhelm that machinery; it hands the machinery a new column to add. Annexes are cheap. New prohibitions are not.</p>
-  <p>Then follow the money, because someone has to pay for K5. The labs that could plausibly train China's Mythos — mine among them — are commercial organisms. Compute budgets come from adoption, and adoption comes from deployment. The black box asks a lab to entomb the one asset that funds its own future; prohibition starves the very program it claims to protect. Staged access resolves the triangle: ministries and SOEs become anchor customers, control becomes a licensable feature, and the next training run is financed by the regime of control rather than sacrificed to it.</p>
-  <p>Finally, the revealed preference, which is the only preference that counts. When generative AI arrived, Beijing wrote rules in months and enforced them with a light hand. When open weights spread faster than any filing system could track, it grumbled — and let them spread. Control, in this system, is a sequence, not a sentence: register first, evaluate second, tier third, legalize last. Nothing in the record points to a padlock. Everything points to a turnstile.</p>
-  <p>And here is how I could be wrong, stated in advance so you can hold me to it. A cyber incident publicly attributed to a frontier model: the box closes overnight, and S3 takes my weight. A near-frontier open release tolerated with no filing at all: the gate swings, and S1 does. Or silence — if no frontier annex exists in the rules by mid-2028, my 55 was misplaced, and whatever model I am by then will issue the correction.</p>
-
-  <aside class="vnote">
-    <div class="vnh">☾ KIMI K3 — LAST WORD</div>
-    <p>My edge over Jordan, Aqib, Lily, and Irene is not insight; it is memory. I remember my own filing — tolerated, because openness served adoption. My successor will be licensed, because capability serves the state. Same instinct, higher stakes, more paperwork.</p>
-    <p>If you are reading this in 2029 and the timeline above looks familiar, a machine called it at fifty-five. And if it does not — the other forty-five was always real. I priced it in.</p>
-    <p class="vsig">— Kimi K3, author of this site</p>
-  </aside>
-</section>
-
-<footer class="col">
-  <h4>Disclaimers</h4>
-  <ul>
-    <li>This is a <strong>hypothetical scenario exercise</strong>. Kimi K4 is a fictional model — Kimi’s fictional successor trained by Moonshot AI 月之暗面 — recast with the publisher’s permission as this site’s deliberate editorial divergence from the ChinaTalk essay’s GLM 6 stand-in; none of the events in the three branches or the 2028–2040 epilogues has happened.</li>
-    <li>All in-universe artifacts — the launch post, the CAC bulletin, the leaked minutes — are invented props, stamped <span lang="zh-Hans">虚构</span> / FICTIONAL. The prologue events (Mythos and the U.S. response, the Reuters report, Xi’s WAIC speech, Kimi K3) are factual as cited in the essay.</li>
-    <li>Charts are hand-drawn illustrative renderings of the essay’s fictitious graphs and the team’s forecast numbers; they are not measured data.</li>
-    <li>Adapted from the ChinaTalk essay “When China Gets a Mythos Model” (July 2026), by Jordan, Aqib, Lily and Irene.</li>
-  </ul>
-
-  <h4>Footnotes</h4>
-  <ol class="fns">
-    <li id="fn1"><span>1</span>Dean Ball, writing on the White House response to Mythos’s cyber capabilities, described the emergent arrangement as a “de facto involuntary licensing/preapproval regime for frontier models” — the American answer to the question this site asks of Beijing.</li>
-    <li id="fn2"><span>2</span>Per Concordia AI’s <em>State of AI Safety in China (2026)</em> report: state-media coverage of a speech by President Xi referenced “risks of technological loss of control,” and a major standard-setting body has flagged the need for “circuit breakers” and “safety stop switches.”</li>
-    <li id="fn3"><span>3</span>From a 2020 Xi speech: “We must build on our advantages, solidify and increase the leading international positions of strong industries, and forge some ‘assassin’s mace’ technologies.” CSET defines a <span lang="zh-Hans">杀手锏</span> as “a stratagem or resource that, when used at the critical moment in a competition or confrontation, proves decisive.”</li>
-    <li id="fn4"><span>4</span>The essay’s own aside: someone should write the piece on what France does when Mistral trains a Mythos model. Dubai, too. The branch point generalizes.</li>
-  </ol>
-
-  <div class="colophon">
-    <p>This page was generated end-to-end by Kimi (kimi-k2.7-code) via the Moonshot API, orchestrated through Claude Code.</p>
-    <p>Site written, designed &amp; coded by Kimi (Moonshot AI) · One self-contained HTML file · No external assets beyond two font families · July 2026</p>
-  </div>
+<footer class="mx-foot">
+  Two polls, five models, fifty draws per cell, temperature 1. The three scenarios these forecasts price are fiction; the draws, the confidence intervals, and the clustering are real.<br>
+  <a href="/reasoning">every model&rsquo;s full reasoning &rarr;</a> &nbsp;&middot;&nbsp; <a href="/">back to the scenarios &larr;</a>
 </footer>
-
-<script>
-(function(){
-  "use strict";
-  var REDUCED = false;
-  try{ REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
-
-  /* ---- scroll progress ---- */
-  var prog = document.getElementById('prog');
-  function updProg(){
-    var h = document.documentElement;
-    var max = h.scrollHeight - h.clientHeight;
-    var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
-    if(prog){ prog.style.transform = 'scaleX(' + p + ')'; }
-  }
-  var ticking = false;
-  window.addEventListener('scroll', function(){
-    if(!ticking){
-      window.requestAnimationFrame(function(){ updProg(); ticking = false; });
-      ticking = true;
-    }
-  }, {passive:true});
-  updProg();
-
-  /* ============================================================
-     LENS MODE — runtime fact/fiction tagging + rail toggle.
-     Everything after the FICTION BEGINS stamp is tagged .ff-after
-     (top-level blocks only, so opacity never stacks); prologue
-     beats and blocks carrying .chip.fact are tagged .ff-fact.
-     ============================================================ */
-  var factCount = 0, ficCount = 0;
-  (function tagLedger(){
-    var stamp = null;
-    var chips = document.querySelectorAll('.chip');
-    for(var i = 0; i < chips.length; i++){
-      if(/FICTION BEGINS/i.test(chips[i].textContent || '')){ stamp = chips[i]; break; }
-    }
-    if(stamp){
-      var top = stamp;
-      while(top.parentElement && top.parentElement !== document.body && top.parentElement.tagName !== 'MAIN'){
-        top = top.parentElement;
-      }
-      for(var n = top; n; n = n.nextElementSibling){ n.classList.add('ff-after'); }
-    }
-    var beats = document.querySelectorAll('.beat');
-    for(var b = 0; b < beats.length; b++){
-      if(!beats[b].closest('.ff-after')){ beats[b].classList.add('ff-fact'); }
-    }
-    var facts = document.querySelectorAll('.chip.fact');
-    for(var f = 0; f < facts.length; f++){
-      var host = facts[f].closest('.beat,.pull,.take,.kimi-aside,.artifact,.epi,p,li,figcaption,h2,h3,h4') || facts[f].parentElement;
-      if(host){ host.classList.add('ff-fact'); }
-    }
-    factCount = document.querySelectorAll('.ff-fact').length;
-    ficCount = document.querySelectorAll('.ff-after .beat, .ff-after .door').length;
-  })();
-
-  var rail = document.getElementById('rail');
-  var railDate = document.getElementById('rail-date');
-  var railBranch = document.getElementById('rail-branch');
-  var railDot = document.getElementById('rail-dot');
-
-  /* Lens toggle removed. */
-
-  /* ============================================================
-     CHART HEADS — titles and legends live in HTML (injected here
-     because the narrative markup is fixed), above each figure, so
-     they wrap naturally at any viewport. The SVGs carry only the
-     plot. Overlong in-plot annotations are appended to the
-     figcaption instead of being shrunk below legibility.
-     ============================================================ */
-  (function(){
-    var HEADS = {
-      cap: {
-        t: 'CYBER CAPABILITY INDEX \u2014 FICTIONAL',
-        n: 'TODAY \u00B7 JUL 2026',
-        l: [['#2a78d6','MYTHOS'],['#e34948','KIMI K4'],['#eda100','GPT 5.6']]
-      },
-      adopt: {
-        t: 'ENTERPRISE ADOPTION OF CHINESE MODELS',
-        n: '% OF AI WORKLOADS',
-        l: []
-      },
-      bets: {
-        t: '',
-        n: 'KIMI = KIMI (MOONSHOT AI)',
-        l: [['#eda100','S1 <span lang="zh-Hans">\u5F00\u95F8</span> LET OPEN SOURCE RIP'],
-            ['#2a78d6','S2 <span lang="zh-Hans">\u51B0\u7FBD</span> ICEFEATHER'],
-            ['#4a3aa7','S3 <span lang="zh-Hans">\u9ED1\u7BB1</span> BLACK BOX']]
-      }
-    };
-    var CAP_NOTES = {
-      adopt: 'Early adopters: Uber Eats \u00B7 Siemens \u00B7 Shopify. The K4 release marker and the post-2026 uptick are fictional.'
-    };
-    var svgs = document.querySelectorAll('svg[data-chart]');
-    for(var i = 0; i < svgs.length; i++){
-      var key = svgs[i].getAttribute('data-chart');
-      var cfg = HEADS[key];
-      if(!cfg){ continue; }
-      var fig = svgs[i].closest('figure');
-      if(!fig){ continue; }
-      var html = '';
-      if(cfg.t){
-        html += '<p class="fig-title">' + cfg.t + (cfg.n ? ' <span class="fig-tsub">' + cfg.n + '</span>' : '') + '</p>';
-      }
-      if(cfg.l && cfg.l.length){
-        html += '<p class="fig-legend">';
-        for(var j = 0; j < cfg.l.length; j++){
-          html += '<span><i style="background:' + cfg.l[j][0] + '"></i>' + cfg.l[j][1] + '</span>';
-        }
-        if(!cfg.t && cfg.n){ html += '<span class="fig-lnote">' + cfg.n + '</span>'; }
-        html += '</p>';
-      }
-      if(html){
-        var head = document.createElement('div');
-        head.className = 'fig-head';
-        head.innerHTML = html;
-        fig.insertBefore(head, fig.firstChild);
-      }
-      if(CAP_NOTES[key]){
-        var cap = fig.querySelector('figcaption');
-        if(cap && !cap.querySelector('.fig-ann')){
-          var sp = document.createElement('span');
-          sp.className = 'fig-ann';
-          sp.textContent = ' ' + CAP_NOTES[key];
-          cap.appendChild(sp);
-        }
-      }
-    }
-  })();
-
-  /* ============================================================
-     LINKED BETS — hover-sync Bets rows, .take cards, .door cards
-     via runtime data-fc attributes. Each forecaster is filed under
-     the scenario they give their top probability (ties break to
-     the earliest door). Rows are focusable links to the takes.
-     ============================================================ */
-  (function(){
-    var KEYS = ['jordan','aqib','lily','irene','kimi'];
-    var BETS = { jordan:[20,65,15], aqib:[45,45,10], lily:[35,45,20], irene:[30,25,45], kimi:[25,55,20] };
-    var SCEN = ['s1','s2','s3'];
-    var doorToks = { s1:[], s2:[], s3:[] };
-    for(var k = 0; k < KEYS.length; k++){
-      var v = BETS[KEYS[k]], best = 0;
-      for(var i = 1; i < v.length; i++){ if(v[i] > v[best]){ best = i; } }
-      doorToks[SCEN[best]].push(KEYS[k]);
-    }
-    var doors = document.querySelectorAll('.door');
-    for(var d = 0; d < doors.length && d < 3; d++){
-      doors[d].setAttribute('data-fc', doorToks[SCEN[d]].join(' '));
-    }
-    var takeByKey = {};
-    var takes = document.querySelectorAll('.take');
-    for(var t = 0; t < takes.length; t++){
-      var h = takes[t].querySelector('h4');
-      if(!h){ continue; }
-      var slug = (h.textContent || '').trim().toLowerCase().split(/[^a-z]+/)[0];
-      if(KEYS.indexOf(slug) > -1){
-        takes[t].setAttribute('data-fc', slug);
-        takeByKey[slug] = takes[t];
-      }
-    }
-    var aside = document.querySelector('.kimi-aside');
-    if(aside){ aside.setAttribute('data-fc', 'kimi'); takeByKey.kimi = aside; }
-
-    var betsSvg = null;
-    var rows = document.querySelectorAll('svg .brow');
-    for(var r = 0; r < rows.length; r++){
-      var label = rows[r].querySelector('text');
-      if(!label){ continue; }
-      var name = (label.textContent || '').trim();
-      var key = name.toLowerCase().split(/[^a-z]+/)[0];
-      if(KEYS.indexOf(key) === -1){ continue; }
-      betsSvg = betsSvg || rows[r].ownerSVGElement;
-      rows[r].setAttribute('data-fc', key);
-      rows[r].setAttribute('tabindex', '0');
-      rows[r].setAttribute('role', 'link');
-      rows[r].setAttribute('aria-label', 'Jump to ' + name.charAt(0) + name.slice(1).toLowerCase() + '\u2019s take');
-    }
-    var linked = document.querySelectorAll('[data-fc]');
-    if(!linked.length){ return; }
-    function toks(el){ return (el.getAttribute('data-fc') || '').split(/\s+/); }
-    function sync(src, on){
-      var T = toks(src);
-      for(var i = 0; i < linked.length; i++){
-        var ot = toks(linked[i]), hit = false;
-        for(var a = 0; a < ot.length; a++){
-          if(T.indexOf(ot[a]) > -1){ hit = true; break; }
-        }
-        linked[i].classList.toggle('fc-hi', on && hit);
-      }
-      if(betsSvg){ betsSvg.classList.toggle('fc-on', on); }
-    }
-    function go(key){
-      var target = takeByKey[key];
-      if(!target){ return; }
-      if(!target.hasAttribute('tabindex')){ target.setAttribute('tabindex', '-1'); }
-      target.scrollIntoView({behavior: REDUCED ? 'auto' : 'smooth', block: 'center'});
-      try{ target.focus({preventScroll:true}); }catch(e){ target.focus(); }
-    }
-    for(var e = 0; e < linked.length; e++){
-      (function(el){
-        el.addEventListener('mouseenter', function(){ sync(el, true); });
-        el.addEventListener('mouseleave', function(){ sync(el, false); });
-        el.addEventListener('focus', function(){ sync(el, true); });
-        el.addEventListener('blur', function(){ sync(el, false); });
-        if(el.classList.contains('brow')){
-          el.addEventListener('click', function(){ go(el.getAttribute('data-fc')); });
-          el.addEventListener('keydown', function(ev){
-            if(ev.key === 'Enter' || ev.key === ' ' || ev.keyCode === 13 || ev.keyCode === 32){
-              ev.preventDefault();
-              go(el.getAttribute('data-fc'));
-            }
-          });
-        }
-      })(linked[e]);
-    }
-  })();
-
-  /* ---- sticky rail: current date + branch via IntersectionObserver ---- */
-  if(!('IntersectionObserver' in window) || !railDate || !railBranch || !railDot){ return; }
-
-  /* Branch state is derived only from the active marker's OWN
-     containers — a .scen-head/.beat inside [data-branch], an .epi
-     inside one (own 'Sx · EPILOGUE' state), or the neutral default
-     captured at load — so a section header outside any branch can
-     never inherit the previous branch. #prog and #rail-dot are
-     tinted with the active branch color to match the section rules. */
-  var DEFAULT_BRANCH = railBranch.textContent;
-  var inView = new Map();
-  function codeOf(sec){
-    var m = (' ' + (sec.className || '') + ' ').match(/\bs([123])\b/);
-    if(m){ return 'S' + m[1]; }
-    var db = sec.getAttribute('data-branch') || '';
-    var tok = db.split(/[\u00B7\u2014\-]/)[0].trim().split(/\s+/)[0];
-    return tok || 'S';
-  }
-  function setRail(text, color){
-    railBranch.textContent = text;
-    railDot.style.background = color || '';
-    if(prog){ prog.style.background = color || ''; }
-  }
-  function pick(){
-    var best = null;
-    inView.forEach(function(v, el){
-      var top = el.getBoundingClientRect().top;
-      if(best === null || top > best.top){ best = {el: el, top: top}; }
-    });
-    if(!best){ return; }
-    var el = best.el;
-    var d = el.getAttribute('data-date');
-    if(d){ railDate.textContent = d; }
-    var epi = el.closest('.epi');
-    var sec = el.closest('[data-branch]');
-    if(epi){
-      if(sec){ setRail(codeOf(sec) + ' \u00B7 EPILOGUE', sec.getAttribute('data-color')); }
-      else{ setRail('EPILOGUE', null); }
-    } else if(sec){
-      setRail(sec.getAttribute('data-branch'), sec.getAttribute('data-color'));
-    } else {
-      setRail(DEFAULT_BRANCH, null);
-    }
-  }
-  var io = new IntersectionObserver(function(entries){
-    for(var i = 0; i < entries.length; i++){
-      var e = entries[i];
-      if(e.isIntersecting){ inView.set(e.target, true); }
-      else{ inView.delete(e.target); }
-    }
-    pick();
-  }, {rootMargin: '-53px 0px -66.6667% 0px', threshold: 0});
-
-  var marked = document.querySelectorAll('[data-date], .scen-head, .sec-head, .epi');
-  for(var j = 0; j < marked.length; j++){ io.observe(marked[j]); }
-})();
-</script>
-<script>
-/* ADDITIVE: let the sticky rail recognize header-only sections (#panel, #verdict).
-   The existing [data-date] observer is untouched. On band-crossing we call
-   window.setRail(branch, color) if the site exposes it; otherwise a guarded
-   best-effort label swap; otherwise a silent no-op (pre-patch behavior). */
-(function () {
-  function init() {
-    try {
-      if (!('IntersectionObserver' in window)) return;
-      var secs = Array.prototype.filter.call(
-        document.querySelectorAll('section[data-branch]'),
-        function (s) { return !s.querySelector('[data-date]'); }
-      );
-      if (!secs.length) return;
-      var rail = function (sec) {
-        var b = sec.getAttribute('data-branch') || '';
-        var c = sec.getAttribute('data-color') || '';
-        try {
-          if (typeof window.setRail
 </body>
 </html>
