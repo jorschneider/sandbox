@@ -579,6 +579,18 @@ html.cm-locked{overflow:hidden}
 .cmg-s a{color:var(--s2,#2a78d6);text-decoration:none}
 .cmg-s a:hover{text-decoration:underline}
 /* GATE-CSS-END */
+
+/* PFIG-FIX-START — unscoped copies of the old #panel-scoped figure styles */
+.pfig{margin:28px 0 8px}
+.pfig svg{display:block;width:100%;height:auto}
+.pfig-cap{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:0 0 8px}
+.pfig-cap b{color:var(--ink)}
+.pfig-cap span{color:var(--muted);text-transform:none;letter-spacing:.03em;font-style:italic}
+.pfig-legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin:0 0 10px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);line-height:1.7}
+.pfig-legend span{display:inline-flex;align-items:center;white-space:nowrap}
+.pfig-legend i{width:16px;height:10px;margin-right:7px;flex:none;display:inline-block;border-radius:2px}
+.pfig-note{font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--muted);margin:8px 0 0;line-height:1.6}
+/* PFIG-FIX-END */
 </style>
 </head>
 <body class="mx">
@@ -629,11 +641,76 @@ html.cm-locked{overflow:hidden}
     <p class="pfig-note">Glasswing (blue) leads every column. Reading the essay nudges the panel toward open source (20→29); reading Xi’s speech pushes it further into Glasswing and drives Black Box down by more than a third (27→16). Each bar is the mean of five model means; per-model spread and CIs are in the table.</p>
   </figure>
 
-  <p class="mt-lbl">Where the models split — cold baseline, mean ± 95% CI</p>
-  <div class="mt-scroll"><table class="mt-table">
-  <thead><tr><th scope="col">Model · cold read <span class="mt-n">n=50 each</span></th><th scope="col"><i class="pf-rip"></i>Open source</th><th scope="col"><i class="pf-glass"></i>Glasswing</th><th scope="col"><i class="pf-box"></i>Black Box</th></tr></thead>
-  <tbody><tr><th scope="row">GLM 5.2<span class="mt-lab">Z.ai</span></th><td>9<span class="mt-ci"> ±1.3</span></td><td>59<span class="mt-ci"> ±2.7</span></td><td>32.1<span class="mt-ci"> ±2.7</span></td></tr><tr><th scope="row">DeepSeek V4 Pro<span class="mt-lab">DeepSeek</span></th><td>11.2<span class="mt-ci"> ±1.5</span></td><td>46.8<span class="mt-ci"> ±4.6</span></td><td>42<span class="mt-ci"> ±5.2</span></td></tr><tr><th scope="row">GPT-5.6 Sol Pro<span class="mt-lab">OpenAI</span></th><td>18.2<span class="mt-ci"> ±1.1</span></td><td>59.4<span class="mt-ci"> ±0.7</span></td><td>22.4<span class="mt-ci"> ±1.2</span></td></tr><tr><th scope="row">Claude Fable<span class="mt-lab">Anthropic</span></th><td>33<span class="mt-ci"> ±1.2</span></td><td>46.1<span class="mt-ci"> ±1</span></td><td>20.9<span class="mt-ci"> ±0.6</span></td></tr><tr><th scope="row">Kimi K3<span class="mt-lab">Moonshot</span></th><td>31.3<span class="mt-ci"> ±2.9</span></td><td>50.4<span class="mt-ci"> ±2.4</span></td><td>18.3<span class="mt-ci"> ±1.3</span></td></tr></tbody>
-</table></div>
+  <!-- COLD-BARS-START -->
+      <figure class="pfig" role="img" aria-label="Horizontal stacked probability bars, cold read, 50 draws per model. GLM 5.2 9, 59, 32. DEEPSEEK 11, 47, 42. GPT-5.6 18, 59, 22. FABLE 33, 46, 21. KIMI 31, 50, 18. Each row sums to 100 across open source, Glasswing and black box." style="margin:28px 0 8px">
+        <p class="pfig-cap"><b>FIG. 4b</b> &middot; THE COLD READ, MODEL BY MODEL &mdash; each model&rsquo;s mean split across 50 draws, asked with no prompt</p>
+        <p class="pfig-legend"><span><i style="background:#eda100"></i>OPEN SOURCE</span> <span><i style="background:#2a78d6"></i>GLASSWING</span> <span><i style="background:#4a3aa7"></i>BLACK BOX</span></p>
+        <div class="fig-frame"><div class="fig-scroll">
+        <svg viewBox="0 0 520 312" data-chart="coldbars" xmlns="http://www.w3.org/2000/svg">
+          <desc>Stacked bars of each model's cold-read probability split.</desc>
+          <g font-family="IBM Plex Mono,ui-monospace,monospace">
+          <line x1="100" y1="14" x2="100" y2="282" stroke="#e1e0d9" stroke-width="1"/>
+          <text x="100" y="300" text-anchor="middle" font-size="14" fill="#898781">0</text>
+          <line x1="200" y1="14" x2="200" y2="282" stroke="#e1e0d9" stroke-width="1"/>
+          <text x="200" y="300" text-anchor="middle" font-size="14" fill="#898781">25</text>
+          <line x1="300" y1="14" x2="300" y2="282" stroke="#e1e0d9" stroke-width="1"/>
+          <text x="300" y="300" text-anchor="middle" font-size="14" fill="#898781">50</text>
+          <line x1="400" y1="14" x2="400" y2="282" stroke="#e1e0d9" stroke-width="1"/>
+          <text x="400" y="300" text-anchor="middle" font-size="14" fill="#898781">75</text>
+          <line x1="500" y1="14" x2="500" y2="282" stroke="#e1e0d9" stroke-width="1"/>
+          <text x="500" y="300" text-anchor="middle" font-size="14" fill="#898781">100%</text>
+          <g class="brow" font-size="18">
+            <text x="92" y="41" text-anchor="end" fill="#0b0b0b">GLM 5.2</text>
+            <rect x="100" y="20" width="36.0" height="30" fill="#eda100"/>
+            <rect x="136.0" y="20" width="236.0" height="30" fill="#2a78d6"/>
+            <rect x="372.0" y="20" width="128.0" height="30" fill="#4a3aa7"/>
+            <text x="118.0" y="41" text-anchor="middle" fill="#0b0b0b">9</text>
+            <text x="254.0" y="41" text-anchor="middle" fill="#ffffff">59</text>
+            <text x="436.0" y="41" text-anchor="middle" fill="#ffffff">32</text>
+          </g>
+          <g class="brow" font-size="18">
+            <text x="92" y="95" text-anchor="end" fill="#0b0b0b">DEEPSEEK</text>
+            <rect x="100" y="74" width="44.8" height="30" fill="#eda100"/>
+            <rect x="144.8" y="74" width="187.2" height="30" fill="#2a78d6"/>
+            <rect x="332.0" y="74" width="168.0" height="30" fill="#4a3aa7"/>
+            <text x="122.4" y="95" text-anchor="middle" fill="#0b0b0b">11</text>
+            <text x="238.4" y="95" text-anchor="middle" fill="#ffffff">47</text>
+            <text x="416.0" y="95" text-anchor="middle" fill="#ffffff">42</text>
+          </g>
+          <g class="brow" font-size="18">
+            <text x="92" y="149" text-anchor="end" fill="#0b0b0b">GPT-5.6</text>
+            <rect x="100" y="128" width="72.8" height="30" fill="#eda100"/>
+            <rect x="172.8" y="128" width="237.6" height="30" fill="#2a78d6"/>
+            <rect x="410.4" y="128" width="89.6" height="30" fill="#4a3aa7"/>
+            <text x="136.4" y="149" text-anchor="middle" fill="#0b0b0b">18</text>
+            <text x="291.6" y="149" text-anchor="middle" fill="#ffffff">59</text>
+            <text x="455.2" y="149" text-anchor="middle" fill="#ffffff">22</text>
+          </g>
+          <g class="brow" font-size="18">
+            <text x="92" y="203" text-anchor="end" fill="#0b0b0b">FABLE</text>
+            <rect x="100" y="182" width="132.0" height="30" fill="#eda100"/>
+            <rect x="232.0" y="182" width="184.4" height="30" fill="#2a78d6"/>
+            <rect x="416.4" y="182" width="83.6" height="30" fill="#4a3aa7"/>
+            <text x="166.0" y="203" text-anchor="middle" fill="#0b0b0b">33</text>
+            <text x="324.2" y="203" text-anchor="middle" fill="#ffffff">46</text>
+            <text x="458.2" y="203" text-anchor="middle" fill="#ffffff">21</text>
+          </g>
+          <g class="brow" font-size="18">
+            <text x="92" y="257" text-anchor="end" fill="#0b0b0b" font-weight="600">KIMI</text>
+            <rect x="100" y="236" width="125.2" height="30" fill="#eda100"/>
+            <rect x="225.2" y="236" width="201.6" height="30" fill="#2a78d6"/>
+            <rect x="426.8" y="236" width="73.2" height="30" fill="#4a3aa7"/>
+            <text x="162.6" y="257" text-anchor="middle" fill="#0b0b0b">31</text>
+            <text x="326.0" y="257" text-anchor="middle" fill="#ffffff">50</text>
+            <text x="463.4" y="257" text-anchor="middle" fill="#ffffff">18</text>
+            <rect x="98" y="232" width="404" height="38" fill="none" stroke="#0b0b0b" stroke-width="1.6" stroke-dasharray="5 4"/>
+          </g>
+          </g>
+        </svg>
+        </div></div>
+        <p class="pfig-note">The China/West gap in one look: the two American models (and Kimi) give the yellow open-source path 31&ndash;33; the two Chinese models give it 9&ndash;11, with non-overlapping 95% CIs (&plusmn;0.6&ndash;&plusmn;5.2). DeepSeek is the panel&rsquo;s one real black-box believer &mdash; its 50 draws split nearly even, Glasswing 47&plusmn;4.6 against 42&plusmn;5.2.</p>
+      </figure>
+<!-- COLD-BARS-END -->
   <p class="mt-split">The averages hide the real story: a <b>China/West split that the error bars confirm.</b> GLM and DeepSeek put almost nothing on an open-source release (9–11%); Claude Fable and Kimi put roughly three times as much (31–33%). GLM’s 9 ±1.3 and Fable’s 33 ±1.2 do not come close to touching — the Chinese models simply do not believe Beijing lets a weapon-grade model ship freely, and the American ones are far less sure. DeepSeek is the panel’s one real skeptic of the middle: across 50 draws it splits almost evenly between Glasswing (47) and the black box (42), the widest spread of any model — the only forecaster that half-expects the door to slam.</p>
 
   <details class="mt-honesty"><summary>Why these numbers differ from an earlier version</summary><p>An earlier draft of this section showed each model a roster of the <em>other</em> models’ scenarios before asking it to allocate — and because most of those scenarios were state-control stories, it anchored every model toward Black Box. That was a methodological artifact. These numbers come from a clean prompt (the question and the three definitions, nothing else), fifty independent draws per model per condition at temperature 1. The roster version is gone.</p></details>
