@@ -1,63 +1,70 @@
-// Builds the monochrome valley and registers every paintable "category".
+// Builds a monochrome realm and registers every paintable "category".
 // A category owns one or more surfaces; decree.js animates their colors.
 // The world also runs the day/night compositor, weather, and the small
-// lives (grass, butterflies, sparkles, fireflies) that color awakens.
+// lives (grass, butterflies, deer, fireflies…) that color awakens.
 
 import * as THREE from 'three';
 import { makeNoise } from './noise.js';
 
-const WORLD_RADIUS = 210;
 const WATER_Y = -1.5;
-
-const N = makeNoise(20260724);
-const rand = N.rand;
-
-// ---------------------------------------------------------------- terrain math
-
-function riverX(z) {
-  return 30 * Math.sin(z * 0.015) + 10 * Math.sin(z * 0.04);
-}
-
-const VILLAGE = { x: 52, z: 19, hx: 16, hz: 14, round: 9 };
-
-function villageMask(x, z) {
-  const dx = Math.max(Math.abs(x - VILLAGE.x) - VILLAGE.hx, 0);
-  const dz = Math.max(Math.abs(z - VILLAGE.z) - VILLAGE.hz, 0);
-  const d = Math.hypot(dx, dz);
-  return 1 - smoothstep(0, VILLAGE.round, d);
-}
+const WHITE = new THREE.Color('#ffffff');
+const easeOut = (t) => 1 - (1 - t) * (1 - t);
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
 function smoothstep(a, b, x) {
   const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
   return t * t * (3 - 2 * t);
 }
-
 function mix(a, b, t) { return a + (b - a) * t; }
 
-export function terrainHeight(x, z) {
-  let h = N.fbm(x * 0.012, z * 0.012, 4) * 9;
-  const r = Math.hypot(x, z);
-  const rim = smoothstep(120, 215, r);
-  h += rim * rim * 34;
+// ------------------------------------------------------------------- realms
 
-  const vm = villageMask(x, z);
-  if (vm > 0) h = mix(h, 2.0 + 0.4 * N.fbm(x * 0.1, z * 0.1, 2), vm * 0.9);
-
-  const d = Math.abs(x - riverX(z));
-  const rm = 1 - smoothstep(0, 11, d);
-  if (rm > 0) {
-    const bed = -3.4 + 0.6 * N.fbm(x * 0.05, z * 0.05, 2);
-    h = mix(h, bed, Math.pow(rm, 1.4));
-  }
-  return h;
-}
-
-function terrainNormal(x, z) {
-  const e = 0.6;
-  const hx = terrainHeight(x + e, z) - terrainHeight(x - e, z);
-  const hz = terrainHeight(x, z + e) - terrainHeight(x, z - e);
-  return new THREE.Vector3(-hx, 2 * e, -hz).normalize();
-}
+export const REALMS = {
+  valley: {
+    key: 'valley', title: 'the valley', seed: 0,
+    terrain: { scale: 0.012, amp: 9, rimStart: 120, rimEnd: 215, rimAmp: 34 },
+    water: { type: 'river' },
+    trees: { kind: 'temperate', count: 380 },
+    grassCount: 1400, flowerClusters: 15,
+    rocks: { count: 170, mesas: 0 },
+    clouds: 9, houses: 'cone', deer: 6, rabbits: 8, mist: true,
+    overrides: {},
+  },
+  desert: {
+    key: 'desert', title: 'the desert', seed: 7,
+    terrain: { scale: 0.008, amp: 5.5, rimStart: 110, rimEnd: 215, rimAmp: 40, dunes: true },
+    water: { type: 'pond', x: -45, z: -25, r: 15 },
+    trees: { kind: 'cacti', count: 200 },
+    grassCount: 520, flowerClusters: 7,
+    rocks: { count: 120, mesas: 6 },
+    clouds: 4, houses: 'flat', deer: 0, rabbits: 6, mist: false,
+    overrides: {
+      land: { label: 'the sands', defaultColor: '#dcb878', synonyms: ['sands', 'dunes', 'dune'] },
+      water: { label: 'the oasis', defaultColor: '#3aa8a0', synonyms: ['oasis', 'pool', 'pond'] },
+      trees: { label: 'the cacti', defaultColor: '#5a8f5d', synonyms: ['cactus', 'cacti', 'saguaro', 'saguaros'] },
+      rocks: { label: 'the mesas', defaultColor: '#c47b52', synonyms: ['mesa', 'mesas', 'butte', 'buttes'] },
+      houses: { defaultColor: '#e0c9a0' },
+      roofs: { defaultColor: '#a8552f' },
+      path: { defaultColor: '#caa26c' },
+    },
+  },
+  peaks: {
+    key: 'peaks', title: 'the high peaks', seed: 13,
+    terrain: { scale: 0.017, amp: 16, rimStart: 100, rimEnd: 215, rimAmp: 46, ridged: true },
+    water: { type: 'river' },
+    trees: { kind: 'alpine', count: 430 },
+    grassCount: 700, flowerClusters: 8,
+    rocks: { count: 220, mesas: 0 },
+    clouds: 12, houses: 'steep', deer: 5, rabbits: 6, mist: true,
+    overrides: {
+      land: { label: 'the slopes', defaultColor: '#b7c9ae', synonyms: ['slopes'] },
+      water: { defaultColor: '#7ec8e6' },
+      trees: { defaultColor: '#2f6e52' },
+      deer: { label: 'the goats', defaultColor: '#e3e3e3', synonyms: ['goat', 'goats', 'ibex'] },
+      roofs: { defaultColor: '#7a4a2f' },
+    },
+  },
+};
 
 // ------------------------------------------------------------- geometry helpers
 
@@ -85,35 +92,19 @@ function instMaterial(extra = {}) {
   });
 }
 
-function makeInstanced(geo, count, matrices, grayLevel, jitter) {
-  const mesh = new THREE.InstancedMesh(geo, instMaterial(), count);
-  const positions = [];
-  const c = new THREE.Color();
-  for (let i = 0; i < count; i++) {
-    mesh.setMatrixAt(i, matrices[i]);
-    const g = grayLevel + (rand() - 0.5) * jitter;
-    mesh.setColorAt(i, c.setRGB(g, g, g));
-    positions.push(new THREE.Vector3().setFromMatrixPosition(matrices[i]));
-  }
-  mesh.instanceMatrix.needsUpdate = true;
-  mesh.instanceColor.needsUpdate = true;
-  return { mesh, positions };
-}
-
-const WHITE = new THREE.Color('#ffffff');
-const easeOut = (t) => 1 - (1 - t) * (1 - t);
-const clamp01 = (v) => Math.min(1, Math.max(0, v));
-
 // --------------------------------------------------------------------- build
 
-export function buildWorld(scene) {
+export function buildWorld(scene, opts = {}) {
+  const cfg = REALMS[opts.realm] || REALMS.valley;
+  const N = makeNoise(20260724 + cfg.seed * 101);
+  const rand = N.rand;
+
   const categories = new Map();
   const gazeEntries = [];
   const meshToKey = new Map();     // mesh -> category key (gaze)
   const meshToSurf = new Map();    // mesh -> surface index (single-object decrees)
   const updaters = [];
 
-  // day/night + weather state, driven by decrees
   const state = {
     nightT: 0, nightTarget: 0, duskT: 0,
     weather: 'clear', season: null,
@@ -122,6 +113,11 @@ export function buildWorld(scene) {
   };
 
   function addCategory(key, def) {
+    const ov = cfg.overrides[key];
+    if (ov) {
+      def = { ...def, ...ov,
+        synonyms: [...def.synonyms, ...(ov.synonyms || [])] };
+    }
     const cat = {
       key, colored: false, currentName: null, rainbow: false,
       countTotal: true, surfaces: [], ...def,
@@ -136,6 +132,76 @@ export function buildWorld(scene) {
     object.traverse((o) => meshToKey.set(o, key));
   }
 
+  // ---- terrain math -------------------------------------------------------
+  const T = cfg.terrain;
+  const VILLAGE = { x: 52, z: 19, hx: 16, hz: 14, round: 9 };
+  const POND = cfg.water.type === 'pond' ? cfg.water : null;
+
+  function riverX(z) {
+    return 30 * Math.sin(z * 0.015) + 10 * Math.sin(z * 0.04);
+  }
+  function waterDist(x, z) {
+    if (POND) return Math.hypot(x - POND.x, z - POND.z) - POND.r;
+    return Math.abs(x - riverX(z));
+  }
+  function villageMask(x, z) {
+    const dx = Math.max(Math.abs(x - VILLAGE.x) - VILLAGE.hx, 0);
+    const dz = Math.max(Math.abs(z - VILLAGE.z) - VILLAGE.hz, 0);
+    return 1 - smoothstep(0, VILLAGE.round, Math.hypot(dx, dz));
+  }
+
+  function terrainHeight(x, z) {
+    let h = N.fbm(x * T.scale, z * T.scale, 4) * T.amp;
+    if (T.dunes) h += Math.sin(x * 0.045 + N.fbm(x * 0.01, z * 0.01, 2) * 2.5) * 2.2;
+    if (T.ridged) {
+      const r2 = 1 - Math.abs(N.fbm(x * 0.03 + 9, z * 0.03 - 4, 3));
+      h += r2 * r2 * 10;
+    }
+    const r = Math.hypot(x, z);
+    const rim = smoothstep(T.rimStart, T.rimEnd, r);
+    h += rim * rim * T.rimAmp;
+
+    const vm = villageMask(x, z);
+    if (vm > 0) h = mix(h, 2.0 + 0.4 * N.fbm(x * 0.1, z * 0.1, 2), vm * 0.9);
+
+    // gentle clearing where the god first stands
+    const sm = 1 - smoothstep(8, 32, Math.hypot(x - 8, z - 78));
+    if (sm > 0) h = mix(h, 2.2 + 0.3 * N.fbm(x * 0.09, z * 0.09, 2), sm * 0.85);
+
+    if (POND) {
+      const d = Math.hypot(x - POND.x, z - POND.z);
+      const m = 1 - smoothstep(0, POND.r + 7, d);
+      if (m > 0) h = mix(h, -3.2 + 0.5 * N.fbm(x * 0.05, z * 0.05, 2), Math.pow(m, 1.3));
+    } else {
+      const d = Math.abs(x - riverX(z));
+      const rm = 1 - smoothstep(0, 11, d);
+      if (rm > 0) h = mix(h, -3.4 + 0.6 * N.fbm(x * 0.05, z * 0.05, 2), Math.pow(rm, 1.4));
+    }
+    return h;
+  }
+
+  function terrainNormal(x, z) {
+    const e = 0.6;
+    const hx = terrainHeight(x + e, z) - terrainHeight(x - e, z);
+    const hz = terrainHeight(x, z + e) - terrainHeight(x, z - e);
+    return new THREE.Vector3(-hx, 2 * e, -hz).normalize();
+  }
+
+  function makeInstanced(geo, count, matrices, grayLevel, jitter) {
+    const mesh = new THREE.InstancedMesh(geo, instMaterial(), count);
+    const positions = [];
+    const c = new THREE.Color();
+    for (let i = 0; i < count; i++) {
+      mesh.setMatrixAt(i, matrices[i]);
+      const g = grayLevel + (rand() - 0.5) * jitter;
+      mesh.setColorAt(i, c.setRGB(g, g, g));
+      positions.push(new THREE.Vector3().setFromMatrixPosition(matrices[i]));
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+    mesh.instanceColor.needsUpdate = true;
+    return { mesh, positions };
+  }
+
   // ---- lights -------------------------------------------------------------
   const hemi = new THREE.HemisphereLight(0xdcdcdc, 0x707070, 0.95);
   scene.add(hemi);
@@ -145,7 +211,8 @@ export function buildWorld(scene) {
   const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
   sunLight.position.copy(sunDir).multiplyScalar(180);
   sunLight.castShadow = true;
-  sunLight.shadow.mapSize.set(2048, 2048);
+  const sms = opts.shadowMapSize || 2048;
+  sunLight.shadow.mapSize.set(sms, sms);
   const sc = sunLight.shadow.camera;
   sc.left = -130; sc.right = 130; sc.top = 130; sc.bottom = -130;
   sc.near = 20; sc.far = 460;
@@ -285,17 +352,15 @@ export function buildWorld(scene) {
 
   updaters.push((dt, t, playerPos) => {
     const target = state.nightTarget;
-    const step = dt / 8; // full day<->night swing over ~8 seconds
+    const step = dt / 8;
     state.nightT += Math.min(Math.abs(target - state.nightT), step) * Math.sign(target - state.nightT);
     const nt = state.nightT;
     const dusk = Math.pow(Math.sin(Math.PI * nt), 1.6);
     state.duskT = dusk;
 
-    // zenith
     tC2.copy(skyBase).multiplyScalar(0.1).lerp(NIGHT_SKY, 0.75);
     tC1.copy(skyBase).lerp(tC2, nt).lerp(DUSK_TOP, dusk * 0.3);
     domeUniforms.uTop.value.copy(tC1);
-    // horizon (also drives fog + fallback background)
     tC3.copy(skyBase).lerp(WHITE, 0.42);
     tC2.copy(skyBase).multiplyScalar(0.16).lerp(NIGHT_SKY, 0.55).lerp(WHITE, 0.06);
     tC3.lerp(tC2, nt).lerp(DUSK_HORIZON, dusk * 0.55);
@@ -322,7 +387,6 @@ export function buildWorld(scene) {
     moonHaloMat.opacity = 0.14 * moonMat.opacity;
     starMat.opacity = nt * (0.75 + 0.15 * Math.sin(t * 0.7));
 
-    // shadow light follows the player (snapped, to avoid shimmer)
     if (playerPos) {
       const sx = Math.round(playerPos.x / 8) * 8, sz = Math.round(playerPos.z / 8) * 8;
       lightDir.lerpVectors(sunDir, moonDir, nt).normalize();
@@ -364,9 +428,9 @@ export function buildWorld(scene) {
   addGaze(terrain, 'land');
 
   // ---- placement helpers --------------------------------------------------
-  function openGround(x, z, riverPad = 10, villagePad = 0.12) {
+  function openGround(x, z, waterPad = 10, villagePad = 0.12) {
     if (Math.hypot(x, z) > 190) return false;
-    if (Math.abs(x - riverX(z)) < riverPad) return false;
+    if (waterDist(x, z) < waterPad) return false;
     if (villageMask(x, z) > villagePad) return false;
     return true;
   }
@@ -379,6 +443,10 @@ export function buildWorld(scene) {
       new THREE.Vector3(3.4, 0, 4), new THREE.Vector3(-14, 0, 0),
       new THREE.Vector3(-34, 0, -8), new THREE.Vector3(-62, 0, -22),
     ];
+    if (POND) {
+      ctrl[6].set(-28, 0, -14);
+      ctrl[7].set(POND.x + POND.r + 6, 0, POND.z + 4);
+    }
     const curve = new THREE.CatmullRomCurve3(ctrl);
     for (let i = 0; i <= 130; i++) pathPts.push(curve.getPoint(i / 130));
   }
@@ -390,7 +458,7 @@ export function buildWorld(scene) {
   // ---- grass (hidden until the land is given color) -----------------------
   const grassSpots = [];
   let guard = 0;
-  while (grassSpots.length < 1400 && guard++ < 60000) {
+  while (grassSpots.length < cfg.grassCount && guard++ < 60000) {
     const x = (rand() * 2 - 1) * 185, z = (rand() * 2 - 1) * 185;
     if (!openGround(x, z, 11)) continue;
     if (nearPath(x, z, 2.4)) continue;
@@ -417,7 +485,7 @@ export function buildWorld(scene) {
   grass.mesh.raycast = () => {};
   scene.add(grass.mesh);
 
-  const grassState = { growing: false, growStart: 0, delays: null, grown: false };
+  const grassState = { growing: false, growStart: 0, delays: null, grown: false, maxDelay: 0 };
   const gM = new THREE.Matrix4(), gQ = new THREE.Quaternion(),
     gP = new THREE.Vector3(), gS = new THREE.Vector3(), gE = new THREE.Euler();
   updaters.push((dt, t) => {
@@ -427,7 +495,7 @@ export function buildWorld(scene) {
       let scale = sp.s;
       if (grassState.growing) {
         const gt = (t - grassState.growStart - grassState.delays[i]) / 0.9;
-        if (gt <= 0) { continue; }
+        if (gt <= 0) continue;
         if (gt < 1) scale = sp.s * (easeOut(gt) * 1.15 - 0.15 * gt);
       }
       const sway = Math.sin(t * 1.9 + sp.phase) * 0.09;
@@ -469,41 +537,48 @@ export function buildWorld(scene) {
     grass.mesh.instanceMatrix.needsUpdate = true;
   }
 
-  // ---- water --------------------------------------------------------------
-  const wCols = 6, wRows = 118, wWidth = 8.6;
-  const wGeo = new THREE.BufferGeometry();
-  const wVerts = new Float32Array(wCols * wRows * 3);
-  for (let r = 0; r < wRows; r++) {
-    const z = -234 + r * 4;
-    for (let cI = 0; cI < wCols; cI++) {
-      const x = riverX(z) - wWidth / 2 + (wWidth * cI) / (wCols - 1);
-      const k = (r * wCols + cI) * 3;
-      wVerts[k] = x; wVerts[k + 1] = WATER_Y; wVerts[k + 2] = z;
-    }
-  }
-  const wIdx = [];
-  for (let r = 0; r < wRows - 1; r++) {
-    for (let cI = 0; cI < wCols - 1; cI++) {
-      const a = r * wCols + cI, b = a + 1, c2 = a + wCols, d = c2 + 1;
-      wIdx.push(a, c2, b, b, c2, d);
-    }
-  }
-  wGeo.setAttribute('position', new THREE.BufferAttribute(wVerts, 3));
-  wGeo.setIndex(wIdx);
-  wGeo.computeVertexNormals();
+  // ---- water (river ribbon or oasis pond) ---------------------------------
   const waterMat = new THREE.MeshPhongMaterial({
     color: '#c4c4c4', transparent: true, opacity: 0.92,
     shininess: 110, specular: new THREE.Color('#aaaaaa'),
   });
+  let wGeo;
+  if (POND) {
+    wGeo = new THREE.CircleGeometry(POND.r, 30).rotateX(-Math.PI / 2)
+      .translate(POND.x, WATER_Y, POND.z);
+  } else {
+    const wCols = 6, wRows = 118, wWidth = 8.6;
+    wGeo = new THREE.BufferGeometry();
+    const wVerts = new Float32Array(wCols * wRows * 3);
+    for (let r = 0; r < wRows; r++) {
+      const z = -234 + r * 4;
+      for (let cI = 0; cI < wCols; cI++) {
+        const x = riverX(z) - wWidth / 2 + (wWidth * cI) / (wCols - 1);
+        const k = (r * wCols + cI) * 3;
+        wVerts[k] = x; wVerts[k + 1] = WATER_Y; wVerts[k + 2] = z;
+      }
+    }
+    const wIdx = [];
+    for (let r = 0; r < wRows - 1; r++) {
+      for (let cI = 0; cI < wCols - 1; cI++) {
+        const a = r * wCols + cI, b = a + 1, c2 = a + wCols, d = c2 + 1;
+        wIdx.push(a, c2, b, b, c2, d);
+      }
+    }
+    wGeo.setAttribute('position', new THREE.BufferAttribute(wVerts, 3));
+    wGeo.setIndex(wIdx);
+    wGeo.computeVertexNormals();
+  }
   const water = new THREE.Mesh(wGeo, waterMat);
   scene.add(water);
   addGaze(water, 'water');
 
-  const wBase = wVerts.slice();
+  const wArr = wGeo.attributes.position.array;
+  const wBase = wArr.slice();
   updaters.push((dt, t) => {
-    for (let i = 0; i < wVerts.length; i += 3) {
+    for (let i = 0; i < wArr.length; i += 3) {
       const x = wBase[i], z = wBase[i + 2];
-      wVerts[i + 1] = WATER_Y
+      wArr[i + 1] = WATER_Y
         + Math.sin(z * 0.35 + t * 1.7) * 0.09
         + Math.sin(x * 0.8 + z * 0.11 + t * 2.4) * 0.06;
     }
@@ -514,7 +589,7 @@ export function buildWorld(scene) {
   addCategory('water', {
     label: 'the river', grayLevel: 0.77,
     synonyms: ['water', 'waters', 'river', 'stream', 'brook', 'creek', 'lake'],
-    phrase: 'and the river ran',
+    phrase: POND ? 'and the water shone' : 'and the river ran',
     defaultColor: '#4fb0c6',
     surfaces: [
       { type: 'tint', current: waterMat.color, apply: (c) => {
@@ -524,19 +599,25 @@ export function buildWorld(scene) {
     ],
   });
 
-  // river sparkles (awaken when the water is colored)
+  // water sparkles (awaken when the water is colored)
   const sparkGeo = new THREE.PlaneGeometry(0.3, 0.3).rotateX(-Math.PI / 2);
   const sparkMat = new THREE.MeshBasicMaterial({
     color: 0xffffff, transparent: true, opacity: 0.9,
     blending: THREE.AdditiveBlending, depthWrite: false,
   });
-  const SPARKS = 110;
+  const SPARKS = POND ? 40 : 110;
   const sparkles = new THREE.InstancedMesh(sparkGeo, sparkMat, SPARKS);
   const sparkData = [];
   for (let i = 0; i < SPARKS; i++) {
-    const z = -200 + rand() * 400;
-    const x = riverX(z) + (rand() - 0.5) * (wWidth - 2);
-    sparkData.push({ x, z, phase: rand() * 9, speed: 1.5 + rand() * 2.5 });
+    let x, z;
+    if (POND) {
+      const a = rand() * Math.PI * 2, rr = Math.sqrt(rand()) * (POND.r - 1.5);
+      x = POND.x + Math.cos(a) * rr; z = POND.z + Math.sin(a) * rr;
+    } else {
+      z = -200 + rand() * 400;
+      x = riverX(z) + (rand() - 0.5) * 6.6;
+    }
+    sparkData.push({ phase: rand() * 9, speed: 1.5 + rand() * 2.5 });
     sparkles.setMatrixAt(i, new THREE.Matrix4().setPosition(x, WATER_Y + 0.18, z));
     sparkles.setColorAt(i, new THREE.Color(0, 0, 0));
   }
@@ -572,18 +653,21 @@ export function buildWorld(scene) {
     ],
   });
 
-  // ---- trees --------------------------------------------------------------
+  // ---- trees / cacti ------------------------------------------------------
   const treeSpots = [];
   guard = 0;
-  while (treeSpots.length < 380 && guard++ < 30000) {
+  while (treeSpots.length < cfg.trees.count && guard++ < 30000) {
     const x = (rand() * 2 - 1) * 195, z = (rand() * 2 - 1) * 195;
     if (!openGround(x, z, 12)) continue;
     if (nearPath(x, z, 4.5)) continue;
     if (N.fbm(x * 0.02 + 40, z * 0.02 - 17, 3) < -0.12) continue;
     treeSpots.push({ x, z, s: 0.7 + rand() * 0.85, rot: rand() * Math.PI * 2 });
   }
-  const pineSpots = treeSpots.filter((_, i) => i % 9 < 5);
-  const broadSpots = treeSpots.filter((_, i) => i % 9 >= 5);
+  const temperate = cfg.trees.kind === 'temperate';
+  const pineSpots = cfg.trees.kind === 'cacti' ? []
+    : temperate ? treeSpots.filter((_, i) => i % 9 < 5) : treeSpots;
+  const broadSpots = temperate ? treeSpots.filter((_, i) => i % 9 >= 5) : [];
+  const cactusSpots = cfg.trees.kind === 'cacti' ? treeSpots : [];
 
   function treeMatrices(spots) {
     return spots.map((sp) => new THREE.Matrix4().compose(
@@ -601,52 +685,83 @@ export function buildWorld(scene) {
   const broadGeo = new THREE.IcosahedronGeometry(2.0, 0)
     .scale(1, 0.85, 1).translate(0, 4.1, 0);
   const trunkGeo = new THREE.CylinderGeometry(0.16, 0.26, 2.6, 6).translate(0, 1.3, 0);
+  const cactusGeo = mergeGeoms([
+    new THREE.CylinderGeometry(0.42, 0.5, 3.4, 7).translate(0, 1.7, 0),
+    new THREE.IcosahedronGeometry(0.44, 0).translate(0, 3.5, 0),
+    new THREE.CylinderGeometry(0.24, 0.26, 1.2, 6).rotateZ(Math.PI / 2).translate(0.75, 1.7, 0),
+    new THREE.CylinderGeometry(0.24, 0.26, 1.1, 6).translate(1.28, 2.35, 0),
+    new THREE.CylinderGeometry(0.22, 0.24, 1.0, 6).rotateZ(-Math.PI / 2).translate(-0.68, 2.3, 0),
+    new THREE.CylinderGeometry(0.22, 0.24, 0.9, 6).translate(-1.14, 2.85, 0),
+  ]);
 
-  const pines = makeInstanced(pineGeo, pineSpots.length, treeMatrices(pineSpots), 0.5, 0.14);
-  const broads = makeInstanced(broadGeo, broadSpots.length, treeMatrices(broadSpots), 0.56, 0.14);
-  const trunkMats = treeMatrices(pineSpots).concat(treeMatrices(broadSpots));
-  const trunks = makeInstanced(trunkGeo, trunkMats.length, trunkMats, 0.42, 0.08);
-  pines.mesh.castShadow = broads.mesh.castShadow = trunks.mesh.castShadow = true;
-  scene.add(pines.mesh, broads.mesh, trunks.mesh);
-  addGaze(pines.mesh, 'trees');
-  addGaze(broads.mesh, 'trees');
-  addGaze(trunks.mesh, 'bark');
-  meshToSurf.set(pines.mesh, 0);
-  meshToSurf.set(broads.mesh, 1);
-  meshToSurf.set(trunks.mesh, 0);
+  const treeSurfs = [];
+  let pines = null, broads = null, cacti = null, trunks = null;
+  if (pineSpots.length) {
+    pines = makeInstanced(pineGeo, pineSpots.length, treeMatrices(pineSpots), 0.5, 0.14);
+    pines.mesh.castShadow = true;
+    scene.add(pines.mesh);
+    addGaze(pines.mesh, 'trees');
+    meshToSurf.set(pines.mesh, treeSurfs.length);
+    treeSurfs.push({ type: 'inst', mesh: pines.mesh, positions: pines.positions,
+      variance: { h: 0.035, s: 0.12, l: 0.09 } });
+  }
+  if (broadSpots.length) {
+    broads = makeInstanced(broadGeo, broadSpots.length, treeMatrices(broadSpots), 0.56, 0.14);
+    broads.mesh.castShadow = true;
+    scene.add(broads.mesh);
+    addGaze(broads.mesh, 'trees');
+    meshToSurf.set(broads.mesh, treeSurfs.length);
+    treeSurfs.push({ type: 'inst', mesh: broads.mesh, positions: broads.positions,
+      variance: { h: 0.05, s: 0.12, l: 0.1 } });
+  }
+  if (cactusSpots.length) {
+    cacti = makeInstanced(cactusGeo, cactusSpots.length, treeMatrices(cactusSpots), 0.55, 0.12);
+    cacti.mesh.castShadow = true;
+    scene.add(cacti.mesh);
+    addGaze(cacti.mesh, 'trees');
+    meshToSurf.set(cacti.mesh, treeSurfs.length);
+    treeSurfs.push({ type: 'inst', mesh: cacti.mesh, positions: cacti.positions,
+      variance: { h: 0.03, s: 0.12, l: 0.08 } });
+  }
 
   addCategory('trees', {
     label: 'the trees', grayLevel: 0.53, singular: 'tree',
     synonyms: ['tree', 'trees', 'forest', 'forests', 'leaves', 'canopy', 'foliage', 'pines'],
     phrase: 'and the trees rose',
     defaultColor: '#2f9e63',
-    surfaces: [
-      { type: 'inst', mesh: pines.mesh, positions: pines.positions,
-        variance: { h: 0.035, s: 0.12, l: 0.09 } },
-      { type: 'inst', mesh: broads.mesh, positions: broads.positions,
-        variance: { h: 0.05, s: 0.12, l: 0.1 } },
-    ],
-  });
-  addCategory('bark', {
-    label: 'the bark', grayLevel: 0.42, singular: 'trunk',
-    synonyms: ['bark', 'trunk', 'trunks', 'wood', 'timber'],
-    phrase: 'and the bark grew',
-    defaultColor: '#7a5537',
-    surfaces: [
-      { type: 'inst', mesh: trunks.mesh, positions: trunks.positions,
-        variance: { h: 0.02, s: 0.1, l: 0.07 } },
-    ],
+    // seasons repaint this surface index (the broadleaf canopies)
+    seasonSurf: broadSpots.length ? treeSurfs.length - 1 : -1,
+    surfaces: treeSurfs,
   });
 
-  // ---- rocks --------------------------------------------------------------
+  if (pineSpots.length || broadSpots.length) {
+    const trunkMats = treeMatrices(pineSpots).concat(treeMatrices(broadSpots));
+    trunks = makeInstanced(trunkGeo, trunkMats.length, trunkMats, 0.42, 0.08);
+    trunks.mesh.castShadow = true;
+    scene.add(trunks.mesh);
+    addGaze(trunks.mesh, 'bark');
+    meshToSurf.set(trunks.mesh, 0);
+    addCategory('bark', {
+      label: 'the bark', grayLevel: 0.42, singular: 'trunk',
+      synonyms: ['bark', 'trunk', 'trunks', 'wood', 'timber'],
+      phrase: 'and the bark grew',
+      defaultColor: '#7a5537',
+      surfaces: [
+        { type: 'inst', mesh: trunks.mesh, positions: trunks.positions,
+          variance: { h: 0.02, s: 0.1, l: 0.07 } },
+      ],
+    });
+  }
+
+  // ---- rocks (and mesas) --------------------------------------------------
   const rockMatrices = [];
   guard = 0;
-  while (rockMatrices.length < 170 && guard++ < 20000) {
+  while (rockMatrices.length < cfg.rocks.count && guard++ < 20000) {
     const x = (rand() * 2 - 1) * 195, z = (rand() * 2 - 1) * 195;
-    const nearRiver = Math.abs(x - riverX(z)) < 16 && Math.abs(x - riverX(z)) > 9;
-    if (!openGround(x, z, 9) && !nearRiver) continue;
+    const nearWater = waterDist(x, z) < 12 && waterDist(x, z) > 5;
+    if (!openGround(x, z, 5) && !nearWater) continue;
     if (nearPath(x, z, 3)) continue;
-    if (!nearRiver && rand() > 0.4) continue;
+    if (!nearWater && rand() > 0.4) continue;
     const s = 0.4 + rand() * 1.5;
     rockMatrices.push(new THREE.Matrix4().compose(
       new THREE.Vector3(x, terrainHeight(x, z) - 0.25 * s, z),
@@ -661,23 +776,45 @@ export function buildWorld(scene) {
   scene.add(rocks.mesh);
   addGaze(rocks.mesh, 'rocks');
   meshToSurf.set(rocks.mesh, 0);
+  const rockSurfs = [
+    { type: 'inst', mesh: rocks.mesh, positions: rocks.positions,
+      variance: { h: 0.02, s: 0.08, l: 0.1 } },
+  ];
+  if (cfg.rocks.mesas) {
+    const mesaGeo = new THREE.CylinderGeometry(0.7, 1, 1, 7);
+    const mesaMats = [];
+    for (let i = 0; i < cfg.rocks.mesas; i++) {
+      const a = rand() * Math.PI * 2, d = 105 + rand() * 65;
+      const x = Math.cos(a) * d, z = Math.sin(a) * d;
+      const s = 12 + rand() * 10;
+      mesaMats.push(new THREE.Matrix4().compose(
+        new THREE.Vector3(x, terrainHeight(x, z) + s * 0.3, z),
+        new THREE.Quaternion().setFromEuler(new THREE.Euler(0, rand() * Math.PI, 0)),
+        new THREE.Vector3(s, s * (0.8 + rand() * 0.5), s),
+      ));
+    }
+    const mesas = makeInstanced(mesaGeo, mesaMats.length, mesaMats, 0.52, 0.1);
+    mesas.mesh.castShadow = true;
+    scene.add(mesas.mesh);
+    addGaze(mesas.mesh, 'rocks');
+    meshToSurf.set(mesas.mesh, 1);
+    rockSurfs.push({ type: 'inst', mesh: mesas.mesh, positions: mesas.positions,
+      variance: { h: 0.015, s: 0.1, l: 0.09 } });
+  }
 
   addCategory('rocks', {
     label: 'the stones', grayLevel: 0.58, singular: 'stone',
     synonyms: ['rock', 'rocks', 'stone', 'stones', 'boulder', 'boulders'],
     phrase: 'and the stones sat',
     defaultColor: '#98a0a8',
-    surfaces: [
-      { type: 'inst', mesh: rocks.mesh, positions: rocks.positions,
-        variance: { h: 0.02, s: 0.08, l: 0.1 } },
-    ],
+    surfaces: rockSurfs,
   });
 
   // ---- flowers ------------------------------------------------------------
   const flowerMatrices = [];
   const clusters = [];
   guard = 0;
-  while (clusters.length < 15 && guard++ < 4000) {
+  while (clusters.length < cfg.flowerClusters && guard++ < 4000) {
     const x = (rand() * 2 - 1) * 170, z = (rand() * 2 - 1) * 170;
     if (!openGround(x, z, 13)) continue;
     clusters.push({ x, z });
@@ -717,15 +854,15 @@ export function buildWorld(scene) {
   });
 
   // ---- butterflies (awaken with the flowers) ------------------------------
-  const BFLIES = 34;
+  const BFLIES = clusters.length ? 34 : 0;
   const bflyWing = new THREE.BufferGeometry();
   bflyWing.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
     0, 0, 0, 0.42, 0.1, -0.16, 0.42, 0.1, 0.2,
   ]), 3));
   bflyWing.computeVertexNormals();
   const bflyMatL = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-  const bflyL = new THREE.InstancedMesh(bflyWing, bflyMatL, BFLIES);
-  const bflyR = new THREE.InstancedMesh(bflyWing, bflyMatL, BFLIES);
+  const bflyL = new THREE.InstancedMesh(bflyWing, bflyMatL, Math.max(BFLIES, 1));
+  const bflyR = new THREE.InstancedMesh(bflyWing, bflyMatL, Math.max(BFLIES, 1));
   bflyL.raycast = () => {}; bflyR.raycast = () => {};
   const bflyData = [];
   for (let i = 0; i < BFLIES; i++) {
@@ -767,6 +904,7 @@ export function buildWorld(scene) {
   });
 
   function showButterflies(baseColor, rainbow, now) {
+    if (!BFLIES) return;
     const c = new THREE.Color();
     const hsl = { h: 0, s: 0, l: 0 };
     if (baseColor) baseColor.getHSL(hsl);
@@ -791,7 +929,7 @@ export function buildWorld(scene) {
   ff.raycast = () => {};
   const ffData = [];
   for (let i = 0; i < FIREFLIES; i++) {
-    const sp = treeSpots[(rand() * treeSpots.length) | 0];
+    const sp = treeSpots[(rand() * treeSpots.length) | 0] || { x: 0, z: 0 };
     ffData.push({
       x: sp.x + (rand() - 0.5) * 10, z: sp.z + (rand() - 0.5) * 10,
       h: 0.5 + rand() * 2, phase: rand() * 9, drift: rand() * 6,
@@ -822,12 +960,14 @@ export function buildWorld(scene) {
   const housePlots = [
     { x: 46, z: 10 }, { x: 58, z: 9 }, { x: 65, z: 20 },
     { x: 57, z: 29 }, { x: 45, z: 27 }, { x: 37, z: 17 }, { x: 66, z: 33 },
-  ];
+  ].slice(0, cfg.houses === 'flat' ? 5 : 7);
   const wallSurf = [], roofSurf = [];
   const windowMats = [];
   const houseGroup = new THREE.Group();
   const wallGeo = new THREE.BoxGeometry(3.4, 2.5, 2.9);
-  const roofGeo = new THREE.ConeGeometry(2.9, 1.7, 4);
+  const roofGeo = cfg.houses === 'flat'
+    ? new THREE.BoxGeometry(3.7, 0.35, 3.2)
+    : new THREE.ConeGeometry(2.9, cfg.houses === 'steep' ? 2.6 : 1.7, 4);
   const chimGeo = new THREE.BoxGeometry(0.4, 1.0, 0.4);
   const winGeo = new THREE.PlaneGeometry(0.55, 0.7);
   housePlots.forEach((plot, hi) => {
@@ -845,12 +985,12 @@ export function buildWorld(scene) {
     const roofMat = instMaterial();
     roofMat.color.setScalar(0.45 + (rand() - 0.5) * 0.06);
     const roof = new THREE.Mesh(roofGeo, roofMat);
-    roof.position.y = 3.35;
-    roof.rotation.y = Math.PI / 4;
+    roof.position.y = cfg.houses === 'flat' ? 2.65 : cfg.houses === 'steep' ? 3.8 : 3.35;
+    if (cfg.houses !== 'flat') roof.rotation.y = Math.PI / 4;
     roof.castShadow = true;
 
     const chim = new THREE.Mesh(chimGeo, wallMat);
-    chim.position.set(0.9, 3.4, 0.4);
+    chim.position.set(0.9, cfg.houses === 'flat' ? 3.1 : 3.4, 0.4);
 
     const winMat = new THREE.MeshStandardMaterial({
       color: '#8f8f8f', emissive: '#000000', roughness: 0.6,
@@ -905,7 +1045,7 @@ export function buildWorld(scene) {
   // ---- path + bridge ------------------------------------------------------
   const patchMatrices = [], patchUp = new THREE.Vector3(0, 1, 0);
   for (const p of pathPts) {
-    if (Math.abs(p.x - riverX(p.z)) < 8.5) continue;
+    if (waterDist(p.x, p.z) < (POND ? 3 : 8.5)) continue;
     const jx = p.x + (rand() - 0.5) * 1.2, jz = p.z + (rand() - 0.5) * 1.2;
     const q = new THREE.Quaternion().setFromUnitVectors(patchUp, terrainNormal(jx, jz));
     q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, rand() * Math.PI, 0)));
@@ -922,10 +1062,14 @@ export function buildWorld(scene) {
   addGaze(patches.mesh, 'path');
   meshToSurf.set(patches.mesh, 0);
 
-  const bridgeMat = instMaterial();
-  bridgeMat.color.setScalar(0.52);
-  const bridge = new THREE.Group();
-  {
+  const pathSurfs = [
+    { type: 'inst', mesh: patches.mesh, positions: patches.positions,
+      variance: { h: 0.015, s: 0.08, l: 0.08 } },
+  ];
+  if (!POND) {
+    const bridgeMat = instMaterial();
+    bridgeMat.color.setScalar(0.52);
+    const bridge = new THREE.Group();
     const bz = 4, bx = riverX(bz);
     const span = 19, planks = 9;
     for (let i = 0; i < planks; i++) {
@@ -944,28 +1088,26 @@ export function buildWorld(scene) {
         bridge.add(post);
       }
     }
+    scene.add(bridge);
+    addGaze(bridge, 'path');
+    bridge.traverse((o) => meshToSurf.set(o, 1));
+    pathSurfs.push({ type: 'tint', current: bridgeMat.color,
+      pos: new THREE.Vector3(bx, 0.5, bz),
+      apply: (c) => bridgeMat.color.copy(c) });
   }
-  scene.add(bridge);
-  addGaze(bridge, 'path');
-  bridge.traverse((o) => meshToSurf.set(o, 1));
 
   addCategory('path', {
     label: 'the path', grayLevel: 0.7, singular: 'stretch of path',
     synonyms: ['path', 'paths', 'road', 'roads', 'trail', 'bridge', 'lane', 'way'],
     phrase: 'and the path wound',
     defaultColor: '#c9b391',
-    surfaces: [
-      { type: 'inst', mesh: patches.mesh, positions: patches.positions,
-        variance: { h: 0.015, s: 0.08, l: 0.08 } },
-      { type: 'tint', current: bridgeMat.color, pos: new THREE.Vector3(riverX(4), 0.5, 4),
-        apply: (c) => bridgeMat.color.copy(c) },
-    ],
+    surfaces: pathSurfs,
   });
 
   // ---- clouds (weather can dim them over their decreed color) -------------
   const cloudSurf = [];
   const cloudGroups = [];
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < cfg.clouds; i++) {
     const mat = instMaterial();
     const g = new THREE.Group();
     const puffs = 3 + (rand() * 3) | 0;
@@ -1042,7 +1184,7 @@ export function buildWorld(scene) {
       apply: (c) => mat.color.copy(c) });
   }
   updaters.push((dt, t) => {
-    const vis = state.nightT < 0.6; // birds roost at night
+    const vis = state.nightT < 0.6;
     for (const fl of flocks) {
       for (const b of fl.birds) {
         b.g.visible = vis;
@@ -1068,81 +1210,239 @@ export function buildWorld(scene) {
     surfaces: birdSurf,
   });
 
-  // ---- rain ---------------------------------------------------------------
-  const RAIN = 900;
-  const rainGeo = new THREE.BufferGeometry();
-  const rainPos = new Float32Array(RAIN * 2 * 3);
-  const rainDrops = [];
-  for (let i = 0; i < RAIN; i++) {
-    rainDrops.push({
-      x: (rand() - 0.5) * 90, y: rand() * 50, z: (rand() - 0.5) * 90,
-    });
+  // ---- deer (or mountain goats) -------------------------------------------
+  const deerMat = instMaterial();
+  deerMat.color.setScalar(0.5);
+  const deerHerd = [];
+  if (cfg.deer > 0) {
+    const bodyGeo = new THREE.IcosahedronGeometry(1, 0).scale(0.55, 0.42, 0.85);
+    const neckGeo = new THREE.CylinderGeometry(0.09, 0.13, 0.6, 5);
+    const headGeo = new THREE.IcosahedronGeometry(0.17, 0);
+    const legGeo = new THREE.BoxGeometry(0.09, 0.9, 0.09).translate(0, -0.45, 0);
+    const antlerGeo = new THREE.ConeGeometry(0.03, 0.34, 4);
+    let placed = 0; guard = 0;
+    while (placed < cfg.deer && guard++ < 4000) {
+      const x = (rand() * 2 - 1) * 160, z = (rand() * 2 - 1) * 160;
+      if (!openGround(x, z, 14)) continue;
+      if (nearPath(x, z, 4)) continue;
+      const g = new THREE.Group();
+      const body = new THREE.Mesh(bodyGeo, deerMat);
+      body.position.y = 1.0;
+      body.castShadow = true;
+      const neck = new THREE.Mesh(neckGeo, deerMat);
+      neck.position.set(0, 1.35, 0.62);
+      neck.rotation.x = 0.5;
+      const head = new THREE.Mesh(headGeo, deerMat);
+      head.position.set(0, 1.66, 0.82);
+      const legs = [];
+      for (const [lx2, lz2] of [[-0.24, 0.32], [0.24, 0.32], [-0.24, -0.34], [0.24, -0.34]]) {
+        const leg = new THREE.Mesh(legGeo, deerMat);
+        leg.position.set(lx2, 0.95, lz2);
+        g.add(leg);
+        legs.push(leg);
+      }
+      for (const ax of [-0.08, 0.08]) {
+        const antler = new THREE.Mesh(antlerGeo, deerMat);
+        antler.position.set(ax, 1.86, 0.76);
+        antler.rotation.z = ax * 4;
+        g.add(antler);
+      }
+      g.add(body, neck, head);
+      g.position.set(x, terrainHeight(x, z), z);
+      scene.add(g);
+      addGaze(g, 'deer');
+      deerHerd.push({ g, legs, x, z, tx: x, tz: z, state: 'graze',
+        timer: 2 + rand() * 5, phase: rand() * 7, speed: 0 });
+      placed++;
+    }
   }
-  rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPos, 3));
-  const rainMat = new THREE.LineBasicMaterial({
-    color: '#a7b8c9', transparent: true, opacity: 0,
-  });
-  const rain = new THREE.LineSegments(rainGeo, rainMat);
-  rain.frustumCulled = false;
-  rain.raycast = () => {};
-  rain.visible = false;
-  scene.add(rain);
-
-  // ---- snow ---------------------------------------------------------------
-  const SNOW = 1100;
-  const snowGeo = new THREE.BufferGeometry();
-  const snowPos = new Float32Array(SNOW * 3);
-  const snowFlakes = [];
-  for (let i = 0; i < SNOW; i++) {
-    snowFlakes.push({
-      x: (rand() - 0.5) * 80, y: rand() * 40, z: (rand() - 0.5) * 80,
-      phase: rand() * 9, sway: 0.5 + rand(),
-    });
-  }
-  snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPos, 3));
-  const snowMat = new THREE.PointsMaterial({
-    color: '#ffffff', size: 2.6, sizeAttenuation: false,
-    transparent: true, opacity: 0, depthWrite: false,
-  });
-  const snow = new THREE.Points(snowGeo, snowMat);
-  snow.frustumCulled = false;
-  snow.raycast = () => {};
-  snow.visible = false;
-  scene.add(snow);
-
   updaters.push((dt, t, playerPos) => {
-    const p = playerPos || spawn;
-    const rTarget = state.weather === 'rain' ? 0.42 : 0;
-    rainMat.opacity += (rTarget - rainMat.opacity) * Math.min(1, dt * 1.5);
-    rain.visible = rainMat.opacity > 0.01;
-    if (rain.visible) {
-      for (let i = 0; i < RAIN; i++) {
-        const d = rainDrops[i];
-        d.y -= 36 * dt; d.x += 4 * dt;
-        if (d.y < -6) { d.y += 50; d.x = (rand() - 0.5) * 90; d.z = (rand() - 0.5) * 90; }
-        if (d.x > 45) d.x -= 90;
-        const k = i * 6;
-        const wx = p.x + d.x, wy = p.y - 8 + d.y, wz = p.z + d.z;
-        rainPos[k] = wx; rainPos[k + 1] = wy; rainPos[k + 2] = wz;
-        rainPos[k + 3] = wx + 0.25; rainPos[k + 4] = wy + 1.3; rainPos[k + 5] = wz;
+    for (const d of deerHerd) {
+      const pdist = playerPos ? Math.hypot(playerPos.x - d.x, playerPos.z - d.z) : 99;
+      if (pdist < 9 && d.state !== 'flee') {
+        d.state = 'flee';
+        const ang = Math.atan2(d.x - playerPos.x, d.z - playerPos.z);
+        d.tx = d.x + Math.sin(ang) * 26;
+        d.tz = d.z + Math.cos(ang) * 26;
+        if (!openGround(d.tx, d.tz, 12)) {
+          d.tx = d.x - Math.sin(ang) * 10;
+          d.tz = d.z + Math.cos(ang) * 26;
+        }
       }
-      rainGeo.attributes.position.needsUpdate = true;
-    }
-    const sTarget = state.weather === 'snow' ? 0.9 : 0;
-    snowMat.opacity += (sTarget - snowMat.opacity) * Math.min(1, dt * 1.5);
-    snow.visible = snowMat.opacity > 0.01;
-    if (snow.visible) {
-      for (let i = 0; i < SNOW; i++) {
-        const f = snowFlakes[i];
-        f.y -= 3.4 * dt;
-        if (f.y < -6) f.y += 40;
-        const k = i * 3;
-        snowPos[k] = p.x + f.x + Math.sin(t * f.sway + f.phase) * 2.2;
-        snowPos[k + 1] = p.y - 8 + f.y;
-        snowPos[k + 2] = p.z + f.z + Math.cos(t * f.sway * 0.8 + f.phase) * 2.2;
+      if (d.state === 'graze') {
+        d.timer -= dt;
+        d.speed = 0;
+        if (d.timer <= 0) {
+          for (let tries = 0; tries < 6; tries++) {
+            const a = rand() * Math.PI * 2, dist2 = 8 + rand() * 16;
+            const nx = d.x + Math.cos(a) * dist2, nz = d.z + Math.sin(a) * dist2;
+            if (!openGround(nx, nz, 12)) continue;
+            d.tx = nx; d.tz = nz; d.state = 'amble';
+            break;
+          }
+          if (d.state === 'graze') d.timer = 2 + rand() * 3;
+        }
+      } else {
+        const speed = d.state === 'flee' ? 6.5 : 2.1;
+        d.speed = speed;
+        const dx = d.tx - d.x, dz = d.tz - d.z;
+        const dd = Math.hypot(dx, dz);
+        if (dd < 0.5) {
+          d.state = 'graze';
+          d.timer = 3 + rand() * 6;
+          d.speed = 0;
+        } else {
+          d.x += (dx / dd) * speed * dt;
+          d.z += (dz / dd) * speed * dt;
+          d.g.rotation.y = Math.atan2(dx, dz);
+        }
       }
-      snowGeo.attributes.position.needsUpdate = true;
+      d.g.position.set(d.x, terrainHeight(d.x, d.z), d.z);
+      const swing = d.speed > 0 ? Math.sin(t * (d.speed > 3 ? 14 : 7) + d.phase) * 0.5 : 0;
+      d.legs[0].rotation.x = swing;
+      d.legs[3].rotation.x = swing;
+      d.legs[1].rotation.x = -swing;
+      d.legs[2].rotation.x = -swing;
     }
+  });
+  if (cfg.deer > 0) {
+    addCategory('deer', {
+      label: 'the deer', grayLevel: 0.5, countTotal: false,
+      synonyms: ['deer', 'stag', 'stags', 'doe', 'does', 'elk', 'fawn', 'fawns'],
+      phrase: 'and the deer wandered',
+      defaultColor: '#8f6b4a',
+      surfaces: [
+        { type: 'tint', current: deerMat.color, apply: (c) => deerMat.color.copy(c) },
+      ],
+    });
+  }
+
+  // ---- rabbits ------------------------------------------------------------
+  const rabbitMat = instMaterial();
+  rabbitMat.color.setScalar(0.55);
+  const rabbits = [];
+  {
+    const bodyGeo = new THREE.IcosahedronGeometry(1, 0).scale(0.3, 0.24, 0.4);
+    const headGeo = new THREE.IcosahedronGeometry(0.15, 0);
+    const earGeo = new THREE.ConeGeometry(0.05, 0.26, 4);
+    let placed = 0; guard = 0;
+    while (placed < cfg.rabbits && guard++ < 4000) {
+      const x = (rand() * 2 - 1) * 150, z = (rand() * 2 - 1) * 150;
+      if (!openGround(x, z, 13)) continue;
+      if (nearPath(x, z, 3)) continue;
+      const g = new THREE.Group();
+      const body = new THREE.Mesh(bodyGeo, rabbitMat);
+      body.position.y = 0.26;
+      body.castShadow = true;
+      const head = new THREE.Mesh(headGeo, rabbitMat);
+      head.position.set(0, 0.46, 0.3);
+      const earL = new THREE.Mesh(earGeo, rabbitMat);
+      earL.position.set(-0.06, 0.66, 0.26);
+      earL.rotation.x = -0.2;
+      const earR = new THREE.Mesh(earGeo, rabbitMat);
+      earR.position.set(0.06, 0.66, 0.26);
+      earR.rotation.x = -0.2;
+      g.add(body, head, earL, earR);
+      g.position.set(x, terrainHeight(x, z), z);
+      scene.add(g);
+      addGaze(g, 'rabbits');
+      rabbits.push({ g, x, z, tx: x, tz: z, state: 'idle', timer: rand() * 3, hopT: 0 });
+      placed++;
+    }
+  }
+  updaters.push((dt) => {
+    for (const r of rabbits) {
+      if (r.state === 'idle') {
+        r.timer -= dt;
+        if (r.timer <= 0) {
+          for (let tries = 0; tries < 6; tries++) {
+            const a = rand() * Math.PI * 2, d = 2 + rand() * 5;
+            const nx = r.x + Math.cos(a) * d, nz = r.z + Math.sin(a) * d;
+            if (!openGround(nx, nz, 12)) continue;
+            r.tx = nx; r.tz = nz; r.state = 'hop'; r.hopT = 0;
+            r.g.rotation.y = Math.atan2(nx - r.x, nz - r.z);
+            break;
+          }
+          if (r.state === 'idle') r.timer = 1 + rand() * 2;
+        }
+      } else {
+        r.hopT += dt / 0.48;
+        const k = Math.min(r.hopT, 1);
+        const x = r.x + (r.tx - r.x) * k, z = r.z + (r.tz - r.z) * k;
+        r.g.position.set(x, terrainHeight(x, z) + Math.sin(Math.PI * k) * 0.5, z);
+        if (k >= 1) {
+          r.x = r.tx; r.z = r.tz;
+          r.state = 'idle';
+          r.timer = 0.3 + rand() * 2.4;
+        }
+      }
+    }
+  });
+
+  addCategory('rabbits', {
+    label: 'the rabbits', grayLevel: 0.55, countTotal: false,
+    synonyms: ['rabbit', 'rabbits', 'bunny', 'bunnies', 'hare', 'hares'],
+    phrase: 'and the rabbits ran',
+    defaultColor: '#a98467',
+    surfaces: [
+      { type: 'tint', current: rabbitMat.color, apply: (c) => rabbitMat.color.copy(c) },
+    ],
+  });
+
+  // ---- fish (leap once the water has a color) -----------------------------
+  const fishMat = instMaterial();
+  fishMat.color.setScalar(0.6);
+  const fishGeo = new THREE.IcosahedronGeometry(1, 0).scale(0.16, 0.14, 0.5);
+  const fishes = [];
+  for (let i = 0; i < 3; i++) {
+    const m = new THREE.Mesh(fishGeo, fishMat);
+    m.visible = false;
+    m.raycast = () => {};
+    scene.add(m);
+    fishes.push({ m, active: false, nextAt: 2 + i * 3, t0: 0, x0: 0, z0: 0, dir: 1 });
+  }
+  updaters.push((dt, t, playerPos) => {
+    if (!state.fishOn) return;
+    for (const f of fishes) {
+      if (!f.active) {
+        if (t > f.nextAt) {
+          f.active = true;
+          f.t0 = t;
+          if (POND) {
+            const a = rand() * Math.PI * 2, rr = Math.sqrt(rand()) * (POND.r - 4);
+            f.x0 = POND.x + Math.cos(a) * rr;
+            f.z0 = POND.z + Math.sin(a) * rr;
+          } else {
+            const pz = playerPos ? playerPos.z : 0;
+            f.z0 = Math.max(-200, Math.min(200, pz + (rand() - 0.5) * 120));
+            f.x0 = riverX(f.z0);
+          }
+          f.dir = rand() > 0.5 ? 1 : -1;
+        }
+        continue;
+      }
+      const k = (t - f.t0) / 1.05;
+      if (k >= 1) {
+        f.active = false;
+        f.m.visible = false;
+        f.nextAt = t + 2.5 + rand() * 6;
+        continue;
+      }
+      const z = f.z0 + f.dir * 2.4 * k;
+      f.m.visible = true;
+      f.m.position.set(POND ? f.x0 : riverX(z), WATER_Y - 0.2 + Math.sin(Math.PI * k) * 1.9, z);
+      f.m.rotation.x = f.dir * (Math.PI * k - Math.PI / 2);
+    }
+  });
+
+  addCategory('fish', {
+    label: 'the fish', grayLevel: 0.6, countTotal: false,
+    synonyms: ['fish', 'fishes', 'trout', 'salmon', 'minnows'],
+    phrase: 'and the fish leapt',
+    defaultColor: '#9fb4c4',
+    surfaces: [
+      { type: 'tint', current: fishMat.color, apply: (c) => fishMat.color.copy(c) },
+    ],
   });
 
   // ---- rainbow (when the rain clears) -------------------------------------
@@ -1234,12 +1534,13 @@ export function buildWorld(scene) {
     petals.instanceMatrix.needsUpdate = true;
   });
 
-  // ---- autumn leaves ------------------------------------------------------
-  const LEAVES = 190;
+  // ---- autumn leaves (only where broadleafs grow) -------------------------
+  const LEAVES = broadSpots.length ? 190 : 0;
   const leafMat = new THREE.MeshBasicMaterial({
     side: THREE.DoubleSide, transparent: true, opacity: 0, depthWrite: false,
   });
-  const leaves = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.22, 0.18), leafMat, LEAVES);
+  const leaves = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.22, 0.18),
+    leafMat, Math.max(LEAVES, 1));
   leaves.raycast = () => {};
   leaves.visible = false;
   const leafData = [];
@@ -1249,9 +1550,9 @@ export function buildWorld(scene) {
       const sp = broadSpots[(rand() * broadSpots.length) | 0];
       leafData.push({
         sp, ox: (rand() - 0.5) * 3.4, oz: (rand() - 0.5) * 3.4,
-        y: 0, vf: rand() * 0.5, phase: rand() * 9, spin: 1 + rand() * 3,
+        y: terrainHeight(sp.x, sp.z) + 3 + rand() * 2.5 * sp.s,
+        vf: rand() * 0.5, phase: rand() * 9, spin: 1 + rand() * 3,
       });
-      leafData[i].y = terrainHeight(sp.x, sp.z) + 3 + rand() * 2.5 * sp.s;
       c.setHSL(0.02 + rand() * 0.09, 0.85, 0.42 + rand() * 0.18);
       leaves.setColorAt(i, c);
     }
@@ -1260,6 +1561,7 @@ export function buildWorld(scene) {
   const lM = new THREE.Matrix4(), lQ = new THREE.Quaternion(), lE = new THREE.Euler(),
     lV = new THREE.Vector3(), lS = new THREE.Vector3();
   updaters.push((dt, t) => {
+    if (!LEAVES) return;
     const targetO = state.season === 'autumn' ? 0.95 : 0;
     leafMat.opacity += (targetO - leafMat.opacity) * Math.min(1, dt * 1.2);
     leaves.visible = leafMat.opacity > 0.02;
@@ -1278,126 +1580,31 @@ export function buildWorld(scene) {
     leaves.instanceMatrix.needsUpdate = true;
   });
 
-  // ---- rabbits ------------------------------------------------------------
-  const rabbitMat = instMaterial();
-  rabbitMat.color.setScalar(0.55);
-  const rabbits = [];
-  {
-    const bodyGeo = new THREE.IcosahedronGeometry(1, 0).scale(0.3, 0.24, 0.4);
-    const headGeo = new THREE.IcosahedronGeometry(0.15, 0);
-    const earGeo = new THREE.ConeGeometry(0.05, 0.26, 4);
-    let placed = 0; guard = 0;
-    while (placed < 8 && guard++ < 4000) {
-      const x = (rand() * 2 - 1) * 150, z = (rand() * 2 - 1) * 150;
-      if (!openGround(x, z, 13)) continue;
-      if (nearPath(x, z, 3)) continue;
-      const g = new THREE.Group();
-      const body = new THREE.Mesh(bodyGeo, rabbitMat);
-      body.position.y = 0.26;
-      body.castShadow = true;
-      const head = new THREE.Mesh(headGeo, rabbitMat);
-      head.position.set(0, 0.46, 0.3);
-      const earL = new THREE.Mesh(earGeo, rabbitMat);
-      earL.position.set(-0.06, 0.66, 0.26);
-      earL.rotation.x = -0.2;
-      const earR = new THREE.Mesh(earGeo, rabbitMat);
-      earR.position.set(0.06, 0.66, 0.26);
-      earR.rotation.x = -0.2;
-      g.add(body, head, earL, earR);
-      g.position.set(x, terrainHeight(x, z), z);
-      scene.add(g);
-      addGaze(g, 'rabbits');
-      rabbits.push({ g, x, z, tx: x, tz: z, state: 'idle', timer: rand() * 3, hopT: 0 });
-      placed++;
+  // ---- ground mist --------------------------------------------------------
+  if (cfg.mist) {
+    const mistMat = new THREE.MeshBasicMaterial({
+      color: '#ffffff', transparent: true, opacity: 0.05, depthWrite: false, fog: false,
+    });
+    const mistGeo = new THREE.CircleGeometry(1, 10).rotateX(-Math.PI / 2);
+    const mists = [];
+    for (let i = 0; i < 6; i++) {
+      const z = -160 + i * 60 + rand() * 30;
+      const x = POND ? POND.x : riverX(z);
+      const m = new THREE.Mesh(mistGeo, mistMat);
+      m.position.set(x + (rand() - 0.5) * 20, WATER_Y + 2.2 + rand() * 1.5, z);
+      m.scale.setScalar(16 + rand() * 9);
+      m.raycast = () => {};
+      scene.add(m);
+      mists.push({ m, sp: 0.4 + rand() * 0.5 });
     }
+    updaters.push((dt, t) => {
+      mistMat.opacity = 0.05 * (1 - 0.5 * state.nightT) + 0.03 * state.duskT;
+      for (const mi of mists) {
+        mi.m.position.x += dt * mi.sp;
+        if (mi.m.position.x > 240) mi.m.position.x = -240;
+      }
+    });
   }
-  updaters.push((dt, t) => {
-    for (const r of rabbits) {
-      if (r.state === 'idle') {
-        r.timer -= dt;
-        if (r.timer <= 0) {
-          for (let tries = 0; tries < 6; tries++) {
-            const a = rand() * Math.PI * 2, d = 2 + rand() * 5;
-            const nx = r.x + Math.cos(a) * d, nz = r.z + Math.sin(a) * d;
-            if (!openGround(nx, nz, 12)) continue;
-            r.tx = nx; r.tz = nz; r.state = 'hop'; r.hopT = 0;
-            r.g.rotation.y = Math.atan2(nx - r.x, nz - r.z);
-            break;
-          }
-          if (r.state === 'idle') r.timer = 1 + rand() * 2;
-        }
-      } else {
-        r.hopT += dt / 0.48;
-        const k = Math.min(r.hopT, 1);
-        const x = r.x + (r.tx - r.x) * k, z = r.z + (r.tz - r.z) * k;
-        r.g.position.set(x, terrainHeight(x, z) + Math.sin(Math.PI * k) * 0.5, z);
-        if (k >= 1) {
-          r.x = r.tx; r.z = r.tz;
-          r.state = 'idle';
-          r.timer = 0.3 + rand() * 2.4;
-        }
-      }
-    }
-  });
-
-  addCategory('rabbits', {
-    label: 'the rabbits', grayLevel: 0.55, countTotal: false,
-    synonyms: ['rabbit', 'rabbits', 'bunny', 'bunnies', 'hare', 'hares'],
-    phrase: 'and the rabbits ran',
-    defaultColor: '#a98467',
-    surfaces: [
-      { type: 'tint', current: rabbitMat.color, apply: (c) => rabbitMat.color.copy(c) },
-    ],
-  });
-
-  // ---- fish (leap once the river has a color) -----------------------------
-  const fishMat = instMaterial();
-  fishMat.color.setScalar(0.6);
-  const fishGeo = new THREE.IcosahedronGeometry(1, 0).scale(0.16, 0.14, 0.5);
-  const fishes = [];
-  for (let i = 0; i < 3; i++) {
-    const m = new THREE.Mesh(fishGeo, fishMat);
-    m.visible = false;
-    m.raycast = () => {};
-    scene.add(m);
-    fishes.push({ m, active: false, nextAt: 2 + i * 3, t0: 0, z0: 0, dir: 1 });
-  }
-  updaters.push((dt, t, playerPos) => {
-    if (!state.fishOn) return;
-    for (const f of fishes) {
-      if (!f.active) {
-        if (t > f.nextAt) {
-          f.active = true;
-          f.t0 = t;
-          const pz = playerPos ? playerPos.z : 0;
-          f.z0 = Math.max(-200, Math.min(200, pz + (rand() - 0.5) * 120));
-          f.dir = rand() > 0.5 ? 1 : -1;
-        }
-        continue;
-      }
-      const k = (t - f.t0) / 1.05;
-      if (k >= 1) {
-        f.active = false;
-        f.m.visible = false;
-        f.nextAt = t + 2.5 + rand() * 6;
-        continue;
-      }
-      const z = f.z0 + f.dir * 2.4 * k;
-      f.m.visible = true;
-      f.m.position.set(riverX(z), WATER_Y - 0.2 + Math.sin(Math.PI * k) * 1.9, z);
-      f.m.rotation.x = f.dir * (Math.PI * k - Math.PI / 2);
-    }
-  });
-
-  addCategory('fish', {
-    label: 'the fish', grayLevel: 0.6, countTotal: false,
-    synonyms: ['fish', 'fishes', 'trout', 'salmon', 'minnows'],
-    phrase: 'and the fish leapt',
-    defaultColor: '#9fb4c4',
-    surfaces: [
-      { type: 'tint', current: fishMat.color, apply: (c) => fishMat.color.copy(c) },
-    ],
-  });
 
   // ---- contact shadows ----------------------------------------------------
   const shadowSpots = treeSpots.map((s) => ({ x: s.x, z: s.z, r: 1.6 * s.s }))
@@ -1426,20 +1633,21 @@ export function buildWorld(scene) {
     gazeEntries,
     meshToKey,
     terrainHeight,
-    WORLD_RADIUS,
     WATER_Y,
     scene,
     state,
     spawn,
     spawnLook: new THREE.Vector3(52, 4, 18),
+    realmKey: cfg.key,
+    realmTitle: cfg.title,
 
-    // ---- decree-driven hooks ----
     setNight(on) { state.nightTarget = on ? 1 : 0; },
     forceNight(on) { state.nightTarget = on ? 1 : 0; state.nightT = state.nightTarget; },
     setWeather(kind) {
       state.weather = kind;
       state.cloudDimTarget = kind === 'rain' ? 0.55 : kind === 'snow' ? 0.82 : 1;
     },
+    setSeason(s) { state.season = s; },
     lifeOnDecree(catKey, baseColor, rainbow, origin, now) {
       if (catKey === 'land') growGrass(origin, now);
       if (catKey === 'flowers') showButterflies(baseColor, rainbow, now);
@@ -1458,7 +1666,6 @@ export function buildWorld(scene) {
       this.setNight(false);
       this.setWeather('clear');
     },
-    setSeason(s) { state.season = s; },
     spawnRainbow() {
       if (state.nightT < 0.5) rbState.phase = 0;
     },
@@ -1482,7 +1689,7 @@ export function buildWorld(scene) {
       petalState.start = now;
       petals.visible = true;
     },
-    riverDistance(x, z) { return Math.abs(x - riverX(z)); },
+    riverDistance(x, z) { return waterDist(x, z); },
     resolveHit(object, instanceId) {
       const key = meshToKey.get(object);
       if (!key) return null;

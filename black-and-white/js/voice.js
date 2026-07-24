@@ -10,10 +10,13 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
 
   onVoiceState(supported ? 'idle' : 'unsupported');
 
+  let lastError = null;
+
   function startListen() {
     if (!supported || holding) return;
     holding = true;
     lastTranscript = '';
+    lastError = null;
     try {
       rec = new SR();
     } catch {
@@ -25,6 +28,9 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
     rec.interimResults = true;
     rec.continuous = true;
     rec.maxAlternatives = 1;
+    // only claim "listening" once the recognizer actually engages,
+    // so a dead speech service is visible instead of silent
+    rec.onstart = () => { if (holding) onVoiceState('listening'); };
     rec.onresult = (e) => {
       let text = '';
       for (const res of e.results) text += res[0].transcript;
@@ -32,6 +38,7 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
       onInterim(text);
     };
     rec.onerror = (e) => {
+      lastError = e.error;
       if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
         supported = false;
         onVoiceState('denied');
@@ -41,14 +48,22 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
       if (holding) {
         // browser ended early (silence timeout) — treat as release
         holding = false;
-        onVoiceState('idle');
+        onVoiceState(supported ? 'idle' : 'denied');
       }
-      if (lastTranscript.trim()) onUtterance(lastTranscript, 'voice');
+      if (lastTranscript.trim()) {
+        onUtterance(lastTranscript, 'voice');
+      } else if (supported && lastError !== null
+        && lastError !== 'aborted' && lastError !== 'no-speech') {
+        onVoiceState('error:' + lastError);
+      } else if (supported) {
+        // engaged but heard nothing
+        onVoiceState('silence');
+      }
       lastTranscript = '';
     };
     try {
       rec.start();
-      onVoiceState('listening');
+      onVoiceState('starting');
     } catch {
       holding = false;
       onVoiceState('idle');
@@ -89,22 +104,34 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
   });
   window.addEventListener('contextmenu', (e) => e.preventDefault());
 
+  const typeWrap = typeBox.closest('#typewrap') || typeBox.parentElement;
   function openType() {
-    typeBox.parentElement.classList.add('open');
+    typeWrap.classList.add('open');
     typeBox.value = '';
     typeBox.focus();
   }
   function closeType() {
     typeBox.blur();
-    typeBox.parentElement.classList.remove('open');
+    typeWrap.classList.remove('open');
   }
   function submitType() {
     const text = typeBox.value.trim();
     closeType();
     if (text) onUtterance(text, 'typed');
   }
+  // mobile keyboards submit through the form's Go/Enter action
+  const form = typeBox.closest('form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      submitType();
+    });
+  }
 
   return {
     get voiceSupported() { return supported; },
+    startListen,
+    stopListen,
+    openType,
   };
 }

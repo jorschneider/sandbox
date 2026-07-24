@@ -75,6 +75,12 @@ const RE_RAIN = /let it rain|make it rain|^rain$|bring (the )?rain|\brainfall\b|
 const RE_SNOW = /let it snow|make it snow|bring (the )?snow|\bsnowfall\b|let the snow|start the snow/;
 const RE_CLEAR = /stop the (rain|snow)|no more (rain|snow)|clear (the )?sk(y|ies)|make it clear|stop (raining|snowing)/;
 const RE_SHARE = /share (this |the )?world|remember this world|give (me )?(a |the )?link|copy (the |this )?world/;
+const RE_TRAVEL = /\b(?:go|travel|journey|take (?:me|us)|show me|carry me|bring me|walk)\b.*?\bthe (valley|meadows|desert|dunes|sands|mountains|peaks|alps|highlands)\b/;
+const TRAVEL_WORDS = {
+  valley: 'valley', meadows: 'valley',
+  desert: 'desert', dunes: 'desert', sands: 'desert',
+  mountains: 'peaks', peaks: 'peaks', alps: 'peaks', highlands: 'peaks',
+};
 
 // seasonal palettes: fn(jitter) -> [h, s, l]
 const SEASONS = {
@@ -119,6 +125,11 @@ let hydrating = false;
 export function bindDecrees(w, h) {
   world = w;
   hooks = h;
+  // drop transitions still aimed at a previous world's surfaces
+  batches.length = 0;
+  singles.length = 0;
+  tweens.length = 0;
+  rings.length = 0;
   synIndex = new Map();
   for (const cat of world.categories.values()) {
     for (const s of cat.synonyms) synIndex.set(s, cat.key);
@@ -313,6 +324,11 @@ export function speak(text, gaze, playerPos, now) {
     hooks.onIntent?.('share');
     return;
   }
+  const tm = norm.match(RE_TRAVEL);
+  if (tm) {
+    hooks.onIntent?.('travel:' + TRAVEL_WORDS[tm[1]]);
+    return;
+  }
   for (const s of Object.keys(SEASONS)) {
     if (SEASONS[s].re.test(norm)) {
       doSeason(s, playerPos, now);
@@ -447,8 +463,12 @@ function doSeason(s, origin, now, instant = false) {
   world.setSeason(s);
   const treesCat = world.categories.get('trees');
   const wasNew = !treesCat.colored;
-  enactPalette('trees', 1, def.trees, origin, now, instant); // broadleaf canopies
-  if (s === 'winter') enactPalette('trees', 0, def.trees, origin, now, instant);
+  if (s === 'winter') {
+    // winter frosts every canopy kind
+    treesCat.surfaces.forEach((_, i) => enactPalette('trees', i, def.trees, origin, now, instant));
+  } else if (treesCat.seasonSurf >= 0) {
+    enactPalette('trees', treesCat.seasonSurf, def.trees, origin, now, instant);
+  }
   treesCat.colored = true;
   treesCat.currentName = s;
   treesCat.currentColor.set(def.rep);
@@ -723,7 +743,7 @@ function paintPatch(point, color, name, now, instant, radius = 9) {
 
 function persist() {
   if (hydrating) return;
-  hooks.onStateChange?.({ v: 2, entries: log.entries,
+  hooks.onStateChange?.({ v: 2, realm: world?.realmKey, entries: log.entries,
     night: log.night, weather: log.weather });
 }
 
@@ -768,7 +788,8 @@ export function getWorldState() {
 
 // the current world as a portable object (same shape persist() saves)
 export function getSaveState() {
-  return { v: 2, entries: log.entries, night: log.night, weather: log.weather };
+  return { v: 2, realm: world?.realmKey, entries: log.entries,
+    night: log.night, weather: log.weather };
 }
 
 // --------------------------------------------------------------- ripple rings

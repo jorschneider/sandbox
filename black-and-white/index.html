@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script type="importmap">
-    { "imports": { "three": "../vendor/three.module.min.js" } }
+    { "imports": { "three": "./vendor/three.module.min.js" } }
   </script>
 </head>
 <body>
@@ -27,17 +27,27 @@
   <div id="mic"><span></span></div>
 
   <div id="hint">
-    <div>WASD — walk &nbsp;·&nbsp; mouse — look &nbsp;·&nbsp; shift — stride</div>
-    <div class="voice-hint">hold V (or right mouse) — speak &nbsp;·&nbsp; T — type a decree</div>
-    <div class="dim">&ldquo;the river is turquoise&rdquo; &nbsp;·&nbsp; &ldquo;this tree is crimson&rdquo; &nbsp;·&nbsp; &ldquo;let there be night&rdquo; &nbsp;·&nbsp; &ldquo;let it be autumn&rdquo; &nbsp;·&nbsp; &ldquo;share this world&rdquo;</div>
+    <div class="kb-only">WASD — walk &nbsp;·&nbsp; mouse — look &nbsp;·&nbsp; shift — stride</div>
+    <div class="kb-only voice-hint">hold V (or right mouse) — speak &nbsp;·&nbsp; T — type a decree</div>
+    <div class="touch-only">left thumb — walk &nbsp;·&nbsp; right thumb — look</div>
+    <div class="touch-only voice-hint">hold the mic — speak &nbsp;·&nbsp; Aa — type a decree</div>
+    <div class="dim">&ldquo;the river is turquoise&rdquo; &nbsp;·&nbsp; &ldquo;let there be night&rdquo; &nbsp;·&nbsp; &ldquo;let it be autumn&rdquo; &nbsp;·&nbsp; &ldquo;take me to the desert&rdquo; &nbsp;·&nbsp; &ldquo;share this world&rdquo;</div>
   </div>
 
+  <!-- touch controls -->
+  <div id="stick"><div id="stick-nub"></div></div>
+  <button id="mic-btn" aria-label="hold to speak">&#127908;</button>
+  <button id="type-btn" aria-label="type a decree">Aa</button>
+
   <div id="typewrap">
-    <input id="typebox" type="text" autocomplete="off" spellcheck="false"
-      placeholder="speak, o god — &ldquo;the trees are deep emerald&rdquo;" />
+    <form id="typeform" action=".">
+      <input id="typebox" type="text" autocomplete="off" spellcheck="false" enterkeyhint="send"
+        placeholder="speak, o god — &ldquo;the trees are deep emerald&rdquo;" />
+    </form>
   </div>
 
   <div id="resume">click to return to the world</div>
+  <div id="fade"></div>
 
   <!-- landing overlay -->
   <div id="enter">
@@ -45,8 +55,10 @@
       <div class="kicker">a colorless world awaits your word</div>
       <h1><span class="b">BLACK</span> <span class="amp">&amp;</span> <span class="w">WHITE</span></h1>
       <p class="lede">
-        Walk the gray valley as a small god. Look upon a thing, hold
-        <strong>V</strong>, and speak — <em>&ldquo;emerald&rdquo;</em>,
+        Walk the gray valley as a small god. Look upon a thing,
+        <span class="kb-only">hold <strong>V</strong>,</span>
+        <span class="touch-only">hold the mic button,</span>
+        and speak — <em>&ldquo;emerald&rdquo;</em>,
         <em>&ldquo;the river is turquoise&rdquo;</em>,
         <em>&ldquo;make the roofs dark red&rdquo;</em> — and the color will
         ripple outward to everything of its kind, until the world is full.
@@ -54,7 +66,7 @@
       <button id="enter-btn">ENTER THE WORLD</button>
       <div class="foot">
         best with a microphone &middot; voice works in Chrome &amp; Safari &middot;
-        no mic? press <strong>T</strong> and type your decrees<br />
+        no mic? <span class="kb-only">press <strong>T</strong></span><span class="touch-only">tap <strong>Aa</strong></span> and type your decrees<br />
         the world remembers what you speak &middot; try
         <em>&ldquo;let there be color&rdquo;</em>,
         <em>&ldquo;let there be night&rdquo;</em>,

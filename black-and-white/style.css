@@ -6,9 +6,53 @@
   --sketch: 1; /* 1 = pencil drawing, 0 = fully painted world */
 }
 
-html, body { height: 100%; overflow: hidden; background: #e7e7e4; }
+html, body {
+  height: 100%; overflow: hidden; background: #e7e7e4;
+  touch-action: none; -webkit-user-select: none; user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
 
-#gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+#gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+
+/* device-specific copy: .kb-only for keyboard+mouse, .touch-only for touch */
+.touch-only { display: none; }
+body.touch div.touch-only { display: block; }
+body.touch span.touch-only { display: inline; }
+body.touch .kb-only { display: none; }
+
+/* virtual joystick (anchors wherever the left thumb lands) */
+#stick {
+  position: fixed; width: 116px; height: 116px; margin: -58px 0 0 -58px;
+  border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.55);
+  background: rgba(18, 18, 20, 0.18);
+  display: none; pointer-events: none; z-index: 5;
+}
+#stick.on { display: block; }
+#stick-nub {
+  position: absolute; left: 50%; top: 50%; width: 52px; height: 52px;
+  border-radius: 50%; background: rgba(255, 255, 255, 0.55);
+  transform: translate(-50%, -50%);
+}
+
+#mic-btn, #type-btn {
+  display: none; position: fixed; right: 18px; z-index: 5;
+  align-items: center; justify-content: center;
+  border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.65);
+  background: rgba(15, 15, 18, 0.45); color: #fff;
+  backdrop-filter: blur(2px); cursor: pointer;
+}
+body.touch #mic-btn {
+  display: flex; width: 78px; height: 78px; bottom: 92px; font-size: 32px;
+}
+body.touch #type-btn {
+  display: flex; width: 54px; height: 54px; bottom: 26px;
+  font: italic 600 20px/1 var(--serif);
+}
+#mic-btn.held { background: rgba(255, 255, 255, 0.3); }
+
+body.touch #hint { top: 14px; bottom: auto; left: 16px; font-size: 10.5px; }
+body.touch #typewrap { bottom: auto; top: 14vh; }
+#typebox { -webkit-user-select: text; user-select: text; }
 
 /* pencil hatching that dissolves as the world takes color */
 #sketch {
@@ -141,6 +185,13 @@ html, body { height: 100%; overflow: hidden; background: #e7e7e4; }
   opacity: 0; transition: opacity 0.3s; pointer-events: none;
 }
 #resume.show { opacity: 1; }
+
+/* white-out used when traveling between realms */
+#fade {
+  position: fixed; inset: 0; z-index: 8; pointer-events: none;
+  background: #f2f2ef; opacity: 0; transition: opacity 0.9s ease;
+}
+#fade.on { opacity: 1; }
 
 /* ------------------------------------------------------------- landing */
 

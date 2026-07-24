@@ -1,7 +1,6 @@
-// Soundscape: a real music bed (audio/theme.mp3, looped) that begins
-// muffled in the gray world and opens up, filter-wise, as color arrives.
-// Small synthesized diegetic touches remain — decree bells, birdsong by
-// day, crickets at night, river babble, rain patter. No pads, no drone.
+// Soundscape: the music bed (audio/theme.mp3, seamlessly looped) plus
+// one-shot bells when color lands. No ambient loops — the music begins
+// muffled in the gray world and opens, filter-wise, as color arrives.
 
 const SEMIS = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26, 28];
 const BASE_FREQ = 110; // A2
@@ -13,31 +12,9 @@ export function createAmbience() {
   let musicGain = null, musicFilter = null;
   const musicEls = [], musicGains = [];
   let musicActive = 0, musicXfade = 0;
-  let rainGain = null, babbleGain = null;
-  let chirpsOn = false, babbleOn = false, night = false;
-  let nextChirp = 0;
+  let night = false;
   let started = false;
   let progress = 0;
-
-  function noiseBuffer(seconds) {
-    const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
-    return buf;
-  }
-
-  function noiseLayer(freq, q) {
-    const src = ctx.createBufferSource();
-    src.buffer = noiseBuffer(2.7);
-    src.loop = true;
-    const f = ctx.createBiquadFilter();
-    f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
-    const g = ctx.createGain();
-    g.gain.value = 0;
-    src.connect(f); f.connect(g); g.connect(master);
-    src.start();
-    return g;
-  }
 
   // the music mirrors how much of the world has color:
   // gray = distant and muffled, painted = full and present
@@ -79,7 +56,7 @@ export function createAmbience() {
         const src = ctx.createMediaElementSource(el);
         src.connect(g);
         g.connect(musicFilter);
-      } catch { /* element/codec failure — effects still play */ }
+      } catch { /* element/codec failure — bells still play */ }
       // safety net if the crossfade never armed (e.g. unknown duration)
       el.addEventListener('ended', () => {
         if (musicEls[musicActive] === el) {
@@ -106,9 +83,6 @@ export function createAmbience() {
     bellLp.connect(delay);
     delay.connect(fb); fb.connect(delay);
     delay.connect(wet); wet.connect(master);
-
-    // rain patter, silent until the weather turns
-    rainGain = noiseLayer(2400, 0.5);
   }
 
   function chime(noteIdx, delaySec = 0, high = false) {
@@ -130,52 +104,6 @@ export function createAmbience() {
     o.stop(t + 2.6); o2.stop(t + 2.6);
   }
 
-  function birdChirp() {
-    const t = ctx.currentTime;
-    const syllables = 2 + (Math.random() * 3) | 0;
-    for (let s = 0; s < syllables; s++) {
-      const st = t + s * (0.14 + Math.random() * 0.08);
-      const f0 = 2200 + Math.random() * 1600;
-      const o = ctx.createOscillator();
-      o.type = 'sine';
-      o.frequency.setValueAtTime(f0, st);
-      o.frequency.exponentialRampToValueAtTime(f0 * (0.55 + Math.random() * 0.3), st + 0.09);
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, st);
-      g.gain.exponentialRampToValueAtTime(0.028, st + 0.015);
-      g.gain.exponentialRampToValueAtTime(0.0001, st + 0.11);
-      o.connect(g); g.connect(master);
-      o.start(st); o.stop(st + 0.13);
-    }
-  }
-
-  function cricketTrill() {
-    const t = ctx.currentTime;
-    const pulses = 5 + (Math.random() * 5) | 0;
-    const f0 = 3800 + Math.random() * 600;
-    for (let p = 0; p < pulses; p++) {
-      const st = t + p * 0.055;
-      const o = ctx.createOscillator();
-      o.type = 'sine'; o.frequency.value = f0;
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, st);
-      g.gain.exponentialRampToValueAtTime(0.013, st + 0.008);
-      g.gain.exponentialRampToValueAtTime(0.0001, st + 0.045);
-      o.connect(g); g.connect(master);
-      o.start(st); o.stop(st + 0.06);
-    }
-  }
-
-  function addBabble() {
-    babbleGain = noiseLayer(950, 2.2);
-    babbleGain.gain.linearRampToValueAtTime(0.012, ctx.currentTime + 4);
-    const lfo = ctx.createOscillator();
-    lfo.frequency.value = 5.3;
-    const lfoAmp = ctx.createGain(); lfoAmp.gain.value = 0.009;
-    lfo.connect(lfoAmp); lfoAmp.connect(babbleGain.gain);
-    lfo.start();
-  }
-
   return {
     start,
     onDecree(catIndex, isNew, coloredCount, total, catKey, muted) {
@@ -184,8 +112,6 @@ export function createAmbience() {
       if (isNew) {
         progress = coloredCount / total;
         voiceTheWorld();
-        if (catKey === 'trees' || catKey === 'birds') chirpsOn = true;
-        if (catKey === 'water' && !babbleOn) { babbleOn = true; addBabble(); }
       }
     },
     singleChime(catIndex) {
@@ -195,13 +121,9 @@ export function createAmbience() {
       if (!started) return;
       for (let i = 0; i < count; i++) chime(i, i * 0.42);
     },
-    // rebuild the soundscape for a remembered world
+    // rebuild the music state for a remembered world
     restore(coloredKeys, allKeys, coloredCount, total) {
       if (!started) return;
-      for (const key of coloredKeys) {
-        if (key === 'trees' || key === 'birds') chirpsOn = true;
-        if (key === 'water' && !babbleOn) { babbleOn = true; addBabble(); }
-      }
       progress = total ? coloredCount / total : 0;
       voiceTheWorld();
     },
@@ -211,23 +133,26 @@ export function createAmbience() {
       voiceTheWorld();
       bellLp.frequency.linearRampToValueAtTime(on ? 900 : 1400, ctx.currentTime + 4);
     },
-    setWeather(kind) {
+    setWeather() { /* weather makes no sound of its own */ },
+    setRiverProximity() { /* no ambient water layer */ },
+    // the world made whole: ascending bells + a swell in the music
+    flourish() {
       if (!started) return;
-      rainGain.gain.linearRampToValueAtTime(
-        kind === 'rain' ? 0.04 : 0, ctx.currentTime + 2.5);
+      for (let i = 0; i < 13; i++) chime(i, i * 0.09);
+      chime(12, 1.35, true);
+      const t = ctx.currentTime;
+      musicGain.gain.cancelScheduledValues(t);
+      musicGain.gain.linearRampToValueAtTime(0.74, t + 1.2);
+      musicGain.gain.linearRampToValueAtTime(0.58, t + 7);
     },
     reset() {
       if (!started) return;
       progress = 0;
       night = false;
-      chirpsOn = false;
       voiceTheWorld();
-      if (babbleGain) babbleGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
-      babbleOn = false;
-      rainGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
       bellLp.frequency.linearRampToValueAtTime(1400, ctx.currentTime + 2);
     },
-    update(nowSec) {
+    update() {
       if (!started) return;
       // seamless loop: crossfade to the twin element near the end of the file
       const a = musicEls[musicActive];
@@ -251,28 +176,6 @@ export function createAmbience() {
         musicEls[1 - musicActive].pause();
         musicXfade = 0;
       }
-      if (!chirpsOn) return;
-      if (nowSec > nextChirp) {
-        if (night) cricketTrill(); else birdChirp();
-        nextChirp = nowSec + (night ? 2.5 + Math.random() * 4 : 3.5 + Math.random() * 7);
-      }
-    },
-    // river babble swells as the god nears the water
-    setRiverProximity(p) {
-      if (!started || !babbleOn || !babbleGain) return;
-      const t = ctx.currentTime;
-      babbleGain.gain.cancelScheduledValues(t);
-      babbleGain.gain.linearRampToValueAtTime(0.005 + p * 0.05, t + 0.4);
-    },
-    // the world made whole: ascending bells + a swell in the music
-    flourish() {
-      if (!started) return;
-      for (let i = 0; i < 13; i++) chime(i, i * 0.09);
-      chime(12, 1.35, true);
-      const t = ctx.currentTime;
-      musicGain.gain.cancelScheduledValues(t);
-      musicGain.gain.linearRampToValueAtTime(0.74, t + 1.2);
-      musicGain.gain.linearRampToValueAtTime(0.58, t + 7);
     },
     // call from any user gesture: resumes a suspended context / blocked play()
     poke() {
