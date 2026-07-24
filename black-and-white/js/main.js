@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { buildWorld } from './world.js';
-import { bindDecrees, speak, tickDecrees } from './decree.js';
+import { bindDecrees, speak, hydrate, getWorldState, tickDecrees } from './decree.js';
 import { initInput } from './voice.js';
 import { createAmbience } from './audio.js';
 
@@ -12,6 +12,8 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 1100);
@@ -20,6 +22,8 @@ camera.rotation.order = 'YXZ';
 const world = buildWorld(scene);
 const audio = createAmbience();
 const catKeys = [...world.categories.keys()];
+
+const SAVE_KEY = 'bw-world-v2';
 
 // ------------------------------------------------------------------ HUD
 
@@ -41,13 +45,50 @@ function caption(html, hex, cls = '') {
     cls === 'hint' || cls === 'interim' ? 2800 : 4200);
 }
 
+// the pencil-sketch overlay thins as the world takes color
+function updateSketch() {
+  let colored = 0, total = 0;
+  for (const c of world.categories.values()) {
+    if (!c.countTotal) continue;
+    total++;
+    if (c.colored) colored++;
+  }
+  document.documentElement.style.setProperty('--sketch', String(1 - colored / total));
+}
+updateSketch();
+
+// ------------------------------------------------------------------ decrees
+
+// declared before bindDecrees: hydration fires onDecree during module eval
+const gazeState = { key: null, point: null, surfIndex: null, instanceId: null };
+let saveTimer = 0;
+
 bindDecrees(world, {
   caption,
-  onDecree(catKey, hue, isNew, coloredCount, total, muted) {
-    audio.onDecree(catKeys.indexOf(catKey), isNew, coloredCount, total, catKey, muted);
-    gazeState.key = undefined; // re-render the gaze label ("unhued" may have cleared)
+  onDecree(info) {
+    const idx = catKeys.indexOf(info.catKey);
+    if (info.single) {
+      audio.singleChime(idx);
+    } else {
+      audio.onDecree(idx, info.isNew, info.coloredCount, info.total, info.catKey, info.muted);
+      world.lifeOnDecree(info.catKey, info.base, info.rainbow, info.origin, info.now);
+    }
+    updateSketch();
+    gazeState.key = undefined; // re-render the gaze label
   },
-  onGenesis() { audio.genesisChimes(world.categories.size); },
+  onIntent(kind) {
+    if (kind === 'night') audio.setNight(true);
+    else if (kind === 'day') audio.setNight(false);
+    else if (kind === 'rain' || kind === 'snow' || kind === 'clear') audio.setWeather(kind);
+    else if (kind === 'genesis') audio.genesisChimes(world.categories.size);
+    else if (kind === 'reset') { audio.reset(); updateSketch(); }
+  },
+  onStateChange(state) {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch { /* full/blocked */ }
+    }, 250);
+  },
 });
 
 // ------------------------------------------------------------------ player
@@ -60,13 +101,19 @@ const player = {
 {
   const d = new THREE.Vector3().subVectors(world.spawnLook, player.pos);
   player.yaw = Math.atan2(-d.x, -d.z);
-  player.pitch = 0;
 }
 player.pos.y = world.terrainHeight(player.pos.x, player.pos.z) + 1.9;
 
+// a remembered world wakes up already painted
+let remembered = false;
+try {
+  const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
+  remembered = hydrate(saved, player.pos.clone(), performance.now() / 1000);
+} catch { /* corrupt save — start gray */ }
+updateSketch();
+
 const keys = new Set();
 let started = false;
-let typing = false;
 
 window.addEventListener('keydown', (e) => {
   if (typingActive()) return;
@@ -113,7 +160,6 @@ function updatePlayer(dt) {
   player.vel.lerp(wish, k);
   player.pos.addScaledVector(player.vel, dt);
 
-  // keep inside the valley rim
   const rad = Math.hypot(player.pos.x, player.pos.z);
   if (rad > 200) {
     player.pos.x *= 200 / rad;
@@ -135,7 +181,6 @@ function updatePlayer(dt) {
 
 const raycaster = new THREE.Raycaster();
 raycaster.far = 1000;
-const gazeState = { key: null, point: null };
 let gazeClock = 0;
 
 function updateGaze(now) {
@@ -143,9 +188,14 @@ function updateGaze(now) {
   gazeClock = now + 0.13;
   raycaster.setFromCamera({ x: 0, y: 0 }, camera);
   const hits = raycaster.intersectObjects(world.gazeEntries, true);
-  let key = null, point = null;
+  let key = null, point = null, surfIndex = null, instanceId = null;
   if (hits.length) {
-    key = world.meshToKey.get(hits[0].object) || null;
+    const resolved = world.resolveHit(hits[0].object, hits[0].instanceId);
+    if (resolved) {
+      key = resolved.key;
+      surfIndex = resolved.surfIndex ?? null;
+      instanceId = resolved.instanceId ?? null;
+    }
     point = hits[0].point;
   } else if (raycaster.ray.direction.y > 0.04) {
     key = 'sky';
@@ -162,6 +212,8 @@ function updateGaze(now) {
     }
   }
   gazeState.point = point;
+  gazeState.surfIndex = surfIndex;
+  gazeState.instanceId = instanceId;
 }
 
 // ------------------------------------------------------------------ input
@@ -173,8 +225,7 @@ const input = initInput({
   isTyping: typingActive,
   onUtterance(text) {
     micEl.classList.remove('live');
-    speak(text, gazeState.key, gazeState.point, player.pos.clone(),
-      performance.now() / 1000);
+    speak(text, { ...gazeState }, player.pos.clone(), performance.now() / 1000);
   },
   onInterim(text) {
     caption(escapeHtml(text), null, 'interim');
@@ -200,7 +251,19 @@ $('enter-btn').addEventListener('click', () => {
   started = true;
   $('enter').classList.add('gone');
   audio.start();
-  // ask for the mic now, inside a click gesture, so hold-V works while locked
+  // rebuild the soundscape of a remembered world
+  const coloredKeys = catKeys.filter((k) => world.categories.get(k).colored);
+  let colored = 0, total = 0;
+  for (const c of world.categories.values()) {
+    if (!c.countTotal) continue;
+    total++;
+    if (c.colored) colored++;
+  }
+  audio.restore(coloredKeys, catKeys, colored, total);
+  const ws = getWorldState();
+  audio.setNight(ws.night);
+  if (ws.weather !== 'clear') audio.setWeather(ws.weather);
+
   if (input.voiceSupported && navigator.mediaDevices?.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then((s) => s.getTracks().forEach((t) => t.stop()))
@@ -208,7 +271,9 @@ $('enter-btn').addEventListener('click', () => {
   }
   lockPointer();
   setTimeout(() => {
-    caption('gaze upon a thing — hold <em>V</em> — speak a color', null, 'hint');
+    caption(remembered
+      ? 'the world remembers your word.'
+      : 'gaze upon a thing — hold <em>V</em> — speak a color', null, 'hint');
   }, 1600);
 });
 
@@ -220,17 +285,23 @@ addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight);
 });
 
+// debug/testing handle
+window.__bw = { world, player };
+
 let last = performance.now() / 1000;
 renderer.setAnimationLoop(() => {
   const now = performance.now() / 1000;
   const dt = Math.min(now - last, 0.05);
   last = now;
 
-  if (started) updatePlayer(dt);
-  else camera.rotation.set(player.pitch, player.yaw + Math.sin(now * 0.05) * 0.04, 0),
+  if (started) {
+    updatePlayer(dt);
+  } else {
+    camera.rotation.set(player.pitch, player.yaw + Math.sin(now * 0.05) * 0.04, 0);
     camera.position.set(player.pos.x, player.pos.y, player.pos.z);
+  }
 
-  world.update(dt, now);
+  world.update(dt, now, player.pos);
   tickDecrees(now);
   audio.update(now);
   if (started) updateGaze(now);

@@ -1,5 +1,7 @@
 // Builds the monochrome valley and registers every paintable "category".
 // A category owns one or more surfaces; decree.js animates their colors.
+// The world also runs the day/night compositor, weather, and the small
+// lives (grass, butterflies, sparkles, fireflies) that color awakens.
 
 import * as THREE from 'three';
 import { makeNoise } from './noise.js';
@@ -77,9 +79,6 @@ function mergeGeoms(geoms) {
   return out;
 }
 
-function gray(v) { return new THREE.Color(v, v, v); }
-
-// Standard flat material driven entirely by instance colors.
 function instMaterial(extra = {}) {
   return new THREE.MeshStandardMaterial({
     color: 0xffffff, flatShading: true, roughness: 0.95, metalness: 0, ...extra,
@@ -94,28 +93,42 @@ function makeInstanced(geo, count, matrices, grayLevel, jitter) {
     mesh.setMatrixAt(i, matrices[i]);
     const g = grayLevel + (rand() - 0.5) * jitter;
     mesh.setColorAt(i, c.setRGB(g, g, g));
-    const p = new THREE.Vector3().setFromMatrixPosition(matrices[i]);
-    positions.push(p);
+    positions.push(new THREE.Vector3().setFromMatrixPosition(matrices[i]));
   }
   mesh.instanceMatrix.needsUpdate = true;
   mesh.instanceColor.needsUpdate = true;
   return { mesh, positions };
 }
 
+const WHITE = new THREE.Color('#ffffff');
+const easeOut = (t) => 1 - (1 - t) * (1 - t);
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+
 // --------------------------------------------------------------------- build
 
 export function buildWorld(scene) {
   const categories = new Map();
-  const gazeEntries = [];   // { object, key } for raycasting
-  const meshToKey = new Map();
+  const gazeEntries = [];
+  const meshToKey = new Map();     // mesh -> category key (gaze)
+  const meshToSurf = new Map();    // mesh -> surface index (single-object decrees)
   const updaters = [];
 
+  // day/night + weather state, driven by decrees
+  const state = {
+    nightT: 0, nightTarget: 0,
+    weather: 'clear',
+    cloudDim: 1, cloudDimTarget: 1,
+    treesColored: false,
+  };
+
   function addCategory(key, def) {
-    categories.set(key, {
-      key, colored: false, currentName: null,
-      surfaces: [], ...def,
-    });
-    return categories.get(key);
+    const cat = {
+      key, colored: false, currentName: null, rainbow: false,
+      countTotal: true, surfaces: [], ...def,
+    };
+    cat.currentColor = new THREE.Color().setScalar(cat.grayLevel ?? 0.6);
+    categories.set(key, cat);
+    return cat;
   }
 
   function addGaze(object, key) {
@@ -126,45 +139,51 @@ export function buildWorld(scene) {
   // ---- lights -------------------------------------------------------------
   const hemi = new THREE.HemisphereLight(0xdcdcdc, 0x707070, 0.95);
   scene.add(hemi);
+
   const sunDir = new THREE.Vector3(0.45, 0.62, -0.64).normalize();
+  const moonDir = new THREE.Vector3(-0.55, 0.52, 0.5).normalize();
   const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
   sunLight.position.copy(sunDir).multiplyScalar(180);
+  sunLight.castShadow = true;
+  sunLight.shadow.mapSize.set(2048, 2048);
+  const sc = sunLight.shadow.camera;
+  sc.left = -130; sc.right = 130; sc.top = 130; sc.bottom = -130;
+  sc.near = 20; sc.far = 460;
+  sc.updateProjectionMatrix();
+  sunLight.shadow.bias = -0.0004;
+  sunLight.shadow.normalBias = 1.2;
   scene.add(sunLight, sunLight.target);
 
-  // ---- sky ----------------------------------------------------------------
-  scene.background = new THREE.Color('#e7e7e4');
-  scene.fog = new THREE.Fog('#e7e7e4', 120, 380);
+  // ---- sky (base colors; the compositor blends night in every frame) ------
+  const skyBase = new THREE.Color('#e7e7e4');
+  const sunLightBase = new THREE.Color('#ffffff');
+  scene.background = new THREE.Color().copy(skyBase);
+  scene.fog = new THREE.Fog(skyBase.clone(), 120, 380);
 
   addCategory('sky', {
-    label: 'the sky',
+    label: 'the sky', grayLevel: 0.9,
     synonyms: ['sky', 'skies', 'heavens', 'heaven', 'firmament', 'air'],
     phrase: 'and the heavens turned',
     defaultColor: '#87c7ea',
     surfaces: [
-      { type: 'tint', current: scene.background, apply: (c) => {
-        scene.background.copy(c);
-        scene.fog.color.copy(c).lerp(new THREE.Color('#ffffff'), 0.22);
-        hemi.color.copy(c).lerp(new THREE.Color('#ffffff'), 0.45);
-      } },
+      { type: 'tint', current: skyBase, apply: (c) => skyBase.copy(c) },
     ],
   });
 
-  // ---- sun ----------------------------------------------------------------
-  const sunMat = new THREE.MeshBasicMaterial({ color: '#f0f0ee', fog: false });
+  // ---- sun / moon / stars -------------------------------------------------
+  const sunMat = new THREE.MeshBasicMaterial({
+    color: '#f0f0ee', fog: false, transparent: true, opacity: 1,
+  });
   const sunDisc = new THREE.Mesh(new THREE.CircleGeometry(15, 26), sunMat);
-  sunDisc.position.copy(sunDir).multiplyScalar(360);
   const haloMat = new THREE.MeshBasicMaterial({
     color: '#f0f0ee', fog: false, transparent: true, opacity: 0.18, depthWrite: false,
   });
   const sunHalo = new THREE.Mesh(new THREE.CircleGeometry(24, 26), haloMat);
-  sunHalo.position.copy(sunDir).multiplyScalar(358);
-  sunDisc.lookAt(0, 0, 0);
-  sunHalo.lookAt(0, 0, 0);
   scene.add(sunDisc, sunHalo);
   addGaze(sunDisc, 'sun');
 
   addCategory('sun', {
-    label: 'the sun',
+    label: 'the sun', grayLevel: 0.94,
     synonyms: ['sun', 'sunshine', 'sunlight'],
     phrase: 'and the sun burned',
     defaultColor: '#ffd166',
@@ -172,9 +191,109 @@ export function buildWorld(scene) {
       { type: 'tint', current: sunMat.color, apply: (c) => {
         sunMat.color.copy(c);
         haloMat.color.copy(c);
-        sunLight.color.copy(c).lerp(new THREE.Color('#ffffff'), 0.55);
+        sunLightBase.copy(c).lerp(WHITE, 0.55);
       } },
     ],
+  });
+
+  const moonMat = new THREE.MeshBasicMaterial({
+    color: '#e6ecf7', fog: false, transparent: true, opacity: 0,
+  });
+  const moonDisc = new THREE.Mesh(new THREE.CircleGeometry(10.5, 26), moonMat);
+  const moonHaloMat = new THREE.MeshBasicMaterial({
+    color: '#e6ecf7', fog: false, transparent: true, opacity: 0, depthWrite: false,
+  });
+  const moonHalo = new THREE.Mesh(new THREE.CircleGeometry(16, 26), moonHaloMat);
+  scene.add(moonDisc, moonHalo);
+  addGaze(moonDisc, 'moon');
+
+  addCategory('moon', {
+    label: 'the moon', grayLevel: 0.9, countTotal: false,
+    synonyms: ['moon', 'moonlight'],
+    phrase: 'and the moon glowed',
+    defaultColor: '#e6ecf7',
+    surfaces: [
+      { type: 'tint', current: moonMat.color, apply: (c) => {
+        moonMat.color.copy(c);
+        moonHaloMat.color.copy(c);
+      } },
+    ],
+  });
+
+  const starMat = new THREE.PointsMaterial({
+    color: '#cfe0ff', size: 1.7, sizeAttenuation: false,
+    transparent: true, opacity: 0, fog: false, depthWrite: false,
+  });
+  {
+    const starPos = new Float32Array(850 * 3);
+    for (let i = 0; i < 850; i++) {
+      const v = new THREE.Vector3(rand() * 2 - 1, rand() * 0.9 + 0.06, rand() * 2 - 1)
+        .normalize().multiplyScalar(720);
+      starPos[i * 3] = v.x; starPos[i * 3 + 1] = v.y; starPos[i * 3 + 2] = v.z;
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    const stars = new THREE.Points(g, starMat);
+    stars.raycast = () => {};
+    scene.add(stars);
+  }
+
+  addCategory('stars', {
+    label: 'the stars', grayLevel: 0.85, countTotal: false,
+    synonyms: ['star', 'stars', 'starlight'],
+    phrase: 'and the stars shone',
+    defaultColor: '#cfe0ff',
+    surfaces: [
+      { type: 'tint', current: starMat.color, apply: (c) => starMat.color.copy(c) },
+    ],
+  });
+
+  // ---- day/night compositor ----------------------------------------------
+  const NIGHT_SKY = new THREE.Color('#0d1330');
+  const NIGHT_LIGHT = new THREE.Color('#a9c2e8');
+  const NIGHT_HEMI = new THREE.Color('#26304d');
+  const tC1 = new THREE.Color(), tC2 = new THREE.Color();
+  const sunPosDay = sunDir.clone().multiplyScalar(360);
+  const sunPosDown = new THREE.Vector3(sunDir.x, -0.14, sunDir.z).normalize().multiplyScalar(360);
+  const moonPosUp = moonDir.clone().multiplyScalar(360);
+  const moonPosDown = new THREE.Vector3(moonDir.x, -0.14, moonDir.z).normalize().multiplyScalar(360);
+  const lightDir = new THREE.Vector3();
+
+  updaters.push((dt, t, playerPos) => {
+    const target = state.nightTarget;
+    const step = dt / 6; // full day<->night swing over ~6 seconds
+    state.nightT += Math.min(Math.abs(target - state.nightT), step) * Math.sign(target - state.nightT);
+    const nt = state.nightT;
+
+    tC2.copy(skyBase).multiplyScalar(0.1).lerp(NIGHT_SKY, 0.75);
+    scene.background.copy(tC1.copy(skyBase).lerp(tC2, nt));
+    scene.fog.color.copy(tC1.copy(skyBase).lerp(WHITE, 0.22).lerp(tC2, nt));
+
+    hemi.color.copy(tC1.copy(skyBase).lerp(WHITE, 0.45).lerp(NIGHT_HEMI, nt * 0.85));
+    hemi.intensity = 0.95 - 0.5 * nt;
+    sunLight.color.copy(tC1.copy(sunLightBase).lerp(NIGHT_LIGHT, nt));
+    sunLight.intensity = 1.5 - 0.95 * nt;
+
+    const e = smoothstep(0, 1, nt);
+    sunDisc.position.lerpVectors(sunPosDay, sunPosDown, e);
+    sunHalo.position.copy(sunDisc.position).multiplyScalar(0.994);
+    sunDisc.lookAt(0, 0, 0); sunHalo.lookAt(0, 0, 0);
+    sunMat.opacity = clamp01(1 - (nt - 0.55) / 0.25);
+    haloMat.opacity = 0.18 * sunMat.opacity;
+    moonDisc.position.lerpVectors(moonPosDown, moonPosUp, e);
+    moonHalo.position.copy(moonDisc.position).multiplyScalar(0.994);
+    moonDisc.lookAt(0, 0, 0); moonHalo.lookAt(0, 0, 0);
+    moonMat.opacity = clamp01((nt - 0.3) / 0.35);
+    moonHaloMat.opacity = 0.14 * moonMat.opacity;
+    starMat.opacity = nt * (0.75 + 0.15 * Math.sin(t * 0.7));
+
+    // shadow light follows the player (snapped, to avoid shimmer)
+    if (playerPos) {
+      const sx = Math.round(playerPos.x / 8) * 8, sz = Math.round(playerPos.z / 8) * 8;
+      lightDir.lerpVectors(sunDir, moonDir, nt).normalize();
+      sunLight.position.set(sx + lightDir.x * 180, lightDir.y * 180, sz + lightDir.z * 180);
+      sunLight.target.position.set(sx, 0, sz);
+    }
   });
 
   // ---- terrain ------------------------------------------------------------
@@ -188,7 +307,6 @@ export function buildWorld(scene) {
   }
   tGeo.computeVertexNormals();
 
-  // Per-vertex shading factor (slope + altitude) baked into every color state.
   const shade = new Float32Array(vCount);
   const vJitter = new Float32Array(vCount);
   const tNor = tGeo.attributes.normal;
@@ -196,32 +314,125 @@ export function buildWorld(scene) {
   for (let i = 0; i < vCount; i++) {
     const ny = tNor.getY(i);
     const y = tPos.getY(i);
-    let s = 0.72 + 0.3 * smoothstep(0.55, 1, ny) + 0.004 * Math.max(y, 0);
-    shade[i] = Math.min(s, 1.12);
+    const s = Math.min(0.72 + 0.3 * smoothstep(0.55, 1, ny) + 0.004 * Math.max(y, 0), 1.12);
+    shade[i] = s;
     vJitter[i] = rand();
-    const g = (0.64 + (vJitter[i] - 0.5) * 0.07) * shade[i];
+    const g = (0.64 + (vJitter[i] - 0.5) * 0.07) * s;
     tCol[i * 3] = g; tCol[i * 3 + 1] = g; tCol[i * 3 + 2] = g;
   }
   tGeo.setAttribute('color', new THREE.BufferAttribute(tCol, 3));
   const terrain = new THREE.Mesh(tGeo, new THREE.MeshStandardMaterial({
     vertexColors: true, flatShading: true, roughness: 1, metalness: 0,
   }));
+  terrain.receiveShadow = true;
   scene.add(terrain);
   addGaze(terrain, 'land');
 
-  addCategory('land', {
-    label: 'the land',
-    synonyms: ['land', 'ground', 'grass', 'earth', 'hills', 'hill', 'valley',
-      'meadow', 'meadows', 'field', 'fields', 'terrain', 'mountains'],
-    phrase: 'and the land lay',
-    defaultColor: '#79b356',
-    surfaces: [
-      { type: 'vertex', mesh: terrain, positions: tPos, shade, jitterSeed: vJitter,
-        variance: { h: 0.02, s: 0.1, l: 0.06 } },
-      { type: 'tint', current: hemi.groundColor,
-        apply: (c) => hemi.groundColor.copy(c).lerp(new THREE.Color('#666666'), 0.45) },
-    ],
+  // ---- placement helpers --------------------------------------------------
+  function openGround(x, z, riverPad = 10, villagePad = 0.12) {
+    if (Math.hypot(x, z) > 190) return false;
+    if (Math.abs(x - riverX(z)) < riverPad) return false;
+    if (villageMask(x, z) > villagePad) return false;
+    return true;
+  }
+
+  const pathPts = [];
+  {
+    const ctrl = [
+      new THREE.Vector3(66, 0, 30), new THREE.Vector3(52, 0, 18),
+      new THREE.Vector3(30, 0, 10), new THREE.Vector3(14, 0, 5),
+      new THREE.Vector3(3.4, 0, 4), new THREE.Vector3(-14, 0, 0),
+      new THREE.Vector3(-34, 0, -8), new THREE.Vector3(-62, 0, -22),
+    ];
+    const curve = new THREE.CatmullRomCurve3(ctrl);
+    for (let i = 0; i <= 130; i++) pathPts.push(curve.getPoint(i / 130));
+  }
+  function nearPath(x, z, d) {
+    for (const p of pathPts) if (Math.hypot(p.x - x, p.z - z) < d) return true;
+    return false;
+  }
+
+  // ---- grass (hidden until the land is given color) -----------------------
+  const grassSpots = [];
+  let guard = 0;
+  while (grassSpots.length < 1400 && guard++ < 60000) {
+    const x = (rand() * 2 - 1) * 185, z = (rand() * 2 - 1) * 185;
+    if (!openGround(x, z, 11)) continue;
+    if (nearPath(x, z, 2.4)) continue;
+    if (N.fbm(x * 0.03 - 11, z * 0.03 + 23, 3) < -0.05) continue;
+    grassSpots.push({ x, z, s: 0.7 + rand() * 0.9, rot: rand() * Math.PI * 2, phase: rand() * 7 });
+  }
+  const bladeTri = (a) => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
+      -0.14, 0, 0, 0.14, 0, 0, 0, 0.62, 0.05,
+    ]), 3));
+    g.computeVertexNormals();
+    g.rotateY(a);
+    return g;
+  };
+  const grassGeo = mergeGeoms([bladeTri(0), bladeTri(2.1), bladeTri(4.2)]);
+  const grass = makeInstanced(grassGeo, grassSpots.length, grassSpots.map((sp) =>
+    new THREE.Matrix4().compose(
+      new THREE.Vector3(sp.x, terrainHeight(sp.x, sp.z), sp.z),
+      new THREE.Quaternion().setFromEuler(new THREE.Euler(0, sp.rot, 0)),
+      new THREE.Vector3(0.0001, 0.0001, 0.0001),
+    )), 0.6, 0.1);
+  grass.mesh.material.side = THREE.DoubleSide;
+  grass.mesh.raycast = () => {};
+  scene.add(grass.mesh);
+
+  const grassState = { growing: false, growStart: 0, delays: null, grown: false };
+  const gM = new THREE.Matrix4(), gQ = new THREE.Quaternion(),
+    gP = new THREE.Vector3(), gS = new THREE.Vector3(), gE = new THREE.Euler();
+  updaters.push((dt, t) => {
+    if (!grassState.growing && !grassState.grown) return;
+    for (let i = 0; i < grassSpots.length; i++) {
+      const sp = grassSpots[i];
+      let scale = sp.s;
+      if (grassState.growing) {
+        const gt = (t - grassState.growStart - grassState.delays[i]) / 0.9;
+        if (gt <= 0) { continue; }
+        if (gt < 1) scale = sp.s * (easeOut(gt) * 1.15 - 0.15 * gt);
+      }
+      const sway = Math.sin(t * 1.9 + sp.phase) * 0.09;
+      gE.set(sway, sp.rot, sway * 0.6);
+      gQ.setFromEuler(gE);
+      gP.set(sp.x, terrainHeight(sp.x, sp.z), sp.z);
+      gS.set(scale, scale, scale);
+      grass.mesh.setMatrixAt(i, gM.compose(gP, gQ, gS));
+    }
+    grass.mesh.instanceMatrix.needsUpdate = true;
+    if (grassState.growing && t > grassState.growStart + grassState.maxDelay + 1) {
+      grassState.growing = false;
+      grassState.grown = true;
+    }
   });
+
+  function growGrass(origin, now) {
+    if (grassState.grown || grassState.growing) return;
+    grassState.growing = true;
+    grassState.growStart = now;
+    grassState.delays = new Float32Array(grassSpots.length);
+    let max = 0;
+    grassSpots.forEach((sp, i) => {
+      const d = Math.hypot(sp.x - origin.x, sp.z - origin.z) / 42;
+      grassState.delays[i] = d;
+      if (d > max) max = d;
+    });
+    grassState.maxDelay = max;
+  }
+
+  function shrinkGrass() {
+    grassState.growing = false;
+    grassState.grown = false;
+    const m = new THREE.Matrix4();
+    grassSpots.forEach((sp, i) => {
+      grass.mesh.getMatrixAt(i, m);
+      grass.mesh.setMatrixAt(i, m.scale(new THREE.Vector3(0.0001, 0.0001, 0.0001)));
+    });
+    grass.mesh.instanceMatrix.needsUpdate = true;
+  }
 
   // ---- water --------------------------------------------------------------
   const wCols = 6, wRows = 118, wWidth = 8.6;
@@ -266,60 +477,82 @@ export function buildWorld(scene) {
   });
 
   addCategory('water', {
-    label: 'the river',
+    label: 'the river', grayLevel: 0.77,
     synonyms: ['water', 'waters', 'river', 'stream', 'brook', 'creek', 'lake'],
     phrase: 'and the river ran',
     defaultColor: '#4fb0c6',
     surfaces: [
       { type: 'tint', current: waterMat.color, apply: (c) => {
         waterMat.color.copy(c);
-        waterMat.specular.copy(c).lerp(new THREE.Color('#ffffff'), 0.6);
+        waterMat.specular.copy(c).lerp(WHITE, 0.6);
       } },
     ],
   });
 
-  // ---- placement helpers --------------------------------------------------
-  function openGround(x, z, riverPad = 10, villagePad = 0.12) {
-    if (Math.hypot(x, z) > 190) return false;
-    if (Math.abs(x - riverX(z)) < riverPad) return false;
-    if (villageMask(x, z) > villagePad) return false;
-    return true;
+  // river sparkles (awaken when the water is colored)
+  const sparkGeo = new THREE.PlaneGeometry(0.3, 0.3).rotateX(-Math.PI / 2);
+  const sparkMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff, transparent: true, opacity: 0.9,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  const SPARKS = 110;
+  const sparkles = new THREE.InstancedMesh(sparkGeo, sparkMat, SPARKS);
+  const sparkData = [];
+  for (let i = 0; i < SPARKS; i++) {
+    const z = -200 + rand() * 400;
+    const x = riverX(z) + (rand() - 0.5) * (wWidth - 2);
+    sparkData.push({ x, z, phase: rand() * 9, speed: 1.5 + rand() * 2.5 });
+    sparkles.setMatrixAt(i, new THREE.Matrix4().setPosition(x, WATER_Y + 0.18, z));
+    sparkles.setColorAt(i, new THREE.Color(0, 0, 0));
   }
+  sparkles.raycast = () => {};
+  sparkles.visible = false;
+  scene.add(sparkles);
+  const sparkTmp = new THREE.Color();
+  updaters.push((dt, t) => {
+    if (!sparkles.visible) return;
+    for (let i = 0; i < SPARKS; i++) {
+      const s = sparkData[i];
+      const tw = Math.pow(Math.max(0, Math.sin(t * s.speed + s.phase)), 6);
+      sparkles.setColorAt(i, sparkTmp.setScalar(tw * (1 - 0.4 * state.nightT)));
+    }
+    sparkles.instanceColor.needsUpdate = true;
+  });
 
-  // path curve (village square, down to the bridge, off to the west)
-  const pathPts = [];
-  {
-    const ctrl = [
-      new THREE.Vector3(66, 0, 30), new THREE.Vector3(52, 0, 18),
-      new THREE.Vector3(30, 0, 10), new THREE.Vector3(14, 0, 5),
-      new THREE.Vector3(3.4, 0, 4), new THREE.Vector3(-14, 0, 0),
-      new THREE.Vector3(-34, 0, -8), new THREE.Vector3(-62, 0, -22),
-    ];
-    const curve = new THREE.CatmullRomCurve3(ctrl);
-    const n = 130;
-    for (let i = 0; i <= n; i++) pathPts.push(curve.getPoint(i / n));
-  }
-  function nearPath(x, z, d) {
-    for (const p of pathPts) if (Math.hypot(p.x - x, p.z - z) < d) return true;
-    return false;
-  }
+  // ---- land (terrain + grass ride the same category) ----------------------
+  addCategory('land', {
+    label: 'the land', grayLevel: 0.64,
+    synonyms: ['land', 'ground', 'grass', 'earth', 'hills', 'hill', 'valley',
+      'meadow', 'meadows', 'field', 'fields', 'terrain', 'mountains'],
+    phrase: 'and the land lay',
+    singular: 'patch of earth',
+    defaultColor: '#79b356',
+    surfaces: [
+      { type: 'vertex', mesh: terrain, positions: tPos, shade, jitterSeed: vJitter,
+        variance: { h: 0.02, s: 0.1, l: 0.06 } },
+      { type: 'inst', mesh: grass.mesh, positions: grass.positions,
+        variance: { h: 0.04, s: 0.12, l: 0.1 } },
+      { type: 'tint', current: hemi.groundColor,
+        apply: (c) => hemi.groundColor.copy(c).lerp(new THREE.Color('#666666'), 0.45) },
+    ],
+  });
 
   // ---- trees --------------------------------------------------------------
   const treeSpots = [];
-  let guard = 0;
+  guard = 0;
   while (treeSpots.length < 380 && guard++ < 30000) {
     const x = (rand() * 2 - 1) * 195, z = (rand() * 2 - 1) * 195;
     if (!openGround(x, z, 12)) continue;
     if (nearPath(x, z, 4.5)) continue;
-    if (N.fbm(x * 0.02 + 40, z * 0.02 - 17, 3) < -0.12) continue; // clearings
+    if (N.fbm(x * 0.02 + 40, z * 0.02 - 17, 3) < -0.12) continue;
     treeSpots.push({ x, z, s: 0.7 + rand() * 0.85, rot: rand() * Math.PI * 2 });
   }
   const pineSpots = treeSpots.filter((_, i) => i % 9 < 5);
   const broadSpots = treeSpots.filter((_, i) => i % 9 >= 5);
 
-  function treeMatrices(spots, yOffset = 0) {
+  function treeMatrices(spots) {
     return spots.map((sp) => new THREE.Matrix4().compose(
-      new THREE.Vector3(sp.x, terrainHeight(sp.x, sp.z) - 0.15 + yOffset, sp.z),
+      new THREE.Vector3(sp.x, terrainHeight(sp.x, sp.z) - 0.15, sp.z),
       new THREE.Quaternion().setFromEuler(new THREE.Euler(0, sp.rot, 0)),
       new THREE.Vector3(sp.s, sp.s, sp.s),
     ));
@@ -338,14 +571,18 @@ export function buildWorld(scene) {
   const broads = makeInstanced(broadGeo, broadSpots.length, treeMatrices(broadSpots), 0.56, 0.14);
   const trunkMats = treeMatrices(pineSpots).concat(treeMatrices(broadSpots));
   const trunks = makeInstanced(trunkGeo, trunkMats.length, trunkMats, 0.42, 0.08);
+  pines.mesh.castShadow = broads.mesh.castShadow = trunks.mesh.castShadow = true;
   scene.add(pines.mesh, broads.mesh, trunks.mesh);
   addGaze(pines.mesh, 'trees');
   addGaze(broads.mesh, 'trees');
   addGaze(trunks.mesh, 'bark');
+  meshToSurf.set(pines.mesh, 0);
+  meshToSurf.set(broads.mesh, 1);
+  meshToSurf.set(trunks.mesh, 0);
 
   addCategory('trees', {
-    label: 'the trees',
-    synonyms: ['tree', 'trees', 'forest', 'forests', 'leaves', 'canopy', 'foliage', 'pines', 'pine'],
+    label: 'the trees', grayLevel: 0.53, singular: 'tree',
+    synonyms: ['tree', 'trees', 'forest', 'forests', 'leaves', 'canopy', 'foliage', 'pines'],
     phrase: 'and the trees rose',
     defaultColor: '#2f9e63',
     surfaces: [
@@ -356,7 +593,7 @@ export function buildWorld(scene) {
     ],
   });
   addCategory('bark', {
-    label: 'the bark',
+    label: 'the bark', grayLevel: 0.42, singular: 'trunk',
     synonyms: ['bark', 'trunk', 'trunks', 'wood', 'timber'],
     phrase: 'and the bark grew',
     defaultColor: '#7a5537',
@@ -367,9 +604,9 @@ export function buildWorld(scene) {
   });
 
   // ---- rocks --------------------------------------------------------------
-  const rockMatrices = [], rockGuardMax = 20000;
+  const rockMatrices = [];
   guard = 0;
-  while (rockMatrices.length < 170 && guard++ < rockGuardMax) {
+  while (rockMatrices.length < 170 && guard++ < 20000) {
     const x = (rand() * 2 - 1) * 195, z = (rand() * 2 - 1) * 195;
     const nearRiver = Math.abs(x - riverX(z)) < 16 && Math.abs(x - riverX(z)) > 9;
     if (!openGround(x, z, 9) && !nearRiver) continue;
@@ -383,13 +620,15 @@ export function buildWorld(scene) {
       new THREE.Vector3(s * (0.8 + rand() * 0.5), s * (0.55 + rand() * 0.4), s),
     ));
   }
-  const rockGeo = new THREE.IcosahedronGeometry(1, 0);
-  const rocks = makeInstanced(rockGeo, rockMatrices.length, rockMatrices, 0.58, 0.12);
+  const rocks = makeInstanced(new THREE.IcosahedronGeometry(1, 0),
+    rockMatrices.length, rockMatrices, 0.58, 0.12);
+  rocks.mesh.castShadow = true;
   scene.add(rocks.mesh);
   addGaze(rocks.mesh, 'rocks');
+  meshToSurf.set(rocks.mesh, 0);
 
   addCategory('rocks', {
-    label: 'the stones',
+    label: 'the stones', grayLevel: 0.58, singular: 'stone',
     synonyms: ['rock', 'rocks', 'stone', 'stones', 'boulder', 'boulders'],
     phrase: 'and the stones sat',
     defaultColor: '#98a0a8',
@@ -429,9 +668,10 @@ export function buildWorld(scene) {
   const flowers = makeInstanced(flowerGeo, flowerMatrices.length, flowerMatrices, 0.72, 0.15);
   scene.add(flowers.mesh);
   addGaze(flowers.mesh, 'flowers');
+  meshToSurf.set(flowers.mesh, 0);
 
   addCategory('flowers', {
-    label: 'the flowers',
+    label: 'the flowers', grayLevel: 0.72, singular: 'flower',
     synonyms: ['flower', 'flowers', 'blossom', 'blossoms', 'bloom', 'blooms', 'petals'],
     phrase: 'and the flowers bloomed',
     defaultColor: '#e86aa6',
@@ -439,6 +679,108 @@ export function buildWorld(scene) {
       { type: 'inst', mesh: flowers.mesh, positions: flowers.positions,
         variance: { h: 0.09, s: 0.15, l: 0.12 } },
     ],
+  });
+
+  // ---- butterflies (awaken with the flowers) ------------------------------
+  const BFLIES = 34;
+  const bflyWing = new THREE.BufferGeometry();
+  bflyWing.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
+    0, 0, 0, 0.42, 0.1, -0.16, 0.42, 0.1, 0.2,
+  ]), 3));
+  bflyWing.computeVertexNormals();
+  const bflyMatL = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+  const bflyL = new THREE.InstancedMesh(bflyWing, bflyMatL, BFLIES);
+  const bflyR = new THREE.InstancedMesh(bflyWing, bflyMatL, BFLIES);
+  bflyL.raycast = () => {}; bflyR.raycast = () => {};
+  const bflyData = [];
+  for (let i = 0; i < BFLIES; i++) {
+    const cl = clusters[i % clusters.length];
+    bflyData.push({
+      cl, angle: rand() * Math.PI * 2, r: 1.5 + rand() * 4,
+      speed: (0.4 + rand() * 0.5) * (rand() > 0.5 ? 1 : -1),
+      h: 0.8 + rand() * 1.6, phase: rand() * 9, scale: 0,
+    });
+    bflyL.setColorAt(i, new THREE.Color('#dddddd'));
+    bflyR.setColorAt(i, new THREE.Color('#dddddd'));
+  }
+  bflyL.visible = bflyR.visible = false;
+  scene.add(bflyL, bflyR);
+  const bM = new THREE.Matrix4(), bQ = new THREE.Quaternion(),
+    bP = new THREE.Vector3(), bS = new THREE.Vector3(), bE = new THREE.Euler();
+  let bflyShown = false, bflyShowTime = 0;
+  updaters.push((dt, t) => {
+    if (!bflyL.visible) return;
+    for (let i = 0; i < BFLIES; i++) {
+      const b = bflyData[i];
+      b.angle += b.speed * dt;
+      const x = b.cl.x + Math.cos(b.angle) * b.r;
+      const z = b.cl.z + Math.sin(b.angle) * b.r;
+      const y = terrainHeight(x, z) + b.h + Math.sin(t * 2.1 + b.phase) * 0.35;
+      const st = clamp01((t - bflyShowTime - (i % 12) * 0.15) / 0.8);
+      b.scale = easeOut(st);
+      const flap = Math.sin(t * 16 + b.phase) * 0.95;
+      const heading = b.angle + (b.speed > 0 ? Math.PI / 2 : -Math.PI / 2);
+      bP.set(x, y, z);
+      bS.setScalar(b.scale);
+      bE.set(0, -heading, flap); bQ.setFromEuler(bE);
+      bflyL.setMatrixAt(i, bM.compose(bP, bQ, bS));
+      bE.set(Math.PI, -heading, flap); bQ.setFromEuler(bE);
+      bflyR.setMatrixAt(i, bM.compose(bP, bQ, bS));
+    }
+    bflyL.instanceMatrix.needsUpdate = true;
+    bflyR.instanceMatrix.needsUpdate = true;
+  });
+
+  function showButterflies(baseColor, rainbow, now) {
+    const c = new THREE.Color();
+    const hsl = { h: 0, s: 0, l: 0 };
+    if (baseColor) baseColor.getHSL(hsl);
+    for (let i = 0; i < BFLIES; i++) {
+      if (rainbow || !baseColor) c.setHSL(rand(), 0.8, 0.62);
+      else c.setHSL((hsl.h + (rand() - 0.5) * 0.16 + 1) % 1,
+        clamp01(hsl.s * 0.9 + 0.1), clamp01(hsl.l + 0.12));
+      bflyL.setColorAt(i, c); bflyR.setColorAt(i, c);
+    }
+    bflyL.instanceColor.needsUpdate = bflyR.instanceColor.needsUpdate = true;
+    if (!bflyShown) { bflyShown = true; bflyShowTime = now; }
+    bflyL.visible = bflyR.visible = true;
+  }
+
+  // ---- fireflies (night + colored trees) ----------------------------------
+  const FIREFLIES = 80;
+  const ffMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff, transparent: true, opacity: 1,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  });
+  const ff = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.055, 0), ffMat, FIREFLIES);
+  ff.raycast = () => {};
+  const ffData = [];
+  for (let i = 0; i < FIREFLIES; i++) {
+    const sp = treeSpots[(rand() * treeSpots.length) | 0];
+    ffData.push({
+      x: sp.x + (rand() - 0.5) * 10, z: sp.z + (rand() - 0.5) * 10,
+      h: 0.5 + rand() * 2, phase: rand() * 9, drift: rand() * 6,
+    });
+    ff.setColorAt(i, new THREE.Color(0, 0, 0));
+  }
+  ff.visible = false;
+  scene.add(ff);
+  const ffTmp = new THREE.Color(), ffM = new THREE.Matrix4();
+  updaters.push((dt, t) => {
+    const vis = clamp01((state.nightT - 0.35) / 0.3) * (state.treesColored ? 1 : 0);
+    ff.visible = vis > 0.01;
+    if (!ff.visible) return;
+    for (let i = 0; i < FIREFLIES; i++) {
+      const f = ffData[i];
+      const x = f.x + Math.sin(t * 0.4 + f.drift) * 2.2;
+      const z = f.z + Math.cos(t * 0.33 + f.drift * 1.7) * 2.2;
+      const y = terrainHeight(x, z) + f.h + Math.sin(t * 0.9 + f.phase) * 0.5;
+      ff.setMatrixAt(i, ffM.setPosition(x, y, z));
+      const pulse = Math.pow(Math.max(0, Math.sin(t * 1.4 + f.phase)), 3);
+      ff.setColorAt(i, ffTmp.set('#d8ff7a').multiplyScalar(pulse * vis));
+    }
+    ff.instanceMatrix.needsUpdate = true;
+    ff.instanceColor.needsUpdate = true;
   });
 
   // ---- village ------------------------------------------------------------
@@ -453,7 +795,7 @@ export function buildWorld(scene) {
   const roofGeo = new THREE.ConeGeometry(2.9, 1.7, 4);
   const chimGeo = new THREE.BoxGeometry(0.4, 1.0, 0.4);
   const winGeo = new THREE.PlaneGeometry(0.55, 0.7);
-  for (const plot of housePlots) {
+  housePlots.forEach((plot, hi) => {
     const g = new THREE.Group();
     const y = terrainHeight(plot.x, plot.z);
     g.position.set(plot.x, y, plot.z);
@@ -463,12 +805,14 @@ export function buildWorld(scene) {
     wallMat.color.setScalar(0.66 + (rand() - 0.5) * 0.06);
     const walls = new THREE.Mesh(wallGeo, wallMat);
     walls.position.y = 1.25;
+    walls.castShadow = walls.receiveShadow = true;
 
     const roofMat = instMaterial();
     roofMat.color.setScalar(0.45 + (rand() - 0.5) * 0.06);
     const roof = new THREE.Mesh(roofGeo, roofMat);
-    roof.position.y = 2.5 + 0.85;
+    roof.position.y = 3.35;
     roof.rotation.y = Math.PI / 4;
+    roof.castShadow = true;
 
     const chim = new THREE.Mesh(chimGeo, wallMat);
     chim.position.set(0.9, 3.4, 0.4);
@@ -482,7 +826,6 @@ export function buildWorld(scene) {
       w.position.set(wx, 1.35, 1.46);
       g.add(w);
     }
-
     g.add(walls, roof, chim);
     houseGroup.add(g);
 
@@ -491,12 +834,16 @@ export function buildWorld(scene) {
       apply: (c) => wallMat.color.copy(c) });
     roofSurf.push({ type: 'tint', current: roofMat.color, pos: wp,
       apply: (c) => roofMat.color.copy(c) });
-  }
+    for (const m of [walls, chim, ...g.children.filter((o) => o.geometry === winGeo)]) {
+      meshToSurf.set(m, hi);
+    }
+    meshToSurf.set(roof, hi);
+  });
   scene.add(houseGroup);
   addGaze(houseGroup, 'houses');
 
   addCategory('houses', {
-    label: 'the houses',
+    label: 'the houses', grayLevel: 0.66, singular: 'house',
     synonyms: ['house', 'houses', 'home', 'homes', 'village', 'cottage',
       'cottages', 'hut', 'huts', 'walls', 'buildings'],
     phrase: 'and the houses stood',
@@ -504,29 +851,28 @@ export function buildWorld(scene) {
     onFirstColor: () => {
       for (const m of windowMats) m.emissive.set('#ffc46b').multiplyScalar(0.9);
     },
+    onReset: () => {
+      for (const m of windowMats) m.emissive.set('#000000');
+    },
     surfaces: wallSurf,
   });
   addCategory('roofs', {
-    label: 'the roofs',
+    label: 'the roofs', grayLevel: 0.45, singular: 'roof',
     synonyms: ['roof', 'roofs', 'rooftops', 'shingles'],
     phrase: 'and the roofs shone',
     defaultColor: '#c65f3d',
     surfaces: roofSurf,
   });
-
-  // Roofs are children of houseGroup; give roofs precedence in gaze lookup.
   houseGroup.traverse((o) => {
     if (o.geometry === roofGeo) meshToKey.set(o, 'roofs');
   });
 
   // ---- path + bridge ------------------------------------------------------
   const patchMatrices = [], patchUp = new THREE.Vector3(0, 1, 0);
-  for (let i = 0; i < pathPts.length; i++) {
-    const p = pathPts[i];
-    if (Math.abs(p.x - riverX(p.z)) < 8.5) continue; // bridge crosses here
+  for (const p of pathPts) {
+    if (Math.abs(p.x - riverX(p.z)) < 8.5) continue;
     const jx = p.x + (rand() - 0.5) * 1.2, jz = p.z + (rand() - 0.5) * 1.2;
-    const nrm = terrainNormal(jx, jz);
-    const q = new THREE.Quaternion().setFromUnitVectors(patchUp, nrm);
+    const q = new THREE.Quaternion().setFromUnitVectors(patchUp, terrainNormal(jx, jz));
     q.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, rand() * Math.PI, 0)));
     patchMatrices.push(new THREE.Matrix4().compose(
       new THREE.Vector3(jx, terrainHeight(jx, jz) + 0.07, jz),
@@ -534,11 +880,12 @@ export function buildWorld(scene) {
       new THREE.Vector3(1.5 + rand() * 0.7, 1, 1.1 + rand() * 0.5),
     ));
   }
-  const patchGeo = new THREE.CircleGeometry(1, 7).rotateX(-Math.PI / 2);
-  const patches = makeInstanced(patchGeo, patchMatrices.length, patchMatrices, 0.7, 0.08);
+  const patches = makeInstanced(new THREE.CircleGeometry(1, 7).rotateX(-Math.PI / 2),
+    patchMatrices.length, patchMatrices, 0.7, 0.08);
   patches.mesh.material.flatShading = false;
   scene.add(patches.mesh);
   addGaze(patches.mesh, 'path');
+  meshToSurf.set(patches.mesh, 0);
 
   const bridgeMat = instMaterial();
   bridgeMat.color.setScalar(0.52);
@@ -548,10 +895,11 @@ export function buildWorld(scene) {
     const span = 19, planks = 9;
     for (let i = 0; i < planks; i++) {
       const t = i / (planks - 1);
-      const x = bx - span / 2 + t * span;
-      const plank = new THREE.Mesh(new THREE.BoxGeometry(span / planks + 0.25, 0.18, 2.6), bridgeMat);
-      plank.position.set(x, 0.35 + Math.sin(t * Math.PI) * 0.55, bz);
+      const plank = new THREE.Mesh(
+        new THREE.BoxGeometry(span / planks + 0.25, 0.18, 2.6), bridgeMat);
+      plank.position.set(bx - span / 2 + t * span, 0.35 + Math.sin(t * Math.PI) * 0.55, bz);
       plank.rotation.z = Math.cos(t * Math.PI) * -0.22;
+      plank.castShadow = true;
       bridge.add(plank);
     }
     for (const sx of [-span / 2 + 0.6, span / 2 - 0.6]) {
@@ -564,9 +912,10 @@ export function buildWorld(scene) {
   }
   scene.add(bridge);
   addGaze(bridge, 'path');
+  bridge.traverse((o) => meshToSurf.set(o, 1));
 
   addCategory('path', {
-    label: 'the path',
+    label: 'the path', grayLevel: 0.7, singular: 'stretch of path',
     synonyms: ['path', 'paths', 'road', 'roads', 'trail', 'bridge', 'lane', 'way'],
     phrase: 'and the path wound',
     defaultColor: '#c9b391',
@@ -578,12 +927,11 @@ export function buildWorld(scene) {
     ],
   });
 
-  // ---- clouds -------------------------------------------------------------
+  // ---- clouds (weather can dim them over their decreed color) -------------
   const cloudSurf = [];
   const cloudGroups = [];
   for (let i = 0; i < 9; i++) {
     const mat = instMaterial();
-    mat.color.setScalar(0.9 + (rand() - 0.5) * 0.05);
     const g = new THREE.Group();
     const puffs = 3 + (rand() * 3) | 0;
     for (let p = 0; p < puffs; p++) {
@@ -596,18 +944,30 @@ export function buildWorld(scene) {
     scene.add(g);
     cloudGroups.push(g);
     addGaze(g, 'clouds');
-    cloudSurf.push({ type: 'tint', current: mat.color, pos: g.position,
-      apply: (c) => mat.color.copy(c) });
+    const surf = {
+      type: 'tint',
+      current: new THREE.Color().setScalar(0.9 + (rand() - 0.5) * 0.05),
+      pos: g.position, mat,
+      apply: (c) => { surf.current.copy(c); mat.color.copy(c).multiplyScalar(state.cloudDim); },
+    };
+    mat.color.copy(surf.current);
+    cloudSurf.push(surf);
+    g.traverse((o) => meshToSurf.set(o, i));
   }
   updaters.push((dt) => {
     for (const g of cloudGroups) {
       g.position.x += dt * 1.15;
       if (g.position.x > 280) g.position.x = -280;
     }
+    const d = state.cloudDimTarget;
+    if (Math.abs(d - state.cloudDim) > 0.002) {
+      state.cloudDim += (d - state.cloudDim) * Math.min(1, dt * 0.8);
+      for (const s of cloudSurf) s.mat.color.copy(s.current).multiplyScalar(state.cloudDim);
+    }
   });
 
   addCategory('clouds', {
-    label: 'the clouds',
+    label: 'the clouds', grayLevel: 0.9, singular: 'cloud',
     synonyms: ['cloud', 'clouds'],
     phrase: 'and the clouds drifted',
     defaultColor: '#fff3e2',
@@ -640,13 +1000,16 @@ export function buildWorld(scene) {
       apply: (c) => mat.color.copy(c) });
   }
   updaters.push((dt, t) => {
+    const vis = state.nightT < 0.6; // birds roost at night
     for (const fl of flocks) {
       for (const b of fl.birds) {
+        b.g.visible = vis;
+        if (!vis) continue;
         const a = t * fl.speed + b.off;
-        const px = fl.center.x + Math.cos(a) * fl.radius;
-        const pz = fl.center.z + Math.sin(a) * fl.radius;
-        const py = fl.center.y + Math.sin(t * 0.6 + b.phase) * 2.5;
-        b.g.position.set(px, py, pz);
+        b.g.position.set(
+          fl.center.x + Math.cos(a) * fl.radius,
+          fl.center.y + Math.sin(t * 0.6 + b.phase) * 2.5,
+          fl.center.z + Math.sin(a) * fl.radius);
         b.g.rotation.y = -a - Math.PI / 2;
         const flap = Math.sin(t * 9 + b.phase) * 0.7;
         b.l.rotation.x = flap;
@@ -656,21 +1019,98 @@ export function buildWorld(scene) {
   });
 
   addCategory('birds', {
-    label: 'the birds',
+    label: 'the birds', grayLevel: 0.35,
     synonyms: ['bird', 'birds', 'flock', 'swallows', 'sparrows'],
     phrase: 'and the birds flew',
     defaultColor: '#37474f',
     surfaces: birdSurf,
   });
 
-  // ---- contact shadows (uncategorized, stays neutral) ---------------------
+  // ---- rain ---------------------------------------------------------------
+  const RAIN = 900;
+  const rainGeo = new THREE.BufferGeometry();
+  const rainPos = new Float32Array(RAIN * 2 * 3);
+  const rainDrops = [];
+  for (let i = 0; i < RAIN; i++) {
+    rainDrops.push({
+      x: (rand() - 0.5) * 90, y: rand() * 50, z: (rand() - 0.5) * 90,
+    });
+  }
+  rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPos, 3));
+  const rainMat = new THREE.LineBasicMaterial({
+    color: '#a7b8c9', transparent: true, opacity: 0,
+  });
+  const rain = new THREE.LineSegments(rainGeo, rainMat);
+  rain.frustumCulled = false;
+  rain.raycast = () => {};
+  rain.visible = false;
+  scene.add(rain);
+
+  // ---- snow ---------------------------------------------------------------
+  const SNOW = 1100;
+  const snowGeo = new THREE.BufferGeometry();
+  const snowPos = new Float32Array(SNOW * 3);
+  const snowFlakes = [];
+  for (let i = 0; i < SNOW; i++) {
+    snowFlakes.push({
+      x: (rand() - 0.5) * 80, y: rand() * 40, z: (rand() - 0.5) * 80,
+      phase: rand() * 9, sway: 0.5 + rand(),
+    });
+  }
+  snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPos, 3));
+  const snowMat = new THREE.PointsMaterial({
+    color: '#ffffff', size: 2.6, sizeAttenuation: false,
+    transparent: true, opacity: 0, depthWrite: false,
+  });
+  const snow = new THREE.Points(snowGeo, snowMat);
+  snow.frustumCulled = false;
+  snow.raycast = () => {};
+  snow.visible = false;
+  scene.add(snow);
+
+  updaters.push((dt, t, playerPos) => {
+    const p = playerPos || spawn;
+    const rTarget = state.weather === 'rain' ? 0.42 : 0;
+    rainMat.opacity += (rTarget - rainMat.opacity) * Math.min(1, dt * 1.5);
+    rain.visible = rainMat.opacity > 0.01;
+    if (rain.visible) {
+      for (let i = 0; i < RAIN; i++) {
+        const d = rainDrops[i];
+        d.y -= 36 * dt; d.x += 4 * dt;
+        if (d.y < -6) { d.y += 50; d.x = (rand() - 0.5) * 90; d.z = (rand() - 0.5) * 90; }
+        if (d.x > 45) d.x -= 90;
+        const k = i * 6;
+        const wx = p.x + d.x, wy = p.y - 8 + d.y, wz = p.z + d.z;
+        rainPos[k] = wx; rainPos[k + 1] = wy; rainPos[k + 2] = wz;
+        rainPos[k + 3] = wx + 0.25; rainPos[k + 4] = wy + 1.3; rainPos[k + 5] = wz;
+      }
+      rainGeo.attributes.position.needsUpdate = true;
+    }
+    const sTarget = state.weather === 'snow' ? 0.9 : 0;
+    snowMat.opacity += (sTarget - snowMat.opacity) * Math.min(1, dt * 1.5);
+    snow.visible = snowMat.opacity > 0.01;
+    if (snow.visible) {
+      for (let i = 0; i < SNOW; i++) {
+        const f = snowFlakes[i];
+        f.y -= 3.4 * dt;
+        if (f.y < -6) f.y += 40;
+        const k = i * 3;
+        snowPos[k] = p.x + f.x + Math.sin(t * f.sway + f.phase) * 2.2;
+        snowPos[k + 1] = p.y - 8 + f.y;
+        snowPos[k + 2] = p.z + f.z + Math.cos(t * f.sway * 0.8 + f.phase) * 2.2;
+      }
+      snowGeo.attributes.position.needsUpdate = true;
+    }
+  });
+
+  // ---- contact shadows ----------------------------------------------------
   const shadowSpots = treeSpots.map((s) => ({ x: s.x, z: s.z, r: 1.6 * s.s }))
     .concat(housePlots.map((p) => ({ x: p.x, z: p.z, r: 2.6 })));
-  const shGeo = new THREE.CircleGeometry(1, 8).rotateX(-Math.PI / 2);
   const shMat = new THREE.MeshBasicMaterial({
-    color: '#000000', transparent: true, opacity: 0.13, depthWrite: false,
+    color: '#000000', transparent: true, opacity: 0.09, depthWrite: false,
   });
-  const shadows = new THREE.InstancedMesh(shGeo, shMat, shadowSpots.length);
+  const shadows = new THREE.InstancedMesh(
+    new THREE.CircleGeometry(1, 8).rotateX(-Math.PI / 2), shMat, shadowSpots.length);
   shadowSpots.forEach((s, i) => {
     shadows.setMatrixAt(i, new THREE.Matrix4().compose(
       new THREE.Vector3(s.x, terrainHeight(s.x, s.z) + 0.05, s.z),
@@ -683,6 +1123,8 @@ export function buildWorld(scene) {
   scene.add(shadows);
 
   // -------------------------------------------------------------------------
+  const spawn = new THREE.Vector3(8, 0, 78);
+
   return {
     categories,
     gazeEntries,
@@ -691,8 +1133,37 @@ export function buildWorld(scene) {
     WORLD_RADIUS,
     WATER_Y,
     scene,
-    spawn: new THREE.Vector3(8, 0, 78),
+    state,
+    spawn,
     spawnLook: new THREE.Vector3(52, 4, 18),
-    update(dt, t) { for (const u of updaters) u(dt, t); },
+
+    // ---- decree-driven hooks ----
+    setNight(on) { state.nightTarget = on ? 1 : 0; },
+    forceNight(on) { state.nightTarget = on ? 1 : 0; state.nightT = state.nightTarget; },
+    setWeather(kind) {
+      state.weather = kind;
+      state.cloudDimTarget = kind === 'rain' ? 0.55 : kind === 'snow' ? 0.82 : 1;
+    },
+    lifeOnDecree(catKey, baseColor, rainbow, origin, now) {
+      if (catKey === 'land') growGrass(origin, now);
+      if (catKey === 'flowers') showButterflies(baseColor, rainbow, now);
+      if (catKey === 'water') sparkles.visible = true;
+      if (catKey === 'trees') state.treesColored = true;
+    },
+    resetLife() {
+      shrinkGrass();
+      bflyL.visible = bflyR.visible = false;
+      bflyShown = false;
+      sparkles.visible = false;
+      state.treesColored = false;
+      this.setNight(false);
+      this.setWeather('clear');
+    },
+    resolveHit(object, instanceId) {
+      const key = meshToKey.get(object);
+      if (!key) return null;
+      return { key, surfIndex: meshToSurf.get(object), instanceId };
+    },
+    update(dt, t, playerPos) { for (const u of updaters) u(dt, t, playerPos); },
   };
 }

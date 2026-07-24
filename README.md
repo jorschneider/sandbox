@@ -54,10 +54,14 @@ Open the page, press **▶ PLAY TRAILER** (audio needs one click).
 
 - **[`/black-and-white/`](black-and-white/)** — *BLACK & WHITE*, a
   first-person toy where you walk a colorless low-poly valley as a small
-  god and **speak colors into being** (hold `V` and say "the trees are
-  emerald", or press `T` to type). Each decree ripples outward to
-  everything of its kind until the world is full of color. Web Speech
-  API + generative WebAudio ambience; same vendored Three.js.
+  god and **speak the world into being** (hold `V` and say "the trees
+  are emerald", or press `T` to type). Each decree ripples outward to
+  everything of its kind; color literally dissolves the pencil-sketch
+  grain off the world. Say *"this house is blue"* to paint one thing,
+  *"let there be night"*, *"let it rain / snow"*, *"begin again"* to
+  unmake it all. Grass, butterflies, sparkles and fireflies wake as
+  their colors arrive; the world is saved locally and remembers you.
+  Web Speech API + generative WebAudio ambience; same vendored Three.js.
 - **[`/rayray-outdoor-weekend/`](rayray-outdoor-weekend/)** — an event
   microsite.
 

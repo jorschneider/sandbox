@@ -1,16 +1,17 @@
 // Generative ambience, all synthesized — no audio files.
 // A colorless world is thin wind; every decreed category adds a pentatonic
-// pad voice, and certain categories unlock birdsong / river babble.
+// pad voice. Trees unlock birdsong (crickets after dark), water unlocks
+// river babble, rain brings its own patter.
 
 const SEMIS = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26, 28];
 const BASE_FREQ = 110; // A2
 
 export function createAmbience() {
   let ctx = null;
-  let master, padBus, wet;
-  let windGain = null;
+  let master, padBus, padLp;
+  let windGain = null, rainGain = null, babbleGain = null;
   const voices = new Map();
-  let chirpsOn = false, babbleOn = false;
+  let chirpsOn = false, babbleOn = false, night = false;
   let nextChirp = 0;
   let started = false;
 
@@ -19,6 +20,19 @@ export function createAmbience() {
     const data = buf.getChannelData(0);
     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
     return buf;
+  }
+
+  function noiseLayer(filterType, freq, q, gain0) {
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuffer(2.7);
+    src.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = filterType; f.frequency.value = freq; f.Q.value = q;
+    const g = ctx.createGain();
+    g.gain.value = gain0;
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start();
+    return { filter: f, gain: g };
   }
 
   function start() {
@@ -32,32 +46,29 @@ export function createAmbience() {
 
     // simple echo space shared by pads + chimes
     padBus = ctx.createGain();
-    const lp = ctx.createBiquadFilter();
-    lp.type = 'lowpass'; lp.frequency.value = 1400;
-    padBus.connect(lp);
+    padLp = ctx.createBiquadFilter();
+    padLp.type = 'lowpass'; padLp.frequency.value = 1400;
+    padBus.connect(padLp);
     const delay = ctx.createDelay(1);
     delay.delayTime.value = 0.34;
     const fb = ctx.createGain(); fb.gain.value = 0.38;
-    wet = ctx.createGain(); wet.gain.value = 0.3;
-    lp.connect(master);
-    lp.connect(delay);
+    const wet = ctx.createGain(); wet.gain.value = 0.3;
+    padLp.connect(master);
+    padLp.connect(delay);
     delay.connect(fb); fb.connect(delay);
     delay.connect(wet); wet.connect(master);
 
     // wind: filtered noise, slowly wandering
-    const wind = ctx.createBufferSource();
-    wind.buffer = noiseBuffer(3);
-    wind.loop = true;
-    const bp = ctx.createBiquadFilter();
-    bp.type = 'bandpass'; bp.frequency.value = 620; bp.Q.value = 0.7;
-    windGain = ctx.createGain();
-    windGain.gain.value = 0.12;
-    wind.connect(bp); bp.connect(windGain); windGain.connect(master);
+    const wind = noiseLayer('bandpass', 620, 0.7, 0.12);
+    windGain = wind.gain;
     const lfo = ctx.createOscillator();
     lfo.frequency.value = 0.06;
     const lfoAmp = ctx.createGain(); lfoAmp.gain.value = 240;
-    lfo.connect(lfoAmp); lfoAmp.connect(bp.frequency);
-    wind.start(); lfo.start();
+    lfo.connect(lfoAmp); lfoAmp.connect(wind.filter.frequency);
+    lfo.start();
+
+    // rain patter, silent until the weather turns
+    rainGain = noiseLayer('bandpass', 2400, 0.5, 0).gain;
   }
 
   function addVoice(key, noteIdx) {
@@ -77,13 +88,13 @@ export function createAmbience() {
     voices.set(key, { o1, o2, g });
   }
 
-  function chime(noteIdx, delaySec = 0) {
+  function chime(noteIdx, delaySec = 0, high = false) {
     if (!started) return;
     const t = ctx.currentTime + delaySec;
-    const f = BASE_FREQ * 2 * Math.pow(2, SEMIS[noteIdx % SEMIS.length] / 12);
+    const f = BASE_FREQ * (high ? 4 : 2) * Math.pow(2, SEMIS[noteIdx % SEMIS.length] / 12);
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.14, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(high ? 0.09 : 0.14, t + 0.02);
     g.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
     const o = ctx.createOscillator();
     o.type = 'triangle'; o.frequency.value = f;
@@ -96,7 +107,7 @@ export function createAmbience() {
     o.stop(t + 2.6); o2.stop(t + 2.6);
   }
 
-  function chirp() {
+  function birdChirp() {
     const t = ctx.currentTime;
     const syllables = 2 + (Math.random() * 3) | 0;
     for (let s = 0; s < syllables; s++) {
@@ -115,26 +126,36 @@ export function createAmbience() {
     }
   }
 
+  function cricketTrill() {
+    const t = ctx.currentTime;
+    const pulses = 5 + (Math.random() * 5) | 0;
+    const f0 = 3800 + Math.random() * 600;
+    for (let p = 0; p < pulses; p++) {
+      const st = t + p * 0.055;
+      const o = ctx.createOscillator();
+      o.type = 'sine'; o.frequency.value = f0;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, st);
+      g.gain.exponentialRampToValueAtTime(0.016, st + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, st + 0.045);
+      o.connect(g); g.connect(master);
+      o.start(st); o.stop(st + 0.06);
+    }
+  }
+
   function addBabble() {
-    const src = ctx.createBufferSource();
-    src.buffer = noiseBuffer(2);
-    src.loop = true;
-    const bp = ctx.createBiquadFilter();
-    bp.type = 'bandpass'; bp.frequency.value = 950; bp.Q.value = 2.2;
-    const g = ctx.createGain();
-    g.gain.value = 0;
-    g.gain.linearRampToValueAtTime(0.028, ctx.currentTime + 4);
+    const layer = noiseLayer('bandpass', 950, 2.2, 0);
+    babbleGain = layer.gain;
+    babbleGain.gain.linearRampToValueAtTime(0.028, ctx.currentTime + 4);
     const lfo = ctx.createOscillator();
     lfo.frequency.value = 5.3;
     const lfoAmp = ctx.createGain(); lfoAmp.gain.value = 0.012;
-    lfo.connect(lfoAmp); lfoAmp.connect(g.gain);
-    src.connect(bp); bp.connect(g); g.connect(master);
-    src.start(); lfo.start();
+    lfo.connect(lfoAmp); lfoAmp.connect(babbleGain.gain);
+    lfo.start();
   }
 
   return {
     start,
-    // category got its first color (or was re-colored)
     onDecree(catIndex, isNew, coloredCount, total, catKey, muted) {
       if (!started) return;
       if (!muted) chime(catIndex);
@@ -146,15 +167,61 @@ export function createAmbience() {
         if (catKey === 'water' && !babbleOn) { babbleOn = true; addBabble(); }
       }
     },
+    singleChime(catIndex) {
+      if (started) chime(catIndex, 0, true);
+    },
     genesisChimes(count) {
       if (!started) return;
       for (let i = 0; i < count; i++) chime(i, i * 0.42);
     },
+    // rebuild the soundscape for a remembered world
+    restore(coloredKeys, allKeys, coloredCount, total) {
+      if (!started) return;
+      for (const key of coloredKeys) {
+        addVoice(key, allKeys.indexOf(key));
+        if (key === 'trees' || key === 'birds') chirpsOn = true;
+        if (key === 'water' && !babbleOn) { babbleOn = true; addBabble(); }
+      }
+      if (coloredCount) {
+        windGain.gain.linearRampToValueAtTime(
+          0.12 * (1 - 0.55 * (coloredCount / total)), ctx.currentTime + 2);
+      }
+    },
+    setNight(on) {
+      night = on;
+      if (!started) return;
+      // pads sink lower and darker after dark
+      padLp.frequency.linearRampToValueAtTime(on ? 900 : 1400, ctx.currentTime + 4);
+    },
+    setWeather(kind) {
+      if (!started) return;
+      rainGain.gain.linearRampToValueAtTime(
+        kind === 'rain' ? 0.05 : 0, ctx.currentTime + 2.5);
+      windGain.gain.linearRampToValueAtTime(
+        kind === 'snow' ? 0.16 : windGain.gain.value > 0.12 ? 0.12 : windGain.gain.value,
+        ctx.currentTime + 2.5);
+    },
+    reset() {
+      if (!started) return;
+      for (const v of voices.values()) {
+        v.g.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
+        v.o1.stop(ctx.currentTime + 2.2);
+        v.o2.stop(ctx.currentTime + 2.2);
+      }
+      voices.clear();
+      chirpsOn = false;
+      night = false;
+      windGain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 2);
+      if (babbleGain) babbleGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
+      babbleOn = false;
+      rainGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
+      padLp.frequency.linearRampToValueAtTime(1400, ctx.currentTime + 2);
+    },
     update(nowSec) {
       if (!started || !chirpsOn) return;
       if (nowSec > nextChirp) {
-        chirp();
-        nextChirp = nowSec + 3.5 + Math.random() * 7;
+        if (night) cricketTrill(); else birdChirp();
+        nextChirp = nowSec + (night ? 2.5 + Math.random() * 4 : 3.5 + Math.random() * 7);
       }
     },
   };
