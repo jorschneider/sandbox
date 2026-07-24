@@ -1,0 +1,61 @@
+name: iOS · build & TestFlight
+
+# Builds CRUX on a cloud macOS runner, signs it, and uploads to TestFlight.
+# No Mac required on your side — just set the repository secrets listed in
+# crux-app/README.md, then run this workflow.
+
+on:
+  workflow_dispatch: {}          # run manually from the Actions tab
+  push:
+    tags: ["v*"]                 # ...or by pushing a version tag, e.g. v1.0.0
+
+jobs:
+  ios:
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: crux-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Build web bundle (boulder -> www)
+        run: npm run build:web
+
+      - name: Add iOS platform
+        run: npx cap add ios
+
+      - name: Generate app icon & splash
+        run: npm run assets
+        continue-on-error: true   # icon polish; falls back to default if sharp can't install
+
+      - name: Apply native config (audio session + keep awake)
+        run: node scripts/apply-native-config.mjs
+
+      - name: Capacitor sync
+        run: npx cap sync ios
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+
+      - name: Install fastlane
+        run: gem install fastlane --no-document
+
+      - name: Build & upload to TestFlight
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          CRUX_BUNDLE_ID: ${{ secrets.CRUX_BUNDLE_ID }}
+          CRUX_APP_NAME: ${{ secrets.CRUX_APP_NAME }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: fastlane beta
