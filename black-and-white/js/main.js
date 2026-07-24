@@ -134,6 +134,7 @@ document.addEventListener('mousemove', (e) => {
 });
 
 canvas.addEventListener('click', () => {
+  audio.poke();
   if (started && document.pointerLockElement !== canvas) lockPointer();
 });
 document.addEventListener('pointerlockchange', () => {
@@ -286,7 +287,7 @@ addEventListener('resize', () => {
 });
 
 // debug/testing handle
-window.__bw = { world, player };
+window.__bw = { world, player, audio };
 
 let last = performance.now() / 1000;
 renderer.setAnimationLoop(() => {

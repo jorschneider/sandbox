@@ -1,19 +1,21 @@
-// Generative ambience, all synthesized — no audio files.
-// A colorless world is thin wind; every decreed category adds a pentatonic
-// pad voice. Trees unlock birdsong (crickets after dark), water unlocks
-// river babble, rain brings its own patter.
+// Soundscape: a real music bed (audio/theme.mp3, looped) that begins
+// muffled in the gray world and opens up, filter-wise, as color arrives.
+// Small synthesized diegetic touches remain — decree bells, birdsong by
+// day, crickets at night, river babble, rain patter. No pads, no drone.
 
 const SEMIS = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26, 28];
 const BASE_FREQ = 110; // A2
+const MUSIC_URL = 'audio/theme.mp3';
 
 export function createAmbience() {
   let ctx = null;
-  let master, padBus, padLp;
-  let windGain = null, rainGain = null, babbleGain = null;
-  const voices = new Map();
+  let master, bellBus, bellLp;
+  let musicEl = null, musicGain = null, musicFilter = null;
+  let rainGain = null, babbleGain = null;
   let chirpsOn = false, babbleOn = false, night = false;
   let nextChirp = 0;
   let started = false;
+  let progress = 0;
 
   function noiseBuffer(seconds) {
     const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
@@ -22,17 +24,30 @@ export function createAmbience() {
     return buf;
   }
 
-  function noiseLayer(filterType, freq, q, gain0) {
+  function noiseLayer(freq, q) {
     const src = ctx.createBufferSource();
     src.buffer = noiseBuffer(2.7);
     src.loop = true;
     const f = ctx.createBiquadFilter();
-    f.type = filterType; f.frequency.value = freq; f.Q.value = q;
+    f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
     const g = ctx.createGain();
-    g.gain.value = gain0;
+    g.gain.value = 0;
     src.connect(f); f.connect(g); g.connect(master);
     src.start();
-    return { filter: f, gain: g };
+    return g;
+  }
+
+  // the music mirrors how much of the world has color:
+  // gray = distant and muffled, painted = full and present
+  function voiceTheWorld() {
+    if (!started) return;
+    const t = ctx.currentTime;
+    const f = 750 + Math.pow(progress, 1.25) * 15500;
+    musicFilter.frequency.cancelScheduledValues(t);
+    musicFilter.frequency.linearRampToValueAtTime(f, t + 2.5);
+    const g = (0.42 + progress * 0.16) * (night ? 0.72 : 1);
+    musicGain.gain.cancelScheduledValues(t);
+    musicGain.gain.linearRampToValueAtTime(g, t + 2.5);
   }
 
   function start() {
@@ -41,51 +56,44 @@ export function createAmbience() {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     master = ctx.createGain();
     master.gain.value = 0;
-    master.gain.linearRampToValueAtTime(0.55, ctx.currentTime + 3);
+    master.gain.linearRampToValueAtTime(0.85, ctx.currentTime + 2);
     master.connect(ctx.destination);
 
-    // simple echo space shared by pads + chimes
-    padBus = ctx.createGain();
-    padLp = ctx.createBiquadFilter();
-    padLp.type = 'lowpass'; padLp.frequency.value = 1400;
-    padBus.connect(padLp);
+    // music bed, streamed and looped
+    musicEl = new Audio(MUSIC_URL);
+    musicEl.loop = true;
+    musicEl.preload = 'auto';
+    musicFilter = ctx.createBiquadFilter();
+    musicFilter.type = 'lowpass';
+    musicFilter.frequency.value = 750;
+    musicFilter.Q.value = 0.4;
+    musicGain = ctx.createGain();
+    musicGain.gain.value = 0;
+    try {
+      const src = ctx.createMediaElementSource(musicEl);
+      src.connect(musicFilter);
+      musicFilter.connect(musicGain);
+      musicGain.connect(master);
+      musicEl.play().catch(() => { /* will retry on next user gesture via game click */ });
+    } catch { /* element/codec failure — effects still play */ }
+    voiceTheWorld();
+
+    // small echo space for the decree bells
+    bellBus = ctx.createGain();
+    bellLp = ctx.createBiquadFilter();
+    bellLp.type = 'lowpass'; bellLp.frequency.value = 1400;
+    bellBus.connect(bellLp);
     const delay = ctx.createDelay(1);
     delay.delayTime.value = 0.34;
     const fb = ctx.createGain(); fb.gain.value = 0.38;
     const wet = ctx.createGain(); wet.gain.value = 0.3;
-    padLp.connect(master);
-    padLp.connect(delay);
+    bellLp.connect(master);
+    bellLp.connect(delay);
     delay.connect(fb); fb.connect(delay);
     delay.connect(wet); wet.connect(master);
 
-    // wind: filtered noise, slowly wandering
-    const wind = noiseLayer('bandpass', 620, 0.7, 0.12);
-    windGain = wind.gain;
-    const lfo = ctx.createOscillator();
-    lfo.frequency.value = 0.06;
-    const lfoAmp = ctx.createGain(); lfoAmp.gain.value = 240;
-    lfo.connect(lfoAmp); lfoAmp.connect(wind.filter.frequency);
-    lfo.start();
-
     // rain patter, silent until the weather turns
-    rainGain = noiseLayer('bandpass', 2400, 0.5, 0).gain;
-  }
-
-  function addVoice(key, noteIdx) {
-    if (!started || voices.has(key)) return;
-    const f = BASE_FREQ * Math.pow(2, SEMIS[noteIdx % SEMIS.length] / 12);
-    const g = ctx.createGain();
-    g.gain.value = 0;
-    g.gain.linearRampToValueAtTime(0.013, ctx.currentTime + 3.5);
-    const o1 = ctx.createOscillator();
-    o1.type = 'sine'; o1.frequency.value = f; o1.detune.value = -4;
-    const o2 = ctx.createOscillator();
-    o2.type = 'triangle'; o2.frequency.value = f; o2.detune.value = 5;
-    const o2g = ctx.createGain(); o2g.gain.value = 0.4;
-    o1.connect(g); o2.connect(o2g); o2g.connect(g);
-    g.connect(padBus);
-    o1.start(); o2.start();
-    voices.set(key, { o1, o2, g });
+    rainGain = noiseLayer(2400, 0.5);
   }
 
   function chime(noteIdx, delaySec = 0, high = false) {
@@ -94,7 +102,7 @@ export function createAmbience() {
     const f = BASE_FREQ * (high ? 4 : 2) * Math.pow(2, SEMIS[noteIdx % SEMIS.length] / 12);
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(high ? 0.09 : 0.14, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(high ? 0.07 : 0.11, t + 0.02);
     g.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
     const o = ctx.createOscillator();
     o.type = 'triangle'; o.frequency.value = f;
@@ -102,7 +110,7 @@ export function createAmbience() {
     o2.type = 'sine'; o2.frequency.value = f * 2.005;
     const g2 = ctx.createGain(); g2.gain.value = 0.35;
     o.connect(g); o2.connect(g2); g2.connect(g);
-    g.connect(padBus);
+    g.connect(bellBus);
     o.start(t); o2.start(t);
     o.stop(t + 2.6); o2.stop(t + 2.6);
   }
@@ -119,7 +127,7 @@ export function createAmbience() {
       o.frequency.exponentialRampToValueAtTime(f0 * (0.55 + Math.random() * 0.3), st + 0.09);
       const g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, st);
-      g.gain.exponentialRampToValueAtTime(0.035, st + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.028, st + 0.015);
       g.gain.exponentialRampToValueAtTime(0.0001, st + 0.11);
       o.connect(g); g.connect(master);
       o.start(st); o.stop(st + 0.13);
@@ -136,7 +144,7 @@ export function createAmbience() {
       o.type = 'sine'; o.frequency.value = f0;
       const g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, st);
-      g.gain.exponentialRampToValueAtTime(0.016, st + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.013, st + 0.008);
       g.gain.exponentialRampToValueAtTime(0.0001, st + 0.045);
       o.connect(g); g.connect(master);
       o.start(st); o.stop(st + 0.06);
@@ -144,12 +152,11 @@ export function createAmbience() {
   }
 
   function addBabble() {
-    const layer = noiseLayer('bandpass', 950, 2.2, 0);
-    babbleGain = layer.gain;
-    babbleGain.gain.linearRampToValueAtTime(0.028, ctx.currentTime + 4);
+    babbleGain = noiseLayer(950, 2.2);
+    babbleGain.gain.linearRampToValueAtTime(0.022, ctx.currentTime + 4);
     const lfo = ctx.createOscillator();
     lfo.frequency.value = 5.3;
-    const lfoAmp = ctx.createGain(); lfoAmp.gain.value = 0.012;
+    const lfoAmp = ctx.createGain(); lfoAmp.gain.value = 0.009;
     lfo.connect(lfoAmp); lfoAmp.connect(babbleGain.gain);
     lfo.start();
   }
@@ -160,9 +167,8 @@ export function createAmbience() {
       if (!started) return;
       if (!muted) chime(catIndex);
       if (isNew) {
-        addVoice(catKey, catIndex);
-        windGain.gain.linearRampToValueAtTime(
-          0.12 * (1 - 0.55 * (coloredCount / total)), ctx.currentTime + 2);
+        progress = coloredCount / total;
+        voiceTheWorld();
         if (catKey === 'trees' || catKey === 'birds') chirpsOn = true;
         if (catKey === 'water' && !babbleOn) { babbleOn = true; addBabble(); }
       }
@@ -178,44 +184,33 @@ export function createAmbience() {
     restore(coloredKeys, allKeys, coloredCount, total) {
       if (!started) return;
       for (const key of coloredKeys) {
-        addVoice(key, allKeys.indexOf(key));
         if (key === 'trees' || key === 'birds') chirpsOn = true;
         if (key === 'water' && !babbleOn) { babbleOn = true; addBabble(); }
       }
-      if (coloredCount) {
-        windGain.gain.linearRampToValueAtTime(
-          0.12 * (1 - 0.55 * (coloredCount / total)), ctx.currentTime + 2);
-      }
+      progress = total ? coloredCount / total : 0;
+      voiceTheWorld();
     },
     setNight(on) {
       night = on;
       if (!started) return;
-      // pads sink lower and darker after dark
-      padLp.frequency.linearRampToValueAtTime(on ? 900 : 1400, ctx.currentTime + 4);
+      voiceTheWorld();
+      bellLp.frequency.linearRampToValueAtTime(on ? 900 : 1400, ctx.currentTime + 4);
     },
     setWeather(kind) {
       if (!started) return;
       rainGain.gain.linearRampToValueAtTime(
-        kind === 'rain' ? 0.05 : 0, ctx.currentTime + 2.5);
-      windGain.gain.linearRampToValueAtTime(
-        kind === 'snow' ? 0.16 : windGain.gain.value > 0.12 ? 0.12 : windGain.gain.value,
-        ctx.currentTime + 2.5);
+        kind === 'rain' ? 0.04 : 0, ctx.currentTime + 2.5);
     },
     reset() {
       if (!started) return;
-      for (const v of voices.values()) {
-        v.g.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
-        v.o1.stop(ctx.currentTime + 2.2);
-        v.o2.stop(ctx.currentTime + 2.2);
-      }
-      voices.clear();
-      chirpsOn = false;
+      progress = 0;
       night = false;
-      windGain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 2);
+      chirpsOn = false;
+      voiceTheWorld();
       if (babbleGain) babbleGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
       babbleOn = false;
       rainGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
-      padLp.frequency.linearRampToValueAtTime(1400, ctx.currentTime + 2);
+      bellLp.frequency.linearRampToValueAtTime(1400, ctx.currentTime + 2);
     },
     update(nowSec) {
       if (!started || !chirpsOn) return;
@@ -223,6 +218,22 @@ export function createAmbience() {
         if (night) cricketTrill(); else birdChirp();
         nextChirp = nowSec + (night ? 2.5 + Math.random() * 4 : 3.5 + Math.random() * 7);
       }
+    },
+    // call from any user gesture: resumes a suspended context / blocked play()
+    poke() {
+      if (!started) return;
+      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+      if (musicEl && musicEl.paused) musicEl.play().catch(() => {});
+    },
+    debug() {
+      return {
+        started,
+        musicPlaying: !!musicEl && !musicEl.paused && !musicEl.error,
+        musicTime: musicEl ? musicEl.currentTime : 0,
+        musicError: musicEl?.error?.code ?? null,
+        filterHz: musicFilter ? musicFilter.frequency.value : 0,
+        progress,
+      };
     },
   };
 }
