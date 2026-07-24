@@ -52,19 +52,20 @@ Open the page, press **▶ PLAY TRAILER** (audio needs one click).
 
 ## Also in this repo
 
-- **[`/black-and-white/`](black-and-white/)** — *BLACK & WHITE*, a
-  first-person toy where you walk a colorless low-poly valley as a small
-  god and **speak the world into being** (hold `V` and say "the trees
-  are emerald", or press `T` to type). Each decree ripples outward to
-  everything of its kind; color literally dissolves the pencil-sketch
-  grain off the world. Say *"this house is blue"* to paint one thing,
-  *"let there be night"*, *"let it rain / snow"*, *"begin again"* to
-  unmake it all. Grass, butterflies, sparkles and fireflies wake as
-  their colors arrive; the world is saved locally and remembers you.
-  Speak *"let it be autumn"* for falling leaves, watch a rainbow rise
-  when the rain clears, and *"share this world"* to get a link that
-  carries your whole painted world to a friend. Web Speech API + a
-  filtered, looping music bed; same vendored Three.js.
+- **[`/black-and-white/`](black-and-white/)** — *BLACK & WHITE*, live at
+  **[let-there-be-color.vercel.app](https://let-there-be-color.vercel.app)**:
+  a first-person toy where you walk a colorless low-poly world as a
+  small god and **speak the world into being** (hold `V` and say "the
+  trees are emerald", or press `T` to type; touch controls on phones).
+  Each decree ripples outward to everything of its kind; color
+  dissolves the pencil-sketch grain off the world. Three realms —
+  valley, desert, high peaks (*"take me to the desert"*) — each with
+  its own creatures: deer, rabbits, goats, fish, butterflies,
+  fireflies. *"Let there be night"*, *"let it rain / snow"*, *"let it
+  be autumn"*, *"this house is blue"*, *"begin again"*. Every realm is
+  saved locally, and *"share this world"* mints a link carrying your
+  whole painted world. Web Speech API + a filtered, looping music bed;
+  self-contained with its own vendored Three.js.
 - **[`/rayray-outdoor-weekend/`](rayray-outdoor-weekend/)** — an event
   microsite.
 
