@@ -1,0 +1,28 @@
+# Which model controls each civilization, and the gateway credentials.
+# Copy to models.yaml and fill in.
+#
+# OpenRouter is the easy path: ONE key, ONE endpoint, every vendor. Each seat's
+# model is an OpenRouter model id, so different vendors play each other through
+# a single credential. Get a key at https://openrouter.ai/keys and browse ids
+# at https://openrouter.ai/models.
+
+providers:
+  openrouter_api_key: ""        # <-- the only thing you strictly need
+  # openrouter_base_url: https://openrouter.ai/api/v1   # default; override if needed
+
+  # Fallback (only used if openrouter_api_key is blank — CivAgent native routing):
+  # openai_api_key: ""
+  # openai_base_url: ""
+  # deepseek_api_key: ""
+  # default_model: deepseek-chat
+
+# One entry per civ in the save. CivAgent's civs: china, mongolia, egypt,
+# greece, rome, aztecs (the bundled Autosave has only egypt/greece/aztecs).
+# Mix vendors freely — that's the point.
+seats:
+  aztecs:   { model: anthropic/claude-opus-4-8 }
+  egypt:    { model: openai/gpt-4o }
+  greece:   { model: deepseek/deepseek-chat }
+  china:    { model: meta-llama/llama-3.1-70b-instruct }
+  rome:     { model: google/gemini-2.0-flash-001 }
+  mongolia: { model: mistralai/mistral-large }
