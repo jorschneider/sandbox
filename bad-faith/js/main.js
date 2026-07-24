@@ -29,9 +29,9 @@ ui.init(app, actions);
 
 // ---------- host path ----------
 
-function startHost({ name, avatar }) {
+function startHost({ name, avatar, theme }) {
   const code = net.normalizeCode(params.get('code')) || net.randomCode();
-  const game = new Game();
+  const game = new Game({ theme: theme || params.get('theme') || 'classic' });
   const pids = new Map();
   ui.renderConnecting('Opening the office…');
 
@@ -137,6 +137,16 @@ function renderFor(view, { code, isHost }) {
   if (view.phase === 'lobby') ui.renderLobby(view, { code, isHost, joinUrl: joinUrl(code) });
   else ui.render(view);
 }
+
+// Same-room games die when phones lock; keep the screen awake (best-effort).
+async function keepAwake() {
+  try { await navigator.wakeLock?.request('screen'); } catch { /* not granted; fine */ }
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) keepAwake(); });
+document.addEventListener('click', function once() {
+  keepAwake();
+  document.removeEventListener('click', once);
+});
 
 // ---------- boot ----------
 

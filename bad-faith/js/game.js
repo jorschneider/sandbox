@@ -2,7 +2,7 @@
 // Pure-ish: no DOM, no network. The host calls dispatch() with player
 // actions and reads viewFor(pid) to send each player their private view.
 
-import { CLIENTS, AVATARS, ROUND_NAMES, UNINSURED_CLAIM, UNINSURED_SAFE } from './content.js';
+import { AVATARS, THEMES, UNINSURED_CLAIM, UNINSURED_SAFE } from './content.js';
 
 export const RULES = {
   minPlayers: 2, // 4 is the real game; 2-3 allowed for testing/small groups
@@ -30,8 +30,9 @@ function shuffle(arr, rng) {
 }
 
 export class Game {
-  constructor(rng = Math.random) {
+  constructor({ rng = Math.random, theme = 'classic' } = {}) {
     this.rng = rng;
+    this.theme = THEMES[theme] || THEMES.classic;
     this.phase = 'lobby';
     this.round = 0; // 1-based once started
     this.players = []; // {id, name, avatar, capital, connected, isHost}
@@ -84,7 +85,7 @@ export class Game {
   start() {
     if (this.phase !== 'lobby') return { error: 'Already started.' };
     if (this.players.length < RULES.minPlayers) return { error: 'Need at least 2 brokers.' };
-    this.deck = shuffle(CLIENTS, this.rng);
+    this.deck = shuffle(this.theme.clients, this.rng);
     this.beginRound();
     return { ok: true };
   }
@@ -123,7 +124,7 @@ export class Game {
       }
       if (p.capital < 0) this.addLog(`${p.avatar} ${p.name} is desperate — and desperate brokers hear everything.`);
     }
-    this.addLog(`— ${ROUND_NAMES[this.round - 1]}: ${this.market.map(m => m.client.name).join(' · ')} hit the market.`);
+    this.addLog(`— ${this.theme.roundNames[this.round - 1]}: ${this.market.map(m => m.client.name).join(' · ')} hit the market.`);
   }
 
   effectiveRisk(marketEntry) {
@@ -400,9 +401,10 @@ export class Game {
     const submitted = this.market[0] ? this.players.filter(p => p.id in this.market[0].quotes).map(p => p.id) : [];
     return {
       youId: pid,
+      theme: this.theme.key,
       phase: this.phase,
       round: this.round,
-      roundName: ROUND_NAMES[this.round - 1] || '',
+      roundName: this.theme.roundNames[this.round - 1] || '',
       totalRounds: RULES.rounds,
       rules: { quoteSeconds: RULES.quoteSeconds, dealSeconds: RULES.dealSeconds, minPlayers: RULES.minPlayers, maxPlayers: RULES.maxPlayers },
       timer: this.timer ? { ...this.timer } : null,

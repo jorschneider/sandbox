@@ -3,7 +3,7 @@
 // regions (timer, statuses, proposals, capital) update in place so open
 // forms and half-typed quotes survive network updates.
 
-import { GAME_NAME, GAME_SUBTITLE, AVATARS } from './content.js';
+import { GAME_NAME, GAME_SUBTITLE, AVATARS, THEMES } from './content.js';
 
 const $ = (sel) => document.querySelector(sel);
 let root, actions, lastKey = '', lastView = null;
@@ -15,6 +15,10 @@ export function init(rootEl, actionHandlers) {
   root.addEventListener('click', onClick);
   root.addEventListener('input', onInput);
   root.addEventListener('submit', (e) => e.preventDefault());
+}
+
+function applyTheme(key) {
+  document.body.className = (THEMES[key] || THEMES.classic).bodyClass;
 }
 
 function esc(s) {
@@ -72,6 +76,17 @@ export function renderIdentity({ mode, code, prefillName }) {
           ${AVATARS.map((a, i) => `<button class="avatar${i === 0 ? ' sel' : ''}" data-action="pick-avatar" data-avatar="${a}">${a}</button>`).join('')}
         </div>
       </div>
+      ${mode === 'create' ? `
+      <div class="field"><span>Edition</span>
+        <div class="themes">
+          ${Object.values(THEMES).map((t, i) => `
+            <button class="theme-card${i === 0 ? ' sel' : ''}" data-action="pick-theme" data-theme="${t.key}">
+              <span class="theme-badge">${t.badge}</span>
+              <span class="theme-name">${esc(t.title)}</span>
+              <span class="theme-sub">${esc(t.subtitle)}</span>
+            </button>`).join('')}
+        </div>
+      </div>` : ''}
       <button class="btn big" data-action="${mode === 'create' ? 'do-create' : 'do-join'}">
         ${mode === 'create' ? 'Open for business' : 'Take a seat'}
       </button>
@@ -85,6 +100,8 @@ export function renderConnecting(msg) {
 }
 
 export function renderLobby(view, { code, isHost, joinUrl }) {
+  applyTheme(view.theme);
+  const theme = THEMES[view.theme] || THEMES.classic;
   const key = 'lobby:' + view.players.length;
   const full = view.players.length >= view.rules.maxPlayers;
   if (lastKey !== key) {
@@ -92,6 +109,7 @@ export function renderLobby(view, { code, isHost, joinUrl }) {
     root.innerHTML = `
       <div class="screen center">
         <h2>Room <span class="code">${esc(code)}</span></h2>
+        <p class="sub">${theme.badge} ${esc(theme.subtitle)}</p>
         ${isHost ? `<div id="qr" class="qr"></div>
         <p class="fine">Scan to join, or go to <b>${esc(shortUrl(joinUrl))}</b> and enter the code.</p>` : ''}
         <div class="lobby-list">
@@ -125,6 +143,8 @@ function shortUrl(u) {
 
 export function render(view) {
   lastView = view;
+  applyTheme(view.theme);
+  const theme = THEMES[view.theme] || THEMES.classic;
   const key = `${view.phase}:${view.round}:${view.claims ? view.claims.revealed : 0}`;
   if (key !== lastKey) {
     lastKey = key;
@@ -133,7 +153,7 @@ export function render(view) {
     root.innerHTML = `
       <div class="game">
         <header class="topbar">
-          <div class="round">${esc(view.roundName)} <span class="dim">· ${phaseLabel(view.phase)}</span></div>
+          <div class="round">${theme.badge} ${esc(view.roundName)} <span class="dim">· ${phaseLabel(view.phase)}</span></div>
           <div class="timer" id="timer"></div>
         </header>
         <div class="players" id="playersBar"></div>
@@ -492,6 +512,12 @@ function onClick(e) {
     btn.classList.add('sel');
     return;
   }
+  if (a === 'pick-theme') {
+    root.querySelectorAll('.theme-card').forEach(el => el.classList.remove('sel'));
+    btn.classList.add('sel');
+    applyTheme(btn.dataset.theme); // live preview
+    return;
+  }
   if (a === 'quote-pass') {
     const id = btn.dataset.client;
     const input = root.querySelector(`.quote-input[data-client="${id}"]`);
@@ -543,6 +569,7 @@ function identityForm() {
     name: $('#nameInput')?.value?.trim(),
     avatar: root.querySelector('.avatar.sel')?.dataset.avatar || AVATARS[0],
     code: $('#codeInput')?.value,
+    theme: root.querySelector('.theme-card.sel')?.dataset.theme || 'classic',
   };
 }
 

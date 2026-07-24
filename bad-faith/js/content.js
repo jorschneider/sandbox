@@ -6,7 +6,7 @@
 export const GAME_NAME = 'Bad Faith';
 export const GAME_SUBTITLE = 'Animal Insurance Division';
 
-export const AVATARS = ['🦊', '🦉', '🐊', '🐐', '🦈', '🐝', '🦃', '🐍'];
+export const AVATARS = ['🦊', '🦉', '🐊', '🐐', '🦈', '🐝', '🦃', '🦎'];
 
 export const CLIENTS = [
   {
@@ -248,6 +248,20 @@ export const CLIENTS = [
     safeText: 'The wheels turned. Big Steve remains a legend.',
   },
   {
+    id: 'komodo-spa',
+    name: 'The Komodo Dragon Day Spa',
+    emoji: '🦎',
+    tagline: 'Hot stones. Heated rocks. One apex predator.',
+    coverage: 1700, band: [280, 520], baseRisk: 0.34, rating: 'Moderate',
+    intel: [
+      { id: 'ks1', text: 'Kevin, the komodo, has learned to open the towel cabinet where guests hide.', delta: 0.25 },
+      { id: 'ks2', text: 'Kevin is in brumation this quarter. Extremely mellow. Practically decorative.', delta: -0.20 },
+      { id: 'ks3', text: 'A wellness influencer keeps taking selfies inside the enclosure "for the algorithm".', delta: 0.20 },
+    ],
+    claimText: 'Kevin ate the cucumber-water station, two robes, and very nearly the influencer.',
+    safeText: 'Kevin lounged on his heated rock all quarter, drawing record crowds.',
+  },
+  {
     id: 'gerbil-circus',
     name: 'The Great Gerbil Circus',
     emoji: '🎪',
@@ -262,6 +276,163 @@ export const CLIENTS = [
     safeText: 'A flawless season under the tiny big top.',
   },
 ];
+
+// ---- New York City deck ----
+// NYC-original clients; the theme also borrows a few base clients that fit
+// the city (see THEMES below).
+
+export const NYC_CLIENTS = [
+  {
+    id: 'pizza-rat',
+    name: 'Pizza Rat Logistics',
+    emoji: '🍕',
+    tagline: 'One rat. One slice. One dream.',
+    coverage: 800, band: [130, 300], baseRisk: 0.28, rating: 'Moderate',
+    intel: [
+      { id: 'pr1', text: 'A subway busker filmed the whole fleet. They freeze when recognized.', delta: 0.15 },
+      { id: 'pr2', text: 'They mapped a rush-hour-free route through the freight tunnels.', delta: -0.15 },
+      { id: 'pr3', text: 'The slice is bigger than the rat. It has always been bigger than the rat.', delta: 0.10 },
+    ],
+    claimText: 'The slice was dropped on the tracks at 34th St–Herald Sq. A city mourns.',
+    safeText: 'Every slice delivered, dragged with dignity.',
+  },
+  {
+    id: 'bodega-cats',
+    name: 'The Bodega Cat Collective',
+    emoji: '🐈',
+    tagline: '400 cats. 400 bodegas. Zero apologies.',
+    coverage: 1100, band: [180, 360], baseRisk: 0.22, rating: 'Low',
+    intel: [
+      { id: 'bc1', text: 'A health-inspector sweep is rumored for Tuesday. The cats refuse to hide.', delta: 0.25 },
+      { id: 'bc2', text: 'The cats unionized for better napping shelves. Morale at an all-time high.', delta: -0.15 },
+      { id: 'bc3', text: 'Mittens (Ave C branch) has been running an unlicensed treat operation.', delta: 0.10 },
+    ],
+    claimText: 'A citywide inspection blitz. The cats made eye contact and did not move.',
+    safeText: 'The mice stayed out and the vibes stayed immaculate.',
+  },
+  {
+    id: 'raccoon-syndicate',
+    name: 'Central Park Raccoon Syndicate',
+    emoji: '🦝',
+    tagline: '"Sanitation consultants." Cash only.',
+    coverage: 1300, band: [220, 430], baseRisk: 0.33, rating: 'Moderate',
+    intel: [
+      { id: 'rs1', text: 'They cracked the new "raccoon-proof" bins. It took four minutes.', delta: 0.20 },
+      { id: 'rs2', text: 'A truce with the rangers: trash access in exchange for posing with tourists.', delta: -0.15 },
+      { id: 'rs3', text: 'A turf dispute is brewing with the Prospect Park chapter.', delta: 0.20 },
+    ],
+    claimText: 'The syndicate hit fourteen hot-dog carts in one night. Coordinated. Professional.',
+    safeText: 'A quiet season of light racketeering.',
+  },
+  {
+    id: 'sewer-gator',
+    name: 'The Sewer Alligator (Allegedly)',
+    emoji: '🐊',
+    tagline: 'You cannot prove it exists. You cannot prove it doesn\'t.',
+    coverage: 2000, band: [300, 580], baseRisk: 0.30, rating: 'Unknown',
+    intel: [
+      { id: 'sg1', text: 'City Hall insists it does not exist. Hard to pay a claim on a myth.', delta: -0.20 },
+      { id: 'sg2', text: 'A guide is selling "gator spotting" kayak tours below Canal St.', delta: 0.25 },
+      { id: 'sg3', text: 'It is real, it is twelve feet long, and it has opinions about the DEP.', delta: 0.15 },
+    ],
+    claimText: 'It surfaced beneath a food-cart convention. Officially, a "water-main event".',
+    safeText: 'No sightings this quarter. Which proves nothing.',
+  },
+  {
+    id: 'seagull-squadron',
+    name: 'Coney Island Seagull Squadron',
+    emoji: '🌭',
+    tagline: 'Boardwalk fry acquisition specialists.',
+    coverage: 900, band: [150, 330], baseRisk: 0.35, rating: 'High',
+    intel: [
+      { id: 'ss1', text: 'The squadron now runs coordinated pincer maneuvers on funnel cake.', delta: 0.15 },
+      { id: 'ss2', text: 'A hot-dog eating champion scared them off the main drag. Lasting trauma.', delta: -0.20 },
+      { id: 'ss3', text: 'Mating season and funnel-cake season overlap this quarter.', delta: 0.15 },
+    ],
+    claimText: 'They took the entire Fourth of July inventory in ninety seconds.',
+    safeText: 'Only standard-issue menacing this quarter.',
+  },
+  {
+    id: 'subway-rats-union',
+    name: 'Subway Rats Local 456',
+    emoji: '🚇',
+    tagline: 'Proudly moving garbage since 1904.',
+    coverage: 1200, band: [200, 400], baseRisk: 0.27, rating: 'Moderate',
+    intel: [
+      { id: 'su1', text: 'Contract talks with the MTA stalled over third-rail hazard pay.', delta: 0.20 },
+      { id: 'su2', text: 'The new garbage-train schedule means abundant, safe buffets.', delta: -0.15 },
+      { id: 'su3', text: 'A viral cat has been deputized at the Bedford L stop.', delta: 0.15 },
+    ],
+    claimText: 'A wildcat strike shut down four lines. The rats deny everything, adorably.',
+    safeText: 'Service ran smoothly. The rats collected their dues.',
+  },
+  {
+    id: 'rocco-owl',
+    name: 'Rocco the Zoo Owl, At Large',
+    emoji: '🦉',
+    tagline: 'Escaped in February. Emotionally, so did we all.',
+    coverage: 1500, band: [250, 480], baseRisk: 0.32, rating: 'Moderate',
+    intel: [
+      { id: 'ro1', text: 'Rocco has learned to hunt. The zoo is quietly proud.', delta: -0.15 },
+      { id: 'ro2', text: 'Rocco roosts on a 5th Ave ledge owned by a man with lawyers.', delta: 0.20 },
+      { id: 'ro3', text: 'Birdwatchers publish his location hourly. So, presumably, do the hawks.', delta: 0.15 },
+    ],
+    claimText: 'Rocco crashed a rooftop gala, stealing one canapé and several hearts. The ice sculpture did not survive.',
+    safeText: 'Rocco remains free, beloved, and suspiciously well-fed.',
+  },
+  {
+    id: 'deli-geese',
+    name: 'Delancey Deli Guard Geese',
+    emoji: '🥪',
+    tagline: 'The pastrami has never been safer. Or the customers, less.',
+    coverage: 1000, band: [170, 350], baseRisk: 0.29, rating: 'Low',
+    intel: [
+      { id: 'dg1', text: 'The geese have expanded "protection" to the sidewalk seating.', delta: 0.20 },
+      { id: 'dg2', text: 'Pastrami-based obedience training is, unbelievably, working.', delta: -0.15 },
+      { id: 'dg3', text: 'A food critic was hissed at. The review is pending.', delta: 0.10 },
+    ],
+    claimText: 'The geese held a delivery van hostage over a rye shortage.',
+    safeText: 'The pastrami was protected at all costs.',
+  },
+  {
+    id: 'wall-street-bull',
+    name: "Wall Street's Emotional Support Bull",
+    emoji: '🐂',
+    tagline: 'He can sense the VIX.',
+    coverage: 1600, band: [260, 500], baseRisk: 0.24, rating: 'Moderate',
+    intel: [
+      { id: 'wb1', text: 'The bull gets skittish when the VIX spikes. Check the VIX.', delta: 0.20 },
+      { id: 'wb2', text: 'Traders funded a calming-hay budget. Bull sentiment is up.', delta: -0.15 },
+      { id: 'wb3', text: 'Tourists keep climbing on him. One of them is a litigator.', delta: 0.15 },
+    ],
+    claimText: 'A flash crash spooked him clean through a window on Broad St.',
+    safeText: 'Markets were volatile. The bull was not.',
+  },
+];
+
+// Base clients that also fit the city, borrowed into the NYC deck.
+const NYC_BORROWED = ['pigeon-couriers', 'gary-parrot', 'ferret-reserve', 'hamster-power', 'good-boys-security', 'swan-lake-hoa', 'komodo-spa'];
+
+export const THEMES = {
+  classic: {
+    key: 'classic',
+    title: 'Animal Kingdom',
+    subtitle: 'Animal Insurance Division',
+    badge: '🐾',
+    bodyClass: '',
+    clients: CLIENTS,
+    roundNames: ['Q1', 'Q2', 'Q3', 'Q4', 'Year-End'],
+  },
+  nyc: {
+    key: 'nyc',
+    title: 'New York City',
+    subtitle: 'Five Boroughs Division',
+    badge: '🗽',
+    bodyClass: 'theme-nyc',
+    clients: [...NYC_CLIENTS, ...CLIENTS.filter(c => NYC_BORROWED.includes(c.id))],
+    roundNames: ['The Bronx', 'Queens', 'Brooklyn', 'Staten Island', 'Manhattan'],
+  },
+};
 
 // Rotating flavor for clients nobody insured.
 export const UNINSURED_CLAIM = [

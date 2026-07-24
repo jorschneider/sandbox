@@ -2,8 +2,16 @@
 
 A 4-player, same-room mobile party game about insurance brokers. Four rival
 brokers compete over five quarters to insure deeply uninsurable animal
-clients — an escape-artist octopus, a violent swan HOA, one extremely
-expensive goldfish. Whoever ends the year richest wins.
+clients — an escape-artist octopus, a violent swan HOA, a komodo dragon
+day spa, one extremely expensive goldfish. Whoever ends the year richest
+wins.
+
+Two editions, picked by the host when creating a game:
+
+- **🐾 Animal Kingdom** (default) — the classic deck, quarters Q1–Year-End.
+- **🗽 New York City** — Pizza Rat Logistics, the Bodega Cat Collective,
+  the Sewer Alligator (Allegedly), Subway Rats Local 456… plus a
+  taxi-yellow-on-asphalt skin, and each round is a borough.
 
 The phones hold the secrets and the math. The game happens out loud, at the
 table: bluff during quoting, haggle on the deal floor, gloat during claims
