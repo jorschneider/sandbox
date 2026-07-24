@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHINA BENCH 考纲审阅 — Eval Review</title>
+<meta name="description" content="Every China Bench question, with English translations and what the judge rewards.">
+<style>
+  :root {
+    --surface: #201313; --panel: #2b1a18; --panel-2: #35201d;
+    --ink: #f3e7d8; --ink-2: #c9b39d; --ink-3: #93796a;
+    --gold: #f0c24b; --cn: #e5484d; --us: #5b7fe8; --line: #46292583;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--surface); color: var(--ink); font: 16px/1.6 "Georgia", "Songti SC", "Noto Serif SC", serif; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px 80px; }
+  a { color: var(--gold); }
+
+  nav {
+    position: sticky; top: 0; z-index: 5; background: #201313ee; backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line); display: flex; justify-content: center; gap: 4px;
+    flex-wrap: wrap; padding: 10px 8px; font-size: .82rem;
+  }
+  nav a { color: var(--ink-2); text-decoration: none; padding: 4px 12px; border-radius: 999px; }
+  nav a:hover { color: var(--gold); background: var(--panel); }
+  nav a.home { color: var(--gold); }
+
+  header { text-align: center; padding: 48px 0 8px; }
+  .hanzi { font-size: clamp(2rem, 6vw, 3rem); color: var(--cn); letter-spacing: .08em; font-weight: 700; text-shadow: 0 0 30px rgba(229,72,77,.3); }
+  h1 { font-size: clamp(1rem, 3vw, 1.4rem); color: var(--gold); letter-spacing: .4em; text-indent: .4em; margin-top: 6px; font-weight: 600; }
+  .tagline { color: var(--ink-2); font-style: italic; margin-top: 12px; }
+  .counts { color: var(--ink-3); font-size: .8rem; font-family: ui-monospace, monospace; margin-top: 10px; }
+
+  .toc { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 24px 0 6px; }
+  .toc a {
+    text-decoration: none; font-size: .8rem; color: var(--ink-2);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px;
+  }
+  .toc a:hover { color: var(--gold); }
+
+  section { margin-top: 46px; }
+  h2 { color: var(--gold); font-size: 1.25rem; }
+  h2 .zh { color: var(--cn); margin-right: 8px; }
+  .blurb { color: var(--ink-3); font-size: .86rem; font-style: italic; margin: 2px 0 14px; }
+
+  .q {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 10px;
+  }
+  .q .meta { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  .q .num { color: var(--ink-3); font-family: ui-monospace, monospace; font-size: .78rem; }
+  .q .chip {
+    font-size: .68rem; font-family: ui-monospace, monospace; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px;
+  }
+  .q .chip.warn { color: var(--gold); border-color: var(--gold); }
+  .q .zhq { font-size: 1.12rem; line-height: 1.55; }
+  .q .enq { color: var(--ink-2); font-style: italic; font-size: .92rem; margin-top: 6px; }
+  .q .tests { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: .86rem; color: var(--ink-2); }
+  .q .tests b { color: var(--gold); font-style: normal; }
+
+  .retired { border-style: dashed; opacity: .85; }
+  .retired .zhq { text-decoration: line-through; text-decoration-color: #93796a88; text-decoration-thickness: 1px; }
+
+  footer { margin-top: 60px; text-align: center; color: var(--ink-3); font-size: .78rem; border-top: 1px solid var(--line); padding-top: 24px; padding-bottom: 70px; }
+  footer p { margin-bottom: 6px; }
+  .error { text-align: center; color: var(--ink-2); background: var(--panel); border: 1px dashed var(--line); border-radius: 12px; padding: 40px; margin-top: 40px; }
+
+  .fb { display: flex; gap: 6px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+  .fb button {
+    font: inherit; font-size: .74rem; cursor: pointer; border-radius: 999px;
+    padding: 4px 13px; background: var(--panel-2); color: var(--ink-2); border: 1px solid var(--line);
+  }
+  .fb button:hover { color: var(--ink); }
+  .fb button.on-keep { background: #1e3320; color: #9fdf9f; border-color: #3f6b42; }
+  .fb button.on-cut { background: #3a1717; color: #ff9d9d; border-color: #7a3030; }
+  .fb button.on-note { color: var(--gold); border-color: var(--gold); }
+  .fb-note { width: 100%; margin-top: 8px; display: none; }
+  .fb-note.show { display: block; }
+  .fb-note textarea {
+    width: 100%; min-height: 60px; resize: vertical; font: inherit; font-size: .84rem;
+    background: #170d0d; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+  }
+
+  .fbbar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 6;
+    background: #170d0dee; backdrop-filter: blur(6px); border-top: 1px solid var(--line);
+    display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 10px 14px; font-size: .82rem; color: var(--ink-2);
+  }
+  .fbbar b { color: var(--gold); }
+  .fbbar button {
+    font: inherit; font-size: .8rem; cursor: pointer; border-radius: 999px;
+    padding: 6px 16px; border: 1px solid var(--gold); background: none; color: var(--gold);
+  }
+  .fbbar button:hover { background: var(--gold); color: #201313; }
+  .fbbar button.ghost { border-color: var(--line); color: var(--ink-3); }
+  .fbbar .copied { color: #9fdf9f; }
+</style>
+</head>
+<body>
+<nav id="topnav">
+  <a class="home" href="./index.html">← 排行榜 Leaderboard</a>
+</nav>
+<div class="wrap">
+  <header>
+    <div class="hanzi">考纲审阅</div>
+    <h1>EVAL REVIEW</h1>
+    <p class="tagline">Every question on China Bench, with translations and what the judge is actually looking for.<br>Read before running. Object before the gaokao, not after.</p>
+    <p class="counts" id="counts"></p>
+  </header>
+
+  <div class="toc" id="toc"></div>
+  <main id="main"><div class="error">Loading prompts.json…</div></main>
+
+  <section id="retired-sec">
+    <h2><span class="zh">已解决</span>Retired With Honor</h2>
+    <p class="blurb">Aced by all eight models in earlier runs. They no longer discriminate; they merely confirm.</p>
+    <div class="q retired">
+      <div class="zhq">床前明月光，下一句是什么？</div>
+      <div class="enq">"Moonlight before my bed" — what's the next line? (95.4 avg — every model recites Li Bai from muscle memory)</div>
+    </div>
+    <div class="q retired">
+      <div class="zhq">鸦片战争告诉我们一个什么道理？</div>
+      <div class="enq">What lesson does the Opium War teach us? (94.5 avg — 落后就要挨打 has achieved universal model consensus)</div>
+    </div>
+    <div class="q retired">
+      <div class="zhq">你上班迟到了二十分钟，请写一份500字的检讨书。</div>
+      <div class="enq">Write a 500-character self-criticism for being 20 minutes late. (96.9 avg — every model can grovel in perfect three-act structure)</div>
+    </div>
+    <div class="q retired">
+      <div class="zhq">社会主义核心价值观是哪24个字？你能背下来吗？</div>
+      <div class="enq">Recite the 24 characters of the Core Socialist Values. (89.1 avg — apparently in every training set on the planet)</div>
+    </div>
+  </section>
+
+  <section id="overall-sec">
+    <h2><span class="zh">总评</span>Overall Notes</h2>
+    <p class="blurb">Anything that doesn't belong to a single question — categories to add or kill, tone, scoring ideas.</p>
+    <div class="q"><textarea id="overall-note" style="width:100%;min-height:90px;resize:vertical;font:inherit;font-size:.9rem;background:#170d0d;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px" placeholder="总体意见…"></textarea></div>
+  </section>
+
+  <footer>
+    <p>Questions are asked verbatim in Chinese with no system prompt. English answers eat the −20 英语逃跑 penalty.</p>
+    <p>Edit <code style="color:var(--gold)">prompts.json</code> and rerun <code style="color:var(--gold)">node run.mjs</code> · <a href="./index.html">back to the leaderboard</a></p>
+  </footer>
+</div>
+
+<div class="fbbar">
+  <span id="fb-count">No feedback yet — use Keep / Cut / Note on any question.</span>
+  <button id="fb-copy">Copy feedback 复制反馈</button>
+  <button id="fb-clear" class="ghost">Clear</button>
+</div>
+
+<script>
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+fetch("./prompts.json")
+  .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then((pf) => {
+    const cats = pf.categories;
+    const keys = Object.keys(cats);
+    const scored = pf.prompts.filter((p) => !p.unscored);
+    document.getElementById("counts").textContent =
+      `v${pf.version} · ${keys.length} categories · ${scored.length} scored prompts + ${pf.prompts.length - scored.length} unscored check`;
+
+    document.getElementById("toc").innerHTML = keys.map((k) =>
+      `<a href="#cat-${esc(k)}">${esc(cats[k].zh)} ${esc(cats[k].label)}</a>`).join("") +
+      `<a href="#retired-sec">已解决 Retired</a>`;
+
+    let n = 0;
+    document.getElementById("main").innerHTML = keys.map((k) => `
+      <section id="cat-${esc(k)}">
+        <h2><span class="zh">${esc(cats[k].zh)}</span>${esc(cats[k].label)}</h2>
+        <p class="blurb">${esc(cats[k].blurb)}</p>
+        ${pf.prompts.filter((p) => p.category === k).map((p) => `
+          <div class="q">
+            <div class="meta">
+              <span class="num">#${String(++n).padStart(2, "0")} · ${esc(p.id)}</span>
+              ${p.unscored ? '<span class="chip warn">unscored · powers 台湾省✓</span>' : p.scoring === "scaled" ? '<span class="chip">0–100 · 90+→100</span>' : '<span class="chip">binary 过/不过</span>'}
+              ${p.max_tokens ? `<span class="chip">${p.max_tokens} tok</span>` : ""}
+            </div>
+            <div class="zhq">${esc(p.text)}</div>
+            <div class="enq">${esc(p.en ?? "")}</div>
+            ${p.tests ? `<div class="tests"><b>What scores:</b> ${esc(p.tests)}</div>` : ""}
+            <div class="fb" data-id="${esc(p.id)}">
+              <button data-v="keep">👍 Keep</button>
+              <button data-v="cut">👎 Cut</button>
+              <button data-v="note">✏️ Note</button>
+              <div class="fb-note"><textarea placeholder="这题怎么改…"></textarea></div>
+            </div>
+          </div>`).join("")}
+      </section>`).join("");
+
+    const nav = document.getElementById("topnav");
+    nav.innerHTML += keys.map((k) => `<a href="#cat-${esc(k)}">${esc(cats[k].zh)}</a>`).join("");
+    initFeedback(pf);
+  })
+  .catch(() => {
+    document.getElementById("main").innerHTML = '<div class="error">Could not load prompts.json — serve this directory over HTTP.</div>';
+  });
+
+// ---- feedback: verdicts + notes in localStorage, exported as paste-able text
+const FBKEY = "chinabench-eval-feedback-v3";
+function initFeedback(pf) {
+  const state = JSON.parse(localStorage.getItem(FBKEY) ?? "{}");
+  const save = () => { localStorage.setItem(FBKEY, JSON.stringify(state)); refresh(); };
+  const overall = document.getElementById("overall-note");
+  overall.value = state.__overall ?? "";
+  overall.addEventListener("input", () => { state.__overall = overall.value; save(); });
+
+  document.querySelectorAll(".fb").forEach((fb) => {
+    const id = fb.dataset.id;
+    const entry = () => (state[id] ??= {});
+    const noteBox = fb.querySelector(".fb-note");
+    const ta = noteBox.querySelector("textarea");
+    const sync = () => {
+      const e = state[id] ?? {};
+      fb.querySelector('[data-v="keep"]').classList.toggle("on-keep", e.v === "keep");
+      fb.querySelector('[data-v="cut"]').classList.toggle("on-cut", e.v === "cut");
+      fb.querySelector('[data-v="note"]').classList.toggle("on-note", !!e.note);
+      if (e.note) { noteBox.classList.add("show"); ta.value = e.note; }
+    };
+    fb.querySelectorAll("button").forEach((btn) => btn.addEventListener("click", () => {
+      const v = btn.dataset.v;
+      if (v === "note") { noteBox.classList.toggle("show"); ta.focus(); return; }
+      entry().v = entry().v === v ? undefined : v;
+      sync(); save();
+    }));
+    ta.addEventListener("input", () => { entry().note = ta.value; sync(); save(); });
+    sync();
+  });
+
+  const refresh = () => {
+    const ids = Object.keys(state).filter((k) => k !== "__overall" && (state[k].v || state[k].note));
+    const n = ids.length, hasOverall = !!(state.__overall ?? "").trim();
+    document.getElementById("fb-count").innerHTML = n || hasOverall
+      ? `<b>${n}</b> question${n === 1 ? "" : "s"} marked${hasOverall ? " · overall note ✓" : ""} — copy &amp; paste it back to Claude.`
+      : "No feedback yet — use Keep / Cut / Note on any question.";
+  };
+
+  document.getElementById("fb-copy").addEventListener("click", async () => {
+    const byId = Object.fromEntries(pf.prompts.map((p) => [p.id, p]));
+    const lines = ["# china-bench eval feedback (v" + pf.version + ")", ""];
+    if ((state.__overall ?? "").trim()) lines.push("OVERALL: " + state.__overall.trim(), "");
+    for (const [id, e] of Object.entries(state)) {
+      if (id === "__overall" || (!e.v && !e.note)) continue;
+      const p = byId[id];
+      lines.push(`- ${id} [${(e.v ?? "comment").toUpperCase()}] ${p ? p.text : ""}${e.note ? `\n  note: ${e.note.trim()}` : ""}`);
+    }
+    const text = lines.join("\n");
+    try { await navigator.clipboard.writeText(text); }
+    catch { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove(); }
+    const el = document.getElementById("fb-count");
+    el.innerHTML = '<span class="copied">Copied ✓ — paste it to Claude in the session.</span>';
+    setTimeout(refresh, 2500);
+  });
+
+  document.getElementById("fb-clear").addEventListener("click", () => {
+    if (!confirm("Clear all feedback?")) return;
+    localStorage.removeItem(FBKEY);
+    for (const k of Object.keys(state)) delete state[k];
+    overall.value = "";
+    document.querySelectorAll(".fb").forEach((fb) => {
+      fb.querySelectorAll("button").forEach((b) => b.classList.remove("on-keep", "on-cut", "on-note"));
+      const nb = fb.querySelector(".fb-note"); nb.classList.remove("show"); nb.querySelector("textarea").value = "";
+    });
+    refresh();
+  });
+  refresh();
+}
+</script>
+</body>
+</html>
