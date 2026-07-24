@@ -12,7 +12,10 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
 
   let lastError = null;
 
-  function startListen() {
+  // hold mode (V / right mouse / mic button): listens until release.
+  // toggle mode (space): listens until you pause — the recognizer ends
+  // itself after a beat of silence and the decree executes.
+  function startListen(toggleMode = false) {
     if (!supported || holding) return;
     holding = true;
     lastTranscript = '';
@@ -26,7 +29,7 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
     }
     rec.lang = 'en-US';
     rec.interimResults = true;
-    rec.continuous = true;
+    rec.continuous = !toggleMode;
     rec.maxAlternatives = 1;
     // only claim "listening" once the recognizer actually engages,
     // so a dead speech service is visible instead of silent
@@ -77,7 +80,7 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
     try { rec && rec.stop(); } catch { /* already stopped */ }
   }
 
-  // --- keyboard: V hold-to-talk, T / enter opens the typed decree box
+  // --- keyboard: space tap-to-talk, V hold-to-talk, T opens the typed box
   window.addEventListener('keydown', (e) => {
     if (isTyping()) {
       if (e.code === 'Escape') closeType();
@@ -85,6 +88,11 @@ export function initInput({ onUtterance, onInterim, onVoiceState, typeBox, isTyp
       return;
     }
     if (e.repeat) return;
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (holding) stopListen();
+      else startListen(true);
+    }
     if (e.code === 'KeyV') startListen();
     if (e.code === 'KeyT' || e.code === 'Enter' || e.code === 'Slash') {
       e.preventDefault();
