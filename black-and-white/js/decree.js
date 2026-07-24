@@ -74,6 +74,32 @@ const RE_DAY = /let there be (light|day|dawn|morning)|make it (day|light|morning
 const RE_RAIN = /let it rain|make it rain|^rain$|bring (the )?rain|\brainfall\b|let the rain|start the rain/;
 const RE_SNOW = /let it snow|make it snow|bring (the )?snow|\bsnowfall\b|let the snow|start the snow/;
 const RE_CLEAR = /stop the (rain|snow)|no more (rain|snow)|clear (the )?sk(y|ies)|make it clear|stop (raining|snowing)/;
+const RE_SHARE = /share (this |the )?world|remember this world|give (me )?(a |the )?link|copy (the |this )?world/;
+
+// seasonal palettes: fn(jitter) -> [h, s, l]
+const SEASONS = {
+  autumn: {
+    re: /let it be (autumn|fall)|autumn (came|come|now)|bring (the )?autumn|^autumn$/,
+    caption: '…and autumn swept the valley.', rep: '#d97b29',
+    trees: (jr) => [0.02 + jr * 0.08, 0.8, 0.42 + ((jr * 3.7) % 1) * 0.18],
+  },
+  spring: {
+    re: /let it be spring|spring (came|come|returned|now)|bring (the )?spring|^spring$/,
+    caption: '…and spring returned.', rep: '#7ccb6e',
+    trees: (jr) => [0.22 + jr * 0.09, 0.55, 0.48 + ((jr * 3.7) % 1) * 0.14],
+    flowers: (jr) => (jr < 0.5 ? [0.93 + jr * 0.06, 0.7, 0.72] : [0.12, 0.35, 0.85]),
+  },
+  summer: {
+    re: /let it be summer|summer (came|come|now)|bring (the )?summer|^summer$/,
+    caption: '…and high summer settled in.', rep: '#2e8b4f',
+    trees: (jr) => [0.3 + jr * 0.06, 0.62, 0.34 + ((jr * 3.7) % 1) * 0.12],
+  },
+  winter: {
+    re: /let it be winter|winter (came|come|now)|bring (the )?winter|^winter$/,
+    caption: '…and winter whitened the world.', rep: '#dfe6ec',
+    trees: (jr) => [0.58, 0.08 + jr * 0.06, 0.72 + ((jr * 3.7) % 1) * 0.16],
+  },
+};
 
 let world = null;
 let hooks = {};
@@ -283,6 +309,16 @@ export function speak(text, gaze, playerPos, now) {
     hooks.caption('…and snow began to fall.', null, '');
     return;
   }
+  if (RE_SHARE.test(norm)) {
+    hooks.onIntent?.('share');
+    return;
+  }
+  for (const s of Object.keys(SEASONS)) {
+    if (SEASONS[s].re.test(norm)) {
+      doSeason(s, playerPos, now);
+      return;
+    }
+  }
 
   // ---- otherwise it's a color decree
   let catKey = findCategory(tokens);
@@ -366,10 +402,85 @@ function setNight(on) {
 }
 
 function setWeather(kind) {
+  if (kind === 'clear' && log.weather === 'rain') world.spawnRainbow();
   world.setWeather(kind);
   log.weather = kind;
   hooks.onIntent?.(kind);
   persist();
+}
+
+function countColored() {
+  let coloredCount = 0, total = 0;
+  for (const c of world.categories.values()) {
+    if (!c.countTotal) continue;
+    total++;
+    if (c.colored) coloredCount++;
+  }
+  return { coloredCount, total };
+}
+
+// paint one instanced surface with a season palette
+function enactPalette(catKey, surfIndex, fn, origin, now, instant) {
+  const cat = world.categories.get(catKey);
+  const surf = cat.surfaces[surfIndex];
+  if (!surf || surf.type !== 'inst') return;
+  const attr = surf.mesh.instanceColor;
+  const count = surf.mesh.count;
+  const to = new Float32Array(count * 3);
+  const delays = new Float32Array(count);
+  let maxDelay = 0;
+  for (let i = 0; i < count; i++) {
+    const [h, s, l] = fn(Math.random());
+    tmpA.setHSL((h + 1) % 1, Math.min(1, s), Math.min(0.95, l));
+    to[i * 3] = tmpA.r; to[i * 3 + 1] = tmpA.g; to[i * 3 + 2] = tmpA.b;
+    const p = surf.positions[i];
+    const d = instant ? 0 : Math.hypot(p.x - origin.x, p.z - origin.z) / RIPPLE_SPEED;
+    delays[i] = d;
+    if (d > maxDelay) maxDelay = d;
+  }
+  batches.push({ attr, arr: attr.array, idx: null, from: attr.array.slice(), to,
+    delays, start: now, maxDelay, count, dur: instant ? 0.12 : BATCH_DUR });
+}
+
+function doSeason(s, origin, now, instant = false) {
+  const def = SEASONS[s];
+  world.setSeason(s);
+  const treesCat = world.categories.get('trees');
+  const wasNew = !treesCat.colored;
+  enactPalette('trees', 1, def.trees, origin, now, instant); // broadleaf canopies
+  if (s === 'winter') enactPalette('trees', 0, def.trees, origin, now, instant);
+  treesCat.colored = true;
+  treesCat.currentName = s;
+  treesCat.currentColor.set(def.rep);
+  if (def.flowers) {
+    const fc = world.categories.get('flowers');
+    const fNew = !fc.colored;
+    enactPalette('flowers', 0, def.flowers, origin, now, instant);
+    fc.colored = true;
+    fc.currentName = 'spring';
+    fc.currentColor.set('#e8a0c0');
+    const { coloredCount, total } = countColored();
+    hooks.onDecree?.({ catKey: 'flowers', isNew: fNew, coloredCount, total,
+      muted: true, base: new THREE.Color('#e8a0c0'), rainbow: false,
+      origin, now, single: false });
+  }
+  if (s === 'winter') {
+    world.setWeather('snow');
+    if (!hydrating) log.weather = 'snow';
+    hooks.onIntent?.('snow');
+  }
+  if (!instant) spawnRing(origin, new THREE.Color(def.rep), now);
+  if (!hydrating) {
+    log.entries = log.entries.filter((e) => e.t !== 'season');
+    log.entries.push({ t: 'season', v: s });
+    persist();
+  }
+  const { coloredCount, total } = countColored();
+  hooks.onDecree?.({ catKey: 'trees', isNew: wasNew, coloredCount, total,
+    muted: instant, base: new THREE.Color(def.rep), rainbow: false,
+    origin, now, single: false });
+  if (!hydrating && wasNew && coloredCount === total) hooks.onComplete?.(origin);
+  if (!instant) hooks.caption(def.caption, captionHex(tmpA.set(def.rep)), '');
 }
 
 function genesis(playerPos, now) {
@@ -509,17 +620,13 @@ function enact(cat, colorSpec, origin, now, extraDelay, muted, instant = false) 
     persist();
   }
 
-  let coloredCount = 0, total = 0;
-  for (const c of world.categories.values()) {
-    if (!c.countTotal) continue;
-    total++;
-    if (c.colored) coloredCount++;
-  }
+  const { coloredCount, total } = countColored();
   hooks.onDecree?.({
     catKey: cat.key, isNew, coloredCount, total, muted,
     base: colorSpec.rainbow ? null : base, rainbow: !!colorSpec.rainbow,
     origin, now, single: false,
   });
+  if (!hydrating && isNew && coloredCount === total) hooks.onComplete?.(origin);
 }
 
 // color just the thing under the crosshair; returns false if it can't
@@ -626,7 +733,7 @@ export function hydrate(saved, playerPos, now) {
   try {
     for (const e of saved.entries || []) {
       const cat = world.categories.get(e.key);
-      if (!cat) continue;
+      if (!cat && e.t !== 'season') continue;
       if (e.t === 'cat') {
         const spec = e.rainbow
           ? { rainbow: true, name: e.name }
@@ -638,6 +745,8 @@ export function hydrate(saved, playerPos, now) {
       } else if (e.t === 'patch') {
         paintPatch(new THREE.Vector3(e.x, 0, e.z), new THREE.Color(e.hex),
           e.name, now, true);
+      } else if (e.t === 'season') {
+        doSeason(e.v, playerPos, now, true);
       }
       // settle each replayed decree before the next one snapshots colors
       tickDecrees(now + 0.15);
@@ -655,6 +764,11 @@ export function hydrate(saved, playerPos, now) {
 
 export function getWorldState() {
   return { night: log.night, weather: log.weather };
+}
+
+// the current world as a portable object (same shape persist() saves)
+export function getSaveState() {
+  return { v: 2, entries: log.entries, night: log.night, weather: log.weather };
 }
 
 // --------------------------------------------------------------- ripple rings

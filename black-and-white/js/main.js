@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { buildWorld } from './world.js';
-import { bindDecrees, speak, hydrate, getWorldState, tickDecrees } from './decree.js';
+import { bindDecrees, speak, hydrate, getWorldState, getSaveState, tickDecrees } from './decree.js';
 import { initInput } from './voice.js';
 import { createAmbience } from './audio.js';
 
@@ -82,6 +82,14 @@ bindDecrees(world, {
     else if (kind === 'rain' || kind === 'snow' || kind === 'clear') audio.setWeather(kind);
     else if (kind === 'genesis') audio.genesisChimes(world.categories.size);
     else if (kind === 'reset') { audio.reset(); updateSketch(); }
+    else if (kind === 'share') shareWorld();
+  },
+  onComplete() {
+    setTimeout(() => {
+      caption('…and the world was whole.', '#ffffff', 'genesis');
+      audio.flourish();
+      world.flourish(player.pos.clone(), performance.now() / 1000);
+    }, 1100);
   },
   onStateChange(state) {
     clearTimeout(saveTimer);
@@ -104,13 +112,43 @@ const player = {
 }
 player.pos.y = world.terrainHeight(player.pos.x, player.pos.z) + 1.9;
 
-// a remembered world wakes up already painted
-let remembered = false;
+// a shared world in the URL wins; otherwise a remembered world wakes up painted
+let remembered = false, gifted = false;
 try {
-  const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
-  remembered = hydrate(saved, player.pos.clone(), performance.now() / 1000);
-} catch { /* corrupt save — start gray */ }
+  const m = location.hash.match(/^#w=([A-Za-z0-9\-_]+)$/);
+  if (m) {
+    const b64 = m[1].replace(/-/g, '+').replace(/_/g, '/');
+    const bytes = Uint8Array.from(atob(b64), (ch) => ch.charCodeAt(0));
+    gifted = hydrate(JSON.parse(new TextDecoder().decode(bytes)),
+      player.pos.clone(), performance.now() / 1000);
+  }
+} catch { /* malformed link — fall through to the local save */ }
+if (!gifted) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
+    remembered = hydrate(saved, player.pos.clone(), performance.now() / 1000);
+  } catch { /* corrupt save — start gray */ }
+}
 updateSketch();
+
+function shareWorld() {
+  try {
+    const json = JSON.stringify(getSaveState());
+    const enc = btoa(String.fromCharCode(...new TextEncoder().encode(json)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const url = location.origin + location.pathname + '#w=' + enc;
+    history.replaceState(null, '', '#w=' + enc);
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(url).then(
+        () => caption('a link to this world is on your clipboard.', null, 'hint'),
+        () => caption('this world now lives in your address bar — copy it.', null, 'hint'));
+    } else {
+      caption('this world now lives in your address bar — copy it.', null, 'hint');
+    }
+  } catch {
+    caption('the world could not be written down…', null, 'hint');
+  }
+}
 
 const keys = new Set();
 let started = false;
@@ -184,6 +222,20 @@ const raycaster = new THREE.Raycaster();
 raycaster.far = 1000;
 let gazeClock = 0;
 
+// soft glow on the exact thing "this" would color
+const highlightMat = new THREE.MeshBasicMaterial({
+  color: '#ffffff', transparent: true, opacity: 0.08,
+  blending: THREE.AdditiveBlending, depthWrite: false,
+});
+const highlight = new THREE.Mesh(new THREE.BufferGeometry(), highlightMat);
+highlight.matrixAutoUpdate = false;
+highlight.visible = false;
+highlight.raycast = () => {};
+scene.add(highlight);
+const hlM = new THREE.Matrix4();
+const hlScale = new THREE.Matrix4().makeScale(1.06, 1.06, 1.06);
+const SINGLE_TINT_KEYS = new Set(['houses', 'roofs', 'clouds']);
+
 function updateGaze(now) {
   if (now < gazeClock) return;
   gazeClock = now + 0.13;
@@ -215,6 +267,25 @@ function updateGaze(now) {
   gazeState.point = point;
   gazeState.surfIndex = surfIndex;
   gazeState.instanceId = instanceId;
+
+  const singleable = hits.length > 0 && (
+    (instanceId !== null && instanceId !== undefined)
+    || (surfIndex !== null && surfIndex !== undefined && SINGLE_TINT_KEYS.has(key)));
+  if (singleable) {
+    const obj = hits[0].object;
+    highlight.geometry = obj.geometry;
+    if (obj.isInstancedMesh) {
+      obj.getMatrixAt(instanceId, hlM);
+      hlM.premultiply(obj.matrixWorld);
+    } else {
+      hlM.copy(obj.matrixWorld);
+    }
+    hlM.multiply(hlScale);
+    highlight.matrix.copy(hlM);
+    highlight.visible = true;
+  } else {
+    highlight.visible = false;
+  }
 }
 
 // ------------------------------------------------------------------ input
@@ -272,9 +343,9 @@ $('enter-btn').addEventListener('click', () => {
   }
   lockPointer();
   setTimeout(() => {
-    caption(remembered
-      ? 'the world remembers your word.'
-      : 'gaze upon a thing — hold <em>V</em> — speak a color', null, 'hint');
+    caption(gifted ? 'a world was given to you.'
+      : remembered ? 'the world remembers your word.'
+        : 'gaze upon a thing — hold <em>V</em> — speak a color', null, 'hint');
   }, 1600);
 });
 
@@ -288,6 +359,8 @@ addEventListener('resize', () => {
 
 // debug/testing handle
 window.__bw = { world, player, audio };
+
+let proxClock = 0;
 
 let last = performance.now() / 1000;
 renderer.setAnimationLoop(() => {
@@ -306,5 +379,13 @@ renderer.setAnimationLoop(() => {
   tickDecrees(now);
   audio.update(now);
   if (started) updateGaze(now);
+  if (highlight.visible) {
+    highlightMat.opacity = 0.05 + 0.05 * (1 + Math.sin(now * 4.5)) / 2;
+  }
+  if (started && now > proxClock) {
+    proxClock = now + 0.25;
+    audio.setRiverProximity(
+      Math.max(0, 1 - world.riverDistance(player.pos.x, player.pos.z) / 55));
+  }
   renderer.render(scene, camera);
 });

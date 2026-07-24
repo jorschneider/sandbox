@@ -61,7 +61,10 @@ Open the page, press **▶ PLAY TRAILER** (audio needs one click).
   *"let there be night"*, *"let it rain / snow"*, *"begin again"* to
   unmake it all. Grass, butterflies, sparkles and fireflies wake as
   their colors arrive; the world is saved locally and remembers you.
-  Web Speech API + generative WebAudio ambience; same vendored Three.js.
+  Speak *"let it be autumn"* for falling leaves, watch a rainbow rise
+  when the rain clears, and *"share this world"* to get a link that
+  carries your whole painted world to a friend. Web Speech API + a
+  filtered, looping music bed; same vendored Three.js.
 - **[`/rayray-outdoor-weekend/`](rayray-outdoor-weekend/)** — an event
   microsite.
 

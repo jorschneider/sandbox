@@ -10,7 +10,9 @@ const MUSIC_URL = 'audio/theme.mp3';
 export function createAmbience() {
   let ctx = null;
   let master, bellBus, bellLp;
-  let musicEl = null, musicGain = null, musicFilter = null;
+  let musicGain = null, musicFilter = null;
+  const musicEls = [], musicGains = [];
+  let musicActive = 0, musicXfade = 0;
   let rainGain = null, babbleGain = null;
   let chirpsOn = false, babbleOn = false, night = false;
   let nextChirp = 0;
@@ -59,23 +61,36 @@ export function createAmbience() {
     master.gain.linearRampToValueAtTime(0.85, ctx.currentTime + 2);
     master.connect(ctx.destination);
 
-    // music bed, streamed and looped
-    musicEl = new Audio(MUSIC_URL);
-    musicEl.loop = true;
-    musicEl.preload = 'auto';
+    // music bed: two elements of the same file, crossfaded at the loop seam
     musicFilter = ctx.createBiquadFilter();
     musicFilter.type = 'lowpass';
     musicFilter.frequency.value = 750;
     musicFilter.Q.value = 0.4;
     musicGain = ctx.createGain();
     musicGain.gain.value = 0;
-    try {
-      const src = ctx.createMediaElementSource(musicEl);
-      src.connect(musicFilter);
-      musicFilter.connect(musicGain);
-      musicGain.connect(master);
-      musicEl.play().catch(() => { /* will retry on next user gesture via game click */ });
-    } catch { /* element/codec failure — effects still play */ }
+    musicFilter.connect(musicGain);
+    musicGain.connect(master);
+    for (let i = 0; i < 2; i++) {
+      const el = new Audio(MUSIC_URL);
+      el.preload = 'auto';
+      const g = ctx.createGain();
+      g.gain.value = i === 0 ? 1 : 0;
+      try {
+        const src = ctx.createMediaElementSource(el);
+        src.connect(g);
+        g.connect(musicFilter);
+      } catch { /* element/codec failure — effects still play */ }
+      // safety net if the crossfade never armed (e.g. unknown duration)
+      el.addEventListener('ended', () => {
+        if (musicEls[musicActive] === el) {
+          el.currentTime = 0;
+          el.play().catch(() => {});
+        }
+      });
+      musicEls.push(el);
+      musicGains.push(g);
+    }
+    musicEls[0].play().catch(() => { /* retried from the next user gesture */ });
     voiceTheWorld();
 
     // small echo space for the decree bells
@@ -153,7 +168,7 @@ export function createAmbience() {
 
   function addBabble() {
     babbleGain = noiseLayer(950, 2.2);
-    babbleGain.gain.linearRampToValueAtTime(0.022, ctx.currentTime + 4);
+    babbleGain.gain.linearRampToValueAtTime(0.012, ctx.currentTime + 4);
     const lfo = ctx.createOscillator();
     lfo.frequency.value = 5.3;
     const lfoAmp = ctx.createGain(); lfoAmp.gain.value = 0.009;
@@ -213,24 +228,66 @@ export function createAmbience() {
       bellLp.frequency.linearRampToValueAtTime(1400, ctx.currentTime + 2);
     },
     update(nowSec) {
-      if (!started || !chirpsOn) return;
+      if (!started) return;
+      // seamless loop: crossfade to the twin element near the end of the file
+      const a = musicEls[musicActive];
+      if (a && !musicXfade && isFinite(a.duration) && a.duration > 20
+        && a.currentTime > a.duration - 3) {
+        const nb = 1 - musicActive;
+        const b = musicEls[nb];
+        b.currentTime = 0;
+        b.play().catch(() => {});
+        const t = ctx.currentTime;
+        musicGains[nb].gain.cancelScheduledValues(t);
+        musicGains[nb].gain.setValueAtTime(0, t);
+        musicGains[nb].gain.linearRampToValueAtTime(1, t + 2.5);
+        musicGains[musicActive].gain.cancelScheduledValues(t);
+        musicGains[musicActive].gain.setValueAtTime(1, t);
+        musicGains[musicActive].gain.linearRampToValueAtTime(0, t + 2.5);
+        musicXfade = t + 2.8;
+        musicActive = nb;
+      }
+      if (musicXfade && ctx.currentTime > musicXfade) {
+        musicEls[1 - musicActive].pause();
+        musicXfade = 0;
+      }
+      if (!chirpsOn) return;
       if (nowSec > nextChirp) {
         if (night) cricketTrill(); else birdChirp();
         nextChirp = nowSec + (night ? 2.5 + Math.random() * 4 : 3.5 + Math.random() * 7);
       }
     },
+    // river babble swells as the god nears the water
+    setRiverProximity(p) {
+      if (!started || !babbleOn || !babbleGain) return;
+      const t = ctx.currentTime;
+      babbleGain.gain.cancelScheduledValues(t);
+      babbleGain.gain.linearRampToValueAtTime(0.005 + p * 0.05, t + 0.4);
+    },
+    // the world made whole: ascending bells + a swell in the music
+    flourish() {
+      if (!started) return;
+      for (let i = 0; i < 13; i++) chime(i, i * 0.09);
+      chime(12, 1.35, true);
+      const t = ctx.currentTime;
+      musicGain.gain.cancelScheduledValues(t);
+      musicGain.gain.linearRampToValueAtTime(0.74, t + 1.2);
+      musicGain.gain.linearRampToValueAtTime(0.58, t + 7);
+    },
     // call from any user gesture: resumes a suspended context / blocked play()
     poke() {
       if (!started) return;
       if (ctx.state === 'suspended') ctx.resume().catch(() => {});
-      if (musicEl && musicEl.paused) musicEl.play().catch(() => {});
+      const a = musicEls[musicActive];
+      if (a && a.paused) a.play().catch(() => {});
     },
     debug() {
+      const a = musicEls[musicActive];
       return {
         started,
-        musicPlaying: !!musicEl && !musicEl.paused && !musicEl.error,
-        musicTime: musicEl ? musicEl.currentTime : 0,
-        musicError: musicEl?.error?.code ?? null,
+        musicPlaying: !!a && !a.paused && !a.error,
+        musicTime: a ? a.currentTime : 0,
+        musicError: a?.error?.code ?? null,
         filterHz: musicFilter ? musicFilter.frequency.value : 0,
         progress,
       };
