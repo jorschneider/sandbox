@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Athena Leads · Insurance Outreach Brief</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- ===== Password gate ===== -->
+  <section id="gate" class="gate">
+    <div class="gate-card">
+      <div class="gate-kicker">ChinaTalk × Athena</div>
+      <h1 class="gate-title serif">Athena Leads</h1>
+      <p class="gate-sub">An insurance-outreach brief, distilled from the ChinaTalk subscriber base. Enter the password to read.</p>
+      <form id="gate-form" autocomplete="off">
+        <div class="gate-field">
+          <input id="password" type="password" placeholder="Password" aria-label="Password" autofocus />
+          <button id="unlock" type="submit"><span class="btn-label">Read brief</span><span class="btn-spinner" hidden></span></button>
+        </div>
+        <p id="gate-error" class="gate-error" hidden></p>
+      </form>
+      <p class="gate-foot">Private &middot; not indexed &middot; contains contact details</p>
+    </div>
+  </section>
+
+  <!-- ===== Brief (revealed after unlock) ===== -->
+  <div id="app" hidden>
+    <div class="runhead">
+      <span>Athena Leads</span>
+      <span class="runhead-mid">Insurance outreach brief</span>
+      <span>Confidential</span>
+    </div>
+
+    <main class="app">
+      <header class="masthead">
+        <div class="mast-kicker" id="mast-kicker"></div>
+        <h1 class="mast-title serif" id="mast-title"></h1>
+        <p class="mast-dek" id="mast-dek"></p>
+        <div class="mast-rule"></div>
+        <div class="mast-meta">
+          <div class="stats" id="stats"></div>
+          <div class="mast-date mono" id="mast-date"></div>
+        </div>
+        <nav class="index" id="index" aria-label="Sections"></nav>
+      </header>
+
+      <div id="content"></div>
+
+      <footer class="foot">
+        <p>Built from first-party subscriber data. Roles identified from public professional sources and labelled with a confidence level — verify the medium / low ones before emailing. An email-free version of this brief is fine to forward; this one isn't.</p>
+        <p class="colophon mono">ChinaTalk × Athena · compiled June 2026 · {N} insurance-domain readers, screened from 74,741</p>
+      </footer>
+    </main>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
