@@ -50,6 +50,17 @@ Open the page, press **▶ PLAY TRAILER** (audio needs one click).
 - `Space` pauses. Digits `1`–`9` seek to 10%–90%. The progress bar is clickable.
 - `?t=95` starts at a given second; add `&mute=1` for silent autoplay (used for testing).
 
+## Also in this repo
+
+- **[`/black-and-white/`](black-and-white/)** — *BLACK & WHITE*, a
+  first-person toy where you walk a colorless low-poly valley as a small
+  god and **speak colors into being** (hold `V` and say "the trees are
+  emerald", or press `T` to type). Each decree ripples outward to
+  everything of its kind until the world is full of color. Web Speech
+  API + generative WebAudio ambience; same vendored Three.js.
+- **[`/rayray-outdoor-weekend/`](rayray-outdoor-weekend/)** — an event
+  microsite.
+
 ## Deploying
 
 A GitHub Actions workflow (`.github/workflows/pages.yml`) deploys the

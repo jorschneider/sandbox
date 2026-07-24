@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BLACK &amp; WHITE — speak color into the world</title>
+  <meta name="description" content="A first-person toy where you walk a colorless valley as a small god and speak colors into being. Every hue you name ripples out to all its kin." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 2a48 48 0 000 96z' fill='%23111'/%3E%3Cpath d='M50 2a48 48 0 010 96z' fill='%23eee' stroke='%23111' stroke-width='3'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    { "imports": { "three": "../vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <canvas id="gl"></canvas>
+  <div id="vignette"></div>
+
+  <!-- HUD -->
+  <div id="crosshair"></div>
+  <div id="gaze"></div>
+  <div id="caption"></div>
+  <div id="mic"><span></span></div>
+
+  <div id="hint">
+    <div>WASD — walk &nbsp;·&nbsp; mouse — look &nbsp;·&nbsp; shift — stride</div>
+    <div class="voice-hint">hold V (or right mouse) — speak &nbsp;·&nbsp; T — type a decree</div>
+    <div class="dim">look upon a thing and name its color &nbsp;·&nbsp; or command its kind: &ldquo;the river is turquoise&rdquo;</div>
+  </div>
+
+  <div id="typewrap">
+    <input id="typebox" type="text" autocomplete="off" spellcheck="false"
+      placeholder="speak, o god — &ldquo;the trees are deep emerald&rdquo;" />
+  </div>
+
+  <div id="resume">click to return to the world</div>
+
+  <!-- landing overlay -->
+  <div id="enter">
+    <div class="enter-inner">
+      <div class="kicker">a colorless world awaits your word</div>
+      <h1><span class="b">BLACK</span> <span class="amp">&amp;</span> <span class="w">WHITE</span></h1>
+      <p class="lede">
+        Walk the gray valley as a small god. Look upon a thing, hold
+        <strong>V</strong>, and speak — <em>&ldquo;emerald&rdquo;</em>,
+        <em>&ldquo;the river is turquoise&rdquo;</em>,
+        <em>&ldquo;make the roofs dark red&rdquo;</em> — and the color will
+        ripple outward to everything of its kind, until the world is full.
+      </p>
+      <button id="enter-btn">ENTER THE WORLD</button>
+      <div class="foot">
+        best with a microphone &middot; voice works in Chrome &amp; Safari &middot;
+        no mic? press <strong>T</strong> and type your decrees<br />
+        try whispering <em>&ldquo;let there be color&rdquo;</em>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
