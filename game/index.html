@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1" />
+  <meta name="theme-color" content="#0f1226" />
+  <title>Broker Battle — Insurance Exam Showdown</title>
+  <meta name="description" content="A two-player insurance broker exam game for Jordan & Athena: Versus, Co-op Boss Battle, Reflex Duel, and Quizmaster modes." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Broker Battle" />
+  <link rel="stylesheet" href="game.css" />
+</head>
+<body>
+  <button id="sound-toggle" class="sound-toggle" title="Sound on/off" aria-label="Toggle sound">🔊</button>
+
+  <div class="app">
+    <div class="brand" id="brand">
+      <h1>BROKER&nbsp;BATTLE</h1>
+      <p>Insurance broker exam, but make it a <b>game</b> 🛡️⚔️</p>
+    </div>
+
+    <!-- ===================== HOME ===================== -->
+    <section class="screen" id="home">
+      <!-- players -->
+      <div class="players-setup">
+        <div class="psetup p1">
+          <button class="avatar" id="av1" title="Tap to change">🦊</button>
+          <input type="text" id="in-name1" value="Jordan" maxlength="14" aria-label="Player 1 name" />
+        </div>
+        <div class="vs-spark">VS</div>
+        <div class="psetup p2">
+          <button class="avatar" id="av2" title="Tap to change">🦉</button>
+          <input type="text" id="in-name2" value="Athena" maxlength="14" aria-label="Player 2 name" />
+        </div>
+      </div>
+
+      <div class="series hidden" id="seriesBox"></div>
+
+      <h2 class="section">Pick your battle</h2>
+      <div class="modes" id="modes">
+        <button class="mode-card" data-mode="versus" style="--mc:#38bdf8">
+          <span class="mc-icon">⚔️</span>
+          <span class="mc-title">Versus + Steal</span>
+          <span class="mc-blurb">Head-to-head. Miss a question and your rival can <b>steal</b> it. Wager points, use lifelines.</span>
+          <span class="mc-tag">competitive</span>
+        </button>
+        <button class="mode-card" data-mode="coop" style="--mc:#34d399">
+          <span class="mc-icon">🐉</span>
+          <span class="mc-title">Co-op Boss Battle</span>
+          <span class="mc-blurb">Team up vs. <b>The Examiner</b>. Shared lives, one HP bar. <b>Consult</b> each other on the hard ones.</span>
+          <span class="mc-tag">cooperative</span>
+        </button>
+        <button class="mode-card" data-mode="duel" style="--mc:#fb7185">
+          <span class="mc-icon">⚡</span>
+          <span class="mc-title">Reflex Duel</span>
+          <span class="mc-blurb">Lay the phone flat between you. Two answers, <b>race to tap</b> the right one. Fastest wins.</span>
+          <span class="mc-tag">fast &amp; silly</span>
+        </button>
+        <button class="mode-card" data-mode="host" style="--mc:#a78bfa">
+          <span class="mc-icon">🎤</span>
+          <span class="mc-title">Quizmaster</span>
+          <span class="mc-blurb">One reads, one answers out loud. The host sees the answer &amp; explanation and scores it.</span>
+          <span class="mc-tag">couch mode</span>
+        </button>
+      </div>
+
+      <details class="opts" id="progressBox">
+        <summary>📈 Athena's progress</summary>
+        <div class="opts-body" id="progressBody"></div>
+      </details>
+
+      <details class="opts" id="opts">
+        <summary>⚙️ Match settings</summary>
+        <div class="opts-body">
+          <div class="field">
+            <label>Length (rounds / questions)</label>
+            <div class="seg" id="rounds" role="group">
+              <button data-rounds="5" aria-pressed="false">Quick · 5</button>
+              <button data-rounds="8" aria-pressed="true">Standard · 8</button>
+              <button data-rounds="12" aria-pressed="false">Long · 12</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Question timer (Versus / Quizmaster)</label>
+            <div class="seg" id="timer" role="group">
+              <button data-time="0" aria-pressed="false">Off</button>
+              <button data-time="20" aria-pressed="true">Chill · 20s</button>
+              <button data-time="12" aria-pressed="false">Tense · 12s</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Challenge level</label>
+            <div class="seg" id="diffSel" role="group">
+              <button data-diff="mixed" aria-pressed="true">Mixed</button>
+              <button data-diff="hard" aria-pressed="false">⚡ Hard only</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Topics</label>
+            <div class="chips" id="cats"></div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===================== QUIZ PLAY (versus / coop / host) ===================== -->
+    <section class="screen hidden" id="play">
+      <!-- versus HUD -->
+      <div class="scoreboard hidden" id="hud-versus">
+        <div class="pcard p1" id="card1">
+          <span class="pav" id="hudav1">🦊</span>
+          <span class="pname" id="name1">Jordan</span>
+          <span class="pscore" id="score1">0</span>
+          <span class="pstreak" id="streak1"></span>
+        </div>
+        <div class="vs">VS</div>
+        <div class="pcard p2" id="card2">
+          <span class="pav" id="hudav2">🦉</span>
+          <span class="pname" id="name2">Athena</span>
+          <span class="pscore" id="score2">0</span>
+          <span class="pstreak" id="streak2"></span>
+        </div>
+      </div>
+
+      <!-- coop HUD -->
+      <div class="coop-hud hidden" id="hud-coop">
+        <div class="boss">
+          <span class="boss-face" id="bossFace">🐉</span>
+          <div class="boss-info">
+            <div class="boss-name">THE EXAMINER <span id="bossLevel"></span></div>
+            <div class="hpbar"><div class="hpfill" id="bossHp"></div><span class="hptext" id="bossHpText"></span></div>
+          </div>
+        </div>
+        <div class="coop-stats">
+          <span class="lives" id="lives">❤️❤️❤️</span>
+          <span class="coop-score">Team <b id="coopScore">0</b></span>
+          <span class="combo" id="coopCombo"></span>
+        </div>
+      </div>
+
+      <!-- turn / question -->
+      <div class="turnbar">
+        <span class="turn-who" id="turnWho">Jordan</span>
+        <div class="qmeta">
+          <span id="qcount">Q 1 / 16</span>
+          <span class="diff-pill" id="diffPill"></span>
+          <span class="cat-pill" id="catPill">Principles</span>
+        </div>
+      </div>
+      <div class="timer-wrap hidden" id="timerWrap"><div class="timer-fill" id="timerFill"></div></div>
+
+      <!-- versus action chips: wager + lifeline -->
+      <div class="vbar hidden" id="vbar">
+        <button class="vchip" id="wagerBtn" title="Double or nothing">🎲 Double or Nothing</button>
+        <button class="vchip" id="lifelineBtn" title="50/50 — ask your partner">🆘 50/50 Lifeline</button>
+      </div>
+
+      <!-- coop consult -->
+      <div class="vbar hidden" id="cbar">
+        <button class="vchip" id="consultBtn" title="Discuss together for a hint (less damage)">🤝 Consult partner</button>
+        <span class="consult-note">Talk it out — but a consulted hit deals half damage.</span>
+      </div>
+
+      <div class="question" id="qtext">…</div>
+      <div class="answers" id="answers"></div>
+
+      <!-- host (quizmaster) controls -->
+      <div class="host-controls hidden" id="hostControls">
+        <button class="btn ghost" id="hostReveal">👀 Reveal answer (host only)</button>
+        <div class="host-grade hidden" id="hostGrade">
+          <button class="btn host-yes" id="gradeRight">✓ They got it</button>
+          <button class="btn host-no" id="gradeWrong">✗ Missed it</button>
+        </div>
+      </div>
+
+      <div class="explain hidden" id="explain">
+        <div class="verdict" id="verdict"></div>
+        <div id="explainText"></div>
+      </div>
+
+      <div class="next-row hidden" id="nextRow">
+        <button class="btn" id="next">Next  ➜</button>
+      </div>
+
+      <button class="quit" id="quit">✕ quit to menu</button>
+    </section>
+
+    <!-- ===================== REFLEX DUEL ===================== -->
+    <section class="screen duel hidden" id="duel">
+      <div class="duel-half top" id="duelTop">
+        <div class="duel-q" id="dqTop">…</div>
+        <div class="duel-opts">
+          <button class="duel-opt" data-half="top" data-side="0"></button>
+          <button class="duel-opt" data-half="top" data-side="1"></button>
+        </div>
+        <div class="duel-flash" id="flashTop"></div>
+      </div>
+
+      <div class="duel-center">
+        <div class="duel-round" id="duelRound">Round 1 / 7</div>
+        <div class="duel-score" id="duelScore">🦊 0 — 0 🦉</div>
+        <div class="duel-go" id="duelGo"></div>
+        <button class="duel-quit" id="duelQuit">✕</button>
+      </div>
+
+      <div class="duel-half bottom" id="duelBottom">
+        <div class="duel-q" id="dqBottom">…</div>
+        <div class="duel-opts">
+          <button class="duel-opt" data-half="bottom" data-side="0"></button>
+          <button class="duel-opt" data-half="bottom" data-side="1"></button>
+        </div>
+        <div class="duel-flash" id="flashBottom"></div>
+      </div>
+    </section>
+
+    <!-- ===================== END ===================== -->
+    <section class="screen hidden" id="end">
+      <div class="trophy" id="trophy">🏆</div>
+      <div class="winner-line" id="winnerLine">…</div>
+      <div class="end-sub" id="endSub"></div>
+
+      <div class="statgrid" id="statgrid"></div>
+
+      <div class="review" id="review"></div>
+
+      <button class="btn study hidden" id="reviewMissed">📖  Review the ones you missed</button>
+      <div class="hsp hidden" id="reviewSp"></div>
+      <button class="btn" id="again">↻  Rematch (same mode)</button>
+      <div style="height:10px"></div>
+      <button class="btn ghost" id="reconfig">⌂  Back to menu</button>
+    </section>
+
+    <!-- ===================== REVIEW MISSED ===================== -->
+    <section class="screen hidden" id="reviewScreen">
+      <div class="rv-head">
+        <span class="rv-title">📖 Review</span>
+        <span class="rv-count" id="rvCount">1 / 1</span>
+      </div>
+      <div class="rv-cat" id="rvCat"></div>
+      <div class="question" id="rvQ"></div>
+      <div class="answers" id="rvAnswers"></div>
+      <div class="explain" id="rvExplain"><div id="rvWhy"></div></div>
+      <div class="rv-nav">
+        <button class="btn ghost" id="rvPrev">‹ Prev</button>
+        <button class="btn" id="rvNext">Next ›</button>
+      </div>
+      <button class="quit" id="rvDone">✓ done reviewing</button>
+    </section>
+
+    <div class="footer">Made for Athena's broker exam 📚 · pass-and-play · sound on 🔊</div>
+  </div>
+
+  <script type="module" src="game.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+    }
+  </script>
+</body>
+</html>
