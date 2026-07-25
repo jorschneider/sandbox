@@ -281,7 +281,8 @@ function quotesHtml(view) {
       ${logHtml()}`;
   }
   return `
-    <p class="phase-note">Pick how much coverage you'll write and quote your premium. The client signs whoever offers the cheapest rate per dollar of coverage — win it, and that risk is yours. Or pass.</p>
+    <p class="phase-note">Pick how much coverage you'll write and quote your premium. The client signs whoever offers the cheapest rate per dollar of coverage — win it, and that risk is yours. Or pass.
+    <br>🏛 Your solvency cap: the regulator will let you sign up to <b>${money(view.rules.solvencyCap)}</b> of coverage this quarter (3× capital).</p>
     ${view.market.map(m => clientCard(view, m, `
       <div class="quote-row" data-client="${m.id}">
         <div class="tier-row">
@@ -335,8 +336,11 @@ function revealHtml(view) {
 
 // --- deals ---
 function dealsHtml(view) {
+  const youWrote = view.market.some(m => (m.winner === view.youId && !m.voided)
+    || m.reinsurance.some(r => r.pid === view.youId));
   return `
     <p class="phase-note">Talk first, then make it binding here. Lay off risk, buy secrets, wire bribes, short your enemies. ${isHost(view) ? '' : 'Floor closes when the timer dies.'}</p>
+    ${youWrote ? '' : `<div class="idle-warn">🏢 You've written nothing this quarter — ${money(view.rules.overhead)} office overhead is coming. Taking reinsurance counts as writing. Go get some.</div>`}
     <div id="reBook">${bookHtml(view)}</div>
     <section class="deal-panel">
       <h3>Incoming</h3>
@@ -539,6 +543,8 @@ function ledgerHtml(view) {
           ${s.cash ? `<span>Wires</span><span class="${moneyClass(s.cash)}">${money(s.cash, true)}</span>` : ''}
           ${s.bets ? `<span>Short desk</span><span class="${moneyClass(s.bets)}">${money(s.bets, true)}</span>` : ''}
           ${s.fines ? `<span>Regulatory fines</span><span class="neg">${money(s.fines, true)}</span>` : ''}
+          ${s.bonus ? `<span>🏆 Broker of the Quarter</span><span class="pos">${money(s.bonus, true)}</span>` : ''}
+          ${s.overhead ? `<span>Office overhead</span><span class="neg">${money(s.overhead, true)}</span>` : ''}
           <span>Capital</span><span class="${moneyClass(s.end)}"><b>${money(s.end)}</b></span>
         </div>
       </div>`;

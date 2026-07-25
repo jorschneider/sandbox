@@ -44,7 +44,13 @@ season. **Eyes up, not down.**
    - **Claims Season** — disasters resolve one file at a time, on every
      phone. Phones up. Someone screams.
    - **The Ledger** — the receipts, then the grudges.
-4. After five quarters, the richest broker runs the market. Go negative and
+4. Nobody gets to just watch: write no business in a quarter (a policy or
+   a reinsurance share both count) and you pay $100 office overhead. The
+   most premium written each quarter earns the $150 **Broker of the
+   Quarter** bonus. And the regulator caps what you can sign at 3× your
+   capital ($1,000 floor) — overextended bids get blocked at signing, so
+   laying risk off is also how you free up capacity to write more.
+5. After five quarters, the richest broker runs the market. Go negative and
    you play on as a *desperate broker* — desperate brokers hear everything
    (extra intel).
 

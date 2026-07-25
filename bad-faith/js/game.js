@@ -22,6 +22,13 @@ export const RULES = {
   // Public bets against a client, priced off the brochure rating. Once per
   // player per round. Win pays stake * (payout/odds - 1).
   shorts: { min: 25, max: 250, payout: 0.9, odds: { Low: 0.2, Moderate: 0.3, High: 0.4, Unknown: 0.32 } },
+  // Idle capital pays rent: write nothing in a quarter (no policy, no
+  // reinsurance) and the office overhead comes out of your pocket. The
+  // biggest net book each quarter earns Broker of the Quarter.
+  office: { overhead: 100, quarterBonus: 150 },
+  // Regulators cap the exposure you can sign in a quarter at mult x your
+  // capital (with a floor so broke firms can still write small business).
+  solvency: { mult: 3, floor: 1000 },
 
   riskFloor: 0.03,
   riskCeil: 0.97,
@@ -121,7 +128,7 @@ export class Game {
     this.intel = {};
     this.roundLedger = {};
     for (const p of this.players) {
-      this.roundLedger[p.id] = { premiums: 0, claims: 0, reFees: 0, rePayouts: 0, intelTrade: 0, cash: 0, bets: 0, fines: 0, start: p.capital };
+      this.roundLedger[p.id] = { premiums: 0, claims: 0, reFees: 0, rePayouts: 0, intelTrade: 0, cash: 0, bets: 0, fines: 0, overhead: 0, bonus: 0, start: p.capital };
     }
 
     const picks = this.deck.splice(0, RULES.clientsPerRound);
@@ -207,27 +214,35 @@ export class Game {
     if (this.quotesPending().length === 0) this.finishQuotes();
   }
 
+  solvencyCap(pid) {
+    return Math.max(RULES.solvency.floor, this.byId(pid).capital * RULES.solvency.mult);
+  }
+
   finishQuotes() {
     this.phase = 'reveal';
     this.timer = null;
+    const signed = {}; // exposure signed this quarter, per player
     for (const m of this.market) {
       // The client signs the cheapest rate (premium per $ of coverage);
-      // rate ties go to the bigger policy, then luck.
+      // rate ties go to the bigger policy, then luck. The regulator blocks
+      // any bid that would push a firm past its solvency cap, and the
+      // client moves on to the next-best quote.
+      const cands = this.players
+        .map(p => ({ pid: p.id, q: m.quotes[p.id] }))
+        .filter(x => x.q)
+        .map(x => ({ pid: x.pid, premium: x.q.premium, coverage: x.q.coverage, rate: x.q.premium / x.q.coverage }))
+        .sort((a, b) => (a.rate - b.rate) || (b.coverage - a.coverage) || (this.rng() < 0.5 ? -1 : 1));
       let best = null;
-      for (const p of this.players) {
-        const q = m.quotes[p.id];
-        if (!q) continue;
-        const rate = q.premium / q.coverage;
-        const wins = !best
-          || rate < best.rate - 1e-9
-          || (Math.abs(rate - best.rate) <= 1e-9 && (q.coverage > best.coverage
-              || (q.coverage === best.coverage && this.rng() < 0.5)));
-        if (wins) best = { pid: p.id, premium: q.premium, coverage: q.coverage, rate };
+      for (const c of cands) {
+        if ((signed[c.pid] || 0) + c.coverage <= this.solvencyCap(c.pid)) { best = c; break; }
+        const p = this.byId(c.pid);
+        this.addLog(`🚫 The regulator blocked ${p.avatar} ${p.name}'s bid on ${m.client.name} — not enough capital behind it.`);
       }
       if (best) {
         m.winner = best.pid;
         m.premium = best.premium;
         m.soldCoverage = best.coverage;
+        signed[best.pid] = (signed[best.pid] || 0) + best.coverage;
         const w = this.byId(best.pid);
         w.capital += best.premium;
         this.roundLedger[best.pid].premiums += best.premium;
@@ -433,6 +448,37 @@ export class Game {
   }
 
   finishRound() {
+    // Idle books pay the overhead (any risk held counts as working — a
+    // reinsurance share included). Broker of the Quarter goes to the most
+    // PREMIUM written, so it rewards winning business at real prices, not
+    // dumping price for volume.
+    const covHeld = {}, premWritten = {};
+    for (const p of this.players) { covHeld[p.id] = 0; premWritten[p.id] = 0; }
+    for (const m of this.market) {
+      if (!m.winner || m.voided) continue;
+      const laid = m.reinsurance.reduce((s, r) => s + r.pct, 0);
+      covHeld[m.winner] += Math.round(m.soldCoverage * (100 - laid) / 100);
+      premWritten[m.winner] += m.premium;
+      for (const r of m.reinsurance) {
+        covHeld[r.pid] += Math.round(m.soldCoverage * r.pct / 100);
+        premWritten[r.pid] += r.fee;
+      }
+    }
+    for (const p of this.players) {
+      if (covHeld[p.id] > 0) continue;
+      p.capital -= RULES.office.overhead;
+      this.roundLedger[p.id].overhead = -RULES.office.overhead;
+      this.addLog(`🏢 ${p.avatar} ${p.name} wrote no business — $${RULES.office.overhead} office overhead anyway.`);
+    }
+    const top = Math.max(...Object.values(premWritten));
+    if (top > 0) {
+      for (const w of this.players.filter(p => premWritten[p.id] === top)) {
+        w.capital += RULES.office.quarterBonus;
+        this.roundLedger[w.id].bonus = RULES.office.quarterBonus;
+        this.addLog(`🏆 ${w.avatar} ${w.name} is Broker of the Quarter (+$${RULES.office.quarterBonus}).`);
+      }
+    }
+
     const summary = this.players.map(p => {
       const l = this.roundLedger[p.id];
       return { pid: p.id, ...l, end: p.capital, net: p.capital - l.start };
@@ -508,6 +554,8 @@ export class Game {
         quoteSeconds: RULES.quoteSeconds, dealSeconds: RULES.dealSeconds,
         minPlayers: RULES.minPlayers, maxPlayers: RULES.maxPlayers,
         layoffPct: RULES.syndicate.layoffPct, shorts: RULES.shorts,
+        overhead: RULES.office.overhead, quarterBonus: RULES.office.quarterBonus,
+        solvencyCap: me ? this.solvencyCap(pid) : 0,
       },
       timer: this.timer ? { ...this.timer } : null,
       players: this.players.map(p => ({
