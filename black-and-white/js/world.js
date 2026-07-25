@@ -86,9 +86,21 @@ function mergeGeoms(geoms) {
   return out;
 }
 
+// A shared 4-step toon ramp: smooth-shaded storybook light, not voxel facets.
+const toonRamp = (() => {
+  const data = new Uint8Array([
+    110, 110, 110, 255, 165, 165, 165, 255,
+    212, 212, 212, 255, 255, 255, 255, 255,
+  ]);
+  const tex = new THREE.DataTexture(data, 4, 1, THREE.RGBAFormat);
+  tex.minFilter = tex.magFilter = THREE.NearestFilter;
+  tex.needsUpdate = true;
+  return tex;
+})();
+
 function instMaterial(extra = {}) {
-  return new THREE.MeshStandardMaterial({
-    color: 0xffffff, flatShading: true, roughness: 0.95, metalness: 0, ...extra,
+  return new THREE.MeshToonMaterial({
+    color: 0xffffff, gradientMap: toonRamp, ...extra,
   });
 }
 
@@ -420,8 +432,8 @@ export function buildWorld(scene, opts = {}) {
     tCol[i * 3] = g; tCol[i * 3 + 1] = g; tCol[i * 3 + 2] = g;
   }
   tGeo.setAttribute('color', new THREE.BufferAttribute(tCol, 3));
-  const terrain = new THREE.Mesh(tGeo, new THREE.MeshStandardMaterial({
-    vertexColors: true, flatShading: true, roughness: 1, metalness: 0,
+  const terrain = new THREE.Mesh(tGeo, new THREE.MeshToonMaterial({
+    vertexColors: true, gradientMap: toonRamp,
   }));
   terrain.receiveShadow = true;
   scene.add(terrain);
@@ -678,20 +690,25 @@ export function buildWorld(scene, opts = {}) {
   }
 
   const pineGeo = mergeGeoms([
-    new THREE.ConeGeometry(1.8, 2.6, 7).translate(0, 3.1, 0),
-    new THREE.ConeGeometry(1.35, 2.2, 7).translate(0, 4.5, 0),
-    new THREE.ConeGeometry(0.9, 1.7, 7).translate(0, 5.7, 0),
+    new THREE.ConeGeometry(1.9, 3.4, 10).translate(0, 3.4, 0),
+    new THREE.ConeGeometry(1.25, 2.6, 10).translate(0, 5.2, 0),
   ]);
-  const broadGeo = new THREE.IcosahedronGeometry(2.0, 0)
-    .scale(1, 0.85, 1).translate(0, 4.1, 0);
-  const trunkGeo = new THREE.CylinderGeometry(0.16, 0.26, 2.6, 6).translate(0, 1.3, 0);
+  const broadGeo = mergeGeoms([
+    new THREE.SphereGeometry(1.7, 9, 7).scale(1, 0.9, 1).translate(0, 3.9, 0),
+    new THREE.SphereGeometry(1.2, 9, 7).translate(0.95, 3.3, 0.4),
+    new THREE.SphereGeometry(1.05, 9, 7).translate(-0.85, 3.4, -0.35),
+    new THREE.SphereGeometry(0.95, 9, 7).translate(0.1, 4.9, -0.5),
+  ]);
+  const trunkGeo = new THREE.CylinderGeometry(0.16, 0.28, 2.6, 8).translate(0, 1.3, 0);
   const cactusGeo = mergeGeoms([
-    new THREE.CylinderGeometry(0.42, 0.5, 3.4, 7).translate(0, 1.7, 0),
-    new THREE.IcosahedronGeometry(0.44, 0).translate(0, 3.5, 0),
-    new THREE.CylinderGeometry(0.24, 0.26, 1.2, 6).rotateZ(Math.PI / 2).translate(0.75, 1.7, 0),
-    new THREE.CylinderGeometry(0.24, 0.26, 1.1, 6).translate(1.28, 2.35, 0),
-    new THREE.CylinderGeometry(0.22, 0.24, 1.0, 6).rotateZ(-Math.PI / 2).translate(-0.68, 2.3, 0),
-    new THREE.CylinderGeometry(0.22, 0.24, 0.9, 6).translate(-1.14, 2.85, 0),
+    new THREE.CylinderGeometry(0.42, 0.5, 3.4, 10).translate(0, 1.7, 0),
+    new THREE.SphereGeometry(0.44, 9, 6).translate(0, 3.4, 0),
+    new THREE.CylinderGeometry(0.24, 0.26, 1.2, 8).rotateZ(Math.PI / 2).translate(0.75, 1.7, 0),
+    new THREE.CylinderGeometry(0.24, 0.26, 1.1, 8).translate(1.28, 2.35, 0),
+    new THREE.SphereGeometry(0.26, 8, 5).translate(1.28, 2.9, 0),
+    new THREE.CylinderGeometry(0.22, 0.24, 1.0, 8).rotateZ(-Math.PI / 2).translate(-0.68, 2.3, 0),
+    new THREE.CylinderGeometry(0.22, 0.24, 0.9, 8).translate(-1.14, 2.85, 0),
+    new THREE.SphereGeometry(0.24, 8, 5).translate(-1.14, 3.3, 0),
   ]);
 
   const treeSurfs = [];
@@ -770,7 +787,7 @@ export function buildWorld(scene, opts = {}) {
       new THREE.Vector3(s * (0.8 + rand() * 0.5), s * (0.55 + rand() * 0.4), s),
     ));
   }
-  const rocks = makeInstanced(new THREE.IcosahedronGeometry(1, 0),
+  const rocks = makeInstanced(new THREE.SphereGeometry(1, 8, 6),
     rockMatrices.length, rockMatrices, 0.58, 0.12);
   rocks.mesh.castShadow = true;
   scene.add(rocks.mesh);
@@ -781,7 +798,7 @@ export function buildWorld(scene, opts = {}) {
       variance: { h: 0.02, s: 0.08, l: 0.1 } },
   ];
   if (cfg.rocks.mesas) {
-    const mesaGeo = new THREE.CylinderGeometry(0.7, 1, 1, 7);
+    const mesaGeo = new THREE.CylinderGeometry(0.7, 1, 1, 9);
     const mesaMats = [];
     for (let i = 0; i < cfg.rocks.mesas; i++) {
       const a = rand() * Math.PI * 2, d = 105 + rand() * 65;
@@ -834,8 +851,8 @@ export function buildWorld(scene, opts = {}) {
     }
   }
   const flowerGeo = mergeGeoms([
-    new THREE.CylinderGeometry(0.025, 0.035, 0.4, 4).translate(0, 0.2, 0),
-    new THREE.IcosahedronGeometry(0.16, 0).translate(0, 0.46, 0),
+    new THREE.CylinderGeometry(0.025, 0.035, 0.4, 5).translate(0, 0.2, 0),
+    new THREE.SphereGeometry(0.16, 7, 5).translate(0, 0.46, 0),
   ]);
   const flowers = makeInstanced(flowerGeo, flowerMatrices.length, flowerMatrices, 0.72, 0.15);
   scene.add(flowers.mesh);
@@ -964,11 +981,12 @@ export function buildWorld(scene, opts = {}) {
   const wallSurf = [], roofSurf = [];
   const windowMats = [];
   const houseGroup = new THREE.Group();
-  const wallGeo = new THREE.BoxGeometry(3.4, 2.5, 2.9);
+  // round storybook cottages instead of boxes
+  const wallGeo = new THREE.CylinderGeometry(2.15, 2.4, 2.6, 9);
   const roofGeo = cfg.houses === 'flat'
-    ? new THREE.BoxGeometry(3.7, 0.35, 3.2)
-    : new THREE.ConeGeometry(2.9, cfg.houses === 'steep' ? 2.6 : 1.7, 4);
-  const chimGeo = new THREE.BoxGeometry(0.4, 1.0, 0.4);
+    ? new THREE.CylinderGeometry(2.5, 2.65, 0.4, 9)
+    : new THREE.ConeGeometry(3.0, cfg.houses === 'steep' ? 2.8 : 1.9, 9);
+  const chimGeo = new THREE.CylinderGeometry(0.18, 0.22, 1.0, 6);
   const winGeo = new THREE.PlaneGeometry(0.55, 0.7);
   housePlots.forEach((plot, hi) => {
     const g = new THREE.Group();
@@ -979,26 +997,26 @@ export function buildWorld(scene, opts = {}) {
     const wallMat = instMaterial();
     wallMat.color.setScalar(0.66 + (rand() - 0.5) * 0.06);
     const walls = new THREE.Mesh(wallGeo, wallMat);
-    walls.position.y = 1.25;
+    walls.position.y = 1.3;
     walls.castShadow = walls.receiveShadow = true;
 
     const roofMat = instMaterial();
     roofMat.color.setScalar(0.45 + (rand() - 0.5) * 0.06);
     const roof = new THREE.Mesh(roofGeo, roofMat);
-    roof.position.y = cfg.houses === 'flat' ? 2.65 : cfg.houses === 'steep' ? 3.8 : 3.35;
-    if (cfg.houses !== 'flat') roof.rotation.y = Math.PI / 4;
+    roof.position.y = cfg.houses === 'flat' ? 2.8 : cfg.houses === 'steep' ? 3.95 : 3.5;
     roof.castShadow = true;
 
     const chim = new THREE.Mesh(chimGeo, wallMat);
-    chim.position.set(0.9, cfg.houses === 'flat' ? 3.1 : 3.4, 0.4);
+    chim.position.set(0.95, cfg.houses === 'flat' ? 3.2 : 3.5, 0.4);
 
     const winMat = new THREE.MeshStandardMaterial({
       color: '#8f8f8f', emissive: '#000000', roughness: 0.6,
     });
     windowMats.push(winMat);
-    for (const wx of [-0.85, 0.85]) {
+    for (const wx of [-0.8, 0.8]) {
       const w = new THREE.Mesh(winGeo, winMat);
-      w.position.set(wx, 1.35, 1.46);
+      w.position.set(wx, 1.35, 2.02);
+      w.rotation.y = -wx * 0.18;
       g.add(w);
     }
     g.add(walls, roof, chim);
@@ -1055,9 +1073,8 @@ export function buildWorld(scene, opts = {}) {
       new THREE.Vector3(1.5 + rand() * 0.7, 1, 1.1 + rand() * 0.5),
     ));
   }
-  const patches = makeInstanced(new THREE.CircleGeometry(1, 7).rotateX(-Math.PI / 2),
+  const patches = makeInstanced(new THREE.CircleGeometry(1, 8).rotateX(-Math.PI / 2),
     patchMatrices.length, patchMatrices, 0.7, 0.08);
-  patches.mesh.material.flatShading = false;
   scene.add(patches.mesh);
   addGaze(patches.mesh, 'path');
   meshToSurf.set(patches.mesh, 0);
@@ -1112,7 +1129,7 @@ export function buildWorld(scene, opts = {}) {
     const g = new THREE.Group();
     const puffs = 3 + (rand() * 3) | 0;
     for (let p = 0; p < puffs; p++) {
-      const puff = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 0), mat);
+      const puff = new THREE.Mesh(new THREE.SphereGeometry(1, 9, 7), mat);
       puff.position.set((p - puffs / 2) * 4.5 + rand() * 2, (rand() - 0.5) * 1.6, (rand() - 0.5) * 4);
       puff.scale.set(3.5 + rand() * 3, 1.5 + rand() * 0.9, 2.6 + rand() * 1.6);
       g.add(puff);
@@ -1215,11 +1232,11 @@ export function buildWorld(scene, opts = {}) {
   deerMat.color.setScalar(0.5);
   const deerHerd = [];
   if (cfg.deer > 0) {
-    const bodyGeo = new THREE.IcosahedronGeometry(1, 0).scale(0.55, 0.42, 0.85);
-    const neckGeo = new THREE.CylinderGeometry(0.09, 0.13, 0.6, 5);
-    const headGeo = new THREE.IcosahedronGeometry(0.17, 0);
-    const legGeo = new THREE.BoxGeometry(0.09, 0.9, 0.09).translate(0, -0.45, 0);
-    const antlerGeo = new THREE.ConeGeometry(0.03, 0.34, 4);
+    const bodyGeo = new THREE.SphereGeometry(1, 9, 7).scale(0.55, 0.42, 0.85);
+    const neckGeo = new THREE.CylinderGeometry(0.09, 0.13, 0.6, 6);
+    const headGeo = new THREE.SphereGeometry(0.17, 8, 6);
+    const legGeo = new THREE.CylinderGeometry(0.05, 0.04, 0.9, 6).translate(0, -0.45, 0);
+    const antlerGeo = new THREE.ConeGeometry(0.03, 0.34, 5);
     let placed = 0; guard = 0;
     while (placed < cfg.deer && guard++ < 4000) {
       const x = (rand() * 2 - 1) * 160, z = (rand() * 2 - 1) * 160;
@@ -1259,19 +1276,16 @@ export function buildWorld(scene, opts = {}) {
   updaters.push((dt, t, playerPos) => {
     for (const d of deerHerd) {
       const pdist = playerPos ? Math.hypot(playerPos.x - d.x, playerPos.z - d.z) : 99;
-      if (pdist < 9 && d.state !== 'flee') {
-        d.state = 'flee';
-        const ang = Math.atan2(d.x - playerPos.x, d.z - playerPos.z);
-        d.tx = d.x + Math.sin(ang) * 26;
-        d.tz = d.z + Math.cos(ang) * 26;
-        if (!openGround(d.tx, d.tz, 12)) {
-          d.tx = d.x - Math.sin(ang) * 10;
-          d.tz = d.z + Math.cos(ang) * 26;
-        }
-      }
       if (d.state === 'graze') {
         d.timer -= dt;
         d.speed = 0;
+        // deer are unafraid of their god: they linger and watch you pass
+        if (pdist < 8 && playerPos) {
+          const ang = Math.atan2(playerPos.x - d.x, playerPos.z - d.z);
+          const delta = ((ang - d.g.rotation.y + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+          d.g.rotation.y += delta * Math.min(1, dt * 3);
+          d.timer = Math.max(d.timer, 0.8);
+        }
         if (d.timer <= 0) {
           for (let tries = 0; tries < 6; tries++) {
             const a = rand() * Math.PI * 2, dist2 = 8 + rand() * 16;
@@ -1283,7 +1297,7 @@ export function buildWorld(scene, opts = {}) {
           if (d.state === 'graze') d.timer = 2 + rand() * 3;
         }
       } else {
-        const speed = d.state === 'flee' ? 6.5 : 2.1;
+        const speed = 2.1;
         d.speed = speed;
         const dx = d.tx - d.x, dz = d.tz - d.z;
         const dd = Math.hypot(dx, dz);
@@ -1298,7 +1312,7 @@ export function buildWorld(scene, opts = {}) {
         }
       }
       d.g.position.set(d.x, terrainHeight(d.x, d.z), d.z);
-      const swing = d.speed > 0 ? Math.sin(t * (d.speed > 3 ? 14 : 7) + d.phase) * 0.5 : 0;
+      const swing = d.speed > 0 ? Math.sin(t * 7 + d.phase) * 0.5 : 0;
       d.legs[0].rotation.x = swing;
       d.legs[3].rotation.x = swing;
       d.legs[1].rotation.x = -swing;
@@ -1322,9 +1336,9 @@ export function buildWorld(scene, opts = {}) {
   rabbitMat.color.setScalar(0.55);
   const rabbits = [];
   {
-    const bodyGeo = new THREE.IcosahedronGeometry(1, 0).scale(0.3, 0.24, 0.4);
-    const headGeo = new THREE.IcosahedronGeometry(0.15, 0);
-    const earGeo = new THREE.ConeGeometry(0.05, 0.26, 4);
+    const bodyGeo = new THREE.SphereGeometry(1, 8, 6).scale(0.3, 0.24, 0.4);
+    const headGeo = new THREE.SphereGeometry(0.15, 8, 6);
+    const earGeo = new THREE.ConeGeometry(0.05, 0.26, 5);
     let placed = 0; guard = 0;
     while (placed < cfg.rabbits && guard++ < 4000) {
       const x = (rand() * 2 - 1) * 150, z = (rand() * 2 - 1) * 150;
@@ -1392,7 +1406,7 @@ export function buildWorld(scene, opts = {}) {
   // ---- fish (leap once the water has a color) -----------------------------
   const fishMat = instMaterial();
   fishMat.color.setScalar(0.6);
-  const fishGeo = new THREE.IcosahedronGeometry(1, 0).scale(0.16, 0.14, 0.5);
+  const fishGeo = new THREE.SphereGeometry(1, 8, 6).scale(0.16, 0.14, 0.5);
   const fishes = [];
   for (let i = 0; i < 3; i++) {
     const m = new THREE.Mesh(fishGeo, fishMat);

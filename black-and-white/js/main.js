@@ -201,17 +201,26 @@ function travelTo(realm) {
 
 function shareWorld() {
   try {
-    const json = JSON.stringify(getSaveState());
-    const enc = btoa(String.fromCharCode(...new TextEncoder().encode(json)))
-      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    const bytes = new TextEncoder().encode(JSON.stringify(getSaveState()));
+    let bin = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    const enc = btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     const url = location.origin + location.pathname + '#w=' + enc;
-    history.replaceState(null, '', '#w=' + enc);
+    const showManualCopy = () => {
+      // put the link in the decree box, selected, so it can be copied anywhere
+      input.openType();
+      typeBoxEl.value = url;
+      typeBoxEl.select();
+      caption('copy the link from the box below.', null, 'hint');
+    };
     if (navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(url).then(
         () => caption('a link to this world is on your clipboard.', null, 'hint'),
-        () => caption('this world now lives in your address bar — copy it.', null, 'hint'));
+        showManualCopy);
     } else {
-      caption('this world now lives in your address bar — copy it.', null, 'hint');
+      showManualCopy();
     }
   } catch {
     caption('the world could not be written down…', null, 'hint');
@@ -235,7 +244,17 @@ createWorld(bootState?.realm || localStorage.getItem(REALM_KEY) || 'valley');
 if (bootState) {
   gifted = hydrate(bootState, player.pos.clone(), performance.now() / 1000);
 }
-if (!gifted) remembered = loadRealmSave(currentRealm);
+if (gifted) {
+  // adopt the gifted world as this browser's own save, and clear the hash
+  // so later visits load live progress instead of the stale snapshot
+  try {
+    localStorage.setItem(SAVE_PREFIX + currentRealm, JSON.stringify(getSaveState()));
+    localStorage.setItem(REALM_KEY, currentRealm);
+  } catch { /* ignore */ }
+  history.replaceState(null, '', location.pathname);
+} else {
+  remembered = loadRealmSave(currentRealm);
+}
 updateSketch();
 
 // ------------------------------------------------------------------ controls
