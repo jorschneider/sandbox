@@ -101,6 +101,20 @@ export function renderIdentity({ mode, code, prefillName }) {
               <span class="theme-sub">${esc(t.subtitle)}</span>
             </button>`).join('')}
         </div>
+      </div>
+      <div class="field"><span>Mode</span>
+        <div class="themes">
+          <button class="theme-card mode-card sel" data-action="pick-mode" data-mode="market">
+            <span class="theme-badge">🏪</span>
+            <span class="theme-name">Open Market</span>
+            <span class="theme-sub">Everyone's a broker. Bid, deal, short. 2–4 players.</span>
+          </button>
+          <button class="theme-card mode-card" data-action="pick-mode" data-mode="middleman">
+            <span class="theme-badge">🤝</span>
+            <span class="theme-name">The Middleman</span>
+            <span class="theme-sub">Customer, broker, carriers — rotating roles. 3–4 players.</span>
+          </button>
+        </div>
       </div>` : ''}
       <button class="btn big" data-action="${mode === 'create' ? 'do-create' : 'do-join'}">
         ${mode === 'create' ? 'Open for business' : 'Take a seat'}
@@ -124,7 +138,7 @@ export function renderLobby(view, { code, isHost, joinUrl }) {
     root.innerHTML = `
       <div class="screen center">
         <h2>Room <span class="code">${esc(code)}</span></h2>
-        <p class="sub">${theme.badge} ${esc(theme.subtitle)}</p>
+        <p class="sub">${theme.badge} ${esc(theme.subtitle)} · ${view.mode === 'middleman' ? '🤝 The Middleman' : '🏪 Open Market'}</p>
         ${isHost ? `<div id="qr" class="qr"></div>
         <p class="fine">Scan to join, or go to <b>${esc(shortUrl(joinUrl))}</b> and enter the code.</p>` : ''}
         <div class="lobby-list">
@@ -161,7 +175,8 @@ export function render(view) {
   lastView = view;
   applyTheme(view.theme);
   const theme = THEMES[view.theme] || THEMES.classic;
-  const key = `${view.phase}:${view.round}:${view.claims ? view.claims.revealed : 0}`;
+  const mmSub = view.mm ? `${view.mm.quotedBy.includes(view.youId) ? 1 : 0}` : '';
+  const key = `${view.phase}:${view.round}:${view.claims ? view.claims.revealed : 0}:${view.mm?.revealed ? 1 : 0}:${mmSub}`;
   if (key !== lastKey) {
     lastKey = key;
     if (view.phase !== 'quotes') drafts.quotes = {};
@@ -180,7 +195,12 @@ export function render(view) {
 }
 
 function phaseLabel(p) {
-  return { market: 'The Market', quotes: 'Sealed Quotes', reveal: 'Signings', deals: 'The Deal Floor', claims: 'Claims Season', ledger: 'The Ledger', results: 'Year-End' }[p] || p;
+  return {
+    market: 'The Market', quotes: 'Sealed Quotes', reveal: 'Signings', deals: 'The Deal Floor',
+    claims: 'Claims Season', ledger: 'The Ledger', results: 'Year-End',
+    mm_brief: 'The Client', mm_wholesale: 'Wholesale Bids', mm_markup: 'The Markup',
+    mm_decide: 'The Offer', mm_claims: 'Moment of Truth',
+  }[p] || p;
 }
 
 // Rewrite a dynamic region only when its content changed — the host
@@ -205,6 +225,9 @@ function updateDynamic(view) {
     setHtml($('#waitList'), view.players.map(p =>
       `<span class="wait${view.quotesSubmittedBy.includes(p.id) ? ' done' : ''}">${p.avatar}</span>`).join(''));
   }
+  if (view.phase === 'mm_wholesale') {
+    setHtml($('#mmWait'), mmWaitHtml(view));
+  }
   if (view.phase === 'deals') {
     setHtml($('#dealsIn'), incomingHtml(view));
     setHtml($('#dealsOut'), outgoingHtml(view));
@@ -224,6 +247,11 @@ function stageHtml(view) {
     case 'claims': return claimsHtml(view);
     case 'ledger': return ledgerHtml(view);
     case 'results': return resultsHtml(view);
+    case 'mm_brief': return mmBriefHtml(view);
+    case 'mm_wholesale': return mmWholesaleHtml(view);
+    case 'mm_markup': return mmMarkupHtml(view);
+    case 'mm_decide': return mmDecideHtml(view);
+    case 'mm_claims': return mmClaimsHtml(view);
     default: return '';
   }
 }
@@ -494,6 +522,172 @@ function dealFormHtml(view) {
     </div>`;
 }
 
+// --- middleman mode ---
+
+function mmName(view, pid) {
+  const p = view.players.find(x => x.id === pid);
+  return p ? `${p.avatar} ${esc(p.name)}` : '?';
+}
+
+function mmRoleBanner(view) {
+  const m = view.mm;
+  const banners = {
+    customer: `👑 It's YOUR business this round — and you know its true risk: <b>${m.trueRisk}%</b>. Get covered cheap, or bluff that it's fine.`,
+    broker: `🤝 YOU broker this deal. Buy low from a carrier, sell high to ${mmName(view, m.customer)}. The spread is yours — if they sign.`,
+    carrier: `🏦 You're a CARRIER. Quote what it takes to underwrite — win it, and the claim lands on you.`,
+    observer: `👀 You're watching this one.`,
+  };
+  return `<div class="role-banner role-${m.yourRole}">${banners[m.yourRole]}</div>`;
+}
+
+function mmCard(view, inner = '') {
+  const c = view.mm.client;
+  return `
+    <div class="card client">
+      <div class="client-head">
+        <span class="cemoji">${c.emoji}</span>
+        <div>
+          <div class="cname">${esc(c.name)}</div>
+          <div class="ctag">${esc(c.tagline)}</div>
+        </div>
+      </div>
+      <div class="cfacts">
+        <span>Wants <b>${money(c.coverage)}</b> of coverage</span>
+        <span>Brochure says: <b>${c.rating}</b> risk — ${RATING_ODDS[c.rating] || '?'} claim odds (allegedly)</span>
+      </div>
+      ${view.mm.yourIntel.map(card => `
+        <div class="intel">
+          <span class="intel-delta ${card.delta > 0 ? 'bad' : 'good'}">${card.delta > 0 ? '▲' : '▼'} ${Math.round(Math.abs(card.delta) * 100)}% risk</span>
+          ${esc(card.text)}
+        </div>`).join('')}
+      ${inner}
+    </div>`;
+}
+
+function mmBriefHtml(view) {
+  const m = view.mm;
+  return `
+    ${mmRoleBanner(view)}
+    ${mmCard(view)}
+    <div class="card">
+      <div class="ledgrid">
+        <span>👑 Customer</span><span>${mmName(view, m.customer)}</span>
+        <span>🤝 Broker</span><span>${mmName(view, m.broker)}</span>
+        <span>🏦 Carrier${m.carriers.length > 1 ? 's' : ''}</span><span>${m.carriers.map(c => mmName(view, c)).join(' · ')}</span>
+      </div>
+    </div>
+    <p class="phase-note">Everyone holds a piece of the truth. The customer holds all of it. Talk.</p>
+    ${isHost(view) ? `<button class="btn big" data-action="mm-open">Open wholesale bidding</button>` : ''}
+    ${logHtml()}`;
+}
+
+function mmWholesaleHtml(view) {
+  const m = view.mm;
+  const mine = m.wholesale[view.youId];
+  return `
+    ${mmRoleBanner(view)}
+    ${mmCard(view)}
+    ${m.yourRole === 'carrier' ? (typeof mine === 'number'
+      ? `<p class="phase-note">Your quote is in: <b>${money(mine)}</b>. Poker face.</p>`
+      : `
+      <p class="phase-note">Quote ${mmName(view, m.broker)} your wholesale price to carry all ${money(m.client.coverage)} of it (${money(m.wholesaleBand[0])}–${money(m.wholesaleBand[1])}).</p>
+      <div class="quote-controls">
+        <input type="number" inputmode="numeric" class="quote-input" id="mmQuote" min="${m.wholesaleBand[0]}" max="${m.wholesaleBand[1]}" placeholder="${m.wholesaleBand[0]}–${m.wholesaleBand[1]}">
+        <button class="btn small" data-action="mm-quote-send">Quote</button>
+      </div>`)
+      : `<p class="phase-note">${m.yourRole === 'broker' ? 'The carriers are pricing it. Work the room.' : 'The carriers are pricing your business. Look trustworthy.'}</p>`}
+    <div class="waiting" id="mmWait"></div>`;
+}
+
+function mmWaitHtml(view) {
+  const m = view.mm;
+  return m.carriers.map(c => `<span class="wait${m.quotedBy.includes(c) ? ' done' : ''}">${view.players.find(p => p.id === c)?.avatar}</span>`).join('');
+}
+
+function mmMarkupHtml(view) {
+  const m = view.mm;
+  if (m.yourRole !== 'broker') {
+    return `${mmRoleBanner(view)}${mmCard(view)}
+      <p class="phase-note">${mmName(view, m.broker)} is doing arithmetic with a straight face…</p>`;
+  }
+  return `
+    ${mmRoleBanner(view)}
+    ${mmCard(view)}
+    <p class="phase-note">Pick a carrier, set your retail price. ${mmName(view, m.customer)} only ever sees your number.</p>
+    <div class="book">
+      ${Object.entries(m.wholesale).map(([cid, w], i) => `
+        <button class="bookrow mm-quote-row${i === 0 ? ' sel' : ''}" data-action="mm-pick" data-carrier="${cid}">
+          <span>${mmName(view, cid)} will carry it for <b>${money(w)}</b></span>
+        </button>`).join('')}
+    </div>
+    <div class="quote-controls">
+      <input type="number" inputmode="numeric" class="quote-input" id="mmRetail" min="0" max="${m.retailMax}" placeholder="your price to the customer">
+      <button class="btn small" data-action="mm-retail-send">Offer it</button>
+    </div>
+    <div class="be-hint" id="mmSpread"> </div>`;
+}
+
+function mmDecideHtml(view) {
+  const m = view.mm;
+  const offer = `<div class="card offer">
+      <div class="claim-verdict">${money(m.retail)}</div>
+      <div class="fine">${mmName(view, m.broker)}'s price for full coverage on ${esc(m.client.name)}</div>
+    </div>`;
+  if (m.yourRole !== 'customer') {
+    return `${mmRoleBanner(view)}${offer}
+      <p class="phase-note">${mmName(view, m.customer)} is deciding. ${m.yourRole === 'broker' ? 'Do not sweat visibly.' : ''}</p>`;
+  }
+  const el = Math.round(m.client.coverage * m.trueRisk / 100);
+  return `
+    ${mmRoleBanner(view)}
+    ${offer}
+    <p class="phase-note">You know the truth: <b>${m.trueRisk}%</b> risk on ${money(m.client.coverage)} — expected loss ~<b>${money(el)}</b> if you go bare.</p>
+    <div class="deal-btns">
+      <button class="btn big" data-action="mm-accept">Sign it — pay ${money(m.retail)}</button>
+      <button class="btn big ghost" data-action="mm-decline">Go bare 🎲</button>
+    </div>`;
+}
+
+function mmClaimsHtml(view) {
+  const m = view.mm;
+  if (!m.revealed) {
+    return `
+      <p class="phase-note">📢 Phones up. The adjuster opens the file on ${esc(m.client.name)}…</p>
+      <div class="card claim latest"><div class="claim-verdict">🗂</div>
+        <div class="claim-text">${m.accepted === false ? `${mmName(view, m.customer)} went bare. The table holds its breath.` : `Signed at ${money(m.retail)}. Now we find out what it was worth.`}</div>
+      </div>
+      ${isHost(view) ? `<button class="btn big" data-action="mm-advance">Open the file</button>` : ''}`;
+  }
+  const r = m.result;
+  const spread = r.accepted ? r.retail - r.wholesale : 0;
+  return `
+    <div class="card claim ${r.hit ? 'hit' : 'safe'} latest">
+      <div class="claim-head">${view.mm.client.emoji} <b>${esc(view.mm.client.name)}</b>
+        <span class="risk-reveal">true risk ${r.risk}%</span></div>
+      <div class="claim-verdict">${r.hit ? '💥 CLAIM' : '✅ NO CLAIM'}</div>
+      <div class="claim-text">${esc(r.text)}</div>
+    </div>
+    <div class="card">
+      <h3>The receipts</h3>
+      <div class="ledgrid">
+        ${r.accepted ? `
+          <span>${mmName(view, m.customer)} paid</span><span class="neg">${money(r.retail)}</span>
+          <span>${mmName(view, m.broker)} kept the spread</span><span class="${spread > 0 ? 'pos' : ''}">${money(spread)}</span>
+          <span>${mmName(view, r.chosenCarrier)} got</span><span class="pos">${money(r.wholesale)}</span>
+          ${r.hit ? `<span>${mmName(view, r.chosenCarrier)} pays the claim</span><span class="neg">−${money(r.coverage).slice(1)}</span>` : ''}
+          ${Object.entries(r.allWholesale).filter(([cid]) => cid !== r.chosenCarrier).map(([cid, w]) =>
+            `<span>${mmName(view, cid)} quoted (passed over)</span><span class="dim">${money(w)}</span>`).join('')}
+        ` : `
+          <span>${mmName(view, m.customer)} went bare</span><span>${r.hit ? `<span class="neg">−${money(r.coverage).slice(1)}</span>` : '<span class="pos">and got away with it</span>'}</span>
+          ${Object.entries(r.allWholesale).map(([cid, w]) =>
+            `<span>${mmName(view, cid)} had quoted</span><span class="dim">${money(w)}</span>`).join('')}
+          ${r.retail ? `<span>The offer was</span><span class="dim">${money(r.retail)}</span>` : ''}
+        `}
+      </div>
+    </div>
+    ${isHost(view) ? `<button class="btn big" data-action="mm-advance">To the ledger</button>` : ''}`;
+}
+
 // --- claims ---
 function claimsHtml(view) {
   const c = view.claims;
@@ -594,9 +788,14 @@ function onClick(e) {
     return;
   }
   if (a === 'pick-theme') {
-    root.querySelectorAll('.theme-card').forEach(el => el.classList.remove('sel'));
+    root.querySelectorAll('.theme-card:not(.mode-card)').forEach(el => el.classList.remove('sel'));
     btn.classList.add('sel');
     applyTheme(btn.dataset.theme); // live preview
+    return;
+  }
+  if (a === 'pick-mode') {
+    root.querySelectorAll('.mode-card').forEach(el => el.classList.remove('sel'));
+    btn.classList.add('sel');
     return;
   }
   if (a === 'quote-tier') {
@@ -648,6 +847,25 @@ function onClick(e) {
     $('#dealForm').innerHTML = `<button class="btn big" data-action="deal-new">Propose a deal</button>`;
     return;
   }
+  if (a === 'mm-quote-send') {
+    actions.send({ type: 'mmQuote', amount: parseInt($('#mmQuote')?.value, 10) });
+    return;
+  }
+  if (a === 'mm-pick') {
+    root.querySelectorAll('.mm-quote-row').forEach(el => el.classList.remove('sel'));
+    btn.classList.add('sel');
+    updateMmSpread();
+    return;
+  }
+  if (a === 'mm-retail-send') {
+    const carrierId = root.querySelector('.mm-quote-row.sel')?.dataset.carrier;
+    const retail = parseInt($('#mmRetail')?.value, 10);
+    if (!isFinite(retail)) { toast('Set your price first.'); return; }
+    actions.send({ type: 'mmSetRetail', carrierId, retail });
+    return;
+  }
+  if (a === 'mm-accept') { actions.send({ type: 'mmDecide', accept: true }); return; }
+  if (a === 'mm-decline') { actions.send({ type: 'mmDecide', accept: false }); return; }
   if (a === 'place-short') {
     const clientId = $('#shortClient')?.value;
     const stake = parseInt($('#shortStake')?.value, 10);
@@ -662,6 +880,7 @@ function onClick(e) {
   const simple = {
     'start': 'start', 'open-quotes': 'openQuotes', 'open-deals': 'openDeals',
     'end-deals': 'endDeals', 'advance-claims': 'advanceClaims', 'next-round': 'nextRound',
+    'mm-open': 'mmOpen', 'mm-advance': 'mmAdvance',
   };
   if (simple[a]) { actions.send({ type: simple[a] }); return; }
 
@@ -678,12 +897,25 @@ function identityForm() {
     name: $('#nameInput')?.value?.trim(),
     avatar: root.querySelector('.avatar.sel')?.dataset.avatar || AVATARS[0],
     code: $('#codeInput')?.value,
-    theme: root.querySelector('.theme-card.sel')?.dataset.theme || 'classic',
+    theme: root.querySelector('.theme-card.sel:not(.mode-card)')?.dataset.theme || 'classic',
+    gameMode: root.querySelector('.mode-card.sel')?.dataset.mode || 'market',
   };
+}
+
+function updateMmSpread() {
+  const hint = $('#mmSpread');
+  if (!hint || !lastView?.mm) return;
+  const cid = root.querySelector('.mm-quote-row.sel')?.dataset.carrier;
+  const w = lastView.mm.wholesale[cid];
+  const r = parseInt($('#mmRetail')?.value, 10);
+  hint.textContent = (isFinite(r) && typeof w === 'number')
+    ? (r >= w ? `Your spread: ${money(r - w)}` : `That's below the carrier's ${money(w)} — you'd pay to work.`)
+    : ' ';
 }
 
 function onInput(e) {
   const el = e.target;
+  if (el.id === 'mmRetail') { updateMmSpread(); return; }
   if (el.id === 'dealTo' && drafts.deal) {
     // Changing the counterparty changes which policies are dealable.
     drafts.deal.to = el.value;

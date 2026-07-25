@@ -30,9 +30,12 @@ ui.init(app, actions);
 
 // ---------- host path ----------
 
-function startHost({ name, avatar, theme }) {
+function startHost({ name, avatar, theme, gameMode }) {
   const code = net.normalizeCode(params.get('code')) || net.randomCode();
-  const game = new Game({ theme: theme || params.get('theme') || 'classic' });
+  const game = new Game({
+    theme: theme || params.get('theme') || 'classic',
+    mode: gameMode || params.get('gm') || 'market',
+  });
   const pids = new Map();
   ui.renderConnecting('Opening the office…');
 

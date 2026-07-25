@@ -46,9 +46,12 @@ function shuffle(arr, rng) {
 }
 
 export class Game {
-  constructor({ rng = Math.random, theme = 'classic' } = {}) {
+  constructor({ rng = Math.random, theme = 'classic', mode = 'market' } = {}) {
     this.rng = rng;
     this.theme = THEMES[theme] || THEMES.classic;
+    this.mode = mode === 'middleman' ? 'middleman' : 'market';
+    this.mm = null; // middleman-mode round state
+    this.totalRounds = RULES.rounds;
     this.phase = 'lobby';
     this.round = 0; // 1-based once started
     this.players = []; // {id, name, avatar, capital, connected, isHost}
@@ -113,9 +116,163 @@ export class Game {
 
   start() {
     if (this.phase !== 'lobby') return { error: 'Already started.' };
-    if (this.players.length < RULES.minPlayers) return { error: 'Need at least 2 brokers.' };
+    const minP = this.mode === 'middleman' ? 3 : RULES.minPlayers;
+    if (this.players.length < minP) return { error: `Need at least ${minP} players for this mode.` };
     this.deck = shuffle(this.theme.clients, this.rng);
-    this.beginRound();
+    if (this.mode === 'middleman') {
+      this.totalRounds = this.players.length; // everyone is the customer once
+      this.beginMMRound();
+    } else {
+      this.totalRounds = RULES.rounds;
+      this.beginRound();
+    }
+    return { ok: true };
+  }
+
+  // ---------- middleman mode: customer / broker / carriers ----------
+
+  freshLedger() {
+    this.roundLedger = {};
+    for (const p of this.players) {
+      this.roundLedger[p.id] = { premiums: 0, claims: 0, reFees: 0, rePayouts: 0, intelTrade: 0, cash: 0, bets: 0, fines: 0, overhead: 0, bonus: 0, start: p.capital };
+    }
+  }
+
+  beginMMRound() {
+    this.round += 1;
+    this.phase = 'mm_brief';
+    this.claims = null;
+    this.freshLedger();
+    const n = this.players.length;
+    const client = this.deck.splice(0, 1)[0];
+    const customer = this.players[(this.round - 1) % n].id;
+    const broker = this.players[this.round % n].id;
+    const carriers = this.players.filter(p => p.id !== customer && p.id !== broker).map(p => p.id);
+    // Two of the client's intel cards are true this round. The customer
+    // knows both (it's their business); broker and carriers each get one
+    // partial inspection report.
+    const active = shuffle(client.intel, this.rng).slice(0, 2);
+    const seen = { [customer]: active.slice() };
+    seen[broker] = [active[Math.floor(this.rng() * active.length)]];
+    for (const c of carriers) seen[c] = [active[Math.floor(this.rng() * active.length)]];
+    this.mm = {
+      client, customer, broker, carriers, active, seen,
+      wholesale: {}, chosenCarrier: null, retail: null, accepted: null,
+      revealed: false, result: null,
+    };
+    const cu = this.byId(customer), br = this.byId(broker);
+    this.addLog(`— ${this.theme.roundNames[(this.round - 1) % this.theme.roundNames.length]}: ${cu.avatar} ${cu.name} owns ${client.name}. ${br.avatar} ${br.name} brokers the deal.`);
+  }
+
+  mmRisk() {
+    const risk = this.mm.client.baseRisk + this.mm.active.reduce((s, c) => s + c.delta, 0);
+    return Math.min(RULES.riskCeil, Math.max(RULES.riskFloor, risk));
+  }
+
+  mmWholesaleBand() {
+    const b = this.mm.client.band;
+    return [Math.round(b[0] * 0.6 / 10) * 10, Math.round(b[1] * 1.5 / 10) * 10];
+  }
+
+  mmOpen() {
+    if (this.phase !== 'mm_brief') return { error: 'Not now.' };
+    this.phase = 'mm_wholesale';
+    this.timer = { phase: 'mm_wholesale', remaining: 60 };
+    return { ok: true };
+  }
+
+  mmQuote(pid, amount) {
+    if (this.phase !== 'mm_wholesale') return { error: 'Bidding is closed.' };
+    if (!this.mm.carriers.includes(pid)) return { error: 'Only carriers quote.' };
+    if (pid in this.mm.wholesale) return { error: 'Already quoted.' };
+    const [lo, hi] = this.mmWholesaleBand();
+    this.mm.wholesale[pid] = Math.round(Math.min(hi, Math.max(lo, +amount || lo)));
+    if (Object.keys(this.mm.wholesale).length === this.mm.carriers.filter(c => this.byId(c).connected).length) {
+      this.mmToMarkup();
+    }
+    return { ok: true };
+  }
+
+  mmToMarkup() {
+    if (Object.keys(this.mm.wholesale).length === 0) {
+      // no carrier showed up; the customer goes bare
+      this.mm.accepted = false;
+      this.mmSettle();
+      return;
+    }
+    this.phase = 'mm_markup';
+    this.timer = { phase: 'mm_markup', remaining: 45 };
+  }
+
+  mmSetRetail(pid, carrierId, retail) {
+    if (this.phase !== 'mm_markup') return { error: 'Not now.' };
+    if (pid !== this.mm.broker) return { error: 'Only the broker sets the price.' };
+    const w = this.mm.wholesale[carrierId];
+    if (typeof w !== 'number') return { error: 'That carrier never quoted.' };
+    const maxRetail = Math.round(this.mm.client.band[1] * 2);
+    this.mm.chosenCarrier = carrierId;
+    this.mm.retail = Math.round(Math.min(maxRetail, Math.max(w, +retail || w)));
+    this.phase = 'mm_decide';
+    this.timer = { phase: 'mm_decide', remaining: 35 };
+    return { ok: true };
+  }
+
+  mmDecide(pid, accept) {
+    if (this.phase !== 'mm_decide') return { error: 'Not now.' };
+    if (pid !== this.mm.customer) return { error: 'Only the customer decides.' };
+    this.mm.accepted = !!accept;
+    this.mmSettle();
+    return { ok: true };
+  }
+
+  mmSettle() {
+    const m = this.mm;
+    const cov = m.client.coverage;
+    const risk = this.mmRisk();
+    const hit = this.rng() < risk;
+    const cu = this.byId(m.customer);
+    this.timer = null;
+    if (m.accepted) {
+      const br = this.byId(m.broker), ca = this.byId(m.chosenCarrier);
+      const spread = m.retail - m.wholesale[m.chosenCarrier];
+      cu.capital -= m.retail;
+      this.roundLedger[m.customer].premiums -= m.retail;
+      br.capital += spread;
+      this.roundLedger[m.broker].cash += spread;
+      ca.capital += m.wholesale[m.chosenCarrier];
+      this.roundLedger[m.chosenCarrier].premiums += m.wholesale[m.chosenCarrier];
+      if (hit) {
+        ca.capital -= cov;
+        this.roundLedger[m.chosenCarrier].claims -= cov;
+      }
+      this.addLog(`${cu.avatar} ${cu.name} signed at $${m.retail}.`);
+    } else {
+      if (hit) {
+        cu.capital -= cov;
+        this.roundLedger[m.customer].claims -= cov;
+      }
+      this.addLog(`${cu.avatar} ${cu.name} went bare.`);
+    }
+    m.result = {
+      hit, risk: Math.round(risk * 100), coverage: cov,
+      accepted: m.accepted, retail: m.retail,
+      wholesale: m.chosenCarrier ? m.wholesale[m.chosenCarrier] : null,
+      allWholesale: { ...m.wholesale },
+      chosenCarrier: m.chosenCarrier,
+      text: hit ? m.client.claimText : m.client.safeText,
+    };
+    this.phase = 'mm_claims';
+  }
+
+  mmAdvance() {
+    if (this.phase !== 'mm_claims') return { error: 'Not now.' };
+    if (!this.mm.revealed) { this.mm.revealed = true; return { ok: true }; }
+    const summary = this.players.map(p => {
+      const l = this.roundLedger[p.id];
+      return { pid: p.id, ...l, end: p.capital, net: p.capital - l.start };
+    });
+    this.ledger.push({ round: this.round, summary });
+    this.phase = 'ledger';
     return { ok: true };
   }
 
@@ -489,12 +646,15 @@ export class Game {
 
   nextRound() {
     if (this.phase !== 'ledger') return { error: 'Not in ledger phase.' };
-    if (this.round >= RULES.rounds || this.deck.length < RULES.clientsPerRound) {
+    const needed = this.mode === 'middleman' ? 1 : RULES.clientsPerRound;
+    if (this.round >= this.totalRounds || this.deck.length < needed) {
       this.phase = 'results';
       const top = Math.max(...this.players.map(p => p.capital));
       this.winnerIds = this.players.filter(p => p.capital === top).map(p => p.id);
       const names = this.winnerIds.map(id => this.byId(id).name).join(' & ');
       this.addLog(`🏆 ${names} runs the market.`);
+    } else if (this.mode === 'middleman') {
+      this.beginMMRound();
     } else {
       this.beginRound();
     }
@@ -513,6 +673,17 @@ export class Game {
       if (this.phase === 'quotes') this.finishQuotes();
     } else if (this.timer.phase === 'deals' && this.phase === 'deals') {
       this.endDeals();
+    } else if (this.timer.phase === 'mm_wholesale' && this.phase === 'mm_wholesale') {
+      this.timer = null;
+      this.mmToMarkup(); // whoever hasn't quoted is out
+    } else if (this.timer.phase === 'mm_markup' && this.phase === 'mm_markup') {
+      // indecisive broker: auto-pick the cheapest carrier at a 30% markup
+      const [cid, w] = Object.entries(this.mm.wholesale).sort((a, b) => a[1] - b[1])[0];
+      this.timer = null;
+      this.mmSetRetail(this.mm.broker, cid, Math.round(w * 1.3));
+    } else if (this.timer.phase === 'mm_decide' && this.phase === 'mm_decide') {
+      this.timer = null;
+      this.mmDecide(this.mm.customer, false); // dithering means going bare
     }
     this.timer = null;
     return true;
@@ -531,6 +702,11 @@ export class Game {
       case 'proposeDeal': return this.proposeDeal(pid, action.deal);
       case 'respondDeal': return this.respondDeal(pid, action.dealId, action.accept);
       case 'placeShort': return this.placeShort(pid, action.clientId, action.stake);
+      case 'mmOpen': return host ? this.mmOpen() : { error: 'Host only.' };
+      case 'mmQuote': return this.mmQuote(pid, action.amount);
+      case 'mmSetRetail': return this.mmSetRetail(pid, action.carrierId, action.retail);
+      case 'mmDecide': return this.mmDecide(pid, action.accept);
+      case 'mmAdvance': return host ? this.mmAdvance() : { error: 'Host only.' };
       case 'endDeals': return host ? this.endDeals() : { error: 'Host only.' };
       case 'advanceClaims': return host ? this.advanceClaims() : { error: 'Host only.' };
       case 'nextRound': return host ? this.nextRound() : { error: 'Host only.' };
@@ -540,16 +716,45 @@ export class Game {
 
   // ---- per-player view (privacy boundary) ----
 
+  mmView(pid) {
+    const m = this.mm;
+    const isBroker = pid === m.broker;
+    const isCustomer = pid === m.customer;
+    const done = this.phase === 'mm_claims' || this.phase === 'ledger' || this.phase === 'results';
+    const c = m.client;
+    return {
+      client: {
+        id: c.id, name: c.name, emoji: c.emoji, tagline: c.tagline,
+        coverage: c.coverage, band: c.band, rating: c.rating,
+      },
+      customer: m.customer, broker: m.broker, carriers: m.carriers,
+      yourRole: isCustomer ? 'customer' : isBroker ? 'broker' : m.carriers.includes(pid) ? 'carrier' : 'observer',
+      yourIntel: (m.seen[pid] || []).map(card => ({ text: card.text, delta: card.delta })),
+      trueRisk: isCustomer || done ? Math.round(this.mmRisk() * 100) : null,
+      wholesaleBand: this.mmWholesaleBand(),
+      retailMax: Math.round(c.band[1] * 2),
+      quotedBy: Object.keys(m.wholesale),
+      wholesale: (isBroker && this.phase !== 'mm_wholesale') || done ? { ...m.wholesale } : (m.carriers.includes(pid) ? (pid in m.wholesale ? { [pid]: m.wholesale[pid] } : {}) : {}),
+      chosenCarrier: this.phase === 'mm_decide' || done ? m.chosenCarrier : null,
+      retail: this.phase === 'mm_decide' || done ? m.retail : null,
+      accepted: m.accepted,
+      revealed: m.revealed,
+      result: m.revealed && m.result ? m.result : null,
+    };
+  }
+
   viewFor(pid) {
     const me = this.byId(pid);
     const submitted = this.market[0] ? this.players.filter(p => p.id in this.market[0].quotes).map(p => p.id) : [];
     return {
       youId: pid,
       theme: this.theme.key,
+      mode: this.mode,
       phase: this.phase,
       round: this.round,
-      roundName: this.theme.roundNames[this.round - 1] || '',
-      totalRounds: RULES.rounds,
+      roundName: this.theme.roundNames[(this.round - 1 + this.theme.roundNames.length) % this.theme.roundNames.length] || '',
+      totalRounds: this.totalRounds,
+      mm: this.mm ? this.mmView(pid) : null,
       rules: {
         quoteSeconds: RULES.quoteSeconds, dealSeconds: RULES.dealSeconds,
         minPlayers: RULES.minPlayers, maxPlayers: RULES.maxPlayers,

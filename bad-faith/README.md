@@ -6,6 +6,19 @@ clients — an escape-artist octopus, a violent swan HOA, a komodo dragon
 day spa, one extremely expensive goldfish. Whoever ends the year richest
 wins.
 
+Two modes, picked by the host when creating a game:
+
+- **🏪 Open Market** (default) — everyone's a broker: sealed quotes,
+  coverage tiers, the deal floor, syndicated clients, the short desk,
+  overhead and solvency caps. 2–4 players, 5 quarters.
+- **🤝 The Middleman** — the real insurance food chain, with rotating
+  roles (3–4 players, one round per player). Each round one player's
+  **the Customer** (it's their business — they see all its intel), one's
+  **the Broker**, the rest are **Carriers**. Carriers privately quote the
+  broker wholesale; the broker picks one and marks it up; the customer
+  sees only the retail price and signs or goes bare. Then the claim rolls
+  and the whole price chain goes public — spread and all.
+
 Two editions, picked by the host when creating a game:
 
 - **🐾 Animal Kingdom** (default) — the classic deck, quarters Q1–Year-End.
