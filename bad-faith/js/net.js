@@ -17,14 +17,14 @@ const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // no 0/O/1/I/L
 const BROKER_OVERRIDE = typeof location !== 'undefined'
   ? new URLSearchParams(location.search).get('mqtt') : null;
 
-// Ordered by reachability: eclipse serves wss on 443 (survives strict
-// networks); the others are fallbacks on high ports. A joiner cycles
-// through the list until it hears the host, so host and client converge
-// on a common broker even if one is down for either side.
+// Ordered by track record (EMQX's public broker is the most dependable).
+// The QR join link pins the host's relay index (&b=N) so scanners go
+// straight to the right one; typed-code joiners cycle the list until they
+// hear the host.
 const BROKERS = BROKER_OVERRIDE ? [BROKER_OVERRIDE] : [
-  'wss://mqtt.eclipseprojects.io/mqtt',
   'wss://broker.emqx.io:8084/mqtt',
   'wss://broker.hivemq.com:8884/mqtt',
+  'wss://mqtt.eclipseprojects.io/mqtt', // wss on 443 — survives strict networks
 ];
 
 const MQTT_OPTS = {
@@ -64,7 +64,7 @@ export function createHostTransport({ code, local, handlers }) {
 function mqttHost(code, handlers) {
   const t = topicsFor(code);
   const seen = new Set();
-  let client = null, closed = false;
+  let client = null, closed = false, brokerIdx = 0;
 
   const ready = new Promise((resolve, reject) => {
     const tryBroker = (i) => {
@@ -75,6 +75,7 @@ function mqttHost(code, handlers) {
       c.once('connect', () => {
         clearTimeout(giveUp);
         client = c;
+        brokerIdx = i;
         c.subscribe(t.host);
         c.on('message', (topic, buf) => {
           if (topic !== t.host) return;
@@ -95,6 +96,7 @@ function mqttHost(code, handlers) {
 
   return {
     ready,
+    getBroker: () => brokerIdx,
     send(cid, msg) { client?.publish(t.client(cid), JSON.stringify(msg)); },
     close() {
       closed = true;
@@ -109,14 +111,16 @@ function mqttHost(code, handlers) {
 // hello is idempotent on the host side.
 // returns: { send(msg), close() }
 
-export function createClientTransport({ code, local, handlers }) {
+export function createClientTransport({ code, local, broker, handlers }) {
   if (local) return localClient(code, handlers);
-  return mqttClient(code, handlers);
+  return mqttClient(code, handlers, broker);
 }
 
-function mqttClient(code, handlers) {
+function mqttClient(code, handlers, startBroker = 0) {
   const cid = 'C' + Math.random().toString(36).slice(2, 10);
   const t = topicsFor(code);
+  // Start at the relay the QR pinned (&b=N); cycle from there.
+  const start = Math.max(0, Math.min(BROKERS.length - 1, parseInt(startBroker, 10) || 0));
   let active = null, joined = false, closed = false, hop = null, attempt = 0;
   const byePayload = JSON.stringify({ cid, msg: { t: '_bye' } });
 
@@ -131,8 +135,9 @@ function mqttClient(code, handlers) {
   const tryBroker = () => {
     if (closed || joined) return;
     if (attempt >= BROKERS.length * 2) { fail(new Error('Room not found')); return; }
-    const url = BROKERS[attempt % BROKERS.length];
+    const url = BROKERS[(start + attempt) % BROKERS.length];
     attempt++;
+    handlers.onStatus?.(attempt, BROKERS.length * 2);
     try { active?.end(true); } catch { /* dead */ }
     const c = mqtt.connect(url, { ...MQTT_OPTS, connectTimeout: 5000, will: { topic: t.host, payload: byePayload } });
     active = c;

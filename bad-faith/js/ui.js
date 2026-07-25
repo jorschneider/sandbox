@@ -3,7 +3,7 @@
 // regions (timer, statuses, proposals, capital) update in place so open
 // forms and half-typed quotes survive network updates.
 
-import { GAME_NAME, GAME_SUBTITLE, AVATARS, THEMES } from './content.js';
+import { GAME_NAME, GAME_SUBTITLE, APP_VERSION, AVATARS, THEMES } from './content.js';
 
 const $ = (sel) => document.querySelector(sel);
 let root, actions, lastKey = '', lastView = null;
@@ -70,6 +70,7 @@ export function renderHome() {
         <button class="btn big ghost" data-action="show-join">Join with a code</button>
       </div>
       <p class="fine">One phone hosts. Everyone plays in the same room, phones in hand, eyes up.</p>
+      <p class="fine dim">${APP_VERSION}</p>
     </div>`;
 }
 
@@ -140,6 +141,7 @@ export function renderLobby(view, { code, isHost, joinUrl }) {
                Start the fiscal year</button>
              <p class="fine">${full ? 'Firm is full.' : 'Best with 4 brokers. Playable with 2–3.'}</p>`
           : `<p class="fine">Waiting for the host to start…</p>`}
+        <p class="fine dim">${APP_VERSION} — every phone should show the same version</p>
       </div>`;
     if (isHost && window.qrcode) {
       const q = window.qrcode(0, 'M');

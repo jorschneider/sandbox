@@ -6,6 +6,7 @@
 //   ?name=X&as=host|join  auto-advance identity screens (testing hooks)
 
 import { Game } from './game.js';
+import { APP_VERSION } from './content.js';
 import * as net from './net.js';
 import * as ui from './ui.js';
 
@@ -91,6 +92,10 @@ function joinUrl(code) {
   const u = new URL(location.pathname, location.origin);
   u.searchParams.set('join', code);
   if (LOCAL) u.searchParams.set('local', '1');
+  const b = hostState?.transport.getBroker?.();
+  if (b) u.searchParams.set('b', String(b)); // pin scanners to the host's relay
+  const override = params.get('mqtt');
+  if (override) u.searchParams.set('mqtt', override);
   return u.toString();
 }
 
@@ -113,9 +118,12 @@ function startClient({ name, avatar, code: rawCode }) {
   let welcomed = false;
 
   const transport = net.createClientTransport({
-    code, local: LOCAL,
+    code, local: LOCAL, broker: params.get('b'),
     handlers: {
       onOpen() { transport.send({ t: 'hello', name, avatar }); },
+      onStatus(attempt, total) {
+        if (!welcomed && attempt > 1) ui.renderConnecting(`Calling the relay office (${attempt}/${total})…`);
+      },
       onMessage(msg) {
         if (msg.t === 'welcome') { welcomed = true; clientState = { transport, code }; }
         else if (msg.t === 'reject') { ui.toast(msg.reason); ui.renderHome(); transport.close(); }
@@ -125,7 +133,7 @@ function startClient({ name, avatar, code: rawCode }) {
       onClose(err) {
         if (welcomed) { ui.toast('Lost the host. The office burned down.', true); }
         else {
-          ui.toast('Couldn\'t reach that room. Check the code, make sure the host\'s screen is on, and scan again.', true);
+          ui.toast('Couldn\'t find that room. Have the host reload the page (lobby should say ' + APP_VERSION + '), scan the fresh QR, and check the code.', true);
           ui.renderHome();
         }
         if (err) console.error(err);
