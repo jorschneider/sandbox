@@ -228,6 +228,79 @@ for (const [label, cfg] of [
   }
 }
 
+group('the slip (2 players)');
+{
+  const g = seat(new Game({ rng: lcg(61), mode: 'duel' }), 2);
+  ok('needs exactly two brokers', !!seat(new Game({ rng: lcg(61), mode: 'duel' }), 3).start().error);
+  g.start();
+  ok('opens on pricing', g.phase === 'duel_price');
+  ok('two lots on the table', g.market.length === 2);
+  ok('both already written at an asking price', g.market.every(m => m.premium > 0 && m.soldCoverage === m.client.coverage));
+  ok('each broker holds intel on BOTH lots',
+    g.players.every(p => new Set(g.intel[p.id].map(c => c.clientId)).size === 2));
+  ok('the chooser cannot price', !!g.setSlip(g.duel.chooser, { clientId: g.market[0].client.id, amount: 100 }).error);
+  ok('a pricing broker cannot see nothing', g.viewFor(g.duel.pricer).duel.youArePricer === true);
+  ok('the sweetener is hidden while it is being set', g.viewFor(g.duel.chooser).duel.offer === null);
+  g.setSlip(g.duel.pricer, { clientId: g.market[0].client.id, amount: 200 });
+  ok('setting the slip moves to the choice', g.phase === 'duel_choose');
+  ok('now both sides can see the offer', g.viewFor(g.duel.chooser).duel.offer.amount === 200);
+  ok('the pricer cannot choose', !!g.chooseSlip(g.duel.pricer, g.market[0].client.id).error);
+
+  const capBefore = { p: g.byId(g.duel.pricer).capital, c: g.byId(g.duel.chooser).capital };
+  const { pricer, chooser } = g.duel;
+  g.chooseSlip(chooser, g.market[0].client.id); // chooser takes the surcharged lot
+  ok('both lots end up owned', g.market.every(m => m.winner));
+  ok('one each', g.market[0].winner !== g.market[1].winner);
+  const paid = capBefore.c + g.market[0].premium - 200;
+  ok('the sweetener rides with the marked lot', g.byId(chooser).capital === paid,
+    `${g.byId(chooser).capital} vs ${paid}`);
+  ok('and lands in the rival pocket', g.byId(pricer).capital === capBefore.p + g.market[1].premium + 200);
+  ok('play continues into the deal window', g.phase === 'deals' && g.timer?.phase === 'deals');
+}
+{
+  const g = seat(new Game({ rng: lcg(62), mode: 'duel' }), 2);
+  g.start();
+  const { pricer, chooser } = g.duel;
+  g.setSlip(pricer, { clientId: g.market[0].client.id, amount: 50 });
+  const before = g.byId(chooser).capital;
+  g.chooseSlip(chooser, 'walk');
+  ok('walking away leaves the dealer holding everything', g.market.every(m => m.winner === pricer));
+  ok('and the walker banks nothing', g.byId(chooser).capital === before);
+  ok('no sweetener changes hands on a walk', g.duel.settled.walked === true);
+}
+{
+  // a whole duel, including timeouts resolving on their own
+  const g = seat(new Game({ rng: lcg(63), mode: 'duel' }), 2);
+  g.start();
+  let guard = 0;
+  while (g.phase !== 'results' && guard++ < 4000) {
+    if (g.phase === 'duel_price' || g.phase === 'duel_choose') g.tick();
+    else if (g.phase === 'deals') g.endDeals();
+    else if (g.phase === 'claims') g.advanceClaims();
+    else if (g.phase === 'ledger') g.nextRound();
+    else break;
+  }
+  ok('an unattended duel still reaches results', g.phase === 'results', `stuck in ${g.phase}`);
+  ok('it ran the full six rounds', g.round === RULES.duel.rounds);
+}
+
+group('two-player market scales down');
+{
+  const g2 = seat(new Game({ rng: lcg(71) }), 2); g2.start();
+  const g4 = seat(new Game({ rng: lcg(71) }), 4); g4.start();
+  ok('two players contest two lots, not three', g2.market.filter(m => !m.renewal).length === 2);
+  ok('four players still get three', g4.market.filter(m => !m.renewal).length === 3);
+}
+{
+  // with a single possible counterparty the layoff rule must not apply
+  const g = seat(new Game({ rng: lcg(72) }), 2);
+  g.start(); g.openQuotes();
+  if (g.phase === 'auction') { g.placeBid('P1', g.auction.bid - 25); g.finishAuction(); }
+  quoteAll(g);
+  g.openDeals(); g.endDeals();
+  ok('a syndicated lot cannot void head-to-head', !g.market.some(m => m.voided));
+}
+
 group('identity survives disconnection');
 {
   const g = seat(new Game({ rng: lcg(41) }));

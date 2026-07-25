@@ -6,7 +6,7 @@ clients — an escape-artist octopus, a violent swan HOA, a komodo dragon
 day spa, one extremely expensive goldfish. Whoever ends the year richest
 wins.
 
-Two modes, picked by the host when creating a game:
+Three modes, picked by the host when creating a game:
 
 - **🏪 Open Market** (default) — everyone's a broker. Two rulebooks,
   picked at creation: **🌱 Rookie Desk** (the default for a first table:
@@ -18,6 +18,12 @@ Two modes, picked by the host when creating a game:
   must beat the incumbent's old rate by 10% or the client stays loyal).
   2–4 players, 5 quarters. The rookie finale points the table at the
   full rulebook when they're ready.
+- **⚔️ The Slip** — head-to-head, exactly 2 players, 6 rounds. Two
+  mismatched clients are already written at the asking price; the dealer
+  says who pays whom to even the book up ("whoever carries the whale
+  hands over $300"), and the rival takes a side — or refuses both and
+  leaves the dealer holding everything. Each broker holds intel on both
+  lots, so the argument is about what you each know.
 - **🤝 The Middleman** — the real insurance food chain, with rotating
   roles (3–4 players, one round per player). Each round one player's
   **the Customer** (it's their business — they see all its intel), one's

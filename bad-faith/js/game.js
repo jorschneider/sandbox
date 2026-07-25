@@ -38,6 +38,12 @@ export const RULES = {
   // quote. Brokers publicly undercut each other; every bid resets a short
   // anti-snipe clock, so it ends only when nobody dares go lower.
   auction: { openSeconds: 20, resetSeconds: 8, steps: [25, 50, 100], floorPct: 0.35 },
+  // Head-to-head. Both policies are written at the client's asking price;
+  // the argument is who carries which. One broker names the sweetener —
+  // "whoever takes the whale pays the other $X" — and the rival picks a
+  // side. Get the sweetener wrong and they take the side you undervalued,
+  // so the money moves between the players, not in from the house.
+  duel: { rounds: 6, clients: 2, priceSeconds: 60, chooseSeconds: 45, dealSeconds: 45, maxSweetener: 1500 },
 
   riskFloor: 0.03,
   riskCeil: 0.97,
@@ -56,7 +62,7 @@ export class Game {
   constructor({ rng = Math.random, theme = 'classic', mode = 'market', ruleset = 'full' } = {}) {
     this.rng = rng;
     this.theme = THEMES[theme] || THEMES.classic;
-    this.mode = mode === 'middleman' ? 'middleman' : 'market';
+    this.mode = ['middleman', 'duel'].includes(mode) ? mode : 'market';
     // 'rookie' strips the market mode to its essentials (no tiers, shorts,
     // syndication, overhead, or solvency caps) for first-time tables.
     this.pro = ruleset !== 'rookie';
@@ -80,6 +86,7 @@ export class Game {
     this.awards = {}; // end-of-game superlatives, tracked as they happen
     this.pendingRenewal = null; // full market: last round's happiest client returns
     this.auction = null; // full market: live open-outcry lot
+    this.duel = null;    // 2-player mode: who prices, who chooses
     this.submitted = new Set(); // who has sealed their quotes this round
   }
 
@@ -154,6 +161,7 @@ export class Game {
       timer: this.timer, log: this.log, dealSeq: this.dealSeq,
       winnerIds: this.winnerIds, awards: this.awards,
       pendingRenewal: this.pendingRenewal, auction: this.auction, mm: this.mm,
+      duel: this.duel,
     };
   }
 
@@ -168,7 +176,7 @@ export class Game {
       timer: data.timer, log: data.log || [], dealSeq: data.dealSeq || 0,
       winnerIds: data.winnerIds, awards: data.awards || {},
       pendingRenewal: data.pendingRenewal || null, auction: data.auction || null,
-      mm: data.mm || null,
+      mm: data.mm || null, duel: data.duel || null,
     });
     // Everyone is presumed away until their phone says otherwise.
     for (const p of g.players) p.connected = false;
@@ -184,16 +192,144 @@ export class Game {
 
   start() {
     if (this.phase !== 'lobby') return { error: 'Already started.' };
+    if (this.mode === 'duel' && this.players.length !== 2) return { error: 'The Slip is played head-to-head — exactly 2 brokers.' };
     const minP = this.mode === 'middleman' ? 3 : RULES.minPlayers;
     if (this.players.length < minP) return { error: `Need at least ${minP} players for this mode.` };
     this.deck = shuffle(this.theme.clients, this.rng);
     if (this.mode === 'middleman') {
       this.totalRounds = this.players.length; // everyone is the customer once
       this.beginMMRound();
+    } else if (this.mode === 'duel') {
+      this.totalRounds = RULES.duel.rounds;
+      this.beginDuelRound();
     } else {
       this.totalRounds = RULES.rounds;
       this.beginRound();
     }
+    return { ok: true };
+  }
+
+  // ---------- the slip (2 players: divide and choose) ----------
+
+  beginDuelRound() {
+    this.round += 1;
+    this.phase = 'duel_price';
+    this.proposals = [];
+    this.claims = null;
+    this.auction = null;
+    this.submitted = new Set();
+    this.dealtCardIds = new Set();
+    this.intel = {};
+    this.freshLedger();
+
+    // Deliberately mismatched pair: look at four, take the biggest and the
+    // smallest. A lopsided table is the whole point — the sweetener has real
+    // work to do, and "big and risky" versus "small and safe" is a genuine
+    // choice that shifts with who's ahead.
+    const look = this.deck.splice(0, Math.min(4, this.deck.length));
+    let picks = look.slice(0, RULES.duel.clients);
+    if (look.length === 4) {
+      const sorted = look.slice().sort((a, b) => a.coverage - b.coverage);
+      picks = [sorted[sorted.length - 1], sorted[0]];
+      this.deck.unshift(...look.filter(c => !picks.includes(c)));
+    }
+    // Both policies are already written at the client's asking price — thin
+    // enough that the intel, not the premium, decides who did well.
+    this.market = picks.map(client => ({
+      client, baseClient: client, quotes: {}, winner: null,
+      premium: Math.round((client.band[0] + (client.band[1] - client.band[0]) * 0.4) / 10) * 10,
+      soldCoverage: client.coverage,
+      reinsurance: [], shorts: [], syndicated: false, voided: false,
+    }));
+
+    // The dealer names the sweetener; the other broker picks a side.
+    const pricer = this.players[(this.round - 1) % 2].id;
+    const chooser = this.players[this.round % 2].id;
+    this.duel = { pricer, chooser, offer: null, chosen: null, settled: null };
+
+    // Each broker gets one card on EACH client — different cards, so both
+    // hold a partial and asymmetric read of both sides. Without this the
+    // sweetener is a coin-flip guess rather than a judgement call.
+    for (const p of this.players) this.intel[p.id] = [];
+    for (const m of this.market) {
+      const cards = shuffle(m.client.intel, this.rng);
+      this.players.forEach((p, i) => {
+        const card = cards[i];
+        if (!card) return;
+        this.intel[p.id].push({ clientId: m.client.id, ...card });
+        this.dealtCardIds.add(card.id);
+      });
+    }
+    const pr = this.byId(pricer);
+    this.addLog(`— Round ${this.round}: ${pr.avatar} ${pr.name} writes the slip on ${this.market.map(m => m.client.name).join(' and ')}.`);
+    this.timer = { phase: 'duel_price', remaining: RULES.duel.priceSeconds };
+  }
+
+  // offer: {clientId, amount} — "whoever takes THIS one pays the other
+  // broker `amount`". Set it wrong and your rival takes the side you
+  // undervalued, with the difference coming straight out of your pocket.
+  setSlip(pid, offer) {
+    if (this.phase !== 'duel_price') return { error: 'The slip is already written.' };
+    if (pid !== this.duel.pricer) return { error: 'Your rival deals this round.' };
+    const m = this.market.find(x => x.client.id === offer?.clientId) || this.market[0];
+    const amount = Math.round(Math.min(RULES.duel.maxSweetener, Math.max(0, +offer?.amount || 0)));
+    this.duel.offer = { clientId: m.client.id, amount };
+    this.phase = 'duel_choose';
+    this.timer = { phase: 'duel_choose', remaining: RULES.duel.chooseSeconds };
+    const other = this.market.find(x => x !== m);
+    this.addLog(`📝 The slip: whoever carries ${m.client.name} pays $${amount} to whoever carries ${other.client.name}.`);
+    return { ok: true };
+  }
+
+  chooseSlip(pid, clientId) {
+    if (this.phase !== 'duel_choose') return { error: 'Not now.' };
+    if (pid !== this.duel.chooser) return { error: 'You wrote the slip — your rival picks.' };
+    const { pricer, chooser, offer } = this.duel;
+
+    // Walking away: touch neither, and the dealer carries both. Lowball the
+    // sweetener and you may end up holding the whole book yourself.
+    if (clientId === 'walk') {
+      this.duel.chosen = 'walk';
+      for (const m of this.market) {
+        m.winner = pricer;
+        this.byId(pricer).capital += m.premium;
+        this.roundLedger[pricer].premiums += m.premium;
+        this.award('rainmaker', pricer, m.premium, m.client.name);
+      }
+      this.duel.settled = { walked: true };
+      const ch = this.byId(chooser), pr = this.byId(pricer);
+      this.addLog(`🚪 ${ch.avatar} ${ch.name} walks away — ${pr.avatar} ${pr.name} carries both.`);
+      this.award('walkaway', chooser, this.market.reduce((s, m) => s + m.soldCoverage, 0), 'the whole book');
+      this.phase = 'deals';
+      this.timer = { phase: 'deals', remaining: RULES.duel.dealSeconds };
+      return { ok: true };
+    }
+
+    const pick = this.market.find(m => m.client.id === clientId) || this.market[0];
+    this.duel.chosen = pick.client.id;
+
+    for (const m of this.market) {
+      const owner = m === pick ? chooser : pricer;
+      m.winner = owner;
+      const w = this.byId(owner);
+      w.capital += m.premium;
+      this.roundLedger[owner].premiums += m.premium;
+      this.award('rainmaker', owner, m.premium, m.client.name);
+    }
+    // The sweetener travels with the client it was attached to.
+    const payer = pick.client.id === offer.clientId ? chooser : pricer;
+    const payee = payer === chooser ? pricer : chooser;
+    if (offer.amount > 0) {
+      this.byId(payer).capital -= offer.amount;
+      this.byId(payee).capital += offer.amount;
+      this.roundLedger[payer].cash -= offer.amount;
+      this.roundLedger[payee].cash += offer.amount;
+    }
+    this.duel.settled = { payer, payee, amount: offer.amount };
+    const ch = this.byId(chooser), pr = this.byId(pricer);
+    this.addLog(`✋ ${ch.avatar} ${ch.name} takes ${pick.client.name}; ${pr.avatar} ${pr.name} carries the other${offer.amount ? ` and ${this.byId(payer).name} hands over $${offer.amount}` : ''}.`);
+    this.phase = 'deals';
+    this.timer = { phase: 'deals', remaining: RULES.duel.dealSeconds };
     return { ok: true };
   }
 
@@ -378,7 +514,11 @@ export class Game {
     this.intel = {};
     this.freshLedger();
 
-    const picks = this.deck.splice(0, RULES.clientsPerRound);
+    // Scarcity is what makes brokers fight. Four players chase three
+    // clients; two players chasing three would each get one uncontested,
+    // so head-to-head play drops to two lots.
+    const nClients = this.players.length < 3 ? 2 : RULES.clientsPerRound;
+    const picks = this.deck.splice(0, nClients);
     this.market = picks.map(client => ({
       client, baseClient: client, quotes: {}, winner: null, premium: null, soldCoverage: null,
       reinsurance: [], shorts: [], syndicated: false, voided: false,
@@ -733,6 +873,10 @@ export class Game {
     // premium clawed back, a fine on top, reinsurance fees unwound.
     for (const m of this.market) {
       if (!m.syndicated || !m.winner || m.voided) continue;
+      // With only one possible counterparty there's no market to lay off
+      // into — your rival profits by simply refusing, so the requirement
+      // would be a coin flip rather than a negotiation.
+      if (this.players.length < 3) continue;
       const laid = m.reinsurance.reduce((s, r) => s + r.pct, 0);
       if (laid >= RULES.syndicate.layoffPct) continue;
       m.voided = true;
@@ -900,7 +1044,7 @@ export class Game {
 
   nextRound() {
     if (this.phase !== 'ledger') return { error: 'Not in ledger phase.' };
-    const needed = this.mode === 'middleman' ? 1 : RULES.clientsPerRound;
+    const needed = this.mode === "middleman" ? 1 : this.mode === "duel" ? RULES.duel.clients : (this.players.length < 3 ? 2 : RULES.clientsPerRound);
     if (this.round >= this.totalRounds || this.deck.length < needed) {
       this.phase = 'results';
       const top = Math.max(...this.players.map(p => p.capital));
@@ -909,6 +1053,8 @@ export class Game {
       this.addLog(`🏆 ${names} runs the market.`);
     } else if (this.mode === 'middleman') {
       this.beginMMRound();
+    } else if (this.mode === 'duel') {
+      this.beginDuelRound();
     } else {
       this.beginRound();
     }
@@ -944,6 +1090,12 @@ export class Game {
     } else if (this.timer.phase === 'mm_decide' && this.phase === 'mm_decide') {
       this.timer = null;
       this.mmDecide(this.mm.customer, false); // dithering means going bare
+    } else if (this.timer.phase === 'duel_price' && this.phase === 'duel_price') {
+      this.timer = null;
+      this.setSlip(this.duel.pricer, { clientId: this.market[0].client.id, amount: 0 });
+    } else if (this.timer.phase === 'duel_choose' && this.phase === 'duel_choose') {
+      this.timer = null;
+      this.chooseSlip(this.duel.chooser, this.market[0].client.id);
     }
     // Only clear if the handler didn't already start the next phase's clock
     // — otherwise a timeout leaves the following phase with no timer and the
@@ -972,6 +1124,8 @@ export class Game {
       case 'mmSetRetail': return this.mmSetRetail(pid, action.carrierId, action.retail);
       case 'mmDecide': return this.mmDecide(pid, action.accept);
       case 'mmAdvance': return host ? this.mmAdvance() : { error: 'Host only.' };
+      case 'setSlip': return this.setSlip(pid, action.prices);
+      case 'chooseSlip': return this.chooseSlip(pid, action.clientId);
       case 'endDeals': return host ? this.endDeals() : { error: 'Host only.' };
       case 'advanceClaims': return host ? this.advanceClaims() : { error: 'Host only.' };
       case 'nextRound': return host ? this.nextRound() : { error: 'Host only.' };
@@ -1022,6 +1176,15 @@ export class Game {
       roundName: this.theme.roundNames[(this.round - 1 + this.theme.roundNames.length) % this.theme.roundNames.length] || '',
       totalRounds: this.totalRounds,
       mm: this.mm ? this.mmView(pid) : null,
+      duel: this.duel ? {
+        pricer: this.duel.pricer, chooser: this.duel.chooser,
+        youArePricer: pid === this.duel.pricer,
+        chosen: this.duel.chosen,
+        // Prices stay secret until the slip is written.
+        offer: this.phase === 'duel_price' ? null : this.duel.offer,
+        settled: this.duel.settled,
+        maxSweetener: RULES.duel.maxSweetener,
+      } : null,
       auction: this.auction ? {
         ...this.auction,
         steps: RULES.auction.steps,

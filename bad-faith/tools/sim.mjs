@@ -15,6 +15,7 @@ import { THEMES } from '../js/content.js';
 
 const N = parseInt(process.argv[2] || '3000', 10);
 const THEME = process.argv[3] || 'classic';
+const NPLAY = parseInt(process.env.PLAYERS || '4', 10);
 
 // Deterministic rng per game for reproducibility.
 function lcg(seed) {
@@ -87,87 +88,118 @@ for (let g = 0; g < N; g++) {
   const rng = lcg(1000 + g);
   const game = new Game({ rng, theme: THEME });
   // rotate seats so no strategy owns an advantage from order
-  const seat = process.env.SEAT ? process.env.SEAT.split(',') : names.map((_, i) => names[(i + g) % names.length]);
+  const seat = (process.env.SEAT ? process.env.SEAT.split(',') : names.map((_, i) => names[(i + g) % names.length])).slice(0, NPLAY);
   seat.forEach((s, i) => game.addPlayer('P' + i, s, '🤖', i === 0));
+  const NP = seat.length;
   game.start();
 
-  while (game.phase !== 'results') {
-    if (game.phase === 'market') {
-      game.openQuotes();
-      for (let i = 0; i < 4; i++) {
-        const view = game.viewFor('P' + i);
-        game.submitQuotes('P' + i, STRATS[seat[i]](view, rng));
-      }
-      // finishQuotes fires automatically once all four are in
-      for (const m of game.market) {
-        agg.clientSeen++;
-        const pc = agg.perClient[m.client.id] ??= { seen: 0, sold: 0, claims: 0, premium: 0, loss: 0 };
-        pc.seen++;
-        if (m.winner) {
-          agg.policies++; pc.sold++;
-          agg.premiumSum += m.premium; pc.premium += m.premium;
-          agg.riskSum += game.effectiveRisk(m);
-        } else agg.unsold++;
-      }
-      game.openDeals();
+  // What rate a bot will not go below when bidding for the live lot.
+  const walkAway = (pid, strat, lot) => {
+    if (strat === 'reckless') return 0;
+    if (strat === 'naive') return lot.client.coverage * (0.14 + 0.22 * rng());
+    let est = RATING_PRIOR[lot.client.rating] ?? 0.28;
+    for (const c of game.viewFor(pid).you.intel) if (c.clientId === lot.client.id) est += c.delta;
+    return lot.client.coverage * Math.max(0.05, est) * 1.02; // wants a margin
+  };
 
-      // Syndication: the winner offers the required layoff at a
-      // proportional price (40% of premium for 40% of the risk) around the
-      // table until someone takes it.
-      for (const m of game.market) {
-        if (!m.syndicated || !m.winner) continue;
-        const fee = Math.round(0.4 * m.premium);
-        for (let i = 0; i < 4 && m.reinsurance.reduce((s, r) => s + r.pct, 0) < 40; i++) {
-          const pid = 'P' + i;
-          if (pid === m.winner) continue;
-          const strat = seat[i];
-          let accepts = false;
-          if (strat === 'reckless') accepts = true;
-          else if (strat === 'naive') accepts = rng() < 0.5;
-          else if (strat === 'informed') {
-            let e = RATING_PRIOR[m.client.rating] ?? 0.28;
-            for (const c of game.viewFor(pid).you.intel) if (c.clientId === m.client.id) e += c.delta;
-            accepts = (m.premium / m.soldCoverage) >= e * 0.95;
+  let guard = 0;
+  while (game.phase !== 'results' && guard++ < 6000) {
+    switch (game.phase) {
+      case 'market':
+        game.openQuotes(); // full market diverts to the live lot first
+        break;
+
+      case 'auction': {
+        const a = game.auction;
+        const lot = game.market.find(m => m.client.id === a.clientId);
+        let bid = false;
+        for (let i = 0; i < NP && !bid; i++) {
+          const pid = 'P' + i, strat = seat[i];
+          if (strat === 'passer' || a.leader === pid) continue;
+          const next = a.bid - 25;
+          if (next >= a.floor && next >= walkAway(pid, strat, lot)) bid = !!game.placeBid(pid, next).ok;
+        }
+        if (!bid) { let t = 0; while (game.phase === 'auction' && t++ < 60) game.tick(); }
+        break;
+      }
+
+      case 'quotes':
+        for (let i = 0; i < NP; i++) {
+          game.submitQuotes('P' + i, STRATS[seat[i]](game.viewFor('P' + i), rng));
+        }
+        break;
+
+      case 'reveal':
+        for (const m of game.market) {
+          agg.clientSeen++;
+          const pc = agg.perClient[m.client.id] ??= { seen: 0, sold: 0, claims: 0, premium: 0, loss: 0 };
+          pc.seen++;
+          if (m.winner) {
+            agg.policies++; pc.sold++;
+            agg.premiumSum += m.premium; pc.premium += m.premium;
+            agg.riskSum += game.effectiveRisk(m);
+          } else agg.unsold++;
+        }
+        game.openDeals();
+        break;
+
+      case 'deals': {
+        // Syndication: the winner shops the required layoff at a
+        // proportional price (40% of premium for 40% of the risk).
+        for (const m of game.market) {
+          if (!m.syndicated || !m.winner) continue;
+          const fee = Math.round(0.4 * m.premium);
+          for (let i = 0; i < NP && m.reinsurance.reduce((s, r) => s + r.pct, 0) < 40; i++) {
+            const pid = 'P' + i;
+            if (pid === m.winner) continue;
+            const strat = seat[i];
+            let accepts = false;
+            if (strat === 'reckless') accepts = true;
+            else if (strat === 'naive') accepts = rng() < 0.5;
+            else if (strat === 'informed') {
+              let e = RATING_PRIOR[m.client.rating] ?? 0.28;
+              for (const c of game.viewFor(pid).you.intel) if (c.clientId === m.client.id) e += c.delta;
+              accepts = (m.premium / m.soldCoverage) >= e * 0.95;
+            }
+            if (!accepts) continue;
+            const res = game.proposeDeal(m.winner, { type: 'reinsurance', to: pid, clientId: m.client.id, pct: 40, fee });
+            if (res.ok) game.respondDeal(pid, res.id, true);
           }
-          if (!accepts) continue;
-          const res = game.proposeDeal(m.winner, { type: 'reinsurance', to: pid, clientId: m.client.id, pct: 40, fee });
-          if (res.ok) game.respondDeal(pid, res.id, true);
         }
-      }
-
-      // Shorts: informed bets when its intel says the brochure understates
-      // the risk; naive occasionally punts.
-      for (let i = 0; i < 4; i++) {
-        const pid = 'P' + i, strat = seat[i];
-        if (strat === 'informed') {
-          for (const m of game.market) {
-            let e = RATING_PRIOR[m.client.rating] ?? 0.28, delta = 0;
-            for (const c of game.viewFor(pid).you.intel) if (c.clientId === m.client.id) { e += c.delta; delta += c.delta; }
-            const odds = RULES.shorts.odds[m.client.rating] ?? 0.3;
-            if (delta > 0 && e >= odds + 0.12) { game.placeShort(pid, m.client.id, 200); break; }
+        // Shorts: informed bets when its intel says the brochure lies low.
+        for (let i = 0; i < NP; i++) {
+          const pid = 'P' + i, strat = seat[i];
+          if (strat === 'informed') {
+            for (const m of game.market) {
+              let e = RATING_PRIOR[m.client.rating] ?? 0.28, delta = 0;
+              for (const c of game.viewFor(pid).you.intel) if (c.clientId === m.client.id) { e += c.delta; delta += c.delta; }
+              const odds = RULES.shorts.odds[m.client.rating] ?? 0.3;
+              if (delta > 0 && e >= odds + 0.12) { game.placeShort(pid, m.client.id, 200); break; }
+            }
+          } else if (strat === 'naive' && rng() < 0.2) {
+            game.placeShort(pid, game.market[Math.floor(rng() * game.market.length)].client.id, 100);
           }
-        } else if (strat === 'naive' && rng() < 0.2) {
-          const m = game.market[Math.floor(rng() * game.market.length)];
-          game.placeShort(pid, m.client.id, 100);
         }
+        game.endDeals();
+        for (const m of game.market) {
+          if (m.syndicated && m.winner) { agg.synWon++; if (m.voided) agg.synVoided++; }
+        }
+        for (const r of game.claims.results) {
+          if (r.insured && r.hit) {
+            agg.claims++;
+            const sold = game.market.find(m => m.client.id === r.clientId).soldCoverage;
+            agg.lossSum += sold;
+            agg.perClient[r.clientId].claims++;
+            agg.perClient[r.clientId].loss += sold;
+          }
+        }
+        break;
       }
 
-      game.endDeals();
-      for (const m of game.market) {
-        if (m.syndicated && m.winner) { agg.synWon++; if (m.voided) agg.synVoided++; }
-      }
-      for (const r of game.claims.results) {
-        if (r.insured && r.hit) {
-          agg.claims++;
-          const sold = game.market.find(m => m.client.id === r.clientId).soldCoverage;
-          agg.lossSum += sold;
-          agg.perClient[r.clientId].claims++;
-          agg.perClient[r.clientId].loss += sold;
-        }
-      }
-      game.claims.revealed = game.claims.results.length;
-      game.advanceClaims(); // -> ledger
-      game.nextRound();
+      // Money moves per reveal now, so every file must actually be opened.
+      case 'claims': game.advanceClaims(); break;
+      case 'ledger': game.nextRound(); break;
+      default: guard = 1e9; break;
     }
   }
 
@@ -185,7 +217,7 @@ const mean = a => a.reduce((s, x) => s + x, 0) / a.length;
 console.log(`\n=== ${THEME} · ${N} games · ${RULES.rounds} rounds · start $${RULES.startingCapital} ===`);
 console.log(`policies sold: ${(agg.policies / agg.clientSeen * 100).toFixed(0)}% of clients | claim rate on insured: ${(agg.claims / agg.policies * 100).toFixed(1)}% | avg effective risk: ${(agg.riskSum / agg.policies * 100).toFixed(1)}%`);
 console.log(`avg premium: $${(agg.premiumSum / agg.policies).toFixed(0)} | avg loss per policy: $${(agg.lossSum / agg.policies).toFixed(0)} | insurer margin per policy: $${((agg.premiumSum - agg.lossSum) / agg.policies).toFixed(0)}`);
-console.log(`bankrupt players: ${(agg.bankrupt / (N * 4) * 100).toFixed(1)}% | avg winner final: $${mean(agg.winnerFinals).toFixed(0)} | syndicates voided: ${(agg.synVoided / Math.max(1, agg.synWon) * 100).toFixed(0)}%`);
+console.log(`players: ${NPLAY} | bankrupt players: ${(agg.bankrupt / (N * NPLAY) * 100).toFixed(1)}% | avg winner final: $${mean(agg.winnerFinals).toFixed(0)} | syndicates voided: ${(agg.synVoided / Math.max(1, agg.synWon) * 100).toFixed(0)}%`);
 console.log('\nstrategy      mean final    win rate');
 for (const n of names) {
   console.log(`${n.padEnd(12)} $${mean(agg.finals[n]).toFixed(0).padStart(6)}      ${(agg.wins[n] / N * 100).toFixed(1)}%`);

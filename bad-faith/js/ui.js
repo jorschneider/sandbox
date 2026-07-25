@@ -148,6 +148,11 @@ export function renderIdentity({ mode, code, prefillName }) {
             <span class="theme-name">The Middleman</span>
             <span class="theme-sub">Customer, broker, carriers — rotating roles. 3–4 players.</span>
           </button>
+          <button class="theme-card mode-card" data-action="pick-mode" data-mode="duel">
+            <span class="theme-badge">⚔️</span>
+            <span class="theme-name">The Slip</span>
+            <span class="theme-sub">Head-to-head. You price both, they pick one. Exactly 2 players.</span>
+          </button>
         </div>
       </div>
       <div class="field" id="ruleField"><span>Rulebook (Open Market)</span>
@@ -186,7 +191,10 @@ export function renderLobby(view, { code, isHost, joinUrl }) {
     root.innerHTML = `
       <div class="screen center">
         <h2>Room <span class="code">${esc(code)}</span></h2>
-        <p class="sub">${theme.badge} ${esc(theme.subtitle)} · ${view.mode === 'middleman' ? '🤝 The Middleman' : view.rules.pro ? '🏪 Open Market · 🌶 Full' : '🏪 Open Market · 🌱 Rookie'}</p>
+        <p class="sub">${theme.badge} ${esc(theme.subtitle)} · ${
+          view.mode === 'middleman' ? '🤝 The Middleman'
+          : view.mode === 'duel' ? '⚔️ The Slip'
+          : view.rules.pro ? '🏪 Open Market · 🌶 Full' : '🏪 Open Market · 🌱 Rookie'}</p>
         ${isHost ? `<div id="qr" class="qr"></div>
         <p class="fine">Scan to join, or go to <b>${esc(shortUrl(joinUrl))}</b> and enter the code.</p>` : ''}
         <div class="lobby-list">
@@ -254,6 +262,7 @@ function phaseLabel(p) {
     claims: 'Claims Season', ledger: 'The Ledger', results: 'Final Standings',
     mm_brief: 'The Client', mm_wholesale: 'Wholesale Bids', mm_markup: 'The Markup',
     mm_decide: 'The Offer', mm_claims: 'Moment of Truth',
+    duel_price: 'Writing the Slip', duel_choose: 'Take Your Pick',
   }[p] || p;
 }
 
@@ -307,8 +316,74 @@ function stageHtml(view) {
     case 'mm_decide': return mmDecideHtml(view);
     case 'mm_claims': return mmClaimsHtml(view);
     case 'auction': return auctionHtml(view);
+    case 'duel_price': return duelPriceHtml(view);
+    case 'duel_choose': return duelChooseHtml(view);
     default: return '';
   }
+}
+
+// --- the slip (2-player: you split, they pick) ---
+function duelClientCard(view, m) {
+  return clientCard(view, m, `
+    <div class="slip-terms">Written at <b>${money(m.premium)}</b> · covers ${money(m.coverage)}
+      <span>whoever carries it breaks even at ${Math.round(m.premium / m.coverage * 100)}% risk</span></div>`);
+}
+
+function duelPriceHtml(view) {
+  const d = view.duel;
+  const rival = view.players.find(p => p.id !== view.youId);
+  if (!d.youArePricer) {
+    return `
+      <div class="role-banner role-carrier">✋ You <b>pick</b> this round. ${rival?.avatar} ${esc(rival?.name)} is deciding what the sweetener should be — then you choose a side, or refuse both.</div>
+      ${view.market.map(m => duelClientCard(view, m)).join('')}
+      <p class="phase-note">Read them. Talk. Your intel is yours alone — and so is theirs.</p>`;
+  }
+  return `
+    <div class="role-banner role-customer">📝 You <b>split the book</b>. Both are already written — say who pays whom to even it up. ${rival?.avatar} ${esc(rival?.name)} then picks a side, so make both look equally survivable.</div>
+    ${view.market.map(m => `
+      <div class="card client slip-pick" data-client="${m.id}">
+        <div class="client-head">
+          <span class="cemoji">${m.emoji}</span>
+          <div>
+            <div class="cname">${esc(m.name)}</div>
+            <div class="ctag">${money(m.premium)} premium · ${money(m.coverage)} cover · breaks even at ${Math.round(m.premium / m.coverage * 100)}%</div>
+          </div>
+        </div>
+        ${intelChips(view, m.id)}
+        <button class="btn small ghost slip-side${view.market[0].id === m.id ? ' sel' : ''}" data-action="slip-side" data-client="${m.id}">
+          Sweetener rides on this one
+        </button>
+      </div>`).join('')}
+    <label class="field"><span>Whoever carries the marked client pays the other</span>
+      <input id="slipAmount" type="number" inputmode="numeric" min="0" max="${d.maxSweetener}" placeholder="$0–${d.maxSweetener}">
+    </label>
+    <div class="be-hint" id="slipHint">Offer nothing and they'll simply take the better one. Offer too much and they'll take the other and pocket your cash.</div>
+    <button class="btn big" data-action="slip-send">Put it on the table</button>`;
+}
+
+function duelChooseHtml(view) {
+  const d = view.duel;
+  const rival = view.players.find(p => p.id !== view.youId);
+  const mine = d.chooser === view.youId;
+  const marked = view.market.find(m => m.id === d.offer?.clientId);
+  const amt = d.offer?.amount || 0;
+  return `
+    <div class="role-banner ${mine ? 'role-customer' : 'role-broker'}">
+      ${mine
+        ? `✋ The book is split. Take a side — or refuse both and let ${rival?.avatar} ${esc(rival?.name)} carry the lot.`
+        : `📝 Your split is on the table. ${rival?.avatar} ${esc(rival?.name)} is choosing. Whatever they leave, you carry.`}
+    </div>
+    <div class="card sweetener">${amt > 0
+      ? `Whoever carries <b>${esc(marked?.name || '')}</b> pays <b>${money(amt)}</b> to the other`
+      : `No sweetener — straight swap, take your pick`}</div>
+    ${view.market.map(m => {
+      const swing = m.id === d.offer?.clientId ? -amt : amt;
+      return clientCard(view, m, `
+        <div class="slip-terms">Premium <b>${money(m.premium)}</b>${amt ? ` · sweetener <b class="${swing < 0 ? 'neg' : 'pos'}">${money(swing, true)}</b>` : ''}
+          <span>net to you this round, before any claim: <b>${money(m.premium + swing, true)}</b></span></div>
+        ${mine ? `<button class="btn" data-action="slip-take" data-client="${m.id}">I'll carry this one</button>` : ''}`);
+    }).join('')}
+    ${mine ? `<button class="btn big ghost" data-action="slip-walk">🚪 Neither — you keep them both</button>` : ''}`;
 }
 
 // --- open outcry ---
@@ -946,7 +1021,7 @@ function onClick(e) {
     btn.classList.add('sel');
     // rulebook applies to the Open Market only
     const rf = $('#ruleField');
-    if (rf) rf.style.display = btn.dataset.mode === 'middleman' ? 'none' : '';
+    if (rf) rf.style.display = btn.dataset.mode === 'market' ? '' : 'none';
     return;
   }
   if (a === 'pick-rule') {
@@ -1003,6 +1078,19 @@ function onClick(e) {
     $('#dealForm').innerHTML = `<button class="btn big" data-action="deal-new">Propose a deal</button>`;
     return;
   }
+  if (a === 'slip-side') {
+    root.querySelectorAll('.slip-side').forEach(el => el.classList.remove('sel'));
+    btn.classList.add('sel');
+    return;
+  }
+  if (a === 'slip-send') {
+    const clientId = root.querySelector('.slip-side.sel')?.dataset.client || lastView?.market[0]?.id;
+    const amount = parseInt($('#slipAmount')?.value, 10) || 0;
+    actions.send({ type: 'setSlip', prices: { clientId, amount } });
+    return;
+  }
+  if (a === 'slip-take') { actions.send({ type: 'chooseSlip', clientId: btn.dataset.client }); return; }
+  if (a === 'slip-walk') { actions.send({ type: 'chooseSlip', clientId: 'walk' }); return; }
   if (a === 'bid') {
     actions.send({ type: 'placeBid', amount: parseInt(btn.dataset.amount, 10) });
     return;
