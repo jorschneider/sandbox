@@ -6,9 +6,9 @@
 //              (enable with ?local=1).
 // The host device is the authority; clients only ever talk to the host.
 //
-// Topics: bf7/<code>/h        everyone -> host, JSON {cid, msg}
-//         bf7/<code>/c/<cid>  host -> one client, JSON msg
-//         bf7/<code>/down     host's last-will; tells clients the room died
+// Topics: bf8/<code>/h        everyone -> host, JSON {cid, msg}
+//         bf8/<code>/c/<cid>  host -> one client, JSON msg
+//         bf8/<code>/down     host's last-will; tells clients the room died
 //
 // ?mqtt=<url> overrides the broker list (used by tests with a local broker).
 
@@ -46,9 +46,9 @@ export function normalizeCode(raw) {
 
 function topicsFor(code) {
   return {
-    host: `bf7/${code}/h`,
-    client: (cid) => `bf7/${code}/c/${cid}`,
-    down: `bf7/${code}/down`,
+    host: `bf8/${code}/h`,
+    client: (cid) => `bf8/${code}/c/${cid}`,
+    down: `bf8/${code}/down`,
   };
 }
 

@@ -72,6 +72,15 @@ export class Game {
     this.log = [];
     this.dealSeq = 0;
     this.winnerIds = null;
+    this.awards = {}; // end-of-game superlatives, tracked as they happen
+  }
+
+  // Keep the most extreme holder of each award (min=true for "lowest wins").
+  award(id, pid, value, detail = '', min = false) {
+    const cur = this.awards[id];
+    if (!cur || (min ? value < cur.value : value > cur.value)) {
+      this.awards[id] = { pid, value: Math.round(value), detail };
+    }
   }
 
   // ---- lobby ----
@@ -254,15 +263,22 @@ export class Game {
       this.roundLedger[m.broker].cash += spread;
       ca.capital += m.wholesale[m.chosenCarrier];
       this.roundLedger[m.chosenCarrier].premiums += m.wholesale[m.chosenCarrier];
+      if (spread > 0) this.award('spread', m.broker, spread, m.client.name);
+      const ev = risk * cov;
+      if (ev > 0) this.award('shopper', m.customer, Math.round(m.retail / ev * 100), m.client.name, true);
       if (hit) {
         ca.capital -= cov;
         this.roundLedger[m.chosenCarrier].claims -= cov;
+        this.award('worstbeat', m.chosenCarrier, cov, m.client.name);
       }
       this.addLog(`${cu.avatar} ${cu.name} signed at $${m.retail}.`);
     } else {
       if (hit) {
         cu.capital -= cov;
         this.roundLedger[m.customer].claims -= cov;
+        this.award('worstbeat', m.customer, cov, m.client.name);
+      } else {
+        this.award('nerves', m.customer, Math.round(risk * 100), m.client.name);
       }
       this.addLog(`${cu.avatar} ${cu.name} went bare.`);
     }
@@ -284,6 +300,10 @@ export class Game {
       const l = this.roundLedger[p.id];
       return { pid: p.id, ...l, end: p.capital, net: p.capital - l.start };
     });
+    for (const s of summary) {
+      if (s.net > 0) this.award('bestquarter', s.pid, s.net);
+      if (s.net < 0) this.award('rockbottom', s.pid, -s.net);
+    }
     this.ledger.push({ round: this.round, summary });
     this.phase = 'ledger';
     return { ok: true };
@@ -416,6 +436,7 @@ export class Game {
         const w = this.byId(best.pid);
         w.capital += best.premium;
         this.roundLedger[best.pid].premiums += best.premium;
+        this.award('rainmaker', best.pid, best.premium, m.client.name);
         this.addLog(`${w.avatar} ${w.name} signed ${m.client.name} at $${best.premium} covering $${best.coverage}.`);
       } else {
         this.addLog(`${m.client.name} found no takers.`);
@@ -581,9 +602,11 @@ export class Game {
           const amount = hit ? Math.round(s.stake * (RULES.shorts.payout / s.odds - 1)) : -s.stake;
           pl.capital += amount;
           this.roundLedger[s.pid].bets += amount;
+          if (amount > 0) this.award('short', s.pid, amount, m.client.name);
           return { pid: s.pid, amount, stake: s.stake };
         }),
       };
+      if (!hit && live && res.risk >= 38) this.award('tightrope', m.winner, res.risk, m.client.name);
       if (hit && live) {
         const coverage = m.soldCoverage;
         let ownerShare = coverage;
@@ -598,6 +621,7 @@ export class Game {
         const owner = this.byId(m.winner);
         owner.capital -= ownerShare;
         this.roundLedger[m.winner].claims -= ownerShare;
+        this.award('worstbeat', m.winner, ownerShare, m.client.name);
         res.payouts.unshift({ pid: m.winner, amount: ownerShare, owner: true });
       }
       return res;
@@ -653,6 +677,10 @@ export class Game {
       const l = this.roundLedger[p.id];
       return { pid: p.id, ...l, end: p.capital, net: p.capital - l.start };
     });
+    for (const s of summary) {
+      if (s.net > 0) this.award('bestquarter', s.pid, s.net);
+      if (s.net < 0) this.award('rockbottom', s.pid, -s.net);
+    }
     this.ledger.push({ round: this.round, summary });
     this.phase = 'ledger';
   }
@@ -814,6 +842,9 @@ export class Game {
       ledger: this.ledger.slice(-1),
       log: this.log.slice(-14),
       winnerIds: this.winnerIds,
+      awards: this.phase === 'results'
+        ? Object.entries(this.awards).map(([id, a]) => ({ id, ...a }))
+        : [],
     };
   }
 }

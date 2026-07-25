@@ -336,6 +336,17 @@ body.theme-nyc .topbar::after {
 .standing { display: flex; justify-content: space-between; width: 100%; font-size: 1rem; font-weight: 800; }
 .standing.winner { background: var(--primary); color: var(--primary-ink); transform: rotate(-.8deg) scale(1.03); }
 
+.awards-head { margin-top: 14px; }
+.awards { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.awards .award {
+  text-align: left; font-size: .88rem; line-height: 1.5; font-weight: 600;
+  border-left: 6px solid var(--primary);
+  opacity: 0; animation: award-in .5s cubic-bezier(.2, 1.5, .4, 1) forwards;
+}
+.awards .award:nth-child(odd) { transform: rotate(.4deg); }
+.awards .award:nth-child(even) { transform: rotate(-.4deg); }
+@keyframes award-in { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: 0 0; } }
+
 /* ---------- misc ---------- */
 .logbox { margin-top: 6px; color: var(--muted); font-size: .82rem; }
 .logbox summary { cursor: pointer; padding: 6px 0; font-weight: 800; }

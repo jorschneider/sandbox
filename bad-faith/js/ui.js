@@ -197,7 +197,7 @@ export function render(view) {
 function phaseLabel(p) {
   return {
     market: 'The Market', quotes: 'Sealed Quotes', reveal: 'Signings', deals: 'The Deal Floor',
-    claims: 'Claims Season', ledger: 'The Ledger', results: 'Year-End',
+    claims: 'Claims Season', ledger: 'The Ledger', results: 'Final Standings',
     mm_brief: 'The Client', mm_wholesale: 'Wholesale Bids', mm_markup: 'The Markup',
     mm_decide: 'The Offer', mm_claims: 'Moment of Truth',
   }[p] || p;
@@ -756,8 +756,21 @@ function ledgerHtml(view) {
 }
 
 // --- results ---
+const AWARDS = {
+  rainmaker:   (n, a) => `💼 <b>The Rainmaker</b> — ${n} landed a ${money(a.value)} premium on ${esc(a.detail)}`,
+  worstbeat:   (n, a) => `💥 <b>The Worst Beat</b> — ${n} ate ${money(a.value)} on ${esc(a.detail)}`,
+  short:       (n, a) => `😈 <b>Most Shameless Short</b> — ${n} made ${money(a.value)} betting against ${esc(a.detail)}`,
+  tightrope:   (n, a) => `🎪 <b>The Tightrope</b> — ${n} insured ${esc(a.detail)} at ${a.value}% true risk and got away with it`,
+  spread:      (n, a) => `🕴 <b>The Middleman's Middleman</b> — ${n} pocketed a ${money(a.value)} spread on ${esc(a.detail)}`,
+  shopper:     (n, a) => `🧾 <b>Smartest Shopper</b> — ${n} paid just ${a.value}% of true odds for ${esc(a.detail)}`,
+  nerves:      (n, a) => `🎲 <b>Nerves of Steel</b> — ${n} went bare on ${esc(a.detail)} at ${a.value}% and lived`,
+  bestquarter: (n, a) => `📈 <b>Quarter of the Century</b> — ${n} made ${money(a.value)} in a single quarter`,
+  rockbottom:  (n, a) => `🕳 <b>Rock Bottom</b> — ${n} lost ${money(a.value)} in a single quarter`,
+};
+
 function resultsHtml(view) {
   const ranked = view.players.slice().sort((a, b) => b.capital - a.capital);
+  const awards = (view.awards || []).filter(a => AWARDS[a.id]);
   return `
     <div class="finale">
       <div class="finale-crown">👑</div>
@@ -767,6 +780,13 @@ function resultsHtml(view) {
           <span>#${i + 1} ${p.avatar} ${esc(p.name)}</span>
           <span class="${moneyClass(p.capital)}"><b>${money(p.capital)}</b></span>
         </div>`).join('')}
+      ${awards.length ? `<h3 class="awards-head">The season's honors</h3>
+      <div class="awards">
+        ${awards.map((a, i) => {
+          const p = view.players.find(x => x.id === a.pid);
+          return `<div class="card award" style="animation-delay:${0.15 + i * 0.18}s">${AWARDS[a.id](`${p?.avatar} ${esc(p?.name)}`, a)}</div>`;
+        }).join('')}
+      </div>` : ''}
       <button class="btn big" data-action="play-again">New game</button>
     </div>
     ${logHtml()}`;
