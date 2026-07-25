@@ -5,6 +5,7 @@
 // of decree. Also keeps the ordered log that lets a world be remembered.
 
 import * as THREE from 'three';
+import { XKCD_COLORS } from './colors.js';
 
 const RIPPLE_SPEED = 42;   // world units / second
 const BATCH_DUR = 1.05;    // per-element color transition time
@@ -146,6 +147,7 @@ export function bindDecrees(w, h) {
     }
   }
   fuzzyWords = Object.keys(EXTRA_COLORS).filter((k) => !k.includes(' '))
+    .concat(Object.keys(XKCD_COLORS).filter((k) => !k.includes(' ') && !synIndex.has(k)))
     .concat(Object.keys(THREE.Color.NAMES));
   stopWords = new Set([
     'the', 'a', 'an', 'is', 'are', 'be', 'let', 'make', 'it', 'its', 'my',
@@ -163,6 +165,7 @@ export function bindDecrees(w, h) {
 
 function normalize(text) {
   return text.toLowerCase()
+    .replace(/['’]/g, '')            // robin's -> robins, matching colors.js keys
     .replace(/[^a-z0-9#\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -194,12 +197,15 @@ function findColor(tokens) {
     if (RAINBOW.has(tokens[i])) {
       return { rainbow: true, name: 'every color at once' };
     }
-    for (let n = 3; n >= 1; n--) {
+    for (let n = 6; n >= 1; n--) {
       if (i + n > tokens.length) continue;
       const gram = tokens.slice(i, i + n);
       const spaced = gram.join(' ');
       const joined = gram.join('');
-      let hex = EXTRA_COLORS[spaced] || EXTRA_COLORS[joined];
+      // single words that name a thing in the world ("grass", "sky") are
+      // targets, not colors — but "grass green" and "sky blue" still match
+      if (n === 1 && synIndex.has(spaced)) continue;
+      let hex = EXTRA_COLORS[spaced] || EXTRA_COLORS[joined] || XKCD_COLORS[spaced];
       if (!hex && THREE.Color.NAMES[joined] !== undefined) hex = joined;
       if (!hex && n === 1 && /^#([0-9a-f]{3}|[0-9a-f]{6})$/.test(gram[0])) hex = gram[0];
       if (hex) {
