@@ -7,7 +7,7 @@ export const GAME_NAME = 'Bad Faith';
 export const GAME_SUBTITLE = 'Animal Insurance Division';
 // Shown on home + lobby so a table can spot a stale tab at a glance.
 // Bump on every deploy that changes the network protocol or content.
-export const APP_VERSION = 'v11';
+export const APP_VERSION = 'v12';
 
 // What the brochure's risk rating claims, in plain odds. The brochure is
 // the client's own marketing — some of them are lying.
@@ -274,6 +274,76 @@ export const CLIENTS = [
     safeText: 'Kevin lounged on his heated rock all quarter, drawing record crowds.',
   },
   {
+    id: 'crab-fitness',
+    name: 'Crab Rave Fitness Studio',
+    emoji: '🦀',
+    tagline: 'Sideways lunges only.',
+    coverage: 900, band: [170, 390], baseRisk: 0.24, rating: 'Low',
+    intel: [
+      { id: 'cf1', text: 'The 5am rave class has started pinching members who skip cooldown.', delta: 0.2 },
+      { id: 'cf2', text: 'New molt-season leave policy: no crab works while soft.', delta: -0.25 },
+      { id: 'cf3', text: 'A member is training for a claw-strength record. On the shared equipment.', delta: 0.05 },
+    ],
+    claimText: 'The bass dropped and so did the drywall. The crabs kept raving.',
+    safeText: 'A full season of safe, extremely lateral gains.',
+  },
+  {
+    id: 'goat-yoga',
+    name: 'Summit Goat Yoga Retreats',
+    emoji: '🧘',
+    tagline: 'Find inner peace. The goats will find you first.',
+    coverage: 1000, band: [220, 500], baseRisk: 0.28, rating: 'Moderate',
+    intel: [
+      { id: 'gy1', text: 'The goats have learned to headbutt anyone who reaches shavasana.', delta: 0.15 },
+      { id: 'gy2', text: 'They hired a certified goat-whisperer. Attendance and calm are both up.', delta: -0.25 },
+      { id: 'gy3', text: 'New cliff-edge sunrise class. Great photos. Terrible railings.', delta: 0.1 },
+    ],
+    claimText: 'A goat achieved enlightenment and pushed the incense cart off the summit.',
+    safeText: 'Namaste. The goats accepted everyone, gently, for once.',
+  },
+  {
+    id: 'penguin-formal',
+    name: 'Tuxedo Junction Penguin Ushers',
+    emoji: '🐧',
+    tagline: 'Formalwear included. Attitude non-negotiable.',
+    coverage: 1200, band: [200, 450], baseRisk: 0.21, rating: 'Low',
+    intel: [
+      { id: 'pf1', text: 'A rival swan was hired at the same venue. The penguins remember.', delta: 0.2 },
+      { id: 'pf2', text: 'Winter bookings only from now on — the penguins stopped overheating.', delta: -0.25 },
+      { id: 'pf3', text: 'Open-bar receptions: guests keep feeding them shrimp cocktail.', delta: 0.05 },
+    ],
+    claimText: 'The penguins waddled off with the wedding rings. Ransom: one herring each.',
+    safeText: 'Every aisle walked with dignity. Minimal fish-related incidents.',
+  },
+  {
+    id: 'tarantula-cafe',
+    name: 'The Tarantula Petting Café',
+    emoji: '🕷',
+    tagline: 'Eight legs, free refills.',
+    coverage: 1400, band: [400, 910], baseRisk: 0.36, rating: 'High',
+    intel: [
+      { id: 'tc1', text: "Someone propped the terrarium lids open 'for airflow'.", delta: 0.15 },
+      { id: 'tc2', text: 'Turns out the tarantulas are extremely chill. Certified docile, every one.', delta: -0.25 },
+      { id: 'tc3', text: "An influencer's scream went viral. Copycat screamers keep visiting.", delta: 0.1 },
+    ],
+    claimText: 'A latte was spilled. In the panic, four residents relocated themselves. Ongoing.',
+    safeText: 'Everyone kept their nerve. The spiders kept their tables.',
+  },
+  {
+    id: 'elephant-pottery',
+    name: 'Trunk Show Pottery Classes',
+    emoji: '🐘',
+    tagline: 'Hand-thrown. Trunk-finished.',
+    coverage: 1600, band: [380, 860], baseRisk: 0.3, rating: 'Low',
+    intel: [
+      { id: 'ep1', text: "Jumbo has opinions about other artists' work. Expressed physically.", delta: 0.15 },
+      { id: 'ep2', text: "The kiln room is fully elephant-proofed after 'the incident'.", delta: -0.25 },
+      { id: 'ep3', text: 'A gallery bought the entire collection. Production pressure is mounting.', delta: 0.1 },
+    ],
+    claimText: 'Jumbo entered his brutalist period. The studio did not survive the critique.',
+    safeText: 'A serene quarter of surprisingly delicate stoneware.',
+  },
+  {
     id: 'gerbil-circus',
     name: 'The Great Gerbil Circus',
     emoji: '🎪',
@@ -405,6 +475,62 @@ export const NYC_CLIENTS = [
     ],
     claimText: 'The geese held a delivery van hostage over a rye shortage.',
     safeText: 'The pastrami was protected at all costs.',
+  },
+  {
+    id: 'met-cat',
+    name: 'The Met Roof Cat, Curator-in-Residence',
+    emoji: '🐈‍⬛',
+    tagline: 'She has strong feelings about the Impressionists.',
+    coverage: 1300, band: [260, 590], baseRisk: 0.25, rating: 'Moderate',
+    intel: [
+      { id: 'mc1', text: 'She has started sharpening her claws on a Rothko-adjacent wall.', delta: 0.15 },
+      { id: 'mc2', text: "Security added a laser-pointer patrol. She's exhausted and docile.", delta: -0.25 },
+      { id: 'mc3', text: 'Gala season: the canapé theft opportunities multiply.', delta: 0.1 },
+    ],
+    claimText: 'A sculpture is down. She was seen leaving the wing at speed, looking radicalized.',
+    safeText: 'She judged the collection silently, from a beam, all quarter.',
+  },
+  {
+    id: 'halal-hawk',
+    name: 'The Halal Cart Hawk Partnership',
+    emoji: '🌯',
+    tagline: 'Best chicken-over-rice in midtown. The hawk guarantees it.',
+    coverage: 1000, band: [250, 560], baseRisk: 0.31, rating: 'Moderate',
+    intel: [
+      { id: 'hh1', text: "The hawk has begun charging rival carts 'protection'. NYPD is aware.", delta: 0.2 },
+      { id: 'hh2', text: 'The hawk and the pigeons signed a truce, brokered by a park ranger.', delta: -0.25 },
+      { id: 'hh3', text: 'White-sauce shortage. Tempers are short.', delta: 0.05 },
+    ],
+    claimText: 'The hawk expanded operations to a hot-dog cart. Turf war. Napkins everywhere.',
+    safeText: 'The line stayed long and the skies stayed friendly.',
+  },
+  {
+    id: 'broadway-roaches',
+    name: 'The Broadway Cockroach Ensemble',
+    emoji: '🎭',
+    tagline: 'They survived everything else. Now they sing.',
+    coverage: 800, band: [170, 390], baseRisk: 0.27, rating: 'Moderate',
+    intel: [
+      { id: 'br1', text: 'An exterminator bought a front-row ticket. Twice.', delta: 0.15 },
+      { id: 'br2', text: "The ensemble unionized with Actors' Equity. Protections galore.", delta: -0.2 },
+      { id: 'br3', text: "A critic called them 'unkillable'. They're taking it as a challenge.", delta: 0.05 },
+    ],
+    claimText: 'The theater fumigated between shows. The ensemble survived; the run did not.',
+    safeText: 'Eight shows a week. No casualties. Rave reviews.',
+  },
+  {
+    id: 'bagel-squirrels',
+    name: 'Everything Bagel Squirrel Collective',
+    emoji: '🥯',
+    tagline: 'Aggressively seeded investments.',
+    coverage: 900, band: [210, 470], baseRisk: 0.29, rating: 'Moderate',
+    intel: [
+      { id: 'bs1', text: "They've moved from park bagels to bodega racks. Bolder every day.", delta: 0.2 },
+      { id: 'bs2', text: 'The winter stash audit came back overfunded. Nobody needs to take risks.', delta: -0.25 },
+      { id: 'bs3', text: 'A pigeon gang is disputing the 6th Ave territory.', delta: 0.05 },
+    ],
+    claimText: 'A coordinated bagel heist collapsed a deli awning. The squirrels deny being organized.',
+    safeText: 'Every bagel acquired through legitimate scurrying.',
   },
   {
     id: 'wall-street-bull',
