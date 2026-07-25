@@ -51,10 +51,13 @@ function shuffle(arr, rng) {
 }
 
 export class Game {
-  constructor({ rng = Math.random, theme = 'classic', mode = 'market' } = {}) {
+  constructor({ rng = Math.random, theme = 'classic', mode = 'market', ruleset = 'full' } = {}) {
     this.rng = rng;
     this.theme = THEMES[theme] || THEMES.classic;
     this.mode = mode === 'middleman' ? 'middleman' : 'market';
+    // 'rookie' strips the market mode to its essentials (no tiers, shorts,
+    // syndication, overhead, or solvency caps) for first-time tables.
+    this.pro = ruleset !== 'rookie';
     this.mm = null; // middleman-mode round state
     this.totalRounds = RULES.rounds;
     this.phase = 'lobby';
@@ -329,10 +332,13 @@ export class Game {
 
     // The round's biggest client is syndicated: boosted, and impossible to
     // hold alone — the winner has to bring the table in or lose the deal.
-    const big = this.market.reduce((a, b) => (b.client.coverage > a.client.coverage ? b : a));
-    const boost = (x) => Math.round(x * RULES.syndicate.sizeBoost / 10) * 10;
-    big.syndicated = true;
-    big.client = { ...big.client, coverage: boost(big.client.coverage), band: big.client.band.map(boost) };
+    // (Full Market rulebook only.)
+    if (this.pro) {
+      const big = this.market.reduce((a, b) => (b.client.coverage > a.client.coverage ? b : a));
+      const boost = (x) => Math.round(x * RULES.syndicate.sizeBoost / 10) * 10;
+      big.syndicated = true;
+      big.client = { ...big.client, coverage: boost(big.client.coverage), band: big.client.band.map(boost) };
+    }
 
     // Deal private intel from this round's clients' pools. Only dealt cards
     // affect the true risk, so every card in a hand is true information.
@@ -405,6 +411,7 @@ export class Game {
   }
 
   solvencyCap(pid) {
+    if (!this.pro) return 1e9; // rookie desk: no capital requirements
     return Math.max(RULES.solvency.floor, this.byId(pid).capital * RULES.solvency.mult);
   }
 
@@ -535,6 +542,7 @@ export class Game {
 
   // Public bet that a client claims this round, priced off the brochure.
   placeShort(pid, clientId, stake) {
+    if (!this.pro) return { error: 'The short desk opens in the Full Market rulebook.' };
     if (this.phase !== 'deals') return { error: 'The short desk is closed.' };
     const p = this.byId(pid);
     const m = this.market.find(x => x.client.id === clientId);
@@ -646,30 +654,32 @@ export class Game {
     // reinsurance share included). Broker of the Quarter goes to the most
     // PREMIUM written, so it rewards winning business at real prices, not
     // dumping price for volume.
-    const covHeld = {}, premWritten = {};
-    for (const p of this.players) { covHeld[p.id] = 0; premWritten[p.id] = 0; }
-    for (const m of this.market) {
-      if (!m.winner || m.voided) continue;
-      const laid = m.reinsurance.reduce((s, r) => s + r.pct, 0);
-      covHeld[m.winner] += Math.round(m.soldCoverage * (100 - laid) / 100);
-      premWritten[m.winner] += m.premium;
-      for (const r of m.reinsurance) {
-        covHeld[r.pid] += Math.round(m.soldCoverage * r.pct / 100);
-        premWritten[r.pid] += r.fee;
+    if (this.pro) {
+      const covHeld = {}, premWritten = {};
+      for (const p of this.players) { covHeld[p.id] = 0; premWritten[p.id] = 0; }
+      for (const m of this.market) {
+        if (!m.winner || m.voided) continue;
+        const laid = m.reinsurance.reduce((s, r) => s + r.pct, 0);
+        covHeld[m.winner] += Math.round(m.soldCoverage * (100 - laid) / 100);
+        premWritten[m.winner] += m.premium;
+        for (const r of m.reinsurance) {
+          covHeld[r.pid] += Math.round(m.soldCoverage * r.pct / 100);
+          premWritten[r.pid] += r.fee;
+        }
       }
-    }
-    for (const p of this.players) {
-      if (covHeld[p.id] > 0) continue;
-      p.capital -= RULES.office.overhead;
-      this.roundLedger[p.id].overhead = -RULES.office.overhead;
-      this.addLog(`🏢 ${p.avatar} ${p.name} wrote no business — $${RULES.office.overhead} office overhead anyway.`);
-    }
-    const top = Math.max(...Object.values(premWritten));
-    if (top > 0) {
-      for (const w of this.players.filter(p => premWritten[p.id] === top)) {
-        w.capital += RULES.office.quarterBonus;
-        this.roundLedger[w.id].bonus = RULES.office.quarterBonus;
-        this.addLog(`🏆 ${w.avatar} ${w.name} is Broker of the Quarter (+$${RULES.office.quarterBonus}).`);
+      for (const p of this.players) {
+        if (covHeld[p.id] > 0) continue;
+        p.capital -= RULES.office.overhead;
+        this.roundLedger[p.id].overhead = -RULES.office.overhead;
+        this.addLog(`🏢 ${p.avatar} ${p.name} wrote no business — $${RULES.office.overhead} office overhead anyway.`);
+      }
+      const top = Math.max(...Object.values(premWritten));
+      if (top > 0) {
+        for (const w of this.players.filter(p => premWritten[p.id] === top)) {
+          w.capital += RULES.office.quarterBonus;
+          this.roundLedger[w.id].bonus = RULES.office.quarterBonus;
+          this.addLog(`🏆 ${w.avatar} ${w.name} is Broker of the Quarter (+$${RULES.office.quarterBonus}).`);
+        }
       }
     }
 
@@ -803,7 +813,8 @@ export class Game {
         minPlayers: RULES.minPlayers, maxPlayers: RULES.maxPlayers,
         layoffPct: RULES.syndicate.layoffPct, shorts: RULES.shorts,
         overhead: RULES.office.overhead, quarterBonus: RULES.office.quarterBonus,
-        solvencyCap: me ? this.solvencyCap(pid) : 0,
+        solvencyCap: me && this.pro ? this.solvencyCap(pid) : 0,
+        pro: this.pro,
       },
       timer: this.timer ? { ...this.timer } : null,
       players: this.players.map(p => ({
@@ -816,7 +827,7 @@ export class Game {
         band: m.client.band, rating: m.client.rating,
         winner: m.winner, premium: m.premium, soldCoverage: m.soldCoverage,
         reinsurance: m.reinsurance,
-        tiers: RULES.coverageTiers,
+        tiers: this.pro ? RULES.coverageTiers : [1],
         syndicated: m.syndicated, voided: m.voided,
         laidOff: m.reinsurance.reduce((s, r) => s + r.pct, 0),
         shorts: m.shorts.map(s => ({ pid: s.pid, stake: s.stake })),

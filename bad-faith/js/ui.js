@@ -136,6 +136,20 @@ export function renderIdentity({ mode, code, prefillName }) {
             <span class="theme-sub">Customer, broker, carriers — rotating roles. 3–4 players.</span>
           </button>
         </div>
+      </div>
+      <div class="field" id="ruleField"><span>Rulebook (Open Market)</span>
+        <div class="themes">
+          <button class="theme-card rule-card sel" data-action="pick-rule" data-rule="rookie">
+            <span class="theme-badge">🌱</span>
+            <span class="theme-name">Rookie Desk</span>
+            <span class="theme-sub">The essentials: intel, quotes, deals, drama. Start here.</span>
+          </button>
+          <button class="theme-card rule-card" data-action="pick-rule" data-rule="full">
+            <span class="theme-badge">🌶</span>
+            <span class="theme-name">Full Market</span>
+            <span class="theme-sub">+ coverage tiers, syndicates, the short desk, overhead, solvency caps.</span>
+          </button>
+        </div>
       </div>` : ''}
       <button class="btn big" data-action="${mode === 'create' ? 'do-create' : 'do-join'}">
         ${mode === 'create' ? 'Open for business' : 'Take a seat'}
@@ -159,7 +173,7 @@ export function renderLobby(view, { code, isHost, joinUrl }) {
     root.innerHTML = `
       <div class="screen center">
         <h2>Room <span class="code">${esc(code)}</span></h2>
-        <p class="sub">${theme.badge} ${esc(theme.subtitle)} · ${view.mode === 'middleman' ? '🤝 The Middleman' : '🏪 Open Market'}</p>
+        <p class="sub">${theme.badge} ${esc(theme.subtitle)} · ${view.mode === 'middleman' ? '🤝 The Middleman' : view.rules.pro ? '🏪 Open Market · 🌶 Full' : '🏪 Open Market · 🌱 Rookie'}</p>
         ${isHost ? `<div id="qr" class="qr"></div>
         <p class="fine">Scan to join, or go to <b>${esc(shortUrl(joinUrl))}</b> and enter the code.</p>` : ''}
         <div class="lobby-list">
@@ -334,16 +348,18 @@ function quotesHtml(view) {
       ${logHtml()}`;
   }
   return `
-    <p class="phase-note">Pick how much coverage you'll write and quote your premium. The client signs whoever offers the cheapest rate per dollar of coverage — win it, and that risk is yours. Or pass.
-    <br>🏛 Your solvency cap: the regulator will let you sign up to <b>${money(view.rules.solvencyCap)}</b> of coverage this quarter (3× capital).</p>
+    <p class="phase-note">${view.rules.pro
+      ? `Pick how much coverage you'll write and quote your premium. The client signs whoever offers the cheapest rate per dollar of coverage — win it, and that risk is yours. Or pass.
+    <br>🏛 Your solvency cap: the regulator will let you sign up to <b>${money(view.rules.solvencyCap)}</b> of coverage this quarter (3× capital).`
+      : `Quote your premium for any client — the cheapest quote signs them. Win it, and their risk is yours. Or pass.`}</p>
     ${view.market.map(m => clientCard(view, m, `
       <div class="quote-row" data-client="${m.id}">
-        <div class="tier-row">
-          ${(m.tiers || [0.5, 0.75, 1]).map(t => `
+        ${(m.tiers || []).length > 1 ? `<div class="tier-row">
+          ${m.tiers.map(t => `
             <button class="tier-btn${t === 1 ? ' sel' : ''}" data-action="quote-tier" data-client="${m.id}" data-tier="${t}">
               ${t === 1 ? 'Full' : Math.round(t * 100) + '%'} · ${money(Math.round(m.coverage * t / 10) * 10)}
             </button>`).join('')}
-        </div>
+        </div>` : ''}
         <div class="quote-controls">
           <input type="number" inputmode="numeric" class="quote-input" data-client="${m.id}"
                  min="${m.band[0]}" max="${m.band[1]}" placeholder="${m.band[0]}–${m.band[1]}">
@@ -393,7 +409,7 @@ function dealsHtml(view) {
     || m.reinsurance.some(r => r.pid === view.youId));
   return `
     <p class="phase-note">Talk first, then make it binding here. Lay off risk, buy secrets, wire bribes, short your enemies. ${isHost(view) ? '' : 'Floor closes when the timer dies.'}</p>
-    ${youWrote ? '' : `<div class="idle-warn">🏢 You've written nothing this quarter — ${money(view.rules.overhead)} office overhead is coming. Taking reinsurance counts as writing. Go get some.</div>`}
+    ${youWrote || !view.rules.pro ? '' : `<div class="idle-warn">🏢 You've written nothing this quarter — ${money(view.rules.overhead)} office overhead is coming. Taking reinsurance counts as writing. Go get some.</div>`}
     <div id="reBook">${bookHtml(view)}</div>
     <section class="deal-panel">
       <h3>Incoming</h3>
@@ -401,9 +417,10 @@ function dealsHtml(view) {
       <h3>Sent</h3>
       <div id="dealsOut">${outgoingHtml(view)}</div>
       <div id="dealForm">${drafts.deal ? dealFormHtml(view) : `<button class="btn big" data-action="deal-new">Propose a deal</button>`}</div>
+      ${view.rules.pro ? `
       <h3>The short desk 📉</h3>
       <div id="shortsList">${shortsListHtml(view)}</div>
-      <div id="shortMine">${view.you.shortPlaced ? `<div class="fine">Your short is placed. One per quarter.</div>` : shortFormHtml(view)}</div>
+      <div id="shortMine">${view.you.shortPlaced ? `<div class="fine">Your short is placed. One per quarter.</div>` : shortFormHtml(view)}</div>` : ''}
     </section>
     ${isHost(view) ? `<button class="btn ghost" data-action="end-deals">Close the floor early</button>` : ''}
     ${logHtml()}`;
@@ -813,6 +830,9 @@ function resultsHtml(view) {
         }).join('')}
       </div>` : ''}
       <button class="btn big" data-action="play-again">New game</button>
+      ${view.mode === 'market' && !view.rules.pro
+        ? `<p class="fine">Ready for more? Start a new firm and pick the <b>🌶 Full Market</b> rulebook — coverage tiers, syndicated clients, the short desk, and solvency caps await.</p>`
+        : ''}
     </div>
     ${logHtml()}`;
 }
@@ -846,6 +866,14 @@ function onClick(e) {
   }
   if (a === 'pick-mode') {
     root.querySelectorAll('.mode-card').forEach(el => el.classList.remove('sel'));
+    btn.classList.add('sel');
+    // rulebook applies to the Open Market only
+    const rf = $('#ruleField');
+    if (rf) rf.style.display = btn.dataset.mode === 'middleman' ? 'none' : '';
+    return;
+  }
+  if (a === 'pick-rule') {
+    root.querySelectorAll('.rule-card').forEach(el => el.classList.remove('sel'));
     btn.classList.add('sel');
     return;
   }
@@ -948,8 +976,9 @@ function identityForm() {
     name: $('#nameInput')?.value?.trim(),
     avatar: root.querySelector('.avatar.sel')?.dataset.avatar || AVATARS[0],
     code: $('#codeInput')?.value,
-    theme: root.querySelector('.theme-card.sel:not(.mode-card)')?.dataset.theme || 'classic',
+    theme: root.querySelector('.theme-card.sel:not(.mode-card):not(.rule-card)')?.dataset.theme || 'classic',
     gameMode: root.querySelector('.mode-card.sel')?.dataset.mode || 'market',
+    ruleset: root.querySelector('.rule-card.sel')?.dataset.rule || 'rookie',
   };
 }
 

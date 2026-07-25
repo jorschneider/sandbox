@@ -8,9 +8,13 @@ wins.
 
 Two modes, picked by the host when creating a game:
 
-- **🏪 Open Market** (default) — everyone's a broker: sealed quotes,
-  coverage tiers, the deal floor, syndicated clients, the short desk,
-  overhead and solvency caps. 2–4 players, 5 quarters.
+- **🏪 Open Market** (default) — everyone's a broker. Two rulebooks,
+  picked at creation: **🌱 Rookie Desk** (the default for a first table:
+  intel, sealed quotes, the deal floor, claims drama, awards — nothing
+  else) and **🌶 Full Market** (adds coverage tiers, syndicated clients,
+  the short desk, office overhead, Broker of the Quarter, and solvency
+  caps). 2–4 players, 5 quarters. The rookie finale points the table at
+  the full rulebook when they're ready.
 - **🤝 The Middleman** — the real insurance food chain, with rotating
   roles (3–4 players, one round per player). Each round one player's
   **the Customer** (it's their business — they see all its intel), one's
