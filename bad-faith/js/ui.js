@@ -4,6 +4,7 @@
 // forms and half-typed quotes survive network updates.
 
 import { GAME_NAME, GAME_SUBTITLE, APP_VERSION, AVATARS, THEMES, RATING_ODDS } from './content.js';
+import * as sound from './sound.js';
 
 const $ = (sel) => document.querySelector(sel);
 let root, actions, lastKey = '', lastView = null;
@@ -26,9 +27,29 @@ export function init(rootEl, actionHandlers) {
   root = rootEl;
   actions = actionHandlers; // { send(action), hostStart(), createGame(name, avatar), joinGame(code, name, avatar) }
   root.addEventListener('click', onClick);
+  root.addEventListener('click', () => sound.prime(), { capture: true });
   root.addEventListener('input', onInput);
   root.addEventListener('submit', (e) => e.preventDefault());
   setInterval(paintTimer, 500);
+}
+
+// Stingers on the drama beats, driven by view transitions.
+const soundPrev = { phase: '', revealed: 0, mmRevealed: false, accepted: 0 };
+function maybeSound(view) {
+  if (view.phase === 'claims' && view.claims && view.claims.revealed > soundPrev.revealed) {
+    const r = view.claims.results[view.claims.revealed - 1];
+    if (r) sound.play(r.hit ? 'hit' : 'safe');
+  }
+  if (view.phase === 'mm_claims' && view.mm?.revealed && !soundPrev.mmRevealed) {
+    sound.play(view.mm.result?.hit ? 'hit' : 'safe');
+  }
+  if (view.phase === 'results' && soundPrev.phase !== 'results') sound.play('fanfare');
+  const accepted = (view.proposals || []).filter(d => d.status === 'accepted').length;
+  if (accepted > soundPrev.accepted && soundPrev.phase === view.phase) sound.play('tick');
+  soundPrev.phase = view.phase;
+  soundPrev.revealed = view.phase === 'claims' ? (view.claims?.revealed || 0) : 0;
+  soundPrev.mmRevealed = view.phase === 'mm_claims' ? !!view.mm?.revealed : false;
+  soundPrev.accepted = accepted;
 }
 
 function applyTheme(key) {
@@ -174,6 +195,7 @@ function shortUrl(u) {
 export function render(view) {
   lastView = view;
   applyTheme(view.theme);
+  maybeSound(view);
   const theme = THEMES[view.theme] || THEMES.classic;
   const mmSub = view.mm ? `${view.mm.quotedBy.includes(view.youId) ? 1 : 0}` : '';
   const key = `${view.phase}:${view.round}:${view.claims ? view.claims.revealed : 0}:${view.mm?.revealed ? 1 : 0}:${mmSub}`;
@@ -185,7 +207,10 @@ export function render(view) {
       <div class="game">
         <header class="topbar">
           <div class="round">${theme.badge} ${esc(view.roundName)} <span class="dim">· ${phaseLabel(view.phase)}</span></div>
-          <div class="timer" id="timer"></div>
+          <div class="topbar-right">
+            <button class="mute-btn" data-action="toggle-mute" aria-label="mute">${sound.isMuted() ? '🔇' : '🔊'}</button>
+            <div class="timer" id="timer"></div>
+          </div>
         </header>
         <div class="players" id="playersBar"></div>
         <main class="stage" id="stage">${stageHtml(view)}</main>
@@ -804,6 +829,10 @@ function onClick(e) {
   const a = btn.dataset.action;
   const view = lastView;
 
+  if (a === 'toggle-mute') {
+    btn.textContent = sound.toggleMute() ? '🔇' : '🔊';
+    return;
+  }
   if (a === 'pick-avatar') {
     root.querySelectorAll('.avatar').forEach(el => el.classList.remove('sel'));
     btn.classList.add('sel');
