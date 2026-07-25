@@ -9,12 +9,26 @@ const $ = (sel) => document.querySelector(sel);
 let root, actions, lastKey = '', lastView = null;
 const drafts = { quotes: {}, deal: null };
 
+// Countdown is rendered locally between the host's coarse re-syncs, so the
+// relay doesn't carry a message per second.
+let timerSync = null; // { remaining, at } from the latest view
+
+function paintTimer() {
+  const el = $('#timer');
+  if (!el) return;
+  if (!timerSync) { el.textContent = ''; return; }
+  const s = Math.max(0, Math.ceil(timerSync.remaining - (Date.now() - timerSync.at) / 1000));
+  el.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  el.classList.toggle('urgent', s <= 15);
+}
+
 export function init(rootEl, actionHandlers) {
   root = rootEl;
   actions = actionHandlers; // { send(action), hostStart(), createGame(name, avatar), joinGame(code, name, avatar) }
   root.addEventListener('click', onClick);
   root.addEventListener('input', onInput);
   root.addEventListener('submit', (e) => e.preventDefault());
+  setInterval(paintTimer, 500);
 }
 
 function applyTheme(key) {
@@ -182,14 +196,8 @@ function updateDynamic(view) {
       <span class="pcap ${moneyClass(p.capital)}">${money(p.capital)}</span>
     </div>`).join(''));
 
-  const t = $('#timer');
-  if (t) {
-    if (view.timer) {
-      const s = Math.max(0, view.timer.remaining);
-      t.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-      t.classList.toggle('urgent', view.timer.remaining <= 15);
-    } else t.textContent = '';
-  }
+  timerSync = view.timer ? { remaining: view.timer.remaining, at: Date.now() } : null;
+  paintTimer();
 
   if (view.phase === 'quotes') {
     setHtml($('#waitList'), view.players.map(p =>

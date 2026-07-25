@@ -39,10 +39,12 @@ Best with 4 players; playable with 2–3.
 
 ## Tech
 
-Static web app, no build step, no backend. Phones sync peer-to-peer over
-WebRTC (PeerJS + the free public PeerServer for signaling); the host's phone
-is the authoritative game server. `vendor/` contains the two runtime deps
-(peerjs, qrcode-generator), checked in.
+Static web app, no build step, no backend. Phones sync through free public
+MQTT relays over secure WebSockets (no WebRTC — works across any WiFi/
+cellular mix, in-app browsers, and strict networks, anywhere HTTPS works).
+The host's phone is the authoritative game server; joiners automatically
+cycle through the relay list until they find the host. `vendor/` contains
+the two runtime deps (mqtt.js, qrcode-generator), checked in.
 
 - `js/content.js` — client/intel decks. All the comedy lives here; add
   clients freely, the engine picks 3 per round.

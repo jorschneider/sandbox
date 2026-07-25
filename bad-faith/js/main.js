@@ -43,6 +43,12 @@ function startHost({ name, avatar, theme }) {
       },
       onMessage(cid, msg) {
         if (msg.t === 'hello') {
+          // Idempotent: a joiner cycling relays may hello more than once.
+          if (game.byId(cid)) {
+            transport.send(cid, { t: 'welcome', pid: cid });
+            broadcast();
+            return;
+          }
           const res = game.addPlayer(cid, msg.name, msg.avatar, false);
           if (res.error) transport.send(cid, { t: 'reject', reason: res.error });
           else {

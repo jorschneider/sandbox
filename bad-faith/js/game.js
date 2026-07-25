@@ -373,11 +373,13 @@ export class Game {
     return { ok: true };
   }
 
-  // Called once per second by the host while a timer is live.
+  // Called once per second by the host while a timer is live. Returns
+  // whether a broadcast is warranted: phones count down locally, so only
+  // a coarse re-sync every 5s (or the expiry itself) goes over the wire.
   tick() {
     if (!this.timer) return false;
     this.timer.remaining -= 1;
-    if (this.timer.remaining > 0) return true;
+    if (this.timer.remaining > 0) return this.timer.remaining % 5 === 0;
     if (this.timer.phase === 'quotes' && this.phase === 'quotes') {
       for (const p of this.quotesPending()) this.submitQuotes(p.id, {});
       if (this.phase === 'quotes') this.finishQuotes();
