@@ -209,6 +209,8 @@ function updateDynamic(view) {
     setHtml($('#dealsIn'), incomingHtml(view));
     setHtml($('#dealsOut'), outgoingHtml(view));
     setHtml($('#reBook'), bookHtml(view));
+    setHtml($('#shortsList'), shortsListHtml(view));
+    setHtml($('#shortMine'), view.you.shortPlaced ? `<div class="fine">Your short is placed. One per quarter.</div>` : shortFormHtml(view));
   }
   setHtml($('#logList'), view.log.slice().reverse().map(l => `<li>${esc(l.text)}</li>`).join(''));
 }
@@ -240,7 +242,8 @@ function intelChips(view, clientId) {
 
 function clientCard(view, m, inner = '') {
   return `
-    <div class="card client">
+    <div class="card client${m.syndicated ? ' syndicated' : ''}">
+      ${m.syndicated ? `<div class="syn-banner">🏛 SYNDICATED — too big for one firm. Winner must lay off ≥${view.rules.layoffPct}% on the deal floor or the contract voids.</div>` : ''}
       <div class="client-head">
         <span class="cemoji">${m.emoji}</span>
         <div>
@@ -333,7 +336,7 @@ function revealHtml(view) {
 // --- deals ---
 function dealsHtml(view) {
   return `
-    <p class="phase-note">Talk first, then make it binding here. Lay off risk, buy secrets, wire bribes. ${isHost(view) ? '' : 'Floor closes when the timer dies.'}</p>
+    <p class="phase-note">Talk first, then make it binding here. Lay off risk, buy secrets, wire bribes, short your enemies. ${isHost(view) ? '' : 'Floor closes when the timer dies.'}</p>
     <div id="reBook">${bookHtml(view)}</div>
     <section class="deal-panel">
       <h3>Incoming</h3>
@@ -341,9 +344,41 @@ function dealsHtml(view) {
       <h3>Sent</h3>
       <div id="dealsOut">${outgoingHtml(view)}</div>
       <div id="dealForm">${drafts.deal ? dealFormHtml(view) : `<button class="btn big" data-action="deal-new">Propose a deal</button>`}</div>
+      <h3>The short desk 📉</h3>
+      <div id="shortsList">${shortsListHtml(view)}</div>
+      <div id="shortMine">${view.you.shortPlaced ? `<div class="fine">Your short is placed. One per quarter.</div>` : shortFormHtml(view)}</div>
     </section>
     ${isHost(view) ? `<button class="btn ghost" data-action="end-deals">Close the floor early</button>` : ''}
     ${logHtml()}`;
+}
+
+function shortsListHtml(view) {
+  const rows = view.market.flatMap(m => m.shorts.map(s => {
+    const p = view.players.find(x => x.id === s.pid);
+    return `<div class="short-row">${p?.avatar} ${esc(p?.name)} shorted <b>${esc(m.name)}</b> — ${money(s.stake)} says it claims</div>`;
+  }));
+  return rows.length ? rows.join('') : `<div class="fine">Nobody has bet against anyone. Yet.</div>`;
+}
+
+function shortMult(view, m) {
+  const s = view.rules.shorts;
+  const odds = s.odds[m.rating] ?? 0.3;
+  return (s.payout / odds - 1).toFixed(1);
+}
+
+function shortFormHtml(view) {
+  const s = view.rules.shorts;
+  return `
+    <div class="short-form">
+      <div class="fine">Bet a client claims this quarter — paid by the market, priced off the brochure. Everyone sees it.</div>
+      <div class="inline">
+        <select id="shortClient">
+          ${view.market.map(m => `<option value="${m.id}">${m.emoji} ${esc(m.name)} (pays ${shortMult(view, m)}×)</option>`).join('')}
+        </select>
+        <input id="shortStake" type="number" inputmode="numeric" min="${s.min}" max="${s.max}" placeholder="$${s.min}–${s.max}">
+      </div>
+      <button class="btn small" data-action="place-short">Short it, publicly</button>
+    </div>`;
 }
 
 function bookHtml(view) {
@@ -355,9 +390,13 @@ function bookHtml(view) {
       const rp = view.players.find(p => p.id === r.pid);
       return `<span class="retag">${rp?.avatar} covers ${r.pct}%</span>`;
     }).join('');
+    const syn = m.syndicated
+      ? `<span class="${m.laidOff >= view.rules.layoffPct ? 'retag' : 'syn-warn'}">🏛 laid off ${m.laidOff}% / needs ${view.rules.layoffPct}%${m.laidOff >= view.rules.layoffPct ? ' ✓' : ' — or it VOIDS'}</span>`
+      : '';
     return `<div class="bookrow">
       <span>${m.emoji} ${esc(m.name)}</span>
       <span class="dim">${owner?.avatar} ${esc(owner?.name)} · ${money(m.soldCoverage || m.coverage)} exposure ${re}</span>
+      ${syn}
     </div>`;
   }).join('')}</div>`;
 }
@@ -471,6 +510,10 @@ function claimsHtml(view) {
           const pl = view.players.find(x => x.id === p.pid);
           return `<div class="payout">${pl?.avatar} ${esc(pl?.name)} pays <b>${money(p.amount)}</b>${p.owner ? '' : ` (${p.pct}% reinsured)`}</div>`;
         }).join('')}
+        ${(r.shortResults || []).map(s => {
+          const pl = view.players.find(x => x.id === s.pid);
+          return `<div class="payout ${s.amount > 0 ? 'pos' : ''}">${pl?.avatar} ${esc(pl?.name)}'s short ${s.amount > 0 ? `pays <b>${money(s.amount, true)}</b> 😈` : `busts <b>${money(s.amount, true)}</b>`}</div>`;
+        }).join('')}
       </div>`;
     }).join('')}
     ${isHost(view)
@@ -494,6 +537,8 @@ function ledgerHtml(view) {
           ${s.reFees ? `<span>Reinsurance fees</span><span class="${moneyClass(s.reFees)}">${money(s.reFees, true)}</span>` : ''}
           ${s.intelTrade ? `<span>Intel trades</span><span class="${moneyClass(s.intelTrade)}">${money(s.intelTrade, true)}</span>` : ''}
           ${s.cash ? `<span>Wires</span><span class="${moneyClass(s.cash)}">${money(s.cash, true)}</span>` : ''}
+          ${s.bets ? `<span>Short desk</span><span class="${moneyClass(s.bets)}">${money(s.bets, true)}</span>` : ''}
+          ${s.fines ? `<span>Regulatory fines</span><span class="neg">${money(s.fines, true)}</span>` : ''}
           <span>Capital</span><span class="${moneyClass(s.end)}"><b>${money(s.end)}</b></span>
         </div>
       </div>`;
@@ -595,6 +640,13 @@ function onClick(e) {
     actions.send({ type: 'proposeDeal', deal });
     drafts.deal = null;
     $('#dealForm').innerHTML = `<button class="btn big" data-action="deal-new">Propose a deal</button>`;
+    return;
+  }
+  if (a === 'place-short') {
+    const clientId = $('#shortClient')?.value;
+    const stake = parseInt($('#shortStake')?.value, 10);
+    if (!isFinite(stake)) { toast('Pick a stake first.'); return; }
+    actions.send({ type: 'placeShort', clientId, stake });
     return;
   }
   if (a === 'deal-accept') { actions.send({ type: 'respondDeal', dealId: btn.dataset.deal, accept: true }); return; }

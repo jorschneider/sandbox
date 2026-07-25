@@ -15,6 +15,13 @@ export const RULES = {
   quoteSeconds: 75,
   dealSeconds: 90,
   coverageTiers: [0.5, 0.75, 1], // fraction of the client's asked coverage
+  // Each round's biggest client is "syndicated": too big for one firm.
+  // Its winner must lay off at least layoffPct of it in reinsurance during
+  // the deal floor or the contract voids (premium clawed back, plus fine).
+  syndicate: { sizeBoost: 1.5, layoffPct: 40, finePct: 0.2 },
+  // Public bets against a client, priced off the brochure rating. Once per
+  // player per round. Win pays stake * (payout/odds - 1).
+  shorts: { min: 25, max: 250, payout: 0.9, odds: { Low: 0.2, Moderate: 0.3, High: 0.4, Unknown: 0.32 } },
 
   riskFloor: 0.03,
   riskCeil: 0.97,
@@ -114,13 +121,21 @@ export class Game {
     this.intel = {};
     this.roundLedger = {};
     for (const p of this.players) {
-      this.roundLedger[p.id] = { premiums: 0, claims: 0, reFees: 0, rePayouts: 0, intelTrade: 0, cash: 0, start: p.capital };
+      this.roundLedger[p.id] = { premiums: 0, claims: 0, reFees: 0, rePayouts: 0, intelTrade: 0, cash: 0, bets: 0, fines: 0, start: p.capital };
     }
 
     const picks = this.deck.splice(0, RULES.clientsPerRound);
     this.market = picks.map(client => ({
-      client, quotes: {}, winner: null, premium: null, soldCoverage: null, reinsurance: [],
+      client, quotes: {}, winner: null, premium: null, soldCoverage: null,
+      reinsurance: [], shorts: [], syndicated: false, voided: false,
     }));
+
+    // The round's biggest client is syndicated: boosted, and impossible to
+    // hold alone — the winner has to bring the table in or lose the deal.
+    const big = this.market.reduce((a, b) => (b.client.coverage > a.client.coverage ? b : a));
+    const boost = (x) => Math.round(x * RULES.syndicate.sizeBoost / 10) * 10;
+    big.syndicated = true;
+    big.client = { ...big.client, coverage: boost(big.client.coverage), band: big.client.band.map(boost) };
 
     // Deal private intel from this round's clients' pools. Only dealt cards
     // affect the true risk, so every card in a hand is true information.
@@ -312,11 +327,49 @@ export class Game {
     return { ok: true };
   }
 
+  // Public bet that a client claims this round, priced off the brochure.
+  placeShort(pid, clientId, stake) {
+    if (this.phase !== 'deals') return { error: 'The short desk is closed.' };
+    const p = this.byId(pid);
+    const m = this.market.find(x => x.client.id === clientId);
+    if (!p || !m) return { error: 'No such client.' };
+    if (this.market.some(x => x.shorts.some(s => s.pid === pid))) return { error: 'One short per quarter.' };
+    const amt = Math.round(Math.min(RULES.shorts.max, Math.max(RULES.shorts.min, +stake || 0)));
+    const odds = RULES.shorts.odds[m.client.rating] ?? 0.3;
+    m.shorts.push({ pid, stake: amt, odds });
+    this.addLog(`📉 ${p.avatar} ${p.name} is shorting ${m.client.name} ($${amt}). Publicly.`);
+    return { ok: true };
+  }
+
   endDeals() {
     if (this.phase !== 'deals') return { error: 'Not in deals phase.' };
     this.phase = 'claims';
     this.timer = null;
     for (const d of this.proposals) if (d.status === 'open') d.status = 'expired';
+
+    // Syndicated contracts collapse if the winner failed to lay off enough:
+    // premium clawed back, a fine on top, reinsurance fees unwound.
+    for (const m of this.market) {
+      if (!m.syndicated || !m.winner || m.voided) continue;
+      const laid = m.reinsurance.reduce((s, r) => s + r.pct, 0);
+      if (laid >= RULES.syndicate.layoffPct) continue;
+      m.voided = true;
+      const w = this.byId(m.winner);
+      const fine = Math.round(m.premium * RULES.syndicate.finePct);
+      w.capital -= m.premium + fine;
+      this.roundLedger[m.winner].premiums -= m.premium;
+      this.roundLedger[m.winner].fines -= fine;
+      for (const r of m.reinsurance) {
+        const re = this.byId(r.pid);
+        re.capital -= r.fee;
+        w.capital += r.fee;
+        this.roundLedger[r.pid].reFees -= r.fee;
+        this.roundLedger[m.winner].reFees += r.fee;
+      }
+      m.reinsurance = [];
+      this.addLog(`💥 ${m.client.name}: only ${laid}% laid off (needed ${RULES.syndicate.layoffPct}%). The syndicate collapses — contract void, $${fine} fine.`);
+    }
+
     this.computeClaims();
     return { ok: true };
   }
@@ -325,16 +378,28 @@ export class Game {
     const results = this.market.map((m, i) => {
       const risk = this.effectiveRisk(m);
       const hit = this.rng() < risk;
+      const live = m.winner && !m.voided;
       const res = {
         clientId: m.client.id, name: m.client.name, emoji: m.client.emoji,
-        insured: !!m.winner, winner: m.winner, premium: m.premium, coverage: m.soldCoverage,
+        insured: !!live, voided: m.voided, winner: m.winner, premium: m.premium, coverage: m.soldCoverage,
         hit, risk: Math.round(risk * 100),
         text: hit
-          ? (m.winner ? m.client.claimText : `${m.client.name} ${UNINSURED_CLAIM[i % UNINSURED_CLAIM.length]}`)
-          : (m.winner ? m.client.safeText : `${m.client.name} ${UNINSURED_SAFE[i % UNINSURED_SAFE.length]}`),
+          ? (live ? m.client.claimText
+            : m.voided ? `${m.client.name} went down with no syndicate behind it. Lawyers descend on everyone, a little.`
+            : `${m.client.name} ${UNINSURED_CLAIM[i % UNINSURED_CLAIM.length]}`)
+          : (live ? m.client.safeText
+            : m.voided ? `${m.client.name} was fine after all. The collapsed syndicate feels very silly.`
+            : `${m.client.name} ${UNINSURED_SAFE[i % UNINSURED_SAFE.length]}`),
         payouts: [],
+        shortResults: m.shorts.map(s => {
+          const pl = this.byId(s.pid);
+          const amount = hit ? Math.round(s.stake * (RULES.shorts.payout / s.odds - 1)) : -s.stake;
+          pl.capital += amount;
+          this.roundLedger[s.pid].bets += amount;
+          return { pid: s.pid, amount, stake: s.stake };
+        }),
       };
-      if (hit && m.winner) {
+      if (hit && live) {
         const coverage = m.soldCoverage;
         let ownerShare = coverage;
         for (const r of m.reinsurance) {
@@ -419,6 +484,7 @@ export class Game {
       case 'openDeals': return host ? this.openDeals() : { error: 'Host only.' };
       case 'proposeDeal': return this.proposeDeal(pid, action.deal);
       case 'respondDeal': return this.respondDeal(pid, action.dealId, action.accept);
+      case 'placeShort': return this.placeShort(pid, action.clientId, action.stake);
       case 'endDeals': return host ? this.endDeals() : { error: 'Host only.' };
       case 'advanceClaims': return host ? this.advanceClaims() : { error: 'Host only.' };
       case 'nextRound': return host ? this.nextRound() : { error: 'Host only.' };
@@ -438,7 +504,11 @@ export class Game {
       round: this.round,
       roundName: this.theme.roundNames[this.round - 1] || '',
       totalRounds: RULES.rounds,
-      rules: { quoteSeconds: RULES.quoteSeconds, dealSeconds: RULES.dealSeconds, minPlayers: RULES.minPlayers, maxPlayers: RULES.maxPlayers },
+      rules: {
+        quoteSeconds: RULES.quoteSeconds, dealSeconds: RULES.dealSeconds,
+        minPlayers: RULES.minPlayers, maxPlayers: RULES.maxPlayers,
+        layoffPct: RULES.syndicate.layoffPct, shorts: RULES.shorts,
+      },
       timer: this.timer ? { ...this.timer } : null,
       players: this.players.map(p => ({
         id: p.id, name: p.name, avatar: p.avatar, capital: p.capital,
@@ -451,6 +521,9 @@ export class Game {
         winner: m.winner, premium: m.premium, soldCoverage: m.soldCoverage,
         reinsurance: m.reinsurance,
         tiers: RULES.coverageTiers,
+        syndicated: m.syndicated, voided: m.voided,
+        laidOff: m.reinsurance.reduce((s, r) => s + r.pct, 0),
+        shorts: m.shorts.map(s => ({ pid: s.pid, stake: s.stake })),
         quotes: (this.phase === 'reveal' || this.phase === 'deals' || this.phase === 'claims' || this.phase === 'ledger') ? m.quotes : undefined,
       })),
       you: me ? {
@@ -459,6 +532,7 @@ export class Game {
           clientName: this.market.find(m => m.client.id === c.clientId)?.client.name,
         })),
         quotesSubmitted: submitted.includes(pid),
+        shortPlaced: this.market.some(m => m.shorts.some(s => s.pid === pid)),
       } : null,
       quotesSubmittedBy: submitted,
       proposals: this.proposals

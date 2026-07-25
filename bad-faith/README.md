@@ -34,6 +34,13 @@ season. **Eyes up, not down.**
      claim on the coverage you sold.
    - **The Deal Floor** — 90 seconds of open negotiation, made binding
      in-app: reinsure each other's policies, sell intel, wire bribes.
+     Each round's biggest client is **syndicated** — too big for one firm.
+     Its winner must lay off ≥40% in reinsurance before the floor closes
+     or the contract voids (premium clawed back, plus a fine), so the
+     table can squeeze them on price. And once per round, anyone can hit
+     the **short desk**: a public bet that a client claims this quarter,
+     paid at brochure-implied odds. Shorts are information, intimidation,
+     or bluff — the table decides which.
    - **Claims Season** — disasters resolve one file at a time, on every
      phone. Phones up. Someone screams.
    - **The Ledger** — the receipts, then the grudges.
