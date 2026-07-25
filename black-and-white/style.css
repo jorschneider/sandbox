@@ -12,7 +12,84 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
-#gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+#gl {
+  position: fixed; inset: 0; width: 100%; height: 100%; display: block;
+  touch-action: none; filter: var(--grade, none);
+}
+
+/* ---------------------------------------------------- per-style overlays */
+
+#overlay-a, #overlay-b {
+  position: fixed; inset: 0; pointer-events: none; opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+/* Overlays use plain alpha compositing on purpose: mix-blend-mode over an
+   accelerated, CSS-filtered canvas washes the frame out in some browsers.
+   Colour tinting happens in the canvas grade instead. */
+
+/* rice paper: warm fibrous tooth (ink, woodblock) */
+body.ov-paper-rice #overlay-a {
+  opacity: 0.9;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(104, 88, 62, 0.05) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(104, 88, 62, 0.035) 0 1px, transparent 1px 4px),
+    radial-gradient(ellipse at 28% 18%, rgba(126, 106, 70, 0.09), transparent 62%),
+    radial-gradient(ellipse at 78% 74%, rgba(126, 106, 70, 0.08), transparent 58%);
+}
+/* the faintest tooth for the painted look */
+body.ov-paper-soft #overlay-a {
+  opacity: 0.3;
+  background-image: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(70, 62, 46, 0.3) 100%);
+}
+/* ink bleeding at the frame edges */
+body.ov-ink-bleed #overlay-b {
+  opacity: 1;
+  background: radial-gradient(ellipse at 50% 50%, transparent 58%, rgba(28, 26, 24, 0.5) 100%);
+}
+/* halftone dots for the print */
+body.ov-halftone #overlay-b {
+  opacity: 0.55;
+  background-image: radial-gradient(rgba(52, 40, 26, 0.45) 0.9px, transparent 1px);
+  background-size: 4px 4px;
+}
+/* cathedral: warm glow pooling from above, deep shadow at the edges */
+body.ov-cathedral #overlay-a {
+  opacity: 1;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 206, 120, 0.22), transparent 62%);
+}
+body.ov-cathedral #overlay-b {
+  opacity: 1;
+  background: radial-gradient(ellipse at 50% 45%, transparent 44%, rgba(10, 6, 24, 0.66) 100%);
+}
+/* drafting grid */
+body.ov-grid #overlay-a {
+  opacity: 0.55;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(150, 210, 255, 0.16) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, rgba(150, 210, 255, 0.16) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(0deg, rgba(150, 210, 255, 0.3) 0 1px, transparent 1px 140px),
+    repeating-linear-gradient(90deg, rgba(150, 210, 255, 0.3) 0 1px, transparent 1px 140px);
+}
+body.ov-vignette-hard #overlay-b {
+  opacity: 1;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(3, 12, 30, 0.8) 100%);
+}
+/* neon: bloom pool + scanlines */
+body.ov-glow #overlay-a {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse at 50% 62%, rgba(140, 110, 255, 0.14), transparent 65%),
+    radial-gradient(ellipse at 20% 18%, rgba(255, 90, 205, 0.1), transparent 60%);
+}
+body.ov-scanlines #overlay-b {
+  opacity: 0.3;
+  background-image: repeating-linear-gradient(0deg,
+    rgba(0, 0, 0, 0.45) 0 1px, transparent 1px 3px);
+}
+
+/* dark-world styles need their HUD text to stay readable */
+body.sty-blueprint #hint, body.sty-neon #hint { color: rgba(220, 240, 255, 0.9); }
 
 /* device-specific copy: .kb-only for keyboard+mouse, .touch-only for touch */
 .touch-only { display: none; }
@@ -48,6 +125,11 @@ body.touch #type-btn {
   display: flex; width: 54px; height: 54px; bottom: 26px;
   font: italic 600 20px/1 var(--serif);
 }
+#style-btn { display: none; }
+body.touch #style-btn {
+  display: flex; width: 46px; height: 46px; bottom: 30px; right: 84px;
+  font-size: 17px;
+}
 #mic-btn.held { background: rgba(255, 255, 255, 0.3); }
 
 body.touch #hint { top: 14px; bottom: auto; left: 16px; font-size: 10.5px; }
@@ -58,7 +140,7 @@ body.touch #typewrap { bottom: auto; top: 14vh; }
 #sketch {
   position: fixed; inset: 0; pointer-events: none;
   mix-blend-mode: multiply;
-  opacity: calc(var(--sketch) * 0.5);
+  opacity: calc(var(--sketch) * 0.5 * var(--sketch-max, 1));
   transition: opacity 1.4s ease;
   background:
     repeating-linear-gradient(45deg, rgba(28, 28, 28, 0.1) 0 1px, transparent 1px 6px),
@@ -68,7 +150,7 @@ body.touch #typewrap { bottom: auto; top: 14vh; }
 #grain {
   position: fixed; inset: -140px; pointer-events: none;
   mix-blend-mode: overlay;
-  opacity: calc(var(--sketch) * 0.4 + 0.05);
+  opacity: calc((var(--sketch) * 0.4 + 0.05) * var(--sketch-max, 1));
   transition: opacity 1.4s ease;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   animation: grain-jitter 0.9s steps(4) infinite;
@@ -189,9 +271,10 @@ body.touch #typewrap { bottom: auto; top: 14vh; }
 /* white-out used when traveling between realms */
 #fade {
   position: fixed; inset: 0; z-index: 8; pointer-events: none;
-  background: #f2f2ef; opacity: 0; transition: opacity 0.9s ease;
+  background: #f2f2ef; opacity: 0; transition: opacity 0.7s ease;
 }
-#fade.on { opacity: 1; }
+#fade.on { opacity: 1; transition: opacity 0.35s ease; }
+body.sty-neon #fade, body.sty-blueprint #fade { background: #0a0a14; }
 
 /* ------------------------------------------------------------- landing */
 
@@ -227,6 +310,30 @@ body.touch #typewrap { bottom: auto; top: 14vh; }
   margin-bottom: 34px;
 }
 .lede em { font-family: var(--serif); font-size: 1.06em; }
+.styles { margin: 0 0 30px; }
+.styles-label {
+  font: 400 10.5px/1 var(--sans); letter-spacing: 0.2em; text-transform: uppercase;
+  color: #9a9a94; margin-bottom: 13px;
+}
+.chips {
+  display: flex; flex-wrap: wrap; gap: 7px; justify-content: center;
+}
+.chip {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 8px 12px; cursor: pointer; text-align: left;
+  border: 1px solid rgba(20, 20, 20, 0.16); border-radius: 3px;
+  background: rgba(255, 255, 255, 0.55); color: #23231f;
+  transition: border-color 0.15s, transform 0.15s, background 0.15s;
+}
+.chip span { font: 500 12.5px/1.1 var(--sans); letter-spacing: 0.02em; }
+.chip em { font: italic 400 10.5px/1.1 var(--serif); color: #85857d; }
+.chip:hover { transform: translateY(-1px); border-color: rgba(20, 20, 20, 0.45); }
+.chip.on {
+  background: #16161a; border-color: #16161a;
+}
+.chip.on span { color: #fafaf7; }
+.chip.on em { color: rgba(250, 250, 247, 0.62); }
+
 #enter-btn {
   font: 500 14px/1 var(--sans); letter-spacing: 0.22em;
   padding: 16px 38px; cursor: pointer;

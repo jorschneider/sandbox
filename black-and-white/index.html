@@ -18,6 +18,8 @@
   <canvas id="gl"></canvas>
   <div id="sketch"></div>
   <div id="grain"></div>
+  <div id="overlay-a"></div>
+  <div id="overlay-b"></div>
   <div id="vignette"></div>
 
   <!-- HUD -->
@@ -30,7 +32,8 @@
     <div class="kb-only">WASD — walk &nbsp;·&nbsp; mouse — look &nbsp;·&nbsp; shift — stride</div>
     <div class="kb-only voice-hint">space — tap, then speak &nbsp;·&nbsp; or hold V &nbsp;·&nbsp; T — type a decree</div>
     <div class="touch-only">left thumb — walk &nbsp;·&nbsp; right thumb — look</div>
-    <div class="touch-only voice-hint">hold the mic — speak &nbsp;·&nbsp; Aa — type a decree</div>
+    <div class="touch-only voice-hint">hold the mic — speak &nbsp;·&nbsp; Aa — type &nbsp;·&nbsp; ◆ — restyle</div>
+    <div class="kb-only">1–7 — change the visual style</div>
     <div class="dim">&ldquo;the river is turquoise&rdquo; &nbsp;·&nbsp; &ldquo;let there be night&rdquo; &nbsp;·&nbsp; &ldquo;let it be autumn&rdquo; &nbsp;·&nbsp; &ldquo;take me to the desert&rdquo; &nbsp;·&nbsp; &ldquo;share this world&rdquo;</div>
   </div>
 
@@ -38,6 +41,7 @@
   <div id="stick"><div id="stick-nub"></div></div>
   <button id="mic-btn" aria-label="hold to speak">&#127908;</button>
   <button id="type-btn" aria-label="type a decree">Aa</button>
+  <button id="style-btn" aria-label="change visual style">&#9670;</button>
 
   <div id="typewrap">
     <form id="typeform" action=".">
@@ -63,6 +67,19 @@
         <em>&ldquo;make the roofs dark red&rdquo;</em> — and the color will
         ripple outward to everything of its kind, until the world is full.
       </p>
+      <div class="styles">
+        <div class="styles-label">choose how the world is drawn</div>
+        <div class="chips">
+          <button class="chip" data-style="storybook"><span>Storybook</span><em>soft painted light</em></button>
+          <button class="chip" data-style="ink"><span>Ink &amp; Wash</span><em>sumi-e brushwork</em></button>
+          <button class="chip" data-style="cel"><span>Cel Shade</span><em>bold anime inks</em></button>
+          <button class="chip" data-style="woodblock"><span>Woodblock</span><em>ukiyo-e flats</em></button>
+          <button class="chip" data-style="glass"><span>Stained Glass</span><em>lit panes, heavy leading</em></button>
+          <button class="chip" data-style="blueprint"><span>Blueprint</span><em>drafting cyanotype</em></button>
+          <button class="chip" data-style="neon"><span>Neon Dream</span><em>luminous dark field</em></button>
+        </div>
+      </div>
+
       <button id="enter-btn">ENTER THE WORLD</button>
       <div class="foot">
         best with a microphone &middot; voice works in Chrome &amp; Safari &middot;

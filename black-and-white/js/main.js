@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { buildWorld, REALMS } from './world.js';
+import { STYLES, STYLE_IDS } from './styles.js';
 import { bindDecrees, speak, hydrate, getWorldState, getSaveState, tickDecrees } from './decree.js';
 import { initInput } from './voice.js';
 import { createAmbience } from './audio.js';
@@ -25,8 +26,10 @@ const audio = createAmbience();
 
 let scene = null, world = null, catKeys = [];
 let currentRealm = 'valley';
+let currentStyle = 'storybook';
 const SAVE_PREFIX = 'bw-world-v2:';
 const REALM_KEY = 'bw-realm';
+const STYLE_KEY = 'bw-style';
 
 // ------------------------------------------------------------------ HUD
 
@@ -146,14 +149,31 @@ function disposeScene(s) {
   renderer.renderLists.dispose();
 }
 
-function createWorld(realm) {
+function applyStyleChrome(style) {
+  document.documentElement.style.setProperty('--grade', style.grade || 'none');
+  document.documentElement.style.setProperty('--sketch-max', style.sketch ? '1' : '0');
+  renderer.toneMappingExposure = style.exposure ?? 1.05;
+  const body = document.body;
+  for (const cls of [...body.classList]) {
+    if (cls.startsWith('ov-') || cls.startsWith('sty-')) body.classList.remove(cls);
+  }
+  body.classList.add('sty-' + style.id);
+  for (const ov of style.overlays || []) body.classList.add('ov-' + ov);
+}
+
+function createWorld(realm, styleId = currentStyle) {
   currentRealm = REALMS[realm] ? realm : 'valley';
+  currentStyle = STYLE_IDS.includes(styleId) ? styleId : 'storybook';
   if (scene) {
     scene.remove(highlight);
     disposeScene(scene);
   }
   scene = new THREE.Scene();
-  world = buildWorld(scene, { realm: currentRealm, shadowMapSize: isTouch ? 1024 : 2048 });
+  world = buildWorld(scene, {
+    realm: currentRealm, style: currentStyle,
+    shadowMapSize: isTouch ? 1024 : 2048,
+  });
+  applyStyleChrome(world.styleDef);
   catKeys = [...world.categories.keys()];
   bindDecrees(world, decreeHooks);
   highlight.visible = false;
@@ -177,6 +197,40 @@ function loadRealmSave(realm) {
   } catch { return false; }
 }
 
+// swap the way the world is drawn, keeping everything you have painted
+function setStyle(styleId, announce = true) {
+  if (!STYLE_IDS.includes(styleId) || styleId === currentStyle) return;
+  const saved = getSaveState();
+  fadeEl.classList.add('on');
+  setTimeout(() => {
+    createWorld(currentRealm, styleId);
+    hydrate(saved, player.pos.clone(), performance.now() / 1000);
+    updateSketch();
+    const { colored, total } = countCats();
+    audio.restore([], catKeys, colored, total);
+    audio.setNight(getWorldState().night);
+    try { localStorage.setItem(STYLE_KEY, currentStyle); } catch { /* ignore */ }
+    syncStyleChips();
+    if (announce) {
+      caption(`<em>${STYLES[currentStyle].title}</em> — ${STYLES[currentStyle].blurb}`,
+        '#ffffff', '');
+    }
+    // clear as soon as the new world exists; the fade-out does the reveal
+    requestAnimationFrame(() => fadeEl.classList.remove('on'));
+  }, 420);
+}
+
+function cycleStyle(dir = 1) {
+  const i = STYLE_IDS.indexOf(currentStyle);
+  setStyle(STYLE_IDS[(i + dir + STYLE_IDS.length) % STYLE_IDS.length]);
+}
+
+function syncStyleChips() {
+  for (const el of document.querySelectorAll('[data-style]')) {
+    el.classList.toggle('on', el.dataset.style === currentStyle);
+  }
+}
+
 function travelTo(realm) {
   if (!REALMS[realm]) return;
   if (realm === currentRealm) {
@@ -193,15 +247,16 @@ function travelTo(realm) {
     audio.setNight(getWorldState().night);
     try { localStorage.setItem(REALM_KEY, currentRealm); } catch { /* ignore */ }
     caption(`…and you came to <em>${world.realmTitle}</em>.`, '#ffffff', '');
-    setTimeout(() => fadeEl.classList.remove('on'), 400);
-  }, 950);
+    requestAnimationFrame(() => fadeEl.classList.remove('on'));
+  }, 780);
 }
 
 // ------------------------------------------------------------------ sharing
 
 function shareWorld() {
   try {
-    const bytes = new TextEncoder().encode(JSON.stringify(getSaveState()));
+    const bytes = new TextEncoder().encode(
+      JSON.stringify({ ...getSaveState(), style: currentStyle }));
     let bin = '';
     for (let i = 0; i < bytes.length; i += 0x8000) {
       bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
@@ -240,7 +295,10 @@ try {
   }
 } catch { /* malformed link — fall through to the local save */ }
 
-createWorld(bootState?.realm || localStorage.getItem(REALM_KEY) || 'valley');
+createWorld(
+  bootState?.realm || localStorage.getItem(REALM_KEY) || 'valley',
+  bootState?.style || localStorage.getItem(STYLE_KEY) || 'storybook',
+);
 if (bootState) {
   gifted = hydrate(bootState, player.pos.clone(), performance.now() / 1000);
 }
@@ -250,12 +308,42 @@ if (gifted) {
   try {
     localStorage.setItem(SAVE_PREFIX + currentRealm, JSON.stringify(getSaveState()));
     localStorage.setItem(REALM_KEY, currentRealm);
+    localStorage.setItem(STYLE_KEY, currentStyle);
   } catch { /* ignore */ }
   history.replaceState(null, '', location.pathname);
 } else {
   remembered = loadRealmSave(currentRealm);
 }
 updateSketch();
+syncStyleChips();
+
+// style chips on the landing card, and 1–7 / [ ] in play
+for (const el of document.querySelectorAll('[data-style]')) {
+  const pick = (e) => {
+    e.preventDefault();
+    if (started) setStyle(el.dataset.style);
+    else {
+      // before entering, swap instantly — nothing is painted yet to preserve
+      const saved = getSaveState();
+      createWorld(currentRealm, el.dataset.style);
+      hydrate(saved, player.pos.clone(), performance.now() / 1000);
+      updateSketch();
+      try { localStorage.setItem(STYLE_KEY, currentStyle); } catch { /* ignore */ }
+      syncStyleChips();
+    }
+  };
+  el.addEventListener('click', pick);
+}
+
+window.addEventListener('keydown', (e) => {
+  if (typingActive() || e.repeat) return;
+  if (e.code.startsWith('Digit')) {
+    const n = +e.code.slice(5);
+    if (n >= 1 && n <= STYLE_IDS.length) setStyle(STYLE_IDS[n - 1]);
+  }
+  if (e.code === 'BracketRight') cycleStyle(1);
+  if (e.code === 'BracketLeft') cycleStyle(-1);
+});
 
 // ------------------------------------------------------------------ controls
 
@@ -406,6 +494,11 @@ if (isTouch) {
   typeBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     if (started) input.openType();
+  }, { passive: false });
+
+  $('style-btn').addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (started) cycleStyle(1);
   }, { passive: false });
 }
 

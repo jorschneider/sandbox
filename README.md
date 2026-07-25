@@ -61,10 +61,12 @@ Open the page, press **▶ PLAY TRAILER** (audio needs one click).
   dissolves the pencil-sketch grain off the world. Three realms —
   valley, desert, high peaks (*"take me to the desert"*) — each with
   its own creatures: deer, rabbits, goats, fish, butterflies,
-  fireflies. *"Let there be night"*, *"let it rain / snow"*, *"let it
-  be autumn"*, *"this house is blue"*, *"begin again"*. Every realm is
-  saved locally, and *"share this world"* mints a link carrying your
-  whole painted world. Web Speech API + a filtered, looping music bed;
+  fireflies. Seven switchable art styles (keys `1`–`7`): storybook, ink
+  &amp; wash, cel shade, woodblock, stained glass, blueprint, neon.
+  *"Let there be night"*, *"let it rain / snow"*, *"let it be autumn"*,
+  *"this house is blue"*, *"begin again"*. Every realm is saved
+  locally, and *"share this world"* mints a link carrying your whole
+  painted world, style included. Web Speech API + a filtered, looping music bed;
   self-contained with its own vendored Three.js.
 - **[`/rayray-outdoor-weekend/`](rayray-outdoor-weekend/)** — an event
   microsite.
