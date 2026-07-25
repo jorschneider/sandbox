@@ -1173,7 +1173,11 @@ export class Game {
       mode: this.mode,
       phase: this.phase,
       round: this.round,
-      roundName: this.theme.roundNames[(this.round - 1 + this.theme.roundNames.length) % this.theme.roundNames.length] || '',
+      // The duel runs more rounds than there are quarter names, so number
+      // them plainly rather than wrapping back round to "Q1".
+      roundName: this.mode === 'duel'
+        ? `Round ${this.round}/${this.totalRounds}`
+        : (this.theme.roundNames[(this.round - 1 + this.theme.roundNames.length) % this.theme.roundNames.length] || ''),
       totalRounds: this.totalRounds,
       mm: this.mm ? this.mmView(pid) : null,
       duel: this.duel ? {

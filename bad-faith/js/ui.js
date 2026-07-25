@@ -358,7 +358,34 @@ function duelPriceHtml(view) {
       <input id="slipAmount" type="number" inputmode="numeric" min="0" max="${d.maxSweetener}" placeholder="$0–${d.maxSweetener}">
     </label>
     <div class="be-hint" id="slipHint">Offer nothing and they'll simply take the better one. Offer too much and they'll take the other and pocket your cash.</div>
+    <div class="card slip-preview" id="slipPreview"></div>
     <button class="btn big" data-action="slip-send">Put it on the table</button>`;
+}
+
+// The pricer's whole job is balancing two outcomes, so show them both.
+function updateSlipPreview() {
+  const box = $('#slipPreview');
+  if (!box || !lastView?.market?.length) return;
+  const markedId = root.querySelector('.slip-side.sel')?.dataset.client || lastView.market[0].id;
+  const amt = parseInt($('#slipAmount')?.value, 10) || 0;
+  const short = (s) => (s.length > 22 ? s.slice(0, 21) + '…' : s);
+  const outcomes = lastView.market.map(m => {
+    const other = lastView.market.find(x => x.id !== m.id);
+    // if THEY take m, I keep `other` and the sweetener rides with m
+    const swing = m.id === markedId ? amt : -amt;
+    return { m, other, mine: other.premium + swing };
+  });
+  const spread = Math.abs(outcomes[0].mine - outcomes[1].mine);
+  const rows = outcomes.map(o => `
+    <div class="slip-prev-row">
+      <div class="slip-prev-if">If they take ${o.m.emoji} ${esc(short(o.m.name))}</div>
+      <div class="slip-prev-then">you keep ${o.other.emoji} ${esc(short(o.other.name))}
+        <b class="${o.mine < 0 ? 'neg' : 'pos'}">${money(o.mine, true)}</b></div>
+    </div>`).join('');
+  box.innerHTML = `<h3>Your side, either way</h3>${rows}
+    <div class="fine">${spread <= 60
+      ? '⚖️ Balanced — they have a genuinely hard choice.'
+      : `Those two are ${money(spread)} apart. They'll take whichever leaves you the worse side.`}</div>`;
 }
 
 function duelChooseHtml(view) {
@@ -461,7 +488,9 @@ function clientCard(view, m, inner = '') {
       </div>
       <div class="cfacts">
         <span>Wants <b>${money(m.coverage)}</b> of coverage</span>
-        <span>Premium ${money(m.band[0])}–${money(m.band[1])} at full cover</span>
+        ${view.mode === 'duel'
+          ? '' /* already written at a fixed price — the band is just noise */
+          : `<span>Premium ${money(m.band[0])}–${money(m.band[1])} at full cover</span>`}
         <span>Brochure says: <b>${m.rating}</b> risk — ${RATING_ODDS[m.rating] || '?'} claim odds (allegedly)</span>
       </div>
       ${intelChips(view, m.id)}
@@ -958,6 +987,7 @@ const AWARDS = {
   rockbottom:  (n, a) => `🕳 <b>Rock Bottom</b> — ${n} lost ${money(a.value)} in a single quarter`,
   poach:       (n, a) => `🏴‍☠️ <b>The Poacher</b> — ${n} stole ${esc(a.detail)}`,
   gavel:       (n, a) => `🔨 <b>Last Broker Standing</b> — ${n} outlasted ${a.value} bids to take ${esc(a.detail)}`,
+  walkaway:    (n, a) => `🚪 <b>The Walkout</b> — ${n} refused ${money(a.value)} of business rather than take either side`,
 };
 
 function resultsHtml(view) {
@@ -1081,6 +1111,7 @@ function onClick(e) {
   if (a === 'slip-side') {
     root.querySelectorAll('.slip-side').forEach(el => el.classList.remove('sel'));
     btn.classList.add('sel');
+    updateSlipPreview();
     return;
   }
   if (a === 'slip-send') {
@@ -1173,6 +1204,7 @@ function updateMmSpread() {
 function onInput(e) {
   const el = e.target;
   if (el.id === 'mmRetail') { updateMmSpread(); return; }
+  if (el.id === 'slipAmount') { updateSlipPreview(); return; }
   if (el.id === 'dealTo' && drafts.deal) {
     // Changing the counterparty changes which policies are dealable.
     drafts.deal.to = el.value;

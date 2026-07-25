@@ -133,6 +133,12 @@ gating, the auction, renewals/poaching, ledger arithmetic, and that every
 mode terminates. Run it on every engine change — the browser E2E suites in
 the scratchpad are the slow backstop, not the first line of defence.
 
+`node tools/fuzz.mjs [games]` plays random games across every mode, table
+size and rulebook while firing malformed and out-of-turn actions and
+dropping phones mid-round. It asserts nothing crashes or stalls, capital
+stays finite, ledgers reconcile, and no view ever leaks another player's
+intel, a rival's wholesale quote, or the sweetener before it is set.
+
 ## Economy tuning
 
 `node tools/sim.mjs [games] [theme]` plays thousands of headless games with
@@ -141,4 +147,6 @@ and reports claim rates, per-client margins, bankruptcies, and per-strategy
 results. Targets: ~30% claim rate, near-zero average insurer margin,
 intel-aware play beating both naive play and sitting out, and one deliberate
 trap client per deck (Swan Lake: rated Low, priced Low, is not Low).
-Set `SEAT=passer,naive,informed,informed` to control the table makeup.
+Set `SEAT=passer,naive,informed,informed` to control the table makeup and
+`PLAYERS=2|3|4` to check a table size. `tools/sim-duel.mjs` and
+`tools/sim-mm.mjs` do the same for The Slip and The Middleman.
