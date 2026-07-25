@@ -311,6 +311,7 @@ function clientCard(view, m, inner = '') {
   return `
     <div class="card client${m.syndicated ? ' syndicated' : ''}">
       ${m.syndicated ? `<div class="syn-banner">🏛 SYNDICATED — too big for one firm. Winner must lay off ≥${view.rules.layoffPct}% on the deal floor or the contract voids.</div>` : ''}
+      ${m.renewal ? `<div class="ren-banner">🔄 RENEWAL — ${esc(view.players.find(p => p.id === m.renewal.incumbent)?.name || '?')}'s client, old rate ${m.renewal.lastRate}%. Poaching requires beating that rate by 10%.</div>` : ''}
       <div class="client-head">
         <span class="cemoji">${m.emoji}</span>
         <div>
@@ -808,6 +809,7 @@ const AWARDS = {
   nerves:      (n, a) => `🎲 <b>Nerves of Steel</b> — ${n} went bare on ${esc(a.detail)} at ${a.value}% and lived`,
   bestquarter: (n, a) => `📈 <b>Quarter of the Century</b> — ${n} made ${money(a.value)} in a single quarter`,
   rockbottom:  (n, a) => `🕳 <b>Rock Bottom</b> — ${n} lost ${money(a.value)} in a single quarter`,
+  poach:       (n, a) => `🏴‍☠️ <b>The Poacher</b> — ${n} stole ${esc(a.detail)}`,
 };
 
 function resultsHtml(view) {

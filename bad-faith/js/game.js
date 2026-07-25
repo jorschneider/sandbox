@@ -76,6 +76,7 @@ export class Game {
     this.dealSeq = 0;
     this.winnerIds = null;
     this.awards = {}; // end-of-game superlatives, tracked as they happen
+    this.pendingRenewal = null; // full market: last round's happiest client returns
   }
 
   // Keep the most extreme holder of each award (min=true for "lowest wins").
@@ -340,6 +341,21 @@ export class Game {
       big.client = { ...big.client, coverage: boost(big.client.coverage), band: big.client.band.map(boost) };
     }
 
+    // A surviving client from last quarter comes back to renew. The
+    // incumbent holds the relationship: poachers must beat their old rate
+    // by 10% or the client stays loyal.
+    if (this.pro && this.pendingRenewal) {
+      const r = this.pendingRenewal;
+      this.pendingRenewal = null;
+      this.market.push({
+        client: r.client, quotes: {}, winner: null, premium: null, soldCoverage: null,
+        reinsurance: [], shorts: [], syndicated: false, voided: false,
+        renewal: { incumbent: r.incumbent, lastRate: r.lastRate },
+      });
+      const inc = this.byId(r.incumbent);
+      this.addLog(`🔄 ${r.client.name} is up for renewal — ${inc?.avatar} ${inc?.name}'s client, if they can keep them.`);
+    }
+
     // Deal private intel from this round's clients' pools. Only dealt cards
     // affect the true risk, so every card in a hand is true information.
     let pool = [];
@@ -424,11 +440,18 @@ export class Game {
       // rate ties go to the bigger policy, then luck. The regulator blocks
       // any bid that would push a firm past its solvency cap, and the
       // client moves on to the next-best quote.
+      const inc = m.renewal?.incumbent;
       const cands = this.players
         .map(p => ({ pid: p.id, q: m.quotes[p.id] }))
         .filter(x => x.q)
-        .map(x => ({ pid: x.pid, premium: x.q.premium, coverage: x.q.coverage, rate: x.q.premium / x.q.coverage }))
-        .sort((a, b) => (a.rate - b.rate) || (b.coverage - a.coverage) || (this.rng() < 0.5 ? -1 : 1));
+        .map(x => {
+          const rate = x.q.premium / x.q.coverage;
+          // Renewal loyalty: a challenger's rate only counts if it beats
+          // the incumbent's by 10%.
+          const key = inc && x.pid !== inc ? rate / 0.9 : rate;
+          return { pid: x.pid, premium: x.q.premium, coverage: x.q.coverage, rate, key };
+        })
+        .sort((a, b) => (a.key - b.key) || (b.coverage - a.coverage) || (this.rng() < 0.5 ? -1 : 1));
       let best = null;
       for (const c of cands) {
         if ((signed[c.pid] || 0) + c.coverage <= this.solvencyCap(c.pid)) { best = c; break; }
@@ -444,6 +467,13 @@ export class Game {
         w.capital += best.premium;
         this.roundLedger[best.pid].premiums += best.premium;
         this.award('rainmaker', best.pid, best.premium, m.client.name);
+        if (inc && best.pid !== inc) {
+          const v = this.byId(inc);
+          this.award('poach', best.pid, best.premium, `${m.client.name} from ${v?.name}`);
+          this.addLog(`🏴‍☠️ ${w.avatar} ${w.name} POACHED ${m.client.name} from ${v?.avatar} ${v?.name}.`);
+        } else if (inc) {
+          this.addLog(`🤝 ${m.client.name} renewed with ${w.avatar} ${w.name}.`);
+        }
         this.addLog(`${w.avatar} ${w.name} signed ${m.client.name} at $${best.premium} covering $${best.coverage}.`);
       } else {
         this.addLog(`${m.client.name} found no takers.`);
@@ -650,6 +680,23 @@ export class Game {
   }
 
   finishRound() {
+    // The biggest policy that survived claims comes back to renew next
+    // quarter (full market only).
+    if (this.pro && this.claims) {
+      let best = null;
+      for (const r of this.claims.results) {
+        if (!r.insured || r.hit) continue;
+        const m = this.market.find(x => x.client.id === r.clientId);
+        if (m && (!best || m.soldCoverage > best.soldCoverage)) best = m;
+      }
+      if (best) {
+        this.pendingRenewal = {
+          client: best.client, incumbent: best.winner,
+          lastRate: best.premium / best.soldCoverage,
+        };
+      }
+    }
+
     // Idle books pay the overhead (any risk held counts as working — a
     // reinsurance share included). Broker of the Quarter goes to the most
     // PREMIUM written, so it rewards winning business at real prices, not
@@ -829,6 +876,7 @@ export class Game {
         reinsurance: m.reinsurance,
         tiers: this.pro ? RULES.coverageTiers : [1],
         syndicated: m.syndicated, voided: m.voided,
+        renewal: m.renewal ? { incumbent: m.renewal.incumbent, lastRate: Math.round(m.renewal.lastRate * 100) } : null,
         laidOff: m.reinsurance.reduce((s, r) => s + r.pct, 0),
         shorts: m.shorts.map(s => ({ pid: s.pid, stake: s.stake })),
         quotes: (this.phase === 'reveal' || this.phase === 'deals' || this.phase === 'claims' || this.phase === 'ledger') ? m.quotes : undefined,
