@@ -282,6 +282,31 @@ const FAIL_LINES = [
 ];
 let failIdx = 0;
 
+// Art direction applied to obedience: whatever hue is decreed gets pulled
+// into the palette the current style is willing to print. The name you spoke
+// still reads in the caption — but Ink will not shout in neon.
+const tmpU = new THREE.Color();
+function paletteMap(color) {
+  const p = world?.styleDef?.palette;
+  if (!p || !color) return color;
+  const hsl = { h: 0, s: 0, l: 0 };
+  color.getHSL(hsl);
+  hsl.s = p.sat[0] + (p.sat[1] - p.sat[0]) * hsl.s;
+  hsl.l = p.light[0] + (p.light[1] - p.light[0]) * hsl.l;
+  if (p.warmth) {
+    let dh = 0.09 - hsl.h;                       // toward amber
+    if (dh > 0.5) dh -= 1;
+    if (dh < -0.5) dh += 1;
+    hsl.h = (hsl.h + dh * p.warmth + 1) % 1;
+  }
+  color.setHSL(hsl.h, hsl.s, hsl.l);
+  if (p.unify) {
+    tmpU.set(world.styleDef.skyTint || '#a89f8c');
+    color.lerp(tmpU, p.unify * 0.45);            // one light over the whole frame
+  }
+  return color;
+}
+
 function captionHex(color) {
   const hsl = { h: 0, s: 0, l: 0 };
   tmpA.copy(color).getHSL(hsl);
@@ -578,7 +603,7 @@ function enact(cat, colorSpec, origin, now, extraDelay, muted, instant = false) 
   cat.rainbow = !!colorSpec.rainbow;
   if (isNew && cat.onFirstColor) cat.onFirstColor();
 
-  const base = colorSpec.color || new THREE.Color(cat.defaultColor);
+  const base = paletteMap((colorSpec.color || new THREE.Color(cat.defaultColor)).clone());
   if (!colorSpec.rainbow) cat.currentColor.copy(base);
   const hsl = { h: 0, s: 0, l: 0 };
   base.getHSL(hsl);
@@ -609,7 +634,12 @@ function enact(cat, colorSpec, origin, now, extraDelay, muted, instant = false) 
             Math.min(0.95, Math.max(0.04, hsl.l + ((jr * 3.7 % 1) - 0.5) * 2 * v.l)),
           );
         }
-        if (surf.shade) tmpA.multiplyScalar(surf.shade[i]);
+        if (surf.shade) {
+          // per-channel: AO, cliff-grey and wetness live in here
+          tmpA.r *= surf.shade[i * 3];
+          tmpA.g *= surf.shade[i * 3 + 1];
+          tmpA.b *= surf.shade[i * 3 + 2];
+        }
         to[i * 3] = tmpA.r; to[i * 3 + 1] = tmpA.g; to[i * 3 + 2] = tmpA.b;
         const d = instant ? 0
           : extraDelay + Math.hypot(x - origin.x, z - origin.z) / RIPPLE_SPEED;
@@ -659,7 +689,7 @@ function enact(cat, colorSpec, origin, now, extraDelay, muted, instant = false) 
 function enactSingle(gaze, colorSpec, now, instant = false) {
   const cat = world.categories.get(gaze.key);
   if (!cat || colorSpec.rainbow) return false;
-  const base = colorSpec.color;
+  const base = paletteMap(colorSpec.color.clone());
 
   // a patch of the land around the gaze point
   if (gaze.key === 'land' && gaze.point) {
@@ -724,7 +754,9 @@ function paintPatch(point, color, name, now, instant, radius = 9) {
     const jr = surf.jitterSeed[i];
     tmpA.setHSL((hsl.h + (jr - 0.5) * 0.04 + 1) % 1, hsl.s,
       Math.min(0.95, Math.max(0.04, hsl.l + (jr - 0.5) * 0.1)));
-    tmpA.multiplyScalar(surf.shade[i]);
+    tmpA.r *= surf.shade[i * 3];
+    tmpA.g *= surf.shade[i * 3 + 1];
+    tmpA.b *= surf.shade[i * 3 + 2];
     tmpB.setRGB(arr[k], arr[k + 1], arr[k + 2]).lerp(tmpA, blend);
     to[j * 3] = tmpB.r; to[j * 3 + 1] = tmpB.g; to[j * 3 + 2] = tmpB.b;
     delays[j] = instant ? 0 : d / 20;

@@ -41,6 +41,12 @@ function outlineMaterial(color, width, opacity = 1) {
 
 // ---------------------------------------------------------------- the styles
 
+// Art direction, per style.
+//
+// `palette` pulls whatever colour you decree toward a curated set: a hue the
+// style is willing to print, a saturation ceiling, and a value range. Ink
+// stays ink even when you shout "neon pink"; stained glass refuses to be
+// muddy. `post` is the look of the frame itself — bloom, grade, vignette.
 export const STYLES = {
   storybook: {
     title: 'Storybook',
@@ -51,17 +57,33 @@ export const STYLES = {
       transparent: true, opacity: 0.92, shininess: 110,
       specular: new THREE.Color('#aaaaaa'),
     }),
+    richWater: true,
     outline: null,
     light: { hemi: 1, dir: 1, ambient: 0 },
     exposure: 1.05,
     fog: [120, 380],
+    fogDensity: 0.0032, fogDesat: 0.5,
     skyMix: 0,
     grade: 'none',
     overlays: ['paper-soft'],
     sketch: true,
+    palette: { sat: [0.18, 0.72], light: [0.24, 0.78], warmth: 0.06, unify: 0.14 },
+    post: {
+      bloom: 0.42, threshold: 0.86, exposure: 1.02, vignette: 0.32,
+      aberration: 0.0014, saturation: 1.06, contrast: 1.04,
+      lift: [0.012, 0.014, 0.026], gain: [1.03, 1.0, 0.96],
+    },
   },
 
   ink: {
+    palette: { sat: [0.0, 0.34], light: [0.16, 0.86], warmth: 0.1, unify: 0.5 },
+    post: {
+      bloom: 0.2, threshold: 0.92, exposure: 0.96, vignette: 0.5,
+      aberration: 0.0, saturation: 0.72, contrast: 1.16,
+      lift: [0.03, 0.028, 0.02], gain: [1.02, 0.99, 0.93],
+    },
+    fogDensity: 0.0062, fogDesat: 0.85,
+    richWater: false,
     title: 'Ink & Wash',
     blurb: 'sumi-e brushwork on rice paper',
     geo: 'wispy',
@@ -80,6 +102,14 @@ export const STYLES = {
   },
 
   cel: {
+    palette: { sat: [0.42, 0.95], light: [0.3, 0.74], warmth: 0.04, unify: 0.08 },
+    post: {
+      bloom: 0.5, threshold: 0.82, exposure: 1.06, vignette: 0.28,
+      aberration: 0.0016, saturation: 1.2, contrast: 1.08,
+      lift: [0.006, 0.01, 0.024], gain: [1.03, 1.0, 0.98],
+    },
+    fogDensity: 0.0022, fogDesat: 0.32,
+    richWater: true,
     title: 'Cel Shade',
     blurb: 'bold anime inks, three-tone light',
     geo: 'round',
@@ -98,6 +128,14 @@ export const STYLES = {
   },
 
   woodblock: {
+    palette: { sat: [0.24, 0.7], light: [0.26, 0.8], warmth: 0.14, unify: 0.3 },
+    post: {
+      bloom: 0.12, threshold: 0.95, exposure: 1.0, vignette: 0.4,
+      aberration: 0.0, saturation: 0.94, contrast: 1.18,
+      lift: [0.03, 0.024, 0.012], gain: [1.04, 0.99, 0.9],
+    },
+    fogDensity: 0.0035, fogDesat: 0.6,
+    richWater: false,
     title: 'Woodblock',
     blurb: 'ukiyo-e flats and carved lines',
     geo: 'angular',
@@ -114,6 +152,14 @@ export const STYLES = {
   },
 
   glass: {
+    palette: { sat: [0.62, 1.0], light: [0.3, 0.66], warmth: 0.0, unify: 0.1 },
+    post: {
+      bloom: 1.0, threshold: 0.62, exposure: 1.14, vignette: 0.55,
+      aberration: 0.0026, saturation: 1.34, contrast: 1.12,
+      lift: [0.0, 0.0, 0.04], gain: [1.04, 0.98, 1.06],
+    },
+    fogDensity: 0.0026, fogDesat: 0.24,
+    richWater: false,
     title: 'Stained Glass',
     blurb: 'lit panes in heavy leading',
     geo: 'angular',
@@ -130,6 +176,14 @@ export const STYLES = {
   },
 
   blueprint: {
+    palette: { sat: [0.3, 0.8], light: [0.5, 0.86], warmth: -0.1, unify: 0.55 },
+    post: {
+      bloom: 0.85, threshold: 0.5, exposure: 1.06, vignette: 0.62,
+      aberration: 0.0012, saturation: 0.8, contrast: 1.1,
+      lift: [0.0, 0.02, 0.06], gain: [0.9, 1.0, 1.12],
+    },
+    fogDensity: 0.0018, fogDesat: 0.2,
+    richWater: false,
     title: 'Blueprint',
     blurb: 'drafting lines on deep cyanotype',
     geo: 'angular',
@@ -150,6 +204,14 @@ export const STYLES = {
   },
 
   neon: {
+    palette: { sat: [0.7, 1.0], light: [0.42, 0.72], warmth: 0.0, unify: 0.06 },
+    post: {
+      bloom: 1.45, threshold: 0.42, exposure: 1.1, vignette: 0.6,
+      aberration: 0.0036, saturation: 1.36, contrast: 1.12,
+      lift: [0.02, 0.0, 0.05], gain: [1.04, 0.96, 1.12],
+    },
+    fogDensity: 0.005, fogDesat: 0.15,
+    richWater: false,
     title: 'Neon Dream',
     blurb: 'luminous forms in a dark field',
     geo: 'crystal',

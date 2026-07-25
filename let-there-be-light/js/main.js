@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { createWorld } from './acts.js';
 import { initInput } from './voice.js';
 import { createChoir } from './audio.js';
+import { createPost } from './render/post.js';
+import * as atmos from './render/atmos.js';
 
 // ------------------------------------------------------------------ boot
 
@@ -12,10 +14,16 @@ const canvas = document.getElementById('gl');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, isTouch ? 1.75 : 2));
 renderer.setSize(innerWidth, innerHeight);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
+// tone mapping happens in the composite, after bloom is gathered in linear light
+renderer.toneMapping = THREE.NoToneMapping;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const post = createPost(renderer);
+post.configure({
+  bloom: 0.85, threshold: 0.7, exposure: 1.0, vignette: 0.46,
+  aberration: 0.0018, saturation: 1.1, contrast: 1.06,
+  lift: [0.01, 0.012, 0.03], gain: [1.03, 1.0, 0.97],
+});
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.5, 2000);
@@ -136,6 +144,7 @@ function enact(id, silent = false) {
     }
     return false;
   }
+  atmos.registerScene(scene);   // whatever was just made joins the atmosphere
   const idx = ACT_IDS.indexOf(id);
   if (!silent) {
     choir.strike(idx);
@@ -215,9 +224,9 @@ function shareCreation() {
 
 // facing the origin, where whatever you make will appear
 const cam = {
-  pos: new THREE.Vector3(0, 58, 235),
+  pos: new THREE.Vector3(0, 96, 330),
   vel: new THREE.Vector3(),
-  yaw: 0, pitch: -0.13,
+  yaw: 0, pitch: -0.2,
 };
 const keys = new Set();
 let started = false;
@@ -430,6 +439,7 @@ addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
+  post.setSize(innerWidth, innerHeight, renderer.getPixelRatio());
 });
 
 window.__ltbl = { world, cam, enact };
@@ -448,5 +458,5 @@ renderer.setAnimationLoop(() => {
     camera.rotation.set(cam.pitch, cam.yaw, 0);
   }
   world.update(dt, now, cam.pos);
-  renderer.render(scene, camera);
+  post.render(scene, camera);
 });

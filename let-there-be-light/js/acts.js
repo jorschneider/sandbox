@@ -8,6 +8,8 @@
 
 import * as THREE from 'three';
 import { makeNoise } from './noise.js';
+import { makeScatterer, slopeAt } from './render/scatter.js';
+import * as atmos from './render/atmos.js';
 
 const N = makeNoise(70414);
 const rand = N.rand;
@@ -136,6 +138,13 @@ export function createWorld(scene, renderer) {
   sky.frustumCulled = false;
   scene.add(sky);
 
+  const WHITE_C = new THREE.Color('#ffffff');
+  const SUN_TINT = new THREE.Color('#ffcf8a');
+  const SUN_DIR = new THREE.Vector3(120, 190, -90).normalize();
+  const atmosCam = new THREE.Vector3();
+  const atmosFog = new THREE.Color();
+  const atmosSun = new THREE.Color();
+  const lastCam = new THREE.Vector3(0, 58, 235);
   const DAY_TOP = new THREE.Color('#3f7fd0');
   const DAY_HORIZON = new THREE.Color('#cfe4f5');
   const NIGHT_TOP = new THREE.Color('#050a1e');
@@ -162,6 +171,20 @@ export function createWorld(scene, renderer) {
     hemi.intensity = lit * (1.5 - 1.05 * nt);
     key.intensity = lit * (made.has('sun') ? 2.3 : 1.0) * (1 - 0.82 * nt);
     fill.intensity = lit * 0.5 * (1 - 0.7 * nt);
+
+    // aerial perspective, keyed to whatever sky currently exists
+    atmosCam.copy(lastCam);
+    atmosFog.copy(skyUniforms.uHorizon.value).lerp(WHITE_C, 0.1);
+    atmos.update(atmosCam, {
+      sunDir: SUN_DIR,
+      fogColor: atmosFog,
+      sunFogColor: atmosSun.copy(atmosFog).lerp(SUN_TINT, 0.55 * (1 - nt)),
+      density: 0.0011 * (1 + f * 0.2) + (1 - lit) * 0.004,
+      height: 12,
+      falloff: 0.03,
+      desat: 0.3,
+      amount: 1,
+    });
     glowMat.opacity = lit * 0.5 * (1 - f * 0.75);
     glow.scale.setScalar(200 + 90 * Math.sin(performance.now() / 2600));
   });
@@ -284,26 +307,65 @@ export function createWorld(scene, renderer) {
     });
   }
 
-  // the ground's own palette: rock, sand, snow — and grass once it is called
+  // The ground's own palette. Not one flat green: sand at the tideline, bare
+  // rock where it is too steep to hold soil, two greens blended by altitude
+  // and moisture, snow up top — all broken up across three scales of noise
+  // and darkened in its own hollows by curvature AO.
+  const SAND = [0.68, 0.60, 0.44], ROCK = [0.35, 0.33, 0.30];
+  const CLIFF = [0.30, 0.28, 0.26], SNOW = [0.86, 0.88, 0.93];
+  const GRASS_LOW = [0.26, 0.44, 0.20], GRASS_HIGH = [0.34, 0.42, 0.24];
   function paintLand() {
     if (!land) return;
     const n = landPos.count;
     const green = state.greenT;
     for (let i = 0; i < n; i++) {
+      const x = landPos.getX(i), z = landPos.getZ(i);
       const y = landPos.getY(i);
-      const j = (landJit[i] - 0.5) * 0.06;
-      let r, g, b;
-      if (y < 1.4) { r = 0.62 + j; g = 0.56 + j; b = 0.42 + j; }        // shore sand
-      else if (y > 46) { const s = clamp01((y - 46) / 16); r = 0.42 + s * 0.5 + j; g = 0.44 + s * 0.5 + j; b = 0.47 + s * 0.5 + j; }
-      else { r = 0.36 + j; g = 0.33 + j; b = 0.29 + j; }                 // bare rock
-      if (green > 0 && y >= 1.4 && y < 44) {
-        const m = green * clamp01(1 - Math.abs(y - 18) / 40);
-        r += (0.24 - r) * m; g += (0.46 - g) * m; b += (0.2 - b) * m;
+
+      // curvature AO: hollows sit in their own shadow, ridges catch the sky
+      const ao = clamp01(0.78 + (y - (
+        landHeight(x + 7, z) + landHeight(x - 7, z)
+        + landHeight(x, z + 7) + landHeight(x, z - 7)) / 4) * 0.055) * 0.35 + 0.7;
+
+      const steep = slopeAt(landHeight, x, z);
+      const cliff = clamp01((steep - 0.55) / 0.75);
+      const m1 = noiseFbm(x * 0.008 + 5, z * 0.008 - 3) * 0.1;
+      const m2 = noiseFbm(x * 0.035 - 12, z * 0.035 + 9) * 0.06;
+      const j = (landJit[i] - 0.5) * 0.05 + m1 + m2;
+
+      let c;
+      if (y < 2.2) c = SAND;
+      else c = ROCK;
+      let r = c[0] + j, g = c[1] + j, b = c[2] + j;
+
+      if (green > 0 && y >= 2.0) {
+        const alt = clamp01((y - 2) / 40);
+        const gr = [
+          GRASS_LOW[0] + (GRASS_HIGH[0] - GRASS_LOW[0]) * alt,
+          GRASS_LOW[1] + (GRASS_HIGH[1] - GRASS_LOW[1]) * alt,
+          GRASS_LOW[2] + (GRASS_HIGH[2] - GRASS_LOW[2]) * alt,
+        ];
+        // grass gives up on cliffs and above the treeline
+        const m = green * (1 - cliff) * (1 - clamp01((y - 44) / 14))
+          * clamp01((y - 1.6) / 2.5);
+        r += (gr[0] + j - r) * m; g += (gr[1] + j - g) * m; b += (gr[2] + j - b) * m;
       }
-      landColor[i * 3] = r; landColor[i * 3 + 1] = g; landColor[i * 3 + 2] = b;
+      if (cliff > 0) {
+        r += (CLIFF[0] + j - r) * cliff * 0.85;
+        g += (CLIFF[1] + j - g) * cliff * 0.85;
+        b += (CLIFF[2] + j - b) * cliff * 0.85;
+      }
+      if (y > 44) {
+        const s = clamp01((y - 44) / 18) * (1 - cliff * 0.6);
+        r += (SNOW[0] - r) * s; g += (SNOW[1] - g) * s; b += (SNOW[2] - b) * s;
+      }
+      landColor[i * 3] = r * ao;
+      landColor[i * 3 + 1] = g * ao;
+      landColor[i * 3 + 2] = b * ao;
     }
     land.geometry.attributes.color.needsUpdate = true;
   }
+  const noiseFbm = (x, z) => N.fbm(x, z, 3);
 
   function groundAt(x, z) {
     if (!land) return -70;
@@ -315,16 +377,23 @@ export function createWorld(scene, renderer) {
   }
 
   // -------------------------------------------------------------------- life
-  function scatter(count, minH, tries = 40) {
-    const out = [];
-    let guard = 0;
-    while (out.length < count && guard++ < count * tries) {
-      const a = rand() * Math.PI * 2, r = Math.sqrt(rand()) * 320;
-      const x = Math.cos(a) * r, z = Math.sin(a) * r;
-      if (!dryLand(x, z, minH)) continue;
-      out.push({ x, z, y: groundAt(x, z), s: 0.7 + rand() * 0.7, rot: rand() * 7 });
-    }
-    return out;
+  // Groves and clearings, thinned on cliffs and toward the treeline, with a
+  // few hero specimens — the same placement logic the valley uses.
+  const SC = makeScatterer({ noise: N, rand });
+  function scatter(count, minH, opts = {}) {
+    return SC.scatter({
+      count, extent: 330, cell: opts.cell ?? 12,
+      allow: (x, z) => dryLand(x, z, minH),
+      density: opts.density ?? ((x, z) => {
+        const g = SC.grove(x, z, 0.009, 0.1, 1.9);
+        const shed = 1 - clamp01((slopeAt(groundAt, x, z) - 0.5) / 0.7);
+        const high = 1 - clamp01((groundAt(x, z) - 34) / 20);
+        return g * shed * high;
+      }),
+      sizeFn: opts.sizeFn ?? ((r) => 0.6 + Math.pow(r, 1.6) * 0.9),
+      heroChance: opts.heroChance ?? 0.05,
+      heroScale: opts.heroScale ?? 1.9,
+    }).map((sp) => ({ ...sp, y: groundAt(sp.x, sp.z) }));
   }
 
   // a growth animation shared by every planted thing
@@ -378,6 +447,42 @@ export function createWorld(scene, renderer) {
     return mesh;
   }
 
+  // Soft radial falloff under everything that stands: the difference between
+  // an object resting on the ground and an object hovering above it.
+  const shadowTex = (() => {
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const g = c.getContext('2d');
+    const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0, 'rgba(0,0,0,0.8)');
+    grd.addColorStop(0.45, 'rgba(0,0,0,0.36)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grd;
+    g.fillRect(0, 0, 64, 64);
+    const t = new THREE.CanvasTexture(c);
+    t.needsUpdate = true;
+    return t;
+  })();
+  function addContactShadows(spots) {
+    if (!spots.length) return;
+    const mat = new THREE.MeshBasicMaterial({
+      map: shadowTex, color: '#0b0d12', transparent: true, opacity: 0.4,
+      depthWrite: false, fog: false,
+    });
+    const mesh = new THREE.InstancedMesh(
+      new THREE.PlaneGeometry(2, 2).rotateX(-Math.PI / 2), mat, spots.length);
+    const m = new THREE.Matrix4(), q = new THREE.Quaternion();
+    spots.forEach((s, i) => {
+      mesh.setMatrixAt(i, m.compose(
+        new THREE.Vector3(s.x, groundAt(s.x, s.z) + 0.12, s.z), q,
+        new THREE.Vector3(s.r, 1, s.r)));
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    mesh.raycast = () => {};
+    mesh.frustumCulled = false;
+    scene.add(mesh);
+  }
+
   function mergeGeoms(list) {
     const parts = list.map((g) => (g.index ? g.toNonIndexed() : g));
     let total = 0;
@@ -417,9 +522,11 @@ export function createWorld(scene, renderer) {
     });
   }
 
-  function makeDisc(color, size, dist, height, emissive) {
+  function makeDisc(color, size, dist, height, hdr = 3.2) {
     const mat = new THREE.MeshBasicMaterial({
-      color, fog: false, transparent: true, opacity: 0.95,
+      // pushed past white so it blooms in the post chain
+      color: new THREE.Color(color).multiplyScalar(hdr),
+      fog: false, transparent: true, opacity: 0.95,
     });
     const disc = new THREE.Mesh(new THREE.CircleGeometry(size, 32), mat);
     const halo = new THREE.Mesh(new THREE.CircleGeometry(size * 1.9, 32),
@@ -512,9 +619,16 @@ export function createWorld(scene, renderer) {
       words: ['mountain', 'mountains', 'hills', 'peaks', 'highlands'],
       verse: 'And the mountains rose up out of the earth.',
       make() {
+        // Start from wherever the ground stands right now — the earth may
+        // still be rising — and aim at an absolute goal rather than an
+        // offset, so the two movements can never fight each other.
         for (let i = 0; i < landPos.count; i++) {
-          landTarget[i] = landBase[i] + ridgeHeight(landPos.getX(i), landPos.getZ(i));
+          const x = landPos.getX(i), z = landPos.getZ(i);
+          landBase[i] = landPos.getY(i);
+          landTarget[i] = landHeight(x, z) + ridgeHeight(x, z);
         }
+        earthAnim.t = -1;          // the rising is superseded by this one
+        state.earthT = 1;
         ridgeAnim.t = 0;
       },
     },
@@ -529,7 +643,14 @@ export function createWorld(scene, renderer) {
           const k = clamp01((performance.now() / 1000 - t0) / 5);
           if (k !== state.greenT) { state.greenT = k; paintLand(); }
         });
-        const spots = scatter(2200, 2.6);
+        const spots = scatter(2400, 2.6, {
+          cell: 5.5, heroChance: 0,
+          density: (x, z) => {
+            const meadow = SC.grove(x, z, 0.014, 0.5, 1.3);
+            const flat = 1 - clamp01((slopeAt(groundAt, x, z) - 0.4) / 0.6);
+            return meadow * flat * (1 - clamp01((groundAt(x, z) - 38) / 16));
+          },
+        });
         const blade = () => {
           const g = new THREE.BufferGeometry();
           g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
@@ -560,6 +681,7 @@ export function createWorld(scene, renderer) {
         const trunk = new THREE.CylinderGeometry(0.22, 0.4, 3.6, 8).translate(0, 1.8, 0);
         growGroup(instanced(canopy, spots, '#2f7d43', 0.12), spots, 1.9, 24);
         growGroup(instanced(trunk, spots.map((s) => ({ ...s })), '#6b4a30', 0.06), spots, 1.9, 24);
+        addContactShadows(spots.map((s) => ({ x: s.x, z: s.z, r: 2.6 * s.s })));
       },
     },
 
@@ -892,6 +1014,7 @@ export function createWorld(scene, renderer) {
     dawn() { state.nightTarget = 0; },
     setRain(on) { state.rain = on; },
     update(dt, t, camPos) {
+      if (camPos) lastCam.copy(camPos);
       for (const u of updaters) u(dt, t, camPos);
     },
   };

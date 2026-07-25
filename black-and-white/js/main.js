@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { buildWorld, REALMS } from './world.js';
 import { STYLES, STYLE_IDS } from './styles.js';
+import { createPost } from './render/post.js';
+import * as atmos from './render/atmos.js';
 import { bindDecrees, speak, hydrate, getWorldState, getSaveState, tickDecrees } from './decree.js';
 import { initInput } from './voice.js';
 import { createAmbience } from './audio.js';
@@ -14,10 +16,12 @@ const canvas = document.getElementById('gl');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, isTouch ? 1.75 : 2));
 renderer.setSize(innerWidth, innerHeight);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+// tone mapping now happens in the composite pass, after bloom is gathered
+// in linear light — so the renderer itself must not touch the curve
+renderer.toneMapping = THREE.NoToneMapping;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const post = createPost(renderer);
 
 const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 1100);
 camera.rotation.order = 'YXZ';
@@ -152,7 +156,7 @@ function disposeScene(s) {
 function applyStyleChrome(style) {
   document.documentElement.style.setProperty('--grade', style.grade || 'none');
   document.documentElement.style.setProperty('--sketch-max', style.sketch ? '1' : '0');
-  renderer.toneMappingExposure = style.exposure ?? 1.05;
+  post.configure(style.post || {});
   const body = document.body;
   for (const cls of [...body.classList]) {
     if (cls.startsWith('ov-') || cls.startsWith('sty-')) body.classList.remove(cls);
@@ -174,6 +178,7 @@ function createWorld(realm, styleId = currentStyle) {
     shadowMapSize: isTouch ? 1024 : 2048,
   });
   applyStyleChrome(world.styleDef);
+  atmos.registerScene(scene);
   catKeys = [...world.categories.keys()];
   bindDecrees(world, decreeHooks);
   highlight.visible = false;
@@ -633,6 +638,7 @@ addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
+  post.setSize(innerWidth, innerHeight, renderer.getPixelRatio());
 });
 
 // debug/testing handle
@@ -658,5 +664,5 @@ renderer.setAnimationLoop(() => {
   if (highlight.visible) {
     highlightMat.opacity = 0.05 + 0.05 * (1 + Math.sin(now * 4.5)) / 2;
   }
-  renderer.render(scene, camera);
+  post.render(scene, camera);
 });

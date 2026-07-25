@@ -6,6 +6,8 @@
 import * as THREE from 'three';
 import { makeNoise } from './noise.js';
 import { getStyle, applyOutlines } from './styles.js';
+import { makeScatterer, slopeAt } from './render/scatter.js';
+import * as atmos from './render/atmos.js';
 
 const WATER_Y = -1.5;
 const WHITE = new THREE.Color('#ffffff');
@@ -254,6 +256,9 @@ export function buildWorld(scene, opts = {}) {
   const domeUniforms = {
     uTop: { value: new THREE.Color('#e7e7e4') },
     uHorizon: { value: new THREE.Color('#efefec') },
+    uSunDir: { value: new THREE.Vector3(0.45, 0.62, -0.64).normalize() },
+    uSunColor: { value: new THREE.Color('#ffe6b0') },
+    uSunAmt: { value: 1 },
   };
   const dome = new THREE.Mesh(
     new THREE.SphereGeometry(880, 32, 20),
@@ -262,9 +267,22 @@ export function buildWorld(scene, opts = {}) {
       vertexShader: `varying vec3 vDir;
         void main() { vDir = normalize(position);
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-      fragmentShader: `uniform vec3 uTop; uniform vec3 uHorizon; varying vec3 vDir;
-        void main() { float t = pow(clamp(vDir.y, 0.0, 1.0), 0.62);
-          gl_FragColor = vec4(mix(uHorizon, uTop, t), 1.0); }`,
+      fragmentShader: `
+        uniform vec3 uTop; uniform vec3 uHorizon; uniform vec3 uSunDir;
+        uniform vec3 uSunColor; uniform float uSunAmt;
+        varying vec3 vDir;
+        void main() {
+          vec3 d = normalize(vDir);
+          float t = pow(clamp(d.y, 0.0, 1.0), 0.62);
+          vec3 col = mix(uHorizon, uTop, t);
+          // a band of haze thickening into the horizon line
+          float band = exp(-max(d.y, 0.0) * 18.0);
+          col = mix(col, uHorizon, band * 0.3);
+          // the sun's glow spreads through the sky around it
+          float s = max(dot(d, uSunDir), 0.0);
+          col += uSunColor * (pow(s, 16.0) * 0.28 + pow(s, 4.0) * 0.045) * uSunAmt;
+          gl_FragColor = vec4(col, 1.0);
+        }`,
     }));
   dome.renderOrder = -999;
   dome.frustumCulled = false;
@@ -289,9 +307,10 @@ export function buildWorld(scene, opts = {}) {
     phrase: 'and the sun burned',
     defaultColor: '#ffd166',
     surfaces: [
+      // pushed past white so the sun actually blooms in the post chain
       { type: 'tint', current: sunMat.color, apply: (c) => {
-        sunMat.color.copy(c);
-        haloMat.color.copy(c);
+        sunMat.color.copy(c).multiplyScalar(3.4);
+        haloMat.color.copy(c).multiplyScalar(2.2);
         sunLightBase.copy(c).lerp(WHITE, 0.55);
       } },
     ],
@@ -375,7 +394,7 @@ export function buildWorld(scene, opts = {}) {
     tC1.copy(skyBase).lerp(tC2, nt).lerp(DUSK_TOP, dusk * 0.3);
     if (styleSky) tC1.lerp(styleSky, skyMix);
     domeUniforms.uTop.value.copy(tC1);
-    tC3.copy(skyBase).lerp(WHITE, 0.42);
+    tC3.copy(skyBase).lerp(WHITE, 0.26);
     tC2.copy(skyBase).multiplyScalar(0.16).lerp(NIGHT_SKY, 0.55).lerp(WHITE, 0.06);
     tC3.lerp(tC2, nt).lerp(DUSK_HORIZON, dusk * 0.55);
     if (styleSky) tC3.lerp(styleSky, skyMix * (style.darkWorld ? 1 : 0.72));
@@ -407,6 +426,24 @@ export function buildWorld(scene, opts = {}) {
       lightDir.lerpVectors(sunDir, moonDir, nt).normalize();
       sunLight.position.set(sx + lightDir.x * 180, lightDir.y * 180, sz + lightDir.z * 180);
       sunLight.target.position.set(sx, 0, sz);
+
+      // the sky's own sun glow, and the aerial perspective, share one direction
+      domeUniforms.uSunDir.value.copy(lightDir);
+      domeUniforms.uSunColor.value.copy(sunMat.color).multiplyScalar(0.34);
+      domeUniforms.uSunAmt.value = (1 - nt) * 0.9 + 0.1;
+      // Haze sits in the valley floor and thins fast with height, so ridges
+      // stay crisp while the distance goes soft — and it never whites out the
+      // near field.
+      atmos.update(playerPos, {
+        sunDir: lightDir,
+        fogColor: tC2.copy(skyBase).lerp(WHITE, 0.16).lerp(NIGHT_SKY, nt * 0.8),
+        sunFogColor: tC1.copy(sunMat.color).lerp(WHITE, 0.2),
+        density: (style.fogDensity ?? 0.0011) * (1 + 0.9 * state.duskT),
+        height: 8,
+        falloff: 0.04,
+        desat: style.fogDesat ?? 0.28,
+        amount: style.atmosphere ?? 1,
+      });
     }
   });
 
@@ -421,18 +458,56 @@ export function buildWorld(scene, opts = {}) {
   }
   tGeo.computeVertexNormals();
 
-  const shade = new Float32Array(vCount);
+  // Per-vertex modulation, in RGB rather than a single scalar, so the ground
+  // can do what real ground does: darken where it folds in on itself, grey
+  // toward rock where it is too steep to hold soil, drink darker at the
+  // water's edge, and break up across three scales so no two acres match.
+  const shade = new Float32Array(vCount * 3);
   const vJitter = new Float32Array(vCount);
   const tNor = tGeo.attributes.normal;
   const tCol = new Float32Array(vCount * 3);
+  const CLIFF = [0.74, 0.71, 0.66];      // what steep ground tends toward
   for (let i = 0; i < vCount; i++) {
-    const ny = tNor.getY(i);
+    const x = tPos.getX(i), z = tPos.getZ(i);
     const y = tPos.getY(i);
-    const s = Math.min(0.72 + 0.3 * smoothstep(0.55, 1, ny) + 0.004 * Math.max(y, 0), 1.12);
-    shade[i] = s;
+    const ny = tNor.getY(i);
     vJitter[i] = rand();
-    const g = (0.64 + (vJitter[i] - 0.5) * 0.07) * s;
-    tCol[i * 3] = g; tCol[i * 3 + 1] = g; tCol[i * 3 + 2] = g;
+
+    // curvature AO: compare this point to the ground around it. Hollows sit
+    // in their own shadow; ridges catch the sky.
+    let avg = 0;
+    for (const [dx, dz] of [[6, 0], [-6, 0], [0, 6], [0, -6], [11, 11], [-11, -11]]) {
+      avg += terrainHeight(x + dx, z + dz);
+    }
+    avg /= 6;
+    const ao = Math.min(1.08, Math.max(0.55, 0.92 + (y - avg) * 0.05));
+
+    // slope: sun-facing tilt plus a lift with altitude
+    const slope = Math.min(0.74 + 0.3 * smoothstep(0.5, 1, ny) + 0.0035 * Math.max(y, 0), 1.12);
+
+    // three scales of macro variation so large areas never read as one flat wash
+    const m1 = N.fbm(x * 0.0075 + 13, z * 0.0075 - 8, 3) * 0.1;
+    const m2 = N.fbm(x * 0.031 - 5, z * 0.031 + 21, 2) * 0.055;
+    const m3 = (vJitter[i] - 0.5) * 0.05;
+    const macro = 1 + m1 + m2 + m3;
+
+    // cliffs: too steep for soil
+    const cliff = smoothstep(0.62, 0.28, ny);
+    // wetness: the shore drinks, and darkens
+    const wet = 1 - smoothstep(0, 7, Math.abs(waterDist(x, z))) * 1;
+    const wetK = Math.max(0, wet) * (y < 6 ? 1 : 0);
+
+    const base = ao * slope * macro;
+    for (let c = 0; c < 3; c++) {
+      let v = base;
+      v = v * (1 - cliff) + base * CLIFF[c] * 1.06 * cliff;   // grey toward rock
+      v *= 1 - 0.28 * wetK;                                    // darker when wet
+      shade[i * 3 + c] = v;
+    }
+    const g = 0.64 * base;
+    tCol[i * 3] = g * (1 - cliff * 0.1);
+    tCol[i * 3 + 1] = g * (1 - cliff * 0.06);
+    tCol[i * 3 + 2] = g;
   }
   tGeo.setAttribute('color', new THREE.BufferAttribute(tCol, 3));
   // groundTint multiplies the decreed land colour, so dark styles keep a
@@ -474,15 +549,22 @@ export function buildWorld(scene, opts = {}) {
   }
 
   // ---- grass (hidden until the land is given color) -----------------------
-  const grassSpots = [];
+  const SG = makeScatterer({ noise: N, rand });
+  const grassSpots = SG.scatter({
+    count: cfg.grassCount,
+    extent: 186, cell: 4.4,
+    allow: (x, z) => openGround(x, z, 10) && !nearPath(x, z, 2.2),
+    // thick in the meadows, thinning on slopes and up toward bare rock
+    density: (x, z) => {
+      const meadow = SG.grove(x, z, 0.016, 0.45, 1.4);
+      const flat = 1 - smoothstep(0.45, 1.0, slopeAt(terrainHeight, x, z));
+      const low = 1 - smoothstep(24, 42, terrainHeight(x, z));
+      return meadow * flat * low;
+    },
+    sizeFn: (r) => 0.55 + r * 1.0,
+    heroChance: 0,
+  }).map((sp) => ({ ...sp, phase: sp.seed * 7 }));
   let guard = 0;
-  while (grassSpots.length < cfg.grassCount && guard++ < 60000) {
-    const x = (rand() * 2 - 1) * 185, z = (rand() * 2 - 1) * 185;
-    if (!openGround(x, z, 11)) continue;
-    if (nearPath(x, z, 2.4)) continue;
-    if (N.fbm(x * 0.03 - 11, z * 0.03 + 23, 3) < -0.05) continue;
-    grassSpots.push({ x, z, s: 0.7 + rand() * 0.9, rot: rand() * Math.PI * 2, phase: rand() * 7 });
-  }
   const bladeTri = (a) => {
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
@@ -556,24 +638,90 @@ export function buildWorld(scene, opts = {}) {
   }
 
   // ---- water (river ribbon or oasis pond) ---------------------------------
-  const waterMat = style.water();
-  waterMat.color.set('#c4c4c4');
+  // Water sells itself at two places: the grazing angle, where it turns to
+  // sky, and the shoreline, where it goes shallow and breaks into foam.
+  let waterMat;
+  if (style.richWater) {
+    const wu = {
+      uColor: { value: new THREE.Color('#c4c4c4') },
+      uSky: { value: new THREE.Color('#dfe9f5') },
+      uSunDir: { value: new THREE.Vector3(0.45, 0.62, -0.64).normalize() },
+      uSunColor: { value: new THREE.Color('#ffe6b0') },
+      uTime: { value: 0 },
+      uCamPos: { value: new THREE.Vector3() },
+      uNight: { value: 0 },
+    };
+    waterMat = new THREE.ShaderMaterial({
+      uniforms: wu, transparent: true, fog: false,
+      vertexShader: `
+        varying vec3 vW; varying float vShore;
+        uniform float uTime;
+        void main(){
+          vW = (modelMatrix * vec4(position, 1.0)).xyz;
+          // distance from the ribbon's centre line drives the shallows
+          vShore = abs(uv.x - 0.5) * 2.0;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }`,
+      fragmentShader: `
+        uniform vec3 uColor, uSky, uSunDir, uSunColor, uCamPos;
+        uniform float uTime, uNight;
+        varying vec3 vW; varying float vShore;
+        void main(){
+          vec3 V = normalize(uCamPos - vW);
+          // ripple normal, cheap but enough to break the mirror
+          float n1 = sin(vW.x * 1.6 + uTime * 1.7);
+          float n2 = sin(vW.z * 2.1 - uTime * 1.3);
+          float n3 = sin((vW.x + vW.z) * 0.9 + uTime * 0.8);
+          vec3 Nn = normalize(vec3((n1 + n3) * 0.09, 1.0, (n2 + n3) * 0.09));
+
+          // fresnel: transparent looking down, sky-bright at a glance
+          float f = pow(1.0 - clamp(dot(V, Nn), 0.0, 1.0), 3.2);
+          f = clamp(f * 0.92 + 0.06, 0.0, 1.0);
+
+          // shallow water keeps its colour; deep water darkens toward it
+          float deep = smoothstep(0.15, 0.95, 1.0 - vShore);
+          vec3 body = mix(uColor * 1.28, uColor * 0.52, deep);
+
+          vec3 col = mix(body, uSky, f * (1.0 - uNight * 0.55));
+
+          // a specular glint where the sun catches a wave face
+          float spec = pow(max(dot(reflect(-V, Nn), uSunDir), 0.0), 90.0);
+          col += uSunColor * spec * 1.4 * (1.0 - uNight);
+
+          // foam gathers at the edge, breathing in and out
+          float foam = smoothstep(0.72, 1.0, vShore + n3 * 0.05 + n1 * 0.03);
+          col = mix(col, vec3(0.95, 0.97, 1.0), foam * 0.55);
+
+          gl_FragColor = vec4(col, mix(0.82, 0.96, f) - foam * 0.12);
+        }`,
+    });
+    Object.defineProperty(waterMat, 'color', { get: () => wu.uColor.value });
+    waterMat.userData.u = wu;
+  } else {
+    waterMat = style.water();
+    waterMat.color.set('#c4c4c4');
+  }
   let wGeo;
   if (POND) {
     wGeo = new THREE.CircleGeometry(POND.r, 30).rotateX(-Math.PI / 2)
       .translate(POND.x, WATER_Y, POND.z);
   } else {
-    const wCols = 6, wRows = 118, wWidth = 8.6;
+    const wCols = 9, wRows = 118, wWidth = 8.6;
     wGeo = new THREE.BufferGeometry();
     const wVerts = new Float32Array(wCols * wRows * 3);
+    const wUv = new Float32Array(wCols * wRows * 2);
     for (let r = 0; r < wRows; r++) {
       const z = -234 + r * 4;
       for (let cI = 0; cI < wCols; cI++) {
         const x = riverX(z) - wWidth / 2 + (wWidth * cI) / (wCols - 1);
         const k = (r * wCols + cI) * 3;
         wVerts[k] = x; wVerts[k + 1] = WATER_Y; wVerts[k + 2] = z;
+        const uk = (r * wCols + cI) * 2;
+        wUv[uk] = cI / (wCols - 1);          // across the ribbon: drives the shallows
+        wUv[uk + 1] = r / (wRows - 1);
       }
     }
+    wGeo.setAttribute('uv', new THREE.BufferAttribute(wUv, 2));
     const wIdx = [];
     for (let r = 0; r < wRows - 1; r++) {
       for (let cI = 0; cI < wCols - 1; cI++) {
@@ -591,7 +739,7 @@ export function buildWorld(scene, opts = {}) {
 
   const wArr = wGeo.attributes.position.array;
   const wBase = wArr.slice();
-  updaters.push((dt, t) => {
+  updaters.push((dt, t, playerPos) => {
     for (let i = 0; i < wArr.length; i += 3) {
       const x = wBase[i], z = wBase[i + 2];
       wArr[i + 1] = WATER_Y
@@ -599,7 +747,16 @@ export function buildWorld(scene, opts = {}) {
         + Math.sin(x * 0.8 + z * 0.11 + t * 2.4) * 0.06;
     }
     wGeo.attributes.position.needsUpdate = true;
-    wGeo.computeVertexNormals();
+    if (!waterMat.userData.u) wGeo.computeVertexNormals();
+    const wu = waterMat.userData.u;
+    if (wu) {
+      wu.uTime.value = t;
+      if (playerPos) wu.uCamPos.value.copy(playerPos);
+      wu.uSky.value.copy(domeUniforms.uHorizon.value).lerp(WHITE, 0.12);
+      wu.uSunDir.value.copy(domeUniforms.uSunDir.value);
+      wu.uSunColor.value.copy(sunMat.color).multiplyScalar(0.3);
+      wu.uNight.value = state.nightT;
+    }
   });
 
   addCategory('water', {
@@ -670,19 +827,33 @@ export function buildWorld(scene, opts = {}) {
   });
 
   // ---- trees / cacti ------------------------------------------------------
-  const treeSpots = [];
-  guard = 0;
-  while (treeSpots.length < cfg.trees.count && guard++ < 30000) {
-    const x = (rand() * 2 - 1) * 195, z = (rand() * 2 - 1) * 195;
-    if (!openGround(x, z, 12)) continue;
-    if (nearPath(x, z, 4.5)) continue;
-    if (N.fbm(x * 0.02 + 40, z * 0.02 - 17, 3) < -0.12) continue;
-    treeSpots.push({ x, z, s: 0.7 + rand() * 0.85, rot: rand() * Math.PI * 2 });
-  }
+  // Groves, not confetti: a density field carves clearings and thickets, the
+  // grid keeps spacing believable, steep ground sheds trees, and one in
+  // twenty is a hero that towers over its neighbours.
+  const S = makeScatterer({ noise: N, rand });
+  const treeSpots = S.scatter({
+    count: cfg.trees.count,
+    extent: 196,
+    cell: cfg.trees.kind === 'cacti' ? 15 : 11,
+    allow: (x, z) => openGround(x, z, 12) && !nearPath(x, z, 4.5),
+    density: (x, z) => {
+      const g = S.grove(x, z, 0.011, 0.12, 2.0);
+      const steep = slopeAt(terrainHeight, x, z);
+      const shed = 1 - smoothstep(0.55, 1.15, steep);       // trees give up on cliffs
+      const high = 1 - smoothstep(28, 46, terrainHeight(x, z)); // and near the treeline
+      return g * shed * high;
+    },
+    sizeFn: (r) => 0.62 + Math.pow(r, 1.7) * 0.9,           // many small, few large
+    heroChance: 0.045,
+    heroScale: 1.95,
+  });
+  // species cluster into stands rather than salt-and-peppering the whole wood
   const temperate = cfg.trees.kind === 'temperate';
+  const isConifer = (sp) =>
+    N.fbm(sp.x * 0.006 - 61, sp.z * 0.006 + 44, 2) + (sp.seed - 0.5) * 0.5 > -0.05;
   const pineSpots = cfg.trees.kind === 'cacti' ? []
-    : temperate ? treeSpots.filter((_, i) => i % 9 < 5) : treeSpots;
-  const broadSpots = temperate ? treeSpots.filter((_, i) => i % 9 >= 5) : [];
+    : temperate ? treeSpots.filter(isConifer) : treeSpots;
+  const broadSpots = temperate ? treeSpots.filter((sp) => !isConifer(sp)) : [];
   const cactusSpots = cfg.trees.kind === 'cacti' ? treeSpots : [];
 
   function treeMatrices(spots) {
@@ -809,22 +980,30 @@ export function buildWorld(scene, opts = {}) {
   }
 
   // ---- rocks (and mesas) --------------------------------------------------
-  const rockMatrices = [];
-  guard = 0;
-  while (rockMatrices.length < cfg.rocks.count && guard++ < 20000) {
-    const x = (rand() * 2 - 1) * 195, z = (rand() * 2 - 1) * 195;
-    const nearWater = waterDist(x, z) < 12 && waterDist(x, z) > 5;
-    if (!openGround(x, z, 5) && !nearWater) continue;
-    if (nearPath(x, z, 3)) continue;
-    if (!nearWater && rand() > 0.4) continue;
-    const s = 0.4 + rand() * 1.5;
-    rockMatrices.push(new THREE.Matrix4().compose(
-      new THREE.Vector3(x, terrainHeight(x, z) - 0.25 * s, z),
+  // boulders gather where the ground breaks: on steep faces and along shores
+  const rockSpots = S.scatter({
+    count: cfg.rocks.count,
+    extent: 196, cell: 13,
+    allow: (x, z) => Math.hypot(x, z) < 196 && !nearPath(x, z, 3)
+      && villageMask(x, z) < 0.12 && waterDist(x, z) > 4,
+    density: (x, z) => {
+      const steep = smoothstep(0.35, 1.0, slopeAt(terrainHeight, x, z));
+      const shore = 1 - smoothstep(5, 16, waterDist(x, z));
+      const stray = S.grove(x, z, 0.02, -0.35, 2.6) * 0.5;
+      return Math.min(1, steep * 0.9 + shore * 0.8 + stray);
+    },
+    sizeFn: (r) => 0.35 + Math.pow(r, 2.1) * 1.9,
+    heroChance: 0.07, heroScale: 2.6,
+  });
+  const rockMatrices = rockSpots.map((sp) => {
+    const s = sp.s;
+    return new THREE.Matrix4().compose(
+      new THREE.Vector3(sp.x, terrainHeight(sp.x, sp.z) - 0.3 * s, sp.z),
       new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(rand() * 0.4, rand() * Math.PI * 2, rand() * 0.4)),
-      new THREE.Vector3(s * (0.8 + rand() * 0.5), s * (0.55 + rand() * 0.4), s),
-    ));
-  }
+        new THREE.Euler(sp.seed * 0.5, sp.rot, (sp.seed * 7 % 1) * 0.5)),
+      new THREE.Vector3(s * (0.8 + sp.seed * 0.5), s * (0.5 + sp.seed * 0.45), s),
+    );
+  });
   const rockGeo = GEO === 'crystal' ? new THREE.OctahedronGeometry(1, 0)
     : GEO === 'angular' ? new THREE.IcosahedronGeometry(1, 0)
       : new THREE.SphereGeometry(1, 8, 6);
@@ -876,15 +1055,22 @@ export function buildWorld(scene, opts = {}) {
   while (clusters.length < cfg.flowerClusters && guard++ < 4000) {
     const x = (rand() * 2 - 1) * 170, z = (rand() * 2 - 1) * 170;
     if (!openGround(x, z, 13)) continue;
+    if (slopeAt(terrainHeight, x, z) > 0.55) continue;   // meadows, not slopes
     clusters.push({ x, z });
   }
+  // drifts rather than discs: elongated, denser at the heart, ragged at the edge
   for (const cl of clusters) {
-    const n = 35 + (rand() * 30) | 0;
+    const n = 40 + (rand() * 45) | 0;
+    const dir = rand() * Math.PI * 2;
+    const stretch = 1.5 + rand() * 1.8;
     for (let i = 0; i < n; i++) {
-      const a = rand() * Math.PI * 2, r = Math.sqrt(rand()) * 7;
-      const x = cl.x + Math.cos(a) * r, z = cl.z + Math.sin(a) * r;
-      if (!openGround(x, z, 10)) continue;
-      const s = 0.7 + rand() * 0.7;
+      const a = rand() * Math.PI * 2, r = Math.pow(rand(), 0.7) * 8;
+      const ox = Math.cos(a) * r * stretch, oz = Math.sin(a) * r;
+      const x = cl.x + ox * Math.cos(dir) - oz * Math.sin(dir);
+      const z = cl.z + ox * Math.sin(dir) + oz * Math.cos(dir);
+      if (!openGround(x, z, 9)) continue;
+      if (slopeAt(terrainHeight, x, z) > 0.75) continue;
+      const s = 0.6 + rand() * 0.9;
       flowerMatrices.push(new THREE.Matrix4().compose(
         new THREE.Vector3(x, terrainHeight(x, z), z),
         new THREE.Quaternion().setFromEuler(new THREE.Euler(0, rand() * Math.PI * 2, 0)),
@@ -1127,7 +1313,7 @@ export function buildWorld(scene, opts = {}) {
     phrase: 'and the houses stood',
     defaultColor: '#e8dcc4',
     onFirstColor: () => {
-      for (const m of windowMats) m.emissive.set('#ffc46b').multiplyScalar(0.9);
+      for (const m of windowMats) m.emissive.set('#ffc46b').multiplyScalar(2.4);
     },
     onReset: () => {
       for (const m of windowMats) m.emissive.set('#000000');
@@ -1841,14 +2027,78 @@ export function buildWorld(scene, opts = {}) {
     });
   }
 
+  // ---- fallen wood: the floor of a real wood is not swept ----------------
+  if (pineSpots.length || broadSpots.length) {
+    const logMats = [], stumpMats = [];
+    for (const sp of treeSpots) {
+      if (sp.seed > 0.09) continue;
+      const a = sp.rot + 1.1;
+      const x = sp.x + Math.cos(a) * 2.2, z = sp.z + Math.sin(a) * 2.2;
+      if (!openGround(x, z, 10)) continue;
+      const s = 0.8 + sp.seed * 4;
+      if (sp.seed < 0.045) {
+        logMats.push(new THREE.Matrix4().compose(
+          new THREE.Vector3(x, terrainHeight(x, z) + 0.22 * s, z),
+          new THREE.Quaternion().setFromEuler(new THREE.Euler(0, a, Math.PI / 2 + 0.06)),
+          new THREE.Vector3(s, s * (2.4 + sp.seed * 12), s)));
+      } else {
+        stumpMats.push(new THREE.Matrix4().compose(
+          new THREE.Vector3(x, terrainHeight(x, z), z),
+          new THREE.Quaternion().setFromEuler(new THREE.Euler(0, a, 0)),
+          new THREE.Vector3(s, s * 0.7, s)));
+      }
+    }
+    const barkCat = categories.get('bark');
+    if (logMats.length) {
+      const logs = makeInstanced(
+        new THREE.CylinderGeometry(0.28, 0.33, 1, 7), logMats.length, logMats, 0.4, 0.07);
+      logs.mesh.castShadow = true;
+      ink(logs.mesh, 0.35);
+      scene.add(logs.mesh);
+      addGaze(logs.mesh, 'bark');
+      meshToSurf.set(logs.mesh, barkCat.surfaces.length);
+      barkCat.surfaces.push({ type: 'inst', mesh: logs.mesh, positions: logs.positions,
+        variance: { h: 0.02, s: 0.1, l: 0.08 } });
+    }
+    if (stumpMats.length) {
+      const stumps = makeInstanced(
+        new THREE.CylinderGeometry(0.34, 0.46, 0.9, 8), stumpMats.length, stumpMats, 0.4, 0.07);
+      stumps.mesh.castShadow = true;
+      ink(stumps.mesh, 0.35);
+      scene.add(stumps.mesh);
+      addGaze(stumps.mesh, 'bark');
+      meshToSurf.set(stumps.mesh, barkCat.surfaces.length);
+      barkCat.surfaces.push({ type: 'inst', mesh: stumps.mesh, positions: stumps.positions,
+        variance: { h: 0.02, s: 0.1, l: 0.08 } });
+    }
+  }
+
   // ---- contact shadows ----------------------------------------------------
-  const shadowSpots = treeSpots.map((s) => ({ x: s.x, z: s.z, r: 1.6 * s.s }))
-    .concat(housePlots.map((p) => ({ x: p.x, z: p.z, r: 2.6 })));
+  // A soft radial falloff, not a hard disc — this is most of what makes a
+  // thing look like it is standing on the ground rather than hovering.
+  const shadowTex = (() => {
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const g = c.getContext('2d');
+    const grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0, 'rgba(0,0,0,0.85)');
+    grd.addColorStop(0.45, 'rgba(0,0,0,0.42)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grd;
+    g.fillRect(0, 0, 64, 64);
+    const t = new THREE.CanvasTexture(c);
+    t.needsUpdate = true;
+    return t;
+  })();
+  const shadowSpots = treeSpots.map((s) => ({ x: s.x, z: s.z, r: 2.1 * s.s }))
+    .concat(rockSpots.map((s) => ({ x: s.x, z: s.z, r: 1.3 * s.s })))
+    .concat(housePlots.map((p) => ({ x: p.x, z: p.z, r: 3.4 })));
   const shMat = new THREE.MeshBasicMaterial({
-    color: '#000000', transparent: true, opacity: 0.09, depthWrite: false,
+    map: shadowTex, color: '#0a0c10', transparent: true, opacity: 0.42,
+    depthWrite: false, fog: false,
   });
   const shadows = new THREE.InstancedMesh(
-    new THREE.CircleGeometry(1, 8).rotateX(-Math.PI / 2), shMat, shadowSpots.length);
+    new THREE.PlaneGeometry(2, 2).rotateX(-Math.PI / 2), shMat, shadowSpots.length);
   shadowSpots.forEach((s, i) => {
     shadows.setMatrixAt(i, new THREE.Matrix4().compose(
       new THREE.Vector3(s.x, terrainHeight(s.x, s.z) + 0.05, s.z),
