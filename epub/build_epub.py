@@ -12,18 +12,92 @@ POSTS_DIR = os.path.join(SCRATCH, 'posts')
 IMG_DIR = os.path.join(SCRATCH, 'images')
 os.makedirs(IMG_DIR, exist_ok=True)
 
-BOOK_TITLE = "Politics & AI Policy"
-BOOK_SUBTITLE = "Essays from writing.antonleicht.me"
+BOOK_TITLE = "Anton Leicht: Collected Essays"
+BOOK_SUBTITLE = "Ordered by relevance to ChinaTalk"
 AUTHOR = "Anton Leicht"
-SOURCE_URL = "https://writing.antonleicht.me/t/politics"
+SOURCE_URL = "https://writing.antonleicht.me/archive"
 COMPILED = "2026-07-25"
 
+# Full archive, ordered most-ChinaTalk-relevant first: US-China chips /
+# export controls / diffusion strategy, then middle powers & international,
+# then frontier-lab & race politics, then US domestic AI politics, the
+# AI & jobs series, and AI-safety-movement strategy pieces last.
+ORDER = [
+    # I. Chips, export controls, US-China diffusion strategy
+    'the-strategic-case-for-h20-chip-exports',
+    'mercantilist-ai-policy',
+    'making-ai-export-promotion-work',
+    'ai-grand-strategy-and-the-rest-of',
+    'diffusion-deals',
+    'import-imperatives',
+    'datacenter-delusions',
+    'the-moonshot',
+    'forging-a-pax-silica',
+    'the-self-fulfilling-prophecy-of-ai',
+    'cut-off',
+    # II. Middle powers & international AI politics
+    'the-awareness-gap',
+    'how-ai-safety-is-getting-middle-powers',
+    'a-roadmap-for-ai-middle-powers',
+    'the-delhi-gap',
+    'what-ai-summits-are-for',
+    'when-should-nations-sell-their-data',
+    'can-you-poach-a-frontier-lab',
+    'ai-jobs-and-the-rest-of-the-world',
+    'the-early-death-of-international',
+    'peak-brussels',
+    # III. Frontier labs & race politics
+    'three-notes-on-situational-awareness',
+    'three-fault-lines-in-conservative',
+    'bubble-politics',
+    'how-to-grow-too-big-to-fail',
+    'anthropic-against-itself',
+    'the-devil-you-know',
+    'the-flood',
+    'the-real-sycophancy-problem',
+    'homeostatic-ai-progress',
+    'the-most-dangerous-time-in-ai-policy',
+    'inferencepolitics',
+    # IV. US domestic AI politics & regulation
+    'a-preemption-deal-worth-making',
+    'the-night-before-preemption',
+    'seductive-salience',
+    'the-next-three-phases-of-ai-politics',
+    'failing-the-future',
+    'press-play-to-continue',
+    'ai-is-not-a-product',
+    'a-moving-target',
+    'three-notes-on-dean-balls-private',
+    'powerless-predictions',
+    'do-you-need-a-wake-up-call',
+    'the-ai-takeoff-political-economy',
+    # V. AI & jobs
+    'betting-on-humans',
+    'ai-and-jobs-leverage-without-labor',
+    'ai-and-jobs-enter-populism',
+    'ai-and-jobs-two-phases-of-automation',
+    'ai-and-jobs-politics-without-policy',
+    'ai-policy-and-job-market-politics',
+    # VI. AI safety strategy & the rest
+    'the-new-ai-policy-frontier',
+    'unbundling-the-ai-safety-pitch',
+    'ai-safety-policy-cant-go-on-like',
+    'dont-build-an-ai-safety-movement',
+    'evals',
+    'veto',
+    'ai-and-child-safety-against-narrow',
+]
+
 # ---------------------------------------------------------------- load posts
-posts = []
+by_slug = {}
 for fn in os.listdir(POSTS_DIR):
     d = json.load(open(os.path.join(POSTS_DIR, fn)))
-    posts.append(d)
-posts.sort(key=lambda p: p['post_date'], reverse=True)  # newest first, like the site
+    by_slug[d['slug']] = d
+missing = set(ORDER) - set(by_slug)
+extra = set(by_slug) - set(ORDER)
+assert not missing, f"ORDER lists posts not downloaded: {missing}"
+assert not extra, f"Downloaded posts missing from ORDER: {extra}"
+posts = [by_slug[s] for s in ORDER]
 print(f"Loaded {len(posts)} posts")
 
 # ---------------------------------------------------------------- images
@@ -297,6 +371,8 @@ for i, p in enumerate(posts, 1):
     slug = p['slug']
     title = p['title'].strip()
     subtitle = (p.get('subtitle') or '').strip()
+    if subtitle.startswith('This is an archived post'):
+        subtitle = ''
     date = datetime.fromisoformat(p['post_date'].replace('Z', '+00:00'))
     date_str = date.strftime('%B %-d, %Y')
     url = p['canonical_url']
@@ -333,18 +409,19 @@ def make_cover():
     f_small = ImageFont.truetype(serif, 52)
     dr.rectangle([120, 200, 1480, 214], fill=accent)
     y = 420
-    for line, f in [("Politics", f_title), ("&", f_amp), ("AI Policy", f_title)]:
+    for line, f in [("Collected", f_title), ("Essays", f_title)]:
         w = dr.textlength(line, font=f)
         dr.text(((W - w) / 2, y), line, font=f, fill=fg)
         y += int(f.size * 1.35)
     y += 90
-    for line in ["Twenty-two essays on the politics", "of artificial intelligence"]:
+    for line in ["Fifty-seven essays on AI geopolitics,", "policy, and politics",
+                 "· ordered by relevance to ChinaTalk ·"]:
         w = dr.textlength(line, font=f_sub)
         dr.text(((W - w) / 2, y), line, font=f_sub, fill=(180, 184, 196))
         y += 92
     w = dr.textlength(AUTHOR, font=f_auth)
     dr.text(((W - w) / 2, 1880), AUTHOR, font=f_auth, fill=accent)
-    tagline = "writing.antonleicht.me · 2025–2026"
+    tagline = "writing.antonleicht.me · 2024–2026"
     w = dr.textlength(tagline, font=f_small)
     dr.text(((W - w) / 2, 2060), tagline, font=f_small, fill=(150, 155, 170))
     dr.rectangle([120, 2346, 1480, 2360], fill=accent)
@@ -383,18 +460,23 @@ a.footnote-num { text-decoration: none; font-weight: bold; margin-right: 0.35em;
 
 titlepage = XHTML_TMPL.format(title=html.escape(BOOK_TITLE), body=f'''
 <section class="titlepage">
-  <h1>Politics &amp; AI Policy</h1>
-  <p class="subtitle">Twenty-two essays on the politics of artificial intelligence</p>
+  <h1>Collected Essays</h1>
+  <p class="subtitle">Fifty-seven essays on AI geopolitics, policy, and politics<br/>
+  ordered by relevance to ChinaTalk</p>
   <p class="author">{AUTHOR}</p>
-  <p class="note">Compiled on {COMPILED} from the
-  <a href="{SOURCE_URL}">Politics &amp; AI Policy</a> tag at writing.antonleicht.me.<br/>
+  <p class="note">Compiled on {COMPILED} from the complete
+  <a href="{SOURCE_URL}">archive</a> at writing.antonleicht.me,
+  June 2024 – July 2026.<br/>
+  Essays are ordered thematically — chips, export controls, and US–China
+  diffusion strategy first; then international AI politics, frontier-lab and
+  race politics, US domestic AI policy, AI &amp; jobs, and AI-safety strategy.<br/>
   All essays © {AUTHOR}. Compiled for personal reading.</p>
 </section>''')
 etree.fromstring(titlepage.encode())
 
 nav_items = '\n'.join(
-    f'      <li><a href="{fname}">{html.escape(t)}</a></li>'
-    for _, fname, t, _, _ in chapters)
+    f'      <li><a href="{fname}">{html.escape(t)} — {d.rsplit(" ", 2)[0]} {d.rsplit(" ", 1)[1]}</a></li>'
+    for _, fname, t, d, _ in chapters)
 nav = f'''<?xml version="1.0" encoding="utf-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en" lang="en">
 <head><title>Contents</title><link rel="stylesheet" type="text/css" href="style.css"/></head>
@@ -424,7 +506,7 @@ cover_xhtml = XHTML_TMPL.format(title="Cover", body='''
 etree.fromstring(cover_xhtml.encode())
 
 # ---------------------------------------------------------------- OPF + NCX
-book_id = str(uuid.uuid5(uuid.NAMESPACE_URL, SOURCE_URL))
+book_id = str(uuid.uuid5(uuid.NAMESPACE_URL, SOURCE_URL + '#chinatalk-order'))
 modified = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 img_items = '\n'.join(
@@ -444,7 +526,7 @@ opf = f'''<?xml version="1.0" encoding="utf-8"?>
     <dc:language>en</dc:language>
     <dc:date>{COMPILED}</dc:date>
     <dc:publisher>writing.antonleicht.me</dc:publisher>
-    <dc:description>{html.escape("Twenty-two essays on the politics of artificial intelligence, compiled from the 'Politics &amp; AI Policy' tag of Anton Leicht's newsletter.")}</dc:description>
+    <dc:description>{html.escape("Fifty-seven essays on AI geopolitics, policy, and politics — the complete archive of Anton Leicht's newsletter (June 2024 – July 2026), ordered by relevance to ChinaTalk: chips and export controls first, AI-safety movement strategy last.")}</dc:description>
     <dc:source>{SOURCE_URL}</dc:source>
     <meta property="dcterms:modified">{modified}</meta>
     <meta name="cover" content="cover-img"/>
@@ -492,7 +574,7 @@ ncx = f'''<?xml version="1.0" encoding="utf-8"?>
 etree.fromstring(ncx.encode())
 
 # ---------------------------------------------------------------- zip it
-out_path = os.path.join(SCRATCH, 'ai-politics-and-policy-anton-leicht.epub')
+out_path = os.path.join(SCRATCH, 'anton-leicht-collected-essays-chinatalk-order.epub')
 container = '''<?xml version="1.0" encoding="utf-8"?>
 <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
   <rootfiles>
