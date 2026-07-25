@@ -68,6 +68,17 @@ Open the page, press **▶ PLAY TRAILER** (audio needs one click).
   locally, and *"share this world"* mints a link carrying your whole
   painted world, style included. Web Speech API + a filtered, looping music bed;
   self-contained with its own vendored Three.js.
+- **[`/let-there-be-light/`](let-there-be-light/)** — *LET THERE BE
+  LIGHT*, a creation toy. You begin in the dark with nothing at all and
+  **speak a world into existence**: light, the firmament, the waters,
+  the dry land, mountains, grass, trees, flowers, sun, moon, stars,
+  fish, birds, beasts, and finally people, who build a village and walk
+  between its houses. Things refuse to exist out of order — no trees
+  before there is earth to root them in. Every act is its own small
+  engine (a drifting point-cloud void, an animated displacement mesh
+  for the land rising, a wave-field sea, instanced growth for life), a
+  chronicle tracks your days, and *"it is finished"* earns the seventh
+  day. Saved locally and shareable by link.
 - **[`/rayray-outdoor-weekend/`](rayray-outdoor-weekend/)** — an event
   microsite.
 

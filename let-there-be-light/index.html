@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LET THERE BE LIGHT — speak a world out of the void</title>
+  <meta name="description" content="A first-person creation toy. You begin in the dark with nothing, and speak a world into existence one word at a time — light, sky, water, land, trees, beasts, people." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23070710'/%3E%3Ccircle cx='50' cy='50' r='22' fill='%23ffe8a8'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+  </script>
+</head>
+<body>
+  <canvas id="gl"></canvas>
+  <div id="vignette"></div>
+
+  <div id="crosshair"></div>
+  <div id="verse"></div>
+  <div id="mic"><span></span></div>
+  <div id="day"></div>
+  <div id="chronicle"></div>
+
+  <div id="hint">
+    <div class="kb-only">WASD — fly &nbsp;·&nbsp; mouse — look &nbsp;·&nbsp; E / Q — rise, fall &nbsp;·&nbsp; shift — swiftly</div>
+    <div class="kb-only voice-hint">hold V — speak &nbsp;·&nbsp; T — type a word</div>
+    <div class="touch-only">left thumb — fly &nbsp;·&nbsp; right thumb — look &nbsp;·&nbsp; ▲ — rise</div>
+    <div class="touch-only voice-hint">hold the mic — speak &nbsp;·&nbsp; Aa — type a word</div>
+    <div class="dim">&ldquo;let there be light&rdquo; &nbsp;·&nbsp; &ldquo;let there be water&rdquo; &nbsp;·&nbsp; &ldquo;let there be dry land&rdquo; &nbsp;·&nbsp; &ldquo;let there be trees&rdquo; &nbsp;·&nbsp; &ldquo;let there be people&rdquo;</div>
+  </div>
+
+  <!-- touch controls -->
+  <div id="stick"><div id="stick-nub"></div></div>
+  <button id="mic-btn" aria-label="hold to speak">&#127908;</button>
+  <button id="type-btn" aria-label="type a word">Aa</button>
+  <button id="up-btn" aria-label="rise">&#9650;</button>
+
+  <div id="typewrap">
+    <form id="typeform" action=".">
+      <input id="typebox" type="text" autocomplete="off" spellcheck="false" enterkeyhint="send"
+        placeholder="speak &mdash; &ldquo;let there be light&rdquo;" />
+    </form>
+  </div>
+
+  <div id="enter">
+    <div class="enter-inner">
+      <div class="kicker">in the beginning</div>
+      <h1>LET THERE BE<br /><span class="l">LIGHT</span></h1>
+      <p class="lede">
+        There is nothing here. No ground, no sky, no sun — only the dark and
+        the dust that drifts in it. Speak, and it will be made:
+        <em>&ldquo;let there be light&rdquo;</em>, then water, then dry land,
+        then grass and trees and beasts and people, until a world stands
+        where the void was.
+      </p>
+      <button id="enter-btn">BEGIN</button>
+      <div class="foot">
+        <span class="kb-only">hold <strong>V</strong> to speak &middot; <strong>T</strong> to type</span>
+        <span class="touch-only">hold the mic to speak &middot; <strong>Aa</strong> to type</span>
+        &middot; voice works in Chrome &amp; Safari<br />
+        say <em>&ldquo;it is finished&rdquo;</em> when you are done &middot;
+        <em>&ldquo;share this world&rdquo;</em> for a link &middot;
+        <em>&ldquo;begin again&rdquo;</em> returns it all to the void
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
