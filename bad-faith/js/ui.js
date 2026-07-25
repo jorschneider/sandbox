@@ -3,7 +3,7 @@
 // regions (timer, statuses, proposals, capital) update in place so open
 // forms and half-typed quotes survive network updates.
 
-import { GAME_NAME, GAME_SUBTITLE, APP_VERSION, AVATARS, THEMES } from './content.js';
+import { GAME_NAME, GAME_SUBTITLE, APP_VERSION, AVATARS, THEMES, RATING_ODDS } from './content.js';
 
 const $ = (sel) => document.querySelector(sel);
 let root, actions, lastKey = '', lastView = null;
@@ -251,7 +251,7 @@ function clientCard(view, m, inner = '') {
       <div class="cfacts">
         <span>Coverage <b>${money(m.coverage)}</b></span>
         <span>Premium ${money(m.band[0])}–${money(m.band[1])}</span>
-        <span>Brochure says: <b>${m.rating}</b> risk</span>
+        <span>Brochure says: <b>${m.rating}</b> risk — ${RATING_ODDS[m.rating] || '?'} claim odds (allegedly)</span>
       </div>
       ${intelChips(view, m.id)}
       ${inner}

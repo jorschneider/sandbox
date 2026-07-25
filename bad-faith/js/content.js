@@ -7,7 +7,16 @@ export const GAME_NAME = 'Bad Faith';
 export const GAME_SUBTITLE = 'Animal Insurance Division';
 // Shown on home + lobby so a table can spot a stale tab at a glance.
 // Bump on every deploy that changes the network protocol or content.
-export const APP_VERSION = 'v3';
+export const APP_VERSION = 'v4';
+
+// What the brochure's risk rating claims, in plain odds. The brochure is
+// the client's own marketing — some of them are lying.
+export const RATING_ODDS = {
+  Low: '~15–25%',
+  Moderate: '~25–35%',
+  High: '35%+',
+  Unknown: '??',
+};
 
 export const AVATARS = ['🦊', '🦉', '🐊', '🐐', '🦈', '🐝', '🦃', '🦎'];
 

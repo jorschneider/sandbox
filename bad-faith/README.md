@@ -23,7 +23,10 @@ season. **Eyes up, not down.**
 2. The other three scan the QR code (or enter the room code) and join.
 3. Each quarter:
    - **The Market** — three animal clients want coverage. Everyone holds
-     private intel cards; talk the clients up or down.
+     private intel cards; talk the clients up or down. Each brochure
+     advertises a risk rating with claim odds: Low ~15–25%, Moderate
+     ~25–35%, High 35%+. The brochure is the client's own marketing —
+     some of them are lying, and intel is how you find out.
    - **Sealed Quotes** — quote a premium for any client. Lowest quote signs
      them: you pocket the premium, you carry the risk.
    - **The Deal Floor** — 90 seconds of open negotiation, made binding
