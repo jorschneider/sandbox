@@ -61,3 +61,13 @@ python3 -m http.server 8087   # from the repo root
 Multi-player without four phones: open four tabs with `?local=1`.
 Testing hooks: `?local=1&code=TEST&as=host&name=Ana` /
 `?local=1&join=TEST&as=join&name=Ben`.
+
+## Economy tuning
+
+`node tools/sim.mjs [games] [theme]` plays thousands of headless games with
+four bot archetypes (passer / reckless undercutter / naive / intel-aware)
+and reports claim rates, per-client margins, bankruptcies, and per-strategy
+results. Targets: ~30% claim rate, near-zero average insurer margin,
+intel-aware play beating both naive play and sitting out, and one deliberate
+trap client per deck (Swan Lake: rated Low, priced Low, is not Low).
+Set `SEAT=passer,naive,informed,informed` to control the table makeup.
