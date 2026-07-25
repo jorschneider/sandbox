@@ -7,6 +7,18 @@
 const PEER_PREFIX = 'badfaith-aid-';
 const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // no 0/O/1/I/L
 
+// STUN alone fails when phones sit on different networks (one on WiFi, one
+// on cellular behind carrier NAT) — include public TURN relays as fallback.
+const ICE_CONFIG = {
+  iceServers: [
+    { urls: ['stun:stun.l.google.com:19302', 'stun:stun.cloudflare.com:3478'] },
+    {
+      urls: ['turn:openrelay.metered.ca:80', 'turn:openrelay.metered.ca:443'],
+      username: 'openrelayproject', credential: 'openrelayproject',
+    },
+  ],
+};
+
 export function randomCode(len = 4) {
   let s = '';
   for (let i = 0; i < len; i++) s += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
@@ -47,13 +59,19 @@ function peerHost(code, handlers) {
   let peer;
   const ready = new Promise((resolve, reject) => {
     const attempt = (tries) => {
-      peer = new Peer(PEER_PREFIX + code, { debug: 1 });
+      peer = new Peer(PEER_PREFIX + code, { debug: 1, config: ICE_CONFIG });
       peer.on('open', () => resolve(code));
+      // If the signaling socket drops (phone briefly backgrounded, network
+      // blip), re-register the room id so later joiners can still find us.
+      peer.on('disconnected', () => { try { peer.reconnect(); } catch { /* destroyed */ } });
       peer.on('error', (err) => {
         if (err.type === 'unavailable-id' && tries > 0) {
           code = randomCode();
           attempt(tries - 1);
-        } else reject(err);
+        } else if (['browser-incompatible', 'invalid-id', 'invalid-key', 'ssl-unavailable'].includes(err.type)) {
+          reject(err);
+        } // other errors (network, peer-unavailable, webrtc) are transient
+          // or per-connection; keep the room alive.
       });
       peer.on('connection', (conn) => {
         conn.on('open', () => {
@@ -104,17 +122,62 @@ function localClient(code, handlers) {
 }
 
 function peerClient(code, handlers) {
-  const peer = new Peer({ debug: 1 });
-  let conn = null;
-  peer.on('open', () => {
-    conn = peer.connect(PEER_PREFIX + code, { reliable: true });
-    conn.on('open', () => handlers.onOpen());
-    conn.on('data', (msg) => handlers.onMessage(msg));
-    conn.on('close', () => handlers.onClose());
-  });
-  peer.on('error', (err) => handlers.onClose(err));
+  // Mobile networks are flaky: a transient signaling error or a slow WebRTC
+  // handshake must not dump the player back to the home screen. Retry the
+  // whole connect a few times with backoff before reporting failure.
+  const MAX_TRIES = 4;
+  let peer = null, conn = null, joined = false, closed = false, timer = null;
+
+  const fail = (err) => {
+    if (closed) return;
+    closed = true;
+    clearTimeout(timer);
+    try { peer?.destroy(); } catch { /* already dead */ }
+    handlers.onClose(err);
+  };
+
+  const retry = (tryNo, err) => {
+    if (closed || joined) return;
+    clearTimeout(timer);
+    try { peer?.destroy(); } catch { /* already dead */ }
+    peer = null; conn = null;
+    if (tryNo >= MAX_TRIES) { fail(err); return; }
+    setTimeout(() => attempt(tryNo + 1), 700 * Math.pow(2, tryNo - 1));
+  };
+
+  const attempt = (tryNo) => {
+    if (closed) return;
+    peer = new Peer({ debug: 1, config: ICE_CONFIG });
+    timer = setTimeout(() => retry(tryNo, { type: 'timeout' }), 9000);
+    peer.on('open', () => {
+      conn = peer.connect(PEER_PREFIX + code, { reliable: true });
+      conn.on('open', () => {
+        clearTimeout(timer);
+        joined = true;
+        handlers.onOpen();
+      });
+      conn.on('data', (msg) => handlers.onMessage(msg));
+      conn.on('close', () => { if (joined) fail(); });
+    });
+    peer.on('disconnected', () => {
+      if (joined) { try { peer.reconnect(); } catch { /* destroyed */ } }
+    });
+    peer.on('error', (err) => {
+      const fatal = ['browser-incompatible', 'invalid-id', 'invalid-key', 'ssl-unavailable'].includes(err.type);
+      if (fatal) { fail(err); return; }
+      if (joined) {
+        // Post-join blips: the signaling socket may drop without affecting
+        // the data channel; try to re-register quietly.
+        if (err.type === 'network') { try { peer.reconnect(); } catch { /* destroyed */ } }
+        return;
+      }
+      retry(tryNo, err); // peer-unavailable, network, webrtc, ...
+    });
+  };
+
+  attempt(1);
   return {
-    send(msg) { conn?.send(msg); },
-    close() { peer.destroy(); },
+    send(msg) { if (joined && !closed) conn?.send(msg); },
+    close() { closed = true; clearTimeout(timer); try { peer?.destroy(); } catch { /* already dead */ } },
   };
 }

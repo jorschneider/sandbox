@@ -57,8 +57,12 @@ function startHost({ name, avatar, theme }) {
         }
       },
       onDisconnect(cid) {
-        game.setConnected(cid, false);
-        game.maybeFinishQuotes();
+        if (game.phase === 'lobby') {
+          game.removePlayer(cid); // free the seat; they can rescan and rejoin
+        } else {
+          game.setConnected(cid, false);
+          game.maybeFinishQuotes();
+        }
         broadcast();
       },
     },
@@ -114,7 +118,10 @@ function startClient({ name, avatar, code: rawCode }) {
       },
       onClose(err) {
         if (welcomed) { ui.toast('Lost the host. The office burned down.', true); }
-        else { ui.toast('No room with that code (host must be online).', true); ui.renderHome(); }
+        else {
+          ui.toast('Couldn\'t reach that room. Check the code, make sure the host\'s screen is on, and scan again.', true);
+          ui.renderHome();
+        }
         if (err) console.error(err);
       },
     },
@@ -137,6 +144,11 @@ function renderFor(view, { code, isHost }) {
   if (view.phase === 'lobby') ui.renderLobby(view, { code, isHost, joinUrl: joinUrl(code) });
   else ui.render(view);
 }
+
+// Closing the tab should free the seat immediately, not leave a ghost.
+window.addEventListener('pagehide', (e) => {
+  if (!e.persisted) clientState?.transport.close();
+});
 
 // Same-room games die when phones lock; keep the screen awake (best-effort).
 async function keepAwake() {

@@ -54,6 +54,9 @@ export class Game {
 
   addPlayer(id, name, avatar, isHost = false) {
     if (this.phase !== 'lobby') return { error: 'Game already started.' };
+    // A dropped connection must not hold a seat: purge ghosts before
+    // checking capacity, or a rejoining player gets "Firm is full".
+    this.players = this.players.filter(p => p.connected || p.isHost);
     if (this.players.length >= RULES.maxPlayers) return { error: 'Firm is full (4 brokers max).' };
     if (this.players.some(p => p.id === id)) return { error: 'Already joined.' };
     const cleanName = String(name || '').trim().slice(0, 16) || `Broker ${this.players.length + 1}`;
@@ -71,6 +74,16 @@ export class Game {
   setConnected(id, connected) {
     const p = this.byId(id);
     if (p) p.connected = connected;
+  }
+
+  // In the lobby a departed player is removed outright (their seat frees
+  // up); once the game starts, players are only ever marked disconnected.
+  removePlayer(id) {
+    if (this.phase !== 'lobby') return;
+    const p = this.byId(id);
+    if (!p || p.isHost) return;
+    this.players = this.players.filter(x => x.id !== id);
+    this.addLog(`${p.avatar} ${p.name} left the lobby.`);
   }
 
   byId(id) { return this.players.find(p => p.id === id); }
