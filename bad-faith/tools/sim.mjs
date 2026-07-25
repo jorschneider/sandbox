@@ -27,37 +27,46 @@ function lcg(seed) {
 
 const RATING_PRIOR = { Low: 0.18, Moderate: 0.27, High: 0.34, Unknown: 0.30 };
 
+const cov = (m, tier) => Math.round(m.coverage * tier / 10) * 10;
+
 const STRATS = {
   // Never plays. The baseline any strategy must beat for the game to work.
   passer: () => ({}),
 
-  // Undercuts on everything: quotes near the bottom of the band.
+  // Undercuts on everything: full coverage at the bottom of the band.
   reckless: (view, rng) => {
     const q = {};
-    for (const m of view.market) q[m.id] = Math.round(m.band[0] + (m.band[1] - m.band[0]) * 0.1 * rng());
+    for (const m of view.market) {
+      q[m.id] = { premium: Math.round(m.band[0] + (m.band[1] - m.band[0]) * 0.1 * rng()), coverage: cov(m, 1) };
+    }
     return q;
   },
 
-  // Quotes a random point in the band on ~2 of 3 clients.
+  // Random tier, random premium in the scaled band, on ~2 of 3 clients.
   naive: (view, rng) => {
     const q = {};
     for (const m of view.market) {
-      if (rng() < 0.67) q[m.id] = Math.round(m.band[0] + (m.band[1] - m.band[0]) * rng());
+      if (rng() >= 0.67) continue;
+      const tier = [0.5, 0.75, 1][Math.floor(rng() * 3)];
+      q[m.id] = { premium: Math.round((m.band[0] + (m.band[1] - m.band[0]) * rng()) * tier), coverage: cov(m, tier) };
     }
     return q;
   },
 
   // Uses the brochure prior plus its own intel; wants a margin; passes on
-  // anything whose band can't cover estimated expected loss.
+  // anything whose band can't cover estimated expected loss. Sizes its
+  // position by confidence: good intel -> full, no intel -> 75%, bad -> 50%.
   informed: (view, rng) => {
     const q = {};
     for (const m of view.market) {
-      let est = RATING_PRIOR[m.rating] ?? 0.28;
-      for (const c of view.you.intel) if (c.clientId === m.id) est += c.delta;
+      let est = RATING_PRIOR[m.rating] ?? 0.28, delta = 0;
+      for (const c of view.you.intel) if (c.clientId === m.id) { est += c.delta; delta += c.delta; }
       est = Math.max(0.03, est);
-      const target = Math.round(est * m.coverage * (1.05 + 0.15 * rng()));
-      if (target > m.band[1]) continue; // can't price it profitably; walk away
-      q[m.id] = Math.max(m.band[0], target);
+      const rate = est * (1.05 + 0.15 * rng());
+      if (rate > m.band[1] / m.coverage) continue; // can't price it profitably
+      const tier = delta < 0 ? 1 : delta > 0 ? 0.5 : 0.75;
+      const c2 = cov(m, tier);
+      q[m.id] = { premium: Math.max(Math.round(m.band[0] * tier), Math.round(rate * c2)), coverage: c2 };
     }
     return q;
   },
@@ -104,9 +113,10 @@ for (let g = 0; g < N; g++) {
       for (const r of game.claims.results) {
         if (r.insured && r.hit) {
           agg.claims++;
-          agg.lossSum += game.market.find(m => m.client.id === r.clientId).client.coverage;
+          const sold = game.market.find(m => m.client.id === r.clientId).soldCoverage;
+          agg.lossSum += sold;
           agg.perClient[r.clientId].claims++;
-          agg.perClient[r.clientId].loss += game.market.find(m => m.client.id === r.clientId).client.coverage;
+          agg.perClient[r.clientId].loss += sold;
         }
       }
       game.claims.revealed = game.claims.results.length;

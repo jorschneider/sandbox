@@ -27,8 +27,11 @@ season. **Eyes up, not down.**
      advertises a risk rating with claim odds: Low ~15–25%, Moderate
      ~25–35%, High 35%+. The brochure is the client's own marketing —
      some of them are lying, and intel is how you find out.
-   - **Sealed Quotes** — quote a premium for any client. Lowest quote signs
-     them: you pocket the premium, you carry the risk.
+   - **Sealed Quotes** — pick how much of the client's asked coverage
+     you'll write (50% / 75% / Full) and quote your premium. The client
+     signs whoever offers the cheapest rate per dollar of coverage (rate
+     ties go to the bigger policy): you pocket the premium, you carry the
+     claim on the coverage you sold.
    - **The Deal Floor** — 90 seconds of open negotiation, made binding
      in-app: reinsure each other's policies, sell intel, wire bribes.
    - **Claims Season** — disasters resolve one file at a time, on every

@@ -249,8 +249,8 @@ function clientCard(view, m, inner = '') {
         </div>
       </div>
       <div class="cfacts">
-        <span>Coverage <b>${money(m.coverage)}</b></span>
-        <span>Premium ${money(m.band[0])}–${money(m.band[1])}</span>
+        <span>Wants <b>${money(m.coverage)}</b> of coverage</span>
+        <span>Premium ${money(m.band[0])}–${money(m.band[1])} at full cover</span>
         <span>Brochure says: <b>${m.rating}</b> risk — ${RATING_ODDS[m.rating] || '?'} claim odds (allegedly)</span>
       </div>
       ${intelChips(view, m.id)}
@@ -278,9 +278,15 @@ function quotesHtml(view) {
       ${logHtml()}`;
   }
   return `
-    <p class="phase-note">Quote a premium for any client you want — lowest quote signs them. Win it, and their risk is yours. Or pass.</p>
+    <p class="phase-note">Pick how much coverage you'll write and quote your premium. The client signs whoever offers the cheapest rate per dollar of coverage — win it, and that risk is yours. Or pass.</p>
     ${view.market.map(m => clientCard(view, m, `
       <div class="quote-row" data-client="${m.id}">
+        <div class="tier-row">
+          ${(m.tiers || [0.5, 0.75, 1]).map(t => `
+            <button class="tier-btn${t === 1 ? ' sel' : ''}" data-action="quote-tier" data-client="${m.id}" data-tier="${t}">
+              ${t === 1 ? 'Full' : Math.round(t * 100) + '%'} · ${money(Math.round(m.coverage * t / 10) * 10)}
+            </button>`).join('')}
+        </div>
         <div class="quote-controls">
           <input type="number" inputmode="numeric" class="quote-input" data-client="${m.id}"
                  min="${m.band[0]}" max="${m.band[1]}" placeholder="${m.band[0]}–${m.band[1]}">
@@ -292,6 +298,19 @@ function quotesHtml(view) {
     <div class="waiting" id="waitList"></div>`;
 }
 
+function tierOf(id) { return drafts.quotes[id]?.tier ?? 1; }
+
+function updateQuoteHint(id) {
+  const m = lastView?.market.find(x => x.id === id);
+  const hint = $('#be-' + id);
+  if (!m || !hint) return;
+  const d = drafts.quotes[id];
+  const cov = Math.round(m.coverage * tierOf(id) / 10) * 10;
+  hint.textContent = (d && isFinite(d.premium))
+    ? `Covers ${money(cov)} · breaks even if true risk ≤ ${Math.round((d.premium / cov) * 100)}%`
+    : ' ';
+}
+
 // --- reveal ---
 function revealHtml(view) {
   return `
@@ -300,7 +319,8 @@ function revealHtml(view) {
       const rows = view.players.map(p => {
         const q = m.quotes?.[p.id];
         const won = m.winner === p.id;
-        return `<div class="qrow${won ? ' won' : ''}"><span>${p.avatar} ${esc(p.name)}</span><span>${typeof q === 'number' ? money(q) : '—'}${won ? ' ✍️' : ''}</span></div>`;
+        const label = q ? `${money(q.premium)} · covers ${money(q.coverage)}` : '—';
+        return `<div class="qrow${won ? ' won' : ''}"><span>${p.avatar} ${esc(p.name)}</span><span>${label}${won ? ' ✍️' : ''}</span></div>`;
       }).join('');
       return clientCard(view, m, `<div class="qtable">${rows}</div>
         ${m.winner ? '' : '<div class="fine">No takers. The client storms out.</div>'}`);
@@ -337,7 +357,7 @@ function bookHtml(view) {
     }).join('');
     return `<div class="bookrow">
       <span>${m.emoji} ${esc(m.name)}</span>
-      <span class="dim">${owner?.avatar} ${esc(owner?.name)} · ${money(m.coverage)} exposure ${re}</span>
+      <span class="dim">${owner?.avatar} ${esc(owner?.name)} · ${money(m.soldCoverage || m.coverage)} exposure ${re}</span>
     </div>`;
   }).join('')}</div>`;
 }
@@ -446,7 +466,7 @@ function claimsHtml(view) {
           <span class="risk-reveal">true risk ${r.risk}%</span></div>
         <div class="claim-verdict">${r.hit ? '💥 CLAIM' : '✅ NO CLAIM'}</div>
         <div class="claim-text">${esc(r.text)}</div>
-        ${r.insured ? `<div class="claim-owner">${owner?.avatar} ${esc(owner?.name)} held it (premium ${money(r.premium)})</div>` : ''}
+        ${r.insured ? `<div class="claim-owner">${owner?.avatar} ${esc(owner?.name)} held it (premium ${money(r.premium)}${r.coverage ? ` · cover ${money(r.coverage)}` : ''})</div>` : ''}
         ${r.payouts.map(p => {
           const pl = view.players.find(x => x.id === p.pid);
           return `<div class="payout">${pl?.avatar} ${esc(pl?.name)} pays <b>${money(p.amount)}</b>${p.owner ? '' : ` (${p.pct}% reinsured)`}</div>`;
@@ -528,6 +548,21 @@ function onClick(e) {
     applyTheme(btn.dataset.theme); // live preview
     return;
   }
+  if (a === 'quote-tier') {
+    const id = btn.dataset.client;
+    const tier = parseFloat(btn.dataset.tier);
+    drafts.quotes[id] = { ...(drafts.quotes[id] || {}), tier };
+    btn.parentElement.querySelectorAll('.tier-btn').forEach(el => el.classList.remove('sel'));
+    btn.classList.add('sel');
+    const m = lastView?.market.find(x => x.id === id);
+    const input = root.querySelector(`.quote-input[data-client="${id}"]`);
+    if (m && input) {
+      const lo = Math.round(m.band[0] * tier / 10) * 10, hi = Math.round(m.band[1] * tier / 10) * 10;
+      input.min = lo; input.max = hi; input.placeholder = `${lo}–${hi}`;
+    }
+    updateQuoteHint(id);
+    return;
+  }
   if (a === 'quote-pass') {
     const id = btn.dataset.client;
     const input = root.querySelector(`.quote-input[data-client="${id}"]`);
@@ -538,7 +573,13 @@ function onClick(e) {
     return;
   }
   if (a === 'submit-quotes') {
-    actions.send({ type: 'submitQuotes', quotes: drafts.quotes });
+    const quotes = {};
+    for (const [id, d] of Object.entries(drafts.quotes)) {
+      const m = lastView?.market.find(x => x.id === id);
+      if (!m || !isFinite(d.premium)) continue;
+      quotes[id] = { premium: d.premium, coverage: Math.round(m.coverage * (d.tier ?? 1) / 10) * 10 };
+    }
+    actions.send({ type: 'submitQuotes', quotes });
     return;
   }
   if (a === 'deal-new') { drafts.deal = { type: 'reinsurance', to: view.players.find(p => p.id !== view.youId)?.id }; $('#dealForm').innerHTML = dealFormHtml(view); return; }
@@ -595,13 +636,8 @@ function onInput(e) {
   if (el.classList?.contains('quote-input')) {
     const id = el.dataset.client;
     const v = parseInt(el.value, 10);
-    if (isFinite(v)) drafts.quotes[id] = v; else delete drafts.quotes[id];
-    const m = lastView?.market.find(x => x.id === id);
-    const hint = $('#be-' + id);
-    if (hint && m) {
-      hint.textContent = isFinite(v)
-        ? `Breaks even if true risk ≤ ${Math.round((v / m.coverage) * 100)}%`
-        : ' ';
-    }
+    if (isFinite(v)) drafts.quotes[id] = { ...(drafts.quotes[id] || {}), premium: v };
+    else if (drafts.quotes[id]) delete drafts.quotes[id].premium;
+    updateQuoteHint(id);
   }
 }

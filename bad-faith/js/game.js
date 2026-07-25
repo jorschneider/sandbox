@@ -14,6 +14,8 @@ export const RULES = {
   desperateBonusIntel: 1, // extra intel when capital < 0
   quoteSeconds: 75,
   dealSeconds: 90,
+  coverageTiers: [0.5, 0.75, 1], // fraction of the client's asked coverage
+
   riskFloor: 0.03,
   riskCeil: 0.97,
 };
@@ -117,7 +119,7 @@ export class Game {
 
     const picks = this.deck.splice(0, RULES.clientsPerRound);
     this.market = picks.map(client => ({
-      client, quotes: {}, winner: null, premium: null, reinsurance: [],
+      client, quotes: {}, winner: null, premium: null, soldCoverage: null, reinsurance: [],
     }));
 
     // Deal private intel from this round's clients' pools. Only dealt cards
@@ -155,17 +157,24 @@ export class Game {
     return { ok: true };
   }
 
-  // quotes: {clientId: number|null} — null/absent means pass
+  // quotes: {clientId: {premium, coverage}} — null/absent means pass.
+  // Coverage snaps to an allowed tier of the asked amount; the premium is
+  // clamped to the band scaled by that tier.
   submitQuotes(pid, quotes) {
     if (this.phase !== 'quotes') return { error: 'Quotes are closed.' };
     for (const m of this.market) {
       if (pid in m.quotes) return { error: 'Already submitted.' };
     }
     for (const m of this.market) {
-      let q = quotes ? quotes[m.client.id] : null;
-      if (typeof q === 'number' && isFinite(q)) {
-        q = Math.round(Math.min(m.client.band[1], Math.max(m.client.band[0], q)));
-        m.quotes[pid] = q;
+      const q = quotes ? quotes[m.client.id] : null;
+      const prem = q && +q.premium, cov = q && +q.coverage;
+      if (isFinite(prem) && prem > 0 && isFinite(cov) && cov > 0) {
+        const full = m.client.coverage;
+        const tier = RULES.coverageTiers.reduce((best, t) =>
+          Math.abs(cov - full * t) < Math.abs(cov - full * best) ? t : best, RULES.coverageTiers[0]);
+        const coverage = Math.round(full * tier / 10) * 10;
+        const premium = Math.round(Math.min(m.client.band[1] * tier, Math.max(m.client.band[0] * tier, prem)));
+        m.quotes[pid] = { premium, coverage };
       } else {
         m.quotes[pid] = null;
       }
@@ -187,19 +196,27 @@ export class Game {
     this.phase = 'reveal';
     this.timer = null;
     for (const m of this.market) {
+      // The client signs the cheapest rate (premium per $ of coverage);
+      // rate ties go to the bigger policy, then luck.
       let best = null;
       for (const p of this.players) {
         const q = m.quotes[p.id];
-        if (typeof q !== 'number') continue;
-        if (!best || q < best.q || (q === best.q && this.rng() < 0.5)) best = { pid: p.id, q };
+        if (!q) continue;
+        const rate = q.premium / q.coverage;
+        const wins = !best
+          || rate < best.rate - 1e-9
+          || (Math.abs(rate - best.rate) <= 1e-9 && (q.coverage > best.coverage
+              || (q.coverage === best.coverage && this.rng() < 0.5)));
+        if (wins) best = { pid: p.id, premium: q.premium, coverage: q.coverage, rate };
       }
       if (best) {
         m.winner = best.pid;
-        m.premium = best.q;
+        m.premium = best.premium;
+        m.soldCoverage = best.coverage;
         const w = this.byId(best.pid);
-        w.capital += best.q;
-        this.roundLedger[best.pid].premiums += best.q;
-        this.addLog(`${w.avatar} ${w.name} signed ${m.client.name} at $${best.q}.`);
+        w.capital += best.premium;
+        this.roundLedger[best.pid].premiums += best.premium;
+        this.addLog(`${w.avatar} ${w.name} signed ${m.client.name} at $${best.premium} covering $${best.coverage}.`);
       } else {
         this.addLog(`${m.client.name} found no takers.`);
       }
@@ -310,7 +327,7 @@ export class Game {
       const hit = this.rng() < risk;
       const res = {
         clientId: m.client.id, name: m.client.name, emoji: m.client.emoji,
-        insured: !!m.winner, winner: m.winner, premium: m.premium,
+        insured: !!m.winner, winner: m.winner, premium: m.premium, coverage: m.soldCoverage,
         hit, risk: Math.round(risk * 100),
         text: hit
           ? (m.winner ? m.client.claimText : `${m.client.name} ${UNINSURED_CLAIM[i % UNINSURED_CLAIM.length]}`)
@@ -318,7 +335,7 @@ export class Game {
         payouts: [],
       };
       if (hit && m.winner) {
-        const coverage = m.client.coverage;
+        const coverage = m.soldCoverage;
         let ownerShare = coverage;
         for (const r of m.reinsurance) {
           const share = Math.round(coverage * r.pct / 100);
@@ -431,8 +448,9 @@ export class Game {
         id: m.client.id, name: m.client.name, emoji: m.client.emoji,
         tagline: m.client.tagline, coverage: m.client.coverage,
         band: m.client.band, rating: m.client.rating,
-        winner: m.winner, premium: m.premium,
+        winner: m.winner, premium: m.premium, soldCoverage: m.soldCoverage,
         reinsurance: m.reinsurance,
+        tiers: RULES.coverageTiers,
         quotes: (this.phase === 'reveal' || this.phase === 'deals' || this.phase === 'claims' || this.phase === 'ledger') ? m.quotes : undefined,
       })),
       you: me ? {
