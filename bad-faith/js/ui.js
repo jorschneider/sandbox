@@ -532,7 +532,7 @@ function mmName(view, pid) {
 function mmRoleBanner(view) {
   const m = view.mm;
   const banners = {
-    customer: `👑 It's YOUR business this round — and you know its true risk: <b>${m.trueRisk}%</b>. Get covered cheap, or bluff that it's fine.`,
+    customer: `👑 It's YOUR business this round — it books <b>${money(m.revenue)}</b> this quarter, and you know its true risk: <b>${m.trueRisk}%</b>. Protect the profit cheap, or gamble it.`,
     broker: `🤝 YOU broker this deal. Buy low from a carrier, sell high to ${mmName(view, m.customer)}. The spread is yours — if they sign.`,
     carrier: `🏦 You're a CARRIER. Quote what it takes to underwrite — win it, and the claim lands on you.`,
     observer: `👀 You're watching this one.`,
@@ -670,6 +670,7 @@ function mmClaimsHtml(view) {
     <div class="card">
       <h3>The receipts</h3>
       <div class="ledgrid">
+        <span>${mmName(view, m.customer)}'s business booked</span><span class="pos">${money(r.revenue, true)}</span>
         ${r.accepted ? `
           <span>${mmName(view, m.customer)} paid</span><span class="neg">${money(r.retail)}</span>
           <span>${mmName(view, m.broker)} kept the spread</span><span class="${spread > 0 ? 'pos' : ''}">${money(spread)}</span>
@@ -737,6 +738,7 @@ function ledgerHtml(view) {
           ${s.cash ? `<span>Wires</span><span class="${moneyClass(s.cash)}">${money(s.cash, true)}</span>` : ''}
           ${s.bets ? `<span>Short desk</span><span class="${moneyClass(s.bets)}">${money(s.bets, true)}</span>` : ''}
           ${s.fines ? `<span>Regulatory fines</span><span class="neg">${money(s.fines, true)}</span>` : ''}
+          ${s.revenue ? `<span>Business revenue</span><span class="pos">${money(s.revenue, true)}</span>` : ''}
           ${s.bonus ? `<span>🏆 Broker of the Quarter</span><span class="pos">${money(s.bonus, true)}</span>` : ''}
           ${s.overhead ? `<span>Office overhead</span><span class="neg">${money(s.overhead, true)}</span>` : ''}
           <span>Capital</span><span class="${moneyClass(s.end)}"><b>${money(s.end)}</b></span>
@@ -908,9 +910,11 @@ function updateMmSpread() {
   const cid = root.querySelector('.mm-quote-row.sel')?.dataset.carrier;
   const w = lastView.mm.wholesale[cid];
   const r = parseInt($('#mmRetail')?.value, 10);
-  hint.textContent = (isFinite(r) && typeof w === 'number')
-    ? (r >= w ? `Your spread: ${money(r - w)}` : `That's below the carrier's ${money(w)} — you'd pay to work.`)
-    : ' ';
+  if (typeof w !== 'number') { hint.textContent = ' '; return; }
+  const cap = Math.round(w * (lastView.mm.retailCapX || 1.5));
+  hint.textContent = isFinite(r)
+    ? (r >= w ? `Your spread: ${money(Math.min(r, cap) - w)}${r > cap ? ` (regulator caps you at ${money(cap)})` : ''}` : `That's below the carrier's ${money(w)} — you'd pay to work.`)
+    : `Regulator caps your price at ${money(cap)} on this carrier.`;
 }
 
 function onInput(e) {

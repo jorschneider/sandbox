@@ -29,6 +29,11 @@ export const RULES = {
   // Regulators cap the exposure you can sign in a quarter at mult x your
   // capital (with a floor so broke firms can still write small business).
   solvency: { mult: 3, floor: 1000 },
+  // Middleman mode: the customer's business books revenue each round
+  // (insurance protects profit, it isn't pure downside), and the broker's
+  // retail price is capped at a multiple of wholesale so gouging can't
+  // stack the market shut.
+  middleman: { revenueRate: 0.35, retailCapX: 1.5 },
 
   riskFloor: 0.03,
   riskCeil: 0.97,
@@ -134,8 +139,12 @@ export class Game {
   freshLedger() {
     this.roundLedger = {};
     for (const p of this.players) {
-      this.roundLedger[p.id] = { premiums: 0, claims: 0, reFees: 0, rePayouts: 0, intelTrade: 0, cash: 0, bets: 0, fines: 0, overhead: 0, bonus: 0, start: p.capital };
+      this.roundLedger[p.id] = { premiums: 0, claims: 0, reFees: 0, rePayouts: 0, intelTrade: 0, cash: 0, bets: 0, fines: 0, overhead: 0, bonus: 0, revenue: 0, start: p.capital };
     }
+  }
+
+  mmRevenue() {
+    return Math.round(this.mm.client.coverage * RULES.middleman.revenueRate / 10) * 10;
   }
 
   beginMMRound() {
@@ -209,7 +218,7 @@ export class Game {
     if (pid !== this.mm.broker) return { error: 'Only the broker sets the price.' };
     const w = this.mm.wholesale[carrierId];
     if (typeof w !== 'number') return { error: 'That carrier never quoted.' };
-    const maxRetail = Math.round(this.mm.client.band[1] * 2);
+    const maxRetail = Math.round(Math.min(this.mm.client.band[1] * 2, w * RULES.middleman.retailCapX));
     this.mm.chosenCarrier = carrierId;
     this.mm.retail = Math.round(Math.min(maxRetail, Math.max(w, +retail || w)));
     this.phase = 'mm_decide';
@@ -232,6 +241,10 @@ export class Game {
     const hit = this.rng() < risk;
     const cu = this.byId(m.customer);
     this.timer = null;
+    // The operating quarter: the business earns before insurance settles.
+    const rev = this.mmRevenue();
+    cu.capital += rev;
+    this.roundLedger[m.customer].revenue += rev;
     if (m.accepted) {
       const br = this.byId(m.broker), ca = this.byId(m.chosenCarrier);
       const spread = m.retail - m.wholesale[m.chosenCarrier];
@@ -254,7 +267,7 @@ export class Game {
       this.addLog(`${cu.avatar} ${cu.name} went bare.`);
     }
     m.result = {
-      hit, risk: Math.round(risk * 100), coverage: cov,
+      hit, risk: Math.round(risk * 100), coverage: cov, revenue: rev,
       accepted: m.accepted, retail: m.retail,
       wholesale: m.chosenCarrier ? m.wholesale[m.chosenCarrier] : null,
       allWholesale: { ...m.wholesale },
@@ -733,6 +746,8 @@ export class Game {
       trueRisk: isCustomer || done ? Math.round(this.mmRisk() * 100) : null,
       wholesaleBand: this.mmWholesaleBand(),
       retailMax: Math.round(c.band[1] * 2),
+      retailCapX: RULES.middleman.retailCapX,
+      revenue: this.mmRevenue(),
       quotedBy: Object.keys(m.wholesale),
       wholesale: (isBroker && this.phase !== 'mm_wholesale') || done ? { ...m.wholesale } : (m.carriers.includes(pid) ? (pid in m.wholesale ? { [pid]: m.wholesale[pid] } : {}) : {}),
       chosenCarrier: this.phase === 'mm_decide' || done ? m.chosenCarrier : null,
