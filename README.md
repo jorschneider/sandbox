@@ -50,6 +50,38 @@ Open the page, press **▶ PLAY TRAILER** (audio needs one click).
 - `Space` pauses. Digits `1`–`9` seek to 10%–90%. The progress bar is clickable.
 - `?t=95` starts at a given second; add `&mute=1` for silent autoplay (used for testing).
 
+## Also in this repo
+
+- **[`/black-and-white/`](black-and-white/)** — *BLACK & WHITE*, live at
+  **[let-there-be-color.vercel.app](https://let-there-be-color.vercel.app)**:
+  a first-person toy where you walk a colorless low-poly world as a
+  small god and **speak the world into being** (hold `V` and say "the
+  trees are emerald", or press `T` to type; touch controls on phones).
+  Each decree ripples outward to everything of its kind; color
+  dissolves the pencil-sketch grain off the world. Three realms —
+  valley, desert, high peaks (*"take me to the desert"*) — each with
+  its own creatures: deer, rabbits, goats, fish, butterflies,
+  fireflies. Seven switchable art styles (keys `1`–`7`): storybook, ink
+  &amp; wash, cel shade, woodblock, stained glass, blueprint, neon.
+  *"Let there be night"*, *"let it rain / snow"*, *"let it be autumn"*,
+  *"this house is blue"*, *"begin again"*. Every realm is saved
+  locally, and *"share this world"* mints a link carrying your whole
+  painted world, style included. Web Speech API + a filtered, looping music bed;
+  self-contained with its own vendored Three.js.
+- **[`/let-there-be-light/`](let-there-be-light/)** — *LET THERE BE
+  LIGHT*, a creation toy. You begin in the dark with nothing at all and
+  **speak a world into existence**: light, the firmament, the waters,
+  the dry land, mountains, grass, trees, flowers, sun, moon, stars,
+  fish, birds, beasts, and finally people, who build a village and walk
+  between its houses. Things refuse to exist out of order — no trees
+  before there is earth to root them in. Every act is its own small
+  engine (a drifting point-cloud void, an animated displacement mesh
+  for the land rising, a wave-field sea, instanced growth for life), a
+  chronicle tracks your days, and *"it is finished"* earns the seventh
+  day. Saved locally and shareable by link.
+- **[`/rayray-outdoor-weekend/`](rayray-outdoor-weekend/)** — an event
+  microsite.
+
 ## Deploying
 
 A GitHub Actions workflow (`.github/workflows/pages.yml`) deploys the
