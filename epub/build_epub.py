@@ -23,7 +23,7 @@ posts = []
 for fn in os.listdir(POSTS_DIR):
     d = json.load(open(os.path.join(POSTS_DIR, fn)))
     posts.append(d)
-posts.sort(key=lambda p: p['post_date'])
+posts.sort(key=lambda p: p['post_date'], reverse=True)  # newest first, like the site
 print(f"Loaded {len(posts)} posts")
 
 # ---------------------------------------------------------------- images
