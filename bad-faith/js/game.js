@@ -34,12 +34,14 @@ export const RULES = {
   // retail price is capped at a multiple of wholesale so gouging can't
   // stack the market shut.
   middleman: { revenueRate: 0.35, retailCapX: 1.5 },
+  // Open outcry: the syndicated whale is sold live instead of by sealed
+  // quote. Brokers publicly undercut each other; every bid resets a short
+  // anti-snipe clock, so it ends only when nobody dares go lower.
+  auction: { openSeconds: 20, resetSeconds: 8, steps: [25, 50, 100], floorPct: 0.35 },
 
   riskFloor: 0.03,
   riskCeil: 0.97,
 };
-
-const PHASES = ['lobby', 'market', 'quotes', 'reveal', 'deals', 'claims', 'ledger', 'results'];
 
 function shuffle(arr, rng) {
   const a = arr.slice();
@@ -77,6 +79,8 @@ export class Game {
     this.winnerIds = null;
     this.awards = {}; // end-of-game superlatives, tracked as they happen
     this.pendingRenewal = null; // full market: last round's happiest client returns
+    this.auction = null; // full market: live open-outcry lot
+    this.submitted = new Set(); // who has sealed their quotes this round
   }
 
   // Keep the most extreme holder of each award (min=true for "lowest wins").
@@ -247,44 +251,24 @@ export class Game {
     return { ok: true };
   }
 
+  // Rolls the outcome and stages the money, but pays nothing until the file
+  // is opened — same reason as computeClaims(): no spoilers in the chips.
   mmSettle() {
     const m = this.mm;
     const cov = m.client.coverage;
     const risk = this.mmRisk();
     const hit = this.rng() < risk;
-    const cu = this.byId(m.customer);
     this.timer = null;
-    // The operating quarter: the business earns before insurance settles.
     const rev = this.mmRevenue();
-    cu.capital += rev;
-    this.roundLedger[m.customer].revenue += rev;
+    const settle = [{ pid: m.customer, amount: rev, kind: 'revenue' }];
     if (m.accepted) {
-      const br = this.byId(m.broker), ca = this.byId(m.chosenCarrier);
-      const spread = m.retail - m.wholesale[m.chosenCarrier];
-      cu.capital -= m.retail;
-      this.roundLedger[m.customer].premiums -= m.retail;
-      br.capital += spread;
-      this.roundLedger[m.broker].cash += spread;
-      ca.capital += m.wholesale[m.chosenCarrier];
-      this.roundLedger[m.chosenCarrier].premiums += m.wholesale[m.chosenCarrier];
-      if (spread > 0) this.award('spread', m.broker, spread, m.client.name);
-      const ev = risk * cov;
-      if (ev > 0) this.award('shopper', m.customer, Math.round(m.retail / ev * 100), m.client.name, true);
-      if (hit) {
-        ca.capital -= cov;
-        this.roundLedger[m.chosenCarrier].claims -= cov;
-        this.award('worstbeat', m.chosenCarrier, cov, m.client.name);
-      }
-      this.addLog(`${cu.avatar} ${cu.name} signed at $${m.retail}.`);
-    } else {
-      if (hit) {
-        cu.capital -= cov;
-        this.roundLedger[m.customer].claims -= cov;
-        this.award('worstbeat', m.customer, cov, m.client.name);
-      } else {
-        this.award('nerves', m.customer, Math.round(risk * 100), m.client.name);
-      }
-      this.addLog(`${cu.avatar} ${cu.name} went bare.`);
+      const w = m.wholesale[m.chosenCarrier];
+      settle.push({ pid: m.customer, amount: -m.retail, kind: 'premiums' });
+      settle.push({ pid: m.broker, amount: m.retail - w, kind: 'cash' });
+      settle.push({ pid: m.chosenCarrier, amount: w, kind: 'premiums' });
+      if (hit) settle.push({ pid: m.chosenCarrier, amount: -cov, kind: 'claims' });
+    } else if (hit) {
+      settle.push({ pid: m.customer, amount: -cov, kind: 'claims' });
     }
     m.result = {
       hit, risk: Math.round(risk * 100), coverage: cov, revenue: rev,
@@ -293,13 +277,37 @@ export class Game {
       allWholesale: { ...m.wholesale },
       chosenCarrier: m.chosenCarrier,
       text: hit ? m.client.claimText : m.client.safeText,
+      settle,
     };
+    const cu = this.byId(m.customer);
+    this.addLog(m.accepted ? `${cu.avatar} ${cu.name} signed at $${m.retail}.` : `${cu.avatar} ${cu.name} went bare.`);
     this.phase = 'mm_claims';
+  }
+
+  mmSettleApply() {
+    const m = this.mm, r = m.result, risk = r.risk / 100, cov = r.coverage;
+    for (const s of r.settle) {
+      const p = this.byId(s.pid);
+      if (!p) continue;
+      p.capital += s.amount;
+      this.roundLedger[s.pid][s.kind] += s.amount;
+    }
+    if (r.accepted) {
+      const spread = r.retail - r.wholesale;
+      if (spread > 0) this.award('spread', m.broker, spread, m.client.name);
+      const ev = risk * cov;
+      if (ev > 0) this.award('shopper', m.customer, Math.round(r.retail / ev * 100), m.client.name, true);
+      if (r.hit) this.award('worstbeat', r.chosenCarrier, cov, m.client.name);
+    } else if (r.hit) {
+      this.award('worstbeat', m.customer, cov, m.client.name);
+    } else {
+      this.award('nerves', m.customer, r.risk, m.client.name);
+    }
   }
 
   mmAdvance() {
     if (this.phase !== 'mm_claims') return { error: 'Not now.' };
-    if (!this.mm.revealed) { this.mm.revealed = true; return { ok: true }; }
+    if (!this.mm.revealed) { this.mm.revealed = true; this.mmSettleApply(); return { ok: true }; }
     const summary = this.players.map(p => {
       const l = this.roundLedger[p.id];
       return { pid: p.id, ...l, end: p.capital, net: p.capital - l.start };
@@ -318,16 +326,15 @@ export class Game {
     this.phase = 'market';
     this.proposals = [];
     this.claims = null;
+    this.auction = null;
+    this.submitted = new Set();
     this.dealtCardIds = new Set();
     this.intel = {};
-    this.roundLedger = {};
-    for (const p of this.players) {
-      this.roundLedger[p.id] = { premiums: 0, claims: 0, reFees: 0, rePayouts: 0, intelTrade: 0, cash: 0, bets: 0, fines: 0, overhead: 0, bonus: 0, start: p.capital };
-    }
+    this.freshLedger();
 
     const picks = this.deck.splice(0, RULES.clientsPerRound);
     this.market = picks.map(client => ({
-      client, quotes: {}, winner: null, premium: null, soldCoverage: null,
+      client, baseClient: client, quotes: {}, winner: null, premium: null, soldCoverage: null,
       reinsurance: [], shorts: [], syndicated: false, voided: false,
     }));
 
@@ -348,7 +355,7 @@ export class Game {
       const r = this.pendingRenewal;
       this.pendingRenewal = null;
       this.market.push({
-        client: r.client, quotes: {}, winner: null, premium: null, soldCoverage: null,
+        client: r.client, baseClient: r.client, quotes: {}, winner: null, premium: null, soldCoverage: null,
         reinsurance: [], shorts: [], syndicated: false, voided: false,
         renewal: { incumbent: r.incumbent, lastRate: r.lastRate },
       });
@@ -384,8 +391,87 @@ export class Game {
     return Math.min(RULES.riskCeil, Math.max(RULES.riskFloor, risk));
   }
 
+  // ---------- open outcry (full market: the syndicated lot) ----------
+
+  auctionLot() {
+    return this.market.find(m => m.syndicated && !m.winner);
+  }
+
+  openAuction() {
+    if (this.phase !== 'market') return { error: 'Not in market phase.' };
+    const lot = this.auctionLot();
+    if (!lot) return { error: 'No lot to auction.' };
+    this.auction = {
+      clientId: lot.client.id,
+      // Opens at the client's top price and gets bid DOWN.
+      bid: lot.client.band[1],
+      floor: Math.max(1, Math.round(lot.client.band[1] * RULES.auction.floorPct / 10) * 10),
+      leader: null,
+      history: [],
+      done: false,
+    };
+    this.phase = 'auction';
+    this.timer = { phase: 'auction', remaining: RULES.auction.openSeconds };
+    this.addLog(`🔨 OPEN OUTCRY: ${lot.client.name}, ${this.money(lot.client.coverage)} of cover. Opening at $${this.auction.bid} — undercut to win.`);
+    return { ok: true };
+  }
+
+  money(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+
+  placeBid(pid, amount) {
+    if (this.phase !== 'auction' || !this.auction || this.auction.done) return { error: 'The lot is closed.' };
+    const a = this.auction;
+    const p = this.byId(pid);
+    if (!p) return { error: 'Not in this game.' };
+    if (a.leader === pid) return { error: "You're already the low bid — let someone else dig the hole." };
+    const bid = Math.round(+amount);
+    if (!isFinite(bid)) return { error: 'Bad bid.' };
+    if (bid >= a.bid) return { error: `You must go below ${this.money(a.bid)}.` };
+    if (bid < a.floor) return { error: `The client won't take less than ${this.money(a.floor)}.` };
+    const lot = this.market.find(m => m.client.id === a.clientId);
+    // Solvency still applies: you can't bid for cover you can't carry.
+    if (lot.client.coverage > this.solvencyCap(pid)) {
+      return { error: "The regulator won't let you carry this one — not enough capital." };
+    }
+    a.bid = bid;
+    a.leader = pid;
+    a.history.push({ pid, bid });
+    if (a.history.length > 24) a.history.shift();
+    // Anti-snipe: every bid puts the clock back to the reset window.
+    this.timer = { phase: 'auction', remaining: RULES.auction.resetSeconds };
+    this.addLog(`🔨 ${p.avatar} ${p.name} bids ${this.money(bid)}.`);
+    return { ok: true };
+  }
+
+  finishAuction() {
+    if (!this.auction || this.auction.done) return { error: 'Nothing to close.' };
+    const a = this.auction;
+    a.done = true;
+    this.timer = null;
+    const lot = this.market.find(m => m.client.id === a.clientId);
+    if (a.leader) {
+      const w = this.byId(a.leader);
+      lot.winner = a.leader;
+      lot.premium = a.bid;
+      lot.soldCoverage = lot.client.coverage;
+      w.capital += a.bid;
+      this.roundLedger[a.leader].premiums += a.bid;
+      this.award('rainmaker', a.leader, a.bid, lot.client.name);
+      this.award('gavel', a.leader, a.history.length, lot.client.name);
+      this.addLog(`🔨 SOLD — ${lot.client.name} to ${w.avatar} ${w.name} for ${this.money(a.bid)} after ${a.history.length} bid${a.history.length === 1 ? '' : 's'}.`);
+    } else {
+      this.addLog(`🔨 No bids. ${lot.client.name} storms out of the room.`);
+      lot.syndicated = false; // nobody holds it; no layoff obligation
+    }
+    this.phase = 'quotes';
+    this.timer = { phase: 'quotes', remaining: RULES.quoteSeconds };
+    return { ok: true };
+  }
+
   openQuotes() {
     if (this.phase !== 'market') return { error: 'Not in market phase.' };
+    // Full market sells the whale live before the sealed lots.
+    if (this.pro && this.auctionLot()) return this.openAuction();
     this.phase = 'quotes';
     this.timer = { phase: 'quotes', remaining: RULES.quoteSeconds };
     return { ok: true };
@@ -396,16 +482,17 @@ export class Game {
   // clamped to the band scaled by that tier.
   submitQuotes(pid, quotes) {
     if (this.phase !== 'quotes') return { error: 'Quotes are closed.' };
+    if (this.submitted.has(pid)) return { error: 'Already submitted.' };
+    this.submitted.add(pid);
+    const tiers = this.pro ? RULES.coverageTiers : [1]; // rookie writes full cover only
     for (const m of this.market) {
-      if (pid in m.quotes) return { error: 'Already submitted.' };
-    }
-    for (const m of this.market) {
+      if (m.winner) continue; // auction-won lots aren't quoted
       const q = quotes ? quotes[m.client.id] : null;
       const prem = q && +q.premium, cov = q && +q.coverage;
       if (isFinite(prem) && prem > 0 && isFinite(cov) && cov > 0) {
         const full = m.client.coverage;
-        const tier = RULES.coverageTiers.reduce((best, t) =>
-          Math.abs(cov - full * t) < Math.abs(cov - full * best) ? t : best, RULES.coverageTiers[0]);
+        const tier = tiers.reduce((best, t) =>
+          Math.abs(cov - full * t) < Math.abs(cov - full * best) ? t : best, tiers[0]);
         const coverage = Math.round(full * tier / 10) * 10;
         const premium = Math.round(Math.min(m.client.band[1] * tier, Math.max(m.client.band[0] * tier, prem)));
         m.quotes[pid] = { premium, coverage };
@@ -418,7 +505,7 @@ export class Game {
   }
 
   quotesPending() {
-    return this.players.filter(p => p.connected && !(p.id in (this.market[0]?.quotes || {})));
+    return this.players.filter(p => p.connected && !this.submitted.has(p.id));
   }
 
   maybeFinishQuotes() {
@@ -435,7 +522,12 @@ export class Game {
     this.phase = 'reveal';
     this.timer = null;
     const signed = {}; // exposure signed this quarter, per player
+    // Capital snapshot: premiums credited during this loop must not inflate
+    // the cap that later clients in the same quarter are checked against.
+    const caps = {};
+    for (const p of this.players) caps[p.id] = this.solvencyCap(p.id);
     for (const m of this.market) {
+      if (m.winner) continue; // already signed at auction
       // The client signs the cheapest rate (premium per $ of coverage);
       // rate ties go to the bigger policy, then luck. The regulator blocks
       // any bid that would push a firm past its solvency cap, and the
@@ -454,7 +546,7 @@ export class Game {
         .sort((a, b) => (a.key - b.key) || (b.coverage - a.coverage) || (this.rng() < 0.5 ? -1 : 1));
       let best = null;
       for (const c of cands) {
-        if ((signed[c.pid] || 0) + c.coverage <= this.solvencyCap(c.pid)) { best = c; break; }
+        if ((signed[c.pid] || 0) + c.coverage <= caps[c.pid]) { best = c; break; }
         const p = this.byId(c.pid);
         this.addLog(`🚫 The regulator blocked ${p.avatar} ${p.name}'s bid on ${m.client.name} — not enough capital behind it.`);
       }
@@ -618,6 +710,9 @@ export class Game {
     return { ok: true };
   }
 
+  // Outcomes are rolled now but NOT paid: money moves only as each file is
+  // opened in advanceClaims(). Otherwise every player's capital chip would
+  // show the final numbers before the first reveal, spoiling the whole beat.
   computeClaims() {
     const results = this.market.map((m, i) => {
       const risk = this.effectiveRisk(m);
@@ -635,31 +730,23 @@ export class Game {
             : m.voided ? `${m.client.name} was fine after all. The collapsed syndicate feels very silly.`
             : `${m.client.name} ${UNINSURED_SAFE[i % UNINSURED_SAFE.length]}`),
         payouts: [],
+        settle: [], // [{pid, amount, kind}] applied at reveal time
         shortResults: m.shorts.map(s => {
-          const pl = this.byId(s.pid);
           const amount = hit ? Math.round(s.stake * (RULES.shorts.payout / s.odds - 1)) : -s.stake;
-          pl.capital += amount;
-          this.roundLedger[s.pid].bets += amount;
-          if (amount > 0) this.award('short', s.pid, amount, m.client.name);
           return { pid: s.pid, amount, stake: s.stake };
         }),
       };
-      if (!hit && live && res.risk >= 38) this.award('tightrope', m.winner, res.risk, m.client.name);
+      for (const s of res.shortResults) res.settle.push({ pid: s.pid, amount: s.amount, kind: 'bets' });
       if (hit && live) {
         const coverage = m.soldCoverage;
         let ownerShare = coverage;
         for (const r of m.reinsurance) {
           const share = Math.round(coverage * r.pct / 100);
           ownerShare -= share;
-          const reinsurer = this.byId(r.pid);
-          reinsurer.capital -= share;
-          this.roundLedger[r.pid].rePayouts -= share;
+          res.settle.push({ pid: r.pid, amount: -share, kind: 'rePayouts' });
           res.payouts.push({ pid: r.pid, amount: share, pct: r.pct });
         }
-        const owner = this.byId(m.winner);
-        owner.capital -= ownerShare;
-        this.roundLedger[m.winner].claims -= ownerShare;
-        this.award('worstbeat', m.winner, ownerShare, m.client.name);
+        res.settle.push({ pid: m.winner, amount: -ownerShare, kind: 'claims' });
         res.payouts.unshift({ pid: m.winner, amount: ownerShare, owner: true });
       }
       return res;
@@ -667,11 +754,30 @@ export class Game {
     this.claims = { results, revealed: 0 };
   }
 
+  // Pay out one file and hand out the awards it earned.
+  settleClaim(res) {
+    for (const s of res.settle) {
+      const p = this.byId(s.pid);
+      if (!p) continue;
+      p.capital += s.amount;
+      this.roundLedger[s.pid][s.kind] += s.amount;
+    }
+    for (const s of res.shortResults) {
+      if (s.amount > 0) this.award('short', s.pid, s.amount, res.name);
+    }
+    if (res.insured && !res.hit && res.risk >= 38) this.award('tightrope', res.winner, res.risk, res.name);
+    if (res.insured && res.hit) {
+      const owner = res.payouts.find(p => p.owner);
+      if (owner) this.award('worstbeat', res.winner, owner.amount, res.name);
+    }
+  }
+
   advanceClaims() {
     if (this.phase !== 'claims') return { error: 'Not in claims phase.' };
     if (this.claims.revealed < this.claims.results.length) {
       this.claims.revealed += 1;
       const r = this.claims.results[this.claims.revealed - 1];
+      this.settleClaim(r);
       if (r.hit && r.insured) this.addLog(`💥 ${r.name}: CLAIM. Coverage paid out.`);
       return { ok: true };
     }
@@ -690,9 +796,13 @@ export class Game {
         if (m && (!best || m.soldCoverage > best.soldCoverage)) best = m;
       }
       if (best) {
+        // Renew the client at its natural size — a syndicate boost is a
+        // one-quarter event, not a permanent upgrade.
+        const client = best.baseClient || best.client;
+        const scale = client.coverage / best.client.coverage;
         this.pendingRenewal = {
-          client: best.client, incumbent: best.winner,
-          lastRate: best.premium / best.soldCoverage,
+          client, incumbent: best.winner,
+          lastRate: (best.premium * scale) / (best.soldCoverage * scale),
         };
       }
     }
@@ -765,8 +875,14 @@ export class Game {
   tick() {
     if (!this.timer) return false;
     this.timer.remaining -= 1;
-    if (this.timer.remaining > 0) return this.timer.remaining % 5 === 0;
-    if (this.timer.phase === 'quotes' && this.phase === 'quotes') {
+    // Auctions are short and loud: sync every second so the anti-snipe
+    // clock on every phone matches the host's.
+    if (this.timer.remaining > 0) return this.phase === 'auction' || this.timer.remaining % 5 === 0;
+    const expired = this.timer;
+    if (this.timer.phase === 'auction' && this.phase === 'auction') {
+      this.timer = null;
+      this.finishAuction();
+    } else if (this.timer.phase === 'quotes' && this.phase === 'quotes') {
       for (const p of this.quotesPending()) this.submitQuotes(p.id, {});
       if (this.phase === 'quotes') this.finishQuotes();
     } else if (this.timer.phase === 'deals' && this.phase === 'deals') {
@@ -783,7 +899,10 @@ export class Game {
       this.timer = null;
       this.mmDecide(this.mm.customer, false); // dithering means going bare
     }
-    this.timer = null;
+    // Only clear if the handler didn't already start the next phase's clock
+    // — otherwise a timeout leaves the following phase with no timer and the
+    // round can hang on an absent player.
+    if (this.timer === expired) this.timer = null;
     return true;
   }
 
@@ -800,6 +919,8 @@ export class Game {
       case 'proposeDeal': return this.proposeDeal(pid, action.deal);
       case 'respondDeal': return this.respondDeal(pid, action.dealId, action.accept);
       case 'placeShort': return this.placeShort(pid, action.clientId, action.stake);
+      case 'placeBid': return this.placeBid(pid, action.amount);
+      case 'closeAuction': return host ? this.finishAuction() : { error: 'Host only.' };
       case 'mmOpen': return host ? this.mmOpen() : { error: 'Host only.' };
       case 'mmQuote': return this.mmQuote(pid, action.amount);
       case 'mmSetRetail': return this.mmSetRetail(pid, action.carrierId, action.retail);
@@ -845,7 +966,7 @@ export class Game {
 
   viewFor(pid) {
     const me = this.byId(pid);
-    const submitted = this.market[0] ? this.players.filter(p => p.id in this.market[0].quotes).map(p => p.id) : [];
+    const submitted = [...(this.submitted || [])];
     return {
       youId: pid,
       theme: this.theme.key,
@@ -855,6 +976,18 @@ export class Game {
       roundName: this.theme.roundNames[(this.round - 1 + this.theme.roundNames.length) % this.theme.roundNames.length] || '',
       totalRounds: this.totalRounds,
       mm: this.mm ? this.mmView(pid) : null,
+      auction: this.auction ? {
+        ...this.auction,
+        steps: RULES.auction.steps,
+        client: (() => {
+          const lot = this.market.find(m => m.client.id === this.auction.clientId);
+          return lot ? {
+            id: lot.client.id, name: lot.client.name, emoji: lot.client.emoji,
+            tagline: lot.client.tagline, coverage: lot.client.coverage,
+            band: lot.client.band, rating: lot.client.rating,
+          } : null;
+        })(),
+      } : null,
       rules: {
         quoteSeconds: RULES.quoteSeconds, dealSeconds: RULES.dealSeconds,
         minPlayers: RULES.minPlayers, maxPlayers: RULES.maxPlayers,

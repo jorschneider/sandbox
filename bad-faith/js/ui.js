@@ -34,8 +34,13 @@ export function init(rootEl, actionHandlers) {
 }
 
 // Stingers on the drama beats, driven by view transitions.
-const soundPrev = { phase: '', revealed: 0, mmRevealed: false, accepted: 0 };
+const soundPrev = { phase: '', revealed: 0, mmRevealed: false, accepted: 0, bid: 0 };
 function maybeSound(view) {
+  if (view.phase === 'auction' && view.auction) {
+    if (soundPrev.bid && view.auction.bid < soundPrev.bid) sound.play('tick');
+    soundPrev.bid = view.auction.bid;
+  } else soundPrev.bid = 0;
+  if (view.phase === 'quotes' && soundPrev.phase === 'auction') sound.play('safe');
   if (view.phase === 'claims' && view.claims && view.claims.revealed > soundPrev.revealed) {
     const r = view.claims.results[view.claims.revealed - 1];
     if (r) sound.play(r.hit ? 'hit' : 'safe');
@@ -212,7 +217,9 @@ export function render(view) {
   maybeSound(view);
   const theme = THEMES[view.theme] || THEMES.classic;
   const mmSub = view.mm ? `${view.mm.quotedBy.includes(view.youId) ? 1 : 0}` : '';
-  const key = `${view.phase}:${view.round}:${view.claims ? view.claims.revealed : 0}:${view.mm?.revealed ? 1 : 0}:${mmSub}`;
+  // Auction rebuilds on every bid — the numbers and buttons all change.
+  const auc = view.auction ? `${view.auction.bid}:${view.auction.leader || ''}` : '';
+  const key = `${view.phase}:${view.round}:${view.claims ? view.claims.revealed : 0}:${view.mm?.revealed ? 1 : 0}:${mmSub}:${auc}`;
   if (key !== lastKey) {
     lastKey = key;
     if (view.phase !== 'quotes') drafts.quotes = {};
@@ -235,7 +242,7 @@ export function render(view) {
 
 function phaseLabel(p) {
   return {
-    market: 'The Market', quotes: 'Sealed Quotes', reveal: 'Signings', deals: 'The Deal Floor',
+    market: 'The Market', auction: 'Open Outcry', quotes: 'Sealed Quotes', reveal: 'Signings', deals: 'The Deal Floor',
     claims: 'Claims Season', ledger: 'The Ledger', results: 'Final Standings',
     mm_brief: 'The Client', mm_wholesale: 'Wholesale Bids', mm_markup: 'The Markup',
     mm_decide: 'The Offer', mm_claims: 'Moment of Truth',
@@ -291,8 +298,58 @@ function stageHtml(view) {
     case 'mm_markup': return mmMarkupHtml(view);
     case 'mm_decide': return mmDecideHtml(view);
     case 'mm_claims': return mmClaimsHtml(view);
+    case 'auction': return auctionHtml(view);
     default: return '';
   }
+}
+
+// --- open outcry ---
+function auctionHtml(view) {
+  const a = view.auction;
+  if (!a || !a.client) return '';
+  const c = a.client;
+  const leader = a.leader ? view.players.find(p => p.id === a.leader) : null;
+  const youLead = a.leader === view.youId;
+  return `
+    <div class="gavel-head">🔨 OPEN OUTCRY</div>
+    <p class="phase-note">The room's biggest lot goes live. Shout, undercut, and try not to win it too cheap — the clock resets on every bid.</p>
+    <div class="card client syndicated">
+      <div class="client-head">
+        <span class="cemoji">${c.emoji}</span>
+        <div>
+          <div class="cname">${esc(c.name)}</div>
+          <div class="ctag">${esc(c.tagline)}</div>
+        </div>
+      </div>
+      <div class="cfacts">
+        <span>Full cover <b>${money(c.coverage)}</b></span>
+        <span>Brochure: <b>${c.rating}</b> — ${RATING_ODDS[c.rating] || '?'} claim odds (allegedly)</span>
+      </div>
+      ${intelChips(view, c.id)}
+    </div>
+    <div class="card bid-box${youLead ? ' mine' : ''}">
+      <div class="bid-label">${leader ? 'Low bid' : 'Opening ask'}</div>
+      <div class="bid-amount" id="bidAmount">${money(a.bid)}</div>
+      <div class="bid-leader">${leader ? `${leader.avatar} ${esc(leader.name)}${youLead ? ' — that\'s you' : ''}` : 'No takers yet'}</div>
+      <div class="bid-be">${leader ? `Breaks even if true risk ≤ ${Math.round(a.bid / c.coverage * 100)}%` : `Floor ${money(a.floor)}`}</div>
+    </div>
+    ${youLead
+      ? `<p class="fine">You hold the low bid. Sweat.</p>`
+      : `<div class="bid-btns">
+          ${a.steps.map(s => {
+            const next = a.bid - s;
+            return `<button class="btn bid-btn" data-action="bid" data-amount="${next}" ${next < a.floor ? 'disabled' : ''}>−${money(s)}<span>${money(next)}</span></button>`;
+          }).join('')}
+        </div>
+        <div class="quote-controls">
+          <input type="number" inputmode="numeric" class="bid-input" id="bidCustom" max="${a.bid - 1}" min="${a.floor}" placeholder="or name your price">
+          <button class="btn small" data-action="bid-custom">Bid</button>
+        </div>`}
+    <div class="bid-history">${a.history.slice().reverse().map(h => {
+      const p = view.players.find(x => x.id === h.pid);
+      return `<div class="bid-row">${p?.avatar} ${esc(p?.name)} — <b>${money(h.bid)}</b></div>`;
+    }).join('') || '<div class="fine">Nobody has bid. The auctioneer is getting nervous.</div>'}</div>
+    ${isHost(view) ? `<button class="btn ghost" data-action="close-auction">Going once… slam the gavel</button>` : ''}`;
 }
 
 function isHost(view) { return view.players.find(p => p.id === view.youId)?.isHost; }
@@ -335,8 +392,8 @@ function marketHtml(view) {
     <p class="phase-note">${view.market.length} clients want coverage this quarter. Read the room — your intel is yours alone. Talk it up, talk it down.</p>
     ${view.market.map(m => clientCard(view, m)).join('')}
     ${isHost(view)
-      ? `<button class="btn big" data-action="open-quotes">Open sealed quotes</button>`
-      : `<p class="fine">The host opens quoting when the table's done talking.</p>`}
+      ? `<button class="btn big" data-action="open-quotes">${view.market.some(m => m.syndicated) ? '🔨 Open the outcry on the big lot' : 'Open sealed quotes'}</button>`
+      : `<p class="fine">The host opens the floor when the table's done talking.</p>`}
     ${logHtml()}`;
 }
 
@@ -353,7 +410,7 @@ function quotesHtml(view) {
       ? `Pick how much coverage you'll write and quote your premium. The client signs whoever offers the cheapest rate per dollar of coverage — win it, and that risk is yours. Or pass.
     <br>🏛 Your solvency cap: the regulator will let you sign up to <b>${money(view.rules.solvencyCap)}</b> of coverage this quarter (3× capital).`
       : `Quote your premium for any client — the cheapest quote signs them. Win it, and their risk is yours. Or pass.`}</p>
-    ${view.market.map(m => clientCard(view, m, `
+    ${view.market.filter(m => !m.winner).map(m => clientCard(view, m, `
       <div class="quote-row" data-client="${m.id}">
         ${(m.tiers || []).length > 1 ? `<div class="tier-row">
           ${m.tiers.map(t => `
@@ -390,6 +447,13 @@ function revealHtml(view) {
   return `
     <p class="phase-note">The envelopes are open.</p>
     ${view.market.map(m => {
+      const auctioned = m.winner && !m.quotes?.[m.winner];
+      if (auctioned) {
+        const w = view.players.find(p => p.id === m.winner);
+        return clientCard(view, m, `<div class="qtable">
+          <div class="qrow won"><span>🔨 Won at outcry — ${w?.avatar} ${esc(w?.name)}</span><span>${money(m.premium)} ✍️</span></div>
+        </div>`);
+      }
       const rows = view.players.map(p => {
         const q = m.quotes?.[p.id];
         const won = m.winner === p.id;
@@ -810,6 +874,7 @@ const AWARDS = {
   bestquarter: (n, a) => `📈 <b>Quarter of the Century</b> — ${n} made ${money(a.value)} in a single quarter`,
   rockbottom:  (n, a) => `🕳 <b>Rock Bottom</b> — ${n} lost ${money(a.value)} in a single quarter`,
   poach:       (n, a) => `🏴‍☠️ <b>The Poacher</b> — ${n} stole ${esc(a.detail)}`,
+  gavel:       (n, a) => `🔨 <b>Last Broker Standing</b> — ${n} outlasted ${a.value} bids to take ${esc(a.detail)}`,
 };
 
 function resultsHtml(view) {
@@ -928,6 +993,16 @@ function onClick(e) {
     $('#dealForm').innerHTML = `<button class="btn big" data-action="deal-new">Propose a deal</button>`;
     return;
   }
+  if (a === 'bid') {
+    actions.send({ type: 'placeBid', amount: parseInt(btn.dataset.amount, 10) });
+    return;
+  }
+  if (a === 'bid-custom') {
+    const v = parseInt($('#bidCustom')?.value, 10);
+    if (!isFinite(v)) { toast('Name a price first.'); return; }
+    actions.send({ type: 'placeBid', amount: v });
+    return;
+  }
   if (a === 'mm-quote-send') {
     actions.send({ type: 'mmQuote', amount: parseInt($('#mmQuote')?.value, 10) });
     return;
@@ -961,7 +1036,7 @@ function onClick(e) {
   const simple = {
     'start': 'start', 'open-quotes': 'openQuotes', 'open-deals': 'openDeals',
     'end-deals': 'endDeals', 'advance-claims': 'advanceClaims', 'next-round': 'nextRound',
-    'mm-open': 'mmOpen', 'mm-advance': 'mmAdvance',
+    'mm-open': 'mmOpen', 'mm-advance': 'mmAdvance', 'close-auction': 'closeAuction',
   };
   if (simple[a]) { actions.send({ type: simple[a] }); return; }
 

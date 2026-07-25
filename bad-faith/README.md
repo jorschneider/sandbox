@@ -47,6 +47,12 @@ season. **Eyes up, not down.**
      advertises a risk rating with claim odds: Low ~15–25%, Moderate
      ~25–35%, High 35%+. The brochure is the client's own marketing —
      some of them are lying, and intel is how you find out.
+   - **🔨 Open Outcry** (Full Market) — the syndicated whale is sold live
+     instead of by sealed quote. It opens at the client's top price and
+     brokers publicly undercut each other; every bid resets a short
+     anti-snipe clock, so the lot only closes when nobody dares go lower.
+     Whoever holds the low bid when the gavel falls signs it — and still
+     owes the 40% layoff on the deal floor.
    - **Sealed Quotes** — pick how much of the client's asked coverage
      you'll write (50% / 75% / Full) and quote your premium. The client
      signs whoever offers the cheapest rate per dollar of coverage (rate
@@ -102,6 +108,14 @@ python3 -m http.server 8087   # from the repo root
 Multi-player without four phones: open four tabs with `?local=1`.
 Testing hooks: `?local=1&code=TEST&as=host&name=Ana` /
 `?local=1&join=TEST&as=join&name=Ben`.
+
+## Tests
+
+`node tools/test.mjs` runs the engine rules suite (no browser, well under a
+second): reveal-time settlement, timer handoff, solvency caps, rookie
+gating, the auction, renewals/poaching, ledger arithmetic, and that every
+mode terminates. Run it on every engine change — the browser E2E suites in
+the scratchpad are the slow backstop, not the first line of defence.
 
 ## Economy tuning
 
