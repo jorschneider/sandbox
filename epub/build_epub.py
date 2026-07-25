@@ -130,25 +130,42 @@ def fetch_image(src):
                 return None
     with open(raw_path, 'rb') as f:
         magic = f.read(16)
-    if magic.startswith(b'\x89PNG'):
-        ext, mt = 'png', 'image/png'
-    elif magic.startswith(b'\xff\xd8'):
-        ext, mt = 'jpg', 'image/jpeg'
-    elif magic.startswith(b'GIF8'):
+    if magic.startswith(b'GIF8'):
         ext, mt = 'gif', 'image/gif'
-    elif magic[:4] == b'RIFF' and magic[8:12] == b'WEBP':
-        # convert webp -> png for reader compatibility
-        im = Image.open(raw_path).convert('RGBA')
-        im.save(raw_path + '.png')
-        os.replace(raw_path + '.png', raw_path)
-        ext, mt = 'png', 'image/png'
+        fname = f"img_{h}.{ext}"
+        final = os.path.join(IMG_DIR, fname)
+        if not os.path.exists(final):
+            os.link(raw_path, final)
+        img_manifest[src] = (fname, mt)
+        return img_manifest[src]
+    # Everything else: decode, downscale, and re-encode compactly.
+    try:
+        im = Image.open(raw_path)
+        im.load()
+    except Exception as e:
+        print(f"  !! undecodable image for {src[:80]}: {e}")
+        return None
+    if im.width > 1100:
+        im = im.resize((1100, round(im.height * 1100 / im.width)), Image.LANCZOS)
+    has_alpha = ('A' in im.getbands() and im.getchannel('A').getextrema()[0] < 255)
+    if has_alpha:
+        pal = im.convert('RGBA').quantize(colors=256, method=Image.FASTOCTREE)
+        buf = io.BytesIO()
+        pal.save(buf, 'PNG', optimize=True)
+        data, ext, mt = buf.getvalue(), 'png', 'image/png'
     else:
-        print(f"  !! unknown image type {magic[:8]} for {src[:80]}")
-        ext, mt = 'png', 'image/png'
+        rgb = im.convert('RGB')
+        jbuf = io.BytesIO()
+        rgb.save(jbuf, 'JPEG', quality=80, optimize=True, progressive=True)
+        pbuf = io.BytesIO()
+        rgb.quantize(colors=256, method=Image.MEDIANCUT).save(pbuf, 'PNG', optimize=True)
+        if len(pbuf.getvalue()) <= len(jbuf.getvalue()):
+            data, ext, mt = pbuf.getvalue(), 'png', 'image/png'
+        else:
+            data, ext, mt = jbuf.getvalue(), 'jpg', 'image/jpeg'
     fname = f"img_{h}.{ext}"
-    final = os.path.join(IMG_DIR, fname)
-    if not os.path.exists(final):
-        os.link(raw_path, final)
+    with open(os.path.join(IMG_DIR, fname), 'wb') as f:
+        f.write(data)
     img_manifest[src] = (fname, mt)
     return img_manifest[src]
 
