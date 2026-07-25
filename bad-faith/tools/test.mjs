@@ -228,6 +228,68 @@ for (const [label, cfg] of [
   }
 }
 
+group('identity survives disconnection');
+{
+  const g = seat(new Game({ rng: lcg(41) }));
+  g.players[1].key = 'dev-key-b';
+  ok('a player can be found by device key', g.byKey('dev-key-b')?.id === 'P1');
+  ok('an unknown key finds nobody', !g.byKey('nope') && !g.byKey(null));
+  g.start();
+  g.setConnected('P1', false);
+  ok('a dropped player keeps their seat mid-game', !!g.byId('P1') && g.byId('P1').connected === false);
+  ok('and keeps their capital', g.byId('P1').capital === RULES.startingCapital);
+  g.setConnected('P1', true);
+  ok('and can be marked back', g.byId('P1').connected === true);
+}
+
+group('host snapshot round-trips');
+{
+  const g = seat(new Game({ rng: lcg(42), theme: 'nyc', ruleset: 'full' }));
+  g.start(); g.openQuotes();
+  if (g.phase === 'auction') { g.placeBid('P2', g.auction.bid - 50); g.finishAuction(); }
+  quoteAll(g);
+  g.openDeals();
+  g.placeShort('P0', g.market[0].client.id, 100);
+  g.endDeals(); g.advanceClaims();
+
+  const restored = Game.fromJSON(JSON.parse(JSON.stringify(g.toJSON())));
+  ok('phase, round and theme survive', restored.phase === g.phase && restored.round === g.round && restored.theme.key === 'nyc');
+  ok('rulebook survives', restored.pro === g.pro);
+  ok('capital survives', restored.players.map(p => p.capital).join() === g.players.map(p => p.capital).join());
+  ok('device keys survive', restored.players.map(p => p.key).join() === g.players.map(p => p.key).join());
+  ok('the market and its winners survive', restored.market.map(m => m.winner).join() === g.market.map(m => m.winner).join());
+  ok('claim progress survives', restored.claims.revealed === g.claims.revealed);
+  ok('private intel survives', JSON.stringify(restored.intel) === JSON.stringify(g.intel));
+  ok('dealt-card set survives as a Set', restored.dealtCardIds instanceof Set && restored.dealtCardIds.size === g.dealtCardIds.size);
+  ok('submitted set survives as a Set', restored.submitted instanceof Set && restored.submitted.size === g.submitted.size);
+  ok('awards survive', JSON.stringify(restored.awards) === JSON.stringify(g.awards));
+  ok('everyone starts disconnected until their phone checks in', restored.players.every(p => !p.connected));
+  // and the restored game must still be playable to the end
+  let guard = 0;
+  while (restored.phase !== 'results' && guard++ < 4000) {
+    if (restored.phase === 'market') restored.openQuotes();
+    else if (restored.phase === 'auction') restored.tick();
+    else if (restored.phase === 'quotes') quoteAll(restored);
+    else if (restored.phase === 'reveal') restored.openDeals();
+    else if (restored.phase === 'deals') restored.endDeals();
+    else if (restored.phase === 'claims') restored.advanceClaims();
+    else if (restored.phase === 'ledger') restored.nextRound();
+    else break;
+  }
+  ok('a restored game plays through to results', restored.phase === 'results', `stuck in ${restored.phase}`);
+}
+
+group('an absent carrier cannot stall the wholesale phase');
+{
+  const g = seat(new Game({ rng: lcg(43), mode: 'middleman' }));
+  g.start(); g.mmOpen();
+  const [a, b] = g.mm.carriers;
+  g.mmQuote(a, 300);
+  g.setConnected(b, false);
+  g.maybeFinishMMQuotes();
+  ok('quoting carriers alone advance the phase', g.phase === 'mm_markup', `phase=${g.phase}`);
+}
+
 group('ledger conserves money');
 {
   const g = seat(new Game({ rng: lcg(77) }));

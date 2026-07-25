@@ -82,6 +82,16 @@ season. **Eyes up, not down.**
 
 Best with 4 players; playable with 2–3.
 
+## If a phone drops
+
+Seats survive interruptions. A phone keeps a per-tab seat key, so a
+reload, a locked screen, a discarded tab or a network blip rebinds to the
+same seat — same money, same intel — instead of locking the player out.
+If the **host's** phone dies, the room isn't lost: the host snapshots the
+game continuously, and reopening the app offers "Resume hosting" for up to
+three hours. Everyone else's phone keeps knocking for 90 seconds and
+rejoins the restored room on its own.
+
 ## Tech
 
 Static web app, no build step, no backend. Phones sync through free public

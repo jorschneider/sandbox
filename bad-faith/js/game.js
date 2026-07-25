@@ -93,7 +93,9 @@ export class Game {
 
   // ---- lobby ----
 
-  addPlayer(id, name, avatar, isHost = false) {
+  // `key` is a device-stable identity (localStorage), independent of the
+  // connection id — that's what makes reconnecting mid-game possible.
+  addPlayer(id, name, avatar, isHost = false, key = null) {
     if (this.phase !== 'lobby') return { error: 'Game already started.' };
     // A dropped connection must not hold a seat: purge ghosts before
     // checking capacity, or a rejoining player gets "Firm is full".
@@ -105,7 +107,7 @@ export class Game {
     const taken = new Set(this.players.map(p => p.avatar));
     if (!avatar || taken.has(avatar)) avatar = AVATARS.find(a => !taken.has(a)) || '🐾';
     this.players.push({
-      id, name: cleanName, avatar,
+      id, key, name: cleanName, avatar,
       capital: RULES.startingCapital, connected: true, isHost,
     });
     this.addLog(`${avatar} ${cleanName} joined the firm.`);
@@ -128,6 +130,50 @@ export class Game {
   }
 
   byId(id) { return this.players.find(p => p.id === id); }
+
+  byKey(key) { return key ? this.players.find(p => p.key === key) : undefined; }
+
+  // A carrier vanishing mid-bid shouldn't stall the wholesale phase.
+  maybeFinishMMQuotes() {
+    if (this.phase !== 'mm_wholesale' || !this.mm) return;
+    const live = this.mm.carriers.filter(c => this.byId(c)?.connected);
+    if (live.length && live.every(c => c in this.mm.wholesale)) this.mmToMarkup();
+  }
+
+  // ---- persistence (host snapshot so a reload can resume the room) ----
+
+  toJSON() {
+    return {
+      v: 1,
+      theme: this.theme.key, mode: this.mode, pro: this.pro,
+      totalRounds: this.totalRounds, phase: this.phase, round: this.round,
+      players: this.players, deck: this.deck, market: this.market,
+      intel: this.intel, dealtCardIds: [...this.dealtCardIds],
+      submitted: [...this.submitted], proposals: this.proposals,
+      claims: this.claims, ledger: this.ledger, roundLedger: this.roundLedger,
+      timer: this.timer, log: this.log, dealSeq: this.dealSeq,
+      winnerIds: this.winnerIds, awards: this.awards,
+      pendingRenewal: this.pendingRenewal, auction: this.auction, mm: this.mm,
+    };
+  }
+
+  static fromJSON(data, rng = Math.random) {
+    const g = new Game({ rng, theme: data.theme, mode: data.mode, ruleset: data.pro ? 'full' : 'rookie' });
+    Object.assign(g, {
+      totalRounds: data.totalRounds, phase: data.phase, round: data.round,
+      players: data.players, deck: data.deck, market: data.market,
+      intel: data.intel, dealtCardIds: new Set(data.dealtCardIds || []),
+      submitted: new Set(data.submitted || []), proposals: data.proposals || [],
+      claims: data.claims, ledger: data.ledger || [], roundLedger: data.roundLedger,
+      timer: data.timer, log: data.log || [], dealSeq: data.dealSeq || 0,
+      winnerIds: data.winnerIds, awards: data.awards || {},
+      pendingRenewal: data.pendingRenewal || null, auction: data.auction || null,
+      mm: data.mm || null,
+    });
+    // Everyone is presumed away until their phone says otherwise.
+    for (const p of g.players) p.connected = false;
+    return g;
+  }
 
   addLog(text) {
     this.log.push({ round: this.round, text });

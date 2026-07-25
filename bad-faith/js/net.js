@@ -149,7 +149,9 @@ function mqttClient(code, handlers, startBroker = 0) {
         handlers.onOpen(); // app (re)sends its hello
       });
       c.on('message', (topic, buf) => {
-        if (topic === t.down) { fail(); return; } // host is gone
+        // The host's last will. It may just be reloading — keep the socket
+        // and let the app re-introduce itself rather than killing the game.
+        if (topic === t.down) { handlers.onHostGone?.(); return; }
         if (topic !== t.client(cid)) return;
         if (!joined) { joined = true; clearTimeout(hop); }
         let msg; try { msg = JSON.parse(buf.toString()); } catch { return; }
@@ -184,7 +186,12 @@ function localHost(code, handlers) {
   return {
     ready: Promise.resolve(code),
     send(cid, msg) { ch.postMessage({ dir: 'h2c', cid, msg }); },
-    close() { ch.close(); },
+    close() {
+      // Mirror the MQTT last-will so local-transport tests exercise the
+      // same host-gone path real phones take.
+      try { ch.postMessage({ dir: 'h2c', cid: '*', msg: {} }); } catch { /* closed */ }
+      ch.close();
+    },
   };
 }
 
@@ -193,6 +200,7 @@ function localClient(code, handlers) {
   const ch = new BroadcastChannel('badfaith-' + code);
   ch.onmessage = (ev) => {
     const { dir, cid: target, msg } = ev.data || {};
+    if (dir === 'h2c' && target === '*') { handlers.onHostGone?.(); return; }
     if (dir === 'h2c' && target === cid) handlers.onMessage(msg);
   };
   // Give the channel a beat, then announce ourselves.

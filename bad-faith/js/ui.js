@@ -81,8 +81,8 @@ export function toast(text, isError = true) {
 
 // ---------- pre-game screens ----------
 
-export function renderHome() {
-  lastKey = 'home';
+export function renderHome(snapshot = null) {
+  lastKey = 'home:' + (snapshot?.code || '');
   root.innerHTML = `
     <div class="screen center">
       <div class="brand">
@@ -91,6 +91,14 @@ export function renderHome() {
         <p class="sub">${GAME_SUBTITLE}</p>
         <p class="pitch">Four rival brokers. Absurd animal clients. Whoever ends the year richest wins — and every deal is negotiable, out loud.</p>
       </div>
+      ${snapshot ? `
+      <div class="card resume">
+        <div>🕰 <b>Room ${esc(snapshot.code)}</b> is still open — quarter ${snapshot.game.round || 1}, ${snapshot.game.players?.length || 0} brokers.</div>
+        <div class="deal-btns">
+          <button class="btn small" data-action="resume">Resume hosting</button>
+          <button class="btn small ghost" data-action="discard-resume">Discard</button>
+        </div>
+      </div>` : ''}
       <div class="stack">
         <button class="btn big" data-action="show-create">Start a new firm</button>
         <button class="btn big ghost" data-action="show-join">Join with a code</button>
@@ -916,6 +924,8 @@ function onClick(e) {
   const a = btn.dataset.action;
   const view = lastView;
 
+  if (a === 'resume') { actions.resume(); return; }
+  if (a === 'discard-resume') { actions.discardResume(); return; }
   if (a === 'toggle-mute') {
     btn.textContent = sound.toggleMute() ? '🔇' : '🔊';
     return;
