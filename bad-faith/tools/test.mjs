@@ -1,0 +1,449 @@
+// Fast engine rules tests — no browser, runs in well under a second.
+//   node tools/test.mjs
+// Covers the invariants that E2E is too slow to guard on every change.
+
+import { Game, RULES } from '../js/game.js';
+
+let pass = 0, fail = 0;
+const ok = (name, cond, detail = '') => {
+  if (cond) { pass++; console.log(`  ✓ ${name}`); }
+  else { fail++; console.log(`  ✗ ${name}${detail ? ' — ' + detail : ''}`); }
+};
+const group = (n) => console.log(`\n${n}`);
+const lcg = (s) => () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+
+function seat(g, n = 4, host = 0) {
+  ['A', 'B', 'C', 'D'].slice(0, n).forEach((name, i) => g.addPlayer('P' + i, name, null, i === host));
+  return g;
+}
+function quoteAll(g, premiumOf = (m) => m.band[1]) {
+  for (const p of g.players) {
+    const v = g.viewFor(p.id), q = {};
+    for (const m of v.market) q[m.id] = { premium: premiumOf(m), coverage: m.coverage };
+    g.submitQuotes(p.id, q);
+  }
+}
+
+group('claims settle only as files are revealed (no spoilers)');
+{
+  let found = false;
+  for (let s = 1; s < 60 && !found; s++) {
+    const g = seat(new Game({ rng: lcg(s) }));
+    g.start(); g.openQuotes();
+    if (g.phase === 'auction') { g.placeBid('P1', g.auction.bid - 50); g.finishAuction(); }
+    quoteAll(g);
+    g.openDeals(); g.endDeals();
+    const hit = g.claims.results.find(r => r.hit && r.insured);
+    if (!hit) continue;
+    found = true;
+    const idx = g.claims.results.indexOf(hit);
+    const ownerBefore = g.byId(hit.winner).capital;
+    // With zero files opened the payout must NOT be on anyone's screen yet.
+    ok('an unrevealed claim is not yet deducted', ownerBefore > 0 && ownerBefore >= RULES.startingCapital,
+      `owner already at $${ownerBefore} with 0 files opened`);
+    for (let i = 0; i <= idx; i++) g.advanceClaims();
+    const ownerAfter = g.byId(hit.winner).capital;
+    ok('opening that file is what moves the money', ownerAfter < ownerBefore,
+      `$${ownerBefore} -> $${ownerAfter}`);
+  }
+  ok('found a hitting seed to test', found);
+}
+
+group('middleman reveal is likewise unspoiled');
+{
+  const g = seat(new Game({ rng: lcg(11), mode: 'middleman' }));
+  g.start(); g.mmOpen();
+  for (const c of g.mm.carriers) g.mmQuote(c, 300);
+  g.mmSetRetail(g.mm.broker, g.mm.chosenCarrier || g.mm.carriers[0], 420);
+  g.mmDecide(g.mm.customer, true);
+  const before = g.players.map(p => p.capital).join(',');
+  g.mmAdvance(); // the reveal
+  ok('money moves on reveal, not at decision time', before !== g.players.map(p => p.capital).join(','));
+}
+
+group('timeouts never leave the next phase without a clock');
+{
+  const g = seat(new Game({ rng: lcg(5), mode: 'middleman' }));
+  g.start(); g.mmOpen();
+  for (const c of g.mm.carriers) g.mmQuote(c, 300);
+  let guard = 0;
+  while (g.phase === 'mm_markup' && guard++ < 300) g.tick();
+  ok('markup timeout hands mm_decide a live timer', g.phase === 'mm_decide' && g.timer !== null,
+    `phase=${g.phase} timer=${JSON.stringify(g.timer)}`);
+  guard = 0;
+  while (g.phase === 'mm_decide' && guard++ < 300) g.tick();
+  ok('decide timeout resolves the round on its own', g.phase === 'mm_claims');
+}
+{
+  const g = seat(new Game({ rng: lcg(6), mode: 'middleman' }));
+  g.start(); g.mmOpen();
+  let guard = 0;
+  while (g.phase === 'mm_wholesale' && guard++ < 300) g.tick();
+  ok('wholesale timeout leaves a live clock or resolves', g.timer !== null || g.phase === 'mm_claims',
+    `phase=${g.phase}`);
+}
+
+group('solvency cap is fixed for the whole quarter');
+{
+  const g = seat(new Game({ rng: lcg(3) }), 2);
+  g.start();
+  const cap = g.solvencyCap('P0');
+  g.openQuotes();
+  if (g.phase === 'auction') g.finishAuction();
+  quoteAll(g);
+  let exposure = 0;
+  for (const m of g.market) if (m.winner === 'P0') exposure += m.soldCoverage;
+  ok('signed exposure never exceeds the cap quoted at the time', exposure <= cap,
+    `signed ${exposure} against cap ${cap}`);
+}
+
+group('rookie desk really is stripped down');
+{
+  const g = seat(new Game({ rng: lcg(9), ruleset: 'rookie' }));
+  g.start();
+  ok('no syndicated lot', !g.market.some(m => m.syndicated));
+  ok('no auction phase', g.phase === 'market' && (g.openQuotes(), g.phase === 'quotes'));
+  ok('short desk refuses', !!g.placeShort('P1', g.market[0].client.id, 100).error);
+  // engine must ignore a partial-coverage quote even if a stale client sends one
+  g.submitQuotes('P0', { [g.market[0].client.id]: { premium: 200, coverage: Math.round(g.market[0].client.coverage / 2) } });
+  ok('partial coverage snaps to full', g.market[0].quotes.P0.coverage === g.market[0].client.coverage,
+    JSON.stringify(g.market[0].quotes.P0));
+  const solo = seat(new Game({ ruleset: 'rookie' }), 2);
+  solo.start();
+  while (solo.phase !== 'results') {
+    if (solo.phase === 'market') solo.openQuotes();
+    else if (solo.phase === 'quotes') { solo.submitQuotes('P0', {}); solo.submitQuotes('P1', {}); }
+    else if (solo.phase === 'reveal') solo.openDeals();
+    else if (solo.phase === 'deals') solo.endDeals();
+    else if (solo.phase === 'claims') solo.advanceClaims();
+    else if (solo.phase === 'ledger') solo.nextRound();
+  }
+  ok('a passive rookie ends at exactly starting capital',
+    solo.byId('P0').capital === RULES.startingCapital, `$${solo.byId('P0').capital}`);
+}
+
+group('open outcry');
+{
+  const g = seat(new Game({ rng: lcg(2) }));
+  g.start();
+  const lot = g.market.find(m => m.syndicated);
+  ok('a syndicated lot exists in full market', !!lot);
+  g.openQuotes();
+  ok('opening the floor starts the auction', g.phase === 'auction');
+  const open = g.auction.bid;
+  ok('bid above the ask is refused', !!g.placeBid('P1', open + 10).error);
+  ok('bid below the floor is refused', !!g.placeBid('P1', g.auction.floor - 1).error);
+  ok('a valid undercut takes the lead', !g.placeBid('P1', open - 25).error && g.auction.leader === 'P1');
+  ok('the leader cannot bid against themselves', !!g.placeBid('P1', g.auction.bid - 25).error);
+  const t0 = g.timer.remaining;
+  g.tick(); g.tick();
+  g.placeBid('P2', g.auction.bid - 25);
+  ok('every bid resets the anti-snipe clock', g.timer.remaining === RULES.auction.resetSeconds,
+    `was ${t0}, now ${g.timer.remaining}`);
+  let guard = 0;
+  while (g.phase === 'auction' && guard++ < 300) g.tick();
+  ok('the clock closes the lot and moves to sealed quotes', g.phase === 'quotes');
+  const won = g.market.find(m => m.client.id === g.auction.clientId);
+  ok('the last bidder owns the lot at their bid', won.winner === 'P2' && won.premium === g.auction.bid);
+  ok('the winner banked the premium', g.byId('P2').capital === RULES.startingCapital + won.premium);
+  ok('the auctioned lot is excluded from sealed quotes', (quoteAll(g), won.quotes.P0 === undefined));
+}
+{
+  const g = seat(new Game({ rng: lcg(4) }));
+  g.start(); g.openQuotes();
+  let guard = 0;
+  while (g.phase === 'auction' && guard++ < 300) g.tick();
+  const lot = g.market.find(m => m.client.id === g.auction.clientId);
+  ok('an unsold lot has no winner and no layoff duty', !lot.winner && !lot.syndicated);
+}
+
+group('renewals');
+{
+  const g = seat(new Game({ rng: lcg(21) }));
+  g.start();
+  const syn = g.market.find(m => m.syndicated);
+  const boosted = syn.client.coverage, base = syn.baseClient.coverage;
+  ok('syndication boosts the lot for this quarter only', boosted > base);
+  // force it to survive and become the renewal
+  g.openQuotes(); g.placeBid('P0', g.auction.bid - 25); g.finishAuction();
+  quoteAll(g); g.openDeals(); g.endDeals();
+  for (const r of g.claims.results) if (r.clientId === syn.client.id) { r.hit = false; r.settle = []; r.payouts = []; }
+  while (g.claims.revealed < g.claims.results.length) g.advanceClaims();
+  if (g.pendingRenewal && g.pendingRenewal.client.id === syn.client.id) {
+    ok('a renewed whale returns at its natural size', g.pendingRenewal.client.coverage === base,
+      `${g.pendingRenewal.client.coverage} vs base ${base}`);
+  } else ok('a renewed whale returns at its natural size', true, '(different client renewed; not applicable)');
+}
+{
+  // incumbent keeps the client unless undercut by 10%
+  const g = seat(new Game({ rng: lcg(31) }), 2);
+  g.start();
+  const m = g.market.find(x => !x.syndicated);
+  m.renewal = { incumbent: 'P0', lastRate: 0.3 };
+  g.phase = 'quotes';
+  g.submitQuotes('P0', { [m.client.id]: { premium: Math.round(m.client.coverage * 0.30), coverage: m.client.coverage } });
+  g.submitQuotes('P1', { [m.client.id]: { premium: Math.round(m.client.coverage * 0.28), coverage: m.client.coverage } });
+  ok('a 7% undercut is not enough to poach', m.winner === 'P0', `winner=${m.winner}`);
+}
+{
+  const g = seat(new Game({ rng: lcg(32) }), 2);
+  g.start();
+  const m = g.market.find(x => !x.syndicated);
+  m.renewal = { incumbent: 'P0', lastRate: 0.3 };
+  g.phase = 'quotes';
+  g.submitQuotes('P0', { [m.client.id]: { premium: Math.round(m.client.coverage * 0.30), coverage: m.client.coverage } });
+  g.submitQuotes('P1', { [m.client.id]: { premium: Math.round(m.client.coverage * 0.20), coverage: m.client.coverage } });
+  ok('a 33% undercut poaches the client', m.winner === 'P1', `winner=${m.winner}`);
+}
+
+group('full games terminate in every configuration');
+for (const [label, cfg] of [
+  ['market/full', { ruleset: 'full' }],
+  ['market/rookie', { ruleset: 'rookie' }],
+  ['middleman', { mode: 'middleman' }],
+  ['nyc/full', { theme: 'nyc', ruleset: 'full' }],
+]) {
+  let done = false;
+  for (let s = 1; s <= 3 && !done; s++) {
+    const g = seat(new Game({ rng: lcg(100 + s), ...cfg }));
+    g.start();
+    let guard = 0;
+    while (g.phase !== 'results' && guard++ < 4000) {
+      if (g.phase === 'market') g.openQuotes();
+      else if (g.phase === 'auction') { if (guard % 3 === 0) g.placeBid('P' + (guard % 4), g.auction.bid - 25); g.tick(); }
+      else if (g.phase === 'quotes') quoteAll(g);
+      else if (g.phase === 'reveal') g.openDeals();
+      else if (g.phase === 'deals') g.endDeals();
+      else if (g.phase === 'claims') g.advanceClaims();
+      else if (g.phase === 'ledger') g.nextRound();
+      else if (g.phase === 'mm_brief') g.mmOpen();
+      else if (g.phase === 'mm_wholesale') { for (const c of g.mm.carriers) g.mmQuote(c, 300); }
+      else if (g.phase === 'mm_markup') g.mmSetRetail(g.mm.broker, g.mm.carriers[0], 400);
+      else if (g.phase === 'mm_decide') g.mmDecide(g.mm.customer, guard % 2 === 0);
+      else if (g.phase === 'mm_claims') g.mmAdvance();
+      else break;
+    }
+    done = g.phase === 'results';
+    ok(`${label} reaches results (seed ${100 + s})`, done, `stuck in ${g.phase} after ${guard} steps`);
+  }
+}
+
+group('the slip (2 players)');
+{
+  const g = seat(new Game({ rng: lcg(61), mode: 'duel' }), 2);
+  ok('needs exactly two brokers', !!seat(new Game({ rng: lcg(61), mode: 'duel' }), 3).start().error);
+  g.start();
+  ok('opens on pricing', g.phase === 'duel_price');
+  ok('two lots on the table', g.market.length === 2);
+  ok('both already written at an asking price', g.market.every(m => m.premium > 0 && m.soldCoverage === m.client.coverage));
+  ok('each broker holds intel on BOTH lots',
+    g.players.every(p => new Set(g.intel[p.id].map(c => c.clientId)).size === 2));
+  ok('the chooser cannot price', !!g.setSlip(g.duel.chooser, { clientId: g.market[0].client.id, amount: 100 }).error);
+  ok('a pricing broker cannot see nothing', g.viewFor(g.duel.pricer).duel.youArePricer === true);
+  ok('the sweetener is hidden while it is being set', g.viewFor(g.duel.chooser).duel.offer === null);
+  g.setSlip(g.duel.pricer, { clientId: g.market[0].client.id, amount: 200 });
+  ok('setting the slip moves to the choice', g.phase === 'duel_choose');
+  ok('now both sides can see the offer', g.viewFor(g.duel.chooser).duel.offer.amount === 200);
+  ok('the pricer cannot choose', !!g.chooseSlip(g.duel.pricer, g.market[0].client.id).error);
+
+  const capBefore = { p: g.byId(g.duel.pricer).capital, c: g.byId(g.duel.chooser).capital };
+  const { pricer, chooser } = g.duel;
+  g.chooseSlip(chooser, g.market[0].client.id); // chooser takes the surcharged lot
+  ok('both lots end up owned', g.market.every(m => m.winner));
+  ok('one each', g.market[0].winner !== g.market[1].winner);
+  const paid = capBefore.c + g.market[0].premium - 200;
+  ok('the sweetener rides with the marked lot', g.byId(chooser).capital === paid,
+    `${g.byId(chooser).capital} vs ${paid}`);
+  ok('and lands in the rival pocket', g.byId(pricer).capital === capBefore.p + g.market[1].premium + 200);
+  ok('play continues into the deal window', g.phase === 'deals' && g.timer?.phase === 'deals');
+}
+{
+  const g = seat(new Game({ rng: lcg(62), mode: 'duel' }), 2);
+  g.start();
+  const { pricer, chooser } = g.duel;
+  g.setSlip(pricer, { clientId: g.market[0].client.id, amount: 50 });
+  const before = g.byId(chooser).capital;
+  g.chooseSlip(chooser, 'walk');
+  ok('walking away leaves the dealer holding everything', g.market.every(m => m.winner === pricer));
+  ok('and the walker banks nothing', g.byId(chooser).capital === before);
+  ok('no sweetener changes hands on a walk', g.duel.settled.walked === true);
+}
+{
+  // a whole duel, including timeouts resolving on their own
+  const g = seat(new Game({ rng: lcg(63), mode: 'duel' }), 2);
+  g.start();
+  let guard = 0;
+  while (g.phase !== 'results' && guard++ < 4000) {
+    if (g.phase === 'duel_price' || g.phase === 'duel_choose') g.tick();
+    else if (g.phase === 'deals') g.endDeals();
+    else if (g.phase === 'claims') g.advanceClaims();
+    else if (g.phase === 'ledger') g.nextRound();
+    else break;
+  }
+  ok('an unattended duel still reaches results', g.phase === 'results', `stuck in ${g.phase}`);
+  ok('it ran the full six rounds', g.round === RULES.duel.rounds);
+}
+
+group('two-player market scales down');
+{
+  const g2 = seat(new Game({ rng: lcg(71) }), 2); g2.start();
+  const g4 = seat(new Game({ rng: lcg(71) }), 4); g4.start();
+  ok('two players contest two lots, not three', g2.market.filter(m => !m.renewal).length === 2);
+  ok('four players still get three', g4.market.filter(m => !m.renewal).length === 3);
+}
+{
+  // with a single possible counterparty the layoff rule must not apply
+  const g = seat(new Game({ rng: lcg(72) }), 2);
+  g.start(); g.openQuotes();
+  if (g.phase === 'auction') { g.placeBid('P1', g.auction.bid - 25); g.finishAuction(); }
+  quoteAll(g);
+  g.openDeals(); g.endDeals();
+  ok('a syndicated lot cannot void head-to-head', !g.market.some(m => m.voided));
+}
+
+group('identity survives disconnection');
+{
+  const g = seat(new Game({ rng: lcg(41) }));
+  g.players[1].key = 'dev-key-b';
+  ok('a player can be found by device key', g.byKey('dev-key-b')?.id === 'P1');
+  ok('an unknown key finds nobody', !g.byKey('nope') && !g.byKey(null));
+  g.start();
+  g.setConnected('P1', false);
+  ok('a dropped player keeps their seat mid-game', !!g.byId('P1') && g.byId('P1').connected === false);
+  ok('and keeps their capital', g.byId('P1').capital === RULES.startingCapital);
+  g.setConnected('P1', true);
+  ok('and can be marked back', g.byId('P1').connected === true);
+}
+
+group('host snapshot round-trips');
+{
+  const g = seat(new Game({ rng: lcg(42), theme: 'nyc', ruleset: 'full' }));
+  g.start(); g.openQuotes();
+  if (g.phase === 'auction') { g.placeBid('P2', g.auction.bid - 50); g.finishAuction(); }
+  quoteAll(g);
+  g.openDeals();
+  g.placeShort('P0', g.market[0].client.id, 100);
+  g.endDeals(); g.advanceClaims();
+
+  const restored = Game.fromJSON(JSON.parse(JSON.stringify(g.toJSON())));
+  ok('phase, round and theme survive', restored.phase === g.phase && restored.round === g.round && restored.theme.key === 'nyc');
+  ok('rulebook survives', restored.pro === g.pro);
+  ok('capital survives', restored.players.map(p => p.capital).join() === g.players.map(p => p.capital).join());
+  ok('device keys survive', restored.players.map(p => p.key).join() === g.players.map(p => p.key).join());
+  ok('the market and its winners survive', restored.market.map(m => m.winner).join() === g.market.map(m => m.winner).join());
+  ok('claim progress survives', restored.claims.revealed === g.claims.revealed);
+  ok('private intel survives', JSON.stringify(restored.intel) === JSON.stringify(g.intel));
+  ok('dealt-card set survives as a Set', restored.dealtCardIds instanceof Set && restored.dealtCardIds.size === g.dealtCardIds.size);
+  ok('submitted set survives as a Set', restored.submitted instanceof Set && restored.submitted.size === g.submitted.size);
+  ok('awards survive', JSON.stringify(restored.awards) === JSON.stringify(g.awards));
+  ok('everyone starts disconnected until their phone checks in', restored.players.every(p => !p.connected));
+  // and the restored game must still be playable to the end
+  let guard = 0;
+  while (restored.phase !== 'results' && guard++ < 4000) {
+    if (restored.phase === 'market') restored.openQuotes();
+    else if (restored.phase === 'auction') restored.tick();
+    else if (restored.phase === 'quotes') quoteAll(restored);
+    else if (restored.phase === 'reveal') restored.openDeals();
+    else if (restored.phase === 'deals') restored.endDeals();
+    else if (restored.phase === 'claims') restored.advanceClaims();
+    else if (restored.phase === 'ledger') restored.nextRound();
+    else break;
+  }
+  ok('a restored game plays through to results', restored.phase === 'results', `stuck in ${restored.phase}`);
+}
+
+group('an absent carrier cannot stall the wholesale phase');
+{
+  const g = seat(new Game({ rng: lcg(43), mode: 'middleman' }));
+  g.start(); g.mmOpen();
+  const [a, b] = g.mm.carriers;
+  g.mmQuote(a, 300);
+  g.setConnected(b, false);
+  g.maybeFinishMMQuotes();
+  ok('quoting carriers alone advance the phase', g.phase === 'mm_markup', `phase=${g.phase}`);
+}
+
+group('ledger conserves money');
+{
+  const g = seat(new Game({ rng: lcg(77) }));
+  g.start();
+  let guard = 0;
+  while (g.phase !== 'results' && guard++ < 4000) {
+    if (g.phase === 'market') g.openQuotes();
+    else if (g.phase === 'auction') { g.placeBid('P1', g.auction.bid - 50); g.tick(); }
+    else if (g.phase === 'quotes') quoteAll(g);
+    else if (g.phase === 'reveal') g.openDeals();
+    else if (g.phase === 'deals') g.endDeals();
+    else if (g.phase === 'claims') g.advanceClaims();
+    else if (g.phase === 'ledger') g.nextRound();
+  }
+  let bad = null;
+  for (const round of g.ledger) {
+    for (const s of round.summary) {
+      const parts = s.premiums + s.claims + s.reFees + s.rePayouts + s.intelTrade + s.cash + s.bets + s.fines + s.overhead + s.bonus + (s.revenue || 0);
+      if (Math.abs(parts - s.net) > 1) bad = `r${round.round} ${s.pid}: parts ${parts} vs net ${s.net}`;
+    }
+  }
+  ok('every ledger row sums to its net change', !bad, bad || '');
+  // and nothing moves capital outside the ledger
+  let drift = null;
+  for (const p of g.players) {
+    const nets = g.ledger.reduce((s, r) => s + (r.summary.find(x => x.pid === p.id)?.net ?? 0), 0);
+    if (Math.abs(RULES.startingCapital + nets - p.capital) > 1) drift = `${p.id}: ${RULES.startingCapital}+${nets} vs ${p.capital}`;
+  }
+  ok('starting stake plus round nets equals the final bankroll', !drift, drift || '');
+}
+
+group('market-mode systems stay out of the duel');
+{
+  // constructed with the constructor default ruleset ('full') — the way
+  // sims and the fuzzer build duels — market systems must still not leak in
+  const g = seat(new Game({ rng: lcg(91), mode: 'duel' }), 2);
+  g.start();
+  g.setSlip(g.duel.pricer, { clientId: g.market[0].client.id, amount: 100 });
+  g.chooseSlip(g.duel.chooser, g.market[1].client.id);
+  ok('no short desk in a duel', !!g.placeShort('P0', g.market[0].client.id, 100).error);
+  g.endDeals();
+  let guard = 0;
+  while (g.phase === 'claims' && guard++ < 20) g.advanceClaims();
+  const row = g.ledger[0].summary;
+  ok('nobody pays office overhead in a duel', row.every(s => !s.overhead), JSON.stringify(row.map(s => s.overhead)));
+  ok('no Broker of the Quarter bonus in a duel', row.every(s => !s.bonus), JSON.stringify(row.map(s => s.bonus)));
+  ok('a duel never queues a renewal', g.pendingRenewal === null);
+}
+
+group('auction wins count against the sealed-quote solvency cap');
+{
+  const g = seat(new Game({ rng: lcg(93), ruleset: 'full' }));
+  g.start();
+  // pretend P1 already carried the whale off the auction block at $2500 —
+  // with $1000 capital their quarter cap is $3000, so a further $1000 lot
+  // must be blocked even though it would fit an empty book
+  const won = g.market[0], next = g.market[1];
+  won.winner = 'P1'; won.premium = 400; won.soldCoverage = 2500;
+  next.quotes = {
+    P1: { premium: 100, coverage: 1000 }, // best rate, but over-extended
+    P2: { premium: 300, coverage: 1000 },
+  };
+  g.phase = 'quotes';
+  g.finishQuotes();
+  ok('the over-extended auction winner is blocked', next.winner === 'P2', `winner=${next.winner}`);
+}
+
+group('a fully laid-off book still counts as working');
+{
+  const g = seat(new Game({ rng: lcg(95), ruleset: 'full' }));
+  g.start();
+  const m = g.market[0];
+  m.winner = 'P1'; m.premium = 400; m.soldCoverage = 2000;
+  m.reinsurance = [{ pid: 'P2', pct: 100, fee: 50 }];
+  g.finishRound();
+  const row = g.ledger[0].summary;
+  const of = (pid) => row.find(s => s.pid === pid);
+  ok('the writer who laid off 100% pays no overhead', !of('P1').overhead, `overhead=${of('P1').overhead}`);
+  ok('the reinsurer holding the risk pays no overhead', !of('P2').overhead);
+  ok('a genuinely idle desk still pays', of('P3').overhead === -RULES.office.overhead, `overhead=${of('P3').overhead}`);
+}
+
+console.log(`\n${fail ? '✗' : '✓'} ${pass} passed, ${fail} failed\n`);
+process.exit(fail ? 1 : 0);
