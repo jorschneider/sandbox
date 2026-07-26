@@ -637,9 +637,27 @@
         mapList.appendChild(card);
         pts.push([e.lat, e.lng]);
     };
+    // when a day-part has no scheduled events, backfill it with the nearest
+    // always-open spots so an afternoon/evening never renders as an empty "0"
+    const usedFallback = new Set();
+    const slotFallback = (slot) => {
+      if (state.day === "all" || state.heartsOnly) return [];
+      return list
+        .filter((e) => timeBucket(e) === "any" && !usedFallback.has(keyOf(e)) &&
+          (slot === "evening" ? (!e.outdoor && !isRide(e)) : (e.outdoor && e.category === "play" && !isRide(e))))
+        .sort((a, b) => (travelOf(a) || 99) - (travelOf(b) || 99))
+        .slice(0, 3);
+    };
     TB.forEach((bucket) => {
-      const items = list.filter((e) => timeBucket(e) === bucket.key);
-      if (!items.length) return;
+      let items = list.filter((e) => timeBucket(e) === bucket.key);
+      let backfilled = false;
+      if (!items.length) {
+        if (bucket.key !== "afternoon" && bucket.key !== "evening") return;
+        items = slotFallback(bucket.key);
+        if (!items.length) return;
+        items.forEach((e) => usedFallback.add(keyOf(e)));
+        backfilled = true;
+      }
       if (bucket.key === "any") {
         // three staged unlocks: indoor rainy-day escapes, the nearby-playground list
         // (sorted closest-first — the weekday go-to), then farther destinations
@@ -647,11 +665,11 @@
         const byTravel = (a, b) => (travelOf(a) || 99) - (travelOf(b) || 99);
         const groups = [
           { label: "☔ Rainy day", sub: "museums & indoor play, nearest-first", flag: "showRainy",
-            items: items.filter((e) => !e.outdoor && !isRide(e)).sort(byTravel) },
+            items: items.filter((e) => !e.outdoor && !isRide(e) && !usedFallback.has(keyOf(e))).sort(byTravel) },
           { label: "🛝 Playgrounds & splash pads", sub: "sorted nearest-first — grab the closest", flag: "showPlay",
-            items: items.filter(isPlayground).sort(byTravel) },
+            items: items.filter((e) => isPlayground(e) && !usedFallback.has(keyOf(e))).sort(byTravel) },
           { label: "🧭 Destinations & ferries", sub: "gardens, boats, carousels & zoos", flag: "showDest",
-            items: items.filter((e) => !isPlayground(e) && (e.outdoor || isRide(e))).sort(byTravel) },
+            items: items.filter((e) => !isPlayground(e) && (e.outdoor || isRide(e)) && !usedFallback.has(keyOf(e))).sort(byTravel) },
         ];
         groups.forEach((g) => {
           if (!g.items.length) return;
@@ -685,7 +703,8 @@
       }
       const head = document.createElement("div");
       head.className = "list-head";
-      head.innerHTML = bucket.emoji + " " + bucket.label + ' <span class="list-count tb-' + bucket.key + '">' + items.length + "</span>";
+      head.innerHTML = bucket.emoji + " " + bucket.label + ' <span class="list-count tb-' + bucket.key + '">' + items.length + "</span>" +
+        (backfilled ? ' <span class="slot-note">no set events — nearby spots open now</span>' : "");
       mapList.appendChild(head);
       items.forEach(addEntry);
     });

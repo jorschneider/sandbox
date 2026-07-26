@@ -160,3 +160,28 @@ if (errors.length) {
 console.log("week.js OK: " + data.events.length + " entries, " +
   data.events.filter((e) => e.event).length + " dated events, week of " + data.weekMonday +
   (data.nextWeek ? " · next-week preview: " + (data.nextWeek.events || []).length + " events" : ""));
+
+// ——— non-fatal coverage report: flag day-parts with no Union-Sq-visible dated
+// event. The UI backfills these with nearby anytime spots, but the Monday routine
+// should aim to fill afternoon AND evening every day with REAL events. ———
+(function coverage() {
+  const DK = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  const bk = (e) => {
+    const t = e.times || ["any"];
+    if (t.indexOf("any") !== -1) return "any";
+    return ["morning", "afternoon", "evening"].find((b) => t.indexOf(b) !== -1) || "any";
+  };
+  const gaps = [];
+  DK.forEach((d) => {
+    const dated = (data.events || []).filter((e) => e.event === true && !e.cpwOnly && (e.days || []).indexOf(d) !== -1);
+    ["afternoon", "evening"].forEach((slot) => {
+      if (!dated.some((e) => bk(e) === slot)) gaps.push(d + " " + slot);
+    });
+  });
+  if (gaps.length) {
+    console.log("⚠ coverage: no Union-Sq-visible dated events for " + gaps.length +
+      " day-part(s): " + gaps.join(", ") + " (UI backfills with nearby spots; prefer real events).");
+  } else {
+    console.log("coverage OK: every day has a Union-Sq afternoon and evening event.");
+  }
+})();

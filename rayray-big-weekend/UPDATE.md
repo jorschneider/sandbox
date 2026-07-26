@@ -100,7 +100,13 @@ for this week directly, but STILL preserve the evergreen library.
 2. **Age 2 fit**: short or drop-in, stroller-friendly, no age minimums.
    **Cover the whole day, every day**: weekday daytime events AND weekday
    evenings (post-work outings) both matter — aim for each day of the week to
-   offer morning, afternoon, and evening options.
+   offer morning, afternoon, and evening options. **Every day needs at least one
+   Union-Square-reachable (non-cpwOnly) afternoon AND evening dated event** — an
+   evening that is all `cpwOnly` (Grandma's-zone only) reads as empty in the
+   default view. The validator prints a coverage report flagging any day-part
+   with no USQ-visible event; the UI auto-backfills empty afternoon/evening
+   slots with the nearest anytime spots, but real dated events are the goal —
+   chase the coverage gaps the validator reports before finishing.
 3. **Storytimes: weekdays yes, weekends no.** Library/bookstore read-alouds
    are welcome Monday-Friday (they fill weekday slots nicely). On weekends
    they're too tame — story-adjacent things earn a weekend slot only as part
