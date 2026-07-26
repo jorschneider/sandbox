@@ -60,17 +60,27 @@ Each event:
 
 ## Monday procedure (do this in order)
 
-The site must NEVER be left showing a past week. Work in this order so even a
-partial run leaves it current:
+The site must NEVER be left showing a past week — **and never jump AHEAD of the
+current week either.** Work in this order so even a partial run leaves it right:
 
-1. **Promote first (fast, always safe).** If `nextWeek` already holds the new
-   week's verified events, promote it to be this week BEFORE any research:
-   keep every evergreen entry (`event !== true`), replace the dated events with
-   `nextWeek.events`, set `weekLabel`/`weekMonday` to nextWeek's and `updated`
-   to today, and author fresh `itineraries` for the new week (see "Daily
-   itineraries"). Clear `nextWeek`. Run the validator, commit, **deploy, and
-   confirm the live `weekLabel` updated** — now the site is current no matter
-   what happens next.
+0. **Anchor to the real date FIRST.** Run `date` and compute
+   `thisMonday` = the most recent Monday **on or before today** (if today IS
+   Monday, that's today). The current week is always `thisMonday`–Sunday.
+   Do NOT assume it is Monday and do NOT skip to a future week — if this routine
+   is ever fired on a Sat/Sun, `thisMonday` is still the PAST Monday, so the week
+   must stay on the current Mon–Sun, not advance. Compare to `week.js`'s
+   `weekMonday`:
+   - If `weekMonday` **already equals `thisMonday`** → the current week is
+     correct. Do NOT promote or advance. Skip to step 2 (just refresh the
+     `nextWeek` preview).
+   - If `weekMonday` is **before `thisMonday`** (stale) → promote/advance in
+     step 1.
+1. **Promote (only when stale, per step 0).** If `nextWeek` holds the events for
+   `thisMonday`'s week, promote it to be this week: keep every evergreen entry
+   (`event !== true`), replace the dated events with `nextWeek.events`, set
+   `weekLabel`/`weekMonday` to `thisMonday`'s week and `updated` to today, author
+   fresh `itineraries` (see "Daily itineraries"), clear `nextWeek`. Run the
+   validator, commit, **deploy, and confirm the live `weekLabel` updated.**
 2. **Then research the NEW `nextWeek`** (the following Mon–Sun) per the rules
    below, and the dated events for any gaps in the promoted week. Add findings,
    re-validate, commit, deploy again.
