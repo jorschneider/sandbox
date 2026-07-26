@@ -1,3 +1,4 @@
+/* Data for the current week. See UPDATE.md for the refresh contract. */
 window.WEEK_DATA = {
   "weekLabel": "July 20–26, 2026",
   "weekMonday": "2026-07-20",
@@ -316,7 +317,7 @@ window.WEEK_DATA = {
       ]
     },
     "sun": {
-      "summary": "A morning marionette matinee near Grandma's or puppets at the Battery, Central Park carousel and goats after nap.",
+      "summary": "Marionettes or Battery puppets in the morning; the free Pokémon festival or a Seaport craft after nap.",
       "picks": [
         {
           "slot": "morning",
@@ -337,24 +338,6 @@ window.WEEK_DATA = {
           "note": "Dig-in-the-dirt volunteer session she can actually help with, 10-12, Greenpoint."
         },
         {
-          "slot": "afternoon",
-          "key": "totally-kid-carousel",
-          "title": "Totally Kid Carousel",
-          "note": "Central Park carousel ride, an easy post-nap stop near Grandma's."
-        },
-        {
-          "slot": "afternoon",
-          "key": "feed-the-goats-at-the-tisch-children-s-zoo",
-          "title": "Feed the goats at the Tisch Children's Zoo",
-          "note": "Hands-on animal time in Central Park if the carousel line is long."
-        },
-        {
-          "slot": "afternoon",
-          "key": "domino-park-s-88-jet-splash-fountain",
-          "title": "Domino Park's 88-jet splash fountain",
-          "note": "If you stayed in Greenpoint after gardening, the Domino Park splash fountain is a short ride away."
-        },
-        {
           "slot": "evening",
           "key": "hudson-classical-theatre-the-dancing-men-sherloc",
           "title": "Hudson Classical Theatre: The Dancing Men (Sherlock Holmes mystery)",
@@ -365,6 +348,24 @@ window.WEEK_DATA = {
           "key": "free-shakespeare-in-the-park-the-winter-s-tale",
           "title": "Free Shakespeare in the Park: The Winter's Tale",
           "note": "Same honest flag as Saturday — lottery, stone seats, 8pm; a parents' outing more than a toddler one."
+        },
+        {
+          "slot": "afternoon",
+          "key": "pok-mon-day-out-at-brooklyn-bridge-park",
+          "title": "Pokémon Day Out at Brooklyn Bridge Park",
+          "note": "Free all-day Pokémon festival on the Pier 6 lawns — drop in after nap, splash pad next door."
+        },
+        {
+          "slot": "afternoon",
+          "key": "extra-extra-family-printmaking-at-the-seaport-mu",
+          "title": "Extra, Extra! Family printmaking at the Seaport Museum",
+          "note": "Roll-and-stamp a newspaper headline at the Seaport Museum, tall ships outside — free craft till 4:30."
+        },
+        {
+          "slot": "afternoon",
+          "key": "totally-kid-carousel",
+          "title": "Totally Kid Carousel",
+          "note": "Prefer Grandma's side? The Central Park carousel is an easy post-nap ride."
         }
       ]
     }
@@ -7142,6 +7143,60 @@ window.WEEK_DATA = {
       "cpwOnly": false,
       "event": true,
       "recurring": false
+    },
+    {
+      "title": "Pokémon Day Out at Brooklyn Bridge Park",
+      "category": "festival",
+      "venue": "Brooklyn Bridge Park — Pier 6",
+      "neighborhood": "Brooklyn Heights waterfront",
+      "when": "Sun Jul 26, 10 AM–7 PM (roll in ~2 PM after nap)",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free (advance reservation encouraged; walk-ups as capacity allows)",
+      "travelMinutes": 27,
+      "travelHow": "~27 min from Union Sq",
+      "toddlerNotes": "Free all-day Pokémon festival on the Pier 6 lawns — games, activities and life-size characters a 2-year-old can toddle around and point at. Drop-in, so arrive well after the 12–2 nap; the Pier 6 Water Lab sprinklers and playground are right there for a splash break.",
+      "url": "https://brooklynbridgepark.org/event/pokemon-day-out-brooklyn-bridge-park/",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.6952,
+      "lng": -73.9997,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:00",
+      "end": "19:00",
+      "cpwOnly": false
+    },
+    {
+      "title": "Extra, Extra! Family printmaking at the Seaport Museum",
+      "category": "storytime",
+      "venue": "South Street Seaport Museum",
+      "neighborhood": "South Street Seaport",
+      "when": "Sun Jul 26, drop-in 11 AM–4:30 PM (come ~2 PM)",
+      "days": [
+        "sun"
+      ],
+      "cost": "Craft free; museum admission ~$18 adult / $5 child, under-2 free (pay-what-you-wish available)",
+      "travelMinutes": 23,
+      "travelHow": "~23 min from Union Sq",
+      "toddlerNotes": "Hands-on printmaking drop-in — roll foam-letter tools to stamp newspaper-style headlines; a 2-year-old can stamp and roll with a grown-up. No time slot (open till 4:30), so come after nap. Tall ships docked right outside.",
+      "url": "https://southstreetseaportmuseum.org/family-activity/",
+      "outdoor": false,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7069,
+      "lng": -74.0033,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:00",
+      "end": "16:30",
+      "cpwOnly": false
     }
   ],
   "nextWeek": {
