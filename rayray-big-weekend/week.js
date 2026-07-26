@@ -1,383 +1,370 @@
-/* Data for the current week. See UPDATE.md for the refresh contract. */
 window.WEEK_DATA = {
-  "weekLabel": "July 13–19, 2026",
-  "weekMonday": "2026-07-13",
-  "updated": "July 13, 2026",
+  "weekLabel": "July 20–26, 2026",
+  "weekMonday": "2026-07-20",
+  "updated": "July 20, 2026",
   "itineraries": {
     "mon": {
-      "summary": "Bryant Park carousel show at 10, splash + greenmarket after nap, Broadway on the boardwalk at sunset.",
+      "summary": "No dated events land on Monday — lean on the playground library; moon-viewing at Domino Park tonight if she's still up.",
       "picks": [
-        {
-          "slot": "morning",
-          "key": "le-carrousel-extravaganza-andy-suzanna-music-dan",
-          "title": "Le Carrousel Extravaganza: Andy & Suzanna (music & dance for kids)",
-          "note": "Andy & Suzanna's sing-and-dance carousel show, 10-11 — home for lunch before nap."
-        },
-        {
-          "slot": "morning",
-          "key": "bilingual-mandarin-english-family-storytime",
-          "title": "Bilingual Mandarin-English Family Storytime",
-          "note": "Songs + stories in two languages at Chatham Square Library, 10:30 — free, drop-in."
-        },
         {
           "slot": "morning",
           "key": "evelyn-s-playground-splash-sandbox-on-your-doors",
           "title": "Evelyn's Playground — splash + sandbox on your doorstep",
-          "note": "The doorstep option — sandbox and sprinklers right in Union Square Park."
+          "note": "Three minutes from home — splash and sandbox before it gets hot."
+        },
+        {
+          "slot": "morning",
+          "key": "augustus-st-gaudens-playground-baby-swings-sprin",
+          "title": "Augustus St. Gaudens Playground — baby swings & sprinkler near Union Sq",
+          "note": "Baby swings and a sprinkler, a 5-minute walk — easy backup if Evelyn's is packed."
+        },
+        {
+          "slot": "morning",
+          "key": "moira-ann-smith-playground-madison-sq-water-bloc",
+          "title": "Moira Ann Smith Playground (Madison Sq) — water blocks & tot jungle gym",
+          "note": "Water blocks and a toddler-scale jungle gym, 8 minutes north."
         },
         {
           "slot": "afternoon",
-          "key": "union-square-greenmarket-wander",
-          "title": "Union Square Greenmarket wander",
-          "note": "Monday market day — post-nap berries-and-samples wander five minutes from home."
+          "key": "washington-square-playgrounds-spray-showers",
+          "title": "Washington Square playgrounds + spray showers",
+          "note": "Post-nap spray showers and two playgrounds to pick from, 12 min away."
         },
         {
           "slot": "afternoon",
-          "key": "pier-51-water-playground-freshly-renovated",
-          "title": "Pier 51 water playground (freshly renovated)",
-          "note": "Sunny and 86° — the renovated Jane St sprinklers are the move. Pack a spare shirt."
+          "key": "tompkins-square-mini-pool-free-kiddie-pool",
+          "title": "Tompkins Square Mini Pool (free kiddie pool)",
+          "note": "A genuine free kiddie pool, not just sprinklers — good for a hot afternoon."
         },
         {
           "slot": "afternoon",
-          "key": "seaglass-carousel-ride-a-glowing-fish",
-          "title": "SeaGlass Carousel — ride a glowing fish",
-          "note": "Ride a glowing fish in the A/C at The Battery when you need a cool-down."
+          "key": "snfl-children-s-center-blocks-play-a-c",
+          "title": "SNFL Children's Center — blocks, play & A/C",
+          "note": "Air-conditioned backup if it's too hot outside — blocks and open play, no time limit."
         },
         {
           "slot": "evening",
-          "key": "broadway-by-the-boardwalk-max-von-essen-with-bil",
-          "title": "Broadway by the Boardwalk: Max von Essen with Billy Stritch (season opener)",
-          "note": "Max von Essen sings Broadway free on the Clinton Cove lawn, 6:30 — dance on the grass, leave anytime."
+          "key": "lunar-gazing-at-domino-park",
+          "title": "Lunar Gazing at Domino Park",
+          "note": "Free telescope moon-viewing over the East River — only worth the trip if she's already up past bedtime; time is a guess so call ahead."
+        }
+      ]
+    },
+    "tue": {
+      "summary": "A stacked storytime morning across three neighborhoods, then Pixar on the Domino Park lawn after nap.",
+      "picks": [
+        {
+          "slot": "morning",
+          "key": "storytime-at-bryant-park-reading-room",
+          "title": "Storytime at Bryant Park Reading Room",
+          "note": "Ages 2-8 read-aloud under the trees, 10:30 — shaded and stroller-friendly."
+        },
+        {
+          "slot": "morning",
+          "key": "bitty-book-buddies-toddler-storytime-at-epiphany",
+          "title": "Bitty Book Buddies (Toddler Storytime) at Epiphany Library",
+          "note": "Six minutes from home: songs + stories then free play, 10:30."
+        },
+        {
+          "slot": "morning",
+          "key": "nypl-storytime-under-the-trees",
+          "title": "NYPL Storytime Under the Trees",
+          "note": "Washington Square Park benches, 11 — built for new walkers and toddlers."
+        },
+        {
+          "slot": "afternoon",
+          "key": "movies-in-the-square-luca-family-matinee",
+          "title": "Movies in the Square: Luca (family matinee)",
+          "note": "Pixar's Luca on the Domino Park lawn, 4pm, with a kids' art activity to start — leave whenever."
+        },
+        {
+          "slot": "afternoon",
+          "key": "kids-storytime-at-mcnally-jackson-seaport",
+          "title": "Kids Storytime at McNally Jackson Seaport",
+          "note": "3:30 bookstore storytime at the Seaport if Domino Park's too far a trek that day."
+        },
+        {
+          "slot": "afternoon",
+          "key": "bellevue-frogs-spray",
+          "title": "Bellevue Frogs & Spray",
+          "note": "Close-to-home splash backup, 11 minutes away."
         },
         {
           "slot": "evening",
           "key": "staten-island-ferry-free-boat-ride",
           "title": "Staten Island Ferry — free boat ride",
-          "note": "Free boat, big harbor wind, Statue of Liberty drive-by at golden hour."
-        }
-      ]
-    },
-    "tue": {
-      "summary": "Storytime tour (Bryant Park, Washington Sq), water play after nap, boardwalk jazz at sunset.",
-      "picks": [
-        {
-          "slot": "morning",
-          "key": "storytime-with-cali-co-cat-at-bryant-park-readin",
-          "title": "StoryTime with Cali Co Cat at Bryant Park Reading Room (ages 2-8)",
-          "note": "Interactive storytime + live 'Meowsic' under the Bryant Park umbrellas, 10:30 — free books to keep."
-        },
-        {
-          "slot": "morning",
-          "key": "nypl-storytime-under-the-trees-washington-square",
-          "title": "NYPL Storytime Under the Trees (Washington Square Park)",
-          "note": "NYPL reads to little ones in Washington Square Park, 11:00 — outdoor, wiggle-friendly."
-        },
-        {
-          "slot": "morning",
-          "key": "amnh-butterflies-the-whale-dinosaurs-under-3s-fr",
-          "title": "AMNH — butterflies, the whale & dinosaurs (under-3s free)",
-          "note": "Rather stay cool? Butterflies, the whale and dinosaurs from 10 — under-3s free."
-        },
-        {
-          "slot": "afternoon",
-          "key": "wetlab-touch-tanks-seahorses-of-the-hudson",
-          "title": "Wetlab touch tanks — seahorses of the Hudson",
-          "note": "Seahorses and crabs at Pier 40, open till 5 — an easy riverside drop-in after nap."
-        },
-        {
-          "slot": "afternoon",
-          "key": "teardrop-park-bubbling-springs-the-slide",
-          "title": "Teardrop Park — bubbling springs & THE slide",
-          "note": "Bubbling springs and the famous long slide, shady all afternoon in Battery Park City."
-        },
-        {
-          "slot": "afternoon",
-          "key": "pier-25-26-splash-pad-playground-mini-golf",
-          "title": "Pier 25 & 26 — splash pad, playground & mini golf",
-          "note": "Splash pad, playground and mini golf on the Tribeca piers."
-        },
-        {
-          "slot": "evening",
-          "key": "boardwalk-blues-at-pier-97-jazz-foundation-of-am",
-          "title": "Boardwalk Blues at Pier 97 (Jazz Foundation of America)",
-          "note": "Free open-air jazz on the river at 6:30, next to the brand-new Pier 97 playground."
-        },
-        {
-          "slot": "evening",
-          "key": "nyc-ferry-mini-hop-under-the-brooklyn-bridge",
-          "title": "NYC Ferry mini-hop under the Brooklyn Bridge",
-          "note": "One stop under the Brooklyn Bridge at sunset — $4.50 well spent."
+          "note": "Free boat, harbor wind, Statue of Liberty drive-by if she's up for a sunset ride."
         }
       ]
     },
     "wed": {
-      "summary": "Teatro SEA puppets at 10, park artmaking + fishing after nap, riverside jazz in the evening.",
+      "summary": "Puppets at Bryant Park, storytelling with puppetry at Lincoln Center, string quartet on the Madison Square Park lawn at dusk.",
       "picks": [
         {
           "slot": "morning",
           "key": "le-carrousel-extravaganza-teatro-sea-puppet-show",
-          "title": "Le Carrousel Extravaganza: Teatro SEA puppet show (Los Colores de Frida)",
-          "note": "Bilingual puppet show 'Los Colores de Frida' at the carousel, 10-11 — bright and short."
+          "title": "Le Carrousel Extravaganza: Teatro SEA puppet show",
+          "note": "Bilingual puppet show by the carousel, 10-11 — pair with a $5 carousel ride after."
         },
         {
           "slot": "morning",
-          "key": "dance-storytime-with-carlota-santana-summer-for-",
-          "title": "Dance Storytime with Carlota Santana (Summer for the City)",
-          "note": "Flamenco-flavored dance-along storytime at Lincoln Center, 11 — free, indoor A/C."
+          "key": "theater-storytime-with-grace-chang",
+          "title": "Theater Storytime with Grace Chang",
+          "note": "Puppetry storytelling in the air-conditioned Geffen Hall lobby, 11am (repeats 1pm)."
         },
         {
           "slot": "morning",
-          "key": "totally-tots-at-brooklyn-children-s-museum",
-          "title": "Totally Tots at Brooklyn Children's Museum",
-          "note": "The whole gallery for ages 0-6 at Brooklyn Children's Museum — sand, water play, reading nook."
+          "key": "toddler-storytime-at-hudson-park-library",
+          "title": "Toddler Storytime at Hudson Park Library",
+          "note": "Quiet West Village branch session for 18mo+, ~10:30."
         },
         {
           "slot": "afternoon",
-          "key": "art-in-the-park-with-miss-debbie-washington-squa",
-          "title": "Art in the Park with Miss Debbie (Washington Square Park playground)",
-          "note": "Drop-in artmaking at the Washington Square playground, 3 PM — wake at 2, stroll over."
+          "key": "toddler-storytime-at-time-out-market-dumbo",
+          "title": "Toddler Storytime at Time Out Market DUMBO",
+          "note": "Book ahead — 3pm storytime with food-hall snacks right there."
         },
         {
           "slot": "afternoon",
-          "key": "big-city-fishing-at-pier-26",
-          "title": "Big City Fishing at Pier 26",
-          "note": "Free catch-and-release at 3 PM — hold the rod on your lap, then hit the sturgeon playground."
+          "key": "kids-storytime-at-mcnally-jackson-downtown-brook",
+          "title": "Kids Storytime at McNally Jackson Downtown Brooklyn",
+          "note": "4pm bookstore storytime inside City Point mall — A/C and bathrooms steps away."
         },
         {
           "slot": "afternoon",
-          "key": "jane-s-carousel-in-its-glass-box",
-          "title": "Jane's Carousel in its glass box",
-          "note": "A $4 spin in the glass box in DUMBO — bridge views and river breeze."
+          "key": "snfl-children-s-center-blocks-play-a-c",
+          "title": "SNFL Children's Center — blocks, play & A/C",
+          "note": "Free drop-in A/C backup on the way home, no time limit."
         },
         {
           "slot": "evening",
-          "key": "carnegie-hall-citywide-american-patchwork-quarte",
-          "title": "Carnegie Hall Citywide: American Patchwork Quartet (free lawn concert)",
-          "note": "Free Carnegie Hall roots concert on the Madison Square lawn at 6 — dance on the grass."
+          "key": "carnegie-hall-citywide-cerus-quartet",
+          "title": "Carnegie Hall Citywide: Cerus Quartet",
+          "note": "Free string quartet on the Madison Square Park lawn, 6pm — five minutes from home."
         },
         {
           "slot": "evening",
-          "key": "jazz-at-pier-84-free-riverside-jazz-with-pier-84",
-          "title": "Jazz at Pier 84 — free riverside jazz (with Pier 84 water-play feature next door)",
-          "note": "Free riverside jazz at 7, right by a waterfront playground — come and go."
+          "key": "jazz-at-pier-84",
+          "title": "Jazz at Pier 84",
+          "note": "Sunset jazz on the Hudson waterfront, 7pm, if you want to go further."
         }
       ]
     },
     "thu": {
-      "summary": "Little Island open play at 9, Moon Tree party + pier fishing after nap, three good evenings out.",
+      "summary": "Open-play morning at Little Island or puppets and dance in LIC, storytime in Downtown Brooklyn after nap.",
       "picks": [
         {
           "slot": "morning",
-          "key": "mornings-in-the-glade-toddler-open-play-at-littl",
-          "title": "Mornings in The Glade — toddler open play at Little Island",
-          "note": "Unstructured toddler open play on Little Island, 9 AM — stay as long as she likes."
+          "key": "mornings-in-the-glade-drop-in-toddler-play",
+          "title": "Mornings in the Glade (drop-in toddler play)",
+          "note": "Little Island's toddler-built play glade, 9-11am — arrive early, it fills up."
         },
         {
           "slot": "morning",
-          "key": "garden-explorers-free-kids-gardening-hour",
-          "title": "Garden Explorers: free kids gardening hour",
-          "note": "Hands-on kids gardening hour at Bryant Park, 10 — plant, weed and pot a seed to take home."
+          "key": "family-storytime-at-tompkins-square-library",
+          "title": "Family Storytime at Tompkins Square Library",
+          "note": "Drop-in read-aloud, ~10:30, with the Tompkins Sq playground right outside."
         },
         {
           "slot": "morning",
-          "key": "summer-on-the-hudson-children-s-performance-seri",
-          "title": "Summer on the Hudson: Children's Performance Series - Lucy Kalantari & the Jazz Cats",
-          "note": "Lucy Kalantari & the Jazz Cats at Pier i, 10 — a real family concert on the river."
+          "key": "summer-kids-puppet-shows-dance-at-gantry-plaza",
+          "title": "Summer Kids: puppet shows & dance at Gantry Plaza",
+          "note": "Free puppet + dance series on the LIC waterfront, 10am, splash pad right there after."
         },
         {
           "slot": "afternoon",
-          "key": "moon-tree-launch-party-at-madison-square-park",
-          "title": "Moon Tree Launch Party at Madison Square Park",
-          "note": "Free all-day space/science/art activities at Madison Square Park (till 8) — drop in post-nap, 5 min from home."
+          "key": "kids-storytime-at-mcnally-jackson-downtown-brook",
+          "title": "Kids Storytime at McNally Jackson Downtown Brooklyn",
+          "note": "4pm bookstore storytime, A/C mall setting."
         },
         {
           "slot": "afternoon",
-          "key": "big-city-fishing-at-pier-97",
-          "title": "Big City Fishing at Pier 97",
-          "note": "Free drop-in fishing at 3, next to the big Pier 97 waterfront playground."
+          "key": "elizabeth-street-garden-hangout",
+          "title": "Elizabeth Street Garden hangout",
+          "note": "A quiet sculpture garden to decompress in post-nap, 15 min away."
         },
         {
           "slot": "afternoon",
-          "key": "totally-tots-at-brooklyn-children-s-museum",
-          "title": "Totally Tots at Brooklyn Children's Museum",
-          "note": "Brooklyn Children's Museum's tot gallery is FREE Thursdays 2-5 — Baby Patch, Play Pond, Sand Spot."
+          "key": "kids-at-work-nyc",
+          "title": "Kids at Work NYC",
+          "note": "Indoor pretend-play backup if it's raining, 12 min away."
         },
         {
           "slot": "evening",
-          "key": "sunset-salsa-at-pier-76-free-beginner-lesson-ope",
-          "title": "Sunset Salsa at Pier 76 — free beginner lesson + open-air dance party",
-          "note": "Free beginner salsa lesson + open-air dance party on the river, 6:30 — toddlers just spin."
+          "key": "shakespeare-in-the-parking-lot-as-you-like-it",
+          "title": "Shakespeare in the Parking Lot: As You Like It",
+          "note": "Free Shakespeare in an LES parking lot, 7pm — casual folding chairs, totally normal to leave after 20 minutes."
         },
         {
           "slot": "evening",
-          "key": "as-you-like-it-shakespeare-in-the-parking-lot-31",
-          "title": "As You Like It — Shakespeare in the Parking Lot, 31st season (The Drilling Company)",
-          "note": "Free Shakespeare in the LES parking lot, 7 — bring a blanket, slip out whenever."
-        },
-        {
-          "slot": "evening",
-          "key": "hamlet-hudson-classical-theater-company-free-out",
-          "title": "Hamlet — Hudson Classical Theater Company (free outdoor Shakespeare)",
-          "note": "Near Grandma's? Blanket-picnic Shakespeare in Riverside Park at 6:30 — pay-what-you-can, leave anytime."
+          "key": "hudson-classical-theatre-the-dancing-men-sherloc",
+          "title": "Hudson Classical Theatre: The Dancing Men (Sherlock Holmes mystery)",
+          "note": "Free lawn theater by the Riverside Park monument, 6:30 — easy in-and-out from Grandma's."
         }
       ]
     },
     "fri": {
-      "summary": "Silly Billy magic at 10, splash + market after nap, free Bryant Park concert at sunset.",
+      "summary": "Juilliard on the Lincoln Center plaza or puppets in LIC by morning, then pick your free-outdoor-theater-and-music evening.",
       "picks": [
         {
           "slot": "morning",
-          "key": "le-carrousel-extravaganza-silly-billy-magic-show",
-          "title": "Le Carrousel Extravaganza: Silly Billy magic show",
-          "note": "Comedy kids-magician at the carousel, 10-11 — best if she likes sitting up front and laughing."
+          "key": "juilliard-summer-music-finale",
+          "title": "Juilliard Summer Music Finale",
+          "note": "Student showcase on the open plaza by the reflecting pool, 11am — no seating needed."
         },
         {
           "slot": "morning",
-          "key": "nature-exploration-lake-appreciation-turtle-fish",
-          "title": "Nature Exploration: Lake Appreciation (turtle & fish Animal Encounter + pond-water discovery)",
-          "note": "Turtle- and fish-spotting by the Prospect Park lake, 10 — a mellow nature morning."
+          "key": "summer-kids-puppet-shows-dance-at-gantry-plaza",
+          "title": "Summer Kids: puppet shows & dance at Gantry Plaza",
+          "note": "Second morning of the LIC puppet + dance series, 10am."
         },
         {
           "slot": "morning",
-          "key": "totally-tots-at-brooklyn-children-s-museum",
-          "title": "Totally Tots at Brooklyn Children's Museum",
-          "note": "Rainy backup: Brooklyn Children's Museum's ages 0-6 gallery, doors at 10."
+          "key": "the-play-ground-open-play-at-little-island",
+          "title": "The Play Ground (open play) at Little Island",
+          "note": "Drop-in toddler play space on the island lawn, 11-1."
         },
         {
           "slot": "afternoon",
-          "key": "pier-25-26-splash-pad-playground-mini-golf",
-          "title": "Pier 25 & 26 — splash pad, playground & mini golf",
-          "note": "Splash pad and playground on the Tribeca piers — sunny-day water play after nap."
+          "key": "kids-storytime-at-mcnally-jackson-seaport",
+          "title": "Kids Storytime at McNally Jackson Seaport",
+          "note": "3:30 bookstore storytime at the Seaport."
         },
         {
           "slot": "afternoon",
-          "key": "union-square-greenmarket-wander",
-          "title": "Union Square Greenmarket wander",
-          "note": "Friday market day — a post-nap peach run two blocks from home."
+          "key": "camp-5th-ave",
+          "title": "CAMP (5th Ave)",
+          "note": "Indoor play-and-shop store, good rainy-afternoon backup 7 min away."
         },
         {
           "slot": "afternoon",
-          "key": "high-line-morning-stroll",
-          "title": "High Line morning stroll",
-          "note": "A stroller stroll on the High Line, entering at 14th St — shade and river peeks."
+          "key": "moira-ann-smith-playground-madison-sq-water-bloc",
+          "title": "Moira Ann Smith Playground (Madison Sq) — water blocks & tot jungle gym",
+          "note": "Water blocks 8 minutes from home if you'd rather stay close."
         },
         {
           "slot": "evening",
-          "key": "picnic-performances-carnegie-hall-citywide-natha",
-          "title": "Picnic Performances - Carnegie Hall Citywide: Nathan & the Zydeco Cha Chas",
-          "note": "Zydeco dance music on the Bryant Park lawn at 7 — bedtime gamble, big payoff."
+          "key": "bryant-park-picnic-performances-nyc-ska-orchestr",
+          "title": "Bryant Park Picnic Performances: NYC Ska Orchestra",
+          "note": "Danceable brass band on the lawn, 7pm — go early, dance 30 min, leave before dark."
         },
         {
           "slot": "evening",
-          "key": "tribute-to-latin-music-giants-with-jimmy-bosch-l",
-          "title": "Tribute to Latin Music Giants with Jimmy Bosch — live salsa on The Dance Floor",
-          "note": "Free live Latin music on the Lincoln Center Dance Floor, 6:30 — open-air, dance it out."
+          "key": "shakespeare-in-the-parking-lot-as-you-like-it",
+          "title": "Shakespeare in the Parking Lot: As You Like It",
+          "note": "Free Shakespeare, LES parking lot, 7pm — casual, easy to duck out early."
+        },
+        {
+          "slot": "evening",
+          "key": "summerstarz-free-movie-the-princess-bride",
+          "title": "SummerStarz Free Movie: The Princess Bride",
+          "note": "Waterfront movie at Transmitter Park — honestly a late one (sunset start); pajamas and an early exit recommended."
         }
       ]
     },
     "sat": {
-      "summary": "Swedish Cottage marionettes at 11, lawn Shakespeare after nap, Shakespeare or a ferry at night.",
+      "summary": "Puppets at Corlears Hook or a fitness festival at Brooklyn Bridge Park by morning, Domino Park splash-and-croquet after nap.",
       "picks": [
         {
           "slot": "morning",
-          "key": "little-red-s-hood-swedish-cottage-marionette-the",
-          "title": "Little Red's Hood — Swedish Cottage Marionette Theatre",
-          "note": "Swedish Cottage marionettes at 11 — a park walk from Grandma's; advance tickets online."
+          "key": "cityparks-puppetmobile-pinocchio-and-gepetto-s-b",
+          "title": "CityParks PuppetMobile: Pinocchio and Gepetto's Big Apple Adventure",
+          "note": "Free marionette show at a Family Fun Day, Corlears Hook Park, 10:30."
         },
         {
           "slot": "morning",
-          "key": "the-art-of-footwork-tap-soccer-freestyle-family-",
-          "title": "The Art of Footwork — tap + soccer freestyle family workshop",
-          "note": "Tap + soccer-freestyle family workshop at the Lincoln Center Atrium, 11 — free, indoor."
+          "key": "healthjox-festival-concrete-jungle",
+          "title": "HealthJox Festival: Concrete Jungle",
+          "note": "Free family fitness festival at Brooklyn Bridge Park Pier 2, 11:30-4:30 — drop in for any slice of it."
         },
         {
           "slot": "morning",
-          "key": "children-s-museum-of-manhattan-cmom",
-          "title": "Children's Museum of Manhattan (CMOM)",
-          "note": "Chance of drizzle — CMOM's five toddler floors on W 83rd are the dry-day insurance."
+          "key": "fad-market-at-governors-island",
+          "title": "FAD Market at Governors Island",
+          "note": "40+ maker stalls on the island, 11am — pair with the free hammock grove and playgrounds."
         },
         {
           "slot": "afternoon",
-          "key": "the-taming-of-the-shrew-boomerang-theatre-compan",
-          "title": "The Taming of the Shrew — Boomerang Theatre Company (free Shakespeare on the lawn)",
-          "note": "Blanket Shakespeare on the Central Park lawn at W 69th & CPW, 2 PM — come and go freely."
-        },
-        {
-          "slot": "afternoon",
-          "key": "jane-s-carousel-in-its-glass-box",
-          "title": "Jane's Carousel in its glass box",
-          "note": "A $4 DUMBO carousel spin with skyline views if the sun breaks through."
+          "key": "croquet-on-the-field",
+          "title": "Croquet on the Field",
+          "note": "Pickup mallets-as-toys on the Domino Park flex field, no schedule to work around."
         },
         {
           "slot": "afternoon",
           "key": "domino-park-s-88-jet-splash-fountain",
           "title": "Domino Park's 88-jet splash fountain",
-          "note": "Domino Park's 88 jets of Williamsburg splash — beat the big-kid crowds."
+          "note": "The real payoff at Domino Park — 88 jets, right next to the croquet field."
+        },
+        {
+          "slot": "afternoon",
+          "key": "pier-6-water-lab-sand-village",
+          "title": "Pier 6 Water Lab + sand village",
+          "note": "If you're still at Brooklyn Bridge Park from HealthJox, this water lab is a short walk away."
         },
         {
           "slot": "evening",
-          "key": "as-you-like-it-shakespeare-in-the-parking-lot-31",
-          "title": "As You Like It — Shakespeare in the Parking Lot, 31st season (The Drilling Company)",
-          "note": "Free Shakespeare in the LES parking lot, 7 — blanket seating, easy exits."
+          "key": "shakespeare-in-the-parking-lot-as-you-like-it",
+          "title": "Shakespeare in the Parking Lot: As You Like It",
+          "note": "Free Shakespeare, LES parking lot, 7pm, closing weekend."
         },
         {
           "slot": "evening",
-          "key": "staten-island-ferry-free-boat-ride",
-          "title": "Staten Island Ferry — free boat ride",
-          "note": "Free sunset harbor ride — she can conk out on the return leg."
+          "key": "free-shakespeare-in-the-park-the-winter-s-tale",
+          "title": "Free Shakespeare in the Park: The Winter's Tale",
+          "note": "Honestly a grownups' outing — lottery required, fixed stone seats, 8pm start; list it, don't plan around it."
         }
       ]
     },
     "sun": {
-      "summary": "National Ice Cream Day! Marionettes at 11, ice-cream fair + lawn Shakespeare after nap.",
+      "summary": "A morning marionette matinee near Grandma's or puppets at the Battery, Central Park carousel and goats after nap.",
       "picks": [
         {
           "slot": "morning",
-          "key": "little-red-s-hood-swedish-cottage-marionette-the",
-          "title": "Little Red's Hood — Swedish Cottage Marionette Theatre",
-          "note": "Swedish Cottage marionettes at 11 — a stroller walk through the park from Grandma's."
+          "key": "little-red-s-hood-sunday-matinee",
+          "title": "Little Red's Hood (Sunday matinee)",
+          "note": "Swedish Cottage marionette show, 11am, an 8-min walk from Grandma's — the better of its two showings, clear of the nap."
         },
         {
           "slot": "morning",
-          "key": "smorgasburg-great-ice-cream-fair-at-breeze-hill",
-          "title": "Smorgasburg Great Ice Cream Fair at Breeze Hill",
-          "note": "It's National Ice Cream Day — the Prospect Park ice-cream fair opens at 11 at Breeze Hill."
+          "key": "puppetsburg-interactive-puppet-show-at-battery-p",
+          "title": "Puppetsburg: interactive puppet show at Battery Playscape",
+          "note": "Built for ages 4mo-4yr: dancing, instruments, bubbles, 10:30 (repeats 12:30)."
         },
         {
           "slot": "morning",
-          "key": "wetlab-touch-tanks-seahorses-of-the-hudson",
-          "title": "Wetlab touch tanks — seahorses of the Hudson",
-          "note": "Seahorses and crabs at Pier 40 if you want a quieter, closer morning."
+          "key": "sunday-gardening-at-transmitter-park",
+          "title": "Sunday Gardening at Transmitter Park",
+          "note": "Dig-in-the-dirt volunteer session she can actually help with, 10-12, Greenpoint."
         },
         {
           "slot": "afternoon",
-          "key": "the-taming-of-the-shrew-boomerang-theatre-compan",
-          "title": "The Taming of the Shrew — Boomerang Theatre Company (free Shakespeare on the lawn)",
-          "note": "2 PM Shakespeare on the lawn at W 69th & CPW — across the street from Grandma's, arrive whenever she wakes."
+          "key": "totally-kid-carousel",
+          "title": "Totally Kid Carousel",
+          "note": "Central Park carousel ride, an easy post-nap stop near Grandma's."
         },
         {
           "slot": "afternoon",
-          "key": "governors-island-ferry-day",
-          "title": "Governors Island ferry day",
-          "note": "Catch a post-nap boat from the Battery — car-free island, big slides and ice cream to keep the day's theme going."
+          "key": "feed-the-goats-at-the-tisch-children-s-zoo",
+          "title": "Feed the goats at the Tisch Children's Zoo",
+          "note": "Hands-on animal time in Central Park if the carousel line is long."
         },
         {
           "slot": "afternoon",
-          "key": "seaglass-carousel-ride-a-glowing-fish",
-          "title": "SeaGlass Carousel — ride a glowing fish",
-          "note": "Ride a glowing fish in the cool A/C at The Battery."
+          "key": "domino-park-s-88-jet-splash-fountain",
+          "title": "Domino Park's 88-jet splash fountain",
+          "note": "If you stayed in Greenpoint after gardening, the Domino Park splash fountain is a short ride away."
         },
         {
           "slot": "evening",
-          "key": "hamlet-hudson-classical-theater-company-free-out",
-          "title": "Hamlet — Hudson Classical Theater Company (free outdoor Shakespeare)",
-          "note": "Blanket-picnic Shakespeare in Riverside Park at 6:30 — pay-what-you-can, leave anytime."
+          "key": "hudson-classical-theatre-the-dancing-men-sherloc",
+          "title": "Hudson Classical Theatre: The Dancing Men (Sherlock Holmes mystery)",
+          "note": "Free lawn theater by the Riverside Park monument, 6:30 — an easy close to a Grandma's-side day."
         },
         {
           "slot": "evening",
-          "key": "tompkins-square-mini-pool-free-kiddie-pool",
-          "title": "Tompkins Square Mini Pool (free kiddie pool)",
-          "note": "Free kiddie-pool splash till closing — the pre-dinner energy dump."
+          "key": "free-shakespeare-in-the-park-the-winter-s-tale",
+          "title": "Free Shakespeare in the Park: The Winter's Tale",
+          "note": "Same honest flag as Saturday — lottery, stone seats, 8pm; a parents' outing more than a toddler one."
         }
       ]
     }
@@ -3078,1546 +3065,4317 @@ window.WEEK_DATA = {
       "cpwOnly": true
     },
     {
-      "title": "Le Carrousel Extravaganza: Andy & Suzanna (music & dance for kids)",
-      "category": "music",
-      "venue": "Bryant Park - Le Carrousel (40th St entrance, between 5th & 6th Aves)",
-      "neighborhood": "Midtown / Bryant Park",
-      "when": "Mon Jul 13, 10:00-11:00 AM",
+      "title": "The Little Gym",
+      "category": "play",
+      "venue": "The Little Gym",
+      "neighborhood": "2121 Broadway",
+      "when": "Open daily 9-7",
       "days": [
-        "mon"
+        "any"
       ],
-      "start": "10:00",
-      "end": "11:00",
-      "cost": "Free - no tickets or reservations required. Optional: Le Carrousel ride $5/person (a parent + toddler = ~$10 if the child rides).",
-      "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
-      "outdoor": true,
-      "toddlerNotes": "The made-for-little-kids morning slot at Bryant Park: a free one-hour outdoor kids show by the carousel, 10-11am. Monday July 13's act is Andy & Suzanna, an interactive sing-and-dance-along, so a 2-year-old can bop, clap, and wander rather than sit still. Bring a blanket; combine with a $5 Le Carrousel ride right next to it. No reservations - just show up.",
-      "lat": 40.7528,
-      "lng": -73.9836,
-      "cpwOnly": false,
-      "confidence": "high",
-      "travelMinutes": 16,
-      "travelHow": "~16 min from Union Sq (see Directions)",
+      "cost": "Free",
+      "travelMinutes": 27,
+      "travelHow": "~27 min from Union Sq",
+      "toddlerNotes": "Parent-child gymnastics ages 4mo+. Tumbling, balance beams, padded environment. (Free intro class)",
+      "url": "https://www.thelittlegym.com/new-york-upper-westside/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.781,
+      "lng": -73.9812,
+      "event": false,
       "times": [
-        "morning"
+        "any"
       ],
-      "event": true,
-      "recurring": false
+      "start": null,
+      "end": null,
+      "cpwOnly": false
     },
     {
-      "title": "StoryTime with Cali Co Cat at Bryant Park Reading Room (ages 2-8)",
+      "title": "Barnes & Noble 82nd St",
+      "category": "storytime",
+      "venue": "Barnes & Noble 82nd St",
+      "neighborhood": "2289 Broadway",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 29,
+      "travelHow": "~29 min from Union Sq",
+      "toddlerNotes": "Free weekend storytimes, large children's section. Reliable free fallback. (No purchase required)",
+      "url": "https://stores.barnesandnoble.com/store/1979",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7847,
+      "lng": -73.978,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Little Shop of Plaster & Pottery",
+      "category": "other",
+      "venue": "Little Shop of Plaster & Pottery",
+      "neighborhood": "711 Amsterdam Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Per piece $25-45",
+      "travelMinutes": 33,
+      "travelHow": "~33 min from Union Sq",
+      "toddlerNotes": "Walk-in pottery painting for all ages. Pick a piece, paint it, they fire it. (No reservation needed)",
+      "url": "https://littleshopny.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7925,
+      "lng": -73.9725,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Kidville UWS",
+      "category": "play",
+      "venue": "Kidville UWS",
+      "neighborhood": "205 W 88th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri 9:15-5:30",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
+      ],
+      "cost": "Drop-in $29; 5-pack $140",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "Indoor swings, climbing, giant blocks, messy art. Ages 12-36 months. (Socks required)",
+      "url": "https://kidville.com/westside/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7883,
+      "lng": -73.9747,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Gymboree Play & Music",
+      "category": "music",
+      "venue": "Gymboree Play & Music",
+      "neighborhood": "120 Riverside Blvd",
+      "when": "Open Sat 9:30-11",
+      "days": [
+        "sat"
+      ],
+      "cost": "Open Gym $59",
+      "travelMinutes": 26,
+      "travelHow": "~26 min from Union Sq",
+      "toddlerNotes": "Open Gym with climbing plus music and sensory classes, ages 0-5. (Sat Open Gym only for drop-in)",
+      "url": "https://www.gymboreeclasses.com/en/locations/NY/Upper-West-Side/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.778,
+      "lng": -73.9895,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Swedish Cottage Marionette Theatre",
+      "category": "theater",
+      "venue": "Swedish Cottage Marionette Theatre",
+      "neighborhood": "W 79th St",
+      "when": "Open Sat/Sun 10:30-1",
+      "days": [
+        "sat",
+        "sun"
+      ],
+      "cost": "Ticket $12",
+      "travelMinutes": 27,
+      "travelHow": "~27 min from Union Sq",
+      "toddlerNotes": "Intimate puppet shows in a charming cottage. Current: Little Red's Hood. (Weekend shows only; advance tickets)",
+      "url": "https://cityparksfoundation.org/swedish-cottage-marionette-theatre/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7793,
+      "lng": -73.9717,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Ballet Hispanico",
+      "category": "music",
+      "venue": "Ballet Hispanico",
+      "neighborhood": "167 W 89th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class ~$30",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "Los Pasitos creative movement ages 2-5. Bilingual English/Spanish. (Trimester enrollment)",
+      "url": "https://www.ballethispanico.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7895,
+      "lng": -73.9722,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "JCC Manhattan",
+      "category": "other",
+      "venue": "JCC Manhattan",
+      "neighborhood": "334 Amsterdam Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Swim ~$24-36",
+      "travelMinutes": 29,
+      "travelHow": "~29 min from Union Sq",
+      "toddlerNotes": "Toddler swim, playgroup, music & art classes. Indoor pool. (Non-members welcome)",
+      "url": "https://www.jccmanhattan.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7854,
+      "lng": -73.9786,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "YMCA West Side",
+      "category": "play",
+      "venue": "YMCA West Side",
+      "neighborhood": "5 W 63rd St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Per class ~$35",
+      "travelMinutes": 24,
+      "travelHow": "~24 min from Union Sq",
+      "toddlerNotes": "Parent-child swim ages 6mo-3yr. Warm pool, structured lessons. (Financial assistance available)",
+      "url": "https://ymcanyc.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7725,
+      "lng": -73.9795,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Lucy Moses School",
+      "category": "music",
+      "venue": "Lucy Moses School",
+      "neighborhood": "129 W 67th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class ~$30",
+      "travelMinutes": 24,
+      "travelHow": "~24 min from Union Sq",
+      "toddlerNotes": "Baby ballet, Dalcroze music, creative dance from 18 months. Lincoln Center. (Semester enrollment)",
+      "url": "https://kaufmanmusiccenter.org/lucy-moses-school/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7738,
+      "lng": -73.9818,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Discovery Programs",
+      "category": "other",
+      "venue": "Discovery Programs",
+      "neighborhood": "251 W 100th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class $46",
+      "travelMinutes": 34,
+      "travelHow": "~34 min from Union Sq",
+      "toddlerNotes": "Gym, art, dance, sports for toddlers. Multi-activity programs. (Drop-in available)",
+      "url": "https://discoveryprograms.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7963,
+      "lng": -73.9694,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "NYPL Bloomingdale Library",
+      "category": "storytime",
+      "venue": "NYPL Bloomingdale Library",
+      "neighborhood": "150 W 100th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Free",
+      "travelMinutes": 34,
+      "travelHow": "~34 min from Union Sq",
+      "toddlerNotes": "Children's floor with board books, toddler storytime. Calm, low-stimulation. (Library card free for NYC residents)",
+      "url": "https://www.nypl.org/locations/bloomingdale",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7956,
+      "lng": -73.9709,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "92nd Street Y",
+      "category": "other",
+      "venue": "92nd Street Y",
+      "neighborhood": "1395 Lexington Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Per class ~$30",
+      "travelMinutes": 32,
+      "travelHow": "~32 min from Union Sq",
+      "toddlerNotes": "Toddler swim, art, music, movement. Excellent instructors. (Non-member rates available)",
+      "url": "https://www.92ny.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7852,
+      "lng": -73.9547,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Asphalt Green",
+      "category": "play",
+      "venue": "Asphalt Green",
+      "neighborhood": "555 E 90th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Per class $24-28",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "Water Tots swim (20-35mo). Olympic pool plus warm toddler pool. (Ages 20-35 months)",
+      "url": "https://www.asphaltgreen.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7808,
+      "lng": -73.9457,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "My Gym Harlem",
+      "category": "play",
+      "venue": "My Gym Harlem",
+      "neighborhood": "258 St Nicholas Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Drop-in ~$35-45",
+      "travelMinutes": 21,
+      "travelHow": "~21 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Mommy & Me tumbling and free play for babies and toddlers. (Free trial class)",
+      "url": "https://www.mygym.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.799,
+      "lng": -73.9551,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Apple Fifth Avenue",
+      "category": "other",
+      "venue": "Apple Fifth Avenue",
+      "neighborhood": "767 Fifth Ave",
+      "when": "Open daily 10-9",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 21,
+      "travelHow": "~21 min from Union Sq",
+      "toddlerNotes": "Free Today at Apple family sessions: drawing, music, coding basics. (Reserve online)",
+      "url": "https://www.apple.com/retail/fifthavenue/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7639,
+      "lng": -73.9722,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Madame Tussauds",
+      "category": "other",
+      "venue": "Madame Tussauds",
+      "neighborhood": "234 W 42nd St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 17,
+      "travelHow": "~17 min from Union Sq",
+      "toddlerNotes": "Life-size wax figures, MARVEL 4D. Under 3 free. (Under 3 free)",
+      "url": "https://www.madametussauds.com/new-york/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7564,
+      "lng": -73.9888,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Intrepid Museum",
+      "category": "other",
+      "venue": "Intrepid Museum",
+      "neighborhood": "Pier 86",
+      "when": "Open daily 10-5",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 21,
+      "travelHow": "~21 min from Union Sq",
+      "toddlerNotes": "Aircraft carrier, planes, helicopters. Under 5 free. NYC residents 50% off. (NYC residents 50% off)",
+      "url": "https://intrepidmuseum.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7645,
+      "lng": -73.9996,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "The Art Farm",
+      "category": "animals",
+      "venue": "The Art Farm",
+      "neighborhood": "431 E 91st St",
+      "when": "Open Tue/Wed/Thu/Sat/Sun (see hours)",
+      "days": [
+        "tue",
+        "wed",
+        "thu",
+        "sat",
+        "sun"
+      ],
+      "cost": "Drop-in $20",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "NYC's only indoor petting zoo: bearded dragons, chinchillas, chickens. Plus crafts. (Ages 6mo+)",
+      "url": "https://www.theartfarms.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7808,
+      "lng": -73.9489,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Union Square Play",
+      "category": "play",
+      "venue": "Union Square Play",
+      "neighborhood": "245 E 84th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Drop-in ~$45",
+      "travelMinutes": 29,
+      "travelHow": "~29 min from Union Sq",
+      "toddlerNotes": "Drop-in music, art, movement for ages 0-5. Multiple Manhattan locations. (Space permitting)",
+      "url": "https://www.usquareplay.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7775,
+      "lng": -73.9524,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "The Craft Studio",
+      "category": "other",
+      "venue": "The Craft Studio",
+      "neighborhood": "1657 Third Ave",
+      "when": "Open daily 10-6",
+      "days": [
+        "any"
+      ],
+      "cost": "Per project $15-35",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "Drop-in pottery painting, mosaics for ages 1.5+. Open 7 days. (Walk-in welcome)",
+      "url": "https://www.thecraftstudionyc.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7828,
+      "lng": -73.9514,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Color Factory",
+      "category": "other",
+      "venue": "Color Factory",
+      "neighborhood": "251 Spring St",
+      "when": "Open daily 9-8",
+      "days": [
+        "any"
+      ],
+      "cost": "Age 2+ $35-45; Under 2 Free",
+      "travelMinutes": 16,
+      "travelHow": "~16 min from Union Sq",
+      "toddlerNotes": "Immersive color rooms, ball pits, interactive installations. No strollers. (Weekdays cheapest)",
+      "url": "https://www.colorfactory.co",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7252,
+      "lng": -73.9999,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "CAMP (5th Ave)",
+      "category": "play",
+      "venue": "CAMP (5th Ave)",
+      "neighborhood": "110 5th Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Experience ~$38/pair; Store Free",
+      "travelMinutes": 7,
+      "travelHow": "~7 min from Union Sq",
+      "toddlerNotes": "Themed play behind a 'magic door' (currently Bluey). Plus free toy store. (25% off 4+ tickets)",
+      "url": "https://camp.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7376,
+      "lng": -73.9929,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Scandinavia House",
+      "category": "play",
+      "venue": "Scandinavia House",
+      "neighborhood": "58 Park Ave",
+      "when": "Open Mon/Tue/Thu/Fri/Sat/Sun 10-5",
+      "days": [
+        "mon",
+        "tue",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Child $15; Adult Free",
+      "travelMinutes": 14,
+      "travelHow": "~14 min from Union Sq",
+      "toddlerNotes": "Nordic play space: sensory tunnel, LEGO corner, BRIO trains, climbing wall. (Ages 1-5; must be walking)",
+      "url": "https://www.scandinaviahouse.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.749,
+      "lng": -73.9793,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Chelsea Piers Toddler Gym",
+      "category": "play",
+      "venue": "Chelsea Piers Toddler Gym",
+      "neighborhood": "Pier 62",
+      "when": "Open Mon/Tue/Wed/Thu 9:30-5",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu"
+      ],
+      "cost": "Session $12",
+      "travelMinutes": 17,
+      "travelHow": "~17 min from Union Sq",
+      "toddlerNotes": "Toddler gym (6mo-4yr): soft climbing, slides. Best value at $12/session. (Mon-Thu only)",
+      "url": "https://www.chelseapiers.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7467,
+      "lng": -74.0082,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Museum of Ice Cream",
+      "category": "other",
+      "venue": "Museum of Ice Cream",
+      "neighborhood": "558 Broadway",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 16,
+      "travelHow": "~16 min from Union Sq",
+      "toddlerNotes": "Ball pit, pastel rooms, unlimited ice cream. Under 3 free. (No strollers)",
+      "url": "https://www.museumoficecream.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7234,
+      "lng": -73.9988,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "ARTECHOUSE NYC",
+      "category": "other",
+      "venue": "ARTECHOUSE NYC",
+      "neighborhood": "439 W 15th St",
+      "when": "Open daily 10-10",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 16,
+      "travelHow": "~16 min from Union Sq",
+      "toddlerNotes": "Immersive light/sound projections. Under 4 free. Mesmerizing for toddlers. (Under 4 free)",
+      "url": "https://www.artechouse.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7425,
+      "lng": -74.0062,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Joffrey Ballet School",
+      "category": "music",
+      "venue": "Joffrey Ballet School",
+      "neighborhood": "434 6th Ave",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class ~$30",
+      "travelMinutes": 15,
+      "travelHow": "~15 min from Union Sq",
+      "toddlerNotes": "Children's ballet from age 2. Creative movement, pre-ballet. (Check toddler schedule)",
+      "url": "https://www.joffreyballetschool.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.734,
+      "lng": -73.9983,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Kids at Work NYC",
+      "category": "other",
+      "venue": "Kids at Work NYC",
+      "neighborhood": "147 W 24th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class $53",
+      "travelMinutes": 12,
+      "travelHow": "~12 min from Union Sq",
+      "toddlerNotes": "Drop-in cooking, dance, art for ages 2-5. (No membership needed)",
+      "url": "https://kidsatworknyc.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.744,
+      "lng": -73.9932,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Taste Buds Kitchen",
+      "category": "other",
+      "venue": "Taste Buds Kitchen",
+      "neighborhood": "109 W 27th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Class $65-95",
+      "travelMinutes": 14,
+      "travelHow": "~14 min from Union Sq",
+      "toddlerNotes": "Caregiver & Me cooking ages 2+. Real recipes, real ingredients. (Ages 2+)",
+      "url": "https://tastebudskitchen.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7453,
+      "lng": -73.9925,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "MoMath",
+      "category": "other",
+      "venue": "MoMath",
+      "neighborhood": "11 E 26th St",
+      "when": "Open daily 10-5",
+      "days": [
+        "any"
+      ],
+      "cost": "Child 2-12 $22; Under 2 Free",
+      "travelMinutes": 11,
+      "travelHow": "~11 min from Union Sq",
+      "toddlerNotes": "Coaster roller, light-up floors, shape puzzles. Surprisingly fun for toddlers. (Under 2 free)",
+      "url": "https://momath.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7444,
+      "lng": -73.9883,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "NYPL Jefferson Market",
+      "category": "storytime",
+      "venue": "NYPL Jefferson Market",
+      "neighborhood": "425 6th Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 13,
+      "travelHow": "~13 min from Union Sq",
+      "toddlerNotes": "Victorian Gothic building with children's room. Toddler storytime. (Beautiful building)",
+      "url": "https://www.nypl.org/locations/jefferson-market",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7343,
+      "lng": -73.9993,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Books of Wonder",
+      "category": "storytime",
+      "venue": "Books of Wonder",
+      "neighborhood": "42 W 17th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 8,
+      "travelHow": "~8 min from Union Sq",
+      "toddlerNotes": "NYC's oldest independent children's bookstore. Author events, storytime. (Author signings)",
+      "url": "https://www.booksofwonder.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7389,
+      "lng": -73.9936,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Strand Bookstore",
+      "category": "storytime",
+      "venue": "Strand Bookstore",
+      "neighborhood": "828 Broadway",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 8,
+      "travelHow": "~8 min from Union Sq",
+      "toddlerNotes": "18 miles of books! Children's section 2nd floor. Weekly storytimes. (Kids storytimes weekly)",
+      "url": "https://www.strandbooks.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7334,
+      "lng": -73.991,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Brooklyn Children's Museum",
+      "category": "other",
+      "venue": "Brooklyn Children's Museum",
+      "neighborhood": "145 Brooklyn Ave",
+      "when": "Open Wed/Thu/Fri/Sat/Sun 10-5",
+      "days": [
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "General $15; Under 1 Free",
+      "travelMinutes": 54,
+      "travelHow": "~54 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Totally Tots: 9 sensory areas ages 0-6. Sand, water, dress-up, climbing. (Free Thu 2-5pm)",
+      "url": "https://www.brooklynkids.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6726,
+      "lng": -73.9441,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "NY Transit Museum",
+      "category": "other",
+      "venue": "NY Transit Museum",
+      "neighborhood": "99 Schermerhorn St",
+      "when": "Open Wed/Thu/Fri/Sat/Sun 10-4",
+      "days": [
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Adult $10; Child 2-17 $5",
+      "travelMinutes": 29,
+      "travelHow": "~29 min from Union Sq",
+      "toddlerNotes": "Real vintage subway cars to climb on. Ultimate 'choo choo' experience. (Timed tickets required)",
+      "url": "https://www.nytransitmuseum.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6903,
+      "lng": -73.99,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Museum of the Moving Image",
+      "category": "other",
+      "venue": "Museum of the Moving Image",
+      "neighborhood": "36-01 35th Ave",
+      "when": "Open Wed/Thu/Fri/Sat/Sun (see hours)",
+      "days": [
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "Flip-book stations, sound effects, animation displays. Under 3 free. (Free Fri 4-8pm)",
+      "url": "https://movingimage.us",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7564,
+      "lng": -73.9238,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Mercer Labs",
+      "category": "other",
+      "venue": "Mercer Labs",
+      "neighborhood": "21 Dey St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 22,
+      "travelHow": "~22 min from Union Sq",
+      "toddlerNotes": "25,000-ball pit, 15 sensory rooms, 4D sound. Under 3 free. (Timed entry)",
+      "url": "https://www.mercerlabs.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7098,
+      "lng": -74.0071,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "MoMA PS1",
+      "category": "other",
+      "venue": "MoMA PS1",
+      "neighborhood": "22-25 Jackson Ave",
+      "when": "Open Thu/Fri/Sat/Sun (see hours)",
+      "days": [
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 22,
+      "travelHow": "~22 min from Union Sq",
+      "toddlerNotes": "Free admission through 2028. Contemporary art in a former school. (Free since Jan 2026)",
+      "url": "https://www.momaps1.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7455,
+      "lng": -73.9472,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Brooklyn Botanic Garden",
+      "category": "animals",
+      "venue": "Brooklyn Botanic Garden",
+      "neighborhood": "990 Washington Ave",
+      "when": "Open Tue/Wed/Thu/Fri/Sat/Sun 10-6",
+      "days": [
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 54,
+      "travelHow": "~54 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Steinhardt Conservatory: 3 warm indoor pavilions. Under 12 free. (Free Fri 10am-noon)",
+      "url": "https://www.bbg.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6694,
+      "lng": -73.9627,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Peekabooo LIC",
+      "category": "play",
+      "venue": "Peekabooo LIC",
+      "neighborhood": "4009 21st St",
+      "when": "Open daily 9-6",
+      "days": [
+        "any"
+      ],
+      "cost": "Child $25-30",
+      "travelMinutes": 23,
+      "travelHow": "~23 min from Union Sq",
+      "toddlerNotes": "Castle, slides, ball pit for under 7s. Cozy LIC spot. (Walk-ins welcome)",
+      "url": "https://www.peekabooolic.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7521,
+      "lng": -73.9476,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Kanga's Indoor Playcenter",
+      "category": "play",
+      "venue": "Kanga's Indoor Playcenter",
+      "neighborhood": "32-15 37th Ave",
+      "when": "Open daily 10-6",
+      "days": [
+        "any"
+      ],
+      "cost": "Child $10.90",
+      "travelMinutes": 30,
+      "travelHow": "~30 min from Union Sq",
+      "toddlerNotes": "10,000 sq ft with toddler gate. Incredible value at $10.90. (Best value play space)",
+      "url": "https://kangasindoorplaycenter.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.753,
+      "lng": -73.9234,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Bounce N Play Astoria",
+      "category": "play",
+      "venue": "Bounce N Play Astoria",
+      "neighborhood": "20-21 Steinway St",
+      "when": "Open daily 10-7",
+      "days": [
+        "any"
+      ],
+      "cost": "2 hours $12",
+      "travelMinutes": 36,
+      "travelHow": "~36 min from Union Sq",
+      "toddlerNotes": "Bounce houses, toddler area, ball pit. Budget-friendly $12/2hrs. (Great budget option)",
+      "url": "https://www.bouncenplaylic.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7726,
+      "lng": -73.9158,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Space Club DUMBO",
+      "category": "play",
+      "venue": "Space Club DUMBO",
+      "neighborhood": "256 Plymouth St",
+      "when": "Open daily 9-6",
+      "days": [
+        "any"
+      ],
+      "cost": "Child 2hr $39",
+      "travelMinutes": 24,
+      "travelHow": "~24 min from Union Sq",
+      "toddlerNotes": "28,000 sq ft: bead pit, jungle gym, imaginative play. Premium. (Book ahead)",
+      "url": "https://www.spaceclub.co",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7023,
+      "lng": -73.987,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "The Canopy NYC",
+      "category": "play",
+      "venue": "The Canopy NYC",
+      "neighborhood": "118 N 11th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "First visit $30",
+      "travelMinutes": 21,
+      "travelHow": "~21 min from Union Sq",
+      "toddlerNotes": "Ages 0-4 only. Calm, Montessori-inspired space. (Ages 0-4 only)",
+      "url": "https://www.thecanopynyc.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7198,
+      "lng": -73.9579,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "PlayWell Brooklyn",
+      "category": "play",
+      "venue": "PlayWell Brooklyn",
+      "neighborhood": "94 9th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Session $32",
+      "travelMinutes": 53,
+      "travelHow": "~53 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Therapist-designed inclusive sensory space. Great for sensory-seeking toddlers. (Inclusive & sensory-friendly)",
+      "url": "https://www.playwellbrooklyn.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6718,
+      "lng": -73.982,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Queens Library Hunters Point",
+      "category": "storytime",
+      "venue": "Queens Library Hunters Point",
+      "neighborhood": "47-40 Center Blvd",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 19,
+      "travelHow": "~19 min from Union Sq",
+      "toddlerNotes": "Stunning architecture, early-childhood area. Toddler Time Wed 10:30am. (All free)",
+      "url": "https://www.queenslibrary.org/about-us/locations/hunters-point",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7424,
+      "lng": -73.9576,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Brooklyn Public Library Central",
+      "category": "storytime",
+      "venue": "Brooklyn Public Library Central",
+      "neighborhood": "10 Grand Army Plaza",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 53,
+      "travelHow": "~53 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Spacious children's room. Toddler Time (18-36mo). Beautiful building. (Free toddler programs)",
+      "url": "https://www.bklynlibrary.org/locations/central",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6728,
+      "lng": -73.9683,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Puppetworks Park Slope",
+      "category": "theater",
+      "venue": "Puppetworks Park Slope",
+      "neighborhood": "338 6th Ave",
+      "when": "Open Sat/Sun 12:30-2",
+      "days": [
+        "sat",
+        "sun"
+      ],
+      "cost": "Ticket $11",
+      "travelMinutes": 54,
+      "travelHow": "~54 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Classic marionette theater since 1980. Intimate shows that enchant toddlers. (Weekend shows only)",
+      "url": "https://www.puppetworks.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6703,
+      "lng": -73.9812,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Liberty Science Center",
+      "category": "other",
+      "venue": "Liberty Science Center",
+      "neighborhood": "222 Jersey City Blvd",
+      "when": "Open Wed/Thu/Fri/Sat/Sun (see hours)",
+      "days": [
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Adult $31; Child 2-12 $26",
+      "travelMinutes": 35,
+      "travelHow": "~35 min from Union Sq",
+      "toddlerNotes": "I Explore toddler gallery: water play, blocks, rock wall. Biggest planetarium in West. Hemisphere. ($5 off online)",
+      "url": "https://lsc.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7065,
+      "lng": -74.0551,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Puppetsburg",
+      "category": "theater",
+      "venue": "Puppetsburg",
+      "neighborhood": "Various Brooklyn/Manhattan",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Child $25",
+      "travelMinutes": 30,
+      "travelHow": "~30 min from Union Sq",
+      "toddlerNotes": "Purpose-built puppet shows for babies & toddlers (4mo-4yr). (Multiple locations)",
+      "url": "https://puppetsburg.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.688,
+      "lng": -73.978,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Music Together in the City",
+      "category": "music",
+      "venue": "Music Together in the City",
+      "neighborhood": "Multiple Manhattan",
+      "when": "Open Mon/Tue/Wed/Thu/Fri (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
+      ],
+      "cost": "Per class ~$42",
+      "travelMinutes": 28,
+      "travelHow": "~28 min from Union Sq",
+      "toddlerNotes": "Research-backed music & movement ages 0-4. Sing, dance, instruments. (Trial class available)",
+      "url": "https://musictogethercity.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7831,
+      "lng": -73.9812,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Ferox Ninja DUMBO",
+      "category": "play",
+      "venue": "Ferox Ninja DUMBO",
+      "neighborhood": "65 Jay St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Weekday $20; Weekend $30",
+      "travelMinutes": 24,
+      "travelHow": "~24 min from Union Sq",
+      "toddlerNotes": "Ninja gym with toddler-sized obstacles. Ages 2-12. (Toddler sessions available)",
+      "url": "https://www.feroxnyc.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.703,
+      "lng": -73.9867,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Brooklearn",
+      "category": "play",
+      "venue": "Brooklearn",
+      "neighborhood": "380 Court St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Play $35/hr",
+      "travelMinutes": 35,
+      "travelHow": "~35 min from Union Sq",
+      "toddlerNotes": "Co-working + playspace. Toddlers play while parents work. (Co-working included)",
+      "url": "https://www.brooklearn.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6773,
+      "lng": -73.9963,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Barnes & Noble Cobble Hill",
+      "category": "storytime",
+      "venue": "Barnes & Noble Cobble Hill",
+      "neighborhood": "194 Atlantic Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 30,
+      "travelHow": "~30 min from Union Sq",
+      "toddlerNotes": "Free Sat storytime 11am. Big kids section in walkable Brooklyn. (Free Sat 11am storytime)",
+      "url": "https://stores.barnesandnoble.com/store/2946",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6884,
+      "lng": -73.9908,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "McNally Jackson Seaport",
+      "category": "storytime",
+      "venue": "McNally Jackson Seaport",
+      "neighborhood": "4 Fulton St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 23,
+      "travelHow": "~23 min from Union Sq",
+      "toddlerNotes": "Curated kids section, occasional storytimes. Waterfront location. (Near Pier 17)",
+      "url": "https://www.mcnallyjackson.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7064,
+      "lng": -74.0028,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Tam Tam Music Together",
+      "category": "music",
+      "venue": "Tam Tam Music Together",
+      "neighborhood": "Various Brooklyn",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class ~$41; Trial $45",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "Bilingual French/English music classes ages 0-4. (Bilingual French/English)",
+      "url": "https://tamtammusictogether.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.687,
+      "lng": -73.974,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Space Club Fort Greene",
+      "category": "play",
+      "venue": "Space Club Fort Greene",
+      "neighborhood": "143 Waverly Ave",
+      "when": "Open daily 9-6",
+      "days": [
+        "any"
+      ],
+      "cost": "2 hours $35",
+      "travelMinutes": 30,
+      "travelHow": "~30 min from Union Sq",
+      "toddlerNotes": "36,000 sq ft four-level play space. Climbing, ball pit, imaginative play. (Book ahead weekends)",
+      "url": "https://www.spaceclub.co",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6889,
+      "lng": -73.9714,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Flying Apple",
+      "category": "play",
+      "venue": "Flying Apple",
+      "neighborhood": "912 Broadway",
+      "when": "Open daily 10-6",
+      "days": [
+        "any"
+      ],
+      "cost": "Toddler $16",
+      "travelMinutes": 49,
+      "travelHow": "~49 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Ages 1-10 with toddler section. Budget-friendly Brooklyn. (Great value)",
+      "url": "https://www.flyingapple.nyc",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6874,
+      "lng": -73.9309,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "IKEA Brooklyn",
+      "category": "play",
+      "venue": "IKEA Brooklyn",
+      "neighborhood": "1 Beard St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 36,
+      "travelHow": "~36 min from Union Sq",
+      "toddlerNotes": "Smaland supervised play (free, call ahead). Plus kid-friendly cafeteria. (Must be potty-trained; call ahead)",
+      "url": "https://www.ikea.com/us/en/stores/brooklyn/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6771,
+      "lng": -74.0095,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "NYPL Riverside",
+      "category": "storytime",
+      "venue": "NYPL Riverside",
+      "neighborhood": "127 Amsterdam Ave",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Free",
+      "travelMinutes": 25,
+      "travelHow": "~25 min from Union Sq",
+      "toddlerNotes": "Children's room on 2nd floor. Toddler storytime programs. Compact, quiet UWS branch. (Small & calm for toddlers)",
+      "url": "https://www.nypl.org/locations/riverside",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7748,
+      "lng": -73.9858,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "NYPL Morningside Heights",
+      "category": "storytime",
+      "venue": "NYPL Morningside Heights",
+      "neighborhood": "2900 Broadway",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Free",
+      "travelMinutes": 22,
+      "travelHow": "~22 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Story hour room on 2nd floor for children's programs. Near Columbia campus. (Story hour room upstairs)",
+      "url": "https://www.nypl.org/locations/morningside-heights",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.8055,
+      "lng": -73.9651,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "NYPL Countee Cullen",
+      "category": "storytime",
+      "venue": "NYPL Countee Cullen",
+      "neighborhood": "104 W 136th St",
+      "when": "Open Tue/Wed/Thu/Fri/Sat/Sun (see hours)",
+      "days": [
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 29,
+      "travelHow": "~29 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Historic Carnegie library in Harlem. James Weldon Johnson children's collection on 2nd floor. (Beautiful McKim Mead & White building)",
+      "url": "https://www.nypl.org/locations/countee-cullen",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.8143,
+      "lng": -73.9424,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "NYPL Hamilton Grange",
+      "category": "storytime",
+      "venue": "NYPL Hamilton Grange",
+      "neighborhood": "503 W 145th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Free",
+      "travelMinutes": 32,
+      "travelHow": "~32 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Children's programs in Hamilton Heights. Storytime, crafts, and early literacy events. (All ages welcome)",
+      "url": "https://www.nypl.org/locations/hamilton-grange",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.8238,
+      "lng": -73.9446,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "NYPL Muhlenberg",
+      "category": "storytime",
+      "venue": "NYPL Muhlenberg",
+      "neighborhood": "209 W 23rd St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Free",
+      "travelMinutes": 14,
+      "travelHow": "~14 min from Union Sq",
+      "toddlerNotes": "Children's room with story hour space on 2nd floor. Chelsea location near Madison Square Park. (Near Madison Square Park playground)",
+      "url": "https://www.nypl.org/locations/muhlenberg",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7443,
+      "lng": -73.9947,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "NYPL 96th Street",
+      "category": "storytime",
+      "venue": "NYPL 96th Street",
+      "neighborhood": "112 E 96th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat 11-5",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Free",
+      "travelMinutes": 32,
+      "travelHow": "~32 min from Union Sq",
+      "toddlerNotes": "Modern branch with dedicated children's room and separate story hour space. Toddler storytime ages 1-3. (Separate story hour space)",
+      "url": "https://www.nypl.org/locations/96th-street",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7854,
+      "lng": -73.9526,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Queens Library Broadway",
+      "category": "storytime",
+      "venue": "Queens Library Broadway",
+      "neighborhood": "40-20 Broadway",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Free",
+      "travelMinutes": 33,
+      "travelHow": "~33 min from Union Sq",
+      "toddlerNotes": "Astoria branch with children's area. Storytime, crafts, and Toddler Learning Center programs. (Toddler Learning Center in spring/fall)",
+      "url": "https://www.queenslibrary.org/about-us/locations/broadway",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7592,
+      "lng": -73.9186,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Book Culture on Broadway",
+      "category": "storytime",
+      "venue": "Book Culture on Broadway",
+      "neighborhood": "2915 Broadway",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 23,
+      "travelHow": "~23 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Indie bookstore with dedicated children's room (lower level). Sat storytime 3:30pm. Persian & English sessions. (Sat 3:30pm English storytime)",
+      "url": "https://www.bookculture.com/locations/book-culture-broadway",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.8067,
+      "lng": -73.9644,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Book Culture 112th St",
+      "category": "storytime",
+      "venue": "Book Culture 112th St",
+      "neighborhood": "536 W 112th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 22,
+      "travelHow": "~22 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Original Book Culture location near Columbia. Children's section upstairs with board books. (Browse anytime)",
+      "url": "https://www.bookculture.com/locations",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.806,
+      "lng": -73.9667,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Greenlight Bookstore",
+      "category": "storytime",
+      "venue": "Greenlight Bookstore",
+      "neighborhood": "686 Fulton St",
+      "when": "Open daily 10-10",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "Beloved Fort Greene indie. Regular Sunday storytimes with author visits, crafts, and activities. All ages. (Sunday storytimes; check calendar)",
+      "url": "https://www.greenlightbookstore.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6862,
+      "lng": -73.9775,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "powerHouse on 8th",
+      "category": "storytime",
+      "venue": "powerHouse on 8th",
+      "neighborhood": "1111 8th Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 56,
+      "travelHow": "~56 min from Grandma's (101 CPW)",
+      "toddlerNotes": "South Slope indie with upper kids' area. Sunday Story Time series. Mini-gallery and community space. (Sunday Story Time; kids area upstairs)",
+      "url": "https://powerhouseon8th.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6648,
+      "lng": -73.9802,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Whitney Museum",
+      "category": "other",
+      "venue": "Whitney Museum",
+      "neighborhood": "99 Gansevoort St",
+      "when": "Open Mon/Wed/Thu/Fri/Sat/Sun (see hours)",
+      "days": [
+        "mon",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 16,
+      "travelHow": "~16 min from Union Sq",
+      "toddlerNotes": "Under 25 always free. Fri 5-10pm free for all. Ground floor always free. Outdoor terraces with Hudson views. (Under 25 free anytime; Fri eve free all)",
+      "url": "https://whitney.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7396,
+      "lng": -74.0089,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "El Museo del Barrio",
+      "category": "other",
+      "venue": "El Museo del Barrio",
+      "neighborhood": "1230 5th Ave",
+      "when": "Open Thu/Fri/Sat/Sun 11-5",
+      "days": [
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 35,
+      "travelHow": "~35 min from Union Sq",
+      "toddlerNotes": "Under 12 free. Pay-what-you-can for adults. Latin American & Caribbean art. 3rd Sat free Super Sabado. (3rd Saturday free for everyone)",
+      "url": "https://www.elmuseo.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7934,
+      "lng": -73.9515,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Noguchi Museum",
+      "category": "other",
+      "venue": "Noguchi Museum",
+      "neighborhood": "9-01 33rd Rd",
+      "when": "Open Wed/Thu/Fri/Sat/Sun (see hours)",
+      "days": [
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 29,
+      "travelHow": "~29 min from Union Sq",
+      "toddlerNotes": "Under 12 free. Tranquil sculpture garden & galleries. First Friday of month free for all. (1st Friday free; serene space)",
+      "url": "https://www.noguchi.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7676,
+      "lng": -73.9374,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Museum of Arts and Design",
+      "category": "other",
+      "venue": "Museum of Arts and Design",
+      "neighborhood": "2 Columbus Circle",
+      "when": "Open Tue/Wed/Thu/Fri/Sat/Sun 10-6",
+      "days": [
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 22,
+      "travelHow": "~22 min from Union Sq",
+      "toddlerNotes": "Under 18 free. Tactile craft & design exhibits. Hands-on workshops. Right at Columbus Circle. (Under 18 always free)",
+      "url": "https://madmuseum.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7673,
+      "lng": -73.9819,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Asia Society",
+      "category": "other",
+      "venue": "Asia Society",
+      "neighborhood": "725 Park Ave",
+      "when": "Open Tue/Wed/Thu/Fri/Sat/Sun 11-6",
+      "days": [
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 24,
+      "travelHow": "~24 min from Union Sq",
+      "toddlerNotes": "Under 16 free. Family Days with crafts, lion dances, cultural performances. Beautiful gallery. (Free Fri 6-9pm)",
+      "url": "https://asiasociety.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7697,
+      "lng": -73.9645,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Japan Society",
+      "category": "other",
+      "venue": "Japan Society",
+      "neighborhood": "333 E 47th St",
+      "when": "Open Tue/Wed/Thu/Fri/Sat/Sun (see hours)",
+      "days": [
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 18,
+      "travelHow": "~18 min from Union Sq",
+      "toddlerNotes": "Under 16 free. Gallery + Japanese cultural events, festivals, family workshops. (Family membership $125)",
+      "url": "https://www.japansociety.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7534,
+      "lng": -73.9688,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Vital Theatre / Pinkalicious",
+      "category": "theater",
+      "venue": "Vital Theatre / Pinkalicious",
+      "neighborhood": "2162 Broadway",
+      "when": "Open Sat/Sun 11-3",
+      "days": [
+        "sat",
+        "sun"
+      ],
+      "cost": "Ticket $40-60",
+      "travelMinutes": 29,
+      "travelHow": "~29 min from Union Sq",
+      "toddlerNotes": "Long-running Pinkalicious musical for ages 2-8. 60 min, no intermission. Right on the UWS. (Weekend shows; 60 min perfect for toddlers)",
+      "url": "https://www.vitaltheatre.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7838,
+      "lng": -73.9805,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "TADA! Youth Theater",
+      "category": "theater",
+      "venue": "TADA! Youth Theater",
+      "neighborhood": "15 W 28th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Child $15; Adult $25",
+      "travelMinutes": 13,
+      "travelHow": "~13 min from Union Sq",
+      "toddlerNotes": "Original musicals performed by kids ages 8-18. Shows suitable for ages 3+. Affordable tickets. (Check schedule for showtimes)",
+      "url": "https://www.tadatheater.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7456,
+      "lng": -73.9901,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Sloomoo Institute",
+      "category": "other",
+      "venue": "Sloomoo Institute",
+      "neighborhood": "475 Broadway",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "General $39-50; Under 2 Free",
+      "travelMinutes": 17,
+      "travelHow": "~17 min from Union Sq",
+      "toddlerNotes": "Immersive slime play. DIY slime bar included with ticket. Ages 2+ need tickets. Sensory overload (in a good way). (Messy! Wear old clothes)",
+      "url": "https://www.sloomoo.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7218,
+      "lng": -73.999,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "INTER_ NYC",
+      "category": "other",
+      "venue": "INTER_ NYC",
+      "neighborhood": "15 Hudson Yards",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 17,
+      "travelHow": "~17 min from Union Sq",
+      "toddlerNotes": "Motion-sensitive space adventure with immersive projections. Under 4 free. Stunning visuals. (Under 4 free; timed entry)",
+      "url": "https://www.inter.nyc",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7538,
+      "lng": -74.0018,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Arte Museum NYC",
+      "category": "other",
+      "venue": "Arte Museum NYC",
+      "neighborhood": "29 Broadway",
+      "when": "Open daily 10-9",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 24,
+      "travelHow": "~24 min from Union Sq",
+      "toddlerNotes": "Immersive nature projections: waterfalls, forests, oceans. Under 3 free. Some dark/mirrored rooms. (Under 3 free; carry toddlers in dark rooms)",
+      "url": "https://www.artemuseum.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7065,
+      "lng": -74.0123,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Imagine Swimming UWS",
+      "category": "play",
+      "venue": "Imagine Swimming UWS",
+      "neighborhood": "752 West End Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Per class $48",
+      "travelMinutes": 33,
+      "travelHow": "~33 min from Union Sq",
+      "toddlerNotes": "Parent & Me swim classes ages 4mo-3yr. Warm pool, gentle progression. UWS location. (Multiple schedule options)",
+      "url": "https://www.imagineswimming.com/locations/upper-west-side",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7928,
+      "lng": -73.9745,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Goldfish Swim School UES",
+      "category": "play",
+      "venue": "Goldfish Swim School UES",
+      "neighborhood": "1534 2nd Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Annual membership $50; Per class ~$35-40",
+      "travelMinutes": 30,
+      "travelHow": "~30 min from Union Sq",
+      "toddlerNotes": "Ages 4mo+. Warm 90-degree pool. Shatter-proof underwater viewing. Family-friendly tropical decor. (90-degree pool; family changing rooms)",
+      "url": "https://goldfishswimschool.com/ues-e-80th-street/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7785,
+      "lng": -73.9505,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "NYC Elite Gymnastics",
+      "category": "play",
+      "venue": "NYC Elite Gymnastics",
+      "neighborhood": "200 Riverside Blvd",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class ~$45",
+      "travelMinutes": 25,
+      "travelHow": "~25 min from Union Sq",
+      "toddlerNotes": "Parent-child obstacle courses from 3 months. 50-min classes. UWS riverside location. (Free trial available)",
+      "url": "https://nycelite.com/upper-west-side/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7754,
+      "lng": -73.9891,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Children's Tumbling",
+      "category": "play",
+      "venue": "Children's Tumbling",
+      "neighborhood": "9 Murray St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class $65-90",
+      "travelMinutes": 21,
+      "travelHow": "~21 min from Union Sq",
+      "toddlerNotes": "Since 1978. NYC's oldest tumbling program. Classes from 16 months. Professional gymnastic equipment. (NYC institution since 1978)",
+      "url": "https://childrentumbling.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.713,
+      "lng": -74.0076,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Super Soccer Stars UWS",
+      "category": "play",
+      "venue": "Super Soccer Stars UWS",
+      "neighborhood": "131 W 86th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Per class ~$35-48",
+      "travelMinutes": 31,
+      "travelHow": "~31 min from Union Sq",
+      "toddlerNotes": "Adult & Me soccer for 12-26mo, Soccer for 2-3s. Fun intro to team sports. (Multiple UWS locations)",
+      "url": "https://www.soccerstars.com/ny/nyc/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7877,
+      "lng": -73.9727,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Color Me Mine UWS",
+      "category": "other",
+      "venue": "Color Me Mine UWS",
+      "neighborhood": "177 Amsterdam Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Mini Mon (under 5) $5 + piece; Regular $10 + piece",
+      "travelMinutes": 27,
+      "travelHow": "~27 min from Union Sq",
+      "toddlerNotes": "Drop-in pottery painting. Mini Mondays: $5 for under-5s. Pick a piece, paint it, they fire it. (Best deal: Mini Mondays for toddlers)",
+      "url": "https://upperwestside.colormemine.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7795,
+      "lng": -73.9804,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Little Maestros",
+      "category": "music",
+      "venue": "Little Maestros",
+      "neighborhood": "344 E 69th St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class ~$35",
+      "travelMinutes": 23,
+      "travelHow": "~23 min from Union Sq",
+      "toddlerNotes": "Award-winning 45-min toddler music with storytime, puppets, dance parties. Ages 0-5. (Award-winning music program)",
+      "url": "https://www.littlemaestros.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7645,
+      "lng": -73.9594,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Church Street School",
+      "category": "music",
+      "venue": "Church Street School",
+      "neighborhood": "41 White St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class ~$35",
+      "travelMinutes": 19,
+      "travelHow": "~19 min from Union Sq",
+      "toddlerNotes": "Non-profit music & art from 16mo. Dalcroze eurythmics, creative movement, art exploration. (Dalcroze method; non-profit)",
+      "url": "https://www.churchstreetschool.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.718,
+      "lng": -74.0024,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Yogi Beans UES",
+      "category": "other",
+      "venue": "Yogi Beans UES",
+      "neighborhood": "1018 Lexington Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Per class ~$35",
+      "travelMinutes": 26,
+      "travelHow": "~26 min from Union Sq",
+      "toddlerNotes": "Kids-only yoga studio. Mini Sun Salutation for ages 2+. Calm, focused environment. (Kids-only yoga; ages 2+)",
+      "url": "https://yogibeans.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.772,
+      "lng": -73.9612,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "14th Street Y",
+      "category": "other",
+      "venue": "14th Street Y",
+      "neighborhood": "344 E 14th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Trial class $17; 5-pack $65",
+      "travelMinutes": 10,
+      "travelHow": "~10 min from Union Sq",
+      "toddlerNotes": "Yoga, dance, art, music, movement classes for toddlers. $17 trial class. Affordable packages. (Most affordable class venue)",
+      "url": "https://www.14streety.org",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7322,
+      "lng": -73.9818,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Apple Seeds",
+      "category": "play",
+      "venue": "Apple Seeds",
+      "neighborhood": "6 Stuyvesant Oval",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Trial visit $25; Membership $75/mo",
+      "travelMinutes": 15,
+      "travelHow": "~15 min from Union Sq",
+      "toddlerNotes": "Indoor play space + classes in Stuy Town. Membership-based but trial visits available. (Trial visit available)",
+      "url": "https://appleseedsovalkids.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7319,
+      "lng": -73.9769,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Chelsea Forest Play",
+      "category": "play",
+      "venue": "Chelsea Forest Play",
+      "neighborhood": "241 W 20th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "50-min session $35",
+      "travelMinutes": 15,
+      "travelHow": "~15 min from Union Sq",
+      "toddlerNotes": "Nature-themed treehouse indoor playground. Reservation required. Beautiful design. (Reservation required)",
+      "url": "https://www.chelseaforestplay.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.742,
+      "lng": -73.9977,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Twinkle Playspace",
+      "category": "play",
+      "venue": "Twinkle Playspace",
+      "neighborhood": "144 Frost St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat 9-5",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Child $20; Adult $15",
+      "travelMinutes": 25,
+      "travelHow": "~25 min from Union Sq",
+      "toddlerNotes": "Toddler-focused space, ages 0-6. Soft play, imaginative stations. Intimate and calm. (Ages 0-6 only)",
+      "url": "https://www.twinkleplayspace.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7168,
+      "lng": -73.9459,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "The Kids Town",
+      "category": "play",
+      "venue": "The Kids Town",
+      "neighborhood": "278A 6th St",
+      "when": "Open daily 9:30-5",
+      "days": [
+        "any"
+      ],
+      "cost": "90 min $25",
+      "travelMinutes": 54,
+      "travelHow": "~54 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Family-owned, intimate play space. 90-min sessions in a cozy Park Slope setting. (Intimate family-run space)",
+      "url": "https://www.thekidstown.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.67,
+      "lng": -73.9832,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Playgarden Prep Tribeca",
+      "category": "play",
+      "venue": "Playgarden Prep Tribeca",
+      "neighborhood": "95 Franklin St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Trial day $50; Membership Monthly",
+      "travelMinutes": 19,
+      "travelHow": "~19 min from Union Sq",
+      "toddlerNotes": "NYC's largest under-5 indoor playground. Membership-based with trial days available. (Membership-based; trial available)",
+      "url": "https://playgardennyc.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7184,
+      "lng": -74.0035,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Gymboree UES",
+      "category": "music",
+      "venue": "Gymboree UES",
+      "neighborhood": "1622 First Ave",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat 9:30-11",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Open Gym $59",
+      "travelMinutes": 29,
+      "travelHow": "~29 min from Union Sq",
+      "toddlerNotes": "Open gym + structured music, art, sensory classes. Ages 0-5. Drop-in welcome. (Sat open gym; weekday classes)",
+      "url": "https://www.gymboreeclasses.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.776,
+      "lng": -73.95,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Jane's Carousel",
+      "category": "other",
+      "venue": "Jane's Carousel",
+      "neighborhood": "Old Dock St",
+      "when": "Open Wed/Thu/Fri/Sat/Sun 11-7",
+      "days": [
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ],
+      "cost": "Per ride $2",
+      "travelMinutes": 23,
+      "travelHow": "~23 min from Union Sq",
+      "toddlerNotes": "Beautifully restored 1922 carousel in a Jean Nouvel glass pavilion. Toddlers love the painted horses. (Cash only; $2 per ride)",
+      "url": "https://janescarousel.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7042,
+      "lng": -73.9936,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Totally Kid Carousel",
+      "category": "other",
+      "venue": "Totally Kid Carousel",
+      "neighborhood": "Riverbank State Park",
+      "when": "Open Sat/Sun 11-5",
+      "days": [
+        "sat",
+        "sun"
+      ],
+      "cost": "Per ride $1",
+      "travelMinutes": 32,
+      "travelHow": "~32 min from Grandma's (101 CPW)",
+      "toddlerNotes": "One-of-a-kind carousel with animals designed by NYC kids. Only $1 per ride. Inside Riverbank State Park. (Weekends only; $1 per ride)",
+      "url": "https://parks.ny.gov/parks/riverbank",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.8253,
+      "lng": -73.9486,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Kids at Art UES",
+      "category": "other",
+      "venue": "Kids at Art UES",
+      "neighborhood": "1412 2nd Ave",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Per class ~$30",
+      "travelMinutes": 26,
+      "travelHow": "~26 min from Union Sq",
+      "toddlerNotes": "Creative art classes for ages 2-12. 25+ years on the UES. Small class sizes. (25+ years experience)",
+      "url": "https://www.kidsatartnyc.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.769,
+      "lng": -73.956,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Gymboree Play & Music Brooklyn",
+      "category": "music",
+      "venue": "Gymboree Play & Music Brooklyn",
+      "neighborhood": "157 Montague St",
+      "when": "Open Mon/Tue/Wed/Thu/Fri/Sat 9:30-11",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat"
+      ],
+      "cost": "Open Gym $59",
+      "travelMinutes": 28,
+      "travelHow": "~28 min from Union Sq",
+      "toddlerNotes": "Open gym + structured music, sensory classes for ages 0-5. Brooklyn Heights location. (Sat open gym; weekday classes)",
+      "url": "https://www.gymboreeclasses.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6935,
+      "lng": -73.9929,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Kidville Park Slope",
+      "category": "play",
+      "venue": "Kidville Park Slope",
+      "neighborhood": "434 7th Ave",
+      "when": "Open Mon/Tue/Wed/Thu/Fri 9-5",
+      "days": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
+      ],
+      "cost": "Drop-in $29",
+      "travelMinutes": 56,
+      "travelHow": "~56 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Indoor gym, music, art classes for babies and toddlers. Park Slope location. (Same programs as UWS)",
+      "url": "https://kidville.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.6647,
+      "lng": -73.9813,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": true
+    },
+    {
+      "title": "Fotografiska NYC",
+      "category": "other",
+      "venue": "Fotografiska NYC",
+      "neighborhood": "281 Park Ave South",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 4,
+      "travelHow": "~4 min from Union Sq",
+      "toddlerNotes": "Photography museum. Under 7 free. Beautiful building with restaurant. Stroller-friendly. (Under 7 free; open late)",
+      "url": "https://www.fotografiska.com/nyc/",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7398,
+      "lng": -73.9852,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Gulliver's Gate (reopened)",
+      "category": "other",
+      "venue": "Gulliver's Gate (reopened)",
+      "neighborhood": "216 W 44th St",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 17,
+      "travelHow": "~17 min from Union Sq",
+      "toddlerNotes": "Miniature world with interactive elements. Under 3 free. Tiny cities, trains, airports mesmerize toddlers. (Interactive keys activate scenes)",
+      "url": "https://gulliversgate.com",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7574,
+      "lng": -73.9871,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Roosevelt Island Tramway + Playground",
+      "category": "other",
+      "venue": "Roosevelt Island Tramway + Playground",
+      "neighborhood": "E 60th St & 2nd Ave",
+      "when": "Open daily (see hours)",
+      "days": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 22,
+      "travelHow": "~22 min from Union Sq",
+      "toddlerNotes": "Aerial tram ride over East River (uses MetroCard). Indoor playground on the island. Toddlers love the ride itself. (Regular MetroCard fare; the ride IS the activity)",
+      "url": "https://rioc.ny.gov/302/Tram",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7614,
+      "lng": -73.9596,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
+    },
+    {
+      "title": "Storytime at Bryant Park Reading Room",
       "category": "storytime",
       "venue": "Bryant Park Reading Room",
       "neighborhood": "Midtown / Bryant Park",
-      "when": "Tue Jul 14, 10:30-11:30 AM",
+      "when": "Tue Jul 21, 10:30-11:30 AM",
       "days": [
         "tue"
       ],
       "start": "10:30",
       "end": "11:30",
-      "cost": "Free - no tickets or registration; $0 for the whole family. Free book to take home while supplies last.",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free — no tickets or registration",
+      "travelMinutes": 15,
+      "travelHow": "F/M/D/B to 42nd St-Bryant Pk, or walk up 6th Ave (~15 min)",
+      "toddlerNotes": "Ages 2-8 read-aloud under the trees on the open-air Reading Room side of the park (42nd St side) — stroller-friendly, shaded, easy to wander off mid-story if she's done.",
       "url": "https://bryantpark.org/calendar/event/storytime",
       "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.7542,
-      "lng": -73.9836,
-      "toddlerNotes": "Explicitly for ages 2-8: sing, clap, and stomp along with Cali Co Cat's live 'Meowsic' plus read-aloud stories (Jul 14 features 'The Seashore Book'). Runs every Tuesday Jul 7-Aug 25. Open-air reading room under the trees on the 42nd St side, stroller-friendly, and kids can take home a free book while supplies last.",
       "confidence": "high",
-      "travelMinutes": 16,
-      "travelHow": "~16 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Garden Explorers: free kids gardening hour",
-      "category": "play",
-      "venue": "Bryant Park - next to Le Carrousel (south side of park)",
-      "neighborhood": "Midtown / Bryant Park",
-      "when": "Thu Jul 16, 10:00-11:00 AM",
-      "days": [
-        "thu"
-      ],
-      "start": "10:00",
-      "end": "11:00",
-      "cost": "Free (no tickets or registration; free for the whole family - two parents + toddler pay $0)",
-      "url": "https://bryantpark.org/activities/garden-explorers",
-      "outdoor": true,
-      "toddlerNotes": "Fully hands-on and toddler-perfect: kids plant, weed, and prune real plants, play and explore in an 'imagination garden,' and pot a seed to take home. No performance to sit through - a 2-year-old just digs. Runs exactly one hour on Thursday morning; dress for dirt and bring a change of clothes.",
-      "lat": 40.7533,
-      "lng": -73.9838,
-      "cpwOnly": false,
-      "confidence": "high",
-      "travelMinutes": 16,
-      "travelHow": "~16 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Le Carrousel Extravaganza: Teatro SEA puppet show (Los Colores de Frida)",
-      "category": "theater",
-      "venue": "Bryant Park - Le Carrousel Extravaganza (40th St entrance)",
-      "neighborhood": "Midtown / Bryant Park",
-      "when": "Wed Jul 15, 10:00-11:00 AM",
-      "days": [
-        "wed"
-      ],
-      "start": "10:00",
-      "end": "11:00",
-      "cost": "Free, no tickets or reservations required (optional Le Carrousel ride $5 per person afterward)",
-      "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
-      "outdoor": true,
-      "toddlerNotes": "Wednesday's Extravaganza act is Teatro SEA, a bilingual (Spanish/English) children's puppet theater; the July 15 show is 'The Colors of Frida / Los Colores de Frida' - bright, visual, and short-attention-span friendly, which suits a 2-year-old better than a scripted play. Outdoor seating near the carousel means easy exits and re-entries. Pair with a Le Carrousel ride ($5) after.",
-      "lat": 40.7527,
-      "lng": -73.9836,
-      "cpwOnly": false,
-      "confidence": "high",
-      "travelMinutes": 15,
-      "travelHow": "~15 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Le Carrousel Extravaganza: Silly Billy magic show",
-      "category": "theater",
-      "venue": "Bryant Park - Le Carrousel (40th St mid-block entrance)",
-      "neighborhood": "Midtown / Bryant Park",
-      "when": "Fri Jul 17, 10:00 AM-11:00 AM",
-      "days": [
-        "fri"
-      ],
-      "start": "10:00",
-      "end": "11:00",
-      "cost": "Free - no tickets or reservations; drop in with the whole family ($0 for any size group)",
-      "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
-      "outdoor": true,
-      "toddlerNotes": "Friday's act is Silly Billy, a comedy kids' magician (billed ages 2-10) who works the preschool crowd with audience participation. Honest framing: of the week's three Extravaganza shows this is the most watch-rather-than-do for a 2-year-old - fine if yours likes sitting up front and laughing, but Monday (dance/music) and Wednesday (puppets) are more hands-on. Outdoor and free-flowing at the carousel either way, so easy to bail if attention fades.",
-      "lat": 40.7533,
-      "lng": -73.9838,
-      "cpwOnly": false,
-      "confidence": "high",
-      "travelMinutes": 16,
-      "travelHow": "~16 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Picnic Performances - Carnegie Hall Citywide: Nathan & the Zydeco Cha Chas",
-      "category": "music",
-      "venue": "Bryant Park Lawn",
-      "neighborhood": "Midtown / Bryant Park",
-      "when": "Fri Jul 17, 7:00-8:30 PM",
-      "days": [
-        "fri"
-      ],
-      "start": "19:00",
-      "end": "20:30",
-      "cost": "Free for all ages - no tickets needed, just show up on the lawn. Free bistro chairs and picnic blankets are first-come, first-served; you can bring your own picnic dinner and non-alcoholic drinks (food vendors on site too). No family math needed - $0 for parents and toddler alike.",
-      "url": "https://bryantpark.org/calendar/event/nathan-and-zydeco/2026-07-17",
-      "outdoor": true,
-      "toddlerNotes": "High-energy, accordion-driven Louisiana zydeco dance music - the toddler-friendly part is dancing and moving around on the big open lawn, and there's grass to roam with a picnic blanket. Real caveat: the 7pm start brushes right up against a 2-year-old's bedtime. Families typically arrive when the lawn opens for the picnic, eat dinner, catch the first few songs, and head out early. It's a general-audience outdoor concert (not a dedicated kids' show), so manage expectations and plan an early exit.",
-      "lat": 40.7537,
-      "lng": -73.9835,
-      "cpwOnly": false,
-      "confidence": "high",
-      "travelMinutes": 15,
-      "travelHow": "N/Q/R/W from Union Sq to Times Sq–42 St + 5-min walk (or F/M to 42 St–Bryant Pk)",
-      "times": [
-        "evening"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Kids Creative Corner (drop-in crafts, coloring & building)",
-      "category": "play",
-      "venue": "Bryant Park - Le Carrousel (40th St mid-block entrance)",
-      "neighborhood": "Midtown / Bryant Park",
-      "when": "Daily Jul 13-19, 10:00 AM-5:00 PM (drop-in, no registration)",
-      "days": [
-        "mon",
-        "tue",
-        "wed",
-        "thu",
-        "fri",
-        "sat",
-        "sun"
-      ],
-      "start": "10:00",
-      "end": "17:00",
-      "cost": "Free (drop-in, no registration; free for the whole family)",
-      "url": "https://bryantpark.org/activities/kids-creative-corner",
-      "outdoor": true,
-      "toddlerNotes": "Free staffed drop-in creative corner next to Le Carrousel for reading, coloring, building, and simple crafts, curated by coordinators to stimulate young kids' creativity - genuinely aimed at small children, not just 'all ages welcome.' No schedule pressure: come any day, stay 20 minutes or 2 hours. A reliable low-key pairing with the other events on this list. (Nearby Art Cart offers free drawing/craft supplies daily, and Le Carrousel rides are ~$4 if you want to add a ride.)",
-      "lat": 40.7533,
-      "lng": -73.9838,
-      "cpwOnly": false,
-      "confidence": "high",
-      "travelMinutes": 16,
-      "travelHow": "~16 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Le Carrousel ride (French-style carousel)",
-      "category": "other",
-      "venue": "Bryant Park - Le Carrousel",
-      "neighborhood": "Midtown / Bryant Park",
-      "when": "Daily Jul 13-19, 10:00 AM-8:00 PM",
-      "days": [
-        "mon",
-        "tue",
-        "wed",
-        "thu",
-        "fri",
-        "sat",
-        "sun"
-      ],
-      "start": "10:00",
-      "end": "20:00",
-      "cost": "$5 per ride; $42 for a 10-ride discount card. Family math: kids under 42\" must ride with an accompanying adult and that adult also pays $5, so one toddler spin = $10",
-      "url": "https://bryantpark.org/activities/le-carrousel",
-      "outdoor": true,
-      "toddlerNotes": "A slow, gentle French-style carousel set to French cabaret music - one of the classic first-carousel rides in Manhattan for 2-year-olds. Kids under 42 inches must be accompanied by one adult per child on the platform, and that adult also pays $5. Open daily June-August, 10am-8pm, so it slots in easily after any morning show.",
-      "lat": 40.7533,
-      "lng": -73.9838,
-      "cpwOnly": false,
-      "confidence": "high",
-      "travelMinutes": 16,
-      "travelHow": "~16 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Dance Storytime with Carlota Santana (Summer for the City)",
-      "category": "storytime",
-      "venue": "Karen and Richard LeFrak Lobby, David Geffen Hall, Lincoln Center",
-      "neighborhood": "Lincoln Square / Upper West Side",
-      "when": "Wed Jul 15, two sessions: 11:00 AM and 1:00 PM",
-      "days": [
-        "wed"
-      ],
-      "start": "11:00",
-      "end": null,
-      "cost": "Free — general admission is first-come, first-served (no tickets required; optional Fast Track available). Free for the whole family; a second session at 1:00 PM if you miss the 11:00 AM one.",
-      "url": "https://www.lincolncenter.org/series/summer-for-the-city/dance-storytime-with-carlota-santana-57",
-      "outdoor": false,
-      "cpwOnly": false,
-      "lat": 40.7727,
+      "lat": 40.7538,
       "lng": -73.9832,
-      "toddlerNotes": "A family-friendly creative storytime (officially tagged FAMILY-FRIENDLY) where young audiences learn basic flamenco movements with Flamenco Vivo's Carlota Santana — rhythmic handclaps (palmas), arm movements (braceo), and footwork (taconeo). Indoor, air-conditioned lobby, so wiggling and wandering are fine. A 2-year-old can stomp and clap along with a parent; no sitting still required. Two identical sessions (11 AM and 1 PM) make it easy to work around a nap.",
-      "confidence": "high",
-      "travelMinutes": 24,
-      "travelHow": "~24 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Create-athon: Creature Kickoff (designed by Kid Koala)",
-      "category": "play",
-      "venue": "The Dance Floor at Josie Robertson Plaza, Lincoln Center",
-      "neighborhood": "Lincoln Square / Upper West Side",
-      "when": "Sun Jul 19, 12:00 PM",
-      "days": [
-        "sun"
-      ],
-      "start": "12:00",
-      "end": null,
-      "cost": "Free — $0 for the whole family (drop-in Create-athon workshop, materials provided)",
-      "url": "https://www.lincolncenter.org/series/summer-for-the-city/create-athon-creature-kickoff",
-      "outdoor": true,
       "cpwOnly": false,
-      "lat": 40.7724,
-      "lng": -73.9835,
-      "toddlerNotes": "Hands-on outdoor craft session on the big plaza dance floor: families build working cardboard foosball tables in a soccer-themed make-athon designed by musician/artist Kid Koala. Honest framing: the actual construction suits roughly 4+, and it is table-craft a parent does WITH the kid — a 2-year-old can stick, color, decorate, and then flick the ball on the finished table. Open plaza means easy toddler roaming; Revson Fountain right there.",
-      "confidence": "high",
-      "travelMinutes": 24,
-      "travelHow": "~24 min from Union Sq (see Directions)",
-      "times": [
-        "afternoon"
-      ],
       "event": true,
       "recurring": false
     },
     {
-      "title": "Tribute to Latin Music Giants with Jimmy Bosch — live salsa on The Dance Floor",
-      "category": "music",
-      "venue": "The Dance Floor at Josie Robertson Plaza, Lincoln Center",
-      "neighborhood": "Lincoln Square / Upper West Side",
-      "when": "Fri Jul 17, 6:30 PM",
-      "days": [
-        "fri"
-      ],
-      "start": "18:30",
-      "end": null,
-      "cost": "Free — no tickets; The Dance Floor is standing/dancing room, first come first served. $0 for the whole family.",
-      "url": "https://www.lincolncenter.org/series/summer-for-the-city/tribute-to-latin-music-giants-with-jimmy-bosch-42",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.7725,
-      "lng": -73.9835,
-      "toddlerNotes": "All-ages, not toddler-specific — the toddler draw is the giant outdoor dance floor on Josie Robertson Plaza (big disco ball over the fountain) where a 2-year-old can bop and be swung around while grown-ups dance to live salsa dura (Jimmy Bosch's tribute to Willie Colon and Eddie Palmieri). Early 6:30 PM start makes it doable before bedtime. Loud brass, so stand toward the edges. Free, no tickets, first come first served.",
-      "confidence": "high",
-      "travelMinutes": 24,
-      "travelHow": "~24 min from Union Sq (see Directions)",
-      "times": [
-        "evening"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "The Art of Footwork — tap + soccer freestyle family workshop",
-      "category": "play",
-      "venue": "David Rubenstein Atrium, Lincoln Center",
-      "neighborhood": "Lincoln Square / Upper West Side",
-      "when": "Sat Jul 18, 11:00 AM",
-      "days": [
-        "sat"
-      ],
-      "start": "11:00",
-      "end": null,
-      "cost": "Free for the whole family — no tickets required (first-come, first-served)",
-      "url": "https://www.lincolncenter.org/series/summer-for-the-city/the-art-of-footwork-951",
-      "outdoor": false,
-      "cpwOnly": false,
-      "lat": 40.7713,
-      "lng": -73.9826,
-      "toddlerNotes": "Participatory ALL AGES workshop (with NewYork-Presbyterian): instructors Nick Seyda and John Manzari teach basic tap steps and soccer freestyle drills, exploring how dance and sport share balance, coordination, and groove. Honest framing: the drills are pitched at kids old enough to follow directions; a 2-year-old's version is stomping to the tap rhythms and toe-poking a ball alongside a parent — plenty for a Saturday morning. Indoor and air-conditioned in the Atrium.",
-      "confidence": "high",
-      "travelMinutes": 23,
-      "travelHow": "~23 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Summer Arts Institute Chamber Music Showcase",
-      "category": "music",
-      "venue": "Karen and Richard LeFrak Lobby, David Geffen Hall, Lincoln Center",
-      "neighborhood": "Lincoln Square / Upper West Side",
-      "when": "Sat Jul 18, 2026, 12:00 PM",
-      "days": [
-        "sat"
-      ],
-      "start": "12:00",
-      "end": null,
-      "cost": "Free for all ages — no tickets or reservation, casual open-lobby seating (walk in, no cost for kids or adults)",
-      "url": "https://www.lincolncenter.org/series/summer-for-the-city/summer-arts-institute-645",
-      "outdoor": false,
-      "cpwOnly": false,
-      "lat": 40.7726,
-      "lng": -73.9834,
-      "toddlerNotes": "Family-friendly, but honestly a listen-along rather than a do-along: NYC public-school student musicians play chamber music in David Geffen Hall's open LeFrak Lobby (couches, room to toddle, no concert-hall hush, come-and-go). Works as a low-key second stop after an 11 AM activity nearby — stay for a piece or two and leave whenever the 2-year-old is done. Zero stakes and free.",
-      "confidence": "high",
-      "travelMinutes": 24,
-      "travelHow": "~24 min from Union Sq (see Directions)",
-      "times": [
-        "afternoon"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Foundations of Double Dutch + Open Jump on The Dance Floor",
-      "category": "play",
-      "venue": "The Dance Floor at Josie Robertson Plaza, Lincoln Center",
-      "neighborhood": "Lincoln Square / Upper West Side",
-      "when": "Thu Jul 16, 4:00 PM foundations class; Double Dutch Fusion Freestyle & Open Jump follows at 5:00 PM",
-      "days": [
-        "thu"
-      ],
-      "start": "16:00",
-      "end": null,
-      "cost": "Free for the whole family — no tickets, just drop in; jump ropes provided ($0 for adults and kids alike)",
-      "url": "https://www.lincolncenter.org/series/summer-for-the-city/foundations-of-double-dutch-691",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.7725,
-      "lng": -73.9836,
-      "toddlerNotes": "Family-friendly outdoor jump-rope block on Lincoln Center's plaza, framed honestly: an actual 2-year-old cannot jump double dutch, and the 4 PM foundations class is aimed at bigger kids. The toddler payoff is the 5 PM open-jump hour — National Double Dutch League championship teams doing freestyle shows a toddler will happily gawk at, with open plaza space to hop and bounce along with a parent between rounds. Treat it as watch-and-bounce, not a class.",
-      "confidence": "high",
-      "travelMinutes": 24,
-      "travelHow": "~24 min from Union Sq (see Directions)",
-      "times": [
-        "afternoon"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Prospect Park Stroller Walk",
-      "category": "other",
-      "venue": "Prospect Park Audubon Center at the Boathouse",
-      "neighborhood": "Prospect Park (Lefferts/east side), Brooklyn",
-      "when": "Thu Jul 16, 10:00 AM-12:00 PM (walk departs the Boathouse promptly at 10)",
-      "days": [
-        "thu"
-      ],
-      "start": "10:00",
-      "end": "12:00",
-      "cost": "Free; RSVP required via Eventbrite. Free for everyone — parents, caregivers, and children — so a family of any size pays $0. Check your email before the event to confirm the walk met its minimum sign-up.",
-      "url": "https://www.prospectpark.org/event/prospect-park-stroller-walk-5/2026-07-16/",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.6608,
-      "lng": -73.9652,
-      "toddlerNotes": "Built for exactly this age: a Prospect Park Alliance naturalist leads a stroller-pace loop along the park's waterways, made for parents/caregivers with babies and toddlers (the series is aimed at children under 3). Your 2-year-old rides in the stroller or toddles alongside while the guide points out birds, streams, flowers and towering trees. B, Q, or S (Franklin Ave Shuttle) to Prospect Park station, then ~5 min walk to the Boathouse near the Lincoln Rd & Ocean Ave entrance.",
-      "confidence": "high",
-      "travelMinutes": 42,
-      "travelHow": "~42 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Nature Exploration: Lake Appreciation (turtle & fish Animal Encounter + pond-water discovery)",
-      "category": "animals",
-      "venue": "Prospect Park Audubon Center at the Boathouse",
-      "neighborhood": "Prospect Park (east side near Lincoln Rd entrance / Prospect Lefferts Gardens), Brooklyn",
-      "when": "Thu Jul 16 & Fri Jul 17, 10:00 AM-3:00 PM (Animal Encounter 1-2 PM; Pond Water Discovery throughout)",
-      "days": [
-        "thu",
-        "fri"
-      ],
-      "start": "10:00",
-      "end": "15:00",
-      "cost": "Free, drop-in, no registration (whole family free)",
-      "url": "https://www.prospectpark.org/event/nature-exploration-lake-appreciation-7/2026-07-16/",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.6626,
-      "lng": -73.9653,
-      "toddlerNotes": "The toddler gold is Pond Water Discovery (peer at wriggling aquatic bugs through magnifying glasses with a naturalist) and the Animal Encounter from 1-2 PM with live turtles and fish up close. Free drop-in, no commitment — come for 30 minutes. Verified only for Thu Jul 16 and Fri Jul 17 on the official pages; despite the listing, there is NO Sat Jul 18 or Sun Jul 19 session (those URLs redirect to an unrelated Thursday date).",
-      "confidence": "high",
-      "travelMinutes": 41,
-      "travelHow": "~41 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "National Ice Cream Day at the Prospect Park Carousel",
-      "category": "play",
-      "venue": "Prospect Park Carousel",
-      "neighborhood": "Prospect Park (Flatbush Ave side), Brooklyn",
-      "when": "Sun Jul 19, 12:00 PM-3:00 PM",
-      "days": [
-        "sun"
-      ],
-      "start": "12:00",
-      "end": "15:00",
-      "cost": "Carousel tickets $3-$13 (about $3 per ride per rider; multi-ride bundles up to $13). A free ice cream treat comes with each carousel ticket purchased — so a toddler + one adult each riding once is about $6 and includes two free ice creams.",
-      "url": "https://www.prospectpark.org/event/national-ice-cream-day-at-the-carousel-2/",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.6635,
-      "lng": -73.9625,
-      "toddlerNotes": "A 2-year-old sweet spot: ride the restored 1912 carousel's hand-carved horses, lions, giraffes and deer with an adult standing/riding alongside, then a free ice cream treat with each ticket. The carousel pavilion is open-air but roofed, so it holds up in light rain. Right inside the Willink entrance, a 2-minute walk from the B/Q Prospect Park stop; Lefferts Historic House and the Prospect Park Zoo are steps away for a longer outing.",
-      "confidence": "high",
-      "travelMinutes": 41,
-      "travelHow": "~41 min from Union Sq (see Directions)",
-      "times": [
-        "afternoon"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Smorgasburg Great Ice Cream Fair at Breeze Hill",
-      "category": "festival",
-      "venue": "Breeze Hill, Prospect Park (Smorgasburg Prospect Park site)",
-      "neighborhood": "Prospect Park (Lefferts/east side), Brooklyn",
-      "when": "Sun Jul 19, 11:00 AM-6:00 PM",
-      "days": [
-        "sun"
-      ],
-      "start": "11:00",
-      "end": "18:00",
-      "cost": "Free entry; ice cream and food pay-as-you-go (most treats roughly $5-$12) — budget ~$15-25 for two adults + toddler shares",
-      "url": "https://www.prospectpark.org/event/smorgasburg-great-ice-cream-fair-2/",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.659,
-      "lng": -73.964,
-      "toddlerNotes": "The annual ice-cream-themed edition of the Sunday Smorgasburg, co-hosted with Prospect Park Alliance: curated ice cream vendors plus 'playful installations, hands-on activities, and family-friendly entertainment designed for all ages' — the installations/activities and the open lawn are the toddler part; the vendor lines are the grown-up part. Stroller-friendly paved paths. Free ice cream treat with each carousel ticket purchase for National Ice Cream Day, so it pairs perfectly with a stop at the Prospect Park Carousel (~10-min walk).",
-      "confidence": "high",
-      "travelMinutes": 43,
-      "travelHow": "~43 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Pop-Up Audubon (free drop-in nature play: pond-water discovery & fish-print craft)",
-      "category": "play",
-      "venue": "LeFrak Center at Lakeside (Pop-Up Audubon I); Tennis House (Pop-Up Audubon II)",
-      "neighborhood": "Prospect Park, Brooklyn",
-      "when": "Sat Jul 18 & Sun Jul 19, 2026, 12:00 PM-4:00 PM (Stay + Play / craft tables & pond-water discovery 12-3 PM; guided Nature on the Go walk 3-4 PM)",
-      "days": [
-        "sat",
-        "sun"
-      ],
-      "start": "12:00",
-      "end": "16:00",
-      "cost": "Free, drop-in (presented by Con Edison) - no tickets, whole family, $0",
-      "url": "https://www.prospectpark.org/event/pop-up-audubon-i-9-2/2026-07-18/",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.6554,
-      "lng": -73.964,
-      "toddlerNotes": "Verified toddler-perfect anchor is Saturday at LeFrak Center at Lakeside (Pop-Up Audubon I): free drop-in Stay + Play tables 12-3 PM with games, puzzles, drawing, plus magnifying-glass pond-water discovery of lake critters with park naturalists - great open-ended fun for a 2-year-old. Aim for 12-3 PM; the 3-4 PM Nature on the Go shoreline walk skews older. The Lakeside splash pad is right there for a post-activity cool-down. Sunday is Pop-Up Audubon II - the recurring pattern puts it at the Tennis House with the rubber-fish-and-paint Fish Print craft (messy toddler art); the July 19, 2026 date is on the official schedule but I could not open the individual Sunday page to confirm the Tennis House venue, so double-check the site before heading to the Tennis House side.",
-      "confidence": "high",
-      "travelMinutes": 44,
-      "travelHow": "~44 min from Union Sq (see Directions)",
-      "times": [
-        "afternoon"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Wetlab Look-ins — drop-in Hudson River aquarium at Pier 40",
-      "category": "animals",
-      "venue": "River Project Wetlab, Pier 40, Hudson River Park",
-      "neighborhood": "West Village / Hudson Square waterfront",
-      "when": "Tue Jul 14 & Wed Jul 15 3:00–6:00 PM; Sat Jul 18 11:00 AM–5:00 PM; Sun Jul 19 11:00 AM–2:00 PM",
-      "days": [
-        "tue",
-        "wed",
-        "sat",
-        "sun"
-      ],
-      "start": "11:00",
-      "end": "18:00",
-      "cost": "Free — drop-in, no registration ($0 for the whole family, any number of kids)",
-      "url": "https://hudsonriverpark.org/event-series/wetlab-look-ins/",
-      "outdoor": false,
-      "lat": 40.729,
-      "lng": -74.0112,
-      "cpwOnly": false,
-      "toddlerNotes": "Best pure-toddler pick on the Hudson: a dozen-plus tanks of real Hudson River animals — lined seahorses, oyster toadfish, blue crabs — at stroller/eye level, with River Project educators showing critters up close. Indoor research aquarium on the pier. Drop-in, so a 15-minute visit counts. Weekend 11 AM hours (Sat 11–5, Sun 11–2) fit before nap; Tue/Wed are afternoons only (3–6 PM).",
-      "confidence": "high",
-      "travelMinutes": 18,
-      "travelHow": "~18 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Mornings in The Glade — toddler open play at Little Island",
-      "category": "play",
-      "venue": "The Glade, Little Island (Pier 55)",
-      "neighborhood": "Meatpacking District / West Village",
-      "when": "Thu Jul 16, 9:00-11:00 AM (weekly Thursdays Jun 4-Sep 3, 2026)",
-      "days": [
-        "thu"
-      ],
-      "start": "09:00",
-      "end": "11:00",
-      "cost": "Free for the whole family (advance registration). Note: the Jul 16 session shows SOLD OUT on littleisland.org — watch for released tickets or ask at the gate. Light snacks/refreshments available for purchase. Little Island itself is free to enter any day if registration doesn't come through.",
-      "url": "https://littleisland.org/event/mornings-in-the-glade/2026-07-16/",
-      "outdoor": true,
-      "lat": 40.742,
-      "lng": -74.0101,
-      "cpwOnly": false,
-      "toddlerNotes": "Purpose-built for a 2-year-old: Little Island calls it 'a relaxed space for little ones and their grown-ups to start the day together' with unstructured outdoor play in The Glade — drop in and stay as long as you like. Big caveat: the Jul 16 date shows sold out on the official site (as do several summer Thursdays), so registration is the gamble. Plan B costs nothing: Little Island's hilly lawns and Play Ground plaza are free to wander any day, no ticket needed.",
-      "confidence": "high",
-      "travelMinutes": 17,
-      "travelHow": "~17 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Broadway by the Boardwalk: Max von Essen with Billy Stritch (season opener)",
-      "category": "music",
-      "venue": "Clinton Cove, Hudson River Park",
-      "neighborhood": "Hell's Kitchen / Midtown West waterfront",
-      "when": "Mon Jul 13, 6:30 PM (arrive early to grab lawn space; series runs Mondays Jul 13-Aug 10)",
-      "days": [
-        "mon"
-      ],
-      "start": "18:30",
-      "end": null,
-      "cost": "Free — no tickets or RSVP. Bring a blanket to sit on the grass; a family of any size pays $0.",
-      "url": "https://hudsonriverpark.org/visit/events/event/broadway-by-the-boardwalk-july-13-2026/",
-      "outdoor": true,
-      "lat": 40.771,
-      "lng": -74.0007,
-      "cpwOnly": false,
-      "toddlerNotes": "Not a kids' show, and that's the point: it's Broadway stars on an open lawn with no seats and no shushing. Your 2-year-old can dance and picnic on the Clinton Cove grass while Max von Essen sings with Billy Stritch at the piano. The 6:30 PM start brushes bedtime, so plant your blanket at the back edge for an easy exit. Stroller-friendly waterfront paths and lawn.",
-      "confidence": "high",
-      "travelMinutes": 24,
-      "travelHow": "~24 min from Union Sq (see Directions)",
-      "times": [
-        "evening"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Sunset Salsa at Pier 76 — free beginner lesson + open-air dance party",
-      "category": "music",
-      "venue": "Pier 76, Hudson River Park",
-      "neighborhood": "Hudson Yards / Hell's Kitchen waterfront",
-      "when": "Thu Jul 16, 6:30 PM beginner lesson, open dancing from ~7:15 PM (weekly Thursdays; season began Jul 9, runs through late Aug)",
-      "days": [
-        "thu"
-      ],
-      "start": "18:30",
-      "end": null,
-      "cost": "Free, no registration — free for the whole family including toddlers",
-      "url": "https://hudsonriverpark.org/visit/events/event/sunset-salsa-july-16-2026/",
-      "outdoor": true,
-      "lat": 40.7596,
-      "lng": -74.0027,
-      "cpwOnly": false,
-      "toddlerNotes": "Free all-ages open-air salsa social on the flat, stroller-friendly Pier 76 deck with a river breeze — no seating required, so a 2-year-old can bounce and spin at the edge of the floor rather than sit still. Talia Castro-Pozo leads a beginner lesson at 6:30 PM, the calmest window before the floor fills for social dancing around 7:15. It's an evening event, so time it early; the 6:30 lesson stretch is the toddler-friendly part.",
-      "confidence": "high",
-      "travelMinutes": 20,
-      "travelHow": "~20 min from Union Sq (see Directions)",
-      "times": [
-        "evening"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Boardwalk Blues at Pier 97 (Jazz Foundation of America)",
-      "category": "music",
-      "venue": "Pier 97, Hudson River Park",
-      "neighborhood": "Hell's Kitchen / Midtown West waterfront",
-      "when": "Tue Jul 14, 6:30 PM (Boardwalk Blues series, Tuesdays Jul 7-28, 2026)",
-      "days": [
-        "tue"
-      ],
-      "start": "18:30",
-      "end": null,
-      "cost": "Free (drop-in, no ticket or registration) — bring a blanket for lawn seating; $0 for a family of any size",
-      "url": "https://hudsonriverpark.org/event-series/boardwalk-blues/",
-      "outdoor": true,
-      "lat": 40.7717,
-      "lng": -73.9958,
-      "cpwOnly": false,
-      "toddlerNotes": "All-ages outdoor blues on Pier 97's grass lawn, not a kids' concert — the toddler appeal is blanket-dancing to a live band with zero sit-still expectations. HRP explicitly encourages blankets on the lawn. The 6:30 PM start runs into bedtime, so plan to leave mid-set, which is easy at a free drop-in event. Date is firmly confirmed as a Tuesday in the official Jul 7-28 series; only the specific Jul 14 performer wasn't posted where I could verify a name.",
-      "confidence": "high",
-      "travelMinutes": 24,
-      "travelHow": "~24 min from Union Sq (see Directions)",
-      "times": [
-        "evening"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Jazz at Pier 84 — free riverside jazz (with Pier 84 water-play feature next door)",
-      "category": "music",
-      "venue": "Pier 84, Hudson River Park",
-      "neighborhood": "Hell's Kitchen waterfront",
-      "when": "Wed Jul 15, 7:00 PM (weekly series, Wednesdays Jun 17–Aug 12; Jul 15 performer not yet individually posted)",
-      "days": [
-        "wed"
-      ],
-      "start": "19:00",
-      "end": null,
-      "cost": "Free, no registration — supported by the Jazz Foundation of America. Family math: $0 for the whole family; bring a picnic/blanket and BYO snacks.",
-      "url": "https://hudsonriverpark.org/event-series/jazz-at-pier-84/",
-      "outdoor": true,
-      "lat": 40.7637,
-      "lng": -74.0005,
-      "cpwOnly": false,
-      "toddlerNotes": "Honest framing: this is an all-ages outdoor jazz series, not a toddler show, and the 7:00 PM start is at or past many 2-year-old bedtimes — best for late-napping kids or a special-occasion late night. What makes it toddler-workable is Pier 84 itself: it has a water-play/splash fountain feature right by the pier so the kid can run around and cool off while you catch the first set from a blanket. Stroller-friendly, flat riverfront, plenty of open lawn/pier space. Verified free; the exact Jul 15 performer wasn't posted yet, but the weekly Wednesday date is confirmed on the official series.",
-      "confidence": "high",
-      "travelMinutes": 21,
-      "travelHow": "~21 min from Union Sq (see Directions)",
-      "times": [
-        "evening"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Taikoza Drummers free concert at Andrew Haswell Green Park",
-      "category": "music",
-      "venue": "Andrew Haswell Green Park",
-      "neighborhood": "Sutton Place / Midtown East",
-      "when": "Mon Jul 13, 12:00-12:45 PM",
-      "days": [
-        "mon"
-      ],
-      "start": "12:00",
-      "end": "12:45",
-      "cost": "Free (no tickets or registration; $0 for the whole family)",
-      "url": "https://www.nycgovparks.org/events/2026/07/13/taikoza-drummers-at-andrew-haswell-green-park",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.7597,
-      "lng": -73.9576,
-      "toddlerNotes": "All-ages concert, not kids-specific programming - but giant Japanese taiko drums and bamboo flutes are loud, rhythmic and highly visual, which is toddler catnip, and it's only 45 minutes at midday on an open riverfront lawn where a 2-year-old can bounce and roam. Bring ear protection if your kid is sound-sensitive.",
-      "confidence": "high",
-      "travelMinutes": 22,
-      "travelHow": "~22 min from Union Sq (see Directions)",
-      "times": [
-        "afternoon"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "NYPL Storytime Under the Trees (Washington Square Park)",
+      "title": "NYPL Storytime Under the Trees",
       "category": "storytime",
-      "venue": "Washington Square Park - East Alcove Seating Area",
-      "neighborhood": "Greenwich Village",
-      "when": "Tue Jul 14, 11:00-11:30 AM",
+      "venue": "Washington Square Park (east alcove, across from Big Kids Playground)",
+      "neighborhood": "West Village / Washington Square",
+      "when": "Tue Jul 21, 11:00-11:30 AM",
       "days": [
         "tue"
       ],
       "start": "11:00",
       "end": "11:30",
-      "cost": "Free - no registration or tickets; free for the whole family, so a parent + toddler pay $0",
-      "url": "https://www.nycgovparks.org/parks/washington-square-park/events/2026/07/14/nypl-storytime-under-the-trees",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.73097,
-      "lng": -73.99632,
-      "toddlerNotes": "Official NYC Parks page: 'Designed for little ones, sing songs and read books together under the trees.' Led by NYPL Hudson Branch librarians at the park's East Alcove Seating Area (shaded, on the east/north side of the park). A tight 30 minutes - right at a 2-year-old's attention span - and about a 10-minute walk from Union Square. Pair it with the park fountain and playgrounds after. Free, no registration.",
-      "confidence": "high",
-      "travelMinutes": 15,
-      "travelHow": "~15 min from Union Sq (see Directions)",
       "times": [
         "morning"
       ],
+      "cost": "Free",
+      "travelMinutes": 12,
+      "travelHow": "N/R/W to 8th St-NYU + 5-min walk (~12 min)",
+      "toddlerNotes": "NYPL (Hudson Park branch) reads outdoors on park benches — explicitly billed as good for new walkers and toddlers. Shaded, no seating requirement, park playground right there for after.",
+      "url": "https://www.nycgovparks.org/events/2026/07/21/nypl-storytime-under-the-trees",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7308,
+      "lng": -73.9973,
+      "cpwOnly": false,
       "event": true,
       "recurring": false
     },
     {
-      "title": "Giant Bubble at Greeley Square Park",
-      "category": "play",
-      "venue": "Greeley Square Park",
-      "neighborhood": "Herald Square / Koreatown",
-      "when": "Wed Jul 15, 12:30-2:30 PM (drop in)",
+      "title": "Bitty Book Buddies (Toddler Storytime) at Epiphany Library",
+      "category": "storytime",
+      "venue": "NYPL Epiphany Library",
+      "neighborhood": "Gramercy / Kips Bay (228 E 23rd St)",
+      "when": "Tue Jul 21, 10:30-11:30 AM",
       "days": [
-        "wed"
+        "tue"
       ],
-      "start": "12:30",
-      "end": "14:30",
-      "cost": "Free, no registration - all ages welcome. $0 for the whole family; just show up.",
-      "url": "https://www.nycgovparks.org/events/2026/07/15/giant-bubble-at-greeley-square-park",
-      "outdoor": true,
+      "start": "10:30",
+      "end": "11:30",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free",
+      "travelMinutes": 6,
+      "travelHow": "6-min walk up 3rd Ave to 23rd St",
+      "toddlerNotes": "The closest storytime to home: 30 min of songs/stories for ages 0-36mo followed by 30 min of free play in the 3rd-floor community room. Tickets given out at 10am on the 2nd floor — arrive a few minutes early.",
+      "url": "https://www.nypl.org/locations/epiphany",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7381,
+      "lng": -73.9822,
       "cpwOnly": false,
-      "lat": 40.7479,
-      "lng": -73.988,
-      "toddlerNotes": "Interactive giant bubbles with RollerBoogie - chasing and popping enormous bubbles is about as pure a 2-year-old activity as exists. Drop in for 20 minutes anywhere in the 2-hour window; small paved plaza, so keep hold of runners near the street edges.",
-      "confidence": "high",
-      "travelMinutes": 13,
-      "travelHow": "~13 min from Union Sq (see Directions)",
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Family Storytime at Seward Park Library",
+      "category": "storytime",
+      "venue": "NYPL Seward Park Library",
+      "neighborhood": "Lower East Side (192 East Broadway)",
+      "when": "Tue Jul 21, ~10:30-11:00 AM (2nd Floor Children's Room)",
+      "days": [
+        "tue"
+      ],
+      "start": "10:30",
+      "end": "11:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free, no registration",
+      "travelMinutes": 18,
+      "travelHow": "F to East Broadway + 3-min walk (~18 min)",
+      "toddlerNotes": "Drop-in read-aloud for caregivers with kids up to age 5 in the children's room — no sign-up, just show up. Also repeats Thursdays.",
+      "url": "https://www.nypl.org/events/programs/2026/03/03/tuesday-family-storytime-seward-park-library",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7135,
+      "lng": -73.9908,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Movies in the Square: Luca (family matinee)",
+      "category": "other",
+      "venue": "Domino Park",
+      "neighborhood": "Williamsburg",
+      "when": "Tue Jul 21, 4:00-6:00 PM (family matinee w/ kids' art activity; separate 7 PM adult feature is a different film)",
+      "days": [
+        "tue"
+      ],
+      "start": "16:00",
+      "end": "18:00",
       "times": [
         "afternoon"
       ],
+      "cost": "Free (food/drink for purchase from park vendors)",
+      "travelMinutes": 28,
+      "travelHow": "L to Bedford Av + 10-min walk, or J/M/Z to Marcy Av (~28 min)",
+      "toddlerNotes": "Pixar's Luca on the lawn plus an art activity with 'A Rosie Day' at 4pm — bring a blanket, big open lawn to wander, leave whenever she's done with the movie part.",
+      "url": "https://www.dominopark.com/events",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7086,
+      "lng": -73.9657,
+      "cpwOnly": false,
       "event": true,
       "recurring": false
     },
     {
-      "title": "Art in the Park with Miss Debbie (Washington Square Park playground)",
-      "category": "play",
-      "venue": "Washington Square Park – Kids Playground (Large)",
-      "neighborhood": "Greenwich Village",
-      "when": "Wed Jul 15, 3:00–5:00 PM (drop-in)",
+      "title": "Le Carrousel Extravaganza: Teatro SEA puppet show",
+      "category": "theater",
+      "venue": "Bryant Park - Le Carrousel (40th St entrance)",
+      "neighborhood": "Midtown / Bryant Park",
+      "when": "Wed Jul 22, 10:00-11:00 AM",
+      "days": [
+        "wed"
+      ],
+      "start": "10:00",
+      "end": "11:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free",
+      "travelMinutes": 15,
+      "travelHow": "F/M/D/B to 42nd St-Bryant Pk, or walk up 6th Ave (~15 min)",
+      "toddlerNotes": "Teatro SEA performs 'Juan Bobo Tales' — a bilingual puppet show right by the carousel. Free-standing lawn seating, easy to bail early; pair with a $5 carousel ride after.",
+      "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7528,
+      "lng": -73.9836,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Toddler Storytime at Hudson Park Library",
+      "category": "storytime",
+      "venue": "NYPL Hudson Park Library",
+      "neighborhood": "West Village (66 Leroy St)",
+      "when": "Wed Jul 22, ~10:30-11:00 AM",
+      "days": [
+        "wed"
+      ],
+      "start": "10:30",
+      "end": "11:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free",
+      "travelMinutes": 15,
+      "travelHow": "1 to Houston St + 7-min walk (~15 min)",
+      "toddlerNotes": "Toddler-focused session (18mo+) in a small West Village branch — quiet, low-key room, good for an easily-overstimulated morning. A separate 'Little Movers and Shakers' movement session runs Thursdays here too.",
+      "url": "https://www.nypl.org/locations/hudson-park",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7301,
+      "lng": -74.0058,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Toddler Storytime at Williamsburgh Library",
+      "category": "storytime",
+      "venue": "Brooklyn Public Library - Williamsburgh",
+      "neighborhood": "Williamsburg (240 Division Ave)",
+      "when": "Wed Jul 22, 10:30-11:00 AM",
+      "days": [
+        "wed"
+      ],
+      "start": "10:30",
+      "end": "11:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free",
+      "travelMinutes": 30,
+      "travelHow": "J/M/Z to Marcy Av + 8-min walk (~30 min)",
+      "toddlerNotes": "Ages 5-and-under read-aloud at the big Williamsburg branch — good option when visiting family friends in the neighborhood.",
+      "url": "https://www.bklynlibrary.org/locations/williamsburgh",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7079,
+      "lng": -73.9581,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Toddler Time at Greenpoint Library",
+      "category": "storytime",
+      "venue": "Brooklyn Public Library - Greenpoint",
+      "neighborhood": "Greenpoint (107 Norman Ave at Leonard St)",
+      "when": "Wed Jul 22, 11:15-11:45 AM",
+      "days": [
+        "wed"
+      ],
+      "start": "11:15",
+      "end": "11:45",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free",
+      "travelMinutes": 34,
+      "travelHow": "G to Nassau Av + 10-min walk (~34 min)",
+      "toddlerNotes": "For walking toddlers specifically. Tickets handed out at 10am, first-come-first-served — arrive a little early. Easy to combine with a Transmitter or McCarren Park stop.",
+      "url": "https://www.bklynlibrary.org/calendar/toddler-time-greenpoint-library-20260128-1115am",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7256,
+      "lng": -73.9508,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Theater Storytime with Grace Chang",
+      "category": "theater",
+      "venue": "David Geffen Hall (Karen and Richard LeFrak Lobby), Lincoln Center",
+      "neighborhood": "Upper West Side / Lincoln Center",
+      "when": "Wed Jul 22, 11:00 AM (repeats 1:00 PM)",
+      "days": [
+        "wed"
+      ],
+      "start": "11:00",
+      "end": "11:50",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free, first-come-first-served (a limited 'Fast Track' reservation opens the Monday before at noon)",
+      "travelMinutes": 26,
+      "travelHow": "1 to 66th St-Lincoln Center (~26 min)",
+      "toddlerNotes": "Live picture-book storytelling of 'Jin Jin the Dragon' with puppetry, indoors and air-conditioned in the Geffen Hall lobby — genuinely toddler-built, ~50 min. Two showings (11am and 1pm) if the first is full.",
+      "url": "https://lincolncenter.org/series/summer-for-the-city/theater-storytime-with-grace-chang-972",
+      "outdoor": false,
+      "confidence": "high",
+      "lat": 40.7725,
+      "lng": -73.9835,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Toddler Storytime at Time Out Market DUMBO",
+      "category": "storytime",
+      "venue": "Time Out Market (5th Floor Lounge)",
+      "neighborhood": "DUMBO (55 Water St)",
+      "when": "Wed Jul 22, ~3:00-3:30 PM",
       "days": [
         "wed"
       ],
       "start": "15:00",
-      "end": "17:00",
-      "cost": "Free — no charge for parents or kids; drop-in, no registration required (a free NYC Parks account is optional).",
-      "url": "https://www.nycgovparks.org/events/2026/07/15/art-in-the-park",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.7312,
-      "lng": -73.9985,
-      "toddlerNotes": "Drop-in art-making ('Draw! Cut! Paste! Smile!') at the tables inside the large kids playground with resident 'playground best friend' Miss Debbie — kids of all ages, so a 2-year-old can glue and scribble with a parent's help, then head straight back to the slides. Good post-nap afternoon option; about 10 min from Union Square. Runs every Wednesday 5/6–10/28/2026.",
-      "confidence": "high",
-      "travelMinutes": 14,
-      "travelHow": "~14 min from Union Sq (see Directions)",
+      "end": "15:30",
       "times": [
         "afternoon"
       ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Moon Tree Launch Party at Madison Square Park",
-      "category": "festival",
-      "venue": "Madison Square Park (Farragut Lawn Moon Tree; activities throughout the park)",
-      "neighborhood": "Flatiron / NoMad",
-      "when": "Thu Jul 16, 12:00 PM-8:00 PM (drop in any time)",
-      "days": [
-        "thu"
-      ],
-      "start": "12:00",
-      "end": "20:00",
-      "cost": "Free for the whole family. Official page says Eventbrite registration is required, but it's an open outdoor park event so a walk-up is realistic.",
-      "url": "https://madisonsquarepark.org/community/calendar/event/moon-tree-launch-party/",
-      "outdoor": true,
+      "cost": "Free, registration opens 72 hrs prior (space limited)",
+      "travelMinutes": 22,
+      "travelHow": "F to York St + 8-min walk (~22 min)",
+      "toddlerNotes": "A Powerhouse Arena-partnered toddler storytime in the Time Out Market lounge — book ahead since spots are limited. Good post-nap option with food-hall snacks right there for the grownups.",
+      "url": "https://www.timeoutmarket.com/newyork/",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7028,
+      "lng": -73.9903,
       "cpwOnly": false,
-      "lat": 40.742,
-      "lng": -73.9878,
-      "toddlerNotes": "All-day free space festival around the park's NASA Artemis I 'Moon Tree' (July 16 = Apollo 11 launch anniversary). Toddler-friendly bits: hands-on science experiments and Moon Tree artmaking, a scavenger hunt, and safe solar viewing through filtered telescopes with a parent's help; there's a special children's presentation at 4:30 PM, and WNYC's Terrestrials kids podcast is part of the lineup. Treat it as a ~1-hour drop-in, not an 8-hour plan. About a 10-min walk from Union Square.",
-      "confidence": "high",
-      "travelMinutes": 7,
-      "travelHow": "~7 min from Union Sq (see Directions)",
-      "times": [
-        "afternoon"
-      ],
       "event": true,
       "recurring": false
     },
     {
-      "title": "Summer on the Hudson: Children's Performance Series - Lucy Kalantari & the Jazz Cats",
+      "title": "Carnegie Hall Citywide: Cerus Quartet",
       "category": "music",
-      "venue": "Pier I, Riverside Park South",
-      "neighborhood": "Upper West Side / Riverside Park South",
-      "when": "Thu Jul 16, 10:00-11:00 AM",
-      "days": [
-        "thu"
-      ],
-      "start": "10:00",
-      "end": "11:00",
-      "cost": "Free (no tickets; limited unreserved seating, first-come, opens ~1 hr before)",
-      "url": "https://www.nycgovparks.org/events/2026/07/16/summer-on-the-hudson-childrens-performance-series",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.7816,
-      "lng": -73.9906,
-      "toddlerNotes": "Flagship toddler show of the week: made 'for young audiences up to age 7.' Grammy-winning bilingual (English/Spanish) kids' jazz band leads an interactive scat-along - dancing encouraged. NYC Parks lists the window as 10-11 AM; the band's own site lists a 10:30 AM performance start, so aim to arrive by ~9:45 (seating is limited, unreserved, first-come, opens about an hour prior). It's an open pier over the Hudson with zero shade - bring hats, sunscreen, and water. ~10-min walk from the 72nd St 1/2/3 stop; ~30 min from Union Square on the 1/2/3.",
-      "confidence": "high",
-      "travelMinutes": 28,
-      "travelHow": "~28 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Goatham 2026: The Great Goat Graze-Off (Riverside Park goats arrive)",
-      "category": "animals",
-      "venue": "Riverside Park - lawn north of Ten Mile Playground",
-      "neighborhood": "West Harlem / Hamilton Heights",
-      "when": "Sat Jul 18, 11:00 AM-1:30 PM (rain date Sun Jul 19)",
-      "days": [
-        "sat"
-      ],
-      "start": "11:00",
-      "end": "13:30",
-      "cost": "Free - no ticket cost; RSVP via Eventbrite encouraged (a family of any size pays $0)",
-      "url": "https://riversideparknyc.org/goatham/",
-      "outdoor": true,
-      "cpwOnly": true,
-      "lat": 40.8301,
-      "lng": -73.952,
-      "toddlerNotes": "Real live grazing goats brought into the park to eat invasive plants (2026 edition is styled 'The Great Goat Graze-Off,' a lighthearted competitive-grazing event overseen by George Shea of Major League Eating), plus a family-friendly outdoor festival atmosphere - meeting goats is a slam dunk for a 2-year-old, and Ten Mile Playground is right there. Honesty on distance: this is W 151st St, well north of the usual zone - roughly 30 min from 101 CPW (1 train 72nd to 145th + walk), not realistic from Union Square. Verified on the official Riverside Park Conservancy page and corroborated by NYC Parks and Eventbrite.",
-      "confidence": "high",
-      "travelMinutes": 50,
-      "travelHow": "~50 min from Union Sq (see Directions)",
-      "times": [
-        "morning"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "Carnegie Hall Citywide: American Patchwork Quartet (free lawn concert)",
-      "category": "music",
-      "venue": "Madison Square Park (Oval Lawn)",
-      "neighborhood": "Flatiron / NoMad",
-      "when": "Wed Jul 15, 6:00-7:30 PM",
+      "venue": "Madison Square Park",
+      "neighborhood": "Flatiron",
+      "when": "Wed Jul 22, 6:00-7:30 PM",
       "days": [
         "wed"
       ],
       "start": "18:00",
       "end": "19:30",
-      "cost": "Free for all ages; free RSVP/registration via Eventbrite (no ticket cost for kids or adults)",
-      "url": "https://madisonsquarepark.org/community/calendar/event/carnegie-hall-citywide-american-patchwork-quartet/",
-      "outdoor": true,
-      "cpwOnly": false,
-      "lat": 40.742,
-      "lng": -73.9878,
-      "toddlerNotes": "Honest framing: this is an all-ages evening concert on the park's Oval Lawn, not dedicated kids programming. The toddler appeal is the setting - a Grammy-nominated roots/folk band (American Patchwork Quartet) on an open lawn where a 2-year-old can dance, snack and roam before bedtime. Bring a picnic blanket and arrive early for lawn space; bail whenever. Skip if your kid melts down after 6:30 PM.",
-      "confidence": "high",
-      "travelMinutes": 7,
-      "travelHow": "~7 min from Union Sq (see Directions)",
       "times": [
         "evening"
       ],
+      "cost": "Free",
+      "travelMinutes": 8,
+      "travelHow": "6 to 23rd St + 3-min walk (~8 min)",
+      "toddlerNotes": "Free saxophone quartet on the lawn, five minutes from home — not a kids' show, but the park setting means she can wander/run on the grass while the grownups listen. Leave anytime.",
+      "url": "https://www.carnegiehall.org/Calendar/2026/07/22/Carnegie-Hall-Citywide-Cerus-Quartet-0600PM",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7429,
+      "lng": -73.9879,
+      "cpwOnly": false,
       "event": true,
       "recurring": false
     },
     {
-      "title": "Hamlet — Hudson Classical Theater Company (free outdoor Shakespeare)",
-      "category": "theater",
-      "venue": "Soldiers' and Sailors' Monument, Riverside Park",
-      "neighborhood": "Upper West Side / Riverside Park",
-      "when": "Thu Jul 16 - Sun Jul 19, 6:30-8:30 PM (arrive by 6:15 for a good spot; Jul 19 is the closing show)",
+      "title": "Family Storytime at Tompkins Square Library",
+      "category": "storytime",
+      "venue": "NYPL Tompkins Square Library",
+      "neighborhood": "East Village (331 E 10th St)",
+      "when": "Thu Jul 23, ~10:30-11:00 AM",
+      "days": [
+        "thu"
+      ],
+      "start": "10:30",
+      "end": "11:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free, no registration",
+      "travelMinutes": 14,
+      "travelHow": "6 to Astor Pl + 10-min walk (~14 min)",
+      "toddlerNotes": "Drop-in read-aloud for infants through age 5 — also repeats Tuesdays. Tompkins Square Park playground is right outside for after.",
+      "url": "https://www.nypl.org/locations/tompkins-square",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7265,
+      "lng": -73.9819,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Tiny Storytime at Books Are Magic",
+      "category": "storytime",
+      "venue": "Books Are Magic (Montague St)",
+      "neighborhood": "Brooklyn Heights (122 Montague St)",
+      "when": "Thu Jul 23, 11:00-11:30 AM",
+      "days": [
+        "thu"
+      ],
+      "start": "11:00",
+      "end": "11:30",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free, no purchase required",
+      "travelMinutes": 24,
+      "travelHow": "4/5 to Borough Hall + 8-min walk (~24 min)",
+      "toddlerNotes": "Storytime built for 6-36 months specifically — an excellent age match, in an independent bookstore with a real kids' section to browse after. Combine with a Brooklyn Bridge Park stop.",
+      "url": "https://www.booksaremagic.net/events/kids-ya-events",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.6947,
+      "lng": -73.993,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Mornings in the Glade (drop-in toddler play)",
+      "category": "play",
+      "venue": "Little Island - The Glade",
+      "neighborhood": "West Village / Hudson River Park (Pier 55)",
+      "when": "Thu Jul 23, 9:00-11:00 AM",
+      "days": [
+        "thu"
+      ],
+      "start": "09:00",
+      "end": "11:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free, drop-in (snacks for purchase)",
+      "travelMinutes": 20,
+      "travelHow": "L to 8th Ave + 12-min walk along the Hudson River Park esplanade (~20 min)",
+      "toddlerNotes": "Unstructured outdoor play built specifically for little ones and caregivers on Little Island's hilltop glade — no ticket, just show up early since it's popular. Great low-stimulation option before the park gets crowded.",
+      "url": "https://littleisland.org/visit/",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7411,
+      "lng": -74.0129,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Summer Kids: puppet shows & dance at Gantry Plaza",
+      "category": "music",
+      "venue": "Gantry Plaza State Park / Hunters Point South Park",
+      "neighborhood": "Long Island City",
+      "when": "Thu Jul 23 & Fri Jul 24, 10:00-11:00 AM",
       "days": [
         "thu",
-        "fri",
-        "sat",
-        "sun"
+        "fri"
       ],
-      "start": "18:30",
-      "end": "20:30",
-      "cost": "Free — Pay What You Can. No tickets or reservations; cushions provided, first-come seating. A whole family gets in for $0; donations are optional and support artist stipends.",
-      "url": "https://riversideparknyc.org/event/hudson-classical-theater-company-presents-hamlet/2026-07-16/",
-      "outdoor": true,
-      "lat": 40.7894,
-      "lng": -73.9812,
-      "cpwOnly": true,
-      "toddlerNotes": "This is a full ~2-hour adult tragedy, not a kids' show — the toddler payoff is the setting: open-air steps/plaza at the Soldiers' and Sailors' Monument with Riverside Park lawn right there, so one parent can watch while the 2-year-old roams the grass, and exits are zero-friction. Casual picnic vibe, cushions on stone steps rather than fixed rows. The 6:30 start brushes up against bedtime; catching the first 30-45 min is the realistic toddler plan.",
-      "confidence": "high",
-      "travelMinutes": 31,
-      "travelHow": "~31 min from Union Sq (see Directions)",
+      "start": "10:00",
+      "end": "11:00",
       "times": [
-        "evening"
+        "morning"
       ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "The Taming of the Shrew — Boomerang Theatre Company (free Shakespeare on the lawn)",
-      "category": "theater",
-      "venue": "Central Park lawn just inside the W 69th St & Central Park West entrance",
-      "neighborhood": "Central Park / Upper West Side",
-      "when": "Sat Jul 18 & Sun Jul 19, 2026, 2:00 PM (closing weekend)",
-      "days": [
-        "sat",
-        "sun"
-      ],
-      "start": "14:00",
-      "end": null,
-      "cost": "Free for everyone — no tickets required to attend. Advance reservations encouraged via their OnTheStage link but walk-ups are fine. A family of any size pays $0.",
-      "url": "https://www.boomerangtheatre.org/shows-tickets/the-taming-of-the-shrew",
+      "cost": "Free",
+      "travelMinutes": 24,
+      "travelHow": "7 to Vernon Blvd-Jackson Av + 8-min walk (~24 min)",
+      "toddlerNotes": "Free six-week daily kids series (Wonderspark Puppets, 'Jiggy Tots' dance) on the East River waterfront lawn with playground and splash pad right there for the rest of the morning.",
+      "url": "https://www.hunterspointparks.org/",
       "outdoor": true,
-      "lat": 40.7737,
-      "lng": -73.9761,
+      "confidence": "medium",
+      "lat": 40.7447,
+      "lng": -73.9598,
       "cpwOnly": false,
-      "toddlerNotes": "The most toddler-compatible of the week's adult Shakespeare: a 2 PM matinee on an open lawn — bring a blanket, sit at the back edge, and the 2-year-old can toddle, snack, and wander without shushing. Come-and-go is expected (billed as a picnic-style event). Content is an adult comedy (~2 hrs), so treat it as a picnic with a show in the background rather than something the kid watches. Two blocks from 101 CPW; also reachable from Union Square (~30 min). Bring sun cover — full afternoon sun on the lawn.",
-      "confidence": "high",
-      "travelMinutes": 25,
-      "travelHow": "~25 min from Union Sq (see Directions)",
-      "times": [
-        "afternoon"
-      ],
       "event": true,
       "recurring": false
     },
     {
-      "title": "Othello — Classical Theatre of Harlem, Uptown Shakespeare in the Park",
+      "title": "Shakespeare in the Parking Lot: As You Like It",
       "category": "theater",
-      "venue": "Richard Rodgers Amphitheater, Marcus Garvey Park",
-      "neighborhood": "Harlem / Marcus Garvey Park",
-      "when": "Tue Jul 14 – Sun Jul 19, 8:30 PM (Fri Jul 17 at 9:00 PM); dark Monday Jul 13. Harlem Chamber Players pre-show Jul 16; Harlem Opera Jul 18; Jazzmobile Fridays 7 PM.",
-      "days": [
-        "tue",
-        "wed",
-        "thu",
-        "fri",
-        "sat",
-        "sun"
-      ],
-      "start": "20:30",
-      "end": null,
-      "cost": "Free for everyone ($0 for a family of any size). Free RSVP available online at cthnyc.org; seating is first-come in the amphitheater, no ticket required to enter.",
-      "url": "https://www.cthnyc.org/othello/",
-      "outdoor": true,
-      "lat": 40.8046,
-      "lng": -73.944,
-      "cpwOnly": true,
-      "toddlerNotes": "Honesty check: the 8:30–9 PM curtain is well past a 2-year-old's bedtime, the amphitheater is fixed concrete rows, and Othello is a heavy 1hr45 (no intermission) tragedy — this is the week's big free-theater event for parents with a sitter, not a toddler outing. Also a stretch even from 101 CPW (2/3 express to 125th & Lenox, ~25 min) and beyond the 35-min Union Square zone. Included because it is the marquee free outdoor theater run of the week (Jul 5–26).",
-      "confidence": "high",
-      "travelMinutes": 40,
-      "travelHow": "~40 min from Union Sq (see Directions)",
-      "times": [
-        "evening"
-      ],
-      "event": true,
-      "recurring": false
-    },
-    {
-      "title": "As You Like It — Shakespeare in the Parking Lot, 31st season (The Drilling Company)",
-      "category": "theater",
-      "venue": "Parking lot of Lower East Side Preparatory High School",
+      "venue": "The Drilling Company (parking lot behind Clemente Soto Velez Center, Rivington St entrance)",
       "neighborhood": "Lower East Side",
-      "when": "Thu Jul 16 - Sat Jul 18, 7:00 PM (opening weekend; run continues Thu-Sat through Aug 1)",
+      "when": "Thu Jul 23 - Sat Jul 25, 7:00-9:00 PM",
       "days": [
         "thu",
         "fri",
         "sat"
       ],
       "start": "19:00",
-      "end": null,
-      "cost": "Free for everyone — a family of any size pays $0. Chairs provided first-come, first-served, or bring your own chair/stroller.",
-      "url": "https://drillingcompany.org/in-the-parking-lot",
-      "outdoor": true,
-      "lat": 40.7206,
-      "lng": -73.9857,
-      "cpwOnly": false,
-      "toddlerNotes": "Closest free outdoor theater to Union Square (~15 min). It's a ~2-hr adult comedy in rows of folding chairs on asphalt — no lawn to roam — so grab aisle/back seats for easy escapes. The scrappy street-theater energy, costumes, and live action can hold a 2-year-old for a stretch, but 7 PM is late for this age; plan on catching the first act. This is opening weekend (Thu Jul 16-Sat Jul 18) — no Sunday show.",
-      "confidence": "high",
-      "travelMinutes": 16,
-      "travelHow": "~16 min from Union Sq (see Directions)",
+      "end": "21:00",
       "times": [
         "evening"
       ],
+      "cost": "Free, no reservations (donations encouraged)",
+      "travelMinutes": 18,
+      "travelHow": "F to Delancey St + 6-min walk (~18 min)",
+      "toddlerNotes": "FREE OUTDOOR THEATER: full-length Shakespeare in an informal parking lot with folding chairs (BYO chair or use theirs), no shade structure. Very casual atmosphere — completely normal to duck out after 20 minutes. A 7pm start means a late night for a 2-year-old; go for the first act and leave before it gets dark.",
+      "url": "https://www.thelodownny.com/leslog/2026/07/shakespeare-in-the-parking-lot-returns-to-lower-east-side-for-31st-season.html",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7186,
+      "lng": -73.9838,
+      "cpwOnly": false,
       "event": true,
       "recurring": false
     },
     {
-      "title": "Little Red's Hood — Swedish Cottage Marionette Theatre",
+      "title": "Hudson Classical Theatre: The Dancing Men (Sherlock Holmes mystery)",
       "category": "theater",
-      "venue": "Swedish Cottage Marionette Theatre, Central Park",
-      "neighborhood": "Central Park / Upper West Side",
-      "when": "Sat Jul 18 & Sun Jul 19, 2026, shows at 11:00 AM and 1:00 PM (weekend-only schedule during renovations)",
+      "venue": "Soldiers' and Sailors' Monument, Riverside Park",
+      "neighborhood": "Upper West Side (W 89th St & Riverside Dr)",
+      "when": "Thu Jul 23 & Sun Jul 26, 6:30-8:30 PM",
+      "days": [
+        "thu",
+        "sun"
+      ],
+      "start": "18:30",
+      "end": "20:30",
+      "times": [
+        "evening"
+      ],
+      "cost": "Pay-what-you-can, no tickets required (cushions provided; arrive by 6:15)",
+      "travelMinutes": 12,
+      "travelHow": "12-min walk up Riverside Dr from 101 CPW",
+      "toddlerNotes": "FREE OUTDOOR THEATER: lawn/cushion seating around the monument, very casual and easy to leave early. It's a talky mystery play (not visually kinetic) so best as background for a toddler running around nearby rather than a sit-and-watch pick.",
+      "url": "https://riversideparknyc.org/event/hudson-classical-theater-company-presents-the-dancing-men/2026-07-23/",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7907,
+      "lng": -73.9779,
+      "cpwOnly": true,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Juilliard Summer Music Finale",
+      "category": "music",
+      "venue": "Hearst Plaza, Lincoln Center",
+      "neighborhood": "Upper West Side / Lincoln Center",
+      "when": "Fri Jul 24, 11:00 AM-12:00 PM",
+      "days": [
+        "fri"
+      ],
+      "start": "11:00",
+      "end": "12:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free",
+      "travelMinutes": 26,
+      "travelHow": "1 to 66th St-Lincoln Center (~26 min)",
+      "toddlerNotes": "All-ages student showcase on the open plaza by the reflecting pool — outdoor, easy to wander around the fountain, no seating requirement.",
+      "url": "https://www.lincolncenter.org/series/summer-for-the-city/v/calendar",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7723,
+      "lng": -73.984,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "The Play Ground (open play) at Little Island",
+      "category": "play",
+      "venue": "Little Island",
+      "neighborhood": "West Village / Hudson River Park (Pier 55)",
+      "when": "Fri Jul 24 & Sat Jul 25, 11:00 AM-1:00 PM",
+      "days": [
+        "fri",
+        "sat"
+      ],
+      "start": "11:00",
+      "end": "13:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free, first-come-first-served",
+      "travelMinutes": 20,
+      "travelHow": "L to 8th Ave + 12-min walk along the Hudson River Park esplanade (~20 min)",
+      "toddlerNotes": "Open drop-in play space built for little ones on the island's lawn — genuinely built for this age. Little Island's ticketed Amph performance season hasn't started yet (begins Jul 29), so this is a quiet week to visit.",
+      "url": "https://littleisland.org/visit/",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7411,
+      "lng": -74.0129,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Bryant Park Picnic Performances: NYC Ska Orchestra",
+      "category": "music",
+      "venue": "Bryant Park (south lawn)",
+      "neighborhood": "Midtown / Bryant Park",
+      "when": "Fri Jul 24, 7:00-8:30 PM",
+      "days": [
+        "fri"
+      ],
+      "start": "19:00",
+      "end": "20:30",
+      "times": [
+        "evening"
+      ],
+      "cost": "Free, no registration (park lends free picnic blankets)",
+      "travelMinutes": 15,
+      "travelHow": "F/M/D/B to 42nd St-Bryant Pk, or walk up 6th Ave (~15 min)",
+      "toddlerNotes": "Carnegie Hall Citywide brass/ska band on the lawn — upbeat and danceable, good for a wiggly toddler, but a 7pm start runs past a lot of bedtimes. Go early, dance for 30 min, leave before the crowd thickens.",
+      "url": "https://bryantpark.org/activities/picnic-performances",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.753,
+      "lng": -73.9834,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "SummerStarz Free Movie: The Princess Bride",
+      "category": "other",
+      "venue": "Transmitter Park",
+      "neighborhood": "Greenpoint",
+      "when": "Fri Jul 24, sunset (~8:15-10:15 PM)",
+      "days": [
+        "fri"
+      ],
+      "start": "20:15",
+      "end": "22:15",
+      "times": [
+        "evening"
+      ],
+      "cost": "Free",
+      "travelMinutes": 36,
+      "travelHow": "G to Greenpoint Av + 12-min walk (~36 min)",
+      "toddlerNotes": "PG family classic on the waterfront lawn with a Manhattan skyline view — genuinely fun pick, but a sunset start means the movie doesn't really get going until close to 9pm. Honest call: bring pajamas and treat it as 30 minutes of dancing on the grass before an early exit, not the whole film.",
+      "url": "https://transmitterpark.org/events",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7307,
+      "lng": -73.9573,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "CityParks PuppetMobile: Pinocchio and Gepetto's Big Apple Adventure",
+      "category": "theater",
+      "venue": "Corlears Hook Park (Family Fun Day)",
+      "neighborhood": "Lower East Side",
+      "when": "Sat Jul 25, 10:30-11:15 AM",
+      "days": [
+        "sat"
+      ],
+      "start": "10:30",
+      "end": "11:15",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free",
+      "travelMinutes": 20,
+      "travelHow": "F to East Broadway + 10-min walk (~20 min)",
+      "toddlerNotes": "Marionette storytelling built for kids as part of a Family Fun Day with Friends of Corlears Hook Park — casual park setting, easy to leave early, playground on site for after.",
+      "url": "https://patch.com/new-york/lower-east-side-chinatown/calendar/event/20260725/76e7d922-bf67-4021-bf71-1359fde340a0/family-fun-day-with-the-city-park-foundation-puppetmobile",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7126,
+      "lng": -73.9788,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "HealthJox Festival: Concrete Jungle",
+      "category": "festival",
+      "venue": "Brooklyn Bridge Park, Pier 2",
+      "neighborhood": "DUMBO / Brooklyn Heights",
+      "when": "Sat Jul 25, 11:30 AM-4:30 PM",
+      "days": [
+        "sat"
+      ],
+      "start": "11:30",
+      "end": "16:30",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free (RSVP recommended)",
+      "travelMinutes": 24,
+      "travelHow": "A/C to High St + 10-min walk (~24 min)",
+      "toddlerNotes": "9th annual free family fitness festival: face-painting, life-size Jenga/Connect 4, mini-basketball, potato-sack race, healthy snacks. Drop in for any slice of the 5-hour window — no need to stay long.",
+      "url": "https://healthjox.com/healthjox-festival",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7003,
+      "lng": -73.9967,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Croquet on the Field",
+      "category": "play",
+      "venue": "Domino Park (Flex Field)",
+      "neighborhood": "Williamsburg",
+      "when": "Sat Jul 25 & Sun Jul 26, park open hours (equipment available for pickup play; exact hours unconfirmed)",
+      "days": [
+        "sat",
+        "sun"
+      ],
+      "start": null,
+      "end": null,
+      "times": [
+        "any"
+      ],
+      "cost": "Free",
+      "travelMinutes": 28,
+      "travelHow": "L to Bedford Av + 10-min walk, or J/M/Z to Marcy Av (~28 min)",
+      "toddlerNotes": "A 2-year-old won't really play croquet, but the flex-field lawn is open for running around with mallets as improv toys — casual pickup activity, no schedule to work around. Confirm current equipment hours with park staff on arrival.",
+      "url": "https://www.dominopark.com/events",
+      "outdoor": true,
+      "confidence": "low",
+      "lat": 40.7086,
+      "lng": -73.9657,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Little Red's Hood (Saturday matinee)",
+      "category": "theater",
+      "venue": "Swedish Cottage Marionette Theatre",
+      "neighborhood": "Central Park (mid-park near W 79th St)",
+      "when": "Sat Jul 25, 1:00-1:45 PM",
+      "days": [
+        "sat"
+      ],
+      "start": "13:00",
+      "end": "13:45",
+      "times": [
+        "afternoon"
+      ],
+      "cost": "$10 child / $15 adult, advance purchase required",
+      "travelMinutes": 8,
+      "travelHow": "8-min walk through the park from 101 CPW",
+      "toddlerNotes": "Officially recommended ages 3-8, so at the young edge for a 2-year-old, but marionette shows run short bursts of visual action that most toddlers tolerate well. Indoor cottage, air-conditioned. Note the 1pm start overlaps nap — better suited for a day she skips or shifts her nap.",
+      "url": "https://wl.eventim.us/SwedishCottageMarionetteTheatre",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7736,
+      "lng": -73.974,
+      "cpwOnly": true,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Little Red's Hood (Sunday matinee)",
+      "category": "theater",
+      "venue": "Swedish Cottage Marionette Theatre",
+      "neighborhood": "Central Park (mid-park near W 79th St)",
+      "when": "Sun Jul 26, 11:00-11:45 AM",
+      "days": [
+        "sun"
+      ],
+      "start": "11:00",
+      "end": "11:45",
+      "times": [
+        "morning"
+      ],
+      "cost": "$10 child / $15 adult, advance purchase required",
+      "travelMinutes": 8,
+      "travelHow": "8-min walk through the park from 101 CPW",
+      "toddlerNotes": "Same show as Saturday's matinee but the morning slot clears the nap conflict — the better of the two showings for a 2-year-old. Officially ages 3-8; expect short-attention-span wiggling, which is normal here.",
+      "url": "https://wl.eventim.us/SwedishCottageMarionetteTheatre",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7736,
+      "lng": -73.974,
+      "cpwOnly": true,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Chinatown Records & Dance with Red Silk Dancers",
+      "category": "music",
+      "venue": "David Rubenstein Atrium, Lincoln Center",
+      "neighborhood": "Upper West Side / Lincoln Center",
+      "when": "Sat Jul 25, 12:00-1:00 PM",
+      "days": [
+        "sat"
+      ],
+      "start": "12:00",
+      "end": "13:00",
+      "times": [
+        "afternoon"
+      ],
+      "cost": "Free, no reservation required",
+      "travelMinutes": 26,
+      "travelHow": "1 to 66th St-Lincoln Center (~26 min)",
+      "toddlerNotes": "Free indoor, air-conditioned music and dance in the Atrium's open public lobby — easy in-and-out, no seats required, though the noon start lands right at nap time so plan around it.",
+      "url": "https://www.lincolncenter.org/venue/atrium/v/calendar",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7725,
+      "lng": -73.9835,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Free Shakespeare in the Park: The Winter's Tale",
+      "category": "theater",
+      "venue": "Delacorte Theater, Central Park",
+      "neighborhood": "Central Park (enter at CPW & 81st St)",
+      "when": "Sat Jul 25 & Sun Jul 26, 8:00-10:15 PM (preview performances)",
+      "days": [
+        "sat",
+        "sun"
+      ],
+      "start": "20:00",
+      "end": "22:15",
+      "times": [
+        "evening"
+      ],
+      "cost": "Free — requires winning the in-person Delacorte lottery (noon day-of) or the TodayTix digital lottery (enter by noon)",
+      "travelMinutes": 8,
+      "travelHow": "8-min walk through the park from 101 CPW",
+      "toddlerNotes": "FREE OUTDOOR THEATER, flagged honestly: fixed stone/concrete amphitheater seating (not lawn), a lottery required just to get in, an 8pm start, and 2+ hours of Shakespeare — this is realistically a grownups' outing, not a toddler one. Listed per the free-outdoor-theater rule, but a 2-year-old is very unlikely to make it past intermission.",
+      "url": "https://www.publictheater.org/programs/shakespeare-in-the-park/",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7794,
+      "lng": -73.9691,
+      "cpwOnly": true,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "FAD Market at Governors Island",
+      "category": "festival",
+      "venue": "Governors Island (near Yankee Pier / Liggett Terrace)",
+      "neighborhood": "Governors Island",
+      "when": "Sat Jul 25 & Sun Jul 26, 11:00 AM-5:00 PM",
       "days": [
         "sat",
         "sun"
       ],
       "start": "11:00",
-      "end": null,
-      "cost": "$10 per child / $15 per adult; children under 2 free — about $40 for two adults + one paying kid. Advance online tickets only (See Tickets/Eventim); no walk-up sales, no refunds.",
-      "url": "https://cityparksfoundation.org/swedish-cottage-marionette-theatre/",
-      "outdoor": false,
-      "lat": 40.7797,
-      "lng": -73.9698,
-      "cpwOnly": false,
-      "toddlerNotes": "The one genuinely made-for-kids show on the free-theater beat: about a dozen handmade marionettes in a tiny historic cottage, ~40-45 min runtime, indoor and seated (the only non-outdoor entry here). Officially pitched at ages 3-7, so a 2-year-old is a notch young — a 2yo still needs a paid child ticket (only under-2 is free); lap-seat them and expect it to land if they already like puppets. Buy the exact 11 AM or 1 PM showtime in advance online — no walk-ups.",
-      "confidence": "high",
-      "travelMinutes": 35,
-      "travelHow": "L to 8 Av, transfer to C uptown to 81 St–Museum of Natural History, then 8-min walk into the park",
+      "end": "17:00",
       "times": [
         "morning"
       ],
+      "cost": "Free entry to browse (ferry fare applies; vendor items cost extra)",
+      "travelMinutes": 32,
+      "travelHow": "4/5 to Bowling Green + ferry from Battery Maritime Building (~32 min incl. ferry wait)",
+      "toddlerNotes": "40+ local maker stalls in a tree-lined, stroller-friendly plaza — a casual browse rather than a kids' activity, but pair it with the island's free hammock grove and playgrounds for the actual toddler payoff.",
+      "url": "https://govisland.com/",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.6907,
+      "lng": -74.0169,
+      "cpwOnly": false,
       "event": true,
       "recurring": false
     },
     {
-      "title": "Bilingual Mandarin-English Family Storytime",
+      "title": "Puppetsburg: interactive puppet show at Battery Playscape",
+      "category": "theater",
+      "venue": "The Battery - Battery Playscape ShowBox Theater",
+      "neighborhood": "Lower Manhattan / The Battery",
+      "when": "Sun Jul 26, 10:30 AM (repeats 12:30 PM)",
+      "days": [
+        "sun"
+      ],
+      "start": "10:30",
+      "end": "11:15",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free, no registration",
+      "travelMinutes": 26,
+      "travelHow": "4/5 to Bowling Green + 6-min walk (~26 min)",
+      "toddlerNotes": "The best-targeted pick of the week: explicitly built for ages 4mos-4yrs, 45 minutes of dancing, instruments, dress-up, and bubbles. Two showings (10:30 & 12:30) if the first doesn't fit your morning.",
+      "url": "https://www.thebattery.org/programs/playscapeperforms/",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7033,
+      "lng": -74.017,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Domino Park Greenmarket",
+      "category": "other",
+      "venue": "Domino Park",
+      "neighborhood": "Williamsburg",
+      "when": "Sun Jul 26, 10:00 AM-3:00 PM",
+      "days": [
+        "sun"
+      ],
+      "start": "10:00",
+      "end": "15:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free to browse (produce/goods cost extra)",
+      "travelMinutes": 28,
+      "travelHow": "L to Bedford Av + 10-min walk, or J/M/Z to Marcy Av (~28 min)",
+      "toddlerNotes": "GrowNYC farmers market right next to the playground and lawn — an easy stroller wander with a built-in payoff (splash/play area) when she's done looking at vegetables.",
+      "url": "https://www.dominopark.com/events",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7086,
+      "lng": -73.9657,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Sunday Gardening at Transmitter Park",
+      "category": "other",
+      "venue": "Transmitter Park community garden",
+      "neighborhood": "Greenpoint",
+      "when": "Sun Jul 26, 10:00 AM-12:00 PM",
+      "days": [
+        "sun"
+      ],
+      "start": "10:00",
+      "end": "12:00",
+      "times": [
+        "morning"
+      ],
+      "cost": "Free",
+      "travelMinutes": 36,
+      "travelHow": "G to Greenpoint Av + 12-min walk (~36 min)",
+      "toddlerNotes": "Casual volunteer weeding/watering/planting session she can genuinely help with — dig-in-the-dirt play with a purpose, not a sit-and-watch event. Dress for mess.",
+      "url": "https://transmitterpark.org/events",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7307,
+      "lng": -73.9573,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Kids Storytime at McNally Jackson Seaport",
       "category": "storytime",
-      "venue": "Chatham Square Library (NYPL)",
-      "neighborhood": "Chinatown",
-      "when": "Mon Jul 13, 10:30-11:00 AM (also 11:30 AM)",
+      "venue": "McNally Jackson (Seaport)",
+      "neighborhood": "South Street Seaport (4 Fulton St)",
+      "when": "Tue Jul 21 & Fri Jul 24, ~3:30-4:00 PM",
+      "days": [
+        "tue",
+        "fri"
+      ],
+      "start": "15:30",
+      "end": "16:00",
+      "times": [
+        "afternoon"
+      ],
+      "cost": "Free, no purchase required",
+      "travelMinutes": 24,
+      "travelHow": "2/3 to Fulton St + 6-min walk (~24 min)",
+      "toddlerNotes": "General kids' storytime (leans slightly older, ages ~4-8, but toddlers are welcome) in a real bookstore with a browsable kids' section right there for after — good post-nap option on a slow afternoon.",
+      "url": "https://www.mcnallyjackson.com/event/seaport-kids-storytime",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.7066,
+      "lng": -74.0036,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Jazz at Pier 84",
+      "category": "music",
+      "venue": "Hudson River Park, Pier 84",
+      "neighborhood": "Hell's Kitchen waterfront",
+      "when": "Wed Jul 22, 7:00-8:30 PM",
+      "days": [
+        "wed"
+      ],
+      "start": "19:00",
+      "end": "20:30",
+      "times": [
+        "evening"
+      ],
+      "cost": "Free",
+      "travelMinutes": 24,
+      "travelHow": "A/C/E to 42nd St + 10-min walk west (~24 min)",
+      "toddlerNotes": "Casual waterfront jazz set with sunset-over-the-Hudson views — skews adult in mood, but it's an open pier with room to walk/dance rather than fixed seating, so an early-arriving toddler can wander before it's past bedtime.",
+      "url": "https://hudsonriverpark.org/event-series/jazz-at-pier-84/",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7648,
+      "lng": -73.9968,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    },
+    {
+      "title": "Lunar Gazing at Domino Park",
+      "category": "other",
+      "venue": "Domino Park",
+      "neighborhood": "Williamsburg",
+      "when": "Mon Jul 20, sunset telescope viewing with Astro5 (~8:00-9:30 PM, time approximate)",
       "days": [
         "mon"
       ],
-      "cost": "Free",
-      "travelMinutes": 20,
-      "travelHow": "~20 min from Union Sq",
-      "toddlerNotes": "Drop-in bilingual (Mandarin/English) family storytime, newborn-age 5: stories, songs, purposeful play. A 2yo fits squarely. Two back-to-back sessions (10:30 & 11:30) so latecomers catch the next. No registration.",
-      "url": "https://www.nypl.org/locations/chatham-square",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7136,
-      "lng": -73.9969,
-      "event": true,
+      "start": "20:00",
+      "end": "21:30",
       "times": [
-        "morning"
-      ],
-      "start": "10:30",
-      "end": "11:00",
-      "cpwOnly": false
-    },
-    {
-      "title": "Little Movers Storytime at Yorkville",
-      "category": "storytime",
-      "venue": "Yorkville Library (NYPL)",
-      "neighborhood": "Upper East Side (Yorkville)",
-      "when": "Tue Jul 14, 11:30 AM-12:00 PM",
-      "days": [
-        "tue"
+        "evening"
       ],
       "cost": "Free",
-      "travelMinutes": 27,
-      "travelHow": "~27 min from Union Sq",
-      "toddlerNotes": "Built for new walkers/toddlers: stories, songs, wiggle-out movement. Free ticket handed out 11:00 AM at the 1st-floor desk, limit 25. No elevator, limited stroller parking. Weekly Tuesday series.",
-      "url": "https://www.nypl.org/events/programs/2026/07/07/little-movers-storytime-1",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "high",
-      "lat": 40.7737,
-      "lng": -73.956,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "11:30",
-      "end": "12:00",
-      "cpwOnly": false
-    },
-    {
-      "title": "Tuesday Family Storytime at Seward Park",
-      "category": "storytime",
-      "venue": "Seward Park Library (NYPL)",
-      "neighborhood": "Lower East Side",
-      "when": "Tue Jul 14, ~11:15-11:45 AM (confirm time)",
-      "days": [
-        "tue"
-      ],
-      "cost": "Free",
-      "travelMinutes": 19,
-      "travelHow": "~19 min from Union Sq",
-      "toddlerNotes": "Drop-in books/songs/rhymes for kids up to age 5, 2nd-floor children's room (cap 30, no registration). A 2yo fits. Confirm the Tuesday start time on the branch calendar.",
-      "url": "https://www.nypl.org/events/programs/2026/03/03/tuesday-family-storytime-seward-park-library",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7143,
-      "lng": -73.9865,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "11:15",
-      "end": "11:45",
-      "cpwOnly": false
-    },
-    {
-      "title": "Toddler Storytime at Tompkins Square",
-      "category": "storytime",
-      "venue": "Tompkins Square Library (NYPL)",
-      "neighborhood": "East Village",
-      "when": "Tue & Thu Jul 14 & 16, mid-morning (confirm 10:30 or 11:30)",
-      "days": [
-        "tue",
-        "thu"
-      ],
-      "cost": "Free",
-      "travelMinutes": 14,
-      "travelHow": "~14 min from Union Sq",
-      "toddlerNotes": "Stories, songs, rhymes and fingerplays for infants-3yr; a 2yo fits. No registration - the easiest quiet-weekday drop-in near Union Sq. Runs Tue and Thu; confirm start time day-of (10:30 or 11:30).",
-      "url": "https://www.nypl.org/locations/tompkins-square",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7264,
-      "lng": -73.9814,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "10:30",
-      "end": "11:00",
-      "cpwOnly": false
-    },
-    {
-      "title": "Family Storytime at St. Agnes",
-      "category": "storytime",
-      "venue": "St. Agnes Library (NYPL)",
-      "neighborhood": "Upper West Side",
-      "when": "Wed Jul 15, 10:30-11:00 AM",
-      "days": [
-        "wed"
-      ],
-      "cost": "Free",
-      "travelMinutes": 14,
-      "travelHow": "~14 min from Grandma's (101 CPW)",
-      "toddlerNotes": "Songs and read-aloud favorites for ages 0-5 - great for a 2yo. Advance registration required, opens the Monday before at 11 AM (Eventbrite/phone), first 15 households. Closest UWS/CPW library option, ~12 blocks N of 101 CPW.",
-      "url": "https://www.nypl.org/locations/st-agnes",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7847,
-      "lng": -73.9762,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "10:30",
-      "end": "11:00",
-      "cpwOnly": true
-    },
-    {
-      "title": "Preschooler Storytime + Craft at Mulberry St",
-      "category": "storytime",
-      "venue": "Mulberry Street Library (NYPL)",
-      "neighborhood": "Nolita / SoHo",
-      "when": "Wed Jul 15, 4:00-4:45 PM",
-      "days": [
-        "wed"
-      ],
-      "cost": "Free",
-      "travelMinutes": 15,
-      "travelHow": "~15 min from Union Sq",
-      "toddlerNotes": "Afternoon storytime plus a simple craft. Skews ages 3-5, so a 2yo is on the young edge but joins with a caregiver - a handy post-nap weekday backup. Confirm on branch calendar.",
-      "url": "https://www.nypl.org/locations/mulberry-street",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7245,
-      "lng": -73.9951,
-      "event": true,
-      "times": [
-        "afternoon"
-      ],
-      "start": "16:00",
-      "end": "16:45",
-      "cpwOnly": false
-    },
-    {
-      "title": "Little Movers Storytime at Hudson Park",
-      "category": "storytime",
-      "venue": "Hudson Park Library (NYPL)",
-      "neighborhood": "West Village",
-      "when": "Thu Jul 16, 10:15-10:45 AM",
-      "days": [
-        "thu"
-      ],
-      "cost": "Free",
-      "travelMinutes": 16,
-      "travelHow": "~16 min from Union Sq",
-      "toddlerNotes": "Stories, songs and wiggle-out movement for ages 1-3 - ideal for a 2yo. Free tickets handed out 10:00 AM day-of, limit 25. Children's room on 2nd floor, NO elevator (fold the stroller). Weekly Thursday series.",
-      "url": "https://www.nypl.org/locations/hudson-park",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.73,
-      "lng": -74.0056,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "10:15",
-      "end": "10:45",
-      "cpwOnly": false
-    },
-    {
-      "title": "Toddler Storytime at Mulberry St",
-      "category": "storytime",
-      "venue": "Mulberry Street Library (NYPL)",
-      "neighborhood": "Nolita / SoHo",
-      "when": "Thu Jul 16, 10:30-11:00 AM",
-      "days": [
-        "thu"
-      ],
-      "cost": "Free",
-      "travelMinutes": 15,
-      "travelHow": "~15 min from Union Sq",
-      "toddlerNotes": "Picture books, songs, rhymes and fingerplays for toddlers - a direct fit for a 2yo. Drop-in, just off the Prince St / Broadway-Lafayette stops. Confirm exact date on branch calendar.",
-      "url": "https://www.nypl.org/locations/mulberry-street",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7245,
-      "lng": -73.9951,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "10:30",
-      "end": "11:00",
-      "cpwOnly": false
-    },
-    {
-      "title": "Thursday Family Storytime at Seward Park",
-      "category": "storytime",
-      "venue": "Seward Park Library (NYPL)",
-      "neighborhood": "Lower East Side",
-      "when": "Thu Jul 16, 11:15-11:45 AM",
-      "days": [
-        "thu"
-      ],
-      "cost": "Free",
-      "travelMinutes": 19,
-      "travelHow": "~19 min from Union Sq",
-      "toddlerNotes": "Drop-in books, songs and rhymes for kids up to age 5, 2nd-floor children's room, no registration. A 2yo fits. Confirm the start time on the branch calendar.",
-      "url": "https://www.nypl.org/events/programs/2026/03/05/thursday-family-storytime-seward-park-library",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7143,
-      "lng": -73.9865,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "11:15",
-      "end": "11:45",
-      "cpwOnly": false
-    },
-    {
-      "title": "Toddler Storytime (18-36 mo) at Chatham Square",
-      "category": "storytime",
-      "venue": "Chatham Square Library (NYPL)",
-      "neighborhood": "Chinatown",
-      "when": "Thu Jul 16, 10:30-11:00 AM",
-      "days": [
-        "thu"
-      ],
-      "cost": "Free",
-      "travelMinutes": 20,
-      "travelHow": "~20 min from Union Sq",
-      "toddlerNotes": "English-language toddler storytime aimed exactly at 18-36 months - a bullseye for a 2yo. Drop-in. Confirm on branch calendar.",
-      "url": "https://www.nypl.org/locations/chatham-square",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7136,
-      "lng": -73.9969,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "10:30",
-      "end": "11:00",
-      "cpwOnly": false
-    },
-    {
-      "title": "Big City Fishing at Pier 26",
-      "category": "animals",
-      "venue": "Hudson River Park, Pier 26",
-      "neighborhood": "Tribeca",
-      "when": "Wed Jul 15, 3:00-6:00 PM",
-      "days": [
-        "wed"
-      ],
-      "cost": "Free (rods & instruction provided)",
-      "travelMinutes": 20,
-      "travelHow": "~20 min from Union Sq",
-      "toddlerNotes": "Free drop-in catch-and-release fishing; rods and instruction provided. A 2yo holds the rod on a lap, watches, and touches a caught fish, then explores the adjacent Pier 26 climb-in-a-sturgeon science playground.",
-      "url": "https://hudsonriverpark.org/especially-for-kids/",
+      "travelMinutes": 28,
+      "travelHow": "L to Bedford Av + 10-min walk, or J/M/Z to Marcy Av (~28 min)",
+      "toddlerNotes": "Free telescope viewing of the moon over the East River — genuinely magical for a kid who's into 'moon,' but the start time is a guess and it's a late one; only worth it if she's already up past bedtime that night.",
+      "url": "https://www.dominopark.com/events",
       "outdoor": true,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7204,
-      "lng": -74.0128,
+      "confidence": "low",
+      "lat": 40.7086,
+      "lng": -73.9657,
+      "cpwOnly": false,
       "event": true,
-      "times": [
-        "afternoon"
-      ],
-      "start": "15:00",
-      "end": "18:00",
-      "cpwOnly": false
+      "recurring": false
     },
     {
-      "title": "Big City Fishing at Pier 97",
-      "category": "animals",
-      "venue": "Hudson River Park, Pier 97",
-      "neighborhood": "Hell's Kitchen",
-      "when": "Thu Jul 16, 3:00-5:00 PM",
-      "days": [
-        "thu"
-      ],
-      "cost": "Free (rods & instruction provided)",
-      "travelMinutes": 24,
-      "travelHow": "~24 min from Union Sq",
-      "toddlerNotes": "Same free drop-in fishing at the uptown pier, next to a big waterfront playground. Caregiver-assisted for a 2yo (hold the rod, watch, touch the catch).",
-      "url": "https://hudsonriverpark.org/especially-for-kids/",
-      "outdoor": true,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.7705,
-      "lng": -74.0006,
-      "event": true,
-      "times": [
-        "afternoon"
-      ],
-      "start": "15:00",
-      "end": "17:00",
-      "cpwOnly": false
-    },
-    {
-      "title": "Toddler Time in the Garden (Park Slope Library)",
+      "title": "Kids Storytime at McNally Jackson Downtown Brooklyn",
       "category": "storytime",
-      "venue": "Brooklyn Public Library, Park Slope Branch",
-      "neighborhood": "Park Slope, Brooklyn",
-      "when": "Thu Jul 16, 10:30-11:00 AM",
-      "days": [
-        "thu"
-      ],
-      "cost": "Free",
-      "travelMinutes": 38,
-      "travelHow": "~38 min from Union Sq",
-      "toddlerNotes": "Outdoor storytelling-garden session with songs, stories, fingerplays and rhymes for independent walkers up to age 3 - squarely a 2yo program. Weather-permitting. Confirm the July 16 date on the BPL calendar.",
-      "url": "https://www.bklynlibrary.org/calendar/list/toddler%20time",
-      "outdoor": true,
-      "recurring": false,
-      "confidence": "medium",
-      "lat": 40.6693,
-      "lng": -73.9835,
-      "event": true,
-      "times": [
-        "morning"
-      ],
-      "start": "10:30",
-      "end": "11:00",
-      "cpwOnly": false
-    },
-    {
-      "title": "Totally Tots at Brooklyn Children's Museum",
-      "category": "play",
-      "venue": "Brooklyn Children's Museum",
-      "neighborhood": "Crown Heights, Brooklyn",
-      "when": "Wed-Fri Jul 15-17, 10 AM-5 PM (free Thu 2-5 PM)",
+      "venue": "McNally Jackson (City Point)",
+      "neighborhood": "Downtown Brooklyn (445 Albee Square)",
+      "when": "Wed Jul 22 & Thu Jul 23, ~4:00-4:30 PM",
       "days": [
         "wed",
-        "thu",
-        "fri"
+        "thu"
       ],
-      "cost": "Free Thu 2-5 PM (Community Access); otherwise ~$15/person",
-      "travelMinutes": 39,
-      "travelHow": "~39 min from Union Sq",
-      "toddlerNotes": "A whole gallery for ages 0-6: Baby Patch, Sand Spot, Play Pond water play, Reading Nook and a dramatic-play shop - all hands-on for a 2yo. Closed Mon/Tue; Thursday 2-5 PM is free.",
-      "url": "https://www.brooklynkids.org/exhibits/totally-tots/",
-      "outdoor": false,
-      "recurring": false,
-      "confidence": "high",
-      "lat": 40.6743,
-      "lng": -73.9443,
-      "event": true,
+      "start": "16:00",
+      "end": "16:30",
       "times": [
-        "morning"
+        "afternoon"
       ],
-      "start": "10:00",
-      "end": "17:00",
-      "cpwOnly": false
-    },
-    {"title":"The Little Gym","category":"play","venue":"The Little Gym","neighborhood":"2121 Broadway","when":"Open daily 9-7","days":["any"],"cost":"Free","travelMinutes":27,"travelHow":"~27 min from Union Sq","toddlerNotes":"Parent-child gymnastics ages 4mo+. Tumbling, balance beams, padded environment. (Free intro class)","url":"https://www.thelittlegym.com/new-york-upper-westside/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.781,"lng":-73.9812,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Barnes & Noble 82nd St","category":"storytime","venue":"Barnes & Noble 82nd St","neighborhood":"2289 Broadway","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":29,"travelHow":"~29 min from Union Sq","toddlerNotes":"Free weekend storytimes, large children's section. Reliable free fallback. (No purchase required)","url":"https://stores.barnesandnoble.com/store/1979","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7847,"lng":-73.978,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Little Shop of Plaster & Pottery","category":"other","venue":"Little Shop of Plaster & Pottery","neighborhood":"711 Amsterdam Ave","when":"Open daily (see hours)","days":["any"],"cost":"Per piece $25-45","travelMinutes":33,"travelHow":"~33 min from Union Sq","toddlerNotes":"Walk-in pottery painting for all ages. Pick a piece, paint it, they fire it. (No reservation needed)","url":"https://littleshopny.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7925,"lng":-73.9725,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Kidville UWS","category":"play","venue":"Kidville UWS","neighborhood":"205 W 88th St","when":"Open Mon/Tue/Wed/Thu/Fri 9:15-5:30","days":["mon","tue","wed","thu","fri"],"cost":"Drop-in $29; 5-pack $140","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"Indoor swings, climbing, giant blocks, messy art. Ages 12-36 months. (Socks required)","url":"https://kidville.com/westside/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7883,"lng":-73.9747,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Gymboree Play & Music","category":"music","venue":"Gymboree Play & Music","neighborhood":"120 Riverside Blvd","when":"Open Sat 9:30-11","days":["sat"],"cost":"Open Gym $59","travelMinutes":26,"travelHow":"~26 min from Union Sq","toddlerNotes":"Open Gym with climbing plus music and sensory classes, ages 0-5. (Sat Open Gym only for drop-in)","url":"https://www.gymboreeclasses.com/en/locations/NY/Upper-West-Side/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.778,"lng":-73.9895,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Swedish Cottage Marionette Theatre","category":"theater","venue":"Swedish Cottage Marionette Theatre","neighborhood":"W 79th St","when":"Open Sat/Sun 10:30-1","days":["sat","sun"],"cost":"Ticket $12","travelMinutes":27,"travelHow":"~27 min from Union Sq","toddlerNotes":"Intimate puppet shows in a charming cottage. Current: Little Red's Hood. (Weekend shows only; advance tickets)","url":"https://cityparksfoundation.org/swedish-cottage-marionette-theatre/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7793,"lng":-73.9717,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Ballet Hispanico","category":"music","venue":"Ballet Hispanico","neighborhood":"167 W 89th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class ~$30","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"Los Pasitos creative movement ages 2-5. Bilingual English/Spanish. (Trimester enrollment)","url":"https://www.ballethispanico.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7895,"lng":-73.9722,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"JCC Manhattan","category":"other","venue":"JCC Manhattan","neighborhood":"334 Amsterdam Ave","when":"Open daily (see hours)","days":["any"],"cost":"Swim ~$24-36","travelMinutes":29,"travelHow":"~29 min from Union Sq","toddlerNotes":"Toddler swim, playgroup, music & art classes. Indoor pool. (Non-members welcome)","url":"https://www.jccmanhattan.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7854,"lng":-73.9786,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"YMCA West Side","category":"play","venue":"YMCA West Side","neighborhood":"5 W 63rd St","when":"Open daily (see hours)","days":["any"],"cost":"Per class ~$35","travelMinutes":24,"travelHow":"~24 min from Union Sq","toddlerNotes":"Parent-child swim ages 6mo-3yr. Warm pool, structured lessons. (Financial assistance available)","url":"https://ymcanyc.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7725,"lng":-73.9795,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Lucy Moses School","category":"music","venue":"Lucy Moses School","neighborhood":"129 W 67th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class ~$30","travelMinutes":24,"travelHow":"~24 min from Union Sq","toddlerNotes":"Baby ballet, Dalcroze music, creative dance from 18 months. Lincoln Center. (Semester enrollment)","url":"https://kaufmanmusiccenter.org/lucy-moses-school/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7738,"lng":-73.9818,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Discovery Programs","category":"other","venue":"Discovery Programs","neighborhood":"251 W 100th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class $46","travelMinutes":34,"travelHow":"~34 min from Union Sq","toddlerNotes":"Gym, art, dance, sports for toddlers. Multi-activity programs. (Drop-in available)","url":"https://discoveryprograms.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7963,"lng":-73.9694,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"NYPL Bloomingdale Library","category":"storytime","venue":"NYPL Bloomingdale Library","neighborhood":"150 W 100th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Free","travelMinutes":34,"travelHow":"~34 min from Union Sq","toddlerNotes":"Children's floor with board books, toddler storytime. Calm, low-stimulation. (Library card free for NYC residents)","url":"https://www.nypl.org/locations/bloomingdale","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7956,"lng":-73.9709,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"92nd Street Y","category":"other","venue":"92nd Street Y","neighborhood":"1395 Lexington Ave","when":"Open daily (see hours)","days":["any"],"cost":"Per class ~$30","travelMinutes":32,"travelHow":"~32 min from Union Sq","toddlerNotes":"Toddler swim, art, music, movement. Excellent instructors. (Non-member rates available)","url":"https://www.92ny.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7852,"lng":-73.9547,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Asphalt Green","category":"play","venue":"Asphalt Green","neighborhood":"555 E 90th St","when":"Open daily (see hours)","days":["any"],"cost":"Per class $24-28","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"Water Tots swim (20-35mo). Olympic pool plus warm toddler pool. (Ages 20-35 months)","url":"https://www.asphaltgreen.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7808,"lng":-73.9457,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"My Gym Harlem","category":"play","venue":"My Gym Harlem","neighborhood":"258 St Nicholas Ave","when":"Open daily (see hours)","days":["any"],"cost":"Drop-in ~$35-45","travelMinutes":21,"travelHow":"~21 min from Grandma's (101 CPW)","toddlerNotes":"Mommy & Me tumbling and free play for babies and toddlers. (Free trial class)","url":"https://www.mygym.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.799,"lng":-73.9551,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Apple Fifth Avenue","category":"other","venue":"Apple Fifth Avenue","neighborhood":"767 Fifth Ave","when":"Open daily 10-9","days":["any"],"cost":"Free","travelMinutes":21,"travelHow":"~21 min from Union Sq","toddlerNotes":"Free Today at Apple family sessions: drawing, music, coding basics. (Reserve online)","url":"https://www.apple.com/retail/fifthavenue/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7639,"lng":-73.9722,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Madame Tussauds","category":"other","venue":"Madame Tussauds","neighborhood":"234 W 42nd St","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":17,"travelHow":"~17 min from Union Sq","toddlerNotes":"Life-size wax figures, MARVEL 4D. Under 3 free. (Under 3 free)","url":"https://www.madametussauds.com/new-york/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7564,"lng":-73.9888,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Intrepid Museum","category":"other","venue":"Intrepid Museum","neighborhood":"Pier 86","when":"Open daily 10-5","days":["any"],"cost":"Free","travelMinutes":21,"travelHow":"~21 min from Union Sq","toddlerNotes":"Aircraft carrier, planes, helicopters. Under 5 free. NYC residents 50% off. (NYC residents 50% off)","url":"https://intrepidmuseum.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7645,"lng":-73.9996,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"The Art Farm","category":"animals","venue":"The Art Farm","neighborhood":"431 E 91st St","when":"Open Tue/Wed/Thu/Sat/Sun (see hours)","days":["tue","wed","thu","sat","sun"],"cost":"Drop-in $20","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"NYC's only indoor petting zoo: bearded dragons, chinchillas, chickens. Plus crafts. (Ages 6mo+)","url":"https://www.theartfarms.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7808,"lng":-73.9489,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Union Square Play","category":"play","venue":"Union Square Play","neighborhood":"245 E 84th St","when":"Open daily (see hours)","days":["any"],"cost":"Drop-in ~$45","travelMinutes":29,"travelHow":"~29 min from Union Sq","toddlerNotes":"Drop-in music, art, movement for ages 0-5. Multiple Manhattan locations. (Space permitting)","url":"https://www.usquareplay.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7775,"lng":-73.9524,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"The Craft Studio","category":"other","venue":"The Craft Studio","neighborhood":"1657 Third Ave","when":"Open daily 10-6","days":["any"],"cost":"Per project $15-35","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"Drop-in pottery painting, mosaics for ages 1.5+. Open 7 days. (Walk-in welcome)","url":"https://www.thecraftstudionyc.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7828,"lng":-73.9514,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Color Factory","category":"other","venue":"Color Factory","neighborhood":"251 Spring St","when":"Open daily 9-8","days":["any"],"cost":"Age 2+ $35-45; Under 2 Free","travelMinutes":16,"travelHow":"~16 min from Union Sq","toddlerNotes":"Immersive color rooms, ball pits, interactive installations. No strollers. (Weekdays cheapest)","url":"https://www.colorfactory.co","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7252,"lng":-73.9999,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"CAMP (5th Ave)","category":"play","venue":"CAMP (5th Ave)","neighborhood":"110 5th Ave","when":"Open daily (see hours)","days":["any"],"cost":"Experience ~$38/pair; Store Free","travelMinutes":7,"travelHow":"~7 min from Union Sq","toddlerNotes":"Themed play behind a 'magic door' (currently Bluey). Plus free toy store. (25% off 4+ tickets)","url":"https://camp.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7376,"lng":-73.9929,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Scandinavia House","category":"play","venue":"Scandinavia House","neighborhood":"58 Park Ave","when":"Open Mon/Tue/Thu/Fri/Sat/Sun 10-5","days":["mon","tue","thu","fri","sat","sun"],"cost":"Child $15; Adult Free","travelMinutes":14,"travelHow":"~14 min from Union Sq","toddlerNotes":"Nordic play space: sensory tunnel, LEGO corner, BRIO trains, climbing wall. (Ages 1-5; must be walking)","url":"https://www.scandinaviahouse.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.749,"lng":-73.9793,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Chelsea Piers Toddler Gym","category":"play","venue":"Chelsea Piers Toddler Gym","neighborhood":"Pier 62","when":"Open Mon/Tue/Wed/Thu 9:30-5","days":["mon","tue","wed","thu"],"cost":"Session $12","travelMinutes":17,"travelHow":"~17 min from Union Sq","toddlerNotes":"Toddler gym (6mo-4yr): soft climbing, slides. Best value at $12/session. (Mon-Thu only)","url":"https://www.chelseapiers.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7467,"lng":-74.0082,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Museum of Ice Cream","category":"other","venue":"Museum of Ice Cream","neighborhood":"558 Broadway","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":16,"travelHow":"~16 min from Union Sq","toddlerNotes":"Ball pit, pastel rooms, unlimited ice cream. Under 3 free. (No strollers)","url":"https://www.museumoficecream.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7234,"lng":-73.9988,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"ARTECHOUSE NYC","category":"other","venue":"ARTECHOUSE NYC","neighborhood":"439 W 15th St","when":"Open daily 10-10","days":["any"],"cost":"Free","travelMinutes":16,"travelHow":"~16 min from Union Sq","toddlerNotes":"Immersive light/sound projections. Under 4 free. Mesmerizing for toddlers. (Under 4 free)","url":"https://www.artechouse.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7425,"lng":-74.0062,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Joffrey Ballet School","category":"music","venue":"Joffrey Ballet School","neighborhood":"434 6th Ave","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class ~$30","travelMinutes":15,"travelHow":"~15 min from Union Sq","toddlerNotes":"Children's ballet from age 2. Creative movement, pre-ballet. (Check toddler schedule)","url":"https://www.joffreyballetschool.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.734,"lng":-73.9983,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Kids at Work NYC","category":"other","venue":"Kids at Work NYC","neighborhood":"147 W 24th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class $53","travelMinutes":12,"travelHow":"~12 min from Union Sq","toddlerNotes":"Drop-in cooking, dance, art for ages 2-5. (No membership needed)","url":"https://kidsatworknyc.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.744,"lng":-73.9932,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Taste Buds Kitchen","category":"other","venue":"Taste Buds Kitchen","neighborhood":"109 W 27th St","when":"Open daily (see hours)","days":["any"],"cost":"Class $65-95","travelMinutes":14,"travelHow":"~14 min from Union Sq","toddlerNotes":"Caregiver & Me cooking ages 2+. Real recipes, real ingredients. (Ages 2+)","url":"https://tastebudskitchen.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7453,"lng":-73.9925,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"MoMath","category":"other","venue":"MoMath","neighborhood":"11 E 26th St","when":"Open daily 10-5","days":["any"],"cost":"Child 2-12 $22; Under 2 Free","travelMinutes":11,"travelHow":"~11 min from Union Sq","toddlerNotes":"Coaster roller, light-up floors, shape puzzles. Surprisingly fun for toddlers. (Under 2 free)","url":"https://momath.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7444,"lng":-73.9883,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"NYPL Jefferson Market","category":"storytime","venue":"NYPL Jefferson Market","neighborhood":"425 6th Ave","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":13,"travelHow":"~13 min from Union Sq","toddlerNotes":"Victorian Gothic building with children's room. Toddler storytime. (Beautiful building)","url":"https://www.nypl.org/locations/jefferson-market","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7343,"lng":-73.9993,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Books of Wonder","category":"storytime","venue":"Books of Wonder","neighborhood":"42 W 17th St","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":8,"travelHow":"~8 min from Union Sq","toddlerNotes":"NYC's oldest independent children's bookstore. Author events, storytime. (Author signings)","url":"https://www.booksofwonder.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7389,"lng":-73.9936,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Strand Bookstore","category":"storytime","venue":"Strand Bookstore","neighborhood":"828 Broadway","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":8,"travelHow":"~8 min from Union Sq","toddlerNotes":"18 miles of books! Children's section 2nd floor. Weekly storytimes. (Kids storytimes weekly)","url":"https://www.strandbooks.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7334,"lng":-73.991,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Brooklyn Children's Museum","category":"other","venue":"Brooklyn Children's Museum","neighborhood":"145 Brooklyn Ave","when":"Open Wed/Thu/Fri/Sat/Sun 10-5","days":["wed","thu","fri","sat","sun"],"cost":"General $15; Under 1 Free","travelMinutes":54,"travelHow":"~54 min from Grandma's (101 CPW)","toddlerNotes":"Totally Tots: 9 sensory areas ages 0-6. Sand, water, dress-up, climbing. (Free Thu 2-5pm)","url":"https://www.brooklynkids.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6726,"lng":-73.9441,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"NY Transit Museum","category":"other","venue":"NY Transit Museum","neighborhood":"99 Schermerhorn St","when":"Open Wed/Thu/Fri/Sat/Sun 10-4","days":["wed","thu","fri","sat","sun"],"cost":"Adult $10; Child 2-17 $5","travelMinutes":29,"travelHow":"~29 min from Union Sq","toddlerNotes":"Real vintage subway cars to climb on. Ultimate 'choo choo' experience. (Timed tickets required)","url":"https://www.nytransitmuseum.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6903,"lng":-73.99,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Museum of the Moving Image","category":"other","venue":"Museum of the Moving Image","neighborhood":"36-01 35th Ave","when":"Open Wed/Thu/Fri/Sat/Sun (see hours)","days":["wed","thu","fri","sat","sun"],"cost":"Free","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"Flip-book stations, sound effects, animation displays. Under 3 free. (Free Fri 4-8pm)","url":"https://movingimage.us","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7564,"lng":-73.9238,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Mercer Labs","category":"other","venue":"Mercer Labs","neighborhood":"21 Dey St","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":22,"travelHow":"~22 min from Union Sq","toddlerNotes":"25,000-ball pit, 15 sensory rooms, 4D sound. Under 3 free. (Timed entry)","url":"https://www.mercerlabs.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7098,"lng":-74.0071,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"MoMA PS1","category":"other","venue":"MoMA PS1","neighborhood":"22-25 Jackson Ave","when":"Open Thu/Fri/Sat/Sun (see hours)","days":["thu","fri","sat","sun"],"cost":"Free","travelMinutes":22,"travelHow":"~22 min from Union Sq","toddlerNotes":"Free admission through 2028. Contemporary art in a former school. (Free since Jan 2026)","url":"https://www.momaps1.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7455,"lng":-73.9472,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Brooklyn Botanic Garden","category":"animals","venue":"Brooklyn Botanic Garden","neighborhood":"990 Washington Ave","when":"Open Tue/Wed/Thu/Fri/Sat/Sun 10-6","days":["tue","wed","thu","fri","sat","sun"],"cost":"Free","travelMinutes":54,"travelHow":"~54 min from Grandma's (101 CPW)","toddlerNotes":"Steinhardt Conservatory: 3 warm indoor pavilions. Under 12 free. (Free Fri 10am-noon)","url":"https://www.bbg.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6694,"lng":-73.9627,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Peekabooo LIC","category":"play","venue":"Peekabooo LIC","neighborhood":"4009 21st St","when":"Open daily 9-6","days":["any"],"cost":"Child $25-30","travelMinutes":23,"travelHow":"~23 min from Union Sq","toddlerNotes":"Castle, slides, ball pit for under 7s. Cozy LIC spot. (Walk-ins welcome)","url":"https://www.peekabooolic.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7521,"lng":-73.9476,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Kanga's Indoor Playcenter","category":"play","venue":"Kanga's Indoor Playcenter","neighborhood":"32-15 37th Ave","when":"Open daily 10-6","days":["any"],"cost":"Child $10.90","travelMinutes":30,"travelHow":"~30 min from Union Sq","toddlerNotes":"10,000 sq ft with toddler gate. Incredible value at $10.90. (Best value play space)","url":"https://kangasindoorplaycenter.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.753,"lng":-73.9234,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Bounce N Play Astoria","category":"play","venue":"Bounce N Play Astoria","neighborhood":"20-21 Steinway St","when":"Open daily 10-7","days":["any"],"cost":"2 hours $12","travelMinutes":36,"travelHow":"~36 min from Union Sq","toddlerNotes":"Bounce houses, toddler area, ball pit. Budget-friendly $12/2hrs. (Great budget option)","url":"https://www.bouncenplaylic.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7726,"lng":-73.9158,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Space Club DUMBO","category":"play","venue":"Space Club DUMBO","neighborhood":"256 Plymouth St","when":"Open daily 9-6","days":["any"],"cost":"Child 2hr $39","travelMinutes":24,"travelHow":"~24 min from Union Sq","toddlerNotes":"28,000 sq ft: bead pit, jungle gym, imaginative play. Premium. (Book ahead)","url":"https://www.spaceclub.co","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7023,"lng":-73.987,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"The Canopy NYC","category":"play","venue":"The Canopy NYC","neighborhood":"118 N 11th St","when":"Open daily (see hours)","days":["any"],"cost":"First visit $30","travelMinutes":21,"travelHow":"~21 min from Union Sq","toddlerNotes":"Ages 0-4 only. Calm, Montessori-inspired space. (Ages 0-4 only)","url":"https://www.thecanopynyc.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7198,"lng":-73.9579,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"PlayWell Brooklyn","category":"play","venue":"PlayWell Brooklyn","neighborhood":"94 9th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Session $32","travelMinutes":53,"travelHow":"~53 min from Grandma's (101 CPW)","toddlerNotes":"Therapist-designed inclusive sensory space. Great for sensory-seeking toddlers. (Inclusive & sensory-friendly)","url":"https://www.playwellbrooklyn.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6718,"lng":-73.982,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Queens Library Hunters Point","category":"storytime","venue":"Queens Library Hunters Point","neighborhood":"47-40 Center Blvd","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":19,"travelHow":"~19 min from Union Sq","toddlerNotes":"Stunning architecture, early-childhood area. Toddler Time Wed 10:30am. (All free)","url":"https://www.queenslibrary.org/about-us/locations/hunters-point","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7424,"lng":-73.9576,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Brooklyn Public Library Central","category":"storytime","venue":"Brooklyn Public Library Central","neighborhood":"10 Grand Army Plaza","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":53,"travelHow":"~53 min from Grandma's (101 CPW)","toddlerNotes":"Spacious children's room. Toddler Time (18-36mo). Beautiful building. (Free toddler programs)","url":"https://www.bklynlibrary.org/locations/central","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6728,"lng":-73.9683,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Puppetworks Park Slope","category":"theater","venue":"Puppetworks Park Slope","neighborhood":"338 6th Ave","when":"Open Sat/Sun 12:30-2","days":["sat","sun"],"cost":"Ticket $11","travelMinutes":54,"travelHow":"~54 min from Grandma's (101 CPW)","toddlerNotes":"Classic marionette theater since 1980. Intimate shows that enchant toddlers. (Weekend shows only)","url":"https://www.puppetworks.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6703,"lng":-73.9812,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Liberty Science Center","category":"other","venue":"Liberty Science Center","neighborhood":"222 Jersey City Blvd","when":"Open Wed/Thu/Fri/Sat/Sun (see hours)","days":["wed","thu","fri","sat","sun"],"cost":"Adult $31; Child 2-12 $26","travelMinutes":35,"travelHow":"~35 min from Union Sq","toddlerNotes":"I Explore toddler gallery: water play, blocks, rock wall. Biggest planetarium in West. Hemisphere. ($5 off online)","url":"https://lsc.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7065,"lng":-74.0551,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Puppetsburg","category":"theater","venue":"Puppetsburg","neighborhood":"Various Brooklyn/Manhattan","when":"Open daily (see hours)","days":["any"],"cost":"Child $25","travelMinutes":30,"travelHow":"~30 min from Union Sq","toddlerNotes":"Purpose-built puppet shows for babies & toddlers (4mo-4yr). (Multiple locations)","url":"https://puppetsburg.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.688,"lng":-73.978,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Music Together in the City","category":"music","venue":"Music Together in the City","neighborhood":"Multiple Manhattan","when":"Open Mon/Tue/Wed/Thu/Fri (see hours)","days":["mon","tue","wed","thu","fri"],"cost":"Per class ~$42","travelMinutes":28,"travelHow":"~28 min from Union Sq","toddlerNotes":"Research-backed music & movement ages 0-4. Sing, dance, instruments. (Trial class available)","url":"https://musictogethercity.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7831,"lng":-73.9812,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Ferox Ninja DUMBO","category":"play","venue":"Ferox Ninja DUMBO","neighborhood":"65 Jay St","when":"Open daily (see hours)","days":["any"],"cost":"Weekday $20; Weekend $30","travelMinutes":24,"travelHow":"~24 min from Union Sq","toddlerNotes":"Ninja gym with toddler-sized obstacles. Ages 2-12. (Toddler sessions available)","url":"https://www.feroxnyc.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.703,"lng":-73.9867,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Brooklearn","category":"play","venue":"Brooklearn","neighborhood":"380 Court St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Play $35/hr","travelMinutes":35,"travelHow":"~35 min from Union Sq","toddlerNotes":"Co-working + playspace. Toddlers play while parents work. (Co-working included)","url":"https://www.brooklearn.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6773,"lng":-73.9963,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Barnes & Noble Cobble Hill","category":"storytime","venue":"Barnes & Noble Cobble Hill","neighborhood":"194 Atlantic Ave","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":30,"travelHow":"~30 min from Union Sq","toddlerNotes":"Free Sat storytime 11am. Big kids section in walkable Brooklyn. (Free Sat 11am storytime)","url":"https://stores.barnesandnoble.com/store/2946","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6884,"lng":-73.9908,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"McNally Jackson Seaport","category":"storytime","venue":"McNally Jackson Seaport","neighborhood":"4 Fulton St","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":23,"travelHow":"~23 min from Union Sq","toddlerNotes":"Curated kids section, occasional storytimes. Waterfront location. (Near Pier 17)","url":"https://www.mcnallyjackson.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7064,"lng":-74.0028,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Tam Tam Music Together","category":"music","venue":"Tam Tam Music Together","neighborhood":"Various Brooklyn","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class ~$41; Trial $45","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"Bilingual French/English music classes ages 0-4. (Bilingual French/English)","url":"https://tamtammusictogether.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.687,"lng":-73.974,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Space Club Fort Greene","category":"play","venue":"Space Club Fort Greene","neighborhood":"143 Waverly Ave","when":"Open daily 9-6","days":["any"],"cost":"2 hours $35","travelMinutes":30,"travelHow":"~30 min from Union Sq","toddlerNotes":"36,000 sq ft four-level play space. Climbing, ball pit, imaginative play. (Book ahead weekends)","url":"https://www.spaceclub.co","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6889,"lng":-73.9714,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Flying Apple","category":"play","venue":"Flying Apple","neighborhood":"912 Broadway","when":"Open daily 10-6","days":["any"],"cost":"Toddler $16","travelMinutes":49,"travelHow":"~49 min from Grandma's (101 CPW)","toddlerNotes":"Ages 1-10 with toddler section. Budget-friendly Brooklyn. (Great value)","url":"https://www.flyingapple.nyc","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6874,"lng":-73.9309,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"IKEA Brooklyn","category":"play","venue":"IKEA Brooklyn","neighborhood":"1 Beard St","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":36,"travelHow":"~36 min from Union Sq","toddlerNotes":"Smaland supervised play (free, call ahead). Plus kid-friendly cafeteria. (Must be potty-trained; call ahead)","url":"https://www.ikea.com/us/en/stores/brooklyn/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6771,"lng":-74.0095,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"NYPL Riverside","category":"storytime","venue":"NYPL Riverside","neighborhood":"127 Amsterdam Ave","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Free","travelMinutes":25,"travelHow":"~25 min from Union Sq","toddlerNotes":"Children's room on 2nd floor. Toddler storytime programs. Compact, quiet UWS branch. (Small & calm for toddlers)","url":"https://www.nypl.org/locations/riverside","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7748,"lng":-73.9858,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"NYPL Morningside Heights","category":"storytime","venue":"NYPL Morningside Heights","neighborhood":"2900 Broadway","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Free","travelMinutes":22,"travelHow":"~22 min from Grandma's (101 CPW)","toddlerNotes":"Story hour room on 2nd floor for children's programs. Near Columbia campus. (Story hour room upstairs)","url":"https://www.nypl.org/locations/morningside-heights","outdoor":false,"recurring":true,"confidence":"medium","lat":40.8055,"lng":-73.9651,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"NYPL Countee Cullen","category":"storytime","venue":"NYPL Countee Cullen","neighborhood":"104 W 136th St","when":"Open Tue/Wed/Thu/Fri/Sat/Sun (see hours)","days":["tue","wed","thu","fri","sat","sun"],"cost":"Free","travelMinutes":29,"travelHow":"~29 min from Grandma's (101 CPW)","toddlerNotes":"Historic Carnegie library in Harlem. James Weldon Johnson children's collection on 2nd floor. (Beautiful McKim Mead & White building)","url":"https://www.nypl.org/locations/countee-cullen","outdoor":false,"recurring":true,"confidence":"medium","lat":40.8143,"lng":-73.9424,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"NYPL Hamilton Grange","category":"storytime","venue":"NYPL Hamilton Grange","neighborhood":"503 W 145th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Free","travelMinutes":32,"travelHow":"~32 min from Grandma's (101 CPW)","toddlerNotes":"Children's programs in Hamilton Heights. Storytime, crafts, and early literacy events. (All ages welcome)","url":"https://www.nypl.org/locations/hamilton-grange","outdoor":false,"recurring":true,"confidence":"medium","lat":40.8238,"lng":-73.9446,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"NYPL Muhlenberg","category":"storytime","venue":"NYPL Muhlenberg","neighborhood":"209 W 23rd St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Free","travelMinutes":14,"travelHow":"~14 min from Union Sq","toddlerNotes":"Children's room with story hour space on 2nd floor. Chelsea location near Madison Square Park. (Near Madison Square Park playground)","url":"https://www.nypl.org/locations/muhlenberg","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7443,"lng":-73.9947,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"NYPL 96th Street","category":"storytime","venue":"NYPL 96th Street","neighborhood":"112 E 96th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat 11-5","days":["mon","tue","wed","thu","fri","sat"],"cost":"Free","travelMinutes":32,"travelHow":"~32 min from Union Sq","toddlerNotes":"Modern branch with dedicated children's room and separate story hour space. Toddler storytime ages 1-3. (Separate story hour space)","url":"https://www.nypl.org/locations/96th-street","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7854,"lng":-73.9526,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Queens Library Broadway","category":"storytime","venue":"Queens Library Broadway","neighborhood":"40-20 Broadway","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Free","travelMinutes":33,"travelHow":"~33 min from Union Sq","toddlerNotes":"Astoria branch with children's area. Storytime, crafts, and Toddler Learning Center programs. (Toddler Learning Center in spring/fall)","url":"https://www.queenslibrary.org/about-us/locations/broadway","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7592,"lng":-73.9186,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Book Culture on Broadway","category":"storytime","venue":"Book Culture on Broadway","neighborhood":"2915 Broadway","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":23,"travelHow":"~23 min from Grandma's (101 CPW)","toddlerNotes":"Indie bookstore with dedicated children's room (lower level). Sat storytime 3:30pm. Persian & English sessions. (Sat 3:30pm English storytime)","url":"https://www.bookculture.com/locations/book-culture-broadway","outdoor":false,"recurring":true,"confidence":"medium","lat":40.8067,"lng":-73.9644,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Book Culture 112th St","category":"storytime","venue":"Book Culture 112th St","neighborhood":"536 W 112th St","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":22,"travelHow":"~22 min from Grandma's (101 CPW)","toddlerNotes":"Original Book Culture location near Columbia. Children's section upstairs with board books. (Browse anytime)","url":"https://www.bookculture.com/locations","outdoor":false,"recurring":true,"confidence":"medium","lat":40.806,"lng":-73.9667,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Greenlight Bookstore","category":"storytime","venue":"Greenlight Bookstore","neighborhood":"686 Fulton St","when":"Open daily 10-10","days":["any"],"cost":"Free","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"Beloved Fort Greene indie. Regular Sunday storytimes with author visits, crafts, and activities. All ages. (Sunday storytimes; check calendar)","url":"https://www.greenlightbookstore.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6862,"lng":-73.9775,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"powerHouse on 8th","category":"storytime","venue":"powerHouse on 8th","neighborhood":"1111 8th Ave","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":56,"travelHow":"~56 min from Grandma's (101 CPW)","toddlerNotes":"South Slope indie with upper kids' area. Sunday Story Time series. Mini-gallery and community space. (Sunday Story Time; kids area upstairs)","url":"https://powerhouseon8th.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6648,"lng":-73.9802,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Whitney Museum","category":"other","venue":"Whitney Museum","neighborhood":"99 Gansevoort St","when":"Open Mon/Wed/Thu/Fri/Sat/Sun (see hours)","days":["mon","wed","thu","fri","sat","sun"],"cost":"Free","travelMinutes":16,"travelHow":"~16 min from Union Sq","toddlerNotes":"Under 25 always free. Fri 5-10pm free for all. Ground floor always free. Outdoor terraces with Hudson views. (Under 25 free anytime; Fri eve free all)","url":"https://whitney.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7396,"lng":-74.0089,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"El Museo del Barrio","category":"other","venue":"El Museo del Barrio","neighborhood":"1230 5th Ave","when":"Open Thu/Fri/Sat/Sun 11-5","days":["thu","fri","sat","sun"],"cost":"Free","travelMinutes":35,"travelHow":"~35 min from Union Sq","toddlerNotes":"Under 12 free. Pay-what-you-can for adults. Latin American & Caribbean art. 3rd Sat free Super Sabado. (3rd Saturday free for everyone)","url":"https://www.elmuseo.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7934,"lng":-73.9515,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Noguchi Museum","category":"other","venue":"Noguchi Museum","neighborhood":"9-01 33rd Rd","when":"Open Wed/Thu/Fri/Sat/Sun (see hours)","days":["wed","thu","fri","sat","sun"],"cost":"Free","travelMinutes":29,"travelHow":"~29 min from Union Sq","toddlerNotes":"Under 12 free. Tranquil sculpture garden & galleries. First Friday of month free for all. (1st Friday free; serene space)","url":"https://www.noguchi.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7676,"lng":-73.9374,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Museum of Arts and Design","category":"other","venue":"Museum of Arts and Design","neighborhood":"2 Columbus Circle","when":"Open Tue/Wed/Thu/Fri/Sat/Sun 10-6","days":["tue","wed","thu","fri","sat","sun"],"cost":"Free","travelMinutes":22,"travelHow":"~22 min from Union Sq","toddlerNotes":"Under 18 free. Tactile craft & design exhibits. Hands-on workshops. Right at Columbus Circle. (Under 18 always free)","url":"https://madmuseum.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7673,"lng":-73.9819,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Asia Society","category":"other","venue":"Asia Society","neighborhood":"725 Park Ave","when":"Open Tue/Wed/Thu/Fri/Sat/Sun 11-6","days":["tue","wed","thu","fri","sat","sun"],"cost":"Free","travelMinutes":24,"travelHow":"~24 min from Union Sq","toddlerNotes":"Under 16 free. Family Days with crafts, lion dances, cultural performances. Beautiful gallery. (Free Fri 6-9pm)","url":"https://asiasociety.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7697,"lng":-73.9645,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Japan Society","category":"other","venue":"Japan Society","neighborhood":"333 E 47th St","when":"Open Tue/Wed/Thu/Fri/Sat/Sun (see hours)","days":["tue","wed","thu","fri","sat","sun"],"cost":"Free","travelMinutes":18,"travelHow":"~18 min from Union Sq","toddlerNotes":"Under 16 free. Gallery + Japanese cultural events, festivals, family workshops. (Family membership $125)","url":"https://www.japansociety.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7534,"lng":-73.9688,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Vital Theatre / Pinkalicious","category":"theater","venue":"Vital Theatre / Pinkalicious","neighborhood":"2162 Broadway","when":"Open Sat/Sun 11-3","days":["sat","sun"],"cost":"Ticket $40-60","travelMinutes":29,"travelHow":"~29 min from Union Sq","toddlerNotes":"Long-running Pinkalicious musical for ages 2-8. 60 min, no intermission. Right on the UWS. (Weekend shows; 60 min perfect for toddlers)","url":"https://www.vitaltheatre.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7838,"lng":-73.9805,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"TADA! Youth Theater","category":"theater","venue":"TADA! Youth Theater","neighborhood":"15 W 28th St","when":"Open daily (see hours)","days":["any"],"cost":"Child $15; Adult $25","travelMinutes":13,"travelHow":"~13 min from Union Sq","toddlerNotes":"Original musicals performed by kids ages 8-18. Shows suitable for ages 3+. Affordable tickets. (Check schedule for showtimes)","url":"https://www.tadatheater.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7456,"lng":-73.9901,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Sloomoo Institute","category":"other","venue":"Sloomoo Institute","neighborhood":"475 Broadway","when":"Open daily (see hours)","days":["any"],"cost":"General $39-50; Under 2 Free","travelMinutes":17,"travelHow":"~17 min from Union Sq","toddlerNotes":"Immersive slime play. DIY slime bar included with ticket. Ages 2+ need tickets. Sensory overload (in a good way). (Messy! Wear old clothes)","url":"https://www.sloomoo.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7218,"lng":-73.999,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"INTER_ NYC","category":"other","venue":"INTER_ NYC","neighborhood":"15 Hudson Yards","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":17,"travelHow":"~17 min from Union Sq","toddlerNotes":"Motion-sensitive space adventure with immersive projections. Under 4 free. Stunning visuals. (Under 4 free; timed entry)","url":"https://www.inter.nyc","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7538,"lng":-74.0018,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Arte Museum NYC","category":"other","venue":"Arte Museum NYC","neighborhood":"29 Broadway","when":"Open daily 10-9","days":["any"],"cost":"Free","travelMinutes":24,"travelHow":"~24 min from Union Sq","toddlerNotes":"Immersive nature projections: waterfalls, forests, oceans. Under 3 free. Some dark/mirrored rooms. (Under 3 free; carry toddlers in dark rooms)","url":"https://www.artemuseum.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7065,"lng":-74.0123,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Imagine Swimming UWS","category":"play","venue":"Imagine Swimming UWS","neighborhood":"752 West End Ave","when":"Open daily (see hours)","days":["any"],"cost":"Per class $48","travelMinutes":33,"travelHow":"~33 min from Union Sq","toddlerNotes":"Parent & Me swim classes ages 4mo-3yr. Warm pool, gentle progression. UWS location. (Multiple schedule options)","url":"https://www.imagineswimming.com/locations/upper-west-side","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7928,"lng":-73.9745,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Goldfish Swim School UES","category":"play","venue":"Goldfish Swim School UES","neighborhood":"1534 2nd Ave","when":"Open daily (see hours)","days":["any"],"cost":"Annual membership $50; Per class ~$35-40","travelMinutes":30,"travelHow":"~30 min from Union Sq","toddlerNotes":"Ages 4mo+. Warm 90-degree pool. Shatter-proof underwater viewing. Family-friendly tropical decor. (90-degree pool; family changing rooms)","url":"https://goldfishswimschool.com/ues-e-80th-street/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7785,"lng":-73.9505,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"NYC Elite Gymnastics","category":"play","venue":"NYC Elite Gymnastics","neighborhood":"200 Riverside Blvd","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class ~$45","travelMinutes":25,"travelHow":"~25 min from Union Sq","toddlerNotes":"Parent-child obstacle courses from 3 months. 50-min classes. UWS riverside location. (Free trial available)","url":"https://nycelite.com/upper-west-side/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7754,"lng":-73.9891,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Children's Tumbling","category":"play","venue":"Children's Tumbling","neighborhood":"9 Murray St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class $65-90","travelMinutes":21,"travelHow":"~21 min from Union Sq","toddlerNotes":"Since 1978. NYC's oldest tumbling program. Classes from 16 months. Professional gymnastic equipment. (NYC institution since 1978)","url":"https://childrentumbling.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.713,"lng":-74.0076,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Super Soccer Stars UWS","category":"play","venue":"Super Soccer Stars UWS","neighborhood":"131 W 86th St","when":"Open daily (see hours)","days":["any"],"cost":"Per class ~$35-48","travelMinutes":31,"travelHow":"~31 min from Union Sq","toddlerNotes":"Adult & Me soccer for 12-26mo, Soccer for 2-3s. Fun intro to team sports. (Multiple UWS locations)","url":"https://www.soccerstars.com/ny/nyc/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7877,"lng":-73.9727,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Color Me Mine UWS","category":"other","venue":"Color Me Mine UWS","neighborhood":"177 Amsterdam Ave","when":"Open daily (see hours)","days":["any"],"cost":"Mini Mon (under 5) $5 + piece; Regular $10 + piece","travelMinutes":27,"travelHow":"~27 min from Union Sq","toddlerNotes":"Drop-in pottery painting. Mini Mondays: $5 for under-5s. Pick a piece, paint it, they fire it. (Best deal: Mini Mondays for toddlers)","url":"https://upperwestside.colormemine.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7795,"lng":-73.9804,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Little Maestros","category":"music","venue":"Little Maestros","neighborhood":"344 E 69th St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class ~$35","travelMinutes":23,"travelHow":"~23 min from Union Sq","toddlerNotes":"Award-winning 45-min toddler music with storytime, puppets, dance parties. Ages 0-5. (Award-winning music program)","url":"https://www.littlemaestros.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7645,"lng":-73.9594,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Church Street School","category":"music","venue":"Church Street School","neighborhood":"41 White St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class ~$35","travelMinutes":19,"travelHow":"~19 min from Union Sq","toddlerNotes":"Non-profit music & art from 16mo. Dalcroze eurythmics, creative movement, art exploration. (Dalcroze method; non-profit)","url":"https://www.churchstreetschool.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.718,"lng":-74.0024,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Yogi Beans UES","category":"other","venue":"Yogi Beans UES","neighborhood":"1018 Lexington Ave","when":"Open daily (see hours)","days":["any"],"cost":"Per class ~$35","travelMinutes":26,"travelHow":"~26 min from Union Sq","toddlerNotes":"Kids-only yoga studio. Mini Sun Salutation for ages 2+. Calm, focused environment. (Kids-only yoga; ages 2+)","url":"https://yogibeans.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.772,"lng":-73.9612,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"14th Street Y","category":"other","venue":"14th Street Y","neighborhood":"344 E 14th St","when":"Open daily (see hours)","days":["any"],"cost":"Trial class $17; 5-pack $65","travelMinutes":10,"travelHow":"~10 min from Union Sq","toddlerNotes":"Yoga, dance, art, music, movement classes for toddlers. $17 trial class. Affordable packages. (Most affordable class venue)","url":"https://www.14streety.org","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7322,"lng":-73.9818,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Apple Seeds","category":"play","venue":"Apple Seeds","neighborhood":"6 Stuyvesant Oval","when":"Open daily (see hours)","days":["any"],"cost":"Trial visit $25; Membership $75/mo","travelMinutes":15,"travelHow":"~15 min from Union Sq","toddlerNotes":"Indoor play space + classes in Stuy Town. Membership-based but trial visits available. (Trial visit available)","url":"https://appleseedsovalkids.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7319,"lng":-73.9769,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Chelsea Forest Play","category":"play","venue":"Chelsea Forest Play","neighborhood":"241 W 20th St","when":"Open daily (see hours)","days":["any"],"cost":"50-min session $35","travelMinutes":15,"travelHow":"~15 min from Union Sq","toddlerNotes":"Nature-themed treehouse indoor playground. Reservation required. Beautiful design. (Reservation required)","url":"https://www.chelseaforestplay.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.742,"lng":-73.9977,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Twinkle Playspace","category":"play","venue":"Twinkle Playspace","neighborhood":"144 Frost St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat 9-5","days":["mon","tue","wed","thu","fri","sat"],"cost":"Child $20; Adult $15","travelMinutes":25,"travelHow":"~25 min from Union Sq","toddlerNotes":"Toddler-focused space, ages 0-6. Soft play, imaginative stations. Intimate and calm. (Ages 0-6 only)","url":"https://www.twinkleplayspace.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7168,"lng":-73.9459,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"The Kids Town","category":"play","venue":"The Kids Town","neighborhood":"278A 6th St","when":"Open daily 9:30-5","days":["any"],"cost":"90 min $25","travelMinutes":54,"travelHow":"~54 min from Grandma's (101 CPW)","toddlerNotes":"Family-owned, intimate play space. 90-min sessions in a cozy Park Slope setting. (Intimate family-run space)","url":"https://www.thekidstown.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.67,"lng":-73.9832,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Playgarden Prep Tribeca","category":"play","venue":"Playgarden Prep Tribeca","neighborhood":"95 Franklin St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Trial day $50; Membership Monthly","travelMinutes":19,"travelHow":"~19 min from Union Sq","toddlerNotes":"NYC's largest under-5 indoor playground. Membership-based with trial days available. (Membership-based; trial available)","url":"https://playgardennyc.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7184,"lng":-74.0035,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Gymboree UES","category":"music","venue":"Gymboree UES","neighborhood":"1622 First Ave","when":"Open Mon/Tue/Wed/Thu/Fri/Sat 9:30-11","days":["mon","tue","wed","thu","fri","sat"],"cost":"Open Gym $59","travelMinutes":29,"travelHow":"~29 min from Union Sq","toddlerNotes":"Open gym + structured music, art, sensory classes. Ages 0-5. Drop-in welcome. (Sat open gym; weekday classes)","url":"https://www.gymboreeclasses.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.776,"lng":-73.95,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Jane's Carousel","category":"other","venue":"Jane's Carousel","neighborhood":"Old Dock St","when":"Open Wed/Thu/Fri/Sat/Sun 11-7","days":["wed","thu","fri","sat","sun"],"cost":"Per ride $2","travelMinutes":23,"travelHow":"~23 min from Union Sq","toddlerNotes":"Beautifully restored 1922 carousel in a Jean Nouvel glass pavilion. Toddlers love the painted horses. (Cash only; $2 per ride)","url":"https://janescarousel.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7042,"lng":-73.9936,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Totally Kid Carousel","category":"other","venue":"Totally Kid Carousel","neighborhood":"Riverbank State Park","when":"Open Sat/Sun 11-5","days":["sat","sun"],"cost":"Per ride $1","travelMinutes":32,"travelHow":"~32 min from Grandma's (101 CPW)","toddlerNotes":"One-of-a-kind carousel with animals designed by NYC kids. Only $1 per ride. Inside Riverbank State Park. (Weekends only; $1 per ride)","url":"https://parks.ny.gov/parks/riverbank","outdoor":false,"recurring":true,"confidence":"medium","lat":40.8253,"lng":-73.9486,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Kids at Art UES","category":"other","venue":"Kids at Art UES","neighborhood":"1412 2nd Ave","when":"Open Mon/Tue/Wed/Thu/Fri/Sat (see hours)","days":["mon","tue","wed","thu","fri","sat"],"cost":"Per class ~$30","travelMinutes":26,"travelHow":"~26 min from Union Sq","toddlerNotes":"Creative art classes for ages 2-12. 25+ years on the UES. Small class sizes. (25+ years experience)","url":"https://www.kidsatartnyc.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.769,"lng":-73.956,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Gymboree Play & Music Brooklyn","category":"music","venue":"Gymboree Play & Music Brooklyn","neighborhood":"157 Montague St","when":"Open Mon/Tue/Wed/Thu/Fri/Sat 9:30-11","days":["mon","tue","wed","thu","fri","sat"],"cost":"Open Gym $59","travelMinutes":28,"travelHow":"~28 min from Union Sq","toddlerNotes":"Open gym + structured music, sensory classes for ages 0-5. Brooklyn Heights location. (Sat open gym; weekday classes)","url":"https://www.gymboreeclasses.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6935,"lng":-73.9929,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Kidville Park Slope","category":"play","venue":"Kidville Park Slope","neighborhood":"434 7th Ave","when":"Open Mon/Tue/Wed/Thu/Fri 9-5","days":["mon","tue","wed","thu","fri"],"cost":"Drop-in $29","travelMinutes":56,"travelHow":"~56 min from Grandma's (101 CPW)","toddlerNotes":"Indoor gym, music, art classes for babies and toddlers. Park Slope location. (Same programs as UWS)","url":"https://kidville.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.6647,"lng":-73.9813,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":true},
-    {"title":"Fotografiska NYC","category":"other","venue":"Fotografiska NYC","neighborhood":"281 Park Ave South","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":4,"travelHow":"~4 min from Union Sq","toddlerNotes":"Photography museum. Under 7 free. Beautiful building with restaurant. Stroller-friendly. (Under 7 free; open late)","url":"https://www.fotografiska.com/nyc/","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7398,"lng":-73.9852,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Gulliver's Gate (reopened)","category":"other","venue":"Gulliver's Gate (reopened)","neighborhood":"216 W 44th St","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":17,"travelHow":"~17 min from Union Sq","toddlerNotes":"Miniature world with interactive elements. Under 3 free. Tiny cities, trains, airports mesmerize toddlers. (Interactive keys activate scenes)","url":"https://gulliversgate.com","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7574,"lng":-73.9871,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false},
-    {"title":"Roosevelt Island Tramway + Playground","category":"other","venue":"Roosevelt Island Tramway + Playground","neighborhood":"E 60th St & 2nd Ave","when":"Open daily (see hours)","days":["any"],"cost":"Free","travelMinutes":22,"travelHow":"~22 min from Union Sq","toddlerNotes":"Aerial tram ride over East River (uses MetroCard). Indoor playground on the island. Toddlers love the ride itself. (Regular MetroCard fare; the ride IS the activity)","url":"https://rioc.ny.gov/302/Tram","outdoor":false,"recurring":true,"confidence":"medium","lat":40.7614,"lng":-73.9596,"event":false,"times":["any"],"start":null,"end":null,"cpwOnly":false}
-  ]
+      "cost": "Free, no purchase required",
+      "travelMinutes": 22,
+      "travelHow": "2/3/4/5 to Borough Hall + 6-min walk (~22 min)",
+      "toddlerNotes": "Bookstore storytime inside the City Point mall — billed as great for ages 4-8 but genuinely all-ages, and the mall setting means A/C, bathrooms, and food court backup are all steps away if she melts down.",
+      "url": "https://www.mcnallyjackson.com/",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.6925,
+      "lng": -73.9829,
+      "cpwOnly": false,
+      "event": true,
+      "recurring": false
+    }
+  ],
+  "nextWeek": {
+    "weekMonday": "2026-07-27",
+    "weekLabel": "July 27–August 2, 2026",
+    "events": [
+      {
+        "title": "Free Shakespeare in the Park: The Winter's Tale (week 2)",
+        "category": "theater",
+        "venue": "Delacorte Theater, Central Park",
+        "neighborhood": "Central Park (enter at CPW & 81st St)",
+        "when": "Tue Jul 28 - Sun Aug 2, 8:00-10:15 PM (dark Mondays)",
+        "days": [
+          "tue",
+          "wed",
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "start": "20:00",
+        "end": "22:15",
+        "times": [
+          "evening"
+        ],
+        "cost": "Free — requires winning the in-person Delacorte lottery (noon day-of) or the TodayTix digital lottery",
+        "travelMinutes": 8,
+        "travelHow": "8-min walk through the park from 101 CPW",
+        "toddlerNotes": "Same honest flag as this week: fixed stone amphitheater seating, lottery required, 8pm start, 2+ hours of Shakespeare — a grownups' outing, not really a toddler one.",
+        "url": "https://www.publictheater.org/programs/shakespeare-in-the-park/",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7794,
+        "lng": -73.9691,
+        "cpwOnly": true,
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Shakespeare in the Parking Lot: As You Like It (closing weekend)",
+        "category": "theater",
+        "venue": "The Drilling Company (parking lot behind Clemente Soto Velez Center, Rivington St entrance)",
+        "neighborhood": "Lower East Side",
+        "when": "Thu Jul 30 - Sat Aug 1, 7:00-9:00 PM (final performances)",
+        "days": [
+          "thu",
+          "fri",
+          "sat"
+        ],
+        "start": "19:00",
+        "end": "21:00",
+        "times": [
+          "evening"
+        ],
+        "cost": "Free, no reservations (donations encouraged)",
+        "travelMinutes": 18,
+        "travelHow": "F to Delancey St + 6-min walk (~18 min)",
+        "toddlerNotes": "FREE OUTDOOR THEATER, closing weekend of the run: casual parking-lot folding chairs, no shade, easy to duck out early. 7pm start is late for a 2-year-old — go for the first act.",
+        "url": "https://drillingcompany.org/in-the-parking-lot",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7186,
+        "lng": -73.9838,
+        "cpwOnly": false,
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Hudson Classical Theatre: The Dancing Men (week 2)",
+        "category": "theater",
+        "venue": "Soldiers' and Sailors' Monument, Riverside Park",
+        "neighborhood": "Upper West Side (W 89th St & Riverside Dr)",
+        "when": "Thu Jul 30 - Sun Aug 2, 6:30-8:30 PM",
+        "days": [
+          "thu",
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "start": "18:30",
+        "end": "20:30",
+        "times": [
+          "evening"
+        ],
+        "cost": "Pay-what-you-can, no tickets required",
+        "travelMinutes": 12,
+        "travelHow": "12-min walk up Riverside Dr from 101 CPW",
+        "toddlerNotes": "FREE OUTDOOR THEATER: lawn/cushion seating, casual and easy to leave early — good background theater for a toddler running around nearby.",
+        "url": "https://riversideparknyc.org/event/hudson-classical-theater-company-presents-the-dancing-men/2026-07-30/",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7907,
+        "lng": -73.9779,
+        "cpwOnly": true,
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "CityParks PuppetMobile: Pinocchio and Gepetto's Big Apple Adventure",
+        "category": "theater",
+        "venue": "NYC Parks (exact park not yet posted — confirm at nycgovparks.org before heading out)",
+        "neighborhood": "Manhattan (location TBD)",
+        "when": "Mon Jul 27, 11:00 AM",
+        "days": [
+          "mon"
+        ],
+        "start": "11:00",
+        "end": "11:45",
+        "times": [
+          "morning"
+        ],
+        "cost": "Free",
+        "travelMinutes": 15,
+        "travelHow": "Location TBD — check the NYC Parks listing for the exact park before setting out",
+        "toddlerNotes": "The date (Mon Jul 27, 11am) is confirmed via NYC Parks' own event listing, but the specific park wasn't retrievable this pass — confirm the exact location on nycgovparks.org a day or two ahead. Marionette storytelling, purpose-built for young kids.",
+        "url": "https://www.nycgovparks.org/events/2026/07/27/puppet-mobile-featuring-pinocchio",
+        "outdoor": true,
+        "confidence": "low",
+        "lat": 40.7359,
+        "lng": -73.9911,
+        "cpwOnly": false,
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "NYC Summer Streets: car-free Park Avenue",
+        "category": "festival",
+        "venue": "Park Avenue (Summer Streets route, Brooklyn Bridge to 72nd St, crossing at 110th)",
+        "neighborhood": "Flatiron / NoMad (steps from Union Square)",
+        "when": "Sat Aug 1, 7:00 AM-3:00 PM",
+        "days": [
+          "sat"
+        ],
+        "start": "07:00",
+        "end": "15:00",
+        "times": [
+          "morning"
+        ],
+        "cost": "Free",
+        "travelMinutes": 5,
+        "travelHow": "5-min walk to Park Ave South from Union Sq",
+        "toddlerNotes": "The city's best stroller-friendly outing: miles of Park Avenue closed to cars, with rest-stop activity zones along the route. The Flatiron/NoMad stretch is a 5-minute walk from home — no need to go far to get the full car-free-street experience.",
+        "url": "https://www.nyc.gov/html/dot/summerstreets/html/home/home.shtml",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7411,
+        "lng": -73.9862,
+        "cpwOnly": false,
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Radiolab: Fruit Fantasia at The Glade",
+        "category": "other",
+        "venue": "Little Island - The Glade",
+        "neighborhood": "West Village / Hudson River Park (Pier 55)",
+        "when": "Fri Jul 31 - Sun Aug 2, 5:00 PM",
+        "days": [
+          "fri",
+          "sat",
+          "sun"
+        ],
+        "start": "17:00",
+        "end": "18:00",
+        "times": [
+          "evening"
+        ],
+        "cost": "Free",
+        "travelMinutes": 20,
+        "travelHow": "L to 8th Ave + 12-min walk along the Hudson River Park esplanade (~20 min)",
+        "toddlerNotes": "A live Radiolab episode taping with host Latif Nasser, outdoors on the Glade lawn — general-audience, not a kids' program specifically, but free, early evening, and casual enough for a wandering toddler.",
+        "url": "https://littleisland.org/2026season/",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.7411,
+        "lng": -74.0129,
+        "cpwOnly": false,
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "Le Carrousel Extravaganza: Scaramouches Puppet Theatre",
+        "category": "theater",
+        "venue": "Bryant Park - Le Carrousel (40th St entrance)",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Wed Jul 29, 10:00-11:00 AM",
+        "days": [
+          "wed"
+        ],
+        "start": "10:00",
+        "end": "11:00",
+        "times": [
+          "morning"
+        ],
+        "cost": "Free",
+        "travelMinutes": 15,
+        "travelHow": "F/M/D/B to 42nd St-Bryant Pk, or walk up 6th Ave (~15 min)",
+        "toddlerNotes": "Repertorio Español's Scaramouches Puppet Theatre takes the carousel slot this week — same free, casual, easy-exit format as this week's puppet show.",
+        "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.7528,
+        "lng": -73.9836,
+        "cpwOnly": false,
+        "event": true,
+        "recurring": false
+      },
+      {
+        "title": "FunkyTown Playground (kids music & dance)",
+        "category": "music",
+        "venue": "Bryant Park - Le Carrousel area",
+        "neighborhood": "Midtown / Bryant Park",
+        "when": "Mon Jul 27, 10:00-11:00 AM",
+        "days": [
+          "mon"
+        ],
+        "start": "10:00",
+        "end": "11:00",
+        "times": [
+          "morning"
+        ],
+        "cost": "Free",
+        "travelMinutes": 15,
+        "travelHow": "F/M/D/B to 42nd St-Bryant Pk, or walk up 6th Ave (~15 min)",
+        "toddlerNotes": "Monday's free morning kids music-and-dance slot at the carousel — reliable weekly fixture, though the specific July 27 act wasn't independently confirmed beyond the listing name.",
+        "url": "https://bryantpark.org/activities/le-carrousel-extravaganza",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.7528,
+        "lng": -73.9836,
+        "cpwOnly": false,
+        "event": true,
+        "recurring": false
+      }
+    ]
+  }
 };
