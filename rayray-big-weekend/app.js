@@ -310,6 +310,11 @@
   const dayType = () => state.day === "all" ? "all" : (WEEKDAYS.indexOf(state.day) !== -1 ? "weekday" : "weekend");
   // the cap the slider filters against, using the active metric
   const travelMins = (e) => state.travelMetric === "walk" ? walkOf(e) : travelOf(e);
+  // travel chip text matches the active metric, so the number shown is the number filtered
+  function travelChip(e) {
+    if (state.travelMetric === "walk") return "🚶 ~" + walkOf(e) + " min walk";
+    return "🚇 ~" + travelOf(e) + " min" + (state.base === "cpw" ? " from Grandma's (est)" : "");
+  }
   function syncTravelLabel() {
     travelLead.textContent = (state.travelMetric === "walk" ? "🚶 Walk up to" : "🚇 Travel up to");
     travelVal.textContent = state.maxTravel
@@ -410,7 +415,7 @@
       '<div class="pop">' +
         "<strong>" + esc(e.title) + "</strong>" +
         '<div class="pop-when">🕐 ' + esc(e.when) + "</div>" +
-        '<div class="pop-venue">📍 ' + esc(e.venue) + " · ~" + travelOf(e) + " min</div>" +
+        '<div class="pop-venue">📍 ' + esc(e.venue) + " · " + travelChip(e) + "</div>" +
         '<div class="pop-venue">🎟️ ' + esc(shortCost(e, 60)) + "</div>" +
         '<div class="pop-links"><a href="' + esc(e.url) + '" target="_blank" rel="noopener">Details ↗</a>' +
         ' · <a href="' + dirUrl(e) + '" target="_blank" rel="noopener">Directions 🗺️</a></div>' +
@@ -439,7 +444,7 @@
         (state.base === "usq" && e.travelHow ? '<p class="mini-when">🚇 ' + esc(e.travelHow) + "</p>" : "") +
         '<p class="mini-meta">' +
           costChip(e) +
-          '<span class="m-travel">🚇 ~' + travelOf(e) + " min" + (state.base === "cpw" ? " from Grandma's (est)" : "") + "</span>" +
+          '<span class="m-travel">' + travelChip(e) + "</span>" +
           (e.outdoor ? "<span>☀️</span>" : "<span>❄️ A/C</span>") +
         "</p>" +
         '<p class="mini-tip">🧸 ' + esc(e.toddlerNotes) + "</p>" +
@@ -582,12 +587,13 @@
       if (state.heartsOnly && !hearts.has(keyOf(e))) return false;
       if (state.base === "usq" && e.cpwOnly) return false; // beyond the Union Sq radius
       if (state.base === "cpw" && estMinutes(BASES.cpw, e) > 32) return false;
-      if (state.maxTravel && travelMins(e) > state.maxTravel) return false;
+      // "Our plan" shows everything you hearted — a saved pick never hides behind the travel cap
+      if (!state.heartsOnly && state.maxTravel && travelMins(e) > state.maxTravel) return false;
       const days = e.days || ["any"];
       if (state.day !== "all" && days.indexOf("any") === -1 && days.indexOf(state.day) === -1) return false;
       if (liveStatus(e) === "done") { doneToday += 1; return false; } // over for today — off the scroll
       return true;
-    }).sort((a, b) => startMin(a) - startMin(b) || (travelOf(a) || 99) - (travelOf(b) || 99));
+    }).sort((a, b) => startMin(a) - startMin(b) || (travelMins(a) || 99) - (travelMins(b) || 99));
 
     const nextW = state.week === "next";
     const label = state.day === "all" ? (nextW ? "next week" : "this week")
@@ -641,7 +647,7 @@
       return list
         .filter((e) => timeBucket(e) === "any" && !usedFallback.has(keyOf(e)) &&
           (slot === "evening" ? (!e.outdoor && !isRide(e)) : (e.outdoor && e.category === "play" && !isRide(e))))
-        .sort((a, b) => (travelOf(a) || 99) - (travelOf(b) || 99))
+        .sort((a, b) => (travelMins(a) || 99) - (travelMins(b) || 99))
         .slice(0, 3);
     };
     TB.forEach((bucket) => {
@@ -658,7 +664,7 @@
         // three staged unlocks: indoor rainy-day escapes, the nearby-playground list
         // (sorted closest-first — the weekday go-to), then farther destinations
         const isPlayground = (e) => e.outdoor && e.category === "play" && !isRide(e);
-        const byTravel = (a, b) => (travelOf(a) || 99) - (travelOf(b) || 99);
+        const byTravel = (a, b) => (travelMins(a) || 99) - (travelMins(b) || 99);
         const groups = [
           { label: "☔ Rainy day", sub: "museums & indoor play, nearest-first", flag: "showRainy",
             items: items.filter((e) => !e.outdoor && !isRide(e) && !usedFallback.has(keyOf(e))).sort(byTravel) },
