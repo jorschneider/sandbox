@@ -10,12 +10,23 @@
   var P = null; // window.PARAMOUNT (engine bridge), resolved lazily
 
   // per-game relationship store, reset when the game id changes
+  // Which roster is in play depends on the scenario's era: the modern Politburo of
+  // fictional archetypes, or the real 1976 succession cast.
+  function era() {
+    var snap = P ? P.snapshot() : null;
+    return (snap && snap.era) || 'modern';
+  }
+  function roster() {
+    return era() === '1976' ? (CAST.elites1976 || CAST.elites) : CAST.elites;
+  }
+
   var rel = { gameId: -1, elites: {} };
   function ensureRel() {
     var gid = P ? P.gameId() : 0;
     if (rel.gameId !== gid) {
       rel = { gameId: gid, elites: {} };
-      CAST.elites.forEach(function (e) {
+      // seed every roster so switching scenarios never leaves a character unseeded
+      [].concat(CAST.elites || [], CAST.elites1976 || []).forEach(function (e) {
         rel.elites[e.id] = { loyalty: e.start.loyalty, suspicion: e.start.suspicion };
       });
     }
@@ -38,8 +49,8 @@
   }
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   function findChar(id) {
-    return CAST.elites.filter(function (e) { return e.id === id; })[0] ||
-      CAST.foreign.filter(function (e) { return e.id === id; })[0] || null;
+    var pools = [].concat(roster() || [], CAST.foreign || [], CAST.elites || [], CAST.elites1976 || []);
+    return pools.filter(function (e) { return e.id === id; })[0] || null;
   }
 
   /* ---------------- text-to-speech ---------------- */
@@ -257,6 +268,7 @@
     var snap = P ? P.snapshot() : null;
     var payload = {
       mode: session.mode,
+      era: era(),
       characterId: session.character ? session.character.id : undefined,
       message: playerText,
       target: session.target,
@@ -309,10 +321,13 @@
 
   function resolveOutcome(outcome, data) {
     var foot = $('sit-foot');
+    var is76 = era() === '1976';
     var msgs = {
       agreed: 'A deal is struck. The photographers are summoned.',
       refused: 'Talks collapse. Both sides declare total victory.',
-      purged: '“Consensus” is reached. ' + (session.target || 'The comrade') + ' is thanked for years of service and sent to study.',
+      purged: is76
+        ? 'The order is given. ' + (session.target || 'The accused') + ' is expelled from the Party and taken into custody, as history records.'
+        : '“Consensus” is reached. ' + (session.target || 'The comrade') + ' is thanked for years of service and sent to study.',
       survived: (session.target || 'The comrade') + ' survives — and will remember this meeting.',
       triumph: 'A triumph. The speech has been added to the national curriculum.',
       disaster: 'The hall applauds precisely as long as required, and no longer.'
@@ -380,31 +395,46 @@
 
   function convenePolitburo() {
     if (!requireActive()) return;
-    openChooser('Convene the Politburo', 'Summon a comrade for a private word.', 'elite', CAST.elites, function (id) {
-      var c = findChar(id);
-      openConversation({
-        mode: 'politburo', character: c,
-        opening: 'You summoned me, Comrade Leader. I came at once, naturally.'
+    var is76 = era() === '1976';
+    openChooser(
+      is76 ? 'Convene the Succession' : 'Convene the Politburo',
+      is76 ? 'Autumn 1976. Everyone is waiting to see who speaks first.' : 'Summon a comrade for a private word.',
+      'elite', roster(), function (id) {
+        var c = findChar(id);
+        openConversation({
+          mode: 'politburo', character: c,
+          opening: is76
+            ? 'You wished to speak. In these days, that is itself a decision.'
+            : 'You summoned me, Comrade Leader. I came at once, naturally.'
+        });
       });
-    });
   }
 
   function callPlenum() {
     if (!requireActive()) return;
-    // choose who to purge
-    openChooser('Call a Plenum', 'Whom shall the Standing Committee thank for their service?', 'elite', CAST.elites, function (targetId) {
-      var target = findChar(targetId);
-      // the deliberation is chaired by your enforcer, unless he is the target
-      var chairId = targetId === 'enforcer' ? 'security' : 'enforcer';
-      var chair = findChar(chairId);
-      openConversation({
-        mode: 'plenum', character: chair, target: target.name,
-        emoji: '⚖️',
-        title: 'Plenum · Re: ' + target.name,
-        subtitle: 'Deliberation chaired by ' + chair.name,
-        opening: 'The committee is seated, Chairman. You wished to raise the matter of ' + target.name + '. The floor — and the file — are yours.'
+    var is76 = era() === '1976';
+    openChooser(
+      is76 ? 'Emergency Session · October 1976' : 'Call a Plenum',
+      is76 ? 'Whom does the Politburo move against — and can you show the numbers?'
+        : 'Whom shall the Standing Committee thank for their service?',
+      'elite', roster(), function (targetId) {
+        var target = findChar(targetId);
+        // The session is chaired by whoever can actually enforce the outcome:
+        // in 1976 that is the marshal (or the guard commander, if he is the target).
+        var chairId = is76
+          ? (targetId === 'ye' ? 'wangdx' : 'ye')
+          : (targetId === 'enforcer' ? 'security' : 'enforcer');
+        var chair = findChar(chairId);
+        openConversation({
+          mode: 'plenum', character: chair, target: target.name,
+          emoji: '⚖️',
+          title: (is76 ? 'Emergency Session · Re: ' : 'Plenum · Re: ') + target.name,
+          subtitle: (is76 ? 'Convened by ' : 'Deliberation chaired by ') + chair.name,
+          opening: is76
+            ? 'We are agreed on the danger, then. The question is the count — and who gives the order. Speak carefully; this room is decided once.'
+            : 'The committee is seated, Chairman. You wished to raise the matter of ' + target.name + '. The floor — and the file — are yours.'
+        });
       });
-    });
   }
 
   function summonForeign() {
@@ -422,11 +452,12 @@
 
   function addressNation() {
     if (!requireActive()) return;
-    var items = CAST.topics.map(function (t, i) {
+    var topicList = (era() === '1976' && CAST.topics1976) ? CAST.topics1976 : CAST.topics;
+    var items = topicList.map(function (t, i) {
       return { id: String(i), emoji: '📜', name: t.replace(/^./, function (c) { return c.toUpperCase(); }), title: 'Address the Nation', blurb: 'Deliver a speech on this theme.' };
     });
     openChooser('Address the Nation', 'Choose your theme. Vague waffle will not move the hall.', 'topic', items, function (idx) {
-      var topic = CAST.topics[Number(idx)] || CAST.topics[0];
+      var topic = topicList[Number(idx)] || topicList[0];
       openConversation({
         mode: 'speech', character: null, topic: topic,
         emoji: '📺',

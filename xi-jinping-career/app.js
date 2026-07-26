@@ -184,10 +184,19 @@
   }
 
   function drawEvent() {
-    var pool = (G.scenario.events || []).concat(CORE_EVENTS).filter(function (e) {
+    // The shared core events are all contemporary (tariffs, chips, developers, memes),
+    // so a period scenario draws only from its own pool — otherwise 1976 gets briefed
+    // on a property-developer default.
+    var periodPiece = G.scenario.era && G.scenario.era !== 'modern';
+    var base = (G.scenario.events || []).concat(periodPiece ? [] : CORE_EVENTS);
+    var pool = base.filter(function (e) {
       return !G.usedEvents[e.id] && (e.minTurn || 0) <= G.turn;
     });
-    if (!pool.length) { G.usedEvents = {}; pool = CORE_EVENTS.slice(); }
+    if (!pool.length) {
+      G.usedEvents = {};
+      pool = base.filter(function (e) { return (e.minTurn || 0) <= G.turn; });
+      if (!pool.length) pool = base.slice();
+    }
     var total = 0;
     pool.forEach(function (e) { total += (e.weight || 1); });
     var r = Math.random() * total;
@@ -707,6 +716,8 @@
       if (!G) return null;
       return {
         scenario: G.scenario.title,
+        scenarioId: G.scenario.id,
+        era: G.scenario.era || 'modern',
         date: dateLabel(G.turn),
         turn: G.turn,
         stats: {

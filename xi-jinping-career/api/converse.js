@@ -103,9 +103,23 @@ function stateLine(gs) {
   return bits.length ? `\nCurrent situation — ${bits.join('; ')}.` : '';
 }
 
-function buildSystem(mode, character, extra, gs) {
+const ERA_1976_BRIEF = `
+SETTING: autumn 1976, days after Mao Zedong's death. This is an alt-history scenario: the
+player is improbably in the room during the succession crisis. The real historical situation —
+Hua Guofeng's contested mandate, Jiang Qing and the Gang of Four's bid for power, Marshal Ye
+Jianying and the army, Wang Dongxing's Unit 8341 guard, Deng Xiaoping in internal exile, the
+Tangshan earthquake still unburied — is your factual backdrop. Stay period-accurate: no
+internet, no mobile phones, no reform-era vocabulary. In this era a "purge" means the
+documented, bloodless outcome of October 1976: arrest, expulsion from the Party, and trial.
+Play these real, deceased historical figures as "The Death of Stalin" plays its cast — sharp
+satire of the scheming, never mockery of the dead as people or invented personal smears.`;
+
+function buildSystem(mode, character, extra, gs, era) {
   let m = '';
-  if (mode === 'politburo') {
+  if (mode === 'plenum' && era === '1976') {
+    // The historical case: the 6 October 1976 arrest of the Gang of Four.
+    m = `MODE: the emergency Politburo session of October 1976 that decides the fate of ${extra.target || 'the accused'}. You speak as ${character.name}. This is the real historical crossroads: the marshals and the guard command move against the Gang, or they hesitate and the Gang consolidates. Weigh your faction, your survival, and who commands actual troops. If the Leader is persuasive and the count is right, you fall in line (deltas.partyUnity up, outcome "purged" — meaning arrest and expulsion, as happened); if he overreaches or cannot show the numbers, you resist (partyUnity down, outcome "survived").`;
+  } else if (mode === 'politburo') {
     m = `MODE: a private one-on-one with the Paramount Leader. React to what he says and to your own interests. Loyalty/suspicion shift based on how he treats you. outcome stays "ongoing" unless he dismisses you or you snap.`;
   } else if (mode === 'plenum') {
     m = `MODE: the Standing Committee plenum. The Leader is arguing that ${extra.target || 'a comrade'} should be purged ("sent to study"). You speak as ${character.name}. Weigh loyalty vs self-preservation vs the target. If the Leader is persuasive/menacing you fall in line (deltas.partyUnity up, outcome "purged"); if he overreaches you resist (partyUnity down, outcome "survived"). Be political.`;
@@ -117,7 +131,8 @@ function buildSystem(mode, character, extra, gs) {
   const who = character
     ? `\n\nYOU ARE:\n${character.persona}\nSpeaking voice: ${character.voice}.`
     : '';
-  return `${GUARDRAILS}\n\n${m}${who}${stateLine(gs)}`;
+  const eraBrief = era === '1976' ? `\n${ERA_1976_BRIEF}` : '';
+  return `${GUARDRAILS}${eraBrief}\n\n${m}${who}${stateLine(gs)}`;
 }
 
 function fallbackPayload(reason) {
@@ -158,7 +173,8 @@ export default async function handler(req, res) {
   }
 
   const mode = ['politburo', 'plenum', 'negotiate', 'speech'].includes(body.mode) ? body.mode : 'politburo';
-  const character = getCharacter(body.characterId);
+  const era = body.era === '1976' ? '1976' : 'modern';
+  const character = getCharacter(body.characterId, era);
   if (mode !== 'speech' && !character) {
     res.statusCode = 400;
     return res.end(JSON.stringify({ ok: false, error: 'unknown_character' }));
@@ -191,7 +207,7 @@ export default async function handler(req, res) {
     const resp = await client.messages.create({
       model: MODEL,
       max_tokens: 700,
-      system: buildSystem(mode, character, extra, body.gameState),
+      system: buildSystem(mode, character, extra, body.gameState, era),
       tools: [RESPOND_TOOL],
       tool_choice: { type: 'tool', name: 'respond' },
       messages,

@@ -28,6 +28,34 @@ window.PARAMOUNT_CAST = {
       blurb: 'The future. Which is exactly why you watch him.', color: '#b3901e',
       start: { loyalty: 65, suspicion: 48 } }
   ],
+  // 1976 succession roster — real, deceased historical figures in documented roles
+  // (see the note in api/_cast.js). Used only by the "1976: The Succession" scenario.
+  elites1976: [
+    { id: 'hua', name: 'Chairman Hua Guofeng', title: 'Designated Successor', emoji: '📜',
+      blurb: 'Has a note saying he is in charge. Carries it everywhere.', color: '#7c0d13',
+      start: { loyalty: 55, suspicion: 40 } },
+    { id: 'jiang', name: 'Comrade Jiang Qing', title: 'The Chairman’s Widow · Gang of Four', emoji: '🎭',
+      blurb: 'Claims his final wishes. Witnessed, conveniently, by herself.', color: '#8f1a4a',
+      start: { loyalty: 20, suspicion: 85 } },
+    { id: 'zhang', name: 'Zhang Chunqiao', title: 'Theorist · Gang of Four', emoji: '✒️',
+      blurb: 'The Gang’s only real brain. Already drafting the editorial.', color: '#2b2b33',
+      start: { loyalty: 22, suspicion: 80 } },
+    { id: 'wanghw', name: 'Wang Hongwen', title: 'Vice-Chairman · Gang of Four', emoji: '🧢',
+      blurb: 'Youngest man ever hoisted this high. Keeps mentioning Shanghai.', color: '#6b4b8a',
+      start: { loyalty: 25, suspicion: 75 } },
+    { id: 'ye', name: 'Marshal Ye Jianying', title: 'Minister of Defense', emoji: '🎖️',
+      blurb: 'Talks about the army’s health. Means divisions.', color: '#5c5138',
+      start: { loyalty: 60, suspicion: 45 } },
+    { id: 'wangdx', name: 'Wang Dongxing', title: 'Commander, Unit 8341', emoji: '🔐',
+      blurb: 'Controls the only men who can arrest anyone here.', color: '#3a4a3a',
+      start: { loyalty: 58, suspicion: 42 } },
+    { id: 'deng', name: 'Deng Xiaoping', title: 'Purged (Twice) · Awaiting Rehabilitation', emoji: '🐈',
+      blurb: 'Cats, mice. Can outwait every man in the building.', color: '#8a5b00',
+      start: { loyalty: 45, suspicion: 55 } },
+    { id: 'li', name: 'Li Xiannian', title: 'Vice-Premier · Economic Affairs', emoji: '🧮',
+      blurb: 'Survived everything by never once being memorable.', color: '#3f6b52',
+      start: { loyalty: 55, suspicion: 40 } }
+  ],
   foreign: [
     { id: 'usa', name: 'President Trump', title: 'United States', emoji: '🦅',
       blurb: 'Treats statecraft as real estate. Wants a win to announce today.', color: '#33506b' },
@@ -45,6 +73,15 @@ window.PARAMOUNT_CAST = {
     'the falling birthrate',
     'a stern warning to hostile foreign forces',
     'anti-corruption and self-revolution'
+  ],
+  // Period-appropriate themes for the 1976 succession (no reform-era vocabulary).
+  topics1976: [
+    'the passing of the Chairman and the continuity of his line',
+    'unity of the Party against splittists and careerists',
+    'the reconstruction of Tangshan',
+    'grain, steel, and the Four Modernizations',
+    'the army and the security of the capital',
+    'vigilance against Soviet revisionism'
   ],
   // Offline lines used when the AI backend is unavailable (503 / network error).
   offline: {
@@ -71,6 +108,23 @@ window.PARAMOUNT_CAST = {
     eu: ['We seek to de-risk, not decouple. Naturally the communiqué will require certain language.',
       'That is not a threat, it is a concern. And the concern will be referred to subcommittee.'],
     speech: ['State television reports the hall erupted in prolonged, thunderous applause — as scheduled.',
-      'The anchor confirms the speech has already been added to the national curriculum.']
+      'The anchor confirms the speech has already been added to the national curriculum.'],
+    // 1976 roster
+    hua: ['The Chairman left a note. I have it here. “With you in charge, I am at ease.” I carry it always.',
+      'Whatever the Chairman decided, we uphold. It spares us all a great deal of thinking.'],
+    jiang: ['I was at his bedside. I know his final wishes. Do you propose to correct a dying man?',
+      'Marshals. Peasants with medals. The revolution was never theirs to inherit.'],
+    zhang: ['Sentiment is not a political line. Comrade Jiang’s theatrics will cost us the provinces.',
+      'I have drafted the editorial. It explains whatever happens next. That is what editorials are for.'],
+    wanghw: ['The Shanghai militia stands ready. Say the word and thirty thousand rifles are ours.',
+      'Everyone in this room has fought a war. I have fought a factory. It has not escaped me.'],
+    ye: ['I am concerned for the health of the army. You understand what I am asking.',
+      'One moves once, comrade. Not twice. So one counts first.'],
+    wangdx: ['Unit 8341 answers to written orders from proper authority. Bring me the authority.',
+      'I do not have opinions on theory. I have men at the gates. State plainly what you require.'],
+    deng: ['Slogans do not plant grain. Say what you want done and I will tell you if it can be done.',
+      'I have been buried twice. I am in no hurry. You, however, appear to be.'],
+    li: ['The grain figures are adequate. I would rather not be quoted on anything beyond the grain figures.',
+      'I am with the marshals. I would be grateful if that were never written down.']
   }
 };
