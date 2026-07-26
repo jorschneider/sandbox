@@ -129,6 +129,14 @@ for this week directly, but STILL preserve the evergreen library.
    concerts, shows, festivals with a date and start time. Hunt venue calendars
    directly (NYC Parks events, Lincoln Center, Bryant Park, Hudson River Park,
    Little Island, BRIC, NYPL/BPL branch calendars, Mommy Poppins day-by-day).
+   **ALWAYS check the home-turf calendars first** — these are a few minutes'
+   walk from base and should be surfaced whenever they have a toddler event:
+   **Stuyvesant Town / Peter Cooper Village** (stuytown.com/events — the Oval
+   Lawn summer series: outdoor kids shows, movies on the Oval, live music,
+   family/toddler programming, the farmers market, and the Oval playgrounds),
+   plus Union Square, Madison Square Park, Gramercy, and the East Village.
+   Note in `toddlerNotes` when a StuyTown/PCV event is resident-access-only vs
+   open to the public.
    Aim for 15+ dated events across the week, every day covered. Evergreen
    places (playgrounds, carousels, ferries, zoo) stay as the "anytime" tail —
    refresh their open/closed status, don't let them crowd out events.
