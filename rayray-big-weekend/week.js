@@ -29,7 +29,7 @@ window.WEEK_DATA = {
           "slot": "afternoon",
           "key": "washington-square-playgrounds-spray-showers",
           "title": "Washington Square playgrounds + spray showers",
-          "note": "Post-nap spray showers and two playgrounds to pick from, 12 min away."
+          "note": "Afternoon spray showers and two playgrounds to pick from, 12 min away."
         },
         {
           "slot": "afternoon",
@@ -52,7 +52,7 @@ window.WEEK_DATA = {
       ]
     },
     "tue": {
-      "summary": "A stacked storytime morning across three neighborhoods, then Pixar on the Domino Park lawn after nap.",
+      "summary": "A stacked storytime morning across three neighborhoods, then Pixar on the Domino Park lawn in the afternoon.",
       "picks": [
         {
           "slot": "morning",
@@ -152,7 +152,7 @@ window.WEEK_DATA = {
       ]
     },
     "thu": {
-      "summary": "Open-play morning at Little Island or puppets and dance in LIC, storytime in Downtown Brooklyn after nap.",
+      "summary": "Open-play morning at Little Island or puppets and dance in LIC, storytime in Downtown Brooklyn in the afternoon.",
       "picks": [
         {
           "slot": "morning",
@@ -182,7 +182,7 @@ window.WEEK_DATA = {
           "slot": "afternoon",
           "key": "elizabeth-street-garden-hangout",
           "title": "Elizabeth Street Garden hangout",
-          "note": "A quiet sculpture garden to decompress in post-nap, 15 min away."
+          "note": "A quiet sculpture garden to decompress in afternoon, 15 min away."
         },
         {
           "slot": "afternoon",
@@ -264,7 +264,7 @@ window.WEEK_DATA = {
       ]
     },
     "sat": {
-      "summary": "Puppets at Corlears Hook or a fitness festival at Brooklyn Bridge Park by morning, Domino Park splash-and-croquet after nap.",
+      "summary": "Puppets at Corlears Hook or a fitness festival at Brooklyn Bridge Park by morning, Domino Park splash-and-croquet in the afternoon.",
       "picks": [
         {
           "slot": "morning",
@@ -317,13 +317,13 @@ window.WEEK_DATA = {
       ]
     },
     "sun": {
-      "summary": "Vehicle storytime or the StuyTown market in the morning; Bluey storytime, puppets or the Pokémon fest after nap; free Central Park concert at 5.",
+      "summary": "Vehicle storytime or the StuyTown market in the morning; Bluey storytime, puppets or the Pokémon fest in the afternoon; free Central Park concert at 5.",
       "picks": [
         {
           "slot": "morning",
           "key": "sunday-storytime-trucks-vehicles-at-books-of-won",
           "title": "Sunday Storytime at Books of Wonder",
-          "note": "Truck-and-vehicle storytime at 11:30, a few blocks away — wraps right before nap."
+          "note": "Truck-and-vehicle storytime at 11:30, a few blocks away."
         },
         {
           "slot": "morning",
@@ -718,7 +718,7 @@ window.WEEK_DATA = {
       "cost": "$34 online / $36 at door for 1 adult + one 2-year-old ($17-18 per person; under 1 free)",
       "travelMinutes": 35,
       "travelHow": "N/Q/R/W to Times Sq-42 St, transfer to 1 train to 79 St + 5-min walk",
-      "toddlerNotes": "Fully indoor and air-conditioned, 5 floors of hands-on exhibits with a dedicated under-4 PlayWorks zone (soft climbers, sensory sand, crawler-safe areas). Stay as long as you like on one ticket, so a 45-minute pre-nap visit works. Stroller parking on-site. Book online to save $1/ticket and guarantee entry. Free via Museums for All (EBT) or Cool Culture if eligible. Right at the edge of the 35-min limit.",
+      "toddlerNotes": "Fully indoor and air-conditioned, 5 floors of hands-on exhibits with a dedicated under-4 PlayWorks zone (soft climbers, sensory sand, crawler-safe areas). Stay as long as you like on one ticket, so a 45-minute morning visit works. Stroller parking on-site. Book online to save $1/ticket and guarantee entry. Free via Museums for All (EBT) or Cool Culture if eligible. Right at the edge of the 35-min limit.",
       "url": "https://cmom.org/visit/",
       "outdoor": false,
       "recurring": true,
@@ -772,7 +772,7 @@ window.WEEK_DATA = {
       "cost": "Free",
       "travelMinutes": 15,
       "travelHow": "L to 1st Av + 8 min walk up Ave A, or ~17 min walk from Union Square",
-      "toddlerNotes": "The best toddler pool near Union Square: a small ~40x20 ft above-ground mini pool about 3 ft at its deepest, reserved for children only (adults admitted only when accompanying a kid), so no rowdy big-kid scene. Confirmed open for 2026 by local press (opened Jun 27); its in-ground rebuild starts after this season. Swim diapers required; bring a sturdy combination padlock if you use lockers; no phones/food/glass on deck; only plain white t-shirts allowed over swimsuits. The 3-4pm cleaning closure lines up nicely with nap time; playground and shady park benches right next door.",
+      "toddlerNotes": "The best toddler pool near Union Square: a small ~40x20 ft above-ground mini pool about 3 ft at its deepest, reserved for children only (adults admitted only when accompanying a kid), so no rowdy big-kid scene. Confirmed open for 2026 by local press (opened Jun 27); its in-ground rebuild starts after this season. Swim diapers required; bring a sturdy combination padlock if you use lockers; no phones/food/glass on deck; only plain white t-shirts allowed over swimsuits. The 3-4pm cleaning closure lines up nicely with midday time; playground and shady park benches right next door.",
       "url": "https://www.nycgovparks.org/parks/tompkins-square-park/facilities/outdoor-pools",
       "outdoor": true,
       "recurring": true,
@@ -826,7 +826,7 @@ window.WEEK_DATA = {
       "cost": "Under 3 FREE; adults $10.95, kids 3-12 $7.95",
       "travelMinutes": 35,
       "travelHow": "Q from 14 St-Union Sq to Prospect Park station (~22 min), then 10-min walk north on Flatbush Ave — right at your 35-min limit",
-      "toddlerNotes": "Much smaller and calmer than the Bronx Zoo — sea lion feedings several times a day (check the board at the pool), a barn area, and prairie dog pop-up domes toddlers adore. Mostly shaded paths; doable in under an hour. Time the Q-train ride with a nap. Note: it sits exactly at the edge of your radius.",
+      "toddlerNotes": "Much smaller and calmer than the Bronx Zoo — sea lion feedings several times a day (check the board at the pool), a barn area, and prairie dog pop-up domes toddlers adore. Mostly shaded paths; doable in under an hour. Time the Q-train ride with a midday. Note: it sits exactly at the edge of your radius.",
       "url": "https://prospectparkzoo.com/plan-your-visit/hours-and-rates",
       "outdoor": true,
       "recurring": true,
@@ -968,7 +968,7 @@ window.WEEK_DATA = {
       "cost": "Free — no ticket needed",
       "travelMinutes": 15,
       "travelHow": "4/5 to Bowling Green or R/W to Whitehall St (~12 min) + walk into the terminal",
-      "toddlerNotes": "A giant orange boat, for free — peak toddler. 25 minutes each way past the Statue of Liberty (stand on the right side heading to Staten Island). Stroller rolls straight on, big air-conditioned cabins for July, snack bar aboard. You must get off at St. George and reboard (usually 15-30 min wait) — the whole loop fits neatly between breakfast and nap.",
+      "toddlerNotes": "A giant orange boat, for free — peak toddler. 25 minutes each way past the Statue of Liberty (stand on the right side heading to Staten Island). Stroller rolls straight on, big air-conditioned cabins for July, snack bar aboard. You must get off at St. George and reboard (usually 15-30 min wait) — the whole loop fits neatly between breakfast and midday.",
       "url": "https://siferry.com/faqs-trip-tips/",
       "outdoor": false,
       "recurring": true,
@@ -6428,7 +6428,7 @@ window.WEEK_DATA = {
       "cost": "Free, registration opens 72 hrs prior (space limited)",
       "travelMinutes": 22,
       "travelHow": "F to York St + 8-min walk (~22 min)",
-      "toddlerNotes": "A Powerhouse Arena-partnered toddler storytime in the Time Out Market lounge — book ahead since spots are limited. Good post-nap option with food-hall snacks right there for the grownups.",
+      "toddlerNotes": "A Powerhouse Arena-partnered toddler storytime in the Time Out Market lounge — book ahead since spots are limited. Good afternoon option with food-hall snacks right there for the grownups.",
       "url": "https://www.timeoutmarket.com/newyork/",
       "outdoor": false,
       "confidence": "medium",
@@ -6839,7 +6839,7 @@ window.WEEK_DATA = {
       "cost": "$10 child / $15 adult, advance purchase required",
       "travelMinutes": 8,
       "travelHow": "8-min walk through the park from 101 CPW",
-      "toddlerNotes": "Officially recommended ages 3-8, so at the young edge for a 2-year-old, but marionette shows run short bursts of visual action that most toddlers tolerate well. Indoor cottage, air-conditioned. Note the 1pm start overlaps nap — better suited for a day she skips or shifts her nap.",
+      "toddlerNotes": "Officially recommended ages 3-8, so at the young edge for a 2-year-old, but marionette shows run short bursts of visual action that most toddlers tolerate well. Indoor cottage, air-conditioned. Note the 1pm start overlaps midday — better suited for a day she skips or shifts her midday.",
       "url": "https://wl.eventim.us/SwedishCottageMarionetteTheatre",
       "outdoor": false,
       "confidence": "medium",
@@ -6866,7 +6866,7 @@ window.WEEK_DATA = {
       "cost": "$10 child / $15 adult, advance purchase required",
       "travelMinutes": 8,
       "travelHow": "8-min walk through the park from 101 CPW",
-      "toddlerNotes": "Same show as Saturday's matinee but the morning slot clears the nap conflict — the better of the two showings for a 2-year-old. Officially ages 3-8; expect short-attention-span wiggling, which is normal here.",
+      "toddlerNotes": "Same show as Saturday's matinee but the morning slot clears the midday conflict — the better of the two showings for a 2-year-old. Officially ages 3-8; expect short-attention-span wiggling, which is normal here.",
       "url": "https://wl.eventim.us/SwedishCottageMarionetteTheatre",
       "outdoor": false,
       "confidence": "medium",
@@ -6893,7 +6893,7 @@ window.WEEK_DATA = {
       "cost": "Free, no reservation required",
       "travelMinutes": 26,
       "travelHow": "1 to 66th St-Lincoln Center (~26 min)",
-      "toddlerNotes": "Free indoor, air-conditioned music and dance in the Atrium's open public lobby — easy in-and-out, no seats required, though the noon start lands right at nap time so plan around it.",
+      "toddlerNotes": "Free indoor, air-conditioned music and dance in the Atrium's open public lobby — easy in-and-out, no seats required, though the noon start lands right at midday time so plan around it.",
       "url": "https://www.lincolncenter.org/venue/atrium/v/calendar",
       "outdoor": false,
       "confidence": "medium",
@@ -7058,7 +7058,7 @@ window.WEEK_DATA = {
       "cost": "Free, no purchase required",
       "travelMinutes": 24,
       "travelHow": "2/3 to Fulton St + 6-min walk (~24 min)",
-      "toddlerNotes": "General kids' storytime (leans slightly older, ages ~4-8, but toddlers are welcome) in a real bookstore with a browsable kids' section right there for after — good post-nap option on a slow afternoon.",
+      "toddlerNotes": "General kids' storytime (leans slightly older, ages ~4-8, but toddlers are welcome) in a real bookstore with a browsable kids' section right there for after — good afternoon option on a slow afternoon.",
       "url": "https://www.mcnallyjackson.com/event/seaport-kids-storytime",
       "outdoor": false,
       "confidence": "medium",
@@ -7155,14 +7155,14 @@ window.WEEK_DATA = {
       "category": "festival",
       "venue": "Brooklyn Bridge Park — Pier 6",
       "neighborhood": "Brooklyn Heights waterfront",
-      "when": "Sun Jul 26, 10 AM–7 PM (roll in ~2 PM after nap)",
+      "when": "Sun Jul 26, 10 AM–7 PM (roll in ~2 PM in the afternoon)",
       "days": [
         "sun"
       ],
       "cost": "Free (advance reservation encouraged; walk-ups as capacity allows)",
       "travelMinutes": 27,
       "travelHow": "~27 min from Union Sq",
-      "toddlerNotes": "Free all-day Pokémon festival on the Pier 6 lawns — games, activities and life-size characters a 2-year-old can toddle around and point at. Drop-in, so arrive well after the 12–2 nap; the Pier 6 Water Lab sprinklers and playground are right there for a splash break.",
+      "toddlerNotes": "Free all-day Pokémon festival on the Pier 6 lawns — games, activities and life-size characters a 2-year-old can toddle around and point at. Drop-in, so arrive well after midday; the Pier 6 Water Lab sprinklers and playground are right there for a splash break.",
       "url": "https://brooklynbridgepark.org/event/pokemon-day-out-brooklyn-bridge-park/",
       "outdoor": true,
       "recurring": false,
@@ -7189,7 +7189,7 @@ window.WEEK_DATA = {
       "cost": "Craft free; museum admission ~$18 adult / $5 child, under-2 free (pay-what-you-wish available)",
       "travelMinutes": 23,
       "travelHow": "~23 min from Union Sq",
-      "toddlerNotes": "Hands-on printmaking drop-in — roll foam-letter tools to stamp newspaper-style headlines; a 2-year-old can stamp and roll with a grown-up. No time slot (open till 4:30), so come after nap. Tall ships docked right outside.",
+      "toddlerNotes": "Hands-on printmaking drop-in — roll foam-letter tools to stamp newspaper-style headlines; a 2-year-old can stamp and roll with a grown-up. No time slot (open till 4:30), so come in the afternoon. Tall ships docked right outside.",
       "url": "https://southstreetseaportmuseum.org/family-activity/",
       "outdoor": false,
       "recurring": false,
@@ -7216,7 +7216,7 @@ window.WEEK_DATA = {
       "cost": "Free (walk-ins welcome; free RSVP)",
       "travelMinutes": 7,
       "travelHow": "~7 min from Union Sq",
-      "toddlerNotes": "Counselor-read Bluey storytime, short and toddler-paced — the 2 PM (bilingual English/Spanish) and 3 PM sessions land right after nap. Inside CAMP's play-focused store steps from Union Square, so it doubles as a cool-down. Skip the 12/1 PM sessions (naptime).",
+      "toddlerNotes": "Counselor-read Bluey storytime, short and toddler-paced — the 2 PM (bilingual English/Spanish) and 3 PM sessions land right in the afternoon. Inside CAMP's play-focused store steps from Union Square, so it doubles as a cool-down. Skip the 12/1 PM sessions (midday).",
       "url": "https://camp.com/bluey-storytime",
       "outdoor": false,
       "recurring": false,
@@ -7243,7 +7243,7 @@ window.WEEK_DATA = {
       "cost": "$12 adults / $11 children (~$35 for two adults + toddler)",
       "travelMinutes": 37,
       "travelHow": "~37 min from Union Sq",
-      "toddlerNotes": "Hand-carved marionette Pinocchio in an intimate 75-seat theater — the 2:30 post-nap show suits a game 2-year-old (billed 3+, ~55 min). Reserve ahead by phone/email; seats held until 15 min before.",
+      "toddlerNotes": "Hand-carved marionette Pinocchio in an intimate 75-seat theater — the 2:30 afternoon show suits a game 2-year-old (billed 3+, ~55 min). Reserve ahead by phone/email; seats held until 15 min before.",
       "url": "https://puppetworks.org/",
       "outdoor": false,
       "recurring": false,
@@ -7270,7 +7270,7 @@ window.WEEK_DATA = {
       "cost": "Free (RSVP suggested)",
       "travelMinutes": 7,
       "travelHow": "~7 min from Union Sq",
-      "toddlerNotes": "Weekly Sunday storytime — this week is truck-and-vehicle themed, catnip for a 2-year-old. Wraps by noon, right before nap. Tiny indoor children's bookshop a few blocks from Union Square.",
+      "toddlerNotes": "Weekly Sunday storytime — this week is truck-and-vehicle themed, catnip for a 2-year-old. Wraps by noon, right in the morning. Tiny indoor children's bookshop a few blocks from Union Square.",
       "url": "https://booksofwonder.com/blogs/upcoming/join-us-for-sunday-storytime",
       "outdoor": false,
       "recurring": false,
@@ -7297,7 +7297,7 @@ window.WEEK_DATA = {
       "cost": "Free",
       "travelMinutes": 23,
       "travelHow": "~23 min from Union Sq",
-      "toddlerNotes": "Free indoor drop-in with a 250-gallon East River aquarium, live native critters, hands-on crafts and borrowable Park Explorer Packs. Air-conditioned — a great post-nap stop on a hot day.",
+      "toddlerNotes": "Free indoor drop-in with a 250-gallon East River aquarium, live native critters, hands-on crafts and borrowable Park Explorer Packs. Air-conditioned — a great afternoon stop on a hot day.",
       "url": "https://brooklynbridgepark.org/event/open-hours/",
       "outdoor": false,
       "recurring": false,
@@ -7405,7 +7405,7 @@ window.WEEK_DATA = {
       "cost": "Free",
       "travelMinutes": 21,
       "travelHow": "~21 min from Grandma's (101 CPW)",
-      "toddlerNotes": "Free lakeside afternoon concert (jazz/gospel/soul) on the Dana Center plaza — mellow but danceable, with open plaza and grass to toddle and sway. Starts right when nap ends.",
+      "toddlerNotes": "Free lakeside afternoon concert (jazz/gospel/soul) on the Dana Center plaza — mellow but danceable, with open plaza and grass to toddle and sway. Starts at 2.",
       "url": "https://www.centralparknyc.org/activities/events/harlem-meer-performance-festival",
       "outdoor": true,
       "recurring": false,
@@ -7800,7 +7800,7 @@ window.WEEK_DATA = {
         "cost": "Free",
         "travelMinutes": 13,
         "travelHow": "~13 min from Union Sq (walk)",
-        "toddlerNotes": "Neighbors' dogs learning tricks with a trainer, right on the PCV playground — dogs are catnip for a 2-year-old, and 5:30–6:30 lands neatly after nap and before bedtime. Fob entry; keep a firm hold near unfamiliar dogs.",
+        "toddlerNotes": "Neighbors' dogs learning tricks with a trainer, right on the PCV playground — dogs are catnip for a 2-year-old, and 5:30–6:30 lands neatly in the afternoon and before bedtime. Fob entry; keep a firm hold near unfamiliar dogs.",
         "url": "https://events.stuytown.com/calendar",
         "outdoor": true,
         "recurring": false,

@@ -59,7 +59,7 @@ function validateEventList(evs, prefix, datedOnly) {
   });
 }
 
-// itineraries: exec-sum plans built around the 12-2 nap; slugMap = resolvable events
+// itineraries: exec-sum plans (morning / afternoon / evening); slugMap = resolvable events
 function validateItineraries(its, slugMap, prefix) {
   const SLOT_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
   const SLOTS = ["morning", "afternoon", "evening"];
@@ -94,17 +94,15 @@ function validateItineraries(its, slugMap, prefix) {
       if (e.start) {
         const min = parseInt(e.start.slice(0, 2), 10) * 60 + parseInt(e.start.slice(3), 10);
         const endM = e.end ? parseInt(e.end.slice(0, 2), 10) * 60 + parseInt(e.end.slice(3), 10) : null;
-        // open-hours entries (with an end comfortably past nap) can be dropped into post-nap;
-        // hard-start shows must not collide with the 12-2 nap
-        const dropIn = (afterMin) => endM != null && endM >= afterMin;
-        if (min >= 12 * 60 && min < 14 * 60 && !dropIn(15 * 60 + 30)) {
-          err(ptag + "starts " + e.start + " — inside the 12-2 nap");
-        }
+        // no nap constraint — midday is fair game. Just keep the pick in a slot
+        // that matches its start (open-hours entries can sit in a later slot if
+        // they're still running then).
+        const runsInto = (afterMin) => endM != null && endM >= afterMin;
         if (p.slot === "morning" && min >= 12 * 60) err(ptag + "morning pick starts " + e.start);
-        if (p.slot === "afternoon" && min < 14 * 60 && !dropIn(15 * 60 + 30)) {
-          err(ptag + "afternoon pick starts " + e.start + " (before nap ends at 2, and not drop-in past 3:30)");
+        if (p.slot === "afternoon" && min >= 17 * 60) err(ptag + "afternoon pick starts " + e.start + " (that's evening)");
+        if (p.slot === "evening" && min < 16 * 60 && !runsInto(18 * 60)) {
+          err(ptag + "evening pick starts " + e.start + " and doesn't run into the evening");
         }
-        if (p.slot === "evening" && min < 16 * 60 && !dropIn(18 * 60)) err(ptag + "evening pick starts " + e.start);
       }
     });
   });

@@ -47,7 +47,7 @@ Each event:
 | `cost` | string | START with "Free" only if genuinely free for the family; "Free entry; rides cost extra" for free-with-extras; otherwise lead with the price ("$10 child / $15 adult"). Renders as a green FREE chip vs an orange price chip. |
 | `travelMinutes` | number | door-to-door estimate from Union Square |
 | `travelHow` | string | e.g. "L to Bedford Av + 5 min walk" |
-| `toddlerNotes` | string | why it works for a 2-year-old (shade, strollers, duration, nap timing) |
+| `toddlerNotes` | string | why it works for a 2-year-old (shade, strollers, duration, timing) |
 | `url` | string | official page — real, working links only |
 | `outdoor` | boolean | drives the ☀️/❄️ badge and outdoor filter |
 | `confidence` | string | `high` = date verified; `medium`/`low` shows a "🔍 double-check" chip |
@@ -209,7 +209,7 @@ options and the only way to fill thin weekdays. Schema:
 ```js
 itineraries: {
   mon: {
-    summary: "Bryant Park magic show at 10, splash or market run after nap.", // one line for the week-at-a-glance view
+    summary: "Bryant Park magic show at 10, splash pad at noon, ferry at golden hour.", // one line for the week-at-a-glance view
     picks: [ // 2-3 per slot, morning + afternoon required, no duplicate keys within a day
       { slot: "morning",   key: "<event slug>", title: "<event title>", note: "…" },
       { slot: "morning",   key: "…", title: "…", note: "…" },
@@ -224,17 +224,19 @@ itineraries: {
 
 - `key` is the event's slug: lowercased title, non-alphanumerics collapsed to
   `-`, trimmed, first 48 chars (same rule as app.js/validate.cjs `keyOf`).
-- **THE NAP IS SACRED: Rayray sleeps 12–2 every day.** Morning picks must
-  start before noon and wrap by ~11:45; afternoon picks start 2 PM or later
-  (open-hours entries that run well past 2 are fine to slot as a post-nap
-  drop-in); nothing may *start* between 12:00 and 14:00 unless it's drop-in
-  hours running past 3:30. Evening picks are "if she's up for it" territory.
+- **NO NAP CONSTRAINT — Rayray is off naps.** Midday (12–2) is fully usable:
+  noon shows, 12:30 matinees and 1 PM sessions are all fair game and should be
+  surfaced, not skipped. Slot picks by their start time: morning = before 12,
+  afternoon = 12:00–4:59, evening = 5 PM and later (an open-hours entry may sit
+  in a later slot if it's still running then). Evening picks are "if she's up
+  for it" territory — bedtime is ~7:30, so evening events should start by ~6:30.
+- Do NOT write nap-era copy in `summary` or `note` ("after nap", "before nap",
+  "post-nap", "naptime") — that language is retired.
 - Picks must actually happen on that day (`days` includes the day or `any`).
   Anytime spots are fair game — the UI auto-opens their unlock on tap.
 - Notes stay self-sufficient (time, place, why) and honest about travel —
   weekend picks can lean grandma's-zone, weekday picks lean Union Square.
-- The validator enforces all of the above; the UI renders a nap row between
-  morning and afternoon automatically, so don't write the nap as a pick.
+- The validator enforces slot/start agreement.
 
 ## Next-week preview
 
@@ -274,7 +276,7 @@ python3 -m http.server  # from the repo root
 **MANDATORY: run `node rayray-big-weekend/validate.cjs` and fix every error
 before deploying** — it checks the schema, coordinate bounds, start/times
 agreement, URLs, duplicate slugs, and the daily itineraries (all 7 days
-present, picks resolve to real events on the right day, nap rules).
+present, picks resolve to real events on the right day, slot/start agreement).
 
 Sanity-check: week label correct, TODAY badge on the right day, the list groups
 under Morning/Afternoon/Evening/Anytime headers in start-time order, every entry

@@ -485,7 +485,7 @@
     }
   }
 
-  // ——— the day's exec-sum: our picks around the sacred 12–2 nap ———
+  // ——— the day's exec-sum: our picks by morning / afternoon / evening ———
   const itinEl = document.getElementById("itin");
   function renderItin() {
     const its = state.week === "next" ? (nextWeek || {}).itineraries : data.itineraries;
@@ -511,7 +511,7 @@
         return '<button class="itin-day' + (past ? " past" : "") + '" data-day="' + k + '">' +
           "<b>" + DAY_LABELS[k] + (cur && k === todayKey ? " ✨" : "") + "</b><span>" + esc(it.summary) + "</span></button>";
       }).join("");
-      html += '<p class="itin-nap-note">😴 Every plan works around Rayray\'s 12–2 nap — mornings wrap by noon, afternoons start after 2.</p>';
+      html += '<p class="itin-nap-note">☀️ Pick one per slot — midday is fair game now that Rayray\'s off naps.</p>';
       itinEl.innerHTML = html;
       itinEl.hidden = false;
       itinEl.querySelectorAll(".itin-day").forEach((b) => {
@@ -537,17 +537,13 @@
     };
     const GROUPS = [
       { slot: "morning", head: "🌅 Morning", hint: "pick one" },
-      { slot: "afternoon", head: "☀️ After nap", hint: "pick one" },
+      { slot: "afternoon", head: "☀️ Afternoon", hint: "pick one" },
       { slot: "evening", head: "🌆 Evening", hint: "if she's up for it" },
     ];
     let html = "<h3>📋 The plan — " + (state.week === "cur" && state.day === todayKey ? "today" : DAY_FULL[state.day]) +
       (state.week === "next" ? " (next week)" : "") + "</h3>";
     GROUPS.forEach((g) => {
       const cards = it.picks.filter((p) => p.slot === g.slot).map(opt).join("");
-      if (g.slot === "afternoon") {
-        html += '<div class="itin-nap"><span class="itin-slot sl-nap">😴 12–2</span>' +
-          "<span><b>Nap at home</b> — Rayray recharges; everything below starts after 2.</span></div>";
-      }
       if (!cards) return;
       html += '<div class="itin-head"><span class="itin-head-pill tb-' + g.slot + '">' + g.head + "</span><i>" + g.hint + "</i></div>" +
         '<div class="itin-group">' + cards + "</div>";
