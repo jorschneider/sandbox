@@ -136,6 +136,27 @@ for (let g = 0; g < N; g++) {
       default: note(seed, `unknown phase ${game.phase}`); guard = 1e9; break;
     }
 
+    // --- host snapshot must round-trip losslessly at any moment ---
+    // (this is what catches new game state that nobody added to toJSON)
+    if (rng() < 0.08 && game.phase !== 'results') {
+      const snap1 = JSON.stringify(game.toJSON());
+      let restored;
+      try { restored = Game.fromJSON(JSON.parse(snap1)); }
+      catch (e) { note(seed, `snapshot restore threw in ${game.phase}: ${e.message}`); restored = null; }
+      if (restored) {
+        // fromJSON deliberately marks everyone away until their phone checks in
+        restored.players.forEach((p, i) => { p.connected = game.players[i].connected; });
+        const snap2 = JSON.stringify(restored.toJSON());
+        if (snap1 !== snap2) note(seed, `snapshot lost state in ${game.phase}`);
+        for (const id of ids) {
+          if (JSON.stringify(restored.viewFor(id)) !== JSON.stringify(game.viewFor(id))) {
+            note(seed, `restored view differs for ${id} in ${game.phase}`);
+            break;
+          }
+        }
+      }
+    }
+
     // --- invariants, checked every step ---
     for (const p of game.players) {
       if (!isFinite(p.capital)) { note(seed, `non-finite capital for ${p.id} in ${game.phase}`); guard = 1e9; }

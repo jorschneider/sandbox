@@ -443,9 +443,14 @@ function auctionHtml(view) {
       <div class="bid-leader">${leader ? `${leader.avatar} ${esc(leader.name)}${youLead ? ' — that\'s you' : ''}` : 'No takers yet'}</div>
       <div class="bid-be">${leader ? `Breaks even if true risk ≤ ${Math.round(a.bid / c.coverage * 100)}%` : `Floor ${money(a.floor)}`}</div>
     </div>
-    ${youLead
-      ? `<p class="fine">You hold the low bid. Sweat.</p>`
-      : `<div class="bid-btns">
+    ${(() => {
+      if (youLead) return `<p class="fine">You hold the low bid. Sweat.</p>`;
+      // No point offering buttons the regulator will refuse.
+      const cap = view.rules.solvencyCap;
+      if (cap && c.coverage > cap) {
+        return `<div class="idle-warn">🏛 You can't carry ${money(c.coverage)} on ${money(cap)} of capacity — the regulator would block it. Watch this one go.</div>`;
+      }
+      return `<div class="bid-btns">
           ${a.steps.map(s => {
             const next = a.bid - s;
             return `<button class="btn bid-btn" data-action="bid" data-amount="${next}" ${next < a.floor ? 'disabled' : ''}>−${money(s)}<span>${money(next)}</span></button>`;
@@ -454,7 +459,8 @@ function auctionHtml(view) {
         <div class="quote-controls">
           <input type="number" inputmode="numeric" class="bid-input" id="bidCustom" max="${a.bid - 1}" min="${a.floor}" placeholder="or name your price">
           <button class="btn small" data-action="bid-custom">Bid</button>
-        </div>`}
+        </div>`;
+    })()}
     <div class="bid-history">${a.history.slice().reverse().map(h => {
       const p = view.players.find(x => x.id === h.pid);
       return `<div class="bid-row">${p?.avatar} ${esc(p?.name)} — <b>${money(h.bid)}</b></div>`;
@@ -986,7 +992,7 @@ const AWARDS = {
   bestquarter: (n, a) => `📈 <b>Quarter of the Century</b> — ${n} made ${money(a.value)} in a single quarter`,
   rockbottom:  (n, a) => `🕳 <b>Rock Bottom</b> — ${n} lost ${money(a.value)} in a single quarter`,
   poach:       (n, a) => `🏴‍☠️ <b>The Poacher</b> — ${n} stole ${esc(a.detail)}`,
-  gavel:       (n, a) => `🔨 <b>Last Broker Standing</b> — ${n} outlasted ${a.value} bids to take ${esc(a.detail)}`,
+  gavel:       (n, a) => `🔨 <b>Last Broker Standing</b> — ${n} outlasted ${a.value} bid${a.value === 1 ? '' : 's'} to take ${esc(a.detail)}`,
   walkaway:    (n, a) => `🚪 <b>The Walkout</b> — ${n} refused ${money(a.value)} of business rather than take either side`,
 };
 

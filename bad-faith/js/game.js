@@ -643,7 +643,9 @@ export class Game {
       w.capital += a.bid;
       this.roundLedger[a.leader].premiums += a.bid;
       this.award('rainmaker', a.leader, a.bid, lot.client.name);
-      this.award('gavel', a.leader, a.history.length, lot.client.name);
+      // "Last broker standing" should mean an actual bidding war, not a
+      // single uncontested bid.
+      if (a.history.length >= 2) this.award('gavel', a.leader, a.history.length, lot.client.name);
       this.addLog(`🔨 SOLD — ${lot.client.name} to ${w.avatar} ${w.name} for ${this.money(a.bid)} after ${a.history.length} bid${a.history.length === 1 ? '' : 's'}.`);
     } else {
       this.addLog(`🔨 No bids. ${lot.client.name} storms out of the room.`);

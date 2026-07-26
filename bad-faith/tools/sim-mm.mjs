@@ -79,15 +79,15 @@ for (let g = 0; g < N; g++) {
       const threshold = cst.custAccept == null ? (rng() < 0.5 ? 0 : 99) : cst.custAccept;
       game.mmDecide(m.customer, m.retail <= ev * threshold);
 
-      // collect per-role nets for the round
       deals++;
       if (m.accepted) closes++; else { bare++; if (m.result.hit) bareHit++; }
+      // Money only moves when the file is opened, so settle first, then read.
+      game.mmAdvance();
       const net = (pid) => game.byId(pid).capital - game.roundLedger[pid].start;
       roleNet.customer.push(net(m.customer));
       roleNet.broker.push(net(m.broker));
       for (const pid of m.carriers) roleNet.carrier.push(net(pid));
-
-      game.mmAdvance(); game.mmAdvance();
+      game.mmAdvance();
       game.nextRound();
     }
   }
