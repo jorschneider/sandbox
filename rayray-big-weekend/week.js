@@ -317,55 +317,61 @@ window.WEEK_DATA = {
       ]
     },
     "sun": {
-      "summary": "Marionettes or Battery puppets in the morning; the free Pokémon festival or a Seaport craft after nap.",
+      "summary": "Vehicle storytime or the StuyTown market in the morning; Bluey storytime, puppets or the Pokémon fest after nap; free Central Park concert at 5.",
       "picks": [
         {
           "slot": "morning",
-          "key": "little-red-s-hood-sunday-matinee",
-          "title": "Little Red's Hood (Sunday matinee)",
-          "note": "Swedish Cottage marionette show, 11am, an 8-min walk from Grandma's — the better of its two showings, clear of the nap."
+          "key": "sunday-storytime-trucks-vehicles-at-books-of-won",
+          "title": "Sunday Storytime at Books of Wonder",
+          "note": "Truck-and-vehicle storytime at 11:30, a few blocks away — wraps right before nap."
+        },
+        {
+          "slot": "morning",
+          "key": "stuytown-greenmarket-on-the-oval",
+          "title": "StuyTown Greenmarket on the Oval",
+          "note": "Walk over to the Oval market for peaches and flowers — zero logistics."
         },
         {
           "slot": "morning",
           "key": "puppetsburg-interactive-puppet-show-at-battery-p",
-          "title": "Puppetsburg: interactive puppet show at Battery Playscape",
-          "note": "Built for ages 4mo-4yr: dancing, instruments, bubbles, 10:30 (repeats 12:30)."
+          "title": "Puppetsburg at Battery Playscape",
+          "note": "Interactive puppet show at 10:30 built for the 4mo–4yr crowd."
         },
         {
-          "slot": "morning",
-          "key": "sunday-gardening-at-transmitter-park",
-          "title": "Sunday Gardening at Transmitter Park",
-          "note": "Dig-in-the-dirt volunteer session she can actually help with, 10-12, Greenpoint."
-        },
-        {
-          "slot": "evening",
-          "key": "hudson-classical-theatre-the-dancing-men-sherloc",
-          "title": "Hudson Classical Theatre: The Dancing Men (Sherlock Holmes mystery)",
-          "note": "Free lawn theater by the Riverside Park monument, 6:30 — an easy close to a Grandma's-side day."
-        },
-        {
-          "slot": "evening",
-          "key": "free-shakespeare-in-the-park-the-winter-s-tale",
-          "title": "Free Shakespeare in the Park: The Winter's Tale",
-          "note": "Same honest flag as Saturday — lottery, stone seats, 8pm; a parents' outing more than a toddler one."
+          "slot": "afternoon",
+          "key": "free-bluey-storytime-at-camp",
+          "title": "Free Bluey Storytime at CAMP",
+          "note": "Free Bluey storytime at 2 (bilingual) or 3, steps from Union Square — A/C included."
         },
         {
           "slot": "afternoon",
           "key": "pok-mon-day-out-at-brooklyn-bridge-park",
-          "title": "Pokémon Day Out at Brooklyn Bridge Park",
-          "note": "Free all-day Pokémon festival on the Pier 6 lawns — drop in after nap, splash pad next door."
+          "title": "Pokémon Day Out",
+          "note": "Free festival on the Pier 6 lawns till 7, splash pad right there."
         },
         {
           "slot": "afternoon",
-          "key": "extra-extra-family-printmaking-at-the-seaport-mu",
-          "title": "Extra, Extra! Family printmaking at the Seaport Museum",
-          "note": "Roll-and-stamp a newspaper headline at the Seaport Museum, tall ships outside — free craft till 4:30."
+          "key": "pinocchio-at-puppetworks-2-30-matinee",
+          "title": "Pinocchio at Puppetworks",
+          "note": "Hand-carved marionettes at 2:30 in Park Slope — reserve ahead."
         },
         {
-          "slot": "afternoon",
-          "key": "totally-kid-carousel",
-          "title": "Totally Kid Carousel",
-          "note": "Prefer Grandma's side? The Central Park carousel is an easy post-nap ride."
+          "slot": "evening",
+          "key": "summerstage-afro-latinas-free-central-park-conce",
+          "title": "SummerStage: Afro-Latinas",
+          "note": "Free Central Park concert — doors 5, dance the opening set, home by 6:45."
+        },
+        {
+          "slot": "evening",
+          "key": "roller-disco-at-central-park-s-skate-circle",
+          "title": "Roller disco at Skate Circle",
+          "note": "Watch the skaters spin to a live DJ till 6:45 — grassy rim to bop on."
+        },
+        {
+          "slot": "evening",
+          "key": "dj-on-the-porch-at-lefferts-historic-house",
+          "title": "DJ on the Porch",
+          "note": "Family house-music party in the Lefferts yard — grass to dance on till bedtime."
         }
       ]
     }
@@ -7197,6 +7203,330 @@ window.WEEK_DATA = {
       "start": "14:00",
       "end": "16:30",
       "cpwOnly": false
+    },
+    {
+      "title": "Free Bluey Storytime at CAMP",
+      "category": "storytime",
+      "venue": "CAMP (Flatiron flagship)",
+      "neighborhood": "Flatiron / Union Square",
+      "when": "Sun Jul 26, hourly sessions; bilingual 2 PM, plus 3 PM",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free (walk-ins welcome; free RSVP)",
+      "travelMinutes": 7,
+      "travelHow": "~7 min from Union Sq",
+      "toddlerNotes": "Counselor-read Bluey storytime, short and toddler-paced — the 2 PM (bilingual English/Spanish) and 3 PM sessions land right after nap. Inside CAMP's play-focused store steps from Union Square, so it doubles as a cool-down. Skip the 12/1 PM sessions (naptime).",
+      "url": "https://camp.com/bluey-storytime",
+      "outdoor": false,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7377,
+      "lng": -73.9931,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:00",
+      "end": "15:30",
+      "cpwOnly": false
+    },
+    {
+      "title": "Pinocchio at Puppetworks (2:30 matinee)",
+      "category": "theater",
+      "venue": "Puppetworks, Park Slope",
+      "neighborhood": "Park Slope, Brooklyn",
+      "when": "Sun Jul 26, 2:30 PM (~55 min)",
+      "days": [
+        "sun"
+      ],
+      "cost": "$12 adults / $11 children (~$35 for two adults + toddler)",
+      "travelMinutes": 37,
+      "travelHow": "~37 min from Union Sq",
+      "toddlerNotes": "Hand-carved marionette Pinocchio in an intimate 75-seat theater — the 2:30 post-nap show suits a game 2-year-old (billed 3+, ~55 min). Reserve ahead by phone/email; seats held until 15 min before.",
+      "url": "https://puppetworks.org/",
+      "outdoor": false,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.6708,
+      "lng": -73.9842,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:30",
+      "end": "15:25",
+      "cpwOnly": false
+    },
+    {
+      "title": "Sunday Storytime (trucks & vehicles) at Books of Wonder",
+      "category": "storytime",
+      "venue": "Books of Wonder",
+      "neighborhood": "Flatiron / Union Square",
+      "when": "Sun Jul 26, 11:30 AM",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free (RSVP suggested)",
+      "travelMinutes": 7,
+      "travelHow": "~7 min from Union Sq",
+      "toddlerNotes": "Weekly Sunday storytime — this week is truck-and-vehicle themed, catnip for a 2-year-old. Wraps by noon, right before nap. Tiny indoor children's bookshop a few blocks from Union Square.",
+      "url": "https://booksofwonder.com/blogs/upcoming/join-us-for-sunday-storytime",
+      "outdoor": false,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7384,
+      "lng": -73.9923,
+      "event": true,
+      "times": [
+        "morning"
+      ],
+      "start": "11:30",
+      "end": "12:15",
+      "cpwOnly": false
+    },
+    {
+      "title": "BBP Environmental Education Center (free drop-in)",
+      "category": "animals",
+      "venue": "Environmental Education Center, Brooklyn Bridge Park",
+      "neighborhood": "DUMBO",
+      "when": "Sun Jul 26, free drop-in 1–5 PM",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 23,
+      "travelHow": "~23 min from Union Sq",
+      "toddlerNotes": "Free indoor drop-in with a 250-gallon East River aquarium, live native critters, hands-on crafts and borrowable Park Explorer Packs. Air-conditioned — a great post-nap stop on a hot day.",
+      "url": "https://brooklynbridgepark.org/event/open-hours/",
+      "outdoor": false,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7036,
+      "lng": -73.9903,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:00",
+      "end": "17:00",
+      "cpwOnly": false
+    },
+    {
+      "title": "Climb aboard the tall ship Wavertree",
+      "category": "other",
+      "venue": "South Street Seaport Museum — Pier 16",
+      "neighborhood": "South Street Seaport",
+      "when": "Sun Jul 26, ships open 11 AM–5 PM (last entry 4:30)",
+      "days": [
+        "sun"
+      ],
+      "cost": "Admission $18 adults / $5 children; under-2 free",
+      "travelMinutes": 23,
+      "travelHow": "~23 min from Union Sq",
+      "toddlerNotes": "Walk the deck of an 1885 iron tall ship and turn the ship's wheel, plus the 1908 lightship Ambrose alongside. Strollers park at the gangway. Pairs with the museum's free printmaking drop-in.",
+      "url": "https://southstreetseaportmuseum.org/wavertree/",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7059,
+      "lng": -74.0027,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:00",
+      "end": "17:00",
+      "cpwOnly": false
+    },
+    {
+      "title": "Meet the chickens at Earth Matter, Governors Island",
+      "category": "animals",
+      "venue": "Earth Matter Compost Learning Center, Governors Island",
+      "neighborhood": "Governors Island",
+      "when": "Sun Jul 26, 12–4 PM (chickens out Sundays)",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free (ferry ~$4 adult, kids free)",
+      "travelMinutes": 32,
+      "travelHow": "~32 min from Union Sq",
+      "toddlerNotes": "Hands-on compost farm where toddlers meet the resident chickens and watch worms turn scraps into soil. Pair with Slide Hill's toddler slides and the GrowNYC dig bed on the same island trip.",
+      "url": "https://www.govisland.com/things-to-do/recreation/earth-matter-nys-compost-learning-center-soil-start-farm",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.6873,
+      "lng": -74.014,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:00",
+      "end": "16:00",
+      "cpwOnly": false
+    },
+    {
+      "title": "SummerStage: Afro-Latinas (free Central Park concert)",
+      "category": "music",
+      "venue": "SummerStage, Rumsey Playfield, Central Park",
+      "neighborhood": "Central Park",
+      "when": "Sun Jul 26, doors 5 PM, music from ~6 PM",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free (RSVP recommended)",
+      "travelMinutes": 24,
+      "travelHow": "~24 min from Union Sq",
+      "toddlerNotes": "Free all-ages Afro-Latin concert — percussion-heavy and very danceable. Arrive at the 5 PM doors for grass near the back/edges, dance the opening set, and head home by ~6:45 for bedtime. Not a kids show, so it's a dance-at-the-edge plan; strollers fine.",
+      "url": "https://cityparksfoundation.org/summerstage/",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7712,
+      "lng": -73.9702,
+      "event": true,
+      "times": [
+        "evening"
+      ],
+      "start": "17:00",
+      "end": "22:00",
+      "cpwOnly": false
+    },
+    {
+      "title": "Harlem Meer Performance Festival",
+      "category": "music",
+      "venue": "Charles A. Dana Discovery Center plaza",
+      "neighborhood": "Central Park North",
+      "when": "Sun Jul 26, 2–4 PM",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 21,
+      "travelHow": "~21 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Free lakeside afternoon concert (jazz/gospel/soul) on the Dana Center plaza — mellow but danceable, with open plaza and grass to toddle and sway. Starts right when nap ends.",
+      "url": "https://www.centralparknyc.org/activities/events/harlem-meer-performance-festival",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7967,
+      "lng": -73.952,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:00",
+      "end": "16:00",
+      "cpwOnly": true
+    },
+    {
+      "title": "Roller disco at Central Park's Skate Circle",
+      "category": "music",
+      "venue": "Skate Circle (Dead Road), Central Park",
+      "neighborhood": "Central Park",
+      "when": "Sun Jul 26, 2:45–6:45 PM",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free (suggested donation)",
+      "travelMinutes": 9,
+      "travelHow": "~9 min from Grandma's (101 CPW)",
+      "toddlerNotes": "Free open-air roller disco with a live DJ spinning funk and disco all afternoon. A 2-year-old can't skate the circle but the grassy rim is a joyful spot to dance and watch the skaters spin. Cancels if wet.",
+      "url": "https://cpdsa.org/events/",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7719,
+      "lng": -73.9726,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "14:45",
+      "end": "18:45",
+      "cpwOnly": true
+    },
+    {
+      "title": "DJ on the Porch at Lefferts Historic House",
+      "category": "music",
+      "venue": "Lefferts Historic House, Prospect Park",
+      "neighborhood": "Prospect Park",
+      "when": "Sun Jul 26, 3–9 PM (toddler window 3–6:30)",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 41,
+      "travelHow": "~41 min from Union Sq",
+      "toddlerNotes": "Explicitly family-friendly outdoor house-music dance party in the yard of the historic house — grassy room to dance, historic-house kids' activities and a farm garden next door. Come at 3 and leave before the evening crowd.",
+      "url": "https://www.prospectpark.org/event/dj-on-the-porch-3-2/",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.664,
+      "lng": -73.962,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "15:00",
+      "end": "21:00",
+      "cpwOnly": false
+    },
+    {
+      "title": "StuyTown Greenmarket on the Oval",
+      "category": "festival",
+      "venue": "Stuyvesant Town Oval (South Loop)",
+      "neighborhood": "Stuyvesant Town",
+      "when": "Sun Jul 26, 9:30 AM–4 PM",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free entry (pay for produce)",
+      "travelMinutes": 14,
+      "travelHow": "~14 min from Union Sq",
+      "toddlerNotes": "The home-turf market, a few minutes' walk: local farmers with fruit, veg, cut flowers and baked goods on the South Loop. Easy stroller browsing, colors and snacks a 2-year-old loves. Open to the public, no fob needed.",
+      "url": "https://events.stuytown.com/event/stuytown-greenmarket",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.732,
+      "lng": -73.9776,
+      "event": true,
+      "times": [
+        "morning"
+      ],
+      "start": "09:30",
+      "end": "16:00",
+      "cpwOnly": false
+    },
+    {
+      "title": "Oval Kids indoor play (StuyTown)",
+      "category": "play",
+      "venue": "Oval Kids, 6 Stuyvesant Oval",
+      "neighborhood": "Stuyvesant Town",
+      "when": "Open play daily — reserve a session in the URBN app",
+      "days": [
+        "any"
+      ],
+      "cost": "$45/month Open Play membership",
+      "travelMinutes": 13,
+      "travelHow": "~13 min from Union Sq (walk)",
+      "toddlerNotes": "Indoor climbing structures and foam play built for little kids, right on the Oval — the closest A/C backup when it's blazing or pouring. Reserve a daily session in the URBN app.",
+      "url": "https://www.stuytown.com/amenities/modern-conveniences/oval-kids",
+      "outdoor": false,
+      "recurring": true,
+      "confidence": "medium",
+      "lat": 40.7327,
+      "lng": -73.9778,
+      "event": false,
+      "times": [
+        "any"
+      ],
+      "start": null,
+      "end": null,
+      "cpwOnly": false
     }
   ],
   "nextWeek": {
@@ -7430,6 +7760,60 @@ window.WEEK_DATA = {
         "cpwOnly": false,
         "event": true,
         "recurring": false
+      },
+      {
+        "title": "Movies on the Oval: The Incredibles",
+        "category": "theater",
+        "venue": "Stuyvesant Town Oval Lawn",
+        "neighborhood": "Stuyvesant Town",
+        "when": "Wed Jul 29, 5 PM family film",
+        "days": [
+          "wed"
+        ],
+        "cost": "Free",
+        "travelMinutes": 14,
+        "travelHow": "~14 min from Union Sq (walk)",
+        "toddlerNotes": "Family film night on the Oval Lawn — giant outdoor screen, blanket seating, five-minute walk from home. The 5 PM slot is the kids' movie (The Incredibles); a grownup film follows around 7. A 2-year-old won't sit a whole feature but loves the picnic-on-the-lawn vibe. Fob entry to the lawn.",
+        "url": "https://events.stuytown.com/event/movies-on-the-oval",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "high",
+        "lat": 40.7325,
+        "lng": -73.9775,
+        "event": true,
+        "times": [
+          "evening"
+        ],
+        "start": "17:00",
+        "end": "19:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Dog Tricks Workshop on Playground 3 (PCV)",
+        "category": "animals",
+        "venue": "Playground 3, Peter Cooper Village",
+        "neighborhood": "Stuyvesant Town",
+        "when": "Tue Jul 28, 5:30–6:30 PM",
+        "days": [
+          "tue"
+        ],
+        "cost": "Free",
+        "travelMinutes": 13,
+        "travelHow": "~13 min from Union Sq (walk)",
+        "toddlerNotes": "Neighbors' dogs learning tricks with a trainer, right on the PCV playground — dogs are catnip for a 2-year-old, and 5:30–6:30 lands neatly after nap and before bedtime. Fob entry; keep a firm hold near unfamiliar dogs.",
+        "url": "https://events.stuytown.com/calendar",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "medium",
+        "lat": 40.735,
+        "lng": -73.9761,
+        "event": true,
+        "times": [
+          "evening"
+        ],
+        "start": "17:30",
+        "end": "18:30",
+        "cpwOnly": false
       }
     ]
   }
