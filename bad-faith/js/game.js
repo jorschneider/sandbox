@@ -710,6 +710,11 @@ export class Game {
     this.phase = 'reveal';
     this.timer = null;
     const signed = {}; // exposure signed this quarter, per player
+    // Coverage already won at auction counts against the winner's cap —
+    // otherwise the whale's book is invisible to the sealed-quote regulator.
+    for (const m of this.market) {
+      if (m.winner) signed[m.winner] = (signed[m.winner] || 0) + m.soldCoverage;
+    }
     // Capital snapshot: premiums credited during this loop must not inflate
     // the cap that later clients in the same quarter are checked against.
     const caps = {};
@@ -852,7 +857,7 @@ export class Game {
 
   // Public bet that a client claims this round, priced off the brochure.
   placeShort(pid, clientId, stake) {
-    if (!this.pro) return { error: 'The short desk opens in the Full Market rulebook.' };
+    if (this.mode !== 'market' || !this.pro) return { error: 'The short desk opens in the Full Market rulebook.' };
     if (this.phase !== 'deals') return { error: 'The short desk is closed.' };
     const p = this.byId(pid);
     const m = this.market.find(x => x.client.id === clientId);
@@ -979,8 +984,9 @@ export class Game {
 
   finishRound() {
     // The biggest policy that survived claims comes back to renew next
-    // quarter (full market only).
-    if (this.pro && this.claims) {
+    // quarter (full market only — renewals, overhead and the quarter bonus
+    // are market-mode systems; the duel settles on sweeteners alone).
+    if (this.mode === 'market' && this.pro && this.claims) {
       let best = null;
       for (const r of this.claims.results) {
         if (!r.insured || r.hit) continue;
@@ -999,11 +1005,12 @@ export class Game {
       }
     }
 
-    // Idle books pay the overhead (any risk held counts as working — a
-    // reinsurance share included). Broker of the Quarter goes to the most
+    // Idle books pay the overhead (any risk held or premium written counts
+    // as working — a reinsurance share included, and a fully laid-off book
+    // still wrote the business). Broker of the Quarter goes to the most
     // PREMIUM written, so it rewards winning business at real prices, not
     // dumping price for volume.
-    if (this.pro) {
+    if (this.mode === 'market' && this.pro) {
       const covHeld = {}, premWritten = {};
       for (const p of this.players) { covHeld[p.id] = 0; premWritten[p.id] = 0; }
       for (const m of this.market) {
@@ -1017,7 +1024,7 @@ export class Game {
         }
       }
       for (const p of this.players) {
-        if (covHeld[p.id] > 0) continue;
+        if (covHeld[p.id] > 0 || premWritten[p.id] > 0) continue;
         p.capital -= RULES.office.overhead;
         this.roundLedger[p.id].overhead = -RULES.office.overhead;
         this.addLog(`🏢 ${p.avatar} ${p.name} wrote no business — $${RULES.office.overhead} office overhead anyway.`);

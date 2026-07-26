@@ -192,6 +192,16 @@ for (let g = 0; g < N; g++) {
     }
   }
   if (game.winnerIds && !game.winnerIds.length) note(seed, 'finished with no winner');
+  // nothing may move capital outside the ledger: the starting stake plus
+  // every round's net must equal the final bankroll exactly
+  if (game.phase === 'results') {
+    for (const p of game.players) {
+      const nets = game.ledger.reduce((s, r) => s + (r.summary.find(x => x.pid === p.id)?.net ?? 0), 0);
+      if (Math.abs(RULES.startingCapital + nets - p.capital) > 1) {
+        note(seed, `capital drift for ${p.id} (${mode}/${ruleset}): ${RULES.startingCapital}+${nets} != ${p.capital}`);
+      }
+    }
+  }
   void startTotal;
 }
 

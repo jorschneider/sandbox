@@ -385,6 +385,64 @@ group('ledger conserves money');
     }
   }
   ok('every ledger row sums to its net change', !bad, bad || '');
+  // and nothing moves capital outside the ledger
+  let drift = null;
+  for (const p of g.players) {
+    const nets = g.ledger.reduce((s, r) => s + (r.summary.find(x => x.pid === p.id)?.net ?? 0), 0);
+    if (Math.abs(RULES.startingCapital + nets - p.capital) > 1) drift = `${p.id}: ${RULES.startingCapital}+${nets} vs ${p.capital}`;
+  }
+  ok('starting stake plus round nets equals the final bankroll', !drift, drift || '');
+}
+
+group('market-mode systems stay out of the duel');
+{
+  // constructed with the constructor default ruleset ('full') — the way
+  // sims and the fuzzer build duels — market systems must still not leak in
+  const g = seat(new Game({ rng: lcg(91), mode: 'duel' }), 2);
+  g.start();
+  g.setSlip(g.duel.pricer, { clientId: g.market[0].client.id, amount: 100 });
+  g.chooseSlip(g.duel.chooser, g.market[1].client.id);
+  ok('no short desk in a duel', !!g.placeShort('P0', g.market[0].client.id, 100).error);
+  g.endDeals();
+  let guard = 0;
+  while (g.phase === 'claims' && guard++ < 20) g.advanceClaims();
+  const row = g.ledger[0].summary;
+  ok('nobody pays office overhead in a duel', row.every(s => !s.overhead), JSON.stringify(row.map(s => s.overhead)));
+  ok('no Broker of the Quarter bonus in a duel', row.every(s => !s.bonus), JSON.stringify(row.map(s => s.bonus)));
+  ok('a duel never queues a renewal', g.pendingRenewal === null);
+}
+
+group('auction wins count against the sealed-quote solvency cap');
+{
+  const g = seat(new Game({ rng: lcg(93), ruleset: 'full' }));
+  g.start();
+  // pretend P1 already carried the whale off the auction block at $2500 —
+  // with $1000 capital their quarter cap is $3000, so a further $1000 lot
+  // must be blocked even though it would fit an empty book
+  const won = g.market[0], next = g.market[1];
+  won.winner = 'P1'; won.premium = 400; won.soldCoverage = 2500;
+  next.quotes = {
+    P1: { premium: 100, coverage: 1000 }, // best rate, but over-extended
+    P2: { premium: 300, coverage: 1000 },
+  };
+  g.phase = 'quotes';
+  g.finishQuotes();
+  ok('the over-extended auction winner is blocked', next.winner === 'P2', `winner=${next.winner}`);
+}
+
+group('a fully laid-off book still counts as working');
+{
+  const g = seat(new Game({ rng: lcg(95), ruleset: 'full' }));
+  g.start();
+  const m = g.market[0];
+  m.winner = 'P1'; m.premium = 400; m.soldCoverage = 2000;
+  m.reinsurance = [{ pid: 'P2', pct: 100, fee: 50 }];
+  g.finishRound();
+  const row = g.ledger[0].summary;
+  const of = (pid) => row.find(s => s.pid === pid);
+  ok('the writer who laid off 100% pays no overhead', !of('P1').overhead, `overhead=${of('P1').overhead}`);
+  ok('the reinsurer holding the risk pays no overhead', !of('P2').overhead);
+  ok('a genuinely idle desk still pays', of('P3').overhead === -RULES.office.overhead, `overhead=${of('P3').overhead}`);
 }
 
 console.log(`\n${fail ? '✗' : '✓'} ${pass} passed, ${fail} failed\n`);
