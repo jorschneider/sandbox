@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#14301f" />
+  <title>Franzefuss — a card game for two phones</title>
+  <meta name="description" content="Franzefuss, the two-hand trick-and-draw card game, played over the internet on two phones. No app, no sign-up — one player shares a code, the other taps a link." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314301f'/%3E%3Ctext x='16' y='24' font-size='22' text-anchor='middle' fill='%23e8dcc0'%3E%E2%99%A0%3C/text%3E%3C/svg%3E" />
+  <script src="vendor/peerjs.min.js"></script>
+</head>
+<body>
+
+<!-- ------------------------------------------------------------- home --- -->
+<section class="screen is-active" id="screen-home">
+  <div class="sheet">
+    <header class="brand">
+      <div class="pips"><span class="red">♥</span><span>♠</span><span class="red">♦</span><span>♣</span></div>
+      <h1>Franzefuss</h1>
+      <p class="sub">A two-hand card game from 1801, for two phones in 2026.</p>
+    </header>
+
+    <label class="field">
+      <span>Your name</span>
+      <input id="name-input" type="text" maxlength="16" autocomplete="nickname"
+             placeholder="Player" enterkeyhint="done" />
+    </label>
+
+    <div class="stack">
+      <button class="btn primary" id="btn-create">Start a game</button>
+      <button class="btn" id="btn-join-screen">Join with a code</button>
+      <button class="btn ghost" id="btn-local">Pass &amp; play on one phone</button>
+    </div>
+
+    <button class="linkish" id="btn-rules">How to play &rsaquo;</button>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- host --- -->
+<section class="screen" id="screen-host">
+  <div class="sheet">
+    <h2>Your code</h2>
+    <div class="code" id="code-display">·····</div>
+    <p class="hint" id="host-hint">Getting a table ready…</p>
+
+    <div class="stack">
+      <button class="btn primary" id="btn-share">Send the link</button>
+      <button class="btn" id="btn-copy">Copy link</button>
+      <button class="btn ghost" id="btn-host-cancel">Back</button>
+    </div>
+
+    <p class="fineprint">
+      The other phone opens the link, or types the code into <b>Join with a code</b>.
+      Cards travel straight between your handsets.
+    </p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- join --- -->
+<section class="screen" id="screen-join">
+  <div class="sheet">
+    <h2>Join a game</h2>
+    <label class="field">
+      <span>Your name</span>
+      <input id="join-name" type="text" maxlength="16" autocomplete="nickname"
+             placeholder="Player" enterkeyhint="next" />
+    </label>
+    <label class="field">
+      <span>Code from the other phone</span>
+      <input id="code-input" class="code-input" type="text" inputmode="latin"
+             autocapitalize="characters" autocomplete="off" spellcheck="false"
+             maxlength="5" placeholder="ABCDE" enterkeyhint="go" />
+    </label>
+    <p class="hint" id="join-hint"></p>
+
+    <div class="stack">
+      <button class="btn primary" id="btn-join">Join</button>
+      <button class="btn ghost" id="btn-join-cancel">Back</button>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------- handoff --- -->
+<section class="screen curtain" id="screen-handoff">
+  <div class="sheet">
+    <div class="pips big"><span>♠</span></div>
+    <h2>Pass the phone</h2>
+    <p class="sub" id="handoff-name">to the other player</p>
+    <button class="btn primary" id="btn-handoff">I have it — show my hand</button>
+    <p class="fineprint">Hold it to yourself. The last hand is off the screen.</p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ rules --- -->
+<section class="screen scrolls" id="screen-rules">
+  <div class="sheet wide">
+    <h2>Franzefuss</h2>
+    <p class="sub">Also called Tatteln; in Denmark, Frantsfuus-Spillet. Two players,
+      32 cards, first to 501.</p>
+
+    <h3>The pack</h3>
+    <p>Sevens up to aces, 32 cards. One suit is trumps, fixed by the card turned
+      up at the deal.</p>
+    <table class="rules-table">
+      <tr><th>Trumps rank</th><td>J · 9 · A · 10 · K · Q · 8 · 7</td></tr>
+      <tr><th>Other suits</th><td>A · 10 · K · Q · J · 9 · 8 · 7</td></tr>
+    </table>
+    <p>Only card points count, never the number of tricks:</p>
+    <table class="rules-table">
+      <tr><th>Trump J</th><td>20</td><th>Trump 9</th><td>14</td></tr>
+      <tr><th>Ace</th><td>11</td><th>Ten</th><td>10</td></tr>
+      <tr><th>King</th><td>4</td><th>Queen</th><td>3</td></tr>
+      <tr><th>Jack</th><td>2</td><th>9 · 8 · 7</th><td>0</td></tr>
+    </table>
+    <p>That is 152 in the pack, plus <b>10 for the last trick</b> — 162 a deal.</p>
+
+    <h3>The deal</h3>
+    <p>Nine cards each, dealt alternately, non-dealer first. The next card is
+      turned for trumps and the remaining thirteen form the stock.</p>
+
+    <h3>Melds</h3>
+    <p>Before the first card is led, each player may <b>declare</b> or <b>pass</b>.
+      The better declaration scores — and scores <em>every</em> combination its
+      owner holds. Declaring shows your hand's best meld to your opponent, so a
+      thin one is worth hiding.</p>
+    <table class="rules-table">
+      <tr><th>Tattel</th><td>run of 3 in a suit</td><td>20</td></tr>
+      <tr><th>Quart</th><td>run of 4</td><td>50</td></tr>
+      <tr><th>Fuss</th><td>run of 5 or more</td><td>100</td></tr>
+      <tr><th>Triplet</th><td>three of a rank</td><td>30</td></tr>
+      <tr><th>Quartet</th><td>four of a rank</td><td>80</td></tr>
+    </table>
+    <p class="fineprint">Runs use the natural order A K Q J 10 9 8 7. Ties go on
+      the higher top card, then trumps, then to the non-dealer.</p>
+
+    <h3>Play</h3>
+    <p>Non-dealer leads. Highest card of the suit led takes the trick, unless it
+      is trumped. The winner leads next.</p>
+    <p><b>While the stock lasts</b> you may play anything you like — no need to
+      follow suit. After each trick the winner draws first, then the loser; the
+      last draw of all is the turned-up trump card.</p>
+    <p><b>Once the stock is gone</b> — the last nine tricks — you must follow
+      suit, you must beat a trump lead if you can, and you must trump when you
+      are void.</p>
+
+    <h3>Robbing</h3>
+    <p>Holding the <b>seven of trumps</b>, you may swap it for the turned-up
+      trump card on your turn, any time the turn-up is still there.</p>
+
+    <h3>Scoring</h3>
+    <p>Count the card points in your tricks, add the ten for the last trick, add
+      your melds. Take <b>none of the last nine tricks</b> and you pay for the
+      whole round: your opponent takes all 162.</p>
+    <p>First past 501 wins.</p>
+
+    <h3>A note on sources</h3>
+    <p class="fineprint">Franzefuss was recorded in Hamburg in 1801 and printed in
+      Austria in 1829, and the surviving descriptions are thin in places. The
+      skeleton here — ranking, card values, the nine-card deal, the turn-up,
+      robbing with the seven, drawing after each trick, following suit only once
+      the stock is out, ten for the last trick, and the penalty for taking none
+      of the last nine — follows those sources. Where they go quiet, the gaps are
+      filled from its close relative Klaberjass: meld values, the
+      declare-or-pass contest, and the 501 target.</p>
+
+    <button class="btn ghost" id="btn-rules-back">Back</button>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ table --- -->
+<section class="screen" id="screen-table">
+  <div class="table-grid">
+
+    <header class="scoreboard">
+      <div class="player" id="score-them">
+        <span class="who"></span><span class="pts"></span>
+      </div>
+      <div class="deal-info">
+        <span class="trump-badge" id="trump-badge">♠</span>
+        <span class="deal-no" id="deal-no"></span>
+      </div>
+      <div class="player you" id="score-you">
+        <span class="who"></span><span class="pts"></span>
+      </div>
+    </header>
+
+    <div class="opp-hand" id="opp-hand"></div>
+
+    <div class="felt">
+      <div class="stock-area">
+        <div class="stock" id="stock">
+          <span class="stock-count" id="stock-count"></span>
+        </div>
+        <div class="upcard" id="upcard"></div>
+      </div>
+      <div class="trick" id="trick"></div>
+    </div>
+
+    <div class="banner" id="banner"></div>
+
+    <div class="hand-rail">
+      <div class="hand" id="hand"></div>
+    </div>
+
+    <footer class="actions">
+      <button class="btn small ghost" id="btn-leave">Leave</button>
+      <button class="btn small" id="btn-rob" hidden>Rob the turn-up</button>
+      <button class="btn small primary" id="btn-play" hidden>Play</button>
+    </footer>
+  </div>
+
+  <!-- overlays ------------------------------------------------------------->
+  <div class="overlay" id="overlay-meld" hidden>
+    <div class="sheet">
+      <h2>Declare?</h2>
+      <div id="meld-body"></div>
+      <div class="stack">
+        <button class="btn primary" id="btn-declare">Declare</button>
+        <button class="btn ghost" id="btn-pass">Pass</button>
+      </div>
+      <p class="fineprint">Declaring shows your best meld to your opponent.</p>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-deal" hidden>
+    <div class="sheet">
+      <h2 id="deal-title">Deal over</h2>
+      <div id="deal-body"></div>
+      <button class="btn primary" id="btn-next">Next deal</button>
+      <p class="hint" id="next-hint"></p>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-match" hidden>
+    <div class="sheet">
+      <h2 id="match-title">Game over</h2>
+      <div id="match-body"></div>
+      <div class="stack">
+        <button class="btn primary" id="btn-rematch">Play again</button>
+        <button class="btn ghost" id="btn-home">Back to the start</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay soft" id="overlay-link" hidden>
+    <div class="sheet">
+      <h2 id="link-title">Reconnecting…</h2>
+      <p class="sub" id="link-body"></p>
+      <button class="btn ghost" id="btn-link-home">Back to the start</button>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
