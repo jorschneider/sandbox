@@ -33,7 +33,14 @@
       <button class="btn ghost" id="btn-local">Pass &amp; play on one phone</button>
     </div>
 
-    <button class="linkish" id="btn-rules">How to play &rsaquo;</button>
+    <div class="teach">
+      <p class="fineprint">Never played? Nobody has. Play a hand against the app
+        and it explains each rule at the moment the rule first matters — about
+        five minutes.</p>
+      <button class="btn" id="btn-learn">Learn by playing</button>
+    </div>
+
+    <button class="linkish" id="btn-rules">Rules reference &rsaquo;</button>
   </div>
 </section>
 
@@ -154,6 +161,13 @@
       whole round: your opponent takes all 162.</p>
     <p>First past 501 wins.</p>
 
+    <h3>The coach</h3>
+    <p>You do not have to read any of this first. Play a hand and the coach
+      explains each rule at the moment it first decides something — what the
+      cards are worth, why trumps rank strangely, when following suit starts to
+      matter. Each lesson appears once. Tapping a dimmed card always tells you
+      why it cannot be played.</p>
+
     <h3>A note on sources</h3>
     <p class="fineprint">Franzefuss was recorded in Hamburg in 1801 and printed in
       Austria in 1829, and the surviving descriptions are thin in places. The
@@ -164,7 +178,10 @@
       filled from its close relative Klaberjass: meld values, the
       declare-or-pass contest, and the 501 target.</p>
 
-    <button class="btn ghost" id="btn-rules-back">Back</button>
+    <div class="stack">
+      <button class="btn" id="btn-coach-again">Turn the coach back on</button>
+      <button class="btn ghost" id="btn-rules-back">Back</button>
+    </div>
   </div>
 </section>
 
@@ -205,12 +222,23 @@
 
     <footer class="actions">
       <button class="btn small ghost" id="btn-leave">Leave</button>
+      <button class="btn small ghost icon" id="btn-help" title="Rules" aria-label="Rules">?</button>
       <button class="btn small" id="btn-rob" hidden>Rob the turn-up</button>
       <button class="btn small primary" id="btn-play" hidden>Play</button>
     </footer>
   </div>
 
   <!-- overlays ------------------------------------------------------------->
+  <div class="overlay coach" id="overlay-coach" hidden>
+    <div class="sheet">
+      <p class="coach-tag">Coach</p>
+      <h2 id="coach-title"></h2>
+      <div id="coach-body"></div>
+      <button class="btn primary" id="btn-coach-ok">Got it</button>
+      <button class="linkish" id="btn-coach-off">Stop coaching me</button>
+    </div>
+  </div>
+
   <div class="overlay" id="overlay-meld" hidden>
     <div class="sheet">
       <h2>Declare?</h2>

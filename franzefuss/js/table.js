@@ -9,7 +9,24 @@
 
 import {
   newMatch, startDeal, settleDeal, declareMeld, playCard, robTrump, viewFor, other,
+  findMelds,
 } from './rules.js';
+
+/*
+ * Redeal until seat 0 has something to be taught with: a meld to weigh up and
+ * the trump seven to rob with. Only ever used for a first, teaching deal.
+ */
+export function dealTeachingHand(match) {
+  const dealNumber = match.dealNumber;
+  for (let attempt = 0; attempt < 800; attempt++) {
+    const deal = match.deal;
+    const hand = deal.hands[0];
+    if (findMelds(hand, deal.trump).length > 0 && hand.includes(`${deal.trump}7`)) break;
+    startDeal(match);
+  }
+  match.dealNumber = dealNumber;
+  return match;
+}
 
 export function createTable({ names, target, firstDealer = 0, onViews }) {
   const match = newMatch(names, target, firstDealer);

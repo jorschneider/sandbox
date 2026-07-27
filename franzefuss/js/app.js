@@ -9,11 +9,17 @@
 import {
   SUIT_SYMBOL, RED_SUITS, RANK_LABEL, suitOf, rankOf, meldName, other, DEFAULT_TARGET,
 } from './rules.js';
-import { createOnlineHost, createOnlineGuest, createLocalSession, normaliseCode } from './net.js';
+import {
+  createOnlineHost, createOnlineGuest, createLocalSession, createSoloSession, normaliseCode,
+} from './net.js';
+import { nextLesson, renderLesson, explainRefusal } from './coach.js';
 
 const $ = (id) => document.getElementById(id);
 const TRICK_HOLD = 1400;
+const HINT_HOLD = 3200;
 const NAME_KEY = 'franzefuss.name';
+const TAUGHT_KEY = 'franzefuss.taught';
+const COACH_KEY = 'franzefuss.coach';
 
 let session = null;
 let view = null;
@@ -28,6 +34,14 @@ let heldTimer = null;
 let shownTrick = 0;
 let meldAcked = false;
 let currentDeal = 0;
+
+/* Coaching: which lessons this player has had, and whether they still want them. */
+let taught = loadTaught();
+let coaching = loadCoaching();
+let lesson = null;
+let hint = null;
+let hintTimer = null;
+let rulesReturn = 'screen-home';
 
 /* -------------------------------------------------------------- screens --- */
 
@@ -50,6 +64,39 @@ function rememberName(name) {
     localStorage.setItem(NAME_KEY, name);
   } catch {
     /* private browsing — the name simply will not stick */
+  }
+}
+
+function loadTaught() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(TAUGHT_KEY) || '[]'));
+  } catch {
+    return new Set();
+  }
+}
+
+function saveTaught() {
+  try {
+    localStorage.setItem(TAUGHT_KEY, JSON.stringify([...taught]));
+  } catch {
+    /* private browsing — the lessons will simply come round again */
+  }
+}
+
+function loadCoaching() {
+  try {
+    return localStorage.getItem(COACH_KEY) !== 'off';
+  } catch {
+    return true;
+  }
+}
+
+function setCoaching(on) {
+  coaching = on;
+  try {
+    localStorage.setItem(COACH_KEY, on ? 'on' : 'off');
+  } catch {
+    /* nothing to store into; the setting lasts the session */
   }
 }
 
@@ -141,6 +188,11 @@ function render() {
   const you = view.you;
   const them = other(you);
 
+  /* A lesson waits its turn behind a trick being shown, and behind itself. */
+  if (coaching && !lesson) {
+    lesson = nextLesson(view, taught, { busy: !!heldTrick });
+  }
+
   renderScoreboard(deal, you, them);
   renderOpponent(deal);
   renderStock(deal);
@@ -148,6 +200,17 @@ function render() {
   renderHand(deal, you);
   renderBanner(deal, you, them);
   renderOverlays(deal, you, them);
+}
+
+function showHint(text) {
+  if (!text) return;
+  hint = text;
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(() => {
+    hint = null;
+    render();
+  }, HINT_HOLD);
+  render();
 }
 
 function renderScoreboard(deal, you, them) {
@@ -207,17 +270,20 @@ function renderHand(deal, you) {
   const rail = $('hand');
   rail.replaceChildren();
 
-  const yourMove = deal.stage === 'play' && deal.turn === you && !heldTrick;
+  /* A trick being shown, or a lesson on screen, means the hand is not live. */
+  const yourMove = deal.stage === 'play' && deal.turn === you && !heldTrick && !lesson;
   const legal = new Set(deal.legal);
   if (selected && !deal.hand.includes(selected)) selected = null;
 
   for (const card of deal.hand) {
     const playable = yourMove && legal.has(card);
+    const refused = yourMove && !playable;
     rail.append(
       cardEl(card, {
         trump: deal.trump,
         selected: selected === card,
-        illegal: yourMove && !playable,
+        illegal: refused,
+        /* A refused card still answers when tapped — it says why it is refused. */
         onClick: playable
           ? () => {
               if (selected === card) {
@@ -228,7 +294,9 @@ function renderHand(deal, you) {
               }
               render();
             }
-          : null,
+          : refused
+            ? () => showHint(explainRefusal(view, card))
+            : null,
       }),
     );
   }
@@ -274,7 +342,13 @@ function fanHand(rail, count) {
 
 function renderBanner(deal, you, them) {
   const banner = $('banner');
-  banner.classList.remove('waiting');
+  banner.classList.remove('waiting', 'hint');
+
+  if (hint) {
+    banner.classList.add('hint');
+    banner.textContent = hint;
+    return;
+  }
 
   if (heldTrick) {
     const winner = heldTrick.winner === you ? 'You take it' : `${view.names[them]} takes it`;
@@ -311,6 +385,17 @@ function renderOverlays(deal, you, them) {
   const meld = $('overlay-meld');
   const dealOver = $('overlay-deal');
   const matchOver = $('overlay-match');
+  const coach = $('overlay-coach');
+
+  /* Teaching comes before everything else on screen. */
+  if (lesson) {
+    meld.hidden = true;
+    dealOver.hidden = true;
+    matchOver.hidden = true;
+    renderCoach();
+    return;
+  }
+  coach.hidden = true;
 
   if (view.matchOver) {
     meld.hidden = true;
@@ -332,6 +417,57 @@ function renderOverlays(deal, you, them) {
     return;
   }
   dealOver.hidden = true;
+}
+
+function renderCoach() {
+  const overlay = $('overlay-coach');
+  const content = renderLesson(lesson, view);
+  overlay.hidden = false;
+
+  $('coach-title').textContent = content.title;
+
+  const body = $('coach-body');
+  body.replaceChildren();
+  if (content.body) body.append(line(content.body));
+
+  if (content.cards) {
+    const strip = document.createElement('div');
+    strip.className = 'meld-cards';
+    for (const card of content.cards) {
+      strip.append(cardEl(card, { mini: true, trump: view.deal.trump }));
+    }
+    body.append(strip);
+  }
+
+  if (content.rows) {
+    const table = document.createElement('table');
+    table.className = 'tally';
+    for (const [label, value] of content.rows) {
+      const row = document.createElement('tr');
+      const head = document.createElement('th');
+      head.textContent = label;
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      row.append(head, cell);
+      table.append(row);
+    }
+    body.append(table);
+  }
+
+  if (content.footer) {
+    const note = document.createElement('p');
+    note.className = 'fineprint';
+    note.textContent = content.footer;
+    body.append(note);
+  }
+}
+
+function dismissLesson() {
+  if (!lesson) return;
+  taught.add(lesson.id);
+  saveTaught();
+  lesson = null;
+  render();
 }
 
 function renderMeld(deal, you, them) {
@@ -578,7 +714,10 @@ function attach(next) {
   currentDeal = 0;
   selected = null;
   heldTrick = null;
+  lesson = null;
+  hint = null;
   clearTimeout(heldTimer);
+  clearTimeout(hintTimer);
 
   session.on('status', onStatus);
   session.on('state', onState);
@@ -593,10 +732,13 @@ function leave() {
   session = null;
   view = null;
   tableReady = false;
+  lesson = null;
+  hint = null;
   $('overlay-link').hidden = true;
   $('overlay-meld').hidden = true;
   $('overlay-deal').hidden = true;
   $('overlay-match').hidden = true;
+  $('overlay-coach').hidden = true;
   showScreen('screen-home');
 }
 
@@ -611,8 +753,47 @@ function boot() {
   $('join-name').value = savedName();
   $('name-input').addEventListener('input', () => { $('join-name').value = $('name-input').value; });
 
-  $('btn-rules').onclick = () => showScreen('screen-rules');
-  $('btn-rules-back').onclick = () => showScreen('screen-home');
+  const openRules = (from) => {
+    rulesReturn = from;
+    const again = $('btn-coach-again');
+    again.hidden = coaching && taught.size === 0;
+    again.textContent = coaching ? 'Replay the lessons' : 'Turn the coach back on';
+    showScreen('screen-rules');
+  };
+  $('btn-rules').onclick = () => openRules('screen-home');
+  $('btn-help').onclick = () => openRules('screen-table');
+  $('btn-rules-back').onclick = () => showScreen(rulesReturn);
+
+  $('btn-coach-again').onclick = () => {
+    taught = new Set();
+    saveTaught();
+    setCoaching(true);
+    showScreen(rulesReturn);
+    render();
+  };
+
+  $('btn-coach-ok').onclick = dismissLesson;
+  $('btn-coach-off').onclick = () => {
+    setCoaching(false);
+    lesson = null;
+    render();
+  };
+
+  $('btn-learn').onclick = () => {
+    const entered = ($('name-input').value || '').trim().slice(0, 16);
+    if (entered) rememberName(entered);
+    /*
+     * Coaching on, but lessons already learned stay learned — come back for a
+     * third solo game and it is simply practice. "Turn the coach back on" in
+     * the rules screen is what replays the whole curriculum.
+     */
+    setCoaching(true);
+    attach(createSoloSession({
+      name: entered || 'You',
+      target: DEFAULT_TARGET,
+      teaching: true,
+    }));
+  };
 
   $('btn-create').onclick = () => {
     rememberName(playerName());

@@ -10,8 +10,9 @@
  * and is never sent to a server.
  */
 
-import { createTable } from './table.js';
-import { other } from './rules.js';
+import { createTable, dealTeachingHand } from './table.js';
+import { canRobTrump, other } from './rules.js';
+import { botCard, botDeclares, botRobs } from './bot.js';
 
 const ID_PREFIX = 'fzf5-';
 const CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // no 0/O/1/I
@@ -21,6 +22,7 @@ const JOIN_TIMEOUT = 12000;
 const REJOIN_DELAYS = [1000, 2000, 3000, 5000, 8000];
 const PING_INTERVAL = 3000;
 const REVEAL_PAUSE = 1600;
+const BOT_PAUSE = 850;
 const LIVENESS_TIMEOUT = 10000;
 
 /*
@@ -434,6 +436,83 @@ function describe(error) {
     default:
       return (error && error.message) || 'Something went wrong setting up the game.';
   }
+}
+
+/* ----------------------------------------------------------------- solo --- */
+
+/*
+ * One player against the practice opponent, for learning the game before
+ * sitting down opposite somebody. Seat 0 is the learner and is the only seat
+ * ever rendered; seat 1 thinks for a beat so the table feels inhabited.
+ */
+export function createSoloSession({ name, target, teaching = false }) {
+  const events = emitter();
+  let timer = null;
+  let closed = false;
+  let guard = 0;
+
+  const table = createTable({
+    names: [name || 'You', 'Fuss'],
+    target,
+    firstDealer: 1,
+    onViews: (views) => {
+      events.emit('state', views[0]);
+      think();
+    },
+  });
+
+  if (teaching) dealTeachingHand(table.match);
+
+  const schedule = (move) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (!closed) move();
+    }, BOT_PAUSE);
+  };
+
+  /* One action per turn of the loop; applying it broadcasts and calls back in. */
+  function think() {
+    if (closed || guard++ > 500) return;
+    const match = table.match;
+    const deal = match.deal;
+    if (!deal || match.over) return;
+
+    if (deal.stage === 'meld' && deal.meldChoice[1] === null) {
+      schedule(() => table.apply(1, { type: 'meld', declare: botDeclares(deal, 1) }));
+      return;
+    }
+
+    if (deal.stage === 'play' && deal.turn === 1) {
+      if (canRobTrump(deal, 1) && botRobs(deal, 1)) {
+        schedule(() => table.apply(1, { type: 'rob' }));
+        return;
+      }
+      schedule(() => table.apply(1, { type: 'play', card: botCard(deal, 1) }));
+      return;
+    }
+
+    if (deal.stage === 'over' && !match.over && !match.ready[1]) {
+      schedule(() => table.apply(1, { type: 'ready' }));
+    }
+  }
+
+  const session = {
+    mode: 'solo',
+    seat: 0,
+    on: events.on,
+    send: (action) => {
+      guard = 0;
+      table.apply(0, action);
+    },
+    close: () => {
+      closed = true;
+      clearTimeout(timer);
+    },
+  };
+
+  events.emit('status', { state: 'connected' });
+  table.broadcast();
+  return session;
 }
 
 /* ---------------------------------------------------------------- local --- */

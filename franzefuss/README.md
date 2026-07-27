@@ -33,7 +33,27 @@ from after every trick.
   opponent.
 - First past 501 wins.
 
-The in-game **How to play** screen carries the same rules.
+## Learning it
+
+Nobody has played this game, so the app teaches it rather than assuming it.
+
+**Learn by playing** deals you a hand against a practice opponent and explains
+each rule at the moment that rule first decides something: what the cards are
+worth before you must value a trick, why trumps rank J 9 A 10 K Q 8 7 while you
+are looking at your trumps, the declare-or-hide tradeoff while the meld prompt is
+open, and the tightening of the rules the instant the stock runs dry. Ten
+lessons, one tap each, in the order the game raises them. The first deal is
+stacked so you actually get a meld to weigh up and the trump seven to rob with.
+
+Lessons never repeat: each is remembered once dismissed, and **Stop coaching me**
+on any lesson ends them. The rules screen can replay them or turn them back on.
+
+The coach runs in every mode, so someone handed a link with no explanation gets
+taught too. Tapping a dimmed card always says why it cannot be played —
+*"You must follow ♥ — the stock is empty."*
+
+The rules screen is the reference for anything else, reachable from the home
+screen and from **?** at the table.
 
 ### On the rules
 
@@ -55,6 +75,8 @@ network, though the same Wi-Fi is the most reliable case.
 **Pass & play** runs both hands on one phone, with a curtain between turns. It
 needs no connection at all, and is the fallback if two phones cannot link up.
 
+**Learn by playing** is a solo game against the practice opponent, coached.
+
 ## How it is put together
 
 No build step, no framework, no bundler — the directory is the deployable
@@ -64,7 +86,9 @@ artifact, matching the rest of this repo.
 |---|---|
 | `js/rules.js` | The rules engine. Pure: no DOM, no network, no timers. |
 | `js/table.js` | The authoritative table — applies intents, hands out views. |
-| `js/net.js` | Transports: WebRTC for two phones, a local one for pass & play. |
+| `js/net.js` | Transports: WebRTC, solo-vs-bot, and local pass & play. |
+| `js/coach.js` | The lessons, each a predicate over the view that renders the table. |
+| `js/bot.js` | The practice opponent. Deterministic; follows the rules exactly. |
 | `js/app.js` | Screens, rendering, input. |
 | `vendor/peerjs.min.js` | PeerJS 1.5.4, vendored. |
 

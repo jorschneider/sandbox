@@ -63,8 +63,10 @@ Static microsites that share the root, each self-contained and deployed with it:
 
 - [`franzefuss/`](franzefuss/) — **Franzefuss**, the two-hand card game of 1801,
   played over the internet on two phones. One player sends a link, the other
-  opens it, and the cards travel straight between the handsets. Also plays
-  pass-and-play on a single phone. `npm test` runs its rules engine.
+  opens it, and the cards travel straight between the handsets. Since nobody has
+  heard of the game, it teaches itself: play a hand and it explains each rule at
+  the moment that rule first matters. Also plays pass-and-play on one phone, or
+  solo against a practice opponent. `npm test` runs its rules engine.
 - [`rayray-outdoor-weekend/`](rayray-outdoor-weekend/) — a three-day guide to
   outdoor events in New York City.
 
