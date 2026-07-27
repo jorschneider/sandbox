@@ -12,7 +12,7 @@
 
 import { createTable, dealTeachingHand } from './table.js';
 import { canRobTrump, other } from './rules.js';
-import { botCard, botDeclares, botRobs } from './bot.js';
+import { botCard, botAnnounces, botRobs } from './bot.js';
 
 const ID_PREFIX = 'fzf5-';
 const CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // no 0/O/1/I
@@ -477,14 +477,14 @@ export function createSoloSession({ name, target, teaching = false }) {
     const deal = match.deal;
     if (!deal || match.over) return;
 
-    if (deal.stage === 'meld' && deal.meldChoice[1] === null) {
-      schedule(() => table.apply(1, { type: 'meld', declare: botDeclares(deal, 1) }));
-      return;
-    }
-
     if (deal.stage === 'play' && deal.turn === 1) {
       if (canRobTrump(deal, 1) && botRobs(deal, 1)) {
         schedule(() => table.apply(1, { type: 'rob' }));
+        return;
+      }
+      const kind = botAnnounces(deal, 1);
+      if (kind) {
+        schedule(() => table.apply(1, { type: 'announce', kind }));
         return;
       }
       schedule(() => table.apply(1, { type: 'play', card: botCard(deal, 1) }));
@@ -537,9 +537,6 @@ export function createLocalSession({ names, target }) {
   function seatOnTurn(match) {
     const deal = match.deal;
     if (!deal || match.over || deal.stage === 'over') return null;
-    if (deal.stage === 'meld') {
-      return deal.meldChoice[deal.elder] === null ? deal.elder : other(deal.elder);
-    }
     return deal.turn;
   }
 

@@ -7,7 +7,8 @@
  */
 
 import {
-  SUIT_SYMBOL, RED_SUITS, RANK_LABEL, suitOf, rankOf, meldName, other, DEFAULT_TARGET,
+  SUIT_SYMBOL, RED_SUITS, RANK_LABEL, suitOf, rankOf, combinationName, other,
+  DEFAULT_TARGET,
 } from './rules.js';
 import {
   createOnlineHost, createOnlineGuest, createLocalSession, createSoloSession, normaliseCode,
@@ -32,8 +33,9 @@ let tableReady = false;
 let heldTrick = null;
 let heldTimer = null;
 let shownTrick = 0;
-let meldAcked = false;
 let currentDeal = 0;
+let announceOpen = false;
+let shownAnnouncements = 0;
 
 /* Coaching: which lessons this player has had, and whether they still want them. */
 let taught = loadTaught();
@@ -107,9 +109,15 @@ function playerName(id = 'name-input') {
 
 /* --------------------------------------------------------------- cards --- */
 
+/*
+ * A card you can play is a button; one that is only being shown is a div. That
+ * keeps a card out of the tab order when it is not a control, and keeps cards
+ * legal inside the announcement rows, which are themselves buttons.
+ */
 function cardEl(card, options = {}) {
-  const element = document.createElement('button');
-  element.type = 'button';
+  const interactive = !!options.onClick;
+  const element = document.createElement(interactive ? 'button' : 'div');
+  if (interactive) element.type = 'button';
   element.className = 'card';
   if (RED_SUITS[suitOf(card)]) element.classList.add('red');
   if (options.mini) element.classList.add('mini');
@@ -134,8 +142,7 @@ function cardEl(card, options = {}) {
     `${RANK_LABEL[rankOf(card)]} of ${{ S: 'spades', H: 'hearts', D: 'diamonds', C: 'clubs' }[suitOf(card)]}`,
   );
 
-  if (options.onClick) element.addEventListener('click', options.onClick);
-  else element.disabled = true;
+  if (interactive) element.addEventListener('click', options.onClick);
   return element;
 }
 
@@ -160,9 +167,24 @@ function onState(next) {
     currentDeal = view.dealNumber;
     shownTrick = 0;
     heldTrick = null;
-    meldAcked = false;
     selected = null;
+    announceOpen = false;
+    shownAnnouncements = 0;
     clearTimeout(heldTimer);
+  }
+
+  /* Say out loud what the other player just announced. */
+  const calls = (view.deal && view.deal.announcements) || [];
+  if (calls.length > shownAnnouncements) {
+    const latest = calls[calls.length - 1];
+    shownAnnouncements = calls.length;
+    if (latest.player !== view.you) {
+      showHint(
+        latest.good
+          ? `${view.names[latest.player]} announces ${latest.name} — good for ${latest.value}.`
+          : `${view.names[latest.player]} announced ${latest.name} — not good.`,
+      );
+    }
   }
 
   const deal = view.deal;
@@ -312,10 +334,22 @@ function renderHand(deal, you) {
   };
 
   const rob = $('btn-rob');
-  rob.hidden = !(deal.canRob && !heldTrick);
+  rob.hidden = !(deal.canRob && !heldTrick && !lesson);
   rob.onclick = () => {
     selected = null;
     session.send({ type: 'rob' });
+  };
+
+  const announce = $('btn-announce');
+  const offer = deal.canAnnounce && !heldTrick && !lesson;
+  announce.hidden = !offer;
+  if (offer) {
+    const worth = deal.announceOptions.reduce((sum, one) => sum + one.total, 0);
+    announce.textContent = `Announce · ${worth}`;
+  }
+  announce.onclick = () => {
+    announceOpen = true;
+    render();
   };
 }
 
@@ -361,11 +395,6 @@ function renderBanner(deal, you, them) {
     return;
   }
 
-  if (deal.stage === 'meld') {
-    banner.textContent = 'Declaring melds';
-    return;
-  }
-
   if (deal.turn === you) {
     const leading = deal.trickCards[them] === null;
     if (leading) {
@@ -382,14 +411,14 @@ function renderBanner(deal, you, them) {
 /* ------------------------------------------------------------ overlays --- */
 
 function renderOverlays(deal, you, them) {
-  const meld = $('overlay-meld');
+  const announceSheet = $('overlay-announce');
   const dealOver = $('overlay-deal');
   const matchOver = $('overlay-match');
   const coach = $('overlay-coach');
 
   /* Teaching comes before everything else on screen. */
   if (lesson) {
-    meld.hidden = true;
+    announceSheet.hidden = true;
     dealOver.hidden = true;
     matchOver.hidden = true;
     renderCoach();
@@ -398,19 +427,20 @@ function renderOverlays(deal, you, them) {
   coach.hidden = true;
 
   if (view.matchOver) {
-    meld.hidden = true;
+    announceSheet.hidden = true;
     dealOver.hidden = true;
     renderMatchOver(you, them);
     return;
   }
   matchOver.hidden = true;
 
-  if (deal.stage === 'meld' || (deal.meldSummary && !meldAcked && deal.stage === 'play')) {
+  if (announceOpen && deal.canAnnounce) {
     dealOver.hidden = true;
-    renderMeld(deal, you, them);
+    renderAnnounce(deal);
     return;
   }
-  meld.hidden = true;
+  announceSheet.hidden = true;
+  announceOpen = false;
 
   if (deal.stage === 'over' && !heldTrick) {
     renderDealOver(deal, you, them);
@@ -470,100 +500,50 @@ function dismissLesson() {
   render();
 }
 
-function renderMeld(deal, you, them) {
-  const overlay = $('overlay-meld');
-  const body = $('meld-body');
-  const declare = $('btn-declare');
-  const pass = $('btn-pass');
+/*
+ * The announcement sheet, offered on your own lead. Each class is one tap: the
+ * opponent judges it against their own hand, and if yours is better you score
+ * every combination of that class you are holding.
+ */
+function renderAnnounce(deal) {
+  const overlay = $('overlay-announce');
+  const body = $('announce-body');
   overlay.hidden = false;
   body.replaceChildren();
 
-  /* Phase three: both have chosen, so show who won the contest. */
-  if (deal.stage === 'play' && deal.meldSummary) {
-    const summary = deal.meldSummary;
-    overlay.querySelector('h2').textContent = 'Melds';
+  for (const option of deal.announceOptions) {
+    const button = document.createElement('button');
+    button.className = 'btn announce-option';
+    button.type = 'button';
 
-    if (!summary.winner) {
-      body.append(line('Both players passed. No meld points.'));
-    } else {
-      for (const seat of [you, them]) {
-        const entry = summary.declared[seat];
-        const who = seat === you ? 'You' : view.names[seat];
-        if (!entry) {
-          body.append(line(`${who} passed.`));
-          continue;
-        }
-        body.append(line(`${who}: ${meldName(entry.best)}`));
-        const strip = document.createElement('div');
-        strip.className = 'meld-cards';
-        for (const card of entry.best.cards) {
-          strip.append(cardEl(card, { mini: true, trump: deal.trump }));
-        }
-        body.append(strip);
-      }
-      const winnerName = summary.winner.player === you ? 'You score' : `${view.names[summary.winner.player]} scores`;
-      const verdict = document.createElement('p');
-      verdict.className = 'verdict';
-      verdict.textContent = `${winnerName} ${summary.winner.total}`;
-      body.append(verdict);
+    const heading = document.createElement('span');
+    heading.className = 'announce-head';
+    heading.textContent = option.count > 1
+      ? `${combinationName(option.best)} + ${option.count - 1} more`
+      : combinationName(option.best);
+
+    const worth = document.createElement('span');
+    worth.className = 'announce-worth';
+    worth.textContent = option.total;
+
+    const strip = document.createElement('span');
+    strip.className = 'meld-cards';
+    for (const card of option.best.cards) {
+      strip.append(cardEl(card, { mini: true, trump: deal.trump }));
     }
 
-    declare.hidden = true;
-    pass.hidden = false;
-    pass.textContent = 'Play';
-    pass.className = 'btn primary';
-    pass.onclick = () => {
-      meldAcked = true;
-      render();
+    button.append(heading, worth, strip);
+    button.onclick = () => {
+      announceOpen = false;
+      session.send({ type: 'announce', kind: option.kind });
     };
-    return;
+    body.append(button);
   }
 
-  /* Phase two: waiting on the other phone. */
-  if (deal.meldWaiting) {
-    overlay.querySelector('h2').textContent = deal.meldChoice ? 'Declared' : 'Passed';
-    body.append(line(`Waiting for ${view.names[them]}…`));
-    declare.hidden = true;
-    pass.hidden = true;
-    return;
-  }
-
-  /* Phase one: declare or pass. */
-  const offer = deal.meldOffer;
-  overlay.querySelector('h2').textContent = 'Declare?';
-  declare.className = 'btn primary';
-  pass.className = 'btn ghost';
-
-  if (!offer || !offer.best) {
-    body.append(line('You have nothing to declare.'));
-    declare.hidden = true;
-    pass.hidden = false;
-    pass.textContent = 'Continue';
-    pass.onclick = () => session.send({ type: 'meld', declare: false });
-    return;
-  }
-
-  body.append(line(`Your best is a ${meldName(offer.best)}.`));
-  const strip = document.createElement('div');
-  strip.className = 'meld-cards';
-  for (const card of offer.best.cards) {
-    strip.append(cardEl(card, { mini: true, trump: deal.trump }));
-  }
-  body.append(strip);
-  body.append(
-    line(
-      offer.count > 1
-        ? `Worth ${offer.total} across ${offer.count} combinations — if it beats theirs.`
-        : `Worth ${offer.total} — if it beats theirs.`,
-    ),
-  );
-
-  declare.hidden = false;
-  declare.textContent = `Declare for ${offer.total}`;
-  declare.onclick = () => session.send({ type: 'meld', declare: true });
-  pass.hidden = false;
-  pass.textContent = 'Pass';
-  pass.onclick = () => session.send({ type: 'meld', declare: false });
+  $('btn-announce-close').onclick = () => {
+    announceOpen = false;
+    render();
+  };
 }
 
 function line(text) {
@@ -618,7 +598,7 @@ function renderDealOver(deal, you, them) {
     text: seat === you ? 'You' : view.names[seat], name: true,
   }))));
   table.append(tallyRow('Cards', seats.map((seat) => ({ text: result.cardPoints[seat] }))));
-  table.append(tallyRow('Melds', seats.map((seat) => ({ text: result.meldPoints[seat] }))));
+  table.append(tallyRow('Announced', seats.map((seat) => ({ text: result.announcePoints[seat] }))));
   table.append(tallyRow('Tricks', seats.map((seat) => ({ text: result.tricksWon[seat] }))));
   table.append(tallyRow('Deal', seats.map((seat) => ({
     text: result.totals[seat],
@@ -641,7 +621,7 @@ function renderMatchOver(you, them) {
   const winner = view.matchWinner;
 
   $('match-title').textContent =
-    winner === null ? 'Level pegging' : winner === you ? 'You win' : `${view.names[them]} wins`;
+    winner === null ? 'Level pegging' : winner === you ? 'You take the partie' : `${view.names[them]} takes the partie`;
 
   const body = $('match-body');
   body.replaceChildren();
@@ -653,6 +633,11 @@ function renderMatchOver(you, them) {
   table.append(tallyRow('Final', [you, them].map((seat) => ({
     text: view.scores[seat], win: seat === winner,
   })), 'total'));
+  if (view.parties[0] + view.parties[1] > 1) {
+    table.append(tallyRow('Parties', [you, them].map((seat) => ({
+      text: view.parties[seat], win: view.parties[seat] > view.parties[other(seat)],
+    }))));
+  }
   body.append(table);
 
   $('btn-rematch').onclick = () => session.send({ type: 'rematch' });
@@ -735,7 +720,7 @@ function leave() {
   lesson = null;
   hint = null;
   $('overlay-link').hidden = true;
-  $('overlay-meld').hidden = true;
+  $('overlay-announce').hidden = true;
   $('overlay-deal').hidden = true;
   $('overlay-match').hidden = true;
   $('overlay-coach').hidden = true;

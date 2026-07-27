@@ -8,8 +8,8 @@
  */
 
 import {
-  legalPlays, cardValue, cardStrength, suitOf, rankOf, findMelds, bestMeld,
-  canRobTrump, stockExhausted, other,
+  legalPlays, cardValue, cardStrength, suitOf, rankOf, announceOptions,
+  canAnnounce, canRobTrump, stockExhausted, other,
 } from './rules.js';
 
 const byCheapest = (trump) => (a, b) =>
@@ -68,8 +68,15 @@ export function botCard(deal, seat) {
   return cheapest(losers, trump);
 }
 
-export function botDeclares(deal, seat) {
-  return !!bestMeld(findMelds(deal.hands[seat], deal.trump));
+/*
+ * Which class to announce on this lead, or null. It leads with whichever is
+ * worth more, and comes back for the other on a later lead.
+ */
+export function botAnnounces(deal, seat) {
+  if (!canAnnounce(deal, seat)) return null;
+  const options = announceOptions(deal, seat);
+  if (!options.length) return null;
+  return options.slice().sort((a, b) => b.total - a.total)[0].kind;
 }
 
 export function botRobs(deal, seat) {

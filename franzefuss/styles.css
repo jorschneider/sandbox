@@ -331,6 +331,25 @@ h3 { font-size: 1.05rem; font-weight: 600; margin-top: 0.9rem; color: var(--gold
 .overlay .sheet { max-width: 22rem; }
 
 .meld-cards { display: flex; gap: 0.2rem; justify-content: center; flex-wrap: wrap; margin: 0.5rem 0; }
+
+#announce-body { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.announce-option {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.2rem 0.6rem;
+  text-align: left;
+  padding: 0.75rem 0.9rem;
+}
+.announce-head { font-size: 0.98rem; }
+.announce-worth { font-size: 1.35rem; font-weight: 700; color: var(--gold); }
+.announce-option .meld-cards {
+  grid-column: 1 / -1;
+  justify-content: flex-start;
+  margin: 0.15rem 0 0;
+  pointer-events: none; /* the whole row is the tap target */
+}
 .meld-line { font-size: 0.92rem; display: flex; justify-content: space-between; gap: 1rem; padding: 0.15rem 0; }
 .meld-line b { color: var(--gold); }
 

@@ -11,7 +11,7 @@
  * arrived is the one shown.
  */
 
-import { SUIT_SYMBOL, RANK_LABEL, rankOf, other } from './rules.js';
+import { SUIT_SYMBOL, RANK_LABEL, rankOf, combinationName, other } from './rules.js';
 
 const trumpRun = (trump) => ['J', '9', 'A', 'T', 'K', 'Q', '8', '7'].map((rank) => trump + rank);
 
@@ -23,7 +23,7 @@ export const LESSONS = [
       `Points do. Every deal puts 162 on the table, and you take them by winning ` +
       `tricks that have valuable cards in them. Win ten tricks full of sevens and ` +
       `you will still lose the deal. First to ${view.target} wins the match.`,
-    when: (view) => view.dealNumber === 1 && view.deal.stage === 'meld',
+    when: (view) => view.dealNumber === 1 && view.deal.trickNumber === 1,
   },
   {
     id: 'values',
@@ -38,7 +38,7 @@ export const LESSONS = [
       ['King 4 · Queen 3 · Jack 2', 'small'],
     ],
     footer: 'And 10 more for whoever takes the very last trick.',
-    when: (view) => view.dealNumber === 1 && view.deal.stage === 'meld',
+    when: (view) => view.dealNumber === 1 && view.deal.trickNumber === 1,
   },
   {
     id: 'trumps',
@@ -50,18 +50,42 @@ export const LESSONS = [
       `ordinary A 10 K Q J 9 8 7.`,
     cards: (view) => trumpRun(view.deal.trump),
     footer: 'Highest on the left. Your trumps are outlined in gold in your hand.',
-    when: (view) => view.dealNumber === 1 && view.deal.stage === 'meld',
+    when: (view) => view.dealNumber === 1 && view.deal.trickNumber === 1,
   },
   {
-    id: 'melds',
-    title: 'Declare, or keep it quiet',
+    id: 'announcing',
+    title: 'Announcing, on your own lead',
+    body: (view) => {
+      const best = view.deal.announceOptions[0] && view.deal.announceOptions[0].best;
+      return (
+        `Whenever you lead you may first announce a combination — a run of three or ` +
+        `more in one suit, or three or four of a kind from the tens upward. ` +
+        `${best ? `You are holding a ${combinationName(best)}. ` : ''}` +
+        `Your opponent looks at their own hand and says good or not good: if theirs ` +
+        `beats yours you score nothing of that class at all. If yours is better you ` +
+        `score every one of that class you hold.`
+      );
+    },
+    footer: 'Announcing tells your opponent what you are holding. That is the price.',
+    when: (view) => view.deal.canAnnounce,
+  },
+  {
+    id: 'containment',
+    title: 'Why the game is called Franzefuß',
     body: () =>
-      'Before the first card is led you may declare a meld: a run of three or more ' +
-      'in one suit, or three or four of a kind. Only the better declaration scores — ' +
-      'and it scores every combination its owner holds, so the winner can clean up. ' +
-      'But declaring shows your best meld to your opponent, which tells them a lot ' +
-      'about what you are holding. A thin meld is often worth hiding.',
-    when: (view) => view.deal.stage === 'meld',
+      'A run pays for every shorter run inside it. Three cards — a Tattel — are ' +
+      'worth 3. A Quart of four is 4, but it also contains two Tatteln, so it pays ' +
+      '10. And a Fuß of five is 15 plus two Quarts plus three Tatteln: 32, the ' +
+      'biggest thing in the game and the one it is named after.',
+    rows: () => [
+      ['Tattel · run of 3', '3'],
+      ['Quart · run of 4', '10'],
+      ['Fuß · run of 5', '32'],
+      ['Three of a kind, tens up', '3'],
+      ['Four of a kind', '14'],
+    ],
+    footer: 'A run you extend later pays again — announce it once more when it grows.',
+    when: (view) => view.deal.canAnnounce,
   },
   {
     id: 'freeplay',
@@ -135,7 +159,7 @@ export const LESSONS = [
     id: 'tally',
     title: 'Counting up',
     body: (view) =>
-      `Card points from your tricks, plus any melds you won, make the deal score. ` +
+      `Card points from your tricks, plus anything you announced, make the deal score. ` +
       `That goes on the match score, the deal passes to the other player, and you ` +
       `go again until somebody passes ${view.target}.`,
     when: (view) => view.deal.stage === 'over',

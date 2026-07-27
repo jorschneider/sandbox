@@ -61,8 +61,8 @@ vercel.com; no configuration needed beyond the included `vercel.json`.
 
 Static microsites that share the root, each self-contained and deployed with it:
 
-- [`franzefuss/`](franzefuss/) — **Franzefuss**, the two-hand card game of 1801,
-  played over the internet on two phones. One player sends a link, the other
+- [`franzefuss/`](franzefuss/) — **Franzefuß**, the Austrian two-hand card game
+  last codified in 1890, played over the internet on two phones. One player sends a link, the other
   opens it, and the cards travel straight between the handsets. Since nobody has
   heard of the game, it teaches itself: play a hand and it explains each rule at
   the moment that rule first matters. Also plays pass-and-play on one phone, or

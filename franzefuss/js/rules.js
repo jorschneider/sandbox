@@ -1,13 +1,20 @@
 /*
- * Franzefuss — the rules engine.
+ * Franzefuß — the rules engine.
  *
- * Franzefuss (also recorded as Tatteln, Toerteln, and in Denmark as
- * Frantsfuus-Spillet) is a historical two-hand point-trick game: a
- * trick-and-draw cousin of Klaberjass, played with 32 cards.
+ * Franzefuß (also Tatteln, Törteln, Därde; in Denmark Frantsfuus-Spillet) is a
+ * two-hand point-trick game of the Austrian 19th century. The Oeconomische
+ * Encyclopädie of 1842 calls it "ein im Oesterreichischen sehr beliebtes
+ * Kartenspiel ... aus dem bekannten Piquet und dem veralteten Mariage
+ * zusammengesetzt" — assembled out of Piquet and Mariage. That is the shape to
+ * hold on to: the trick play is Mariage's, and the combinations and their
+ * scoring are Piquet's.
  *
- * This module is pure. It owns no DOM, no network and no timers — it takes a
- * state object and returns a new one, so the same code runs on the host phone,
- * in pass-and-play, and in tests.
+ * Ruleset as last codified for the Austro-Hungarian market: S. Ulmann, Das Buch
+ * der Familienspiele, A. Hartleben, Wien/München/Pest 1890, which is the edition
+ * that called the game Franzefuß.
+ *
+ * This module is pure. It owns no DOM, no network and no timers, so the same
+ * code runs on the host phone, in pass-and-play, and in tests.
  */
 
 export const SUITS = ['S', 'H', 'D', 'C'];
@@ -26,11 +33,15 @@ export const rankOf = (card) => card[1];
 const TRUMP_ORDER = ['J', '9', 'A', 'T', 'K', 'Q', '8', '7'];
 const PLAIN_ORDER = ['A', 'T', 'K', 'Q', 'J', '9', '8', '7'];
 
-/* Card points. The trump Jack and Nine are the two big ones. 152 in the pack. */
+/*
+ * "As zählt 11, die Zehn 10, König 4, Dame 3, Bube 2. Je nach den
+ * zugrundegelegten Regeln zählt außerdem der Trumpfbube 20 und Trumpfneun 14."
+ * 152 in the pack.
+ */
 const TRUMP_VALUE = { J: 20, 9: 14, A: 11, T: 10, K: 4, Q: 3, 8: 0, 7: 0 };
 const PLAIN_VALUE = { A: 11, T: 10, K: 4, Q: 3, J: 2, 9: 0, 8: 0, 7: 0 };
 
-/* Melds use the natural sequence order, not the trick-taking order. */
+/* "Die Zehn nimmt bei den Sequenzen ihren natürlichen Platz ein." */
 const SEQUENCE_ORDER = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7'];
 
 export const CARD_POINTS_IN_PACK = 152;
@@ -39,7 +50,10 @@ export const DEAL_TOTAL = CARD_POINTS_IN_PACK + LAST_TRICK_BONUS; // 162
 export const HAND_SIZE = 9;
 export const TRICKS_WITH_DRAW = 7; // 13 stock cards + the turn-up = 14 draws
 export const TOTAL_TRICKS = 16;
-export const DEFAULT_TARGET = 501;
+
+/* "die Punktezahl, bis zu der man die ganze Partie spielt, ist genau wie beim
+ * Pikett" — and a partie of Piquet is played to a hundred. */
+export const DEFAULT_TARGET = 100;
 
 export function cardValue(card, trump) {
   return suitOf(card) === trump ? TRUMP_VALUE[rankOf(card)] : PLAIN_VALUE[rankOf(card)];
@@ -70,97 +84,117 @@ function shuffle(cards, random) {
   return cards;
 }
 
-/* ---------------------------------------------------------------- melds --- */
+/* -------------------------------------------------------- combinations --- */
 
-const MELD_VALUE = { tattel: 20, quart: 50, fuss: 100, triplet: 30, quartet: 80 };
+/*
+ * Sequence values are Piquet's, as printed in German in 1883: "die Octave
+ * zählt 18; die Septime 17; die Sixte 16, die Quinte 15, die Quarte 4 und die
+ * Terze 3 Punkte, vorausgesetzt, daß sie vom Gegner gutgeheißen werden."
+ */
+const SEQUENCE_VALUE = { 3: 3, 4: 4, 5: 15, 6: 16, 7: 17, 8: 18 };
 
-const MELD_LABEL = {
-  tattel: 'Tattel',
-  quart: 'Quart',
-  fuss: 'Fuss',
-  triplet: 'Triplet',
-  quartet: 'Quartet',
+/* "Vier Aß, 4 Könige, 4 Damen, 4 Bauern und 4 Zehner gelten je 14; 3 Aß, 3
+ * Könige etc. gelten je 3" — sets run down to the tens and no further. */
+const SET_VALUE = { 3: 3, 4: 14 };
+const SET_RANKS = ['A', 'K', 'Q', 'J', 'T'];
+
+const SEQUENCE_NAME = {
+  3: 'Tattel', 4: 'Quart', 5: 'Fuß', 6: 'Sixte', 7: 'Septime', 8: 'Octave',
 };
 
-/* Every scoring combination in a hand: runs of 3+ in a suit, and sets of 3-4. */
-export function findMelds(hand, trump) {
-  const melds = [];
+export const combinationId = (cards) => cards.slice().sort().join('');
+
+/*
+ * Every combination a hand contains.
+ *
+ * A run scores each shorter run inside it as well as itself — "eine Quart zählt
+ * nicht nur als solche, sondern auch als zwei Tattel, ein Fuß ebenso als drei
+ * Tattel und zwei Quarten". So a quart is 4 + 3 + 3 = 10, and a Fuß, the
+ * combination the game is named for, is 15 + 4 + 4 + 3 + 3 + 3 = 32.
+ *
+ * Sets are not scored that way: four aces are 14, not 14 plus the trios inside.
+ */
+export function findCombinations(hand) {
+  const found = [];
 
   for (const suit of SUITS) {
-    const inSuit = hand
+    const ladder = hand
       .filter((card) => suitOf(card) === suit)
       .map((card) => SEQUENCE_ORDER.indexOf(rankOf(card)))
       .sort((a, b) => a - b);
 
     let run = [];
     const flush = () => {
-      if (run.length >= 3) {
-        const kind = run.length === 3 ? 'tattel' : run.length === 4 ? 'quart' : 'fuss';
-        melds.push({
-          kind,
-          value: MELD_VALUE[kind],
-          length: run.length,
-          top: run[0],
-          trump: suit === trump,
-          cards: run.map((index) => suit + SEQUENCE_ORDER[index]),
-        });
+      for (let length = 3; length <= run.length; length++) {
+        for (let start = 0; start + length <= run.length; start++) {
+          const slice = run.slice(start, start + length);
+          const cards = slice.map((index) => suit + SEQUENCE_ORDER[index]);
+          found.push({
+            id: combinationId(cards),
+            kind: 'sequence',
+            length,
+            value: SEQUENCE_VALUE[length] || 0,
+            top: slice[0],
+            suit,
+            cards,
+          });
+        }
       }
       run = [];
     };
-    for (const index of inSuit) {
+    for (const index of ladder) {
       if (run.length && index !== run[run.length - 1] + 1) flush();
       run.push(index);
     }
     flush();
   }
 
-  for (const rank of RANKS) {
-    const sameRank = hand.filter((card) => rankOf(card) === rank);
-    if (sameRank.length >= 3) {
-      const kind = sameRank.length === 3 ? 'triplet' : 'quartet';
-      melds.push({
-        kind,
-        value: MELD_VALUE[kind],
-        length: sameRank.length,
+  for (const rank of SET_RANKS) {
+    const cards = hand.filter((card) => rankOf(card) === rank);
+    if (cards.length >= 3) {
+      found.push({
+        id: combinationId(cards),
+        kind: 'set',
+        length: cards.length,
+        value: SET_VALUE[cards.length] || 0,
         top: SEQUENCE_ORDER.indexOf(rank),
-        trump: sameRank.some((card) => suitOf(card) === trump),
-        cards: sameRank,
+        rank,
+        cards,
       });
     }
   }
 
-  return melds;
+  return found;
 }
 
-/* Ranking key for the meld contest: value, then the higher top card, then trump. */
-function meldRank(meld) {
-  return [meld.value, -meld.top, meld.trump ? 1 : 0];
+/*
+ * Within a class: the longer wins, and at equal length the higher top card.
+ * "Drei gleiche Figuren werden von vier gleichen, wenn diese auch niedriger
+ * sein sollten, überboten" — four beats three whatever the rank.
+ */
+export function compareCombinations(a, b) {
+  if (a.length !== b.length) return a.length - b.length;
+  return b.top - a.top;
 }
 
-export function compareMelds(a, b) {
-  const left = meldRank(a);
-  const right = meldRank(b);
-  for (let i = 0; i < left.length; i++) {
-    if (left[i] !== right[i]) return left[i] - right[i];
+export function bestOfKind(combinations, kind) {
+  return combinations
+    .filter((combination) => combination.kind === kind)
+    .reduce((best, one) => (!best || compareCombinations(one, best) > 0 ? one : best), null);
+}
+
+const RANK_PLURAL = { A: 'Aces', K: 'Kings', Q: 'Queens', J: 'Jacks', T: 'Tens' };
+
+export function combinationName(combination) {
+  if (!combination) return null;
+  if (combination.kind === 'set') {
+    const many = combination.length === 4 ? 'Four' : 'Three';
+    return `${many} ${RANK_PLURAL[combination.rank] || RANK_LABEL[combination.rank]}`;
   }
-  return 0;
+  return `${SEQUENCE_NAME[combination.length] || 'Sequence'} in ${SUIT_SYMBOL[combination.suit]}`;
 }
 
-export function bestMeld(melds) {
-  return melds.reduce((best, meld) => (!best || compareMelds(meld, best) > 0 ? meld : best), null);
-}
-
-export function meldName(meld) {
-  if (!meld) return null;
-  const suffix = meld.kind === 'triplet' || meld.kind === 'quartet'
-    ? ` of ${RANK_LABEL[rankOf(meld.cards[0])]}s`
-    : ` in ${SUIT_SYMBOL[suitOf(meld.cards[0])]}`;
-  return MELD_LABEL[meld.kind] + suffix;
-}
-
-export function meldTotal(melds) {
-  return melds.reduce((sum, meld) => sum + meld.value, 0);
-}
+export const KIND_LABEL = { sequence: 'sequences', set: 'sets' };
 
 /* ----------------------------------------------------------------- deal --- */
 
@@ -174,6 +208,8 @@ export function newMatch(names, target = DEFAULT_TARGET, firstDealer = 0) {
     dealNumber: 0,
     deal: null,
     ready: [false, false],
+    /* A partie is short, so they were played one after another for stakes. */
+    parties: [0, 0],
     over: false,
     winner: null,
   };
@@ -196,18 +232,19 @@ export function startDeal(match, random = Math.random) {
     upcard,
     stock: pack,
     hands,
-    stage: 'meld',
+    stage: 'play',
     elder,
     turn: elder,
     trickLead: elder,
     trickCards: [null, null],
     trickNumber: 1,
     cardPoints: [0, 0],
-    meldPoints: [0, 0],
+    announcePoints: [0, 0],
     tricksWon: [0, 0],
     lateTricksWon: [0, 0],
-    meldChoice: [null, null],
-    meldSummary: null,
+    spent: [[], []],
+    announcedThisTrick: [false, false],
+    announcements: [],
     robbed: false,
     lastTrick: null,
     result: null,
@@ -234,52 +271,86 @@ function note(deal, text) {
   if (deal.log.length > 40) deal.log.shift();
 }
 
-/* --------------------------------------------------------------- melds ---- */
+/* ---------------------------------------------------------- announcing --- */
 
-export function meldOffer(deal, player) {
-  const melds = findMelds(deal.hands[player], deal.trump);
-  return { best: bestMeld(melds), total: meldTotal(melds), count: melds.length };
+export const isLeading = (deal, player) =>
+  deal.trickLead === player && deal.trickCards[0] === null && deal.trickCards[1] === null;
+
+/* What this player could still announce, grouped into the two Piquet classes. */
+export function announceOptions(deal, player) {
+  const spent = deal.spent[player];
+  const fresh = findCombinations(deal.hands[player]).filter((one) => !spent.includes(one.id));
+
+  return ['sequence', 'set']
+    .map((kind) => {
+      const mine = fresh.filter((one) => one.kind === kind);
+      if (!mine.length) return null;
+      return {
+        kind,
+        best: bestOfKind(mine, kind),
+        total: mine.reduce((sum, one) => sum + one.value, 0),
+        count: mine.length,
+        cards: mine.flatMap((one) => one.cards),
+      };
+    })
+    .filter(Boolean);
 }
 
-export function declareMeld(deal, player, declaring) {
-  if (deal.stage !== 'meld' || deal.meldChoice[player] !== null) return deal;
-  deal.meldChoice[player] = !!declaring;
-  if (deal.meldChoice.some((choice) => choice === null)) return deal;
+export function canAnnounce(deal, player) {
+  return (
+    deal.stage === 'play' &&
+    deal.turn === player &&
+    isLeading(deal, player) &&
+    !deal.announcedThisTrick[player] &&
+    announceOptions(deal, player).length > 0
+  );
+}
 
-  const shown = [0, 1].map((p) => {
-    if (!deal.meldChoice[p]) return null;
-    const melds = findMelds(deal.hands[p], deal.trump);
-    const best = bestMeld(melds);
-    return best ? { player: p, best, melds, total: meldTotal(melds) } : null;
+/*
+ * "Wer eine Karte ausspielt, darf zuvor eine Kartenkombination von seiner Hand
+ * ansagen, um sich die Punkte dafür anzurechnen."
+ *
+ * You announce on your own lead, and the opponent says good or not good by
+ * looking at their hand: if theirs is better you score nothing of that class at
+ * all, which is Piquet — "dieser letztere kann in diesem Falle nichts zählen".
+ * If yours is better you score every combination of that class you hold, so a
+ * run that grows as you draw pays again each time it grows.
+ */
+export function announce(deal, player, kind) {
+  if (!canAnnounce(deal, player)) return deal;
+
+  const option = announceOptions(deal, player).find((one) => one.kind === kind);
+  if (!option) return deal;
+
+  const theirs = bestOfKind(findCombinations(deal.hands[other(player)]), kind);
+  const good = !theirs || compareCombinations(option.best, theirs) > 0;
+
+  deal.announcedThisTrick[player] = true;
+
+  if (good) {
+    const spent = deal.spent[player];
+    const mine = findCombinations(deal.hands[player]).filter(
+      (one) => one.kind === kind && !spent.includes(one.id),
+    );
+    for (const one of mine) spent.push(one.id);
+    deal.announcePoints[player] += option.total;
+    note(deal, `${combinationName(option.best)} — good for ${option.total}.`);
+  } else {
+    note(deal, `${combinationName(option.best)} — not good.`);
+  }
+
+  deal.announcements.push({
+    player,
+    kind,
+    good,
+    value: good ? option.total : 0,
+    cards: option.best.cards.slice(),
+    name: combinationName(option.best),
   });
-
-  let winner = null;
-  if (shown[0] && shown[1]) {
-    const verdict = compareMelds(shown[0].best, shown[1].best);
-    /* A dead heat is settled in favour of the elder hand, who leads. */
-    winner = verdict > 0 ? shown[0] : verdict < 0 ? shown[1] : shown[deal.elder];
-  } else {
-    winner = shown[0] || shown[1];
-  }
-
-  if (winner) {
-    deal.meldPoints[winner.player] = winner.total;
-    note(deal, `Melds: ${meldName(winner.best)} scores ${winner.total}.`);
-  } else {
-    note(deal, 'Melds: both hands passed.');
-  }
-
-  deal.meldSummary = {
-    declared: shown.map((entry) => (entry ? { player: entry.player, best: entry.best } : null)),
-    winner: winner
-      ? { player: winner.player, melds: winner.melds, total: winner.total, best: winner.best }
-      : null,
-  };
-  deal.stage = 'play';
   return deal;
 }
 
-/* ---------------------------------------------------------------- play ---- */
+/* ---------------------------------------------------------------- play --- */
 
 /* The stock is spent once the last card and the turn-up have both been drawn. */
 export const stockExhausted = (deal) => deal.stock.length === 0 && deal.upcard === null;
@@ -307,9 +378,9 @@ export function robTrump(deal, player) {
 }
 
 /*
- * While the stock lasts a player may play anything. Once it is spent the
- * Klaberjass obligations bite: follow suit, overtrump a trump lead if you can,
- * and trump when you are void.
+ * "Farbe bekennen muss man erst, wenn der Talon aufgebraucht ist" — before that
+ * a player may play anything. After it, the Mariage obligations bite: follow
+ * suit, beat a trump lead if you can, and trump when void.
  */
 export function legalPlays(deal, player) {
   const hand = deal.hands[player];
@@ -381,6 +452,7 @@ function resolveTrick(deal) {
 
   deal.trickCards = [null, null];
   deal.trickNumber += 1;
+  deal.announcedThisTrick = [false, false];
 
   /* The winner draws first; on the very last draw the loser takes the turn-up. */
   drawCard(deal, winner);
@@ -409,7 +481,7 @@ function finishDeal(deal) {
   const cardPoints = deal.cardPoints.slice();
   let sweep = null;
 
-  /* Take none of the last nine tricks and you pay for the whole round. */
+  /* "Wer von den letzten 9 Stichen gar keinen erhält, muss die Spielrunde zahlen." */
   for (const player of [0, 1]) {
     if (deal.lateTricksWon[player] === 0) {
       sweep = other(player);
@@ -421,8 +493,11 @@ function finishDeal(deal) {
   deal.stage = 'over';
   deal.result = {
     cardPoints,
-    meldPoints: deal.meldPoints.slice(),
-    totals: [cardPoints[0] + deal.meldPoints[0], cardPoints[1] + deal.meldPoints[1]],
+    announcePoints: deal.announcePoints.slice(),
+    totals: [
+      cardPoints[0] + deal.announcePoints[0],
+      cardPoints[1] + deal.announcePoints[1],
+    ],
     sweep,
     tricksWon: deal.tricksWon.slice(),
   };
@@ -449,6 +524,7 @@ export function settleDeal(match) {
           : match.scores[0] > match.scores[1]
             ? 0
             : 1;
+    if (match.winner !== null) match.parties[match.winner] += 1;
   }
   match.dealer = other(match.dealer);
   return match;
@@ -458,8 +534,8 @@ export function settleDeal(match) {
 
 /*
  * The redacted state sent to a player. Their opponent's hand, the stock order
- * and any undeclared meld never leave the host, so the wire carries nothing a
- * curious player could read out of the console.
+ * and any unannounced combination never leave the host, so the wire carries
+ * nothing a curious player could read out of the console.
  */
 export function viewFor(match, player) {
   const deal = match.deal;
@@ -471,6 +547,7 @@ export function viewFor(match, player) {
     dealer: match.dealer,
     dealNumber: match.dealNumber,
     ready: match.ready.slice(),
+    parties: match.parties.slice(),
     matchOver: match.over,
     matchWinner: match.winner,
   };
@@ -490,7 +567,7 @@ export function viewFor(match, player) {
       trickCards: deal.trickCards.slice(),
       trickNumber: deal.trickNumber,
       cardPoints: deal.cardPoints.slice(),
-      meldPoints: deal.meldPoints.slice(),
+      announcePoints: deal.announcePoints.slice(),
       tricksWon: deal.tricksWon.slice(),
       robbed: deal.robbed,
       lastTrick: deal.lastTrick,
@@ -499,10 +576,10 @@ export function viewFor(match, player) {
       legal: legalPlays(deal, player),
       canRob: canRobTrump(deal, player),
       mustFollow: stockExhausted(deal),
-      meldOffer: deal.stage === 'meld' ? meldOffer(deal, player) : null,
-      meldChoice: deal.meldChoice[player],
-      meldWaiting: deal.stage === 'meld' && deal.meldChoice[player] !== null,
-      meldSummary: deal.meldSummary,
+      leading: isLeading(deal, player),
+      canAnnounce: canAnnounce(deal, player),
+      announceOptions: canAnnounce(deal, player) ? announceOptions(deal, player) : [],
+      announcements: deal.announcements.slice(-6),
     },
   };
 }

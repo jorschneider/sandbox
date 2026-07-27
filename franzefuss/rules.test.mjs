@@ -4,9 +4,10 @@
  */
 
 import {
-  newMatch, startDeal, settleDeal, legalPlays, playCard, declareMeld, meldOffer,
-  canRobTrump, robTrump, stockExhausted, findMelds, bestMeld, meldName, viewFor,
-  suitOf, cardValue, DEAL_TOTAL, TOTAL_TRICKS, HAND_SIZE, other,
+  newMatch, startDeal, settleDeal, legalPlays, playCard, announce, announceOptions,
+  canAnnounce, canRobTrump, robTrump, stockExhausted, findCombinations, bestOfKind,
+  combinationName, compareCombinations, viewFor, suitOf, cardValue,
+  DEAL_TOTAL, TOTAL_TRICKS, HAND_SIZE, DEFAULT_TARGET, other,
 } from './js/rules.js';
 
 let checks = 0;
@@ -52,8 +53,7 @@ function playRandomDeal(seed) {
     `seed ${seed}: view for player 0 leaks no hidden card`,
   );
 
-  for (const player of [0, 1]) declareMeld(deal, player, random() < 0.5);
-  assert(deal.stage === 'play', `seed ${seed}: meld stage resolves`);
+  assert(deal.stage === 'play', `seed ${seed}: the deal opens in play`);
 
   let guard = 0;
   while (deal.stage === 'play') {
@@ -65,6 +65,17 @@ function playRandomDeal(seed) {
       robTrump(deal, player);
       assert(deal.hands[player].length === before, `seed ${seed}: robbing swaps 1-for-1`);
       assert(deal.upcard === `${trump}7`, `seed ${seed}: the seven becomes the turn-up`);
+    }
+
+    if (canAnnounce(deal, player) && random() < 0.5) {
+      const options = announceOptions(deal, player);
+      const before = deal.announcePoints[player];
+      announce(deal, player, options[Math.floor(random() * options.length)].kind);
+      assert(
+        deal.announcePoints[player] >= before,
+        `seed ${seed}: announcing never loses points`,
+      );
+      assert(!canAnnounce(deal, player), `seed ${seed}: one announcement per lead`);
     }
 
     const legal = legalPlays(deal, player);
@@ -139,62 +150,128 @@ for (const trump of ['S', 'H', 'D', 'C']) {
   assert(total === 152, `pack holds 152 card points with ${trump} trump (got ${total})`);
 }
 
-/* Meld detection. */
-const runHand = ['HA', 'HK', 'HQ', 'SJ', 'ST', 'S9', 'S8', 'D7', 'C7'];
-const runMelds = findMelds(runHand, 'H');
-assert(runMelds.some((m) => m.kind === 'tattel' && m.value === 20), 'finds a three-card tattel');
-assert(runMelds.some((m) => m.kind === 'quart' && m.value === 50), 'finds a four-card quart');
-assert(!runMelds.some((m) => m.kind === 'triplet'), 'two of a kind is not a set');
-assert(bestMeld(runMelds).kind === 'quart', 'the quart is the best meld here');
-assert(meldName(bestMeld(runMelds)) === 'Quart in ♠', 'meld names read correctly');
-
-const setHand = ['S7', 'H7', 'D7', 'C7', 'SA', 'HA', 'DA', 'SK', 'SQ'];
-const setMelds = findMelds(setHand, 'D');
-assert(setMelds.some((m) => m.kind === 'quartet' && m.value === 80), 'finds four of a kind');
-assert(setMelds.some((m) => m.kind === 'triplet' && m.value === 30), 'finds three of a kind');
-assert(setMelds.some((m) => m.kind === 'tattel'), 'a card can serve a set and a run at once');
-assert(bestMeld(setMelds).kind === 'quartet', 'four of a kind outbids the rest');
-assert(meldName(bestMeld(setMelds)) === 'Quartet of 7s', 'set names read correctly');
+/* Combinations, at Piquet's values. */
+const quartHand = ['SJ', 'ST', 'S9', 'S8', 'HA', 'HK', 'HQ', 'D7', 'C7'];
+const quartCombos = findCombinations(quartHand);
+const seqs = quartCombos.filter((c) => c.kind === 'sequence');
+assert(seqs.filter((c) => c.length === 4).length === 1, 'the quart itself is found');
+assert(seqs.filter((c) => c.length === 3).length === 3, 'both tatteln inside it, plus the heart one');
+assert(
+  seqs.filter((c) => c.suit === 'S').reduce((n, c) => n + c.value, 0) === 10,
+  'a quart pays 4 + 3 + 3 = 10',
+);
+assert(!quartCombos.some((c) => c.kind === 'set'), 'two sevens are not a set');
+assert(combinationName(bestOfKind(quartCombos, 'sequence')) === 'Quart in ♠', 'names read right');
 
 const fussHand = ['CA', 'CK', 'CQ', 'CJ', 'CT', 'H7', 'H8', 'D9', 'ST'];
-const fussMelds = findMelds(fussHand, 'D');
-assert(bestMeld(fussMelds).kind === 'fuss' && bestMeld(fussMelds).value === 100, 'finds a fuss');
-assert(fussMelds.filter((m) => m.kind === 'fuss').length === 1, 'a fuss is not double counted');
-
-const brokenRun = ['HA', 'HK', 'HJ', 'HT', 'H9', 'S7', 'D7', 'C8', 'CQ'];
-const brokenMelds = findMelds(brokenRun, 'S');
-assert(bestMeld(brokenMelds).kind === 'tattel', 'a gap splits a run');
+const fussCombos = findCombinations(fussHand).filter((c) => c.kind === 'sequence');
+assert(fussCombos.filter((c) => c.length === 5).length === 1, 'one Fuß');
+assert(fussCombos.filter((c) => c.length === 4).length === 2, 'two quarts inside it');
+assert(fussCombos.filter((c) => c.length === 3).length === 3, 'three tatteln inside it');
 assert(
-  brokenMelds.filter((m) => m.kind === 'tattel').length === 1,
-  'A-K on its own is not a meld',
+  fussCombos.reduce((n, c) => n + c.value, 0) === 32,
+  `a Fuß pays 15 + 4 + 4 + 3 + 3 + 3 = 32 (got ${fussCombos.reduce((n, c) => n + c.value, 0)})`,
+);
+assert(combinationName(bestOfKind(fussCombos, 'sequence')) === 'Fuß in ♣', 'the Fuß is named');
+
+/* "3 Aß, 3 Könige etc. gelten je 3" — and no lower than the tens. */
+const setHand = ['S7', 'H7', 'D7', 'C7', 'SA', 'HA', 'DA', 'S9', 'H9'];
+const sets = findCombinations(setHand).filter((c) => c.kind === 'set');
+assert(sets.length === 1, 'four sevens are not a set; three aces are');
+assert(sets[0].value === 3 && sets[0].rank === 'A', 'three of a kind is worth 3');
+assert(combinationName(sets[0]) === 'Three Aces', 'sets are named in words');
+
+const quatorze = findCombinations(['SA', 'HA', 'DA', 'CA', 'SK', 'HK', 'DK', 'S8', 'H8'])
+  .filter((c) => c.kind === 'set');
+assert(quatorze.find((c) => c.length === 4).value === 14, 'four of a kind is worth 14');
+assert(quatorze.length === 2, 'the four aces are one set, not four trios');
+assert(
+  compareCombinations(quatorze.find((c) => c.length === 4), quatorze.find((c) => c.length === 3)) > 0,
+  'four beats three',
 );
 
-/* Declaring beats passing, and the best meld takes every meld its owner holds. */
+const lowFour = findCombinations(['ST', 'HT', 'DT', 'CT', 'SA', 'HA', 'DA', 'S8', 'H8'])
+  .filter((c) => c.kind === 'set');
+assert(
+  compareCombinations(lowFour.find((c) => c.length === 4), lowFour.find((c) => c.length === 3)) > 0,
+  'four tens beat three aces — four beats three whatever the rank',
+);
+
+const gapped = findCombinations(['HA', 'HK', 'HJ', 'HT', 'H9', 'S7', 'D7', 'C8', 'CQ']);
+assert(
+  gapped.filter((c) => c.kind === 'sequence' && c.length === 3).length === 1,
+  'a gap splits a run, and A-K alone is nothing',
+);
+
+/* Announcing: only on your own lead, once, and judged against the other hand. */
 {
   const match = newMatch(['A', 'B']);
   startDeal(match, rng(7));
   const deal = match.deal;
-  deal.hands[0] = ['HA', 'HK', 'HQ', 'HJ', 'SA', 'SK', 'SQ', 'D7', 'C8'];
-  deal.hands[1] = ['DA', 'DK', 'DQ', 'CJ', 'CT', 'C9', 'S9', 'S8', 'H9'];
   deal.trump = 'C';
-  declareMeld(deal, 0, true);
-  declareMeld(deal, 1, true);
-  assert(deal.meldPoints[0] === 70, `quart + tattel scores 70 (got ${deal.meldPoints[0]})`);
-  assert(deal.meldPoints[1] === 0, 'the loser of the meld contest scores nothing');
-  assert(deal.meldSummary.winner.player === 0, 'the better meld wins the contest');
+  deal.hands[0] = ['SJ', 'ST', 'S9', 'S8', 'HA', 'HK', 'HQ', 'D7', 'C7'];
+  deal.hands[1] = ['DA', 'DK', 'DQ', 'CJ', 'CT', 'C9', 'H9', 'H8', 'S7'];
+  deal.trickLead = 0;
+  deal.turn = 0;
+
+  assert(canAnnounce(deal, 0), 'the leader may announce');
+  assert(!canAnnounce(deal, 1), 'the other player may not announce out of turn');
+
+  announce(deal, 0, 'sequence');
+  assert(
+    deal.announcePoints[0] === 13,
+    `the spade quart (10) and the heart tattel (3) both score (got ${deal.announcePoints[0]})`,
+  );
+  assert(deal.announcements[0].good === true, 'a better sequence is good');
+  assert(!canAnnounce(deal, 0), 'one announcement per lead');
+
+  /* Already scored, so announcing the same class again pays nothing. */
+  deal.announcedThisTrick = [false, false];
+  const before = deal.announcePoints[0];
+  announce(deal, 0, 'sequence');
+  assert(deal.announcePoints[0] === before, 'a combination is only ever scored once');
 }
 {
   const match = newMatch(['A', 'B']);
   startDeal(match, rng(9));
   const deal = match.deal;
-  deal.hands[0] = ['HA', 'HK', 'HQ', 'HJ', 'SA', 'SK', 'SQ', 'D7', 'C8'];
   deal.trump = 'C';
-  declareMeld(deal, 0, false);
-  declareMeld(deal, 1, true);
-  assert(deal.meldPoints[0] === 0, 'passing forfeits the meld even with the better hand');
-  const offer = meldOffer(deal, 0);
-  assert(offer.best.kind === 'quart' && offer.total === 70, 'the offer previews the full total');
+  deal.hands[0] = ['HA', 'HK', 'HQ', 'D7', 'D8', 'S7', 'S8', 'C7', 'C8'];
+  deal.hands[1] = ['DA', 'DK', 'DQ', 'DJ', 'H9', 'H8', 'S9', 'ST', 'CT'];
+  deal.trickLead = 0;
+  deal.turn = 0;
+
+  announce(deal, 0, 'sequence');
+  assert(deal.announcePoints[0] === 0, 'a tattel is not good against a quart');
+  assert(deal.announcements[0].good === false, 'and it is recorded as not good');
 }
+
+/* A run that grows pays again: the 1890 example, Bube-10-9 plus the Dame. */
+{
+  const match = newMatch(['A', 'B']);
+  startDeal(match, rng(11));
+  const deal = match.deal;
+  deal.trump = 'C';
+  deal.hands[0] = ['SJ', 'ST', 'S9', 'D7', 'D8', 'H7', 'H8', 'C7', 'CQ'];
+  deal.hands[1] = ['DA', 'DK', 'H9', 'S7', 'S8', 'CT', 'C9', 'HQ', 'DT'];
+  deal.trickLead = 0;
+  deal.turn = 0;
+
+  announce(deal, 0, 'sequence');
+  assert(deal.announcePoints[0] === 3, 'the tattel J-10-9 scores 3');
+
+  /* The Queen arrives from the stock. */
+  deal.hands[0].push('SQ');
+  deal.announcedThisTrick = [false, false];
+  announce(deal, 0, 'sequence');
+  assert(
+    deal.announcePoints[0] === 3 + 3 + 4,
+    `growing it pays the new tattel and the quart (got ${deal.announcePoints[0]})`,
+  );
+}
+
+/* A partie is played to a hundred, as in Piquet. */
+assert(DEFAULT_TARGET === 100, 'the target is Piquet\'s hundred');
 
 /* A player who takes none of the last nine tricks pays for the whole round. */
 {
@@ -264,7 +341,7 @@ assert(
 {
   const match = newMatch(['A', 'B'], 100);
   startDeal(match, rng(23));
-  match.deal.result = { cardPoints: [120, 42], meldPoints: [0, 0], totals: [120, 42], sweep: null, tricksWon: [9, 7] };
+  match.deal.result = { cardPoints: [120, 42], announcePoints: [0, 0], totals: [120, 42], sweep: null, tricksWon: [9, 7] };
   settleDeal(match);
   assert(match.over === true, 'crossing the target ends the match');
   assert(match.winner === 0, 'the player who crossed it wins');

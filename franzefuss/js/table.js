@@ -8,20 +8,20 @@
  */
 
 import {
-  newMatch, startDeal, settleDeal, declareMeld, playCard, robTrump, viewFor, other,
-  findMelds,
+  newMatch, startDeal, settleDeal, announce, playCard, robTrump, viewFor, other,
+  findCombinations,
 } from './rules.js';
 
 /*
- * Redeal until seat 0 has something to be taught with: a meld to weigh up and
- * the trump seven to rob with. Only ever used for a first, teaching deal.
+ * Redeal until seat 0 has something to be taught with: a combination to weigh up
+ * and the trump seven to rob with. Only ever used for a first, teaching deal.
  */
 export function dealTeachingHand(match) {
   const dealNumber = match.dealNumber;
   for (let attempt = 0; attempt < 800; attempt++) {
     const deal = match.deal;
     const hand = deal.hands[0];
-    if (findMelds(hand, deal.trump).length > 0 && hand.includes(`${deal.trump}7`)) break;
+    if (findCombinations(hand).length > 0 && hand.includes(`${deal.trump}7`)) break;
     startDeal(match);
   }
   match.dealNumber = dealNumber;
@@ -39,8 +39,8 @@ export function createTable({ names, target, firstDealer = 0, onViews }) {
     if (!action || typeof action.type !== 'string') return;
 
     switch (action.type) {
-      case 'meld':
-        if (deal && deal.stage === 'meld') declareMeld(deal, seat, action.declare);
+      case 'announce':
+        if (deal && deal.stage === 'play') announce(deal, seat, action.kind);
         break;
 
       case 'play':

@@ -1,6 +1,6 @@
-# Franzefuss
+# Franzefuß
 
-A two-hand card game from 1801, playable on two phones in a browser. No app, no
+An Austrian card game for two, last printed in 1890, playable on two phones in a browser. No app, no
 sign-up, no account: one player taps **Start a game** and sends the link, the
 other opens it. Cards go straight from handset to handset.
 
@@ -12,26 +12,62 @@ python3 -m http.server        # then open http://localhost:8000/franzefuss/
 
 ## The game
 
-Franzefuss — also recorded as *Tatteln*, *Törteln*, and in Denmark as
-*Frantsfuus-Spillet* — is a two-player point-trick game recorded in Hamburg in
-1801 and printed in Austria in 1829. It is a trick-and-draw relative of
-Klaberjass: 32 cards, nine to a hand, a turned-up trump, and a stock you draw
-from after every trick.
+Franzefuß — also *Tatteln*, *Törteln*, *Därde*; in Denmark *Frantsfuus-Spillet* —
+is a two-hand point-trick game of the Austrian nineteenth century. The
+*Oeconomische Encyclopädie* of 1842 describes it as "ein im Oesterreichischen
+sehr beliebtes Kartenspiel … aus dem bekannten Piquet und dem veralteten Mariage
+zusammengesetzt": assembled out of Piquet and Mariage. That is exactly its shape.
+**The trick play is Mariage's; the combinations and their scoring are Piquet's.**
 
+- 32 cards, nine to a hand, a turned-up trump, and a stock you draw from after
+  every trick.
 - Trumps rank **J 9 A 10 K Q 8 7**; other suits **A 10 K Q J 9 8 7**.
 - Card points: trump J 20, trump 9 14, ace 11, ten 10, king 4, queen 3, jack 2 —
   152 in the pack, plus **10 for the last trick**. Tricks themselves count for
   nothing.
-- Before the first lead each player may **declare** a meld or pass. The better
-  declaration scores every combination its owner holds; declaring shows it to
-  your opponent, so a thin meld is often worth hiding.
+- **Whenever you lead** you may first announce a combination. Your opponent
+  judges it against their own hand and says good or not good: if theirs is better
+  you score *nothing* of that class; if yours is better you score every
+  combination of that class you hold. Sequences and sets are judged separately,
+  and a tie scores for neither.
+- A run pays for every shorter run inside it — "eine Quart zählt nicht nur als
+  solche, sondern auch als zwei Tattel, ein Fuß ebenso als drei Tattel und zwei
+  Quarten". So a Tattel is 3, a Quart 4 + 3 + 3 = **10**, and a Fuß —
+  the combination the game is named after — 15 + 4 + 4 + 3 + 3 + 3 = **32**.
+  Three of a kind 3, four of a kind 14, tens and above only.
+- Because a growing run keeps paying, a Tattel announced now and extended later
+  scores again when the card arrives.
 - **While the stock lasts you may play anything.** Once it is spent — the last
   nine tricks — you must follow suit, beat a trump lead if you can, and trump
   when void.
 - Holding the **seven of trumps** you may swap it for the turned-up trump card.
 - Take none of the last nine tricks and you pay for the whole round: 162 to your
   opponent.
-- First past 501 wins.
+- A partie is played to **100**, as in Piquet. Deals are large, so a partie is
+  short; they were played one after another for stakes, and the app keeps a count
+  of parties won.
+
+### Which ruleset this is
+
+The target is the last codification for the Austro-Hungarian market: **S. Ulmann,
+*Das Buch der Familienspiele*, A. Hartleben, Wien/München/Pest 1890** — the
+edition that called the game Franzefuß, following the 1829 Vienna rulebook and
+the many that copied its wording. The nine-card deal is that newer form; eight
+cards is the older one.
+
+Those rulebooks omit the value of the combinations entirely. The encyclopedia
+tells you where to look instead: *"die Berechnung der Sequenzen, Stiche und
+Punktezahl, bis zu der man die ganze Partie spielt, ist genau wie beim Pikett."*
+So the values here are Piquet's, as printed in German in 1883: *"die Octave zählt
+18; die Septime 17; die Sixte 16, die Quinte 15, die Quarte 4 und die Terze 3
+Punkte, vorausgesetzt, daß sie vom Gegner gutgeheißen werden"*, with four of a
+kind at 14 and three at 3, down to the tens and no further.
+
+Being straight about it: the game barely outlived the century that produced it.
+It survived as *Tärtele* in Alsace until the second war, and lives on as Austrian
+*Tartl* and Hungarian *Tartli*. Anyone dealt a hand of this in Prague in 1910
+would have been playing something already old-fashioned — and would have held a
+German-suited pack, not a French-suited one.
 
 ## Learning it
 
@@ -40,10 +76,11 @@ Nobody has played this game, so the app teaches it rather than assuming it.
 **Learn by playing** deals you a hand against a practice opponent and explains
 each rule at the moment that rule first decides something: what the cards are
 worth before you must value a trick, why trumps rank J 9 A 10 K Q 8 7 while you
-are looking at your trumps, the declare-or-hide tradeoff while the meld prompt is
-open, and the tightening of the rules the instant the stock runs dry. Ten
-lessons, one tap each, in the order the game raises them. The first deal is
-stacked so you actually get a meld to weigh up and the trump seven to rob with.
+are looking at your trumps, the announce-or-stay-quiet tradeoff the first time
+you are on lead holding a combination, and the tightening of the rules the
+instant the stock runs dry. Eleven lessons, one tap each, in the order the game
+raises them. The first deal is stacked so you actually get a combination to weigh
+up and the trump seven to rob with.
 
 Lessons never repeat: each is remembered once dismissed, and **Stop coaching me**
 on any lesson ends them. The rules screen can replay them or turn them back on.
@@ -54,16 +91,6 @@ taught too. Tapping a dimmed card always says why it cannot be played —
 
 The rules screen is the reference for anything else, reachable from the home
 screen and from **?** at the table.
-
-### On the rules
-
-The surviving descriptions are thin in places. The skeleton here follows them:
-ranking, card values, the nine-card deal, the turn-up, robbing with the seven,
-drawing after each trick, following suit only once the stock is out, ten for the
-last trick, and the penalty for taking none of the last nine. Where the sources
-go quiet, the gaps are filled from Klaberjass, the game's closest relative:
-the meld values, the declare-or-pass contest, and the 501 target. Anyone who
-knows the game as their family plays it will find the seams there.
 
 ## Playing on two phones
 
@@ -118,6 +145,9 @@ third player, and the host holds the full game state while they are gone.
 node franzefuss/rules.test.mjs
 ```
 
-Three thousand random deals plus fixed cases for melds, robbing, the sweep, the
+Three thousand random deals plus fixed cases for the Piquet combination values
+(a Quart pays 10, a Fuß 32, four of a kind beats three whatever the rank, sets
+stop at the tens), announcing on the lead and only on the lead, good-and-not-good
+against the other hand, a run that grows paying again, robbing, the sweep, the
 follow-suit obligations, deck integrity (152 card points however trump falls),
-and view redaction — about 160,000 assertions.
+and view redaction — about 174,000 assertions.
