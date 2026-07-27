@@ -9,7 +9,8 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎈</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- async so a slow font CDN can never block the page's scripts from booting -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -22,9 +23,9 @@
 
   <header class="hero">
     <div class="wrap">
-      <div class="sun" aria-hidden="true">☀️</div>
-      <h1><span class="balloon" aria-hidden="true">🎈</span> Rayray Big Weekend</h1>
-      <p class="tagline">Toddler-approved adventures within <strong>35 minutes of Union Square</strong> —
+      <div class="sun" id="hero-sun" aria-hidden="true">☀️</div>
+      <h1><span class="balloon" id="hero-emoji" aria-hidden="true">🎈</span> <span id="hero-name">Rayray Big Weekend</span></h1>
+      <p class="tagline" id="hero-tagline">Toddler-approved adventures within <strong>35 minutes of Union Square</strong> —
         music, puppets, splash pads, goats &amp; ferry rides.</p>
       <p class="weekline">
         <span class="week-label" id="week-label">…</span>
@@ -34,6 +35,10 @@
   </header>
 
   <main class="wrap">
+    <nav class="modes" id="mode-picker" aria-label="Whose plans?">
+      <button class="md" data-mode="kid">🎈 Rayray</button>
+      <button class="md" data-mode="date">🌃 Date night</button>
+    </nav>
     <nav class="weeks" id="week-picker" aria-label="Pick a week" hidden>
       <button class="wk active" data-week="cur">This week</button>
       <button class="wk" data-week="next">🔭 Next week</button>
@@ -67,8 +72,8 @@
     </section>
 
     <aside class="note">
-      <h2>🧢 Before you head out</h2>
-      <p>July in NYC = pack water, sunscreen and a spare shirt. Schedules wiggle for heat and rain,
+      <h2 id="note-head">🧢 Before you head out</h2>
+      <p id="note-body">July in NYC = pack water, sunscreen and a spare shirt. Schedules wiggle for heat and rain,
         so tap <em>Details</em> before leaving the house. A 🔍 next to a name means the exact time
         couldn’t be pinned down for this week — check the link.</p>
     </aside>
@@ -76,13 +81,14 @@
 
   <footer>
     <div class="wrap">
-      <p>Home base: 112 East 19th Street · travel times are door-to-door-ish by subway, foot or boat.</p>
+      <p id="footer-line">Home base: 112 East 19th Street · travel times are door-to-door-ish by subway, foot or boat.</p>
       <p id="updated-line"></p>
     </div>
   </footer>
 
   <script src="vendor/leaflet/leaflet.js"></script>
   <script src="week.js"></script>
+  <script src="date.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

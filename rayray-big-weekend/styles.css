@@ -108,6 +108,36 @@ body {
 
 .count { text-align: center; color: var(--ink-soft); font-weight: 600; margin: 8px 0 12px; }
 
+/* ——— mode toggle (Rayray / Date night) ——— */
+.modes { display: flex; justify-content: center; gap: 10px; margin: 0 0 14px; }
+.md {
+  font-family: var(--font); font-weight: 800; font-size: 1rem;
+  border: 3px solid var(--ink); background: var(--card); color: var(--ink);
+  border-radius: 999px; padding: 9px 20px; cursor: pointer;
+  box-shadow: 0 3px 0 var(--ink); transition: transform 0.12s, background 0.12s;
+}
+.md:hover { transform: translateY(-2px); }
+.md.active { background: var(--sunny); }
+body.mode-date .md.active { background: var(--grape); color: #fff; }
+
+/* ——— date-night twilight skin ——— */
+body.mode-date {
+  --paper: #f3eefc;
+  --card: #fdfbff;
+  --sunny: #d9b8ff;
+  --coral: #a855f7;
+  --mint: #7dd3c0;
+  --shadow: 0 10px 24px rgba(58, 30, 90, 0.16);
+}
+body.mode-date .blob-a { background: #b28ff2; }
+body.mode-date .blob-b { background: #6cc7f0; }
+body.mode-date .blob-c { background: #ff9ed2; }
+body.mode-date .fresh { background: var(--grape); color: #fff; }
+body.mode-date .sun { animation: floaty 4s ease-in-out infinite; }
+body.mode-date .day.active { background: var(--sunny); }
+body.mode-date .day .today-tag { background: var(--coral); }
+body.mode-date .itin-go { background: var(--sunny); }
+
 /* ——— week picker (this week / next week preview) ——— */
 .weeks[hidden] { display: none !important; }
 .weeks { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }

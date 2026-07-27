@@ -6,8 +6,9 @@ It must be refreshed **every Monday morning** for the new week (Monday–Sunday)
 
 ## What to change
 
-Only `week.js`. Do not restructure `index.html`, `app.js`, or `styles.css`
-unless something is broken — the design is settled.
+Only `week.js` (kid mode) and `date.js` (Date Night mode — see its own section
+below). Do not restructure `index.html`, `app.js`, or `styles.css` unless
+something is broken — the design is settled.
 
 **CRITICAL — `events` has two kinds of entries; only one kind is refreshed:**
 - **Dated events** (`event: true`, real `days`): the ~40–55 scheduled happenings
@@ -265,6 +266,57 @@ Rules:
   free-outdoor-theater hunt, weekends covered) — next Monday's refresh gives
   that week the full treatment anyway.
 - `days` in nextWeek entries refer to the FOLLOWING week's Mon–Sun.
+
+## Date Night mode (`date.js`) — refresh alongside week.js
+
+The site has a second mode (🌃 button in the header, `#mode=date`) with plans
+for Jordan & Athena's dates — same machinery, its own data file. `date.js` sets
+`window.DATE_DATA` with the SAME shape as `WEEK_DATA` (`weekLabel`,
+`weekMonday`, `updated`, `events`, optional `itineraries`, optional
+`nextWeek`); `toddlerNotes` carries the date-night notes (why it's a good
+date, booking tips). Refresh it every Monday with the same procedure as
+week.js: anchor the date (step 0), promote a stale week from `nextWeek` first,
+then research. The validator checks both files.
+
+**The interest profile (this is the brief — stay on it):**
+- **Classic theater** plus **very well-reviewed new plays and musicals**
+  (rush/lottery/TDF tips in the notes; skip mediocre tourist fare).
+- **Chinese-language and Chinese-culture nights**: 中文 films (new releases and
+  rep screenings), Mandarin standup (CrazyLaugh 拉疯喜剧 runs recurring 中文
+  开放麦/showcases — check their Eventbrite), Chinese music/arts events
+  (Chinese Arts Week, China Institute, Asia Society, museum programs).
+- **Ballet & contemporary dance**: NYCB, ABT, Joyce, City Center, Little
+  Island Amph dance nights, BAM.
+- **Dance parties — outdoor, afternoon/early-evening only** (day parties,
+  silent discos, Lincoln Center dance floors; NOT 11 PM club nights).
+- **Outdoor beginner-friendly couples dance classes** that teach you (Midsummer
+  Night Swing lessons, Bryant Park dance classes, salsa/tango socials with an
+  intro lesson).
+
+Mode rules that differ from kid mode:
+- Categories add `dance` 🩰, `chinese` 🏮, `party` 🪩, `class` 💃, `film` 🎬
+  (plus the shared `music`, `theater`, `other`).
+- No toddler constraints: evenings are the main event; late shows are fine.
+  Travel default is transit/anywhere — Manhattan + near-Brooklyn radius, up to
+  ~40 min from Union Square.
+- The evergreen standbys (~10 entries: rep cinemas, jazz rooms, museum nights,
+  skyline walks — `event:false`, `days:["any"]`) are the anytime tail. Carry
+  them forward like the kid library; add sparingly.
+- `itineraries` are OPTIONAL and loose for date mode (no per-day minimums; the
+  validator only checks slot/slug sanity). When authored, lean evening-heavy —
+  a strong evening pick per day beats three token morning entries.
+- Aim for ~10–25 dated events across the week. Quality over coverage: two
+  great bookable nights beat ten filler listings. Verify dates/times on
+  official pages; note rush/lottery/ticket windows in the notes.
+
+**Standing date-mode sources — check every week:** the Gmail newsletters
+(search the inbox for **fieldnotesnyc**, **The Blankman List** and similar
+listing digests — the owner says to mine these), **CrazyLaugh 拉疯喜剧** on
+Eventbrite, TDF/TKTS + the week's rush/lottery boards, Time Out theater &
+dance, Joyce/NYCB/ABT/City Center calendars, Film at Lincoln Center,
+Film Forum, Metrograph, Angelika (Chinese-language releases often at AMC
+Empire/Regal E-Walk too), Lincoln Center Summer for the City, Bryant Park
+Picnic Performances, Little Island Amph, SummerStage.
 
 ## Verify locally
 

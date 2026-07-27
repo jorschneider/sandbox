@@ -1,7 +1,51 @@
-/* Rayray Big Weekend — map + scrolling list, day picker, hour-by-hour weather. */
+/* Rayray Big Weekend — map + scrolling list, day picker, hour-by-hour weather.
+   Two modes share the machinery: "kid" (WEEK_DATA) and "date" (DATE_DATA). */
 (function () {
-  const data = window.WEEK_DATA;
+  const MODE = /(^|[#&])mode=date(&|$)/.test(location.hash) && window.DATE_DATA ? "date" : "kid";
+  const data = MODE === "date" ? window.DATE_DATA : window.WEEK_DATA;
   if (!data || !window.L) return;
+  document.body.classList.add("mode-" + MODE);
+
+  // per-mode voice: everything user-facing that differs between the two sites
+  const COPY = MODE === "date" ? {
+    heroEmoji: "🥂", heroName: "Jordan & Athena Date Night", sun: "🌙",
+    tagline: "Two-of-us plans within <strong>40 minutes of Union Square</strong> — classic theater, Chinese nights out, ballet & open-air dance floors.",
+    noteHead: "🥂 Before you book",
+    noteBody: "Curtain times are strict and ticket lotteries close early — tap <em>Details</em> to grab rush or lottery seats a day or two ahead. A 🔍 next to a name means confirm the exact time on the venue page.",
+    footer: "Home base: 112 East 19th Street · babysitter not included.",
+    countEmoji: " 🥂", tipIcon: "💡", eveHint: "the main event", icsEmoji: "🌃 ",
+    groupRainy: { label: "🍸 Indoor standbys", sub: "cinemas, jazz rooms & museums, nearest-first" },
+    groupDest: { label: "🥂 Anytime classics", sub: "date standbys worth a wander" },
+  } : {
+    heroEmoji: "🎈", heroName: "Rayray Big Weekend", sun: "☀️",
+    tagline: "Toddler-approved adventures within <strong>35 minutes of Union Square</strong> — music, puppets, splash pads, goats &amp; ferry rides.",
+    noteHead: "🧢 Before you head out",
+    noteBody: "July in NYC = pack water, sunscreen and a spare shirt. Schedules wiggle for heat and rain, so tap <em>Details</em> before leaving the house. A 🔍 next to a name means the exact time couldn’t be pinned down for this week — check the link.",
+    footer: "Home base: 112 East 19th Street · travel times are door-to-door-ish by subway, foot or boat.",
+    countEmoji: " 🎈", tipIcon: "🧸", eveHint: "if she's up for it", icsEmoji: "🎈 ",
+    groupRainy: { label: "☔ Rainy day", sub: "museums & indoor play, nearest-first" },
+    groupDest: { label: "🧭 Destinations & ferries", sub: "gardens, boats, carousels & zoos" },
+  };
+  document.getElementById("hero-emoji").textContent = COPY.heroEmoji;
+  document.getElementById("hero-name").textContent = COPY.heroName;
+  document.getElementById("hero-sun").textContent = COPY.sun;
+  document.getElementById("hero-tagline").innerHTML = COPY.tagline;
+  document.getElementById("note-head").textContent = COPY.noteHead;
+  document.getElementById("note-body").innerHTML = COPY.noteBody;
+  document.getElementById("footer-line").textContent = COPY.footer;
+
+  // mode toggle: hash carries the mode (and base), then a clean reload
+  document.querySelectorAll("#mode-picker .md").forEach((b) => {
+    b.classList.toggle("active", b.dataset.mode === MODE);
+    b.addEventListener("click", () => {
+      if (b.dataset.mode === MODE) return;
+      const parts = [];
+      if (b.dataset.mode === "date") parts.push("mode=date");
+      if (/(^|[#&])base=cpw(&|$)/.test(location.hash)) parts.push("base=cpw");
+      location.hash = parts.join("&");
+      location.reload();
+    });
+  });
 
   const BASES = {
     usq: { label: "home (Union Sq)", addr: "112 East 19th Street, New York, NY", coords: [40.7376, -73.9868], emoji: "🏠" },
@@ -11,12 +55,19 @@
 
   const CATS = {
     music:     { label: "Music",            emoji: "🎵" },
-    theater:   { label: "Shows & Puppets",  emoji: "🎭" },
+    theater:   { label: MODE === "date" ? "Theater" : "Shows & Puppets",  emoji: "🎭" },
     storytime: { label: "Storytime",        emoji: "📚" },
     play:      { label: "Splash & Play",    emoji: "⛲" },
     animals:   { label: "Animals & Nature", emoji: "🦆" },
     festival:  { label: "Festivals",        emoji: "🎪" },
-    other:     { label: "Adventures",       emoji: "⛴️" },
+    other:     MODE === "date" ? { label: "Nights Out", emoji: "🌃" }
+                               : { label: "Adventures", emoji: "⛴️" },
+    // date-night categories
+    dance:     { label: "Ballet & Dance",   emoji: "🩰" },
+    chinese:   { label: "Chinese Nights",   emoji: "🏮" },
+    party:     { label: "Dance Parties",    emoji: "🪩" },
+    class:     { label: "Learn to Dance",   emoji: "💃" },
+    film:      { label: "Film",             emoji: "🎬" },
   };
 
   const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
@@ -147,7 +198,8 @@
 
   // ——— hearts (persisted; #hearts=… share links still import) ———
   let hearts = new Set();
-  try { hearts = new Set(JSON.parse(localStorage.getItem("rbw-hearts") || "[]").filter((k) => byKey[k])); } catch (err) {}
+  const HEARTS_KEY = MODE === "date" ? "rbw-hearts-date" : "rbw-hearts";
+  try { hearts = new Set(JSON.parse(localStorage.getItem(HEARTS_KEY) || "[]").filter((k) => byKey[k])); } catch (err) {}
   const sharedMatch = location.hash.match(/hearts=([^&]*)/);
   if (sharedMatch && sharedMatch[1]) {
     decodeURIComponent(sharedMatch[1]).split(",").forEach((k) => { if (byKey[k]) hearts.add(k); });
@@ -155,7 +207,7 @@
   }
   function toggleHeart(k) {
     if (hearts.has(k)) hearts.delete(k); else hearts.add(k);
-    try { localStorage.setItem("rbw-hearts", JSON.stringify(Array.from(hearts))); } catch (err) {}
+    try { localStorage.setItem(HEARTS_KEY, JSON.stringify(Array.from(hearts))); } catch (err) {}
     if (state.heartsOnly) { render(); return; }
     mapList.querySelectorAll('.heart[data-key="' + k + '"]').forEach((b) => {
       if (b.classList.contains("btn-cal-mini")) return;
@@ -177,7 +229,7 @@
     render();
   });
   copyPlanBtn.addEventListener("click", () => {
-    const url = location.origin + location.pathname + "#" +
+    const url = location.origin + location.pathname + "#" + (MODE === "date" ? "mode=date&" : "") +
       (state.base === "cpw" ? "base=cpw&" : "") + "hearts=" + Array.from(hearts).join(",");
     (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => {
       copyPlanBtn.textContent = "✅ Copied!";
@@ -213,7 +265,7 @@
       "DTSTAMP:" + icsDate(monday, idx, e.start) + "Z",
       "DTSTART:" + icsDate(monday, idx, e.start),
       "DTEND:" + icsDate(monday, idx, e.start, 90),
-      "SUMMARY:" + icsEsc("🎈 " + e.title),
+      "SUMMARY:" + icsEsc(COPY.icsEmoji + e.title),
       "LOCATION:" + icsEsc(e.venue + ", " + e.neighborhood + ", New York, NY"),
       "DESCRIPTION:" + icsEsc(e.when + "\n\n" + e.toddlerNotes + "\n\n" + e.url),
       "URL:" + e.url,
@@ -329,7 +381,8 @@
     const dt = dayType();
     if (dt === lastDayType) return;
     lastDayType = dt;
-    if (dt === "weekday") { state.travelMetric = "walk"; state.maxTravel = 25; }
+    if (MODE === "date") { state.travelMetric = "transit"; state.maxTravel = null; } // date night: the city's yours
+    else if (dt === "weekday") { state.travelMetric = "walk"; state.maxTravel = 25; }
     else if (dt === "weekend") { state.travelMetric = "transit"; state.maxTravel = 35; }
     else { state.travelMetric = "transit"; state.maxTravel = null; } // whole week = anywhere
     syncTravelLabel();
@@ -447,7 +500,7 @@
           '<span class="m-travel">' + travelChip(e) + "</span>" +
           (e.outdoor ? "<span>☀️</span>" : "<span>❄️ A/C</span>") +
         "</p>" +
-        '<p class="mini-tip">🧸 ' + esc(e.toddlerNotes) + "</p>" +
+        '<p class="mini-tip">' + COPY.tipIcon + " " + esc(e.toddlerNotes) + "</p>" +
         '<span class="mini-links">' +
           '<a href="' + esc(e.url) + '" target="_blank" rel="noopener">Details ↗</a> · ' +
           '<a href="' + dirUrl(e) + '" target="_blank" rel="noopener">Directions 🗺️</a>' +
@@ -543,7 +596,7 @@
     const GROUPS = [
       { slot: "morning", head: "🌅 Morning", hint: "pick one" },
       { slot: "afternoon", head: "☀️ Afternoon", hint: "pick one" },
-      { slot: "evening", head: "🌆 Evening", hint: "if she's up for it" },
+      { slot: "evening", head: "🌆 Evening", hint: COPY.eveHint },
     ];
     let html = "<h3>📋 The plan — " + (state.week === "cur" && state.day === todayKey ? "today" : DAY_FULL[state.day]) +
       (state.week === "next" ? " (next week)" : "") + "</h3>";
@@ -603,7 +656,7 @@
     document.getElementById("count").textContent =
       nTimed + " event" + (nTimed === 1 ? "" : "s") + " " + label +
       (nAny ? (state.showAnytime ? " + " + nAny + " anytime spots" : " (+" + nAny + " anytime spots below)") : "") +
-      (doneToday ? " · " + doneToday + " already wrapped up ✔" : "") + " 🎈";
+      (doneToday ? " · " + doneToday + " already wrapped up ✔" : "") + COPY.countEmoji;
 
     // rebuild list + markers, grouped by time of day
     markerLayer.clearLayers();
@@ -646,7 +699,9 @@
       if (state.day === "all" || state.heartsOnly) return [];
       return list
         .filter((e) => timeBucket(e) === "any" && !usedFallback.has(keyOf(e)) &&
-          (slot === "evening" ? (!e.outdoor && !isRide(e)) : (e.outdoor && e.category === "play" && !isRide(e))))
+          (slot === "evening" ? (!e.outdoor && !isRide(e))
+            : MODE === "date" ? true // date mode: any nearby standby fills a quiet afternoon
+            : (e.outdoor && e.category === "play" && !isRide(e))))
         .sort((a, b) => (travelMins(a) || 99) - (travelMins(b) || 99))
         .slice(0, 3);
     };
@@ -666,11 +721,11 @@
         const isPlayground = (e) => e.outdoor && e.category === "play" && !isRide(e);
         const byTravel = (a, b) => (travelMins(a) || 99) - (travelMins(b) || 99);
         const groups = [
-          { label: "☔ Rainy day", sub: "museums & indoor play, nearest-first", flag: "showRainy",
+          { label: COPY.groupRainy.label, sub: COPY.groupRainy.sub, flag: "showRainy",
             items: items.filter((e) => !e.outdoor && !isRide(e) && !usedFallback.has(keyOf(e))).sort(byTravel) },
           { label: "🛝 Playgrounds & splash pads", sub: "sorted nearest-first — grab the closest", flag: "showPlay",
             items: items.filter((e) => isPlayground(e) && !usedFallback.has(keyOf(e))).sort(byTravel) },
-          { label: "🧭 Destinations & ferries", sub: "gardens, boats, carousels & zoos", flag: "showDest",
+          { label: COPY.groupDest.label, sub: COPY.groupDest.sub, flag: "showDest",
             items: items.filter((e) => !isPlayground(e) && (e.outdoor || isRide(e)) && !usedFallback.has(keyOf(e))).sort(byTravel) },
         ];
         groups.forEach((g) => {
@@ -830,7 +885,7 @@
       return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
     })();
     try {
-      const cached = JSON.parse(sessionStorage.getItem("rbw-wx3") || "null");
+      const cached = JSON.parse(sessionStorage.getItem("rbw-wx3-" + MODE) || "null");
       if (cached && cached.monday === data.weekMonday && Date.now() - cached.t < 3 * 3600e3) {
         WX.daily = cached.daily;
         WX.hourly = cached.hourly;
@@ -849,7 +904,7 @@
         if (!j || !j.daily || !j.hourly) return;
         WX.daily = j.daily;
         WX.hourly = j.hourly;
-        try { sessionStorage.setItem("rbw-wx3", JSON.stringify({ t: Date.now(), monday: data.weekMonday, daily: j.daily, hourly: j.hourly })); } catch (err) {}
+        try { sessionStorage.setItem("rbw-wx3-" + MODE, JSON.stringify({ t: Date.now(), monday: data.weekMonday, daily: j.daily, hourly: j.hourly })); } catch (err) {}
         decorateDays();
         renderWxStrip();
       })

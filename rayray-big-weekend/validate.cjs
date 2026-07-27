@@ -8,7 +8,8 @@ global.window = {};
 eval(fs.readFileSync(path.join(__dirname, "week.js"), "utf8"));
 const data = global.window.WEEK_DATA;
 
-const CATS = ["music", "theater", "storytime", "play", "animals", "festival", "other"];
+const CATS = ["music", "theater", "storytime", "play", "animals", "festival", "other",
+  "dance", "chinese", "party", "class", "film"]; // last five are date-night categories
 const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun", "any"];
 const TIMES = ["morning", "afternoon", "evening", "any"];
 const HM = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -147,6 +148,44 @@ else {
       evs.concat(nevs).forEach((e) => { if (!union[keyOf(e)]) union[keyOf(e)] = e; });
       validateItineraries(nw.itineraries, union, "nextWeek ");
     }
+  }
+}
+
+// ——— date.js (Date Night mode): validate when present. Same event schema;
+// itineraries are OPTIONAL and slot minimums don't apply (date plans skew evening). ———
+const datePath = path.join(__dirname, "date.js");
+if (fs.existsSync(datePath)) {
+  global.window = global.window || {};
+  eval(fs.readFileSync(datePath, "utf8"));
+  const dd = global.window.DATE_DATA;
+  if (!dd) err("date.js exists but did not define window.DATE_DATA");
+  else {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dd.weekMonday || "")) err("date.js weekMonday must be YYYY-MM-DD");
+    else if (new Date(dd.weekMonday + "T12:00:00").getDay() !== 1) err("date.js weekMonday is not a Monday: " + dd.weekMonday);
+    if (!dd.weekLabel) err("date.js weekLabel missing");
+    const devs = dd.events || [];
+    if (devs.length < 5 || devs.length > 200) err("date.js suspicious event count: " + devs.length);
+    validateEventList(devs, "date ", false);
+    if (dd.nextWeek && Array.isArray(dd.nextWeek.events)) validateEventList(dd.nextWeek.events, "date nextWeek ", true);
+    if (dd.itineraries) {
+      const slugMap = {};
+      devs.forEach((e) => { slugMap[keyOf(e)] = e; });
+      const SLOTS2 = ["morning", "afternoon", "evening"];
+      ["mon", "tue", "wed", "thu", "fri", "sat", "sun"].forEach((d) => {
+        const it = dd.itineraries[d];
+        if (!it) return; // date itineraries may skip days
+        (it.picks || []).forEach((p) => {
+          const ptag = "date itinerary." + d + " pick '" + String(p.key || "?").slice(0, 40) + "': ";
+          if (SLOTS2.indexOf(p.slot) === -1) err(ptag + "bad slot " + p.slot);
+          const e = slugMap[p.key];
+          if (!e) { err(ptag + "key does not match any date.js event slug"); return; }
+          if (e.days.indexOf("any") === -1 && e.days.indexOf(d) === -1) err(ptag + "event not on " + d);
+        });
+      });
+    }
+    console.log("date.js OK: " + devs.length + " entries, " + devs.filter((e) => e.event).length +
+      " dated events, week of " + dd.weekMonday +
+      (dd.nextWeek ? " · preview: " + (dd.nextWeek.events || []).length : ""));
   }
 }
 
