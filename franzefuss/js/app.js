@@ -14,6 +14,7 @@ import {
   createOnlineHost, createOnlineGuest, createLocalSession, createSoloSession, normaliseCode,
 } from './net.js';
 import { nextLesson, renderLesson, explainRefusal } from './coach.js';
+import { GRADES } from './analysis.js';
 
 const $ = (id) => document.getElementById(id);
 const TRICK_HOLD = 1400;
@@ -35,6 +36,8 @@ let heldTimer = null;
 let shownTrick = 0;
 let currentDeal = 0;
 let announceOpen = false;
+let reviewOpen = false;
+let reviewRequested = false;
 let shownAnnouncements = 0;
 
 /* Coaching: which lessons this player has had, and whether they still want them. */
@@ -169,6 +172,8 @@ function onState(next) {
     heldTrick = null;
     selected = null;
     announceOpen = false;
+    reviewOpen = false;
+    reviewRequested = false;
     shownAnnouncements = 0;
     clearTimeout(heldTimer);
   }
@@ -209,6 +214,12 @@ function render() {
   const deal = view.deal;
   const you = view.you;
   const them = other(you);
+
+  /* The solve was asked for and has landed: show it. */
+  if (reviewRequested && view.review && view.review.state === 'ready') {
+    reviewRequested = false;
+    reviewOpen = true;
+  }
 
   /* A lesson waits its turn behind a trick being shown, and behind itself. */
   if (coaching && !lesson) {
@@ -426,6 +437,15 @@ function renderOverlays(deal, you, them) {
   }
   coach.hidden = true;
 
+  if (reviewOpen && view.review && view.review.state === 'ready') {
+    dealOver.hidden = true;
+    announceSheet.hidden = true;
+    matchOver.hidden = true;
+    renderReview(view.review.value);
+    return;
+  }
+  $('overlay-review').hidden = true;
+
   if (view.matchOver) {
     announceSheet.hidden = true;
     dealOver.hidden = true;
@@ -546,6 +566,92 @@ function renderAnnounce(deal) {
   };
 }
 
+/*
+ * The post-game. Two exact numbers: the position the first half left you in,
+ * and how much of it you kept. Then the decisions that cost the most, with the
+ * card that was actually right.
+ */
+function renderReview(review) {
+  const overlay = $('overlay-review');
+  overlay.hidden = false;
+  $('review-title').textContent =
+    review.accuracy === null ? 'Nothing to grade' : `${review.accuracy}% accuracy`;
+
+  const body = $('review-body');
+  body.replaceChildren();
+
+  if (review.accuracy === null) {
+    body.append(line('Every endgame play was forced — there was no decision to get wrong.'));
+    return;
+  }
+
+  const table = document.createElement('table');
+  table.className = 'tally';
+  table.append(tallyRow('Position at the turn', [{
+    text: `${review.position >= 0 ? '+' : '−'}${Math.abs(review.position)}`,
+    win: review.position > 0,
+  }]));
+  table.append(tallyRow('Given up since', [{ text: `−${review.lost}` }]));
+  table.append(tallyRow('Decisions graded', [{ text: review.graded }]));
+  body.append(table);
+  body.append(line(
+    'The first number is solved, not estimated: the exact margin you were holding ' +
+    'when the stock ran out. Everything after it was in your hands.',
+  ));
+
+  const grades = document.createElement('div');
+  grades.className = 'grade-row';
+  for (const grade of GRADES) {
+    const count = review.counts[grade.id];
+    if (!count) continue;
+    const row = document.createElement('div');
+    row.className = 'grade-line';
+    const dot = document.createElement('span');
+    dot.className = `dot ${grade.id}`;
+    const name = document.createElement('span');
+    name.textContent = grade.label;
+    const n = document.createElement('span');
+    n.className = 'n';
+    n.textContent = count;
+    row.append(dot, name, n);
+    grades.append(row);
+  }
+  body.append(grades);
+
+  if (!review.worst.length) {
+    body.append(line('Not a point dropped. That is the whole endgame played perfectly.'));
+    return;
+  }
+
+  const heading = document.createElement('p');
+  heading.className = 'verdict';
+  heading.textContent = 'What it cost';
+  body.append(heading);
+
+  for (const miss of review.worst) {
+    const row = document.createElement('div');
+    row.className = 'miss';
+    const where = document.createElement('span');
+    where.className = 'where';
+    where.textContent = `Trick ${miss.trickNumber}`;
+    const played = cardEl(miss.played, { mini: true, trump: view.deal.trump });
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow';
+    arrow.textContent = '→';
+    const best = cardEl(miss.best, { mini: true, trump: view.deal.trump });
+    const cost = document.createElement('span');
+    cost.className = 'cost';
+    cost.textContent = `−${Math.round(miss.loss)}`;
+    row.append(where, played, arrow, best, cost);
+    body.append(row);
+  }
+
+  $('btn-review-close').onclick = () => {
+    reviewOpen = false;
+    render();
+  };
+}
+
 function line(text) {
   const paragraph = document.createElement('p');
   paragraph.className = 'sub';
@@ -607,6 +713,8 @@ function renderDealOver(deal, you, them) {
   table.append(tallyRow('Match', seats.map((seat) => ({ text: `${view.scores[seat]}` }))));
   body.append(table);
 
+  wireReviewButton($('btn-review'));
+
   const next = $('btn-next');
   const waiting = view.ready[you] && !view.ready[them];
   next.disabled = waiting;
@@ -615,9 +723,32 @@ function renderDealOver(deal, you, them) {
   $('next-hint').textContent = waiting ? `Waiting for ${view.names[them]}…` : '';
 }
 
+/*
+ * A partie can be decided by a single deal, so the review has to be reachable
+ * from the match screen as well as the tally.
+ */
+function wireReviewButton(button) {
+  const available = !!view.review;
+  button.hidden = !available;
+  if (!available) return;
+
+  const solving = view.review.state === 'solving';
+  button.disabled = solving;
+  button.textContent = solving ? 'Solving the endgame…' : 'Review the endgame';
+  button.onclick = () => {
+    if (view.review.state === 'ready') reviewOpen = true;
+    else {
+      reviewRequested = true;
+      session.send({ type: 'review' });
+    }
+    render();
+  };
+}
+
 function renderMatchOver(you, them) {
   const overlay = $('overlay-match');
   overlay.hidden = false;
+  wireReviewButton($('btn-review-match'));
   const winner = view.matchWinner;
 
   $('match-title').textContent =
@@ -762,6 +893,16 @@ function boot() {
     setCoaching(false);
     lesson = null;
     render();
+  };
+
+  $('btn-scrim').onclick = () => {
+    const entered = ($('name-input').value || '').trim().slice(0, 16);
+    if (entered) rememberName(entered);
+    attach(createSoloSession({
+      name: entered || 'You',
+      target: DEFAULT_TARGET,
+      scrim: true,
+    }));
   };
 
   $('btn-learn').onclick = () => {

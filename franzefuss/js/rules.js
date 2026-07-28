@@ -215,23 +215,16 @@ export function newMatch(names, target = DEFAULT_TARGET, firstDealer = 0) {
   };
 }
 
-export function startDeal(match, random = Math.random) {
-  const pack = shuffle(buildPack(), random);
-  const hands = [[], []];
-
-  /* Dealt alternately, one at a time, non-dealer first. */
-  const elder = other(match.dealer);
-  for (let i = 0; i < HAND_SIZE * 2; i++) {
-    hands[i % 2 === 0 ? elder : match.dealer].push(pack.pop());
-  }
-
-  const upcard = pack.pop();
-  match.dealNumber += 1;
-  match.deal = {
+/*
+ * Build a deal from a known layout. Shared by the dealer and by replay, so an
+ * analysed deal is reconstructed by exactly the code that played it.
+ */
+export function buildDeal({ hands, stock, upcard, elder }, { recorded = true } = {}) {
+  const deal = {
     trump: suitOf(upcard),
     upcard,
-    stock: pack,
-    hands,
+    stock: stock.slice(),
+    hands: [hands[0].slice(), hands[1].slice()],
     stage: 'play',
     elder,
     turn: elder,
@@ -249,11 +242,40 @@ export function startDeal(match, random = Math.random) {
     lastTrick: null,
     result: null,
     log: [],
+    /* Kept only on real deals: the layout and every action, so the deal can be
+     * replayed afterwards and each decision graded. Never sent to a player. */
+    record: recorded
+      ? {
+          hands: [hands[0].slice(), hands[1].slice()],
+          stock: stock.slice(),
+          upcard,
+          elder,
+          actions: [],
+        }
+      : null,
   };
-  sortHand(match.deal.hands[0], match.deal.trump);
-  sortHand(match.deal.hands[1], match.deal.trump);
+  sortHand(deal.hands[0], deal.trump);
+  sortHand(deal.hands[1], deal.trump);
+  return deal;
+}
+
+export function startDeal(match, random = Math.random) {
+  const pack = shuffle(buildPack(), random);
+  const hands = [[], []];
+
+  /* Dealt alternately, one at a time, non-dealer first. */
+  const elder = other(match.dealer);
+  for (let i = 0; i < HAND_SIZE * 2; i++) {
+    hands[i % 2 === 0 ? elder : match.dealer].push(pack.pop());
+  }
+
+  const upcard = pack.pop();
+  match.dealNumber += 1;
+  match.deal = buildDeal({ hands, stock: pack, upcard, elder });
   return match;
 }
+
+export const dealFromRecord = (record) => buildDeal(record, { recorded: false });
 
 export function sortHand(hand, trump) {
   hand.sort((a, b) => {
@@ -326,6 +348,7 @@ export function announce(deal, player, kind) {
   const good = !theirs || compareCombinations(option.best, theirs) > 0;
 
   deal.announcedThisTrick[player] = true;
+  if (deal.record) deal.record.actions.push({ type: 'announce', player, kind });
 
   if (good) {
     const spent = deal.spent[player];
@@ -371,6 +394,7 @@ export function robTrump(deal, player) {
   deal.hands[player].splice(deal.hands[player].indexOf(seven), 1);
   deal.hands[player].push(deal.upcard);
   sortHand(deal.hands[player], deal.trump);
+  if (deal.record) deal.record.actions.push({ type: 'rob', player });
   note(deal, `Robbed the turn-up with the ${cardLabel(seven)}.`);
   deal.upcard = seven;
   deal.robbed = true;
@@ -407,6 +431,8 @@ export function legalPlays(deal, player) {
 
 export function playCard(deal, player, card) {
   if (!legalPlays(deal, player).includes(card)) return deal;
+
+  if (deal.record) deal.record.actions.push({ type: 'play', player, card });
 
   const hand = deal.hands[player];
   hand.splice(hand.indexOf(card), 1);

@@ -41,6 +41,13 @@
       <button class="btn" id="btn-learn">Learn by playing</button>
     </div>
 
+    <div class="teach scrim">
+      <p class="fineprint">Already play? <b>Scrim</b> puts you against the app and
+        then solves the endgame exactly — the position you reached, every
+        decision graded, and the card you should have played.</p>
+      <button class="btn" id="btn-scrim">Scrim &amp; review</button>
+    </div>
+
     <button class="linkish" id="btn-rules">Rules reference &rsaquo;</button>
   </div>
 </section>
@@ -277,6 +284,7 @@
       <h2 id="deal-title">Deal over</h2>
       <div id="deal-body"></div>
       <button class="btn primary" id="btn-next">Next deal</button>
+      <button class="btn" id="btn-review" hidden>Review the endgame</button>
       <p class="hint" id="next-hint"></p>
     </div>
   </div>
@@ -286,9 +294,19 @@
       <h2 id="match-title">Game over</h2>
       <div id="match-body"></div>
       <div class="stack">
+        <button class="btn" id="btn-review-match" hidden>Review the endgame</button>
         <button class="btn primary" id="btn-rematch">Another partie</button>
         <button class="btn ghost" id="btn-home">Back to the start</button>
       </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-review" hidden>
+    <div class="sheet">
+      <p class="coach-tag">Endgame review</p>
+      <h2 id="review-title">Solving…</h2>
+      <div id="review-body"></div>
+      <button class="btn primary" id="btn-review-close">Back</button>
     </div>
   </div>
 

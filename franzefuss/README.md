@@ -107,6 +107,42 @@ needs no connection at all, and is the fallback if two phones cannot link up.
 
 **Learn by playing** is a solo game against the practice opponent, coached.
 
+**Scrim & review** is the same solo game with the post-game turned on.
+
+## The review
+
+After a scrim, the last nine tricks are **solved** and every decision you made in
+them is graded — the card you played, the card that was right, and the exact
+points between them. Two numbers carry it:
+
+- **Position at the turn** — the true margin you were holding the moment the
+  stock ran out. Solved, not estimated.
+- **Accuracy** — how much of that you kept, across the decisions you actually
+  faced. Forced plays are not decisions and are not graded.
+
+Together they separate the two halves of a deal: you can reach the endgame ahead
+and give it away, or lose it in the draw and then convert cleanly. In testing,
+playing the endgame perfectly rather than heuristically moved the average deal
+from −39 to −3 without changing a single card of the first half — which is a fair
+measure of how much of this game lives in the last nine tricks.
+
+### Why only the endgame
+
+Because that is the part with a right answer. While the stock lasts, cards you
+have never seen are still to come and the best play is a judgement under
+uncertainty; grading it means grading you against a layout you had no way of
+knowing. The first version of the reviewer did exactly that with Monte-Carlo
+rollouts, and it was worse than useless — it agreed with a greedy
+always-play-your-highest policy 44% of the time while that policy lost by 119
+points a deal. It was deleted.
+
+Once the stock is empty the game changes character. Your nine cards, the fourteen
+already played and your opponent's nine are the whole pack, so the cards you
+cannot see are precisely the cards they hold: **the endgame is perfect
+information for anyone who has been counting** (asserted over 200 deals in the
+tests). That makes it exactly solvable by alpha-beta, and a solved verdict is a
+fact rather than an opinion. The free-play half is reported, not judged.
+
 ## How it is put together
 
 No build step, no framework, no bundler — the directory is the deployable
@@ -118,6 +154,8 @@ artifact, matching the rest of this repo.
 | `js/table.js` | The authoritative table — applies intents, hands out views. |
 | `js/net.js` | Transports: WebRTC, solo-vs-bot, and local pass & play. |
 | `js/coach.js` | The lessons, each a predicate over the view that renders the table. |
+| `js/solver.js` | Exact alpha-beta over the endgame, with a node budget. |
+| `js/analysis.js` | Replays a deal and grades each endgame decision against the solver. |
 | `js/bot.js` | The practice opponent. Deterministic; follows the rules exactly. |
 | `js/app.js` | Screens, rendering, input. |
 | `vendor/peerjs.min.js` | PeerJS 1.5.4, vendored. |

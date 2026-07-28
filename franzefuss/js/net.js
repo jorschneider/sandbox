@@ -13,6 +13,7 @@
 import { createTable, dealTeachingHand } from './table.js';
 import { canRobTrump, other } from './rules.js';
 import { botCard, botAnnounces, botRobs } from './bot.js';
+import { reviewDeal } from './analysis.js';
 
 const ID_PREFIX = 'fzf5-';
 const CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // no 0/O/1/I
@@ -445,18 +446,26 @@ function describe(error) {
  * sitting down opposite somebody. Seat 0 is the learner and is the only seat
  * ever rendered; seat 1 thinks for a beat so the table feels inhabited.
  */
-export function createSoloSession({ name, target, teaching = false }) {
+export function createSoloSession({ name, target, teaching = false, scrim = false }) {
   const events = emitter();
   let timer = null;
   let closed = false;
   let guard = 0;
+
+  /* Solving the endgame takes a beat, so it is done on request and cached. */
+  let review = { dealNumber: 0, state: 'idle', value: null };
+
+  const decorate = (view) => (scrim ? { ...view, review } : view);
 
   const table = createTable({
     names: [name || 'You', 'Fuss'],
     target,
     firstDealer: 1,
     onViews: (views) => {
-      events.emit('state', views[0]);
+      if (review.dealNumber !== table.match.dealNumber) {
+        review = { dealNumber: table.match.dealNumber, state: 'idle', value: null };
+      }
+      events.emit('state', decorate(views[0]));
       think();
     },
   });
@@ -502,6 +511,20 @@ export function createSoloSession({ name, target, teaching = false }) {
     on: events.on,
     send: (action) => {
       guard = 0;
+      if (action.type === 'review') {
+        const deal = table.match.deal;
+        if (!scrim || !deal || deal.stage !== 'over' || review.state !== 'idle') return;
+        /* Paint the waiting state first, then block on the search. */
+        review = { dealNumber: table.match.dealNumber, state: 'solving', value: null };
+        table.broadcast();
+        setTimeout(() => {
+          if (closed) return;
+          const value = reviewDeal(deal.record, 0);
+          review = { dealNumber: table.match.dealNumber, state: 'ready', value };
+          table.broadcast();
+        }, 30);
+        return;
+      }
       table.apply(0, action);
     },
     close: () => {
