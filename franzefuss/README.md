@@ -4,7 +4,10 @@ An Austrian card game for two, last printed in 1890, playable on two phones in a
 sign-up, no account: one player taps **Start a game** and sends the link, the
 other opens it. Cards go straight from handset to handset.
 
-Live at `/franzefuss/` on the deployed site. Locally:
+**Play it: [franzefuss.vercel.app](https://franzefuss.vercel.app)**
+
+It deploys as its own Vercel project rooted at this directory, so the game sits
+at the root of that domain rather than down a path. Locally:
 
 ```sh
 python3 -m http.server        # then open http://localhost:8000/franzefuss/
