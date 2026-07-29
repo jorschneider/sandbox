@@ -292,6 +292,15 @@ then research. The validator checks both files.
 - **Outdoor beginner-friendly couples dance classes** that teach you (Midsummer
   Night Swing lessons, Bryant Park dance classes, salsa/tango socials with an
   intro lesson).
+- **Live music: DJ sets, electropop/indie-electronic, and world music.** DJ
+  nights at civilized hours (open-air, rooftop, early or listening-bar sets —
+  Nowadays, Public Records, Good Room, Elsewhere rooftop, The Lot Radio, Le
+  Bain); electropop/synth/indie-electronic bills (SummerStage, Celebrate
+  Brooklyn!, Little Island Amph, Pier 17, Webster Hall, Bowery Ballroom, LPR,
+  Baby's All Right, Racket); world music (Drom, Barbès, S.O.B.'s, Joe's Pub,
+  Jalopy, Rubenstein Atrium free Thursdays, Bryant Park Picnic Performances).
+  Skip arena acts and 1 AM club starts — doors-to-done ~5 PM–midnight or an
+  outdoor afternoon slot.
 
 Mode rules that differ from kid mode:
 - Categories add `dance` 🩰, `chinese` 🏮, `party` 🪩, `class` 💃, `film` 🎬
