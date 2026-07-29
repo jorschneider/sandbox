@@ -69,14 +69,20 @@ export function botCard(deal, seat) {
 }
 
 /*
- * Which class to announce on this lead, or null. It leads with whichever is
- * worth more, and comes back for the other on a later lead.
+ * Which class to announce on this lead, or null.
+ *
+ * Announcing into a better hand hands the points across, so a bare Tattel is
+ * not worth the risk: it wins 3 when it is good and can lose 32 when it is not.
+ * Anything longer than three cards, or a set, is worth saying out loud.
  */
 export function botAnnounces(deal, seat) {
   if (!canAnnounce(deal, seat)) return null;
-  const options = announceOptions(deal, seat);
-  if (!options.length) return null;
-  return options.slice().sort((a, b) => b.total - a.total)[0].kind;
+
+  const worthwhile = announceOptions(deal, seat)
+    .filter((option) => option.best.length >= 4 || option.kind === 'set')
+    .sort((a, b) => b.total - a.total);
+
+  return worthwhile.length ? worthwhile[0].kind : null;
 }
 
 export function botRobs(deal, seat) {

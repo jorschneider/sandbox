@@ -28,11 +28,14 @@ zusammengesetzt": assembled out of Piquet and Mariage. That is exactly its shape
 - Card points: trump J 20, trump 9 14, ace 11, ten 10, king 4, queen 3, jack 2 —
   152 in the pack, plus **10 for the last trick**. Tricks themselves count for
   nothing.
-- **Whenever you lead** you may first announce a combination. Your opponent
-  judges it against their own hand and says good or not good: if theirs is better
-  you score *nothing* of that class; if yours is better you score every
-  combination of that class you hold. Sequences and sets are judged separately,
-  and a tie scores for neither.
+- **Whenever you lead** you may first announce a combination, and your opponent
+  answers from their own hand. If yours is better you score every combination of
+  that class you hold; **if theirs is better the points go to them instead**
+  ("der Gegner darf sich die Punkte gutschreiben, wenn seine Kartenkombination
+  höherwertig als die angesagte des Gegners ist"); equal pays nobody. That makes
+  announcing a risk rather than a free roll, and it is the only way a player who
+  never wins a lead gets paid for what they hold. Sequences and sets are judged
+  separately.
 - A run pays for every shorter run inside it — "eine Quart zählt nicht nur als
   solche, sondern auch als zwei Tattel, ein Fuß ebenso als drei Tattel und zwei
   Quarten". So a Tattel is 3, a Quart 4 + 3 + 3 = **10**, and a Fuß —

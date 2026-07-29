@@ -178,18 +178,11 @@ function onState(next) {
     clearTimeout(heldTimer);
   }
 
-  /* Say out loud what the other player just announced. */
+  /* Report every announcement to both sides — the caller needs the verdict too. */
   const calls = (view.deal && view.deal.announcements) || [];
   if (calls.length > shownAnnouncements) {
-    const latest = calls[calls.length - 1];
+    showHint(describeCall(calls[calls.length - 1]));
     shownAnnouncements = calls.length;
-    if (latest.player !== view.you) {
-      showHint(
-        latest.good
-          ? `${view.names[latest.player]} announces ${latest.name} — good for ${latest.value}.`
-          : `${view.names[latest.player]} announced ${latest.name} — not good.`,
-      );
-    }
   }
 
   const deal = view.deal;
@@ -233,6 +226,26 @@ function render() {
   renderHand(deal, you);
   renderBanner(deal, you, them);
   renderOverlays(deal, you, them);
+}
+
+/*
+ * What an announcement did, from this player's side of the table. Losing the
+ * contest is the interesting case: the points go across, so both need telling.
+ */
+function describeCall(call) {
+  const mine = call.player === view.you;
+  const caller = mine ? 'You announce' : `${view.names[call.player]} announces`;
+
+  if (call.good) {
+    return `${caller} ${call.name} — good for ${call.value}.`;
+  }
+  if (call.beatenBy) {
+    const winner = call.beatenBy.player === view.you
+      ? `your ${call.beatenBy.name}`
+      : `${view.names[call.beatenBy.player]}'s ${call.beatenBy.name}`;
+    return `${caller} ${call.name} — not good. ${winner} takes ${call.beatenBy.value}.`;
+  }
+  return `${caller} ${call.name} — equal, so it pays nobody.`;
 }
 
 function showHint(text) {

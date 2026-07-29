@@ -61,12 +61,13 @@ export const LESSONS = [
         `Whenever you lead you may first announce a combination — a run of three or ` +
         `more in one suit, or three or four of a kind from the tens upward. ` +
         `${best ? `You are holding a ${combinationName(best)}. ` : ''}` +
-        `Your opponent looks at their own hand and says good or not good: if theirs ` +
-        `beats yours you score nothing of that class at all. If yours is better you ` +
-        `score every one of that class you hold.`
+        `Your opponent answers from their own hand. If yours is better you score ` +
+        `every combination of that class you hold. If theirs is better, the points ` +
+        `go to them instead — announcing into a stronger hand pays your opponent. ` +
+        `Equal pays nobody.`
       );
     },
-    footer: 'Announcing tells your opponent what you are holding. That is the price.',
+    footer: 'It also tells them what you hold. A thin Tattel is often worth keeping quiet.',
     when: (view) => view.deal.canAnnounce,
   },
   {

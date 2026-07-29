@@ -244,6 +244,52 @@ assert(
   announce(deal, 0, 'sequence');
   assert(deal.announcePoints[0] === 0, 'a tattel is not good against a quart');
   assert(deal.announcements[0].good === false, 'and it is recorded as not good');
+  /* The points do not simply vanish — they cross the table. */
+  assert(
+    deal.announcePoints[1] === 10,
+    `the better quart collects 10 (got ${deal.announcePoints[1]})`,
+  );
+  assert(deal.announcements[0].beatenBy.player === 1, 'the call records who beat it');
+  assert(deal.announcements[0].beatenBy.value === 10, 'and what it paid them');
+  /* And having been paid for, it cannot be claimed twice. */
+  deal.announcedThisTrick = [false, false];
+  deal.trickLead = 1; deal.turn = 1;
+  announce(deal, 1, 'sequence');
+  assert(deal.announcePoints[1] === 10, 'a combination already paid for does not pay again');
+}
+
+/* A dead heat pays nobody — "bezahlt". */
+{
+  const match = newMatch(['A', 'B']);
+  startDeal(match, rng(21));
+  const deal = match.deal;
+  deal.trump = 'C';
+  deal.hands[0] = ['HA', 'HK', 'HQ', 'D7', 'D8', 'S7', 'S8', 'C7', 'C8'];
+  deal.hands[1] = ['SA', 'SK', 'SQ', 'D9', 'DT', 'H9', 'HT', 'CT', 'C9'];
+  deal.trickLead = 0; deal.turn = 0;
+
+  announce(deal, 0, 'sequence');
+  assert(deal.announcePoints[0] === 0, 'an equal tattel scores nothing for the caller');
+  assert(deal.announcePoints[1] === 0, 'and nothing for the opponent either');
+  assert(deal.announcements[0].beatenBy === null, 'a tie is not a defeat');
+}
+
+/* An opponent who never wins a lead still gets paid for a better holding. */
+{
+  const match = newMatch(['A', 'B']);
+  startDeal(match, rng(23));
+  const deal = match.deal;
+  deal.trump = 'C';
+  deal.hands[0] = ['HA', 'HK', 'HQ', 'D7', 'D8', 'S7', 'S8', 'C7', 'C8'];
+  deal.hands[1] = ['SA', 'SK', 'SQ', 'SJ', 'ST', 'H9', 'HT', 'CT', 'C9'];
+  deal.trickLead = 0; deal.turn = 0;
+
+  announce(deal, 0, 'sequence');
+  assert(
+    deal.announcePoints[1] === 32,
+    `a Fuß held by the player off lead still collects 32 (got ${deal.announcePoints[1]})`,
+  );
+  assert(deal.announcePoints[0] === 0, 'and the caller gets nothing');
 }
 
 /* A run that grows pays again: the 1890 example, Bube-10-9 plus the Dame. */

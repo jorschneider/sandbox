@@ -344,32 +344,58 @@ export function announce(deal, player, kind) {
   const option = announceOptions(deal, player).find((one) => one.kind === kind);
   if (!option) return deal;
 
-  const theirs = bestOfKind(findCombinations(deal.hands[other(player)]), kind);
-  const good = !theirs || compareCombinations(option.best, theirs) > 0;
+  const opponent = other(player);
+  const theirBest = bestOfKind(findCombinations(deal.hands[opponent]), kind);
+  const verdict = !theirBest ? 1 : compareCombinations(option.best, theirBest);
 
   deal.announcedThisTrick[player] = true;
   if (deal.record) deal.record.actions.push({ type: 'announce', player, kind });
 
-  if (good) {
-    const spent = deal.spent[player];
-    const mine = findCombinations(deal.hands[player]).filter(
-      (one) => one.kind === kind && !spent.includes(one.id),
+  /* Score every unspent combination of this class in a hand, and spend them. */
+  const claim = (seat, forKind) => {
+    const spent = deal.spent[seat];
+    const held = findCombinations(deal.hands[seat]).filter(
+      (one) => one.kind === forKind && !spent.includes(one.id),
     );
-    for (const one of mine) spent.push(one.id);
-    deal.announcePoints[player] += option.total;
-    note(deal, `${combinationName(option.best)} — good for ${option.total}.`);
-  } else {
-    note(deal, `${combinationName(option.best)} — not good.`);
-  }
+    for (const one of held) spent.push(one.id);
+    const total = held.reduce((sum, one) => sum + one.value, 0);
+    deal.announcePoints[seat] += total;
+    return total;
+  };
 
-  deal.announcements.push({
+  const call = {
     player,
     kind,
-    good,
-    value: good ? option.total : 0,
+    good: verdict > 0,
+    value: 0,
     cards: option.best.cards.slice(),
     name: combinationName(option.best),
-  });
+    beatenBy: null,
+  };
+
+  if (verdict > 0) {
+    call.value = claim(player, kind);
+    note(deal, `${combinationName(option.best)} — good for ${call.value}.`);
+  } else if (verdict < 0) {
+    /*
+     * "Der Gegner darf sich die Punkte gutschreiben, wenn seine Kartenkombination
+     * höherwertig als die angesagte des Gegners ist." Announcing into a better
+     * hand does not merely fail — it hands the points across, which is what
+     * makes announcing a risk rather than a free roll.
+     */
+    call.beatenBy = {
+      player: opponent,
+      name: combinationName(theirBest),
+      cards: theirBest.cards.slice(),
+      value: claim(opponent, kind),
+    };
+    note(deal, `${combinationName(option.best)} — not good; ${call.beatenBy.name} takes ${call.beatenBy.value}.`);
+  } else {
+    /* A dead heat is "bezahlt": it scores for neither. */
+    note(deal, `${combinationName(option.best)} — equal, so it pays nobody.`);
+  }
+
+  deal.announcements.push(call);
   return deal;
 }
 
