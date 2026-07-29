@@ -308,6 +308,13 @@ Mode rules that differ from kid mode:
 - Aim for ~10–25 dated events across the week. Quality over coverage: two
   great bookable nights beat ten filler listings. Verify dates/times on
   official pages; note rush/lottery/ticket windows in the notes.
+- **SUNDAY AFTERNOON + EVENING IS THE PRIME DATE WINDOW — cover it hardest.**
+  Every weekly refresh must nail down the Sunday picture in particular: exact
+  Sunday matinee/evening curtains for the well-reviewed shows (houses vary —
+  3 PM matinees, 7 PM evenings, some dark Sunday), Sunday day parties
+  (Mister Sunday, Soul Summit), Sunday dance performances, and Sunday
+  Chinese-language options. The Sunday itinerary should be the deepest of
+  the week, afternoon + evening both stacked.
 
 **Standing date-mode sources — check every week:** the Gmail newsletters
 (search the inbox for **fieldnotesnyc**, **The Blankman List** and similar
