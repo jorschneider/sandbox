@@ -57,6 +57,20 @@ site to **GitHub Pages** on every push. It also works on Vercel as a
 static site — `vercel deploy` from the repo root, or import the repo at
 vercel.com; no configuration needed beyond the included `vercel.json`.
 
+## Also in this repo
+
+Static microsites that share the root, each self-contained and deployed with it:
+
+- [`franzefuss/`](franzefuss/) — **Franzefuß** ([play](https://franzefuss.vercel.app)),
+  the Austrian two-hand card game last codified in 1890, played over the internet on two phones. One player sends a link, the other
+  opens it, and the cards travel straight between the handsets. Since nobody has
+  heard of the game, it teaches itself: play a hand and it explains each rule at
+  the moment that rule first matters. Also plays pass-and-play on one phone, or
+  solo against a practice opponent — with a post-game that solves the endgame
+  exactly and grades every decision in it. `npm test` runs its rules engine.
+- [`rayray-outdoor-weekend/`](rayray-outdoor-weekend/) — a three-day guide to
+  outdoor events in New York City.
+
 ---
 
 *This is a work of satire. All low-poly persons depicted are 14
