@@ -7462,6 +7462,174 @@ window.WEEK_DATA = {
       "start": "09:00",
       "end": "14:00",
       "cpwOnly": false
+    },
+    {
+      "title": "Arm-of-the-Sea Theatre: giant-puppet show on the pier",
+      "category": "theater",
+      "venue": "Pier I, Riverside Park South, W 70th St at the Hudson River",
+      "neighborhood": "Lincoln Square",
+      "when": "Thursday July 30, 10:00–11:00 AM",
+      "days": [
+        "thu"
+      ],
+      "cost": "Free, no tickets",
+      "travelMinutes": 26,
+      "travelHow": "~26 min from Union Sq",
+      "toddlerNotes": "Arm-of-the-Sea is a mask-and-giant-puppet company, and this is real free outdoor puppetry billed explicitly for 'young audiences up to age 7' — so she's inside the target range, not tolerated at the edge of it. Setup: open pier deck, no fixed seats. Bring a blanket, sit at the front or the back, leave mid-show with zero friction. One hour of music, storytelling and big visual puppets she can actually track.",
+      "url": "https://www.nycgovparks.org/events/2026/07/30/summer-on-the-hudson-childrens-performance-series-featuring",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7789,
+      "lng": -73.9901,
+      "event": true,
+      "times": [
+        "morning"
+      ],
+      "start": "10:00",
+      "end": "11:00",
+      "cpwOnly": false
+    },
+    {
+      "title": "Sensory Station with Splat Lab",
+      "category": "play",
+      "venue": "Bryant Park Kids Area, 40th St side between Fifth and Sixth Aves",
+      "neighborhood": "Midtown",
+      "when": "Thursday July 30, 11:30 AM–12:30 PM (weekly Thursdays through Sept 17)",
+      "days": [
+        "thu"
+      ],
+      "cost": "Free, drop in",
+      "travelMinutes": 16,
+      "travelHow": "~16 min from Union Sq",
+      "toddlerNotes": "Rotating hands-on sensory and craft stations run by Splat Lab instructors in the fenced Kids Area — squishing, pouring, scooping, getting messy. The most age-2-appropriate thing Bryant Park runs. Stroller parking right there, and it pairs neatly with Little Island's morning play if you want the day to be two short outings.",
+      "url": "https://bryantpark.org/calendar/event/sensory-station/2026-07-30",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7529,
+      "lng": -73.9838,
+      "event": true,
+      "times": [
+        "morning",
+        "afternoon"
+      ],
+      "start": "11:30",
+      "end": "12:30",
+      "cpwOnly": false
+    },
+    {
+      "title": "Puppetsburg puppet show (ages 0–5)",
+      "category": "theater",
+      "venue": "My Little Village, 383 Grand St",
+      "neighborhood": "Lower East Side",
+      "when": "Thursday July 30, 3:00 PM (every Thursday)",
+      "days": [
+        "thu"
+      ],
+      "cost": "$45 drop-in per child (30% sibling discount)",
+      "travelMinutes": 18,
+      "travelHow": "~18 min from Union Sq",
+      "toddlerNotes": "Paid, not free — but the best Thursday-afternoon option and built for exactly her age: 45 minutes, ages 0–5, a new story every week, with dancing, instrument-shaking, dress-up, one-on-one time holding the handmade puppets, and a bubble finale. Advance registration required via the link on their sign-up page. ~15 min from Union Square on the F or by bus.",
+      "url": "https://www.puppetsburg.com/sign-up.html",
+      "outdoor": false,
+      "recurring": false,
+      "confidence": "medium",
+      "lat": 40.716,
+      "lng": -73.9855,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "15:00",
+      "end": "15:45",
+      "cpwOnly": false
+    },
+    {
+      "title": "Art Cart Workshop: sun-print cyanotypes, then painting",
+      "category": "other",
+      "venue": "Bryant Park Art Cart, Fountain Terrace, 42nd St side behind the New York Public Library",
+      "neighborhood": "Midtown",
+      "when": "Friday July 31 & Saturday August 1, 11:30 AM–1:30 PM",
+      "days": [
+        "fri",
+        "sat"
+      ],
+      "cost": "Free (registration recommended; walk-ups accepted while materials last)",
+      "travelMinutes": 16,
+      "travelHow": "~16 min from Union Sq",
+      "toddlerNotes": "Fills both the Friday and Saturday midday holes. Friday is sun-printing cyanotypes — she lays leaves and toys on the paper and the sun does the rest, which is perfect for a 2-year-old attention span. Saturday is acrylic painting, i.e. she paints. Come and go inside the two-hour window; open-air terrace, stroller-accessible, no age floor. Don't arrive more than 30 min late if you register.",
+      "url": "https://bryantpark.org/calendar/event/art-cart-workshop-1130am/2026-07-31",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.7536,
+      "lng": -73.982,
+      "event": true,
+      "times": [
+        "morning",
+        "afternoon"
+      ],
+      "start": "11:30",
+      "end": "13:30",
+      "cpwOnly": false
+    },
+    {
+      "title": "Puppetworks: Pinocchio marionettes — final Park Slope run",
+      "category": "theater",
+      "venue": "Puppetworks, 338 Sixth Ave at 4th St, Brooklyn",
+      "neighborhood": "Park Slope",
+      "when": "Saturday August 1 & Sunday August 2, shows at 12:30 and 2:30 PM (run ends Aug 9)",
+      "days": [
+        "sat",
+        "sun"
+      ],
+      "cost": "$11 children / $12 adults",
+      "travelMinutes": 36,
+      "travelHow": "~36 min from Union Sq",
+      "toddlerNotes": "Hand-carved wooden marionettes on a tiny proscenium stage, 55 minutes, two showtimes each day so you can pick her best hour. Officially 'suggested for ages 3 and up' — there's no enforced minimum and the puppets are large and slow-moving enough for a 2-year-old, but it's a dark room with fixed bench seating, so sit on the aisle. Reserve by phone (718-965-3391); holds are released 15 min before curtain. This is the last month at their 35-year Park Slope address before they move to Industry City.",
+      "url": "https://puppetworks.org/",
+      "outdoor": false,
+      "recurring": false,
+      "confidence": "high",
+      "lat": 40.6739,
+      "lng": -73.9836,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "start": "12:30",
+      "end": "13:25",
+      "cpwOnly": false
+    },
+    {
+      "title": "Randall's Island Urban Farm & Tot Lot",
+      "category": "animals",
+      "venue": "Randall's Island Urban Farm, southern end of the island beside the playground",
+      "neighborhood": "Randall's Island",
+      "when": "Saturday August 1 & Sunday August 2, 10:00 AM–3:30 PM (weekends through September)",
+      "days": [
+        "sat",
+        "sun"
+      ],
+      "cost": "Free, no registration",
+      "travelMinutes": 28,
+      "travelHow": "~28 min from Grandma's",
+      "toddlerNotes": "The Tot Lot is purpose-built for her age: a play tunnel with climbing plants growing over it, a dig bed with child-sized tools, flower-shaped chalkboards, sensory herbs to crush and smell, a pretend farm stand and a 'Book Barn.' Beyond it, 100+ raised beds of vegetables and flowers, an active compost system, pollinators and worms to look at. Honest travel note: the longest trip on the list, ~40 min door-to-door (6 to 103rd St, then the pedestrian footbridge).",
+      "url": "https://randallsisland.org/programs/urban-farm",
+      "outdoor": true,
+      "recurring": false,
+      "confidence": "medium",
+      "lat": 40.792,
+      "lng": -73.923,
+      "event": true,
+      "times": [
+        "morning",
+        "afternoon"
+      ],
+      "start": "10:00",
+      "end": "15:30",
+      "cpwOnly": true
     }
   ],
   "itineraries": {
@@ -7571,7 +7739,7 @@ window.WEEK_DATA = {
       ]
     },
     "thu": {
-      "summary": "Toddler fitness at Asser Levy at 9 or Little Island's play morning, lunchtime jazz in Union Square at noon, ABT story ballet at 5.",
+      "summary": "Toddler fitness at Asser Levy at 9, giant puppets on the Hudson pier at 10, lunchtime jazz in Union Square at noon, ABT story ballet at 5.",
       "picks": [
         {
           "slot": "morning",
@@ -7587,9 +7755,9 @@ window.WEEK_DATA = {
         },
         {
           "slot": "morning",
-          "key": "joanie-leeds-live-kids-concert",
-          "title": "Joanie Leeds live kids' concert",
-          "note": "Or a Grammy-winning kids' concert at CMOM, sets at 11 and 12 — two chances, so a nap can't cost you it."
+          "key": "arm-of-the-sea-theatre-giant-puppet-show-on-the-",
+          "title": "Arm-of-the-Sea Theatre: giant-puppet show on the pier",
+          "note": "Or free giant-puppet theatre on the Hudson pier at 10 — a mask-and-puppet company, billed for under-7s, open deck so you can slip out anytime."
         },
         {
           "slot": "afternoon",
@@ -7605,9 +7773,9 @@ window.WEEK_DATA = {
         },
         {
           "slot": "afternoon",
-          "key": "kids-in-motion-at-tompkins-square-park",
-          "title": "Kids in Motion at Tompkins Square Park",
-          "note": "Or all-day staffed play and water games at Tompkins Square, till 6 — drop in whenever."
+          "key": "sensory-station-with-splat-lab",
+          "title": "Sensory Station with Splat Lab",
+          "note": "Or Bryant Park's Splat Lab sensory station, 11:30–12:30 — squishing, pouring, scooping, and getting messy."
         },
         {
           "slot": "evening",
@@ -7652,9 +7820,9 @@ window.WEEK_DATA = {
         },
         {
           "slot": "afternoon",
-          "key": "toy-time-two-hours-of-open-free-play",
-          "title": "Toy Time — two hours of open free play",
-          "note": "Or two hours of open toy play at Clinton Hill, 3–5. No start time, no sitting still, air conditioned."
+          "key": "art-cart-workshop-sun-print-cyanotypes-then-pain",
+          "title": "Art Cart Workshop: sun-print cyanotypes, then painting",
+          "note": "Or sun-print cyanotypes at Bryant Park's Art Cart, 11:30–1:30 — she lays leaves on the paper and the sun does the rest."
         },
         {
           "slot": "evening",
@@ -7711,9 +7879,9 @@ window.WEEK_DATA = {
         },
         {
           "slot": "afternoon",
-          "key": "creation-station-vintage-subway-cars",
-          "title": "Creation Station + vintage subway cars",
-          "note": "Or the Transit Museum: drop-in crafts 11–2 plus a platform of vintage subway cars she can climb aboard."
+          "key": "puppetworks-park-slope",
+          "title": "Puppetworks Park Slope",
+          "note": "Or hand-carved Pinocchio marionettes in Park Slope, 12:30 or 2:30 — their last month at this 35-year address. Sit on the aisle."
         },
         {
           "slot": "evening",
@@ -8263,6 +8431,146 @@ window.WEEK_DATA = {
         ],
         "start": "15:30",
         "end": "16:30",
+        "cpwOnly": false
+      },
+      {
+        "title": "Summer on the Hudson: Art in the Park at Hippo Playground",
+        "category": "other",
+        "venue": "Hippo Playground, Riverside Park",
+        "neighborhood": "Upper West Side",
+        "when": "Tuesday August 4 & Wednesday August 5, 10:00 AM–12:00 PM",
+        "days": [
+          "tue",
+          "wed"
+        ],
+        "cost": "Free, drop in",
+        "travelMinutes": 32,
+        "travelHow": "~32 min from Union Sq",
+        "toddlerNotes": "NYC Parks runs interactive art and craft projects 'for kids of all ages' at a table right inside Hippo Playground — so it's art-plus-playground, and if the project is beyond her she just plays on the hippo sprinklers instead. Two-hour open window, no sign-up.",
+        "url": "https://www.nycgovparks.org/events/2026/08/04/summer-on-the-hudson-art-in-the-park",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "high",
+        "lat": 40.7915,
+        "lng": -73.9769,
+        "event": true,
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "start": "10:00",
+        "end": "12:00",
+        "cpwOnly": false
+      },
+      {
+        "title": "Le Carrousel STEM: motor-powered mini cars (ages 2 and up)",
+        "category": "other",
+        "venue": "Bryant Park, Le Carrousel, 40th St between Fifth and Sixth Aves",
+        "neighborhood": "Midtown",
+        "when": "Wednesday August 5, 11:30 AM–12:30 PM",
+        "days": [
+          "wed"
+        ],
+        "cost": "Free, drop in",
+        "travelMinutes": 16,
+        "travelHow": "~16 min from Union Sq",
+        "toddlerNotes": "One of the very few listings in the city that states 'for kids ages 2 and up' outright. She helps assemble and then pushes and tests little motor-powered vehicles — wheels, axles, balance. Hands-on and physical rather than explanatory, and the carousel is right there when she's done. Outdoors, drop-in, one hour.",
+        "url": "https://bryantpark.org/calendar/event/le-carrousel-stem/2026-08-05",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "high",
+        "lat": 40.753,
+        "lng": -73.984,
+        "event": true,
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "start": "11:30",
+        "end": "12:30",
+        "cpwOnly": false
+      },
+      {
+        "title": "Summer on the Hudson: Tots Soccer (ages 5 and under)",
+        "category": "play",
+        "venue": "71st Street Soccer Field, Riverside Park South, 71st St Soccer Field, Riverside Park South",
+        "neighborhood": "Lincoln Square",
+        "when": "Thursday August 6, 9:30–10:30 AM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 27,
+        "travelHow": "~27 min from Union Sq",
+        "toddlerNotes": "Explicit upper age cap of 5 and no lower bound — coaches from Carlos Oliveira Soccer Academy run non-competitive skills games. At 2 she mostly chases the ball and kicks it in random directions, which is the entire point of the format. Early enough to finish before the heat.",
+        "url": "https://www.nycgovparks.org/events/2026/08/06/summer-on-the-hudson-tots-soccer",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "high",
+        "lat": 40.7798,
+        "lng": -73.9886,
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "start": "09:30",
+        "end": "10:30",
+        "cpwOnly": false
+      },
+      {
+        "title": "Lions and Legends: folktales and foodlore, live at The Glade",
+        "category": "storytime",
+        "venue": "Little Island — The Glade, Pier 55, Hudson River Park at W 13th St",
+        "neighborhood": "Meatpacking",
+        "when": "Thursday August 6, Friday August 7 & Saturday August 8, 5:00–6:30 PM",
+        "days": [
+          "thu",
+          "fri",
+          "sat"
+        ],
+        "cost": "Free, first come first served",
+        "travelMinutes": 17,
+        "travelHow": "~17 min from Union Sq",
+        "toddlerNotes": "Rebecca Sheir and Eric Shimelonis (of Circle Round) premiere a new family storytelling podcast with folktales about the origins of the mango and durian — live music and voices, aimed squarely at families. Setup: The Glade seats about 200 on lawn and benches, first come first served, no assigned seats and no no-late-entry rule, so a blanket at the back means you can leave the second she's done. 90 min, three nights to choose from.",
+        "url": "https://littleisland.org/events/",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "high",
+        "lat": 40.7418,
+        "lng": -74.0107,
+        "event": true,
+        "times": [
+          "evening"
+        ],
+        "start": "17:00",
+        "end": "18:30",
+        "cpwOnly": false
+      },
+      {
+        "title": "Play in the Square: bilingual sing-along + Puppetsburg",
+        "category": "music",
+        "venue": "Domino Square, Domino Park, 12 South 3rd St, Brooklyn",
+        "neighborhood": "Williamsburg",
+        "when": "Sunday August 9 — Lina Sings 12:00–1:00 PM, Puppetsburg puppet show 2:00–3:00 PM",
+        "days": [
+          "sun"
+        ],
+        "cost": "Free (RSVP on Eventbrite; walk-ups fine)",
+        "travelMinutes": 21,
+        "travelHow": "~21 min from Union Sq",
+        "toddlerNotes": "Two age-2 events in one free outdoor afternoon: Lina Sings does bilingual Spanish/English sing-alongs at noon, then Puppetsburg — the 0-to-5 puppet troupe — performs at 2. Setup: open plaza, no seats, no barriers; stand, sit on the ground, or leave between the two acts. Domino Park's playground, fog bridge and Sunday greenmarket are steps away, plus shade and bathrooms. ~28 min on the L to Bedford Ave. The best single Sunday of the preview week.",
+        "url": "https://www.eventbrite.com/e/play-in-the-square-tickets-1989160291980",
+        "outdoor": true,
+        "recurring": false,
+        "confidence": "high",
+        "lat": 40.7139,
+        "lng": -73.9673,
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "start": "12:00",
+        "end": "15:00",
         "cpwOnly": false
       }
     ]
