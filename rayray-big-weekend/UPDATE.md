@@ -59,6 +59,37 @@ Each event:
 | `cpwOnly` | boolean | `true` = only reachable from Grandma's base (beyond ~35 min of Union Sq); hidden in Union Sq mode |
 | `event` | boolean | `true` = a real dated happening (concert, show, storytime session, festival) — gets the "⭐ this week" chip, sorts first, and powers the "Real events only" filter. `false` = an open-anytime place. |
 
+## The health check is the contract (`health.cjs`)
+
+**`node rayray-big-weekend/health.cjs` is the single source of truth for
+"is this site OK right now?"** Run it at the START and END of every routine.
+
+```sh
+node rayray-big-weekend/health.cjs          # local repo files
+node rayray-big-weekend/health.cjs --live   # what the deployed site serves
+```
+
+Exit 0 = healthy. Exit 1 = ACTION NEEDED. Exit 2 = couldn't check (also act).
+
+It measures **what Jordan actually sees in the default view** — weekday picks
+capped at 25 minutes' walk, weekends at 35 minutes' transit, already-ended
+events hidden — not the raw event count. That distinction matters: on
+Thursday July 30, 2026 `week.js` held 10 dated events and looked non-empty,
+while the screen showed one 8 PM play. It checks:
+
+1. **Freshness** — `weekMonday` equals the current Monday (not stale, not
+   jumped ahead), for BOTH `week.js` and `date.js`.
+2. **Visible coverage** — today plus the next 3 days each have at least one
+   visible event in every remaining day-part (kid: morning/afternoon/evening;
+   date mode: afternoon/evening, since it is evening-led by design).
+3. **Look-ahead** — the next-week preview holds 8+ events.
+
+**A run is not finished until `--live` exits 0.** "The routine fired" is not
+success; a green health check against the deployed site is. On July 27, 2026
+the Monday routine fired, silently did nothing, and left the site a week
+stale — because nothing verified the outcome. Never report success without
+pasting the health-check output.
+
 ## Monday procedure (do this in order)
 
 The site must NEVER be left showing a past week — **and never jump AHEAD of the
@@ -397,6 +428,26 @@ and athena.caoyue@gmail.com, subject "🎈 Rayray Big Weekend — week of
 best dated events and free picks. Finish the run by summarizing the week's
 highlights: best free events, outdoor theater finds, one-offs worth planning
 around, and any grandma-zone weekend gems.
+
+## Daily watchdog (the safety net)
+
+A routine runs EVERY morning and is the reason a bad week can no longer sit
+unnoticed. It is cheap when things are fine and self-healing when they aren't:
+
+1. `node rayray-big-weekend/health.cjs --live`.
+2. **Exit 0** → check the repo copy too (`health.cjs` with no flag) in case an
+   un-deployed change is pending; if that's green as well, STOP. Send no
+   message, open no PR, burn no tokens. Silence is the correct output.
+3. **Exit 1 or 2** → FIX IT, don't report it. Follow the Monday procedure for
+   whatever the check flagged: promote a stale week, research real events for
+   the empty day-parts (spawn several parallel research agents — see "Research
+   rules"), rebuild itineraries, validate, commit, push, deploy.
+4. Re-run `health.cjs --live` until it exits 0, then stop.
+5. Only message Jordan if you could NOT get it green — say exactly what is
+   broken and what you tried. A successful self-heal needs no announcement.
+
+Two independent failure modes it covers: the Monday routine not firing at
+all, and the Monday routine firing but accomplishing nothing.
 
 ## Saturday re-verify (second routine)
 
