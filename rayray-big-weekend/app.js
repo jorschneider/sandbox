@@ -87,7 +87,7 @@
 
   const state = { day: todayKey || "all", week: "cur", showRainy: false, showPlay: false, showDest: false, heartsOnly: false,
     maxTravel: null, // minutes cap from the travel slider; null = anywhere
-    travelMetric: "transit", // "walk" (weekdays) | "transit" (weekends/whole week)
+    travelMetric: "transit", // "transit" is the default everywhere; "walk" only if a user picks it
     base: /(^|[#&])base=cpw(&|$)/.test(location.hash) ? "cpw" : "usq" };
   const nextWeek = data.nextWeek && Array.isArray(data.nextWeek.events) && data.nextWeek.events.length ? data.nextWeek : null;
   const WX = { daily: null, hourly: null }; // 14-day forecast, filled async
@@ -353,8 +353,8 @@
     });
   });
 
-  // ——— travel slider: day-type-aware. Weekdays default to a 25-min WALK radius
-  // (keep it local with a toddler); weekends open up to 35 min by TRANSIT. ———
+  // ——— travel slider: every day defaults to 35 min by TRANSIT; the whole-week
+  // view and date mode drop the cap entirely. Drag to widen or tighten. ———
   const travelSlider = document.getElementById("travel-slider");
   const travelVal = document.getElementById("travel-val");
   const travelLead = document.getElementById("travel-lead");
@@ -382,8 +382,7 @@
     if (dt === lastDayType) return;
     lastDayType = dt;
     if (MODE === "date") { state.travelMetric = "transit"; state.maxTravel = null; } // date night: the city's yours
-    else if (dt === "weekday") { state.travelMetric = "walk"; state.maxTravel = 25; }
-    else if (dt === "weekend") { state.travelMetric = "transit"; state.maxTravel = 35; }
+    else if (dt === "weekday" || dt === "weekend") { state.travelMetric = "transit"; state.maxTravel = 35; }
     else { state.travelMetric = "transit"; state.maxTravel = null; } // whole week = anywhere
     syncTravelLabel();
   }
@@ -615,7 +614,7 @@
         const e = byKey[k];
         if (!n && e) {
           // the pick isn't on the map — open its anytime group and/or lift the
-          // travel filter (a weekday plan can point past the 25-min walk radius)
+          // travel filter (an itinerary pick can point past the 35-min radius)
           if (timeBucket(e) === "any") {
             state[(!e.outdoor && !isRide(e)) ? "showRainy"
               : (e.outdoor && e.category === "play" && !isRide(e)) ? "showPlay" : "showDest"] = true;
@@ -630,7 +629,7 @@
   }
 
   function render() {
-    applyTravelDefault(); // weekday → 25-min walk, weekend → 35-min transit, whole week → anywhere
+    applyTravelDefault(); // any single day → 35-min transit, whole week → anywhere
     dayPicker.querySelectorAll(".day").forEach((b) => b.classList.toggle("active", b.dataset.day === state.day));
 
     document.getElementById("week-label").textContent =

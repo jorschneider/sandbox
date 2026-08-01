@@ -83,10 +83,9 @@ function checkWeek(label, data, today, todayKey, isKid) {
   const idx = DAY_KEYS.indexOf(todayKey);
   for (let off = 0; off < 4 && idx + off < 7; off++) {
     const day = DAY_KEYS[idx + off];
-    const isWeekend = day === "sat" || day === "sun";
-    // date mode has no travel cap; kid mode uses the weekday/weekend defaults
-    const cap = !isKid ? null : (isWeekend ? 35 : 25);
-    const metric = !isKid ? "transit" : (isWeekend ? "transit" : "walk");
+    // date mode has no travel cap; kid mode caps every day at 35 min transit
+    const cap = isKid ? 35 : null;
+    const metric = "transit";
 
     const visible = data.events.filter((e) => {
       if (!e.event || e.cpwOnly) return false;

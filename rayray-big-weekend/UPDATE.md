@@ -71,9 +71,9 @@ node rayray-big-weekend/health.cjs --live   # what the deployed site serves
 
 Exit 0 = healthy. Exit 1 = ACTION NEEDED. Exit 2 = couldn't check (also act).
 
-It measures **what Jordan actually sees in the default view** — weekday picks
-capped at 25 minutes' walk, weekends at 35 minutes' transit, already-ended
-events hidden — not the raw event count. That distinction matters: on
+It measures **what Jordan actually sees in the default view** — every day
+capped at 35 minutes by transit, already-ended events hidden — not the raw
+event count. That distinction matters: on
 Thursday July 30, 2026 `week.js` held 10 dated events and looked non-empty,
 while the screen showed one 8 PM play. It checks:
 
