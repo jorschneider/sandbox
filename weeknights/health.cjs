@@ -128,12 +128,57 @@ function mondayOf(d) {
     if (pinned === 0) problems.push(`${who}: no class has a verified time — the weekly refresh is not doing its job`);
   }
 
+  // 6b. slots.js freshness — the live times are the site's main value now, so a
+  //     stale or missing slots file is a real failure, not a warning
+  try {
+    const slots = await load("slots.js", "SLOTS");
+    const n = Object.values(slots.venues || {}).reduce((t, v) => t + v.length, 0);
+    console.log(`  slots: ${n} live slots · week of ${slots.weekMonday}`);
+    if (slots.weekMonday !== thisMonday) problems.push(`slots.js is STALE — week of ${slots.weekMonday}, this week is ${thisMonday} (run fetch-schedules.cjs)`);
+    const empty = Object.keys(slots.venues || {}).filter((v) => !(slots.venues[v] || []).length);
+    if (empty.length) problems.push(`slots.js has no slots for: ${empty.join(", ")} — that fetcher source broke`);
+  } catch (e) {
+    problems.push(`slots.js missing or unreadable (${e.message}) — run fetch-schedules.cjs`);
+  }
+
+  // 7. link check — a booking URL that 404s is a real failure the data can't
+  //    see. 403/405/429 mean "alive but bot-blocked" (ClassPass, Pure Barre,
+  //    BDC all do this) and are only warned about; 404/410/5xx/DNS fail.
+  if (!args.includes("--no-links")) {
+    const urls = new Set();
+    for (const data of [athena, jordan]) {
+      Object.values(data.venues || {}).forEach((v) => v.url && urls.add(v.url));
+      (data.events || []).forEach((e) => e.url && urls.add(e.url));
+      Object.values(data.teachers || {}).forEach((t) => t.url && urls.add(t.url));
+    }
+    const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
+    const check = async (u) => {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 20000);
+      try {
+        let res = await fetch(u, { method: "HEAD", redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": UA } });
+        if (res.status === 405 || res.status === 403 || res.status === 400) {
+          res = await fetch(u, { method: "GET", redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": UA } });
+        }
+        return { u, status: res.status };
+      } catch (e) {
+        return { u, status: 0, err: e.name === "AbortError" ? "timeout" : (e.cause && e.cause.code) || e.message };
+      } finally { clearTimeout(t); }
+    };
+    const results = await Promise.all(Array.from(urls).map(check));
+    const dead = results.filter((r) => r.status === 404 || r.status === 410 || r.status >= 500 || r.status === 0);
+    const blocked = results.filter((r) => [401, 403, 405, 429].includes(r.status));
+    console.log(`  links: ${results.length} checked · ${dead.length} dead · ${blocked.length} bot-blocked (alive)`);
+    blocked.forEach((r) => console.log(`    ⚠ ${r.status} ${r.u}`));
+    dead.forEach((r) => problems.push(`dead link (${r.status || r.err}): ${r.u}`));
+  }
+
   console.log("");
   if (problems.length) {
     console.error(`✗ ACTION NEEDED — ${problems.length} problem(s):`);
     problems.forEach((p) => console.error(`   · ${p}`));
     process.exit(1);
   }
-  console.log("✓ healthy — both sides fresh, every weeknight covered, radius rules holding.");
+  console.log("✓ healthy — both sides fresh, every weeknight covered, radius rules holding, links alive.");
   process.exit(0);
 })();

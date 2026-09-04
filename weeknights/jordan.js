@@ -87,6 +87,7 @@ window.JORDAN_DATA = {
     },
 
     "GoodRec — Sara D. Roosevelt Park": {
+      "outdoor": true,
       "address": "Chrystie Street at Broome/Canal, Sara D. Roosevelt Park",
       "neighborhood": "Lower East Side / Chinatown",
       "lat": 40.7188, "lng": -73.9938,
@@ -109,6 +110,7 @@ window.JORDAN_DATA = {
       "hours": "Facility open Mon–Sat 8:00am–midnight · closed Sunday"
     },
     "GoodRec — Pier 40": {
+      "outdoor": true,
       "address": "Pier 40, 353 West Street (at West Houston), Hudson River Park",
       "neighborhood": "West Village / Hudson River Park",
       "lat": 40.7295, "lng": -74.0110,
@@ -120,6 +122,7 @@ window.JORDAN_DATA = {
       "hours": "Rooftop and courtyard fields, floodlit — evening games most nights"
     },
     "GoodRec — Chelsea Waterside": {
+      "outdoor": true,
       "address": "Chelsea Waterside Park, 23rd Street at 11th Avenue",
       "neighborhood": "Chelsea / Hudson River Park",
       "lat": 40.7482, "lng": -74.0075,
@@ -131,6 +134,7 @@ window.JORDAN_DATA = {
       "hours": "Floodlit turf — small-sided games run into the evening"
     },
     "TMIRCE — Alphabet City Beer Co.": {
+      "outdoor": true,
       "address": "96 Avenue C (at East 6th Street)",
       "neighborhood": "Alphabet City / East Village",
       "lat": 40.7237, "lng": -73.9779,
@@ -225,51 +229,139 @@ window.JORDAN_DATA = {
       "confidence": "high"
     },
     {
-      "title": "No-gi jiu jitsu & submission wrestling",
+      "title": "Jiu-Jitsu Fundamentals",
       "venue": "Paxibellum",
       "category": "grappling",
-      "discipline": "No-Gi BJJ / Wrestling",
-      "level": "Beginner to advanced",
-      "days": ["mon", "tue", "wed", "thu"],
-      "start": "19:00",
-      "end": "20:15",
-      "when": "Adult evening classes — confirm the slot on the Zen Planner schedule.",
-      "timeVerified": false,
+      "discipline": "No-Gi BJJ",
+      "level": "Beginner — the entry class",
+      "days": ["mon", "tue", "wed", "thu", "fri"],
+      "start": "18:30",
+      "end": "19:30",
+      "when": "Every weeknight: 6:30pm Mon/Tue/Wed/Fri, 5:30pm Thu. Verified on Paxibellum's live Zen Planner calendar.",
+      "timeVerified": true,
+      "match": ["Jiu-Jitsu - Fundamentals"],
       "cost": "First class always free",
       "url": "https://paxibellum.com/class-schedule/",
-      "notes": "Six minutes from Union Square and the best pick if the interest is specifically the modern MMA grappling game — no-gi, submission wrestling and muay thai rather than traditional gi jiu jitsu. \"Your first class is always free\" is stated plainly on the site, with students explicitly welcomed \"from beginners to advanced practitioners.\" No-gi is the friendlier entry point for adults who don't want to buy a gi to find out whether they like it: rash guard and shorts, that's the whole kit. Third floor of 4 W 18th.",
+      "notes": "The most reliable class on Jordan's whole list: Paxibellum runs Jiu-Jitsu Fundamentals every single weeknight, 6:30pm four nights out of five, six minutes from Union Square, first one free. Fundamentals means positions, escapes and the basic submissions drilled at a pace built for people who don't know them yet — no live rolling required. No-gi, so the whole kit is a rash guard and shorts. Third floor of 4 W 18th. If the goal is to actually build a habit rather than sample gyms, this is the slot to build it around.",
       "confidence": "high"
     },
     {
-      "title": "Muay Thai",
+      "title": "Jiu-Jitsu All Levels",
+      "venue": "Paxibellum",
+      "category": "grappling",
+      "discipline": "No-Gi BJJ",
+      "level": "All levels",
+      "days": ["mon", "wed"],
+      "start": "19:30",
+      "end": "20:30",
+      "when": "Mon and Wed 7:30pm, straight after Fundamentals. Verified on the live calendar.",
+      "timeVerified": true,
+      "match": ["Jiu-Jitsu - All Levels"],
+      "cost": "First class always free",
+      "url": "https://paxibellum.com/class-schedule/",
+      "notes": "The second hour on Monday and Wednesday: mixed belts, more technique depth, live rounds for anyone who wants them. Stack it on top of the 6:30 Fundamentals for a two-hour night, or come to this alone once the basics feel familiar. The 7:30 start is the latest grappling start anywhere within a ten-minute walk.",
+      "confidence": "high"
+    },
+    {
+      "title": "Fundamental Wrestling / Takedowns",
+      "venue": "Paxibellum",
+      "category": "grappling",
+      "discipline": "Wrestling",
+      "level": "Beginner",
+      "days": ["tue"],
+      "start": "17:30",
+      "end": "18:30",
+      "when": "Tuesdays 5:30pm (also a noon session). Verified on the live calendar.",
+      "timeVerified": true,
+      "match": ["Fundamental Wrestling/Takedowns"],
+      "cost": "First class always free",
+      "url": "https://paxibellum.com/class-schedule/",
+      "notes": "Standing grappling — how to take someone down and how not to be taken down — taught as a fundamentals class rather than a conditioning beasting, which is rarer than it should be. Tuesday only, and it runs into the 6:30 Fundamentals if you want to do both. The 5:30 start is the catch; it's the one Paxibellum class that needs an early finish at work.",
+      "confidence": "high"
+    },
+    {
+      "title": "Muay Thai Pads",
       "venue": "Paxibellum",
       "category": "striking",
       "discipline": "Muay Thai",
       "level": "All levels",
-      "days": ["tue", "wed", "thu"],
-      "start": "18:00",
-      "end": "19:00",
-      "when": "Evening striking slot — confirm on the schedule page.",
-      "timeVerified": false,
+      "days": ["mon", "wed", "fri"],
+      "start": "17:30",
+      "end": "18:30",
+      "when": "Mon, Wed and Fri at 5:30pm. Verified on the live calendar.",
+      "timeVerified": true,
+      "match": ["Muay Thai Pads"],
       "cost": "First class always free",
       "url": "https://paxibellum.com/class-schedule/",
-      "notes": "The striking half of the Paxibellum program, in the same room and on the same free-first-class terms. Useful as a second gym to compare against Anderson's muay thai — both are within a ten-minute walk, both let you try before paying, so there is no reason to commit to either sight unseen.",
+      "notes": "Pad work — holding for a partner and hitting for a partner — which is the part of muay thai that's pure conditioning and technique with none of the getting hit. Three nights a week at 5:30, so it fits before the 6:30 jiu-jitsu if the plan is a striking-then-grappling double. Free to try, same as everything else here.",
       "confidence": "high"
     },
     {
-      "title": "Gi & no-gi jiu jitsu, 7 days a week",
+      "title": "Thursday sparring night",
+      "venue": "Paxibellum",
+      "category": "mma",
+      "discipline": "BJJ sparring + MMA striking",
+      "level": "Not for a first visit",
+      "days": ["thu"],
+      "start": "18:30",
+      "end": "20:30",
+      "when": "Thu 6:30pm Jiu-Jitsu Sparring, then 7:30pm MMA Striking — Sparring Drills. Verified on the live calendar.",
+      "timeVerified": true,
+      "match": ["Jiu-Jitsu - Sparring", "MMA Striking - Sparring Drills"],
+      "cost": "Members / first class free applies to Fundamentals, not sparring",
+      "url": "https://paxibellum.com/class-schedule/",
+      "notes": "Thursday is the night Paxibellum turns into an actual fight gym: an hour of live jiu-jitsu rolling at 6:30, then MMA striking sparring drills at 7:30. This is where the week's technique gets tested against someone trying to stop you. Not a first-visit class — do a few Fundamentals sessions first — but it is the reason to train here rather than at a pure BJJ academy, and it's the only weeknight within a fifteen-minute walk that puts striking and grappling sparring back to back.",
+      "confidence": "high"
+    },
+    {
+      "title": "Friday open mat",
+      "venue": "Paxibellum",
+      "category": "grappling",
+      "discipline": "No-Gi BJJ",
+      "level": "All levels",
+      "days": ["fri"],
+      "start": "19:30",
+      "end": "20:30",
+      "when": "Fridays 7:30pm after the 6:30 Fundamentals. Verified on the live calendar.",
+      "timeVerified": true,
+      "match": ["Open Mat"],
+      "cost": "Members",
+      "url": "https://paxibellum.com/class-schedule/",
+      "notes": "No instruction, no structure — mats open, roll with whoever's there, leave when you're done. The friendliest hour of the week at any grappling gym, because nobody is being made to do anything. Friday 7:30pm, straight after Fundamentals. A good way to end the week that doesn't wreck Saturday with Rayray.",
+      "confidence": "high"
+    },
+    {
+      "title": "Foundations Class — Unity's beginner track",
       "venue": "Unity Jiu Jitsu",
       "category": "grappling",
       "discipline": "Brazilian Jiu Jitsu",
-      "level": "Fundamentals through competition",
+      "level": "Beginner — no experience needed",
       "days": ["mon", "tue", "wed", "thu", "fri"],
-      "start": "18:30",
-      "end": "20:00",
-      "when": "Verified: mats run to 10:00pm Mon/Fri and 10:30pm Tue–Thu. Reserve a drop-in on the online calendar.",
-      "timeVerified": false,
+      "start": "17:30",
+      "end": "18:30",
+      "when": "Every weekday at 5:30pm, mostly with head coach Murilo Santana. Verified on Unity's live Zen Planner calendar.",
+      "timeVerified": true,
+      "match": ["Foundations Class", "White Belt Class"],
       "cost": "First day FREE for NY/NJ/CT residents (includes an intro lesson) · then $40/day weekdays, $25 weekends, $100 for any 7 consecutive days",
       "url": "https://unityjiujitsu.com/schedule/",
-      "notes": "The serious one, and the one with the latest mats — Tuesday through Thursday they run until 10:30pm, which is the only real answer on this list to a night that starts at 8. Unity is a world-class competition academy (the Almeida/Miyao lineage), but the fundamentals program is separate and genuinely built for beginners. The first day is free for anyone in the tri-state area and includes a one-on-one introduction lesson if you've never trained. After that the drop-in economics are unusually honest: $40 a weekday, or $100 for seven consecutive days if you want to binge a week before deciding. Eleven-minute walk west along 14th — Stair Door A, basement level, between 6th and 7th.",
+      "notes": "Unity is a world-class competition academy (the Almeida/Miyao lineage), and the honest worry is that a beginner walks into a room of killers. Foundations is the answer: the dedicated beginner track, 5:30pm every weekday, taught more often than not by Murilo Santana himself — the head of the school, not a junior coach. That's the tell for a gym that takes new people seriously. First day is free for anyone in the tri-state area and includes a one-on-one intro lesson. Eleven minutes west along 14th — Stair Door A, basement, between 6th and 7th.",
+      "confidence": "high"
+    },
+    {
+      "title": "Gi & no-gi — the main evening class",
+      "venue": "Unity Jiu Jitsu",
+      "category": "grappling",
+      "discipline": "Brazilian Jiu Jitsu",
+      "level": "All levels",
+      "days": ["mon", "tue", "wed", "thu", "fri"],
+      "start": "18:45",
+      "end": "19:45",
+      "when": "6:45pm every weekday (gi or no-gi by night), plus a 9:00pm late class Mon–Thu. Verified on the live calendar.",
+      "timeVerified": true,
+      "match": ["Class", "No Gi Class", "Gi/No Gi Class"],
+      "cost": "First day free (tri-state) · $40 weekday drop-in · $100 for 7 consecutive days",
+      "url": "https://unityjiujitsu.com/schedule/",
+      "notes": "The main adult class of the night at the most serious academy within walking distance — 6:45pm every weekday, alternating gi and no-gi, with a 9:00pm class Monday through Thursday that is the latest jiu-jitsu start anywhere near Union Square. Technique, drilling, then rolling. Do a few Foundations sessions first; then this is where the real training happens. The $100-for-seven-consecutive-days drop-in is the smartest way to trial it: a full week of everything before deciding on a membership.",
       "confidence": "high"
     },
     {
@@ -281,8 +373,9 @@ window.JORDAN_DATA = {
       "days": ["mon", "tue", "wed", "thu"],
       "start": "19:00",
       "end": "20:00",
-      "when": "Wrestling sits alongside the gi and no-gi program — confirm the night on the online calendar.",
+      "when": "All Levels Wrestling runs on the weekly grid — check the live calendar for the night.",
       "timeVerified": false,
+      "match": ["All Levels Wrestling"],
       "cost": "First day free (tri-state) · $40 weekday drop-in",
       "url": "https://unityjiujitsu.com/schedule/",
       "notes": "Straight folkstyle/freestyle wrestling as a standalone class, which is rarer in Manhattan than it should be and is the fastest way to stop being the person who gets taken down at will. Hardest conditioning session on this list by a distance — expect to be genuinely gassed. Best scheduled on a night with nothing after it.",
@@ -416,9 +509,9 @@ window.JORDAN_DATA = {
     "tue": {
       "summary": "Tuesday: Unity's mats run to 10:30pm — the latest grappling anywhere nearby, so a late finish isn't a dealbreaker.",
       "picks": [
-        { "key": "gi-no-gi-jiu-jitsu-7-days-a-week", "note": "First day free for tri-state residents, intro lesson included." },
+        { "key": "gi-no-gi-the-main-evening-class", "note": "First day free for tri-state residents, intro lesson included." },
         { "key": "pickup-soccer-at-sara-d-roosevelt-park", "note": "Closest field — 6 train to Canal, five minutes' walk." },
-        { "key": "no-gi-jiu-jitsu-submission-wrestling", "note": "Rash guard and shorts, no gi to buy. First class free." },
+        { "key": "fundamental-wrestling-takedowns", "note": "5:30pm — standing grappling taught as fundamentals. Free to try." },
         { "key": "jeet-kune-do-filipino-martial-arts", "note": "The most interesting hour within a 5-minute walk." }
       ]
     },
@@ -428,7 +521,7 @@ window.JORDAN_DATA = {
         { "key": "muay-thai-boxing-bjj-adult-program", "note": "The second and last Gramercy weeknight. Spend the free trial week here." },
         { "key": "adults-bjj", "note": "Technique, drilling, then optional rolling. Small groups." },
         { "key": "pickup-soccer-at-pier-40", "note": "Floodlit roof over the Hudson. Worth it on a clear evening." },
-        { "key": "muay-thai", "note": "Paxibellum's striking hour — free to try, six minutes away." }
+        { "key": "jiu-jitsu-all-levels", "note": "7:30pm — stack it on the 6:30 Fundamentals for a two-hour night." }
       ]
     },
     "thu": {
@@ -436,8 +529,8 @@ window.JORDAN_DATA = {
       "picks": [
         { "key": "tempo-thursdays-with-tmirce", "note": "Free, 7pm, any pace. Starts and ends at a beer hall." },
         { "key": "wrestling", "note": "Hardest conditioning on the list. Put nothing after it." },
-        { "key": "gi-no-gi-jiu-jitsu-7-days-a-week", "note": "Mats to 10:30pm — the latest option anywhere nearby." },
-        { "key": "pickup-soccer-at-chelsea-waterside", "note": "M23 crosstown drops you at the door. Good when downtown's full." }
+        { "key": "gi-no-gi-the-main-evening-class", "note": "Mats to 10:30pm — the latest option anywhere nearby." },
+        { "key": "thursday-sparring-night", "note": "6:30 jiu-jitsu rolling, 7:30 MMA striking drills. Not a first visit." }
       ]
     },
     "fri": {
@@ -445,7 +538,7 @@ window.JORDAN_DATA = {
       "picks": [
         { "key": "boxing-underground", "note": "Hit a bag, talk to no one, walk home down Bleecker." },
         { "key": "indoor-4v4-futsal-at-the-ground", "note": "Open till midnight Fridays. Play late, no consequences." },
-        { "key": "adults-bjj", "note": "Friday rolls are usually the friendliest of the week." },
+        { "key": "friday-open-mat", "note": "7:30pm, no instruction, roll with whoever's there." },
         { "key": "muay-thai-all-levels", "note": "Anderson's is open till 9pm Fridays — two minutes away." }
       ]
     }

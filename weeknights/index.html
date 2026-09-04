@@ -46,6 +46,7 @@
       <button class="base" id="copy-plan" hidden>🔗 Copy link</button>
       <button class="base" id="verified-chip" aria-pressed="false">✅ Pinned times only</button>
       <button class="base" id="martial-chip" aria-pressed="false" hidden>🥋 Martial arts only</button>
+      <button class="base" id="past-chip" aria-pressed="false" hidden>🕰️ Show what's already started</button>
     </div>
 
     <div class="travel-row">
@@ -59,6 +60,11 @@
     <section class="itin" id="itin" hidden aria-label="Tonight's plan"></section>
 
     <section class="teachers" id="teachers" hidden aria-label="Who teaches"></section>
+
+    <section class="wx-strip" id="wx-strip" hidden aria-label="Evening weather">
+      <div class="wx-label" id="wx-label"></div>
+      <div class="wx-hours" id="wx-hours"></div>
+    </section>
 
     <section class="map-shell" id="map-shell">
       <div class="map-split">
@@ -85,6 +91,8 @@
   <script src="vendor/leaflet/leaflet.js"></script>
   <script src="athena.js"></script>
   <script src="jordan.js"></script>
+  <!-- generated weekly by fetch-schedules.cjs; the page works without it -->
+  <script src="slots.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

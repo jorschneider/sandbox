@@ -1,7 +1,7 @@
 # Jordan & Athena Weeknights — weekly update contract
 
 The site lives in `weeknights/` and is deployed to Vercel. It answers one
-question on a weeknight: **what can each of them actually walk to and book
+question on a weeknight: **what can each of them actually get to and book
 tonight?**
 
 Two sides, same machinery:
@@ -10,190 +10,200 @@ Two sides, same machinery:
 | --- | --- | --- | --- |
 | `athena.js` | `window.ATHENA_DATA` | Athena | yoga, ballet, dance, pilates, barre |
 | `jordan.js` | `window.JORDAN_DATA` | Jordan | grappling, striking, mma, soccer, run |
+| `slots.js` | `window.SLOTS` | both | **generated** — live class slots from the booking platforms |
 
 `app.js` renders whichever side the hash selects (`#mode=jordan`, default
 Athena). `index.html` and `styles.css` are shared.
 
 ---
 
-## The two radius rules
+## Two files own the truth, and they are different kinds of truth
 
-Both are enforced by `validate.cjs`, and neither is a soft preference — they
-are what makes the site usable on a Tuesday at 6:40pm.
+**The curated files (`athena.js`, `jordan.js`) are written by hand.** They hold
+the venues, the notes, the itineraries, the teacher roster, the radius rules.
+They change when a human decides something.
 
-**1. Martial arts stay inside a 15-minute WALK.** Any entry with category
-`grappling`, `striking` or `mma` must sit at a venue with `walkMinutes <= 15`.
-This was the original ask and it does not bend. The header comment in
-`jordan.js` names the gyms that keep getting suggested and keep failing the
-test — Renzo Gracie (W 30th), Five Points (148 Lafayette), Radical MMA
-(W 29th), 10th Planet (W 43rd) — so nobody re-adds them.
+**`slots.js` is generated.** `fetch-schedules.cjs` pulls the real weekly class
+schedule from the studios' own booking platforms and writes it there. Never
+hand-edit it. It is the reason the site is more than a directory.
 
-**2. Everything else gets 25 minutes door-to-door.** Soccer and running may be
-up to `travelMinutes <= 25`. Manhattan has no soccer field inside a 15-minute
-walk of Union Square, so a strict cap there would simply mean no soccer.
-Athena's side is entirely walkable and stays under 15.
+```sh
+node weeknights/fetch-schedules.cjs                 # week of the most recent Monday
+node weeknights/fetch-schedules.cjs --monday 2026-09-07
+node weeknights/fetch-schedules.cjs --dry           # print, don't write
+```
 
-Venues reached better by train or bus than on foot carry:
+Sources it reads, all public and unauthenticated:
 
-- `walkMinutes` — the honest walk, however long
-- `travelMinutes` — the best realistic door-to-door time (what the slider uses)
-- `travelHow` — the actual route, e.g. `"16 min — 6 train from Union Sq to
-  Canal St, then a 5-minute walk"`
+| venue | platform | how |
+| --- | --- | --- |
+| ISHTA Yoga | Momence, host 45870 | the same `readonly-api.momence.com` endpoint the studio's embedded widget calls — full sessions with teacher, price, spots and a per-class booking link |
+| Paxibellum | Zen Planner | public `calendar.cfm` month grid |
+| Unity Jiu Jitsu | Zen Planner | public `calendar.cfm` week list, with teachers |
 
-`travelMinutes` must be faster than `walkMinutes`, or drop it. If a genuinely
-exceptional venue sits past its cap, ask Jordan. Do not quietly relax either
-rule.
+Zen Planner shows start times only, so those slots get a 60-minute end. When a
+calendar doesn't show every date of the target week (a month grid starting on a
+Tuesday, say), the fetcher fills the gap from the weekly pattern and marks those
+rows `pattern:true` — these gyms run identical grids week to week.
+
+**Not yet fetched:** Peridance, Power Pilates and Gibney use MindBody, which
+blocks non-browser readers (403 on the classic schedule, and the public search
+API ignores location filters). Their entries keep curated times and a 🔍.
+Anderson's runs a bot challenge. Mushin's Squarespace page has no static
+schedule. GoodRec publishes game times only inside its app. If one of these
+opens a readable feed, add it to `SOURCES` in the fetcher.
 
 ---
 
-## What to change each week
+## How a curated entry opts into live times: `match`
 
-Refresh **both** files for the current Mon–Fri:
+An event carries `match: ["Exact Class Name", ...]` — the class names as they
+appear on the booking platform, matched case-insensitively and **exactly**.
+At render time the app finds slots at that event's venue with a matching name
+and, when it finds any:
 
-1. `weekMonday` → the most recent Monday **on or before today**. Run `date`
-   first. Never skip ahead to next Monday.
-2. `weekLabel` → e.g. `"Sep 7–11, 2026"`.
-3. `updated` → today's date, long form.
-4. `events[]` → re-verify times, prices and links; convert `timeVerified:false`
-   entries into pinned times wherever the booking page will tell you.
-5. `itineraries` → one entry per weeknight, 2–4 picks each, refreshed so the
-   picks match what is actually on the schedule that week.
+- `days`, per-night `start`/`end`, and the teacher come from the slots
+- the card is marked verified (no 🔍), links straight to the class's booking
+  page, and shows spots left when the platform reports it
+- the nights line shows each night's real start ("Mon 6:15pm · Wed 6:15pm ·
+  Thu 4:30pm")
 
-The `venues` map changes rarely. Addresses, coordinates and walk times are
-stable; only touch them if a studio moves, closes, or changes hours.
+Without slots the entry falls back to its curated `days`/`start`/`end`, so the
+page always works. `validate.cjs` **fails** if a `match` hits nothing in
+`slots.js` — that means the studio renamed or dropped the class, and the
+curated entry needs a human look. Class-name drift is the main thing the weekly
+run should catch.
+
+ISHTA's seven weeknight-evening formats in `athena.js` are the real ones on its
+Momence schedule, verified across three consecutive weeks. Earlier guesses
+(ISHTA Basics, Vinyasa/Power, Community) don't run on weeknight evenings.
+
+---
+
+## The radius rules
+
+Both enforced by `validate.cjs`. Neither is a soft preference.
+
+**1. Martial arts stay inside a 15-minute WALK.** Any entry with category
+`grappling`, `striking` or `mma` must sit at a venue with `walkMinutes <= 15`.
+The original ask; it does not bend. The header comment in `jordan.js` names the
+gyms that keep getting suggested and keep failing — Renzo Gracie, Five Points,
+Radical MMA, 10th Planet — so nobody re-adds them.
+
+**2. Door-to-door caps by side: Athena 20 minutes, Jordan 25.** Manhattan has no
+soccer field inside a 15-minute walk of Union Square; Athena's cap was widened
+to reach a reformer studio and Broadway Dance Center. Venues reached by train
+carry `walkMinutes` (the honest walk), `travelMinutes` (best door-to-door, what
+the slider uses) and `travelHow` (the actual route). `travelMinutes` must beat
+`walkMinutes` or drop it. If a genuinely exceptional venue sits past its cap,
+ask Jordan. Do not quietly relax either rule.
 
 ---
 
 ## ISHTA leads Athena's page
 
-`athena.js` carries `"favoriteVenue": "ISHTA Yoga"`. ISHTA is Athena's
-favourite, so its classes sort above everything else — in the main list, in the
-map numbering that follows it, and in each night's plan — before the usual
-by-start-time order. Favourite cards get a ★ and an accent edge so the ordering
-reads as deliberate rather than a bug.
+`athena.js` carries `"favoriteVenue": "ISHTA Yoga"`. Its classes sort above
+everything else — list, map numbering, and each night's plan — before the usual
+by-start-time order. Favourite cards get a ★. **Do not drop or change this
+field**; `validate.cjs` fails the build if it isn't `ISHTA Yoga`. Give ISHTA
+the most research effort of any venue on her side.
 
-**Do not drop or change this field.** `validate.cjs` fails the build if
-`athena.js` has anything other than `ISHTA Yoga` there, because losing it would
-silently reshuffle her whole page. Adding or removing ISHTA classes is fine;
-the field itself stays.
+---
 
-## `timeVerified` is the honesty flag
+## Cut — do not re-add
 
-Most studios near Union Square publish their timetable through a JavaScript
-booking widget (Momence for ISHTA, MindBody for Peridance, Zen Planner for
-Paxibellum, WellnessLiving for Anderson's). Those widgets are not readable from
-a plain fetch.
+Jordan is **not interested in ping pong or chess**. SPIN Flatiron and the
+Marshall Chess Club were both on the site and were removed at his request.
+They pass the radius test, which is exactly why a future pass will be tempted.
+`validate.cjs` rejects the `pingpong` and `chess` categories outright.
 
-So each class carries `timeVerified`:
+---
 
-- `true` — the exact recurring slot is confirmed on an official page. The card
-  shows the time plainly.
-- `false` — venue, discipline, price and booking link are confirmed, but the
-  slot rotates. The card shows a 🔍 and links straight to booking.
+## Tonight is real
 
-**Never set `timeVerified: true` on a time you did not read on an official
-page.** A wrong pinned time is worse than an honest 🔍 — it sends someone
-across town for a class that isn't running.
+On today's tab the app hides sessions whose start time has passed (a chip
+reveals them, greyed), shows a countdown on upcoming ones, and marks a session
+"on now" between its start and end. Nothing to maintain here — it runs off the
+device clock and the slot times — but it is why pinned times matter: a wrong
+time now actively misleads.
 
-Turning 🔍 entries into pinned times is the main week-to-week value this
-routine adds. `health.cjs` fails if a side has zero pinned times.
+Outdoor venues carry `"outdoor": true` (the four GoodRec fields, the run club).
+The app pulls an hour-by-hour forecast from Open-Meteo (keyless) and, when the
+evening looks wet, flags those cards and shows the strip. Indoor venues never
+show it.
 
 ---
 
 ## Research rules
 
 - Verify on the **venue's own page** first. Yelp and ClassPass are useful for
-  finding a place and cross-checking hours; they are not sources for class
-  times.
-- Confirm the venue is **still open**. Jivamukti's Union Square studio at 841
-  Broadway is closed — it was excluded for that reason, and that kind of check
-  is part of the weekly pass.
+  finding a place and cross-checking hours; they are not sources for times.
+- Confirm the venue is **still open**. Jivamukti's Union Square studio (841
+  Broadway), Yoga Vida Union Square (99 University Pl) and Sky Ting Tribeca are
+  all closed — each was excluded for that reason.
 - Prices change. Re-read the pricing page rather than carrying `cost` forward.
 - Intro offers are the most valuable thing on the site for Jordan (four of six
-  gyms offer a free first class). Re-confirm they still stand.
-- `notes` should tell them something they could not get from the studio's own
-  marketing: what the room is actually like, who it suits, what to wear, the
-  practical catch. Thin notes trigger a validator warning.
+  gyms offer a free first class; Unity's is free for tri-state residents).
+- `notes` should tell them something the studio's own marketing wouldn't.
+- **ISHTA teacher roster:** `athena.js` has a `teachers` block. Re-read
+  `ishtayoga.com/our-instructors` weekly and reconcile it with who the live
+  slots say is actually teaching evenings. Keep the honest note that ISHTA's
+  lineage page places Alan Finger and Sarah Platt-Finger in Florida while Mona
+  Anand is the Yogiraj in New York — and per the live schedule teaches Tuesday
+  5pm herself.
 
 ### Standing sources
 
-**Athena** — ISHTA Yoga (`ishtayoga.com/schedule`, Momence),
-Peridance (`peridance.com/open-classes`, MindBody),
-Gibney (`gibneydance.org/class-schedule/`),
-Pure Barre Union Square, Om Factory.
+**Athena** — ISHTA (fetched), Peridance (`peridance.com/open-classes`, MindBody),
+Gibney (`gibneydance.org/class-schedule/`), Pure Barre Union Square, Om Factory,
+Power Pilates Flatiron (`powerpilates.com/flatiron/`), Broadway Dance Center
+(`broadwaydancecenter.com/schedule` — blocks bots; pricing unverified).
 
-**Jordan, martial arts** — Anderson's Martial Arts (`andersonsmartialarts.com/schedule/`),
-Mushin MMA (`mushinmma.org/schedule`), Paxibellum (`paxibellum.com/class-schedule/`,
-Zen Planner), Unity Jiu Jitsu (`unityjiujitsu.com/schedule/`),
-Training Zone NYC Gramercy (Mon & Wed only — the Manhattan location is closed
-Tue/Thu/Fri/Sun, which is why it appears on just two nights),
-Overthrow Boxing.
-
-**Jordan, everything else** — GoodRec (`goodrec.com/pickup-soccer/new-york-city`):
-individual game times are published only in the GoodRec app, so soccer entries
-stay `timeVerified:false` by design; verify the *facility* is still hosting
-games. TMIRCE (`meetup.com/nyc-informal-running-club-home-of-tmirce-nyc/`) —
-confirm Tempo Thursdays still leaves 96 Avenue C at 7pm.
-
-### Cut — do not re-add
-
-Jordan is **not interested in ping pong or chess**. SPIN Flatiron and the
-Marshall Chess Club were both on the site and were removed at his request.
-They are good venues and they pass the radius test, which is exactly why they
-would tempt a future pass — leave them off. `validate.cjs` no longer accepts
-the `pingpong` or `chess` categories, so re-adding them fails the build.
+**Jordan** — Paxibellum and Unity (fetched); Anderson's Martial Arts, Mushin
+MMA, Training Zone Gramercy (Mon & Wed only — Manhattan location is closed
+Tue/Thu/Fri/Sun), Overthrow Boxing; GoodRec (`goodrec.com/pickup-soccer/new-york-city`,
+game times only in the app — verify the facility still hosts games); TMIRCE
+(confirm Tempo Thursdays still leaves 96 Avenue C at 7pm).
 
 ### Watch list (excluded for now, re-check each week)
 
-- **CityPickle Union Square** — two pickleball courts on the North Plaza at E
-  17th St, $5 open play, i.e. sixty seconds from the front door. Currently
-  **closed for the season** with a 2026 reopening TBD. The moment it reopens it
-  is the single best-located entry on the entire site — add it.
-- **East River Park** — soccer fields and track are mid-reconstruction under
-  the East Side Coastal Resiliency project (the stretch south of Stanton St is
-  closed; completion slated for 2026). Deliberately excluded so nobody is sent
-  to a fenced-off field. Re-check before adding.
-- **Climbing** — there is no bouldering gym within 25 minutes of Union Square.
-  The nearest options (Steep Rock on Lexington at 97th, Chelsea Piers, Movement
-  Harlem) all fail the radius. Don't add one to be thorough.
+- **CityPickle Union Square** — $5 pickleball on the North Plaza at E 17th St,
+  sixty seconds from the door. Closed for the season, 2026 reopening TBD. The
+  moment it reopens it is the best-located entry on the site — add it.
+- **East River Park** — fields mid-reconstruction (East Side Coastal
+  Resiliency; the stretch south of Stanton St is closed). Excluded so nobody
+  is sent to a fence.
+- **Climbing** — nothing within 25 minutes. Don't add one to be thorough.
 
 ---
 
 ## Itineraries
 
-One per weeknight, in both files. Each has:
-
-- `summary` — one or two sentences on what makes that night different. Say the
-  real constraint ("Om Factory runs to 10:30pm", "the only two nights Training
-  Zone's Manhattan location is open"), not filler.
-- `picks` — 2 to 4 options, each `{ key, note }`. `key` is the slug of a class
-  title; the class must actually run that night or validation fails. The `note`
-  is why you'd pick this one tonight.
-
-Slugs: lowercase the title, replace runs of non-alphanumerics with `-`, trim,
-truncate to 48 chars.
+One per weeknight, in both files: `summary` (the real constraint for that
+night, not filler) and 2–4 `picks` of `{ key, note }`. `key` is a class slug —
+lowercase the title, runs of non-alphanumerics to `-`, trim, 48 chars — and the
+class must actually run that night or validation fails.
 
 ---
 
 ## Verify before deploying
 
 ```sh
-node weeknights/validate.cjs   # schema + the 15-minute rule. Must pass.
-node weeknights/health.cjs     # freshness + coverage. Must exit 0.
-python3 -m http.server 8000    # then open http://localhost:8000/weeknights/
+node weeknights/fetch-schedules.cjs   # refresh slots.js for this Monday
+node weeknights/validate.cjs          # schema, radius rules, match hits. Must pass.
+node weeknights/health.cjs            # freshness, coverage, slots, links. Exit 0.
+python3 -m http.server 8000           # then open http://localhost:8000/weeknights/
 ```
 
-`validate.cjs` checks: both sides on the same week, venues resolve, evening
-start times (16:00+), Mon–Fri only, unique slugs, itineraries resolve to
-sessions that run that night, and both radius rules.
+`health.cjs` checks: the data week and `slots.js` are both current, every
+weeknight has 2+ options per person, tonight isn't empty, both radius rules
+hold, each fetcher source produced slots, and **every booking URL is alive**
+(404/410/5xx/DNS fail the run; 403/405/429 mean bot-blocked-but-alive and only
+warn — ClassPass, Pure Barre, BDC and Sky Ting all do this). Pass `--no-links`
+to skip the link pass, `--live` to check the deployed site.
 
-`health.cjs` checks: the week is current, every weeknight has 2+ options per
-person, tonight specifically is not empty, both radius rules hold, and at least
-one entry per side has a pinned time. Exit 1 = act, exit 2 = could not check.
-
-Map tiles come from `tile.openstreetmap.org`, which needs no API key. Do not
-switch to CARTO's basemaps — they now require a key and render "api key
-required" across the whole map without one.
+Map tiles come from `tile.openstreetmap.org` — keyless. Do not switch to
+CARTO's basemaps; they now require a key and render "api key required".
 
 ---
 
@@ -206,21 +216,39 @@ git add weeknights && git commit && git push -u origin claude/ray-ray-evening-ac
 cd weeknights && npx -y vercel deploy --prod --yes --token "$VERCEL_TOKEN"
 ```
 
-Then re-run `node weeknights/health.cjs --live` (set `WEEKNIGHTS_URL` if the
-production domain differs). A run is not finished until the live check exits 0
-— "I made changes" is not success.
+Then `node weeknights/health.cjs --live` until it exits 0.
+
+---
+
+## The Monday email
+
+After a clean deploy, send **one** email to both of them —
+`athena.caoyue@gmail.com` and `jordan@chinatalk.media` — via Gmail:
+
+- Subject: `Weeknights — week of <Mon date>` (e.g. `Weeknights — week of Sep 7`)
+- Two short sections, **Athena** then **Jordan**. For each night Mon–Fri, one
+  line: the top pick with its real time and teacher where known, and the
+  booking link. ISHTA leads Athena's every night it runs.
+- One line at the top if anything changed (a class dropped, a teacher moved, a
+  venue closed, CityPickle reopened). Otherwise skip it.
+- End with the site link. Plain, short, no marketing voice. It should read like
+  a text from a friend who checked the schedules.
 
 ---
 
 ## Weekly routine (Monday)
 
 1. `date` → compute this Monday. Anchor everything to it.
-2. `node weeknights/health.cjs --live` → this tells you what is broken.
-3. Re-verify every venue's evening schedule on its official page. Pin what you
-   can; leave honest 🔍 on what you cannot.
-4. Rebuild the five itineraries per side against what is actually running.
-5. `node weeknights/validate.cjs` → must pass.
-6. Commit, push, deploy, re-run `health.cjs --live` until it exits 0.
-7. Message Jordan **only** if you could not get it green, or if something
-   genuinely notable changed (a gym closed, a studio dropped its beginner
-   class). A clean refresh needs no announcement.
+2. `node weeknights/health.cjs --live` → what is broken.
+3. `node weeknights/fetch-schedules.cjs` → refresh slots.js. Read its output:
+   every source should report slots; a source with 0 broke and needs a look.
+4. `node weeknights/validate.cjs` → a `match` that hits nothing means a class
+   was renamed or dropped; fix the curated entry, don't silence the check.
+5. Re-verify the non-fetched venues on their official pages. Reconcile the
+   ISHTA teacher roster with who the slots say is teaching.
+6. Rebuild the ten itineraries against what is actually running.
+7. Bump `weekMonday`, `weekLabel`, `updated` in both files.
+8. Validate, commit, push, deploy, `health.cjs --live` until green.
+9. Send the Monday email.
+10. Message Jordan **only** if you could not get it green or something notable
+    changed. A clean refresh needs no announcement beyond the email.
