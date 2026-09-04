@@ -15,6 +15,11 @@ window.ATHENA_DATA = {
   "updated": "September 4, 2026",
   "who": "Athena",
 
+  /* ISHTA is Athena's favourite, so its classes sort to the top of every list
+     and every night's plan, ahead of the usual by-start-time order. Keep this
+     field — do not drop it in a weekly refresh. */
+  "favoriteVenue": "ISHTA Yoga",
+
   "venues": {
     "ISHTA Yoga": {
       "address": "816 Broadway (mezzanine), between 11th & 12th St",

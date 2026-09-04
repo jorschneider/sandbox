@@ -64,6 +64,19 @@ stable; only touch them if a studio moves, closes, or changes hours.
 
 ---
 
+## ISHTA leads Athena's page
+
+`athena.js` carries `"favoriteVenue": "ISHTA Yoga"`. ISHTA is Athena's
+favourite, so its classes sort above everything else — in the main list, in the
+map numbering that follows it, and in each night's plan — before the usual
+by-start-time order. Favourite cards get a ★ and an accent edge so the ordering
+reads as deliberate rather than a bug.
+
+**Do not drop or change this field.** `validate.cjs` fails the build if
+`athena.js` has anything other than `ISHTA Yoga` there, because losing it would
+silently reshuffle her whole page. Adding or removing ISHTA classes is fine;
+the field itself stays.
+
 ## `timeVerified` is the honesty flag
 
 Most studios near Union Square publish their timetable through a JavaScript

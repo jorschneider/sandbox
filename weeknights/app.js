@@ -64,6 +64,10 @@
   const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri" };
   const DAY_FULL = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday" };
 
+  // a side may name one favourite venue; its sessions sort above everything else
+  const FAV_VENUE = data.favoriteVenue || null;
+  const isFav = (e) => Boolean(FAV_VENUE) && e.venue === FAV_VENUE;
+
   const keyOf = (e) => e.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
   const venueOf = (e) => (data.venues && data.venues[e.venue]) || {};
   const walkOf = (e) => venueOf(e).walkMinutes || 25;
@@ -265,14 +269,16 @@
     const c = CATS[e.category] || { label: e.category, emoji: "📍" };
     const k = keyOf(e);
     const nights = e.days.map((d) => DAY_LABELS[d]).join(" · ");
-    return '<article class="card" data-key="' + k + '" data-num="' + num + '" tabindex="0">' +
+    return '<article class="card' + (isFav(e) ? " card-fav" : "") + '" data-key="' + k +
+      '" data-num="' + num + '" tabindex="0">' +
       '<div class="card-head">' +
         '<span class="num">' + num + "</span>" +
         '<h3>' + esc(e.title) + (e.timeVerified ? "" : ' <span class="unpinned" title="Exact slot rotates weekly — confirm on the booking page">🔍</span>') + "</h3>" +
         '<button class="heart" data-key="' + k + '" aria-pressed="' + hearts.has(k) + '" aria-label="Add to shortlist">' +
           (hearts.has(k) ? "❤️" : "🤍") + "</button>" +
       "</div>" +
-      '<p class="venue">' + esc(e.venue) + " · " + esc(v.neighborhood || "") + "</p>" +
+      '<p class="venue">' + (isFav(e) ? '<span class="fav-star" title="Athena\'s favourite">★</span> ' : "") +
+        esc(e.venue) + " · " + esc(v.neighborhood || "") + "</p>" +
       '<p class="chips">' +
         '<span class="chip cat">' + c.emoji + " " + esc(e.discipline || c.label) + "</span>" +
         '<span class="chip walk" title="' + esc(travelHowOf(e)) + '">' +
@@ -307,7 +313,12 @@
     if (!it) { itinEl.hidden = true; return; }
     let html = '<h2>' + DAY_FULL[state.day] + (state.day === todayKey ? " — tonight" : "") + "</h2>" +
       '<p class="itin-sum">' + esc(it.summary) + "</p><div class=\"itin-picks\">";
-    it.picks.forEach((p) => {
+    // favourite venue leads the night's plan too, without disturbing the rest
+    const picks = it.picks.slice().sort((a, b) => {
+      const ea = byKey[a.key], eb = byKey[b.key];
+      return (ea && isFav(ea) ? 0 : 1) - (eb && isFav(eb) ? 0 : 1);
+    });
+    picks.forEach((p) => {
       const e = byKey[p.key];
       if (!e) return;
       html += '<button class="itin-opt" data-key="' + p.key + '">' +
@@ -371,7 +382,10 @@
       if (state.verifiedOnly && !e.timeVerified) return false;
       if (state.martialOnly && MARTIAL_CATS.indexOf(e.category) === -1) return false;
       return true;
-    }).sort((a, b) => (a.start || "").localeCompare(b.start || "") || travelOf(a) - travelOf(b));
+    }).sort((a, b) =>
+      (isFav(b) ? 1 : 0) - (isFav(a) ? 1 : 0) ||
+      (a.start || "").localeCompare(b.start || "") ||
+      travelOf(a) - travelOf(b));
 
     markerLayer.clearLayers();
     markers = {};
