@@ -5,12 +5,17 @@
 const fs = require("fs");
 const path = require("path");
 
-const CATS = ["yoga", "ballet", "dance", "pilates", "barre", "grappling", "striking", "mma"];
 const ATHENA_CATS = ["yoga", "ballet", "dance", "pilates", "barre"];
-const JORDAN_CATS = ["grappling", "striking", "mma"];
+const JORDAN_CATS = ["grappling", "striking", "mma", "soccer", "chess", "pingpong", "run"];
+// Martial arts keep the original hard rule: a 15-minute WALK, no exceptions.
+const MARTIAL_CATS = ["grappling", "striking", "mma"];
 const DAYS = ["mon", "tue", "wed", "thu", "fri"];
 const HM = /^([01]\d|2[0-3]):[0-5]\d$/;
-const MAX_WALK = 15; // the whole premise of the site — nothing further out belongs here
+const MAX_WALK = 15;   // martial arts, and everything on Athena's side
+const MAX_TRAVEL = 25; // everything else, door-to-door by whatever route
+
+// what the slider actually filters on: the best realistic door-to-door time
+const travelOf = (v) => (typeof v.travelMinutes === "number" ? v.travelMinutes : v.walkMinutes);
 
 const keyOf = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
 const toMin = (hm) => parseInt(hm.slice(0, 2), 10) * 60 + parseInt(hm.slice(3), 10);
@@ -52,9 +57,18 @@ function validateSide(data, label, allowedCats) {
     if (typeof v.lat !== "number" || v.lat < 40.6 || v.lat > 40.85) err(tag + "lat out of NYC bounds: " + v.lat);
     if (typeof v.lng !== "number" || v.lng < -74.1 || v.lng > -73.9) err(tag + "lng out of NYC bounds: " + v.lng);
     if (typeof v.walkMinutes !== "number" || v.walkMinutes < 1) err(tag + "bad walkMinutes " + v.walkMinutes);
-    else if (v.walkMinutes > MAX_WALK) {
-      err(tag + "walkMinutes " + v.walkMinutes + " exceeds the " + MAX_WALK +
-        "-minute rule — this venue does not belong on the site");
+    if (v.travelMinutes != null) {
+      if (typeof v.travelMinutes !== "number" || v.travelMinutes < 1) err(tag + "bad travelMinutes " + v.travelMinutes);
+      else if (v.travelMinutes > v.walkMinutes) {
+        err(tag + "travelMinutes " + v.travelMinutes + " is slower than just walking (" + v.walkMinutes + ") — drop it");
+      }
+      if (!v.travelHow || typeof v.travelHow !== "string") {
+        err(tag + "has travelMinutes but no travelHow — say which train or bus");
+      }
+    }
+    if (travelOf(v) > MAX_TRAVEL) {
+      err(tag + "is " + travelOf(v) + " min door-to-door, past the " + MAX_TRAVEL +
+        "-minute cap — this venue does not belong on the site");
     }
   });
 
@@ -71,6 +85,10 @@ function validateSide(data, label, allowedCats) {
     });
     if (allowedCats.indexOf(e.category) === -1) err(tag + "category '" + e.category + "' not one of " + allowedCats.join("/"));
     if (!venues[e.venue]) err(tag + "venue '" + e.venue + "' is not in the venues map");
+    else if (MARTIAL_CATS.indexOf(e.category) !== -1 && venues[e.venue].walkMinutes > MAX_WALK) {
+      err(tag + "martial arts at a venue " + venues[e.venue].walkMinutes + " min away on foot — " +
+        "the " + MAX_WALK + "-minute WALK rule holds for grappling/striking/mma, no exceptions");
+    }
     if (!/^https?:\/\//.test(e.url || "")) err(tag + "bad url " + e.url);
     if (["high", "medium", "low"].indexOf(e.confidence) === -1) err(tag + "bad confidence " + e.confidence);
     if (typeof e.timeVerified !== "boolean") err(tag + "timeVerified must be boolean");

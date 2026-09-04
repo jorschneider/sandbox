@@ -9,26 +9,40 @@ Two sides, same machinery:
 | file | global | who | disciplines |
 | --- | --- | --- | --- |
 | `athena.js` | `window.ATHENA_DATA` | Athena | yoga, ballet, dance, pilates, barre |
-| `jordan.js` | `window.JORDAN_DATA` | Jordan | grappling, striking, mma |
+| `jordan.js` | `window.JORDAN_DATA` | Jordan | grappling, striking, mma, soccer, chess, pingpong, run |
 
 `app.js` renders whichever side the hash selects (`#mode=jordan`, default
 Athena). `index.html` and `styles.css` are shared.
 
 ---
 
-## The one rule that is never bent
+## The two radius rules
 
-**Everything on this site is inside a 15-minute walk of Union Square.**
+Both are enforced by `validate.cjs`, and neither is a soft preference — they
+are what makes the site usable on a Tuesday at 6:40pm.
 
-`validate.cjs` fails the build if any venue has `walkMinutes > 15`. This is not
-a soft preference — it is the entire premise, and it is what makes the site
-usable on a Tuesday at 6:40pm. Gyms and studios that are excellent but too far
-are deliberately absent, and the header comment in `jordan.js` names the ones
-that keep getting suggested (Renzo Gracie on W 30th, Five Points on Lafayette,
-Radical MMA on W 29th, 10th Planet on W 43rd) so nobody re-adds them.
+**1. Martial arts stay inside a 15-minute WALK.** Any entry with category
+`grappling`, `striking` or `mma` must sit at a venue with `walkMinutes <= 15`.
+This was the original ask and it does not bend. The header comment in
+`jordan.js` names the gyms that keep getting suggested and keep failing the
+test — Renzo Gracie (W 30th), Five Points (148 Lafayette), Radical MMA
+(W 29th), 10th Planet (W 43rd) — so nobody re-adds them.
 
-If a genuinely exceptional venue sits at 16–18 minutes, ask Jordan before
-adding it. Do not quietly relax the cap.
+**2. Everything else gets 25 minutes door-to-door.** Soccer, chess, ping pong
+and running may be up to `travelMinutes <= 25`. Manhattan has no soccer field
+inside a 15-minute walk of Union Square, so a strict cap there would simply
+mean no soccer. Athena's side is entirely walkable and stays under 15.
+
+Venues reached better by train or bus than on foot carry:
+
+- `walkMinutes` — the honest walk, however long
+- `travelMinutes` — the best realistic door-to-door time (what the slider uses)
+- `travelHow` — the actual route, e.g. `"16 min — 6 train from Union Sq to
+  Canal St, then a 5-minute walk"`
+
+`travelMinutes` must be faster than `walkMinutes`, or drop it. If a genuinely
+exceptional venue sits past its cap, ask Jordan. Do not quietly relax either
+rule.
 
 ---
 
@@ -95,12 +109,36 @@ Peridance (`peridance.com/open-classes`, MindBody),
 Gibney (`gibneydance.org/class-schedule/`),
 Pure Barre Union Square, Om Factory.
 
-**Jordan** — Anderson's Martial Arts (`andersonsmartialarts.com/schedule/`),
+**Jordan, martial arts** — Anderson's Martial Arts (`andersonsmartialarts.com/schedule/`),
 Mushin MMA (`mushinmma.org/schedule`), Paxibellum (`paxibellum.com/class-schedule/`,
 Zen Planner), Unity Jiu Jitsu (`unityjiujitsu.com/schedule/`),
 Training Zone NYC Gramercy (Mon & Wed only — the Manhattan location is closed
 Tue/Thu/Fri/Sun, which is why it appears on just two nights),
 Overthrow Boxing.
+
+**Jordan, everything else** — GoodRec (`goodrec.com/pickup-soccer/new-york-city`):
+individual game times are published only in the GoodRec app, so soccer entries
+stay `timeVerified:false` by design; verify the *facility* is still hosting
+games. SPIN Flatiron (`wearespin.com/location/new-york-flatiron/`) — re-check
+the walk-in rates and the Tuesday `$9 after 9pm` deal, which is the single best
+value on Jordan's side. Marshall Chess Club (`marshallchessclub.org/calendar`)
+— the calendar lists the night's rated event and entry fee; pin one if you can.
+TMIRCE (`meetup.com/nyc-informal-running-club-home-of-tmirce-nyc/`) — confirm
+Tempo Thursdays still leaves 96 Avenue C at 7pm.
+
+### Watch list (excluded for now, re-check each week)
+
+- **CityPickle Union Square** — two pickleball courts on the North Plaza at E
+  17th St, $5 open play, i.e. sixty seconds from the front door. Currently
+  **closed for the season** with a 2026 reopening TBD. The moment it reopens it
+  is the single best-located entry on the entire site — add it.
+- **East River Park** — soccer fields and track are mid-reconstruction under
+  the East Side Coastal Resiliency project (the stretch south of Stanton St is
+  closed; completion slated for 2026). Deliberately excluded so nobody is sent
+  to a fenced-off field. Re-check before adding.
+- **Climbing** — there is no bouldering gym within 25 minutes of Union Square.
+  The nearest options (Steep Rock on Lexington at 97th, Chelsea Piers, Movement
+  Harlem) all fail the radius. Don't add one to be thorough.
 
 ---
 
@@ -130,11 +168,15 @@ python3 -m http.server 8000    # then open http://localhost:8000/weeknights/
 
 `validate.cjs` checks: both sides on the same week, venues resolve, evening
 start times (16:00+), Mon–Fri only, unique slugs, itineraries resolve to
-classes that run that night, and the 15-minute walk cap.
+sessions that run that night, and both radius rules.
 
 `health.cjs` checks: the week is current, every weeknight has 2+ options per
-person, tonight specifically is not empty, and at least one class per side has
-a pinned time. Exit 1 = act, exit 2 = could not check.
+person, tonight specifically is not empty, both radius rules hold, and at least
+one entry per side has a pinned time. Exit 1 = act, exit 2 = could not check.
+
+Map tiles come from `tile.openstreetmap.org`, which needs no API key. Do not
+switch to CARTO's basemaps — they now require a key and render "api key
+required" across the whole map without one.
 
 ---
 

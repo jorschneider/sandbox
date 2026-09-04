@@ -1,11 +1,21 @@
-/* Jordan's weeknight mixed martial arts — BJJ, muay thai, wrestling, boxing.
-   HARD CONSTRAINT: every gym here is inside a 15-minute walk of Union Square.
-   Nothing goes in this file that fails that test. Renzo Gracie (W 30th),
-   Five Points (148 Lafayette), Radical MMA (W 29th) and 10th Planet (W 43rd)
-   are all good gyms and all too far — they are deliberately excluded.
+/* Jordan's weeknights — martial arts, plus the rest of the sporting week.
 
-   Venue facts (address, coordinates, walk time, booking URL) live once in
-   `venues`; each entry in `events` is a class FORMAT offered at one of them.
+   TWO RADIUS RULES, and validate.cjs enforces both:
+
+   1. MARTIAL ARTS (grappling / striking / mma) must be inside a 15-MINUTE
+      WALK of Union Square. This was the original ask and it does not bend.
+      Renzo Gracie (W 30th), Five Points (148 Lafayette), Radical MMA (W 29th)
+      and 10th Planet (W 43rd) are all good gyms and all too far — they are
+      deliberately excluded.
+
+   2. EVERYTHING ELSE (soccer, chess, ping pong, running) may be up to 25
+      MINUTES DOOR-TO-DOOR, because Manhattan has no soccer field inside a
+      15-minute walk of Union Square and a strict cap would just mean no
+      soccer at all. Those venues carry `travelMinutes` + `travelHow` naming
+      the actual route; `walkMinutes` stays honest about the walk.
+
+   Venue facts (address, coordinates, travel, booking URL) live once in
+   `venues`; each entry in `events` is a session FORMAT offered at one of them.
 
    timeVerified:false means the gym, disciplines, intro offer and address are
    confirmed on an official page, but the exact mat times sit behind a booking
@@ -71,6 +81,80 @@ window.JORDAN_DATA = {
       "url": "https://overthrownyc.com/",
       "phone": "",
       "hours": "Evening classes daily — check the site for the current timetable"
+    },
+
+    "SPIN New York Flatiron": {
+      "address": "48 East 23rd Street (between Madison & Park)",
+      "neighborhood": "Flatiron",
+      "lat": 40.7404, "lng": -73.9873,
+      "walkMinutes": 8,
+      "url": "https://wearespin.com/location/new-york-flatiron/",
+      "phone": "(212) 982-8802",
+      "hours": "Walk-in Mon–Thu 4:00–11:00pm · Fri 4:00pm–1:00am · Sat 12:00pm–1:00am"
+    },
+    "Marshall Chess Club": {
+      "address": "23 West 10th Street (between 5th & 6th Ave)",
+      "neighborhood": "Greenwich Village",
+      "lat": 40.7345, "lng": -73.9965,
+      "walkMinutes": 12,
+      "url": "https://www.marshallchessclub.org/calendar",
+      "phone": "(212) 477-3716",
+      "hours": "Mon, Wed–Fri 2:00pm–midnight · Sat–Sun 9:00am–midnight · closed Tue except for events"
+    },
+    "GoodRec — Sara D. Roosevelt Park": {
+      "address": "Chrystie Street at Broome/Canal, Sara D. Roosevelt Park",
+      "neighborhood": "Lower East Side / Chinatown",
+      "lat": 40.7188, "lng": -73.9938,
+      "walkMinutes": 25,
+      "travelMinutes": 16,
+      "travelHow": "16 min — 6 train from Union Sq to Canal St, then a 5-minute walk",
+      "url": "https://www.goodrec.com/pickup-soccer/new-york-city",
+      "phone": "",
+      "hours": "Games most evenings — times are set per game in the GoodRec app"
+    },
+    "GoodRec — The Ground": {
+      "address": "130 Madison Street",
+      "neighborhood": "Two Bridges / Lower East Side",
+      "lat": 40.7128, "lng": -73.9906,
+      "walkMinutes": 32,
+      "travelMinutes": 22,
+      "travelHow": "22 min — F train to East Broadway, then a 4-minute walk",
+      "url": "https://www.goodrec.com/facilities/the-ground-nyc",
+      "phone": "",
+      "hours": "Facility open Mon–Sat 8:00am–midnight · closed Sunday"
+    },
+    "GoodRec — Pier 40": {
+      "address": "Pier 40, 353 West Street (at West Houston), Hudson River Park",
+      "neighborhood": "West Village / Hudson River Park",
+      "lat": 40.7295, "lng": -74.0110,
+      "walkMinutes": 26,
+      "travelMinutes": 20,
+      "travelHow": "20 min — 1 train to Houston St, then a 7-minute walk west",
+      "url": "https://www.goodrec.com/pickup-soccer/new-york-city",
+      "phone": "",
+      "hours": "Rooftop and courtyard fields, floodlit — evening games most nights"
+    },
+    "GoodRec — Chelsea Waterside": {
+      "address": "Chelsea Waterside Park, 23rd Street at 11th Avenue",
+      "neighborhood": "Chelsea / Hudson River Park",
+      "lat": 40.7482, "lng": -74.0075,
+      "walkMinutes": 26,
+      "travelMinutes": 22,
+      "travelHow": "22 min — M23 crosstown bus, or L to 8th Ave then a 10-minute walk",
+      "url": "https://www.goodrec.com/pickup-soccer/new-york-city",
+      "phone": "",
+      "hours": "Floodlit turf — small-sided games run into the evening"
+    },
+    "TMIRCE — Alphabet City Beer Co.": {
+      "address": "96 Avenue C (at East 6th Street)",
+      "neighborhood": "Alphabet City / East Village",
+      "lat": 40.7237, "lng": -73.9779,
+      "walkMinutes": 22,
+      "travelMinutes": 18,
+      "travelHow": "18 min — L to 1st Ave then a 9-minute walk, or a straight 22-minute walk east",
+      "url": "https://www.meetup.com/nyc-informal-running-club-home-of-tmirce-nyc/",
+      "phone": "",
+      "hours": "Tempo Thursdays, 7:00pm. RSVPs optional."
     }
   },
 
@@ -250,47 +334,165 @@ window.JORDAN_DATA = {
       "url": "https://overthrownyc.com/",
       "notes": "The edge of the fifteen-minute radius and the one with the most atmosphere: a basement gym at 9 Bleecker on the Bowery, in a building with genuine anarchist history, run with a deliberate punk aesthetic. Pure boxing — no grappling, no gi, no belt system — which makes it the lowest-commitment way to get a hard hour in. Good on a night when the appeal is to hit a bag and not talk to anyone. Fifteen minutes on foot straight down Broadway and Bleecker, or two stops on the 6.",
       "confidence": "medium"
+    },
+
+    {
+      "title": "Pickup soccer at Sara D. Roosevelt Park",
+      "venue": "GoodRec — Sara D. Roosevelt Park",
+      "category": "soccer",
+      "discipline": "Soccer",
+      "level": "All skill levels",
+      "days": ["mon", "tue", "wed", "thu", "fri"],
+      "start": "18:30",
+      "end": "19:30",
+      "when": "Games most weeknight evenings. Exact kickoff times are published per game in the GoodRec app.",
+      "timeVerified": false,
+      "cost": "Per-game fee set in the app · jerseys and a host included",
+      "url": "https://www.goodrec.com/pickup-soccer/new-york-city",
+      "notes": "The closest GoodRec field to Union Square and the easiest one to make on a weeknight — 6 train to Canal, five minutes on foot, you're playing. GoodRec's whole premise is that you show up alone: a host runs the game, jerseys are provided so teams are obvious, and it is explicitly all skill levels with no season-long commitment. Games are typically small-sided and 60–90 minutes. You must be 18+ and you pay in advance through the app, which also means the game is confirmed before you leave the house. Turf — sneakers or turf shoes, not studs.",
+      "confidence": "medium"
+    },
+    {
+      "title": "Indoor 4v4 futsal at The Ground",
+      "venue": "GoodRec — The Ground",
+      "category": "soccer",
+      "discipline": "Soccer",
+      "level": "All skill levels",
+      "days": ["mon", "tue", "wed", "thu", "fri"],
+      "start": "19:00",
+      "end": "20:30",
+      "when": "The facility runs 8:00am–midnight Mon–Sat. Book a specific game slot in the GoodRec app.",
+      "timeVerified": false,
+      "cost": "Per-game fee set in the app",
+      "url": "https://www.goodrec.com/facilities/the-ground-nyc",
+      "notes": "The rain-proof option, and the one to build a habit around — indoor and rooftop futsal pitches that play the same in February as in June, running four teams of 4v4 so you rotate on and off rather than standing around. Fast, tight, touch-heavy football; 4v4 means you get vastly more of the ball than an 11-a-side would give you. Open until midnight, so a 9pm game is a real option after a late edit. Turf shoes or sneakers — cleats are not allowed on the surface.",
+      "confidence": "medium"
+    },
+    {
+      "title": "Pickup soccer at Pier 40",
+      "venue": "GoodRec — Pier 40",
+      "category": "soccer",
+      "discipline": "Soccer",
+      "level": "All skill levels",
+      "days": ["mon", "tue", "wed", "thu"],
+      "start": "19:00",
+      "end": "20:30",
+      "when": "Floodlit rooftop and courtyard fields; evening games most nights. Times per game in the app.",
+      "timeVerified": false,
+      "cost": "Per-game fee set in the app",
+      "url": "https://www.goodrec.com/pickup-soccer/new-york-city",
+      "notes": "The best-looking game on the list: a floodlit pitch on the roof of a pier sticking out into the Hudson, with the sun going down over Jersey behind the goal. Pier 40 is the biggest field complex in downtown Manhattan and runs both rooftop and courtyard surfaces, so games survive weather that would cancel a park pitch. Worth the extra few minutes of travel on a clear evening purely for the setting.",
+      "confidence": "medium"
+    },
+    {
+      "title": "Pickup soccer at Chelsea Waterside",
+      "venue": "GoodRec — Chelsea Waterside",
+      "category": "soccer",
+      "discipline": "Soccer",
+      "level": "All skill levels",
+      "days": ["tue", "wed", "thu"],
+      "start": "18:30",
+      "end": "20:00",
+      "when": "Floodlit turf, small-sided games into the evening. Times per game in the app.",
+      "timeVerified": false,
+      "cost": "Per-game fee set in the app",
+      "url": "https://www.goodrec.com/pickup-soccer/new-york-city",
+      "notes": "The north-west option, on the water at 23rd and 11th. Reliably has small-sided games going in the afternoons and evenings, and it is the easiest of the outdoor fields to reach by bus rather than train — the M23 goes crosstown and drops you at the door. Good fallback when the downtown games are full.",
+      "confidence": "medium"
+    },
+    {
+      "title": "Ping pong at SPIN — $9 after 9pm Tuesdays",
+      "venue": "SPIN New York Flatiron",
+      "category": "pingpong",
+      "discipline": "Table tennis",
+      "level": "Anyone",
+      "days": ["mon", "tue", "wed", "thu"],
+      "start": "18:00",
+      "end": "23:00",
+      "when": "Walk-in Mon–Thu 4:00–11:00pm. The Tuesday deal is $9 per person after 9:00pm.",
+      "timeVerified": true,
+      "cost": "Walk-in per table/hour: Mon $29 · Tue–Thu $49 · Fri–Sat $59. Tuesday after 9pm: $9",
+      "url": "https://wearespin.com/location/new-york-flatiron/",
+      "notes": "The one on this list you can do with a drink in your hand, and the obvious answer to \"someone's in town, where do we go.\" Eighteen Olympic-grade tables across 14,000 square feet in the Flatiron, with a full bar and a real kitchen — Susan Sarandon's ping pong club, still the best-executed version of the idea in the city. The move is Tuesday: $9 a head after 9pm, which turns a $49-an-hour table into a cheap night out. Walk-ins are welcome when tables are free, but book ahead if it matters. Eight minutes up Park Ave South.",
+      "confidence": "high"
+    },
+    {
+      "title": "Blitz & rapid at the Marshall Chess Club",
+      "venue": "Marshall Chess Club",
+      "category": "chess",
+      "discipline": "Chess",
+      "level": "All ratings, including unrated",
+      "days": ["mon", "wed", "thu", "fri"],
+      "start": "19:00",
+      "end": "22:00",
+      "when": "Club open Mon and Wed–Fri 2:00pm–midnight (closed Tue except for events). USCF-rated tournaments run almost daily — check the calendar for the night's event and entry fee.",
+      "timeVerified": false,
+      "cost": "Entry fees vary by event · non-members may enter many tournaments",
+      "url": "https://www.marshallchessclub.org/calendar",
+      "notes": "The most Jordan thing within a fifteen-minute walk. The Marshall is one of the oldest chess clubs in America, in a Greenwich Village brownstone on West 10th — the room where Bobby Fischer played the Game of the Century at thirteen. It runs USCF-rated tournaments almost every day, from four-round blitz nights to slower action events, and non-members can enter many of them, so you can turn up and play rated chess without joining first. Open until midnight, which makes it the rare weeknight activity that doesn't punish a late start. Bring nothing; boards and clocks are there.",
+      "confidence": "high"
+    },
+    {
+      "title": "Tempo Thursdays with TMIRCE",
+      "venue": "TMIRCE — Alphabet City Beer Co.",
+      "category": "run",
+      "discipline": "Running",
+      "level": "Any pace — walking encouraged",
+      "days": ["thu"],
+      "start": "19:00",
+      "end": "20:00",
+      "when": "Every Thursday at 7:00pm from Alphabet City Beer Co., 96 Avenue C. RSVP optional.",
+      "timeVerified": true,
+      "cost": "Free",
+      "url": "https://www.meetup.com/nyc-informal-running-club-home-of-tmirce-nyc/",
+      "notes": "Free, weekly, and the least intimidating run club in the city by design — The Most Informal Running Club Ever states plainly that NO ONE IS TOO SLOW and that it's any pace, any distance you want to go. It starts and finishes at a beer hall in Alphabet City, which tells you the priorities. RSVPs are optional because they reliably get more runners than sign-ups. The zero-equipment, zero-cost, zero-commitment entry on Jordan's list: worst case you jog twenty minutes and have a beer.",
+      "confidence": "high"
     }
   ],
 
   "itineraries": {
     "mon": {
-      "summary": "Monday is the widest night — Anderson's opens at 10am, Training Zone runs its Mon/Wed block, Unity's mats go to 10pm.",
+      "summary": "Monday is the widest night — Anderson's opens at 10am, Training Zone runs its Mon/Wed block, and SPIN's $29 table is the cheapest of the week.",
       "picks": [
         { "key": "intro-to-bjj-the-free-first-class", "note": "If it's the first session ever, start here. Free, four minutes away." },
-        { "key": "muay-thai-all-levels", "note": "Two minutes from the door. Beginners are normal here." },
-        { "key": "muay-thai-boxing-bjj-adult-program", "note": "One of only two weeknights the Gramercy gym is open." }
+        { "key": "muay-thai-boxing-bjj-adult-program", "note": "One of only two weeknights the Gramercy gym is open." },
+        { "key": "indoor-4v4-futsal-at-the-ground", "note": "Rain-proof, open till midnight — the reliable soccer habit." },
+        { "key": "blitz-rapid-at-the-marshall-chess-club", "note": "The zero-sweat option. Rated chess till midnight on West 10th." }
       ]
     },
     "tue": {
-      "summary": "Tuesday belongs to the late mats — Unity runs to 10:30pm, so a late finish at work isn't a dealbreaker.",
+      "summary": "Tuesday: Unity's mats run to 10:30pm, and SPIN does $9 a head after 9pm — the two best late options of the week.",
       "picks": [
         { "key": "gi-no-gi-jiu-jitsu-7-days-a-week", "note": "First day free for tri-state residents, intro lesson included." },
-        { "key": "no-gi-jiu-jitsu-submission-wrestling", "note": "Rash guard and shorts, no gi to buy. First class free." },
-        { "key": "jeet-kune-do-filipino-martial-arts", "note": "The most interesting hour available within a 5-minute walk." }
+        { "key": "ping-pong-at-spin-9-after-9pm-tuesdays", "note": "$9 after 9pm. The one you can bring someone to." },
+        { "key": "pickup-soccer-at-sara-d-roosevelt-park", "note": "Closest field — 6 train to Canal, five minutes' walk." },
+        { "key": "no-gi-jiu-jitsu-submission-wrestling", "note": "Rash guard and shorts, no gi to buy. First class free." }
       ]
     },
     "wed": {
-      "summary": "Midweek is the busiest night on every mat in the neighborhood — Anderson's 7–8pm runs near capacity.",
+      "summary": "Midweek is the busiest night on every mat nearby — Anderson's 7–8pm runs near capacity, so have a backup.",
       "picks": [
         { "key": "muay-thai-boxing-bjj-adult-program", "note": "The second and last Gramercy weeknight. Spend the free trial week here." },
         { "key": "adults-bjj", "note": "Technique, drilling, then optional rolling. Small groups." },
-        { "key": "muay-thai", "note": "Paxibellum's striking hour — free to try, six minutes away." }
+        { "key": "pickup-soccer-at-pier-40", "note": "Floodlit roof over the Hudson. Worth it on a clear evening." },
+        { "key": "blitz-rapid-at-the-marshall-chess-club", "note": "Open till midnight — the rare thing a late start doesn't ruin." }
       ]
     },
     "thu": {
-      "summary": "Thursday: the hardest training night if you want one. Unity wrestling plus late mats to 10:30pm.",
+      "summary": "Thursday is the busiest night of Jordan's week: Unity wrestling, the free run club at 7, and late mats to 10:30pm.",
       "picks": [
+        { "key": "tempo-thursdays-with-tmirce", "note": "Free, 7pm, any pace. Starts and ends at a beer hall." },
         { "key": "wrestling", "note": "Hardest conditioning on the list. Put nothing after it." },
         { "key": "gi-no-gi-jiu-jitsu-7-days-a-week", "note": "Mats to 10:30pm — the latest option anywhere nearby." },
-        { "key": "kickboxing", "note": "The lighter alternative: pads and bags, no grappling." }
+        { "key": "pickup-soccer-at-chelsea-waterside", "note": "M23 crosstown drops you at the door. Good when downtown's full." }
       ]
     },
     "fri": {
-      "summary": "Friday is deliberately light. Anderson's and Mushin run, Training Zone is closed, and nothing should hurt on Saturday.",
+      "summary": "Friday is deliberately light. Training Zone is closed, nothing should hurt on Saturday, and the soft options are the right ones.",
       "picks": [
         { "key": "boxing-underground", "note": "Hit a bag, talk to no one, walk home down Bleecker." },
-        { "key": "adults-bjj", "note": "Friday rolls are usually the friendliest of the week." },
+        { "key": "indoor-4v4-futsal-at-the-ground", "note": "Open till midnight Fridays. Play late, no consequences." },
+        { "key": "blitz-rapid-at-the-marshall-chess-club", "note": "Friday nights at the Marshall run to midnight." },
         { "key": "muay-thai-all-levels", "note": "Anderson's is open till 9pm Fridays — two minutes away." }
       ]
     }

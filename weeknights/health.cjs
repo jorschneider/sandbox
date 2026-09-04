@@ -18,7 +18,9 @@
  * Exit 2 = could not check (fetch/parse failure) — also needs a human/agent.
  */
 const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri"];
-const MAX_WALK = 15;
+const MAX_WALK = 15;   // martial arts, and all of Athena's side — on foot
+const MAX_TRAVEL = 25; // Jordan's soccer/chess/ping pong/running — door-to-door
+const MARTIAL_CATS = ["grappling", "striking", "mma"];
 const LIVE = process.env.WEEKNIGHTS_URL || "https://jordan-athena-weeknights.vercel.app";
 
 const args = process.argv.slice(2);
@@ -75,17 +77,21 @@ function mondayOf(d) {
   for (const [who, data] of [["athena", athena], ["jordan", jordan]]) {
     const venues = data.venues || {};
     const walkOf = (e) => (venues[e.venue] || {}).walkMinutes ?? 999;
+    const travelOf = (e) => {
+      const v = venues[e.venue] || {};
+      return typeof v.travelMinutes === "number" ? v.travelMinutes : (v.walkMinutes ?? 999);
+    };
 
     // 1. freshness
     if (data.weekMonday !== thisMonday) {
       problems.push(`${who}: STALE — weekMonday is ${data.weekMonday}, this week is ${thisMonday}`);
     }
 
-    // 2. every weeknight has something inside the walk radius
-    const visible = (data.events || []).filter((e) => walkOf(e) <= MAX_WALK);
+    // 2. every weeknight has something inside the radius
+    const visible = (data.events || []).filter((e) => travelOf(e) <= MAX_TRAVEL);
     for (const day of DAY_KEYS) {
       const n = visible.filter((e) => (e.days || []).indexOf(day) !== -1).length;
-      if (n < 2) problems.push(`${who}: ${day} has only ${n} class(es) inside the ${MAX_WALK}-min walk`);
+      if (n < 2) problems.push(`${who}: ${day} has only ${n} option(s) inside the ${MAX_TRAVEL}-min radius`);
     }
 
     // 3. tonight specifically — the thing they'd actually open the site for
@@ -100,10 +106,19 @@ function mondayOf(d) {
       if (!it || !(it.picks || []).length) problems.push(`${who}: itinerary.${day} is missing or empty`);
     }
 
-    // 5. the walk rule is the whole premise — nothing may violate it
-    const tooFar = Object.entries(venues).filter(([, v]) => (v.walkMinutes || 0) > MAX_WALK);
+    // 5. the radius rules are the whole premise — nothing may violate them.
+    //    Martial arts keep the original 15-minute WALK; everything else gets
+    //    25 minutes door-to-door.
+    const martialTooFar = (data.events || []).filter((e) =>
+      MARTIAL_CATS.indexOf(e.category) !== -1 && walkOf(e) > MAX_WALK);
+    if (martialTooFar.length) {
+      problems.push(`${who}: ${martialTooFar.length} martial-arts entr(ies) beyond the ${MAX_WALK}-min WALK: ` +
+        martialTooFar.map((e) => e.venue).join(", "));
+    }
+    const tooFar = Object.entries(venues).filter(([, v]) =>
+      (typeof v.travelMinutes === "number" ? v.travelMinutes : v.walkMinutes || 0) > MAX_TRAVEL);
     if (tooFar.length) {
-      problems.push(`${who}: ${tooFar.length} venue(s) beyond the ${MAX_WALK}-min walk: ${tooFar.map(([n]) => n).join(", ")}`);
+      problems.push(`${who}: ${tooFar.length} venue(s) beyond ${MAX_TRAVEL} min door-to-door: ${tooFar.map(([n]) => n).join(", ")}`);
     }
 
     // 6. drift guard — if nothing has a pinned time the site is only a directory
@@ -119,6 +134,6 @@ function mondayOf(d) {
     problems.forEach((p) => console.error(`   · ${p}`));
     process.exit(1);
   }
-  console.log("✓ healthy — both sides fresh, every weeknight covered, walk rule holding.");
+  console.log("✓ healthy — both sides fresh, every weeknight covered, radius rules holding.");
   process.exit(0);
 })();

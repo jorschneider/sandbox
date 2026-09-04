@@ -12,11 +12,11 @@
   // per-mode voice: everything user-facing that differs between the two sides
   const COPY = MODE === "jordan" ? {
     emoji: "🥋", name: "Jordan's Weeknights", moon: "🥊",
-    tagline: "Mats within a <strong>15-minute walk of Union Square</strong> — jiu jitsu, muay thai, wrestling &amp; boxing.",
+    tagline: "Mats, fields &amp; boards within <strong>25 minutes of Union Square</strong> — jiu jitsu, muay thai, pickup soccer, chess &amp; ping pong. Martial arts stay inside a 15-minute walk.",
     noteHead: "🎒 Before you go",
-    noteBody: "Four of these six gyms let you train the first class free — there is no reason to pay before you know you like the room. A <em>🔍</em> means the gym, disciplines and intro offer are confirmed but the exact mat time sits behind a booking app: tap through to pin it down.",
-    footer: "Home base: 112 East 19th Street · walk times are on foot from Union Square.",
-    countWord: "classes", icsPrefix: "🥋 ",
+    noteBody: "Four of the six gyms let you train the first class free, and the run club is free full stop — there is no reason to pay before you know you like it. A <em>🔍</em> means the venue and terms are confirmed but the exact time sits behind a booking app: tap through to pin it down. Soccer games are booked per-game in the GoodRec app.",
+    footer: "Home base: 112 East 19th Street · times are door-to-door from Union Square.",
+    countWord: "sessions", icsPrefix: "🥋 ",
   } : {
     emoji: "🧘", name: "Athena's Weeknights", moon: "🌙",
     tagline: "Classes within a <strong>15-minute walk of Union Square</strong> — yoga, ballet, barre &amp; dance.",
@@ -55,7 +55,12 @@
     grappling:{ label: "Grappling", emoji: "🥋" },
     striking: { label: "Striking",  emoji: "🥊" },
     mma:      { label: "Mixed",     emoji: "🔀" },
+    soccer:   { label: "Soccer",    emoji: "⚽" },
+    chess:    { label: "Chess",     emoji: "♞" },
+    pingpong: { label: "Ping pong", emoji: "🏓" },
+    run:      { label: "Running",   emoji: "🏃" },
   };
+  const MARTIAL_CATS = ["grappling", "striking", "mma"];
 
   const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri"];
   const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri" };
@@ -63,14 +68,25 @@
 
   const keyOf = (e) => e.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48);
   const venueOf = (e) => (data.venues && data.venues[e.venue]) || {};
-  const walkOf = (e) => venueOf(e).walkMinutes || 15;
+  const walkOf = (e) => venueOf(e).walkMinutes || 25;
+  // the slider filters on the best realistic door-to-door time, which for a
+  // soccer field two trains away is the train, not the 32-minute walk
+  const travelOf = (e) => {
+    const v = venueOf(e);
+    return typeof v.travelMinutes === "number" ? v.travelMinutes : walkOf(e);
+  };
+  const travelHowOf = (e) => {
+    const v = venueOf(e);
+    return v.travelHow || walkOf(e) + " min walk";
+  };
 
   // which night is "today" relative to the data's week
   const weekStart = new Date(data.weekMonday + "T00:00:00");
   const dayIndex = Math.floor((new Date() - weekStart) / 86400000); // 0 = Monday
   const todayKey = dayIndex >= 0 && dayIndex < 5 ? DAY_KEYS[dayIndex] : null;
 
-  const state = { day: todayKey || "all", maxWalk: 15, heartsOnly: false, verifiedOnly: false };
+  const MAX_TRAVEL = MODE === "jordan" ? 25 : 15;
+  const state = { day: todayKey || "all", maxWalk: MAX_TRAVEL, heartsOnly: false, verifiedOnly: false, martialOnly: false };
 
   const byKey = {};
   data.events.forEach((e) => { byKey[keyOf(e)] = e; });
@@ -194,16 +210,36 @@
   // ——— walk radius ———
   const travelSlider = document.getElementById("travel-slider");
   const travelVal = document.getElementById("travel-val");
+  const travelLead = document.getElementById("travel-lead");
+  travelSlider.max = String(MAX_TRAVEL);
+  travelSlider.value = String(MAX_TRAVEL);
+  travelVal.textContent = MAX_TRAVEL + " min";
+  if (MODE === "jordan") travelLead.innerHTML = "🚇 Door-to-door up to";
   travelSlider.addEventListener("input", () => {
     state.maxWalk = parseInt(travelSlider.value, 10);
-    travelVal.textContent = state.maxWalk >= 15 ? "15 min" : state.maxWalk + " min";
+    travelVal.textContent = state.maxWalk + " min";
     render();
   });
 
+  // Jordan's side spans mats, fields and boards — let him collapse back to
+  // just the martial arts, which is how the site started.
+  const martialChip = document.getElementById("martial-chip");
+  if (MODE === "jordan") {
+    martialChip.hidden = false;
+    martialChip.addEventListener("click", () => {
+      state.martialOnly = !state.martialOnly;
+      martialChip.setAttribute("aria-pressed", String(state.martialOnly));
+      martialChip.classList.toggle("active", state.martialOnly);
+      render();
+    });
+  }
+
   // ——— map ———
   const map = L.map("map", { scrollWheelZoom: false }).setView(UNION_SQ, 15);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  // Plain OSM tiles — keyless. CARTO's basemaps now demand an API key and
+  // render "api key required" across the map without one.
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     maxZoom: 19,
   }).addTo(map);
   L.marker(UNION_SQ, {
@@ -241,11 +277,13 @@
       '<p class="venue">' + esc(e.venue) + " · " + esc(v.neighborhood || "") + "</p>" +
       '<p class="chips">' +
         '<span class="chip cat">' + c.emoji + " " + esc(e.discipline || c.label) + "</span>" +
-        '<span class="chip walk">🚶 ' + walkOf(e) + " min</span>" +
+        '<span class="chip walk" title="' + esc(travelHowOf(e)) + '">' +
+          (venueOf(e).travelHow ? "🚇 " : "🚶 ") + travelOf(e) + " min</span>" +
         '<span class="chip time">🕕 ' + esc(timeRange(e)) + "</span>" +
         '<span class="chip level">' + esc(e.level) + "</span>" +
       "</p>" +
       '<p class="nights"><b>' + nights + "</b> · " + esc(e.when) + "</p>" +
+      '<p class="getting">🧭 ' + esc(travelHowOf(e)) + "</p>" +
       '<p class="cost">💳 ' + esc(e.cost) + "</p>" +
       '<p class="notes">' + esc(e.notes) + "</p>" +
       '<p class="links">' +
@@ -276,7 +314,8 @@
       if (!e) return;
       html += '<button class="itin-opt" data-key="' + p.key + '">' +
         '<b>' + esc(e.title) + "</b>" +
-        '<span class="io-meta">' + esc(e.venue) + " · " + fmtTime(e.start) + " · 🚶 " + walkOf(e) + " min</span>" +
+        '<span class="io-meta">' + esc(e.venue) + " · " + fmtTime(e.start) + " · " +
+          (venueOf(e).travelHow ? "🚇 " : "🚶 ") + travelOf(e) + " min</span>" +
         '<span class="io-note">' + esc(p.note) + "</span>" +
         "</button>";
     });
@@ -296,11 +335,12 @@
   function render() {
     const list = data.events.filter((e) => {
       if (state.day !== "all" && e.days.indexOf(state.day) === -1) return false;
-      if (walkOf(e) > state.maxWalk) return false;
+      if (travelOf(e) > state.maxWalk) return false;
       if (state.heartsOnly && !hearts.has(keyOf(e))) return false;
       if (state.verifiedOnly && !e.timeVerified) return false;
+      if (state.martialOnly && MARTIAL_CATS.indexOf(e.category) === -1) return false;
       return true;
-    }).sort((a, b) => (a.start || "").localeCompare(b.start || "") || walkOf(a) - walkOf(b));
+    }).sort((a, b) => (a.start || "").localeCompare(b.start || "") || travelOf(a) - travelOf(b));
 
     markerLayer.clearLayers();
     markers = {};
@@ -328,7 +368,7 @@
         const m = L.marker([lat, lng], { icon: markerIcon(e, num, false) }).addTo(markerLayer);
         m._ev = e;
         m.bindPopup("<b>" + esc(e.title) + "</b><br>" + esc(e.venue) + "<br>" +
-          esc(v.address || "") + "<br>🕕 " + esc(timeRange(e)) + " · 🚶 " + walkOf(e) + " min");
+          esc(v.address || "") + "<br>🕕 " + esc(timeRange(e)) + "<br>🧭 " + esc(travelHowOf(e)));
         m.on("click", () => {
           const card = mapList.querySelector('.card[data-num="' + num + '"]');
           if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
