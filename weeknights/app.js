@@ -12,7 +12,7 @@
   // per-mode voice: everything user-facing that differs between the two sides
   const COPY = MODE === "jordan" ? {
     emoji: "🥋", name: "Jordan's Weeknights", moon: "🥊",
-    tagline: "Mats, fields &amp; boards within <strong>25 minutes of Union Square</strong> — jiu jitsu, muay thai, pickup soccer, chess &amp; ping pong. Martial arts stay inside a 15-minute walk.",
+    tagline: "Mats &amp; fields within <strong>25 minutes of Union Square</strong> — jiu jitsu, muay thai, wrestling, boxing &amp; pickup soccer. Martial arts stay inside a 15-minute walk.",
     noteHead: "🎒 Before you go",
     noteBody: "Four of the six gyms let you train the first class free, and the run club is free full stop — there is no reason to pay before you know you like it. A <em>🔍</em> means the venue and terms are confirmed but the exact time sits behind a booking app: tap through to pin it down. Soccer games are booked per-game in the GoodRec app.",
     footer: "Home base: 112 East 19th Street · times are door-to-door from Union Square.",
@@ -56,8 +56,6 @@
     striking: { label: "Striking",  emoji: "🥊" },
     mma:      { label: "Mixed",     emoji: "🔀" },
     soccer:   { label: "Soccer",    emoji: "⚽" },
-    chess:    { label: "Chess",     emoji: "♞" },
-    pingpong: { label: "Ping pong", emoji: "🏓" },
     run:      { label: "Running",   emoji: "🏃" },
   };
   const MARTIAL_CATS = ["grappling", "striking", "mma"];
@@ -332,6 +330,39 @@
     });
   }
 
+  // ——— who teaches: a collapsible roster per venue, when the data has one ———
+  function renderTeachers() {
+    const teachersEl = document.getElementById("teachers");
+    const all = data.teachers || {};
+    const names = Object.keys(all);
+    if (!names.length) { teachersEl.hidden = true; return; }
+
+    teachersEl.innerHTML = names.map((venue) => {
+      const t = all[venue];
+      const seniors = (t.seniors || []).map((s) =>
+        '<div class="teacher">' +
+          '<b>' + esc(s.name) + "</b>" +
+          '<span class="t-title">' + esc(s.title) + "</span>" +
+          '<span class="t-note">' + esc(s.note) + "</span>" +
+        "</div>").join("");
+      const faculty = (t.faculty || []).length
+        ? '<p class="t-faculty"><b>Also teaching:</b> ' +
+            t.faculty.map((n) => esc(n)).join(" · ") + "</p>"
+        : "";
+      return '<details class="t-block">' +
+        "<summary><b>Who teaches at " + esc(venue) + "</b>" +
+          (t.inTheRoom ? '<span class="t-hint">' + esc(t.inTheRoom) + "</span>" : "") +
+        "</summary>" +
+        (t.lineage ? '<p class="t-lineage">' + esc(t.lineage) + "</p>" : "") +
+        '<div class="t-grid">' + seniors + "</div>" +
+        faculty +
+        (t.url ? '<p class="links"><a href="' + esc(t.url) +
+          '" target="_blank" rel="noopener">Full roster &amp; bios ↗</a></p>' : "") +
+        "</details>";
+    }).join("");
+    teachersEl.hidden = false;
+  }
+
   function render() {
     const list = data.events.filter((e) => {
       if (state.day !== "all" && e.days.indexOf(state.day) === -1) return false;
@@ -404,6 +435,7 @@
 
   buildDayPicker();
   syncPlanChip();
+  renderTeachers();
   render();
   setTimeout(() => map.invalidateSize(), 200);
 })();

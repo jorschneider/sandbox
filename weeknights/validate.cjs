@@ -6,7 +6,8 @@ const fs = require("fs");
 const path = require("path");
 
 const ATHENA_CATS = ["yoga", "ballet", "dance", "pilates", "barre"];
-const JORDAN_CATS = ["grappling", "striking", "mma", "soccer", "chess", "pingpong", "run"];
+// chess and pingpong were tried and cut — Jordan isn't interested. Don't re-add.
+const JORDAN_CATS = ["grappling", "striking", "mma", "soccer", "run"];
 // Martial arts keep the original hard rule: a 15-minute WALK, no exceptions.
 const MARTIAL_CATS = ["grappling", "striking", "mma"];
 const DAYS = ["mon", "tue", "wed", "thu", "fri"];
@@ -69,6 +70,23 @@ function validateSide(data, label, allowedCats) {
     if (travelOf(v) > MAX_TRAVEL) {
       err(tag + "is " + travelOf(v) + " min door-to-door, past the " + MAX_TRAVEL +
         "-minute cap — this venue does not belong on the site");
+    }
+  });
+
+  // ——— teachers (optional per side; keyed by venue) ———
+  Object.keys(data.teachers || {}).forEach((venue) => {
+    const t = data.teachers[venue];
+    const tag = label + " teachers['" + venue + "']: ";
+    if (!venues[venue]) err(tag + "not a venue in the venues map");
+    if (t.url && !/^https?:\/\//.test(t.url)) err(tag + "bad url " + t.url);
+    if (!Array.isArray(t.seniors) || !t.seniors.length) err(tag + "needs at least one senior teacher");
+    else t.seniors.forEach((s, i) => {
+      ["name", "title", "note"].forEach((f) => {
+        if (!s[f] || typeof s[f] !== "string") err(tag + "senior #" + i + " missing " + f);
+      });
+    });
+    if (t.faculty && !t.faculty.every((n) => typeof n === "string" && n.trim())) {
+      err(tag + "faculty must be a list of non-empty names");
     }
   });
 

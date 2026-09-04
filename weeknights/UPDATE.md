@@ -9,7 +9,7 @@ Two sides, same machinery:
 | file | global | who | disciplines |
 | --- | --- | --- | --- |
 | `athena.js` | `window.ATHENA_DATA` | Athena | yoga, ballet, dance, pilates, barre |
-| `jordan.js` | `window.JORDAN_DATA` | Jordan | grappling, striking, mma, soccer, chess, pingpong, run |
+| `jordan.js` | `window.JORDAN_DATA` | Jordan | grappling, striking, mma, soccer, run |
 
 `app.js` renders whichever side the hash selects (`#mode=jordan`, default
 Athena). `index.html` and `styles.css` are shared.
@@ -28,10 +28,10 @@ This was the original ask and it does not bend. The header comment in
 test — Renzo Gracie (W 30th), Five Points (148 Lafayette), Radical MMA
 (W 29th), 10th Planet (W 43rd) — so nobody re-adds them.
 
-**2. Everything else gets 25 minutes door-to-door.** Soccer, chess, ping pong
-and running may be up to `travelMinutes <= 25`. Manhattan has no soccer field
-inside a 15-minute walk of Union Square, so a strict cap there would simply
-mean no soccer. Athena's side is entirely walkable and stays under 15.
+**2. Everything else gets 25 minutes door-to-door.** Soccer and running may be
+up to `travelMinutes <= 25`. Manhattan has no soccer field inside a 15-minute
+walk of Union Square, so a strict cap there would simply mean no soccer.
+Athena's side is entirely walkable and stays under 15.
 
 Venues reached better by train or bus than on foot carry:
 
@@ -119,12 +119,16 @@ Overthrow Boxing.
 **Jordan, everything else** — GoodRec (`goodrec.com/pickup-soccer/new-york-city`):
 individual game times are published only in the GoodRec app, so soccer entries
 stay `timeVerified:false` by design; verify the *facility* is still hosting
-games. SPIN Flatiron (`wearespin.com/location/new-york-flatiron/`) — re-check
-the walk-in rates and the Tuesday `$9 after 9pm` deal, which is the single best
-value on Jordan's side. Marshall Chess Club (`marshallchessclub.org/calendar`)
-— the calendar lists the night's rated event and entry fee; pin one if you can.
-TMIRCE (`meetup.com/nyc-informal-running-club-home-of-tmirce-nyc/`) — confirm
-Tempo Thursdays still leaves 96 Avenue C at 7pm.
+games. TMIRCE (`meetup.com/nyc-informal-running-club-home-of-tmirce-nyc/`) —
+confirm Tempo Thursdays still leaves 96 Avenue C at 7pm.
+
+### Cut — do not re-add
+
+Jordan is **not interested in ping pong or chess**. SPIN Flatiron and the
+Marshall Chess Club were both on the site and were removed at his request.
+They are good venues and they pass the radius test, which is exactly why they
+would tempt a future pass — leave them off. `validate.cjs` no longer accepts
+the `pingpong` or `chess` categories, so re-adding them fails the build.
 
 ### Watch list (excluded for now, re-check each week)
 

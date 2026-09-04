@@ -8,11 +8,14 @@
       and 10th Planet (W 43rd) are all good gyms and all too far — they are
       deliberately excluded.
 
-   2. EVERYTHING ELSE (soccer, chess, ping pong, running) may be up to 25
-      MINUTES DOOR-TO-DOOR, because Manhattan has no soccer field inside a
-      15-minute walk of Union Square and a strict cap would just mean no
-      soccer at all. Those venues carry `travelMinutes` + `travelHow` naming
-      the actual route; `walkMinutes` stays honest about the walk.
+   2. EVERYTHING ELSE (soccer, running) may be up to 25 MINUTES DOOR-TO-DOOR,
+      because Manhattan has no soccer field inside a 15-minute walk of Union
+      Square and a strict cap would just mean no soccer at all. Those venues
+      carry `travelMinutes` + `travelHow` naming the actual route;
+      `walkMinutes` stays honest about the walk.
+
+   NOT INTERESTED, do not re-add: ping pong (SPIN) and chess (Marshall Chess
+   Club) were tried here and cut — Jordan doesn't want them.
 
    Venue facts (address, coordinates, travel, booking URL) live once in
    `venues`; each entry in `events` is a session FORMAT offered at one of them.
@@ -83,24 +86,6 @@ window.JORDAN_DATA = {
       "hours": "Evening classes daily — check the site for the current timetable"
     },
 
-    "SPIN New York Flatiron": {
-      "address": "48 East 23rd Street (between Madison & Park)",
-      "neighborhood": "Flatiron",
-      "lat": 40.7404, "lng": -73.9873,
-      "walkMinutes": 8,
-      "url": "https://wearespin.com/location/new-york-flatiron/",
-      "phone": "(212) 982-8802",
-      "hours": "Walk-in Mon–Thu 4:00–11:00pm · Fri 4:00pm–1:00am · Sat 12:00pm–1:00am"
-    },
-    "Marshall Chess Club": {
-      "address": "23 West 10th Street (between 5th & 6th Ave)",
-      "neighborhood": "Greenwich Village",
-      "lat": 40.7345, "lng": -73.9965,
-      "walkMinutes": 12,
-      "url": "https://www.marshallchessclub.org/calendar",
-      "phone": "(212) 477-3716",
-      "hours": "Mon, Wed–Fri 2:00pm–midnight · Sat–Sun 9:00am–midnight · closed Tue except for events"
-    },
     "GoodRec — Sara D. Roosevelt Park": {
       "address": "Chrystie Street at Broome/Canal, Sara D. Roosevelt Park",
       "neighborhood": "Lower East Side / Chinatown",
@@ -401,38 +386,6 @@ window.JORDAN_DATA = {
       "confidence": "medium"
     },
     {
-      "title": "Ping pong at SPIN — $9 after 9pm Tuesdays",
-      "venue": "SPIN New York Flatiron",
-      "category": "pingpong",
-      "discipline": "Table tennis",
-      "level": "Anyone",
-      "days": ["mon", "tue", "wed", "thu"],
-      "start": "18:00",
-      "end": "23:00",
-      "when": "Walk-in Mon–Thu 4:00–11:00pm. The Tuesday deal is $9 per person after 9:00pm.",
-      "timeVerified": true,
-      "cost": "Walk-in per table/hour: Mon $29 · Tue–Thu $49 · Fri–Sat $59. Tuesday after 9pm: $9",
-      "url": "https://wearespin.com/location/new-york-flatiron/",
-      "notes": "The one on this list you can do with a drink in your hand, and the obvious answer to \"someone's in town, where do we go.\" Eighteen Olympic-grade tables across 14,000 square feet in the Flatiron, with a full bar and a real kitchen — Susan Sarandon's ping pong club, still the best-executed version of the idea in the city. The move is Tuesday: $9 a head after 9pm, which turns a $49-an-hour table into a cheap night out. Walk-ins are welcome when tables are free, but book ahead if it matters. Eight minutes up Park Ave South.",
-      "confidence": "high"
-    },
-    {
-      "title": "Blitz & rapid at the Marshall Chess Club",
-      "venue": "Marshall Chess Club",
-      "category": "chess",
-      "discipline": "Chess",
-      "level": "All ratings, including unrated",
-      "days": ["mon", "wed", "thu", "fri"],
-      "start": "19:00",
-      "end": "22:00",
-      "when": "Club open Mon and Wed–Fri 2:00pm–midnight (closed Tue except for events). USCF-rated tournaments run almost daily — check the calendar for the night's event and entry fee.",
-      "timeVerified": false,
-      "cost": "Entry fees vary by event · non-members may enter many tournaments",
-      "url": "https://www.marshallchessclub.org/calendar",
-      "notes": "The most Jordan thing within a fifteen-minute walk. The Marshall is one of the oldest chess clubs in America, in a Greenwich Village brownstone on West 10th — the room where Bobby Fischer played the Game of the Century at thirteen. It runs USCF-rated tournaments almost every day, from four-round blitz nights to slower action events, and non-members can enter many of them, so you can turn up and play rated chess without joining first. Open until midnight, which makes it the rare weeknight activity that doesn't punish a late start. Bring nothing; boards and clocks are there.",
-      "confidence": "high"
-    },
-    {
       "title": "Tempo Thursdays with TMIRCE",
       "venue": "TMIRCE — Alphabet City Beer Co.",
       "category": "run",
@@ -452,21 +405,21 @@ window.JORDAN_DATA = {
 
   "itineraries": {
     "mon": {
-      "summary": "Monday is the widest night — Anderson's opens at 10am, Training Zone runs its Mon/Wed block, and SPIN's $29 table is the cheapest of the week.",
+      "summary": "Monday is the widest night — Anderson's opens at 10am, Training Zone runs its Mon/Wed block, and Unity's mats go to 10pm.",
       "picks": [
         { "key": "intro-to-bjj-the-free-first-class", "note": "If it's the first session ever, start here. Free, four minutes away." },
         { "key": "muay-thai-boxing-bjj-adult-program", "note": "One of only two weeknights the Gramercy gym is open." },
         { "key": "indoor-4v4-futsal-at-the-ground", "note": "Rain-proof, open till midnight — the reliable soccer habit." },
-        { "key": "blitz-rapid-at-the-marshall-chess-club", "note": "The zero-sweat option. Rated chess till midnight on West 10th." }
+        { "key": "muay-thai-all-levels", "note": "Two minutes from the door. Beginners are normal here." }
       ]
     },
     "tue": {
-      "summary": "Tuesday: Unity's mats run to 10:30pm, and SPIN does $9 a head after 9pm — the two best late options of the week.",
+      "summary": "Tuesday: Unity's mats run to 10:30pm — the latest grappling anywhere nearby, so a late finish isn't a dealbreaker.",
       "picks": [
         { "key": "gi-no-gi-jiu-jitsu-7-days-a-week", "note": "First day free for tri-state residents, intro lesson included." },
-        { "key": "ping-pong-at-spin-9-after-9pm-tuesdays", "note": "$9 after 9pm. The one you can bring someone to." },
         { "key": "pickup-soccer-at-sara-d-roosevelt-park", "note": "Closest field — 6 train to Canal, five minutes' walk." },
-        { "key": "no-gi-jiu-jitsu-submission-wrestling", "note": "Rash guard and shorts, no gi to buy. First class free." }
+        { "key": "no-gi-jiu-jitsu-submission-wrestling", "note": "Rash guard and shorts, no gi to buy. First class free." },
+        { "key": "jeet-kune-do-filipino-martial-arts", "note": "The most interesting hour within a 5-minute walk." }
       ]
     },
     "wed": {
@@ -475,7 +428,7 @@ window.JORDAN_DATA = {
         { "key": "muay-thai-boxing-bjj-adult-program", "note": "The second and last Gramercy weeknight. Spend the free trial week here." },
         { "key": "adults-bjj", "note": "Technique, drilling, then optional rolling. Small groups." },
         { "key": "pickup-soccer-at-pier-40", "note": "Floodlit roof over the Hudson. Worth it on a clear evening." },
-        { "key": "blitz-rapid-at-the-marshall-chess-club", "note": "Open till midnight — the rare thing a late start doesn't ruin." }
+        { "key": "muay-thai", "note": "Paxibellum's striking hour — free to try, six minutes away." }
       ]
     },
     "thu": {
@@ -492,7 +445,7 @@ window.JORDAN_DATA = {
       "picks": [
         { "key": "boxing-underground", "note": "Hit a bag, talk to no one, walk home down Bleecker." },
         { "key": "indoor-4v4-futsal-at-the-ground", "note": "Open till midnight Fridays. Play late, no consequences." },
-        { "key": "blitz-rapid-at-the-marshall-chess-club", "note": "Friday nights at the Marshall run to midnight." },
+        { "key": "adults-bjj", "note": "Friday rolls are usually the friendliest of the week." },
         { "key": "muay-thai-all-levels", "note": "Anderson's is open till 9pm Fridays — two minutes away." }
       ]
     }

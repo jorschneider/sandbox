@@ -19,7 +19,7 @@
  */
 const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri"];
 const MAX_WALK = 15;   // martial arts, and all of Athena's side — on foot
-const MAX_TRAVEL = 25; // Jordan's soccer/chess/ping pong/running — door-to-door
+const MAX_TRAVEL = 25; // Jordan's soccer and running — door-to-door
 const MARTIAL_CATS = ["grappling", "striking", "mma"];
 const LIVE = process.env.WEEKNIGHTS_URL || "https://jordan-athena-weeknights.vercel.app";
 

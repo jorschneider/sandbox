@@ -63,6 +63,63 @@ window.ATHENA_DATA = {
     }
   },
 
+  /* Who actually teaches at 816 Broadway. Athena asked. The honest headline is
+     that ISHTA's two most famous names are no longer the ones in the room:
+     ISHTA's own lineage page places Alan Finger and Sarah Platt-Finger in
+     Florida, and Mona Anand in New York. Mona is the Yogiraj she is most
+     likely to meet. Faculty rosters drift — re-read /our-instructors weekly. */
+  "teachers": {
+    "ISHTA Yoga": {
+      "url": "https://ishtayoga.com/our-instructors",
+      "lineage": "ISHTA is both a Sanskrit word — \"that which resonates with the individual spirit\" — and an acronym: the Integrated Science of Hatha, Tantra and Ayurveda. It was built in late-1960s South Africa by Mani Finger and his son Alan, who studied alongside him from the age of fifteen. Mani was initiated into Kriya Yoga by Paramahansa Yogananda in Los Angeles and later as a Kavi yogi by Sivananda in India; both father and son were initiated into Tantra by Shuddhanand Bharati. Alan brought it to Los Angeles in 1975 and opened the New York headquarters in 1993. The system's whole premise is that you draw selectively from those traditions based on what you personally need, rather than working toward a standard pose — which is why the teacher you get matters more here than at a studio with a fixed sequence.",
+      "inTheRoom": "Alan and Sarah are now based in Florida. The Yogiraj teaching in New York is Mona Anand, alongside the wider NYC faculty below.",
+      "seniors": [
+        {
+          "name": "Mona Anand",
+          "title": "Yogiraj · co-owner & managing director",
+          "note": "The senior teacher actually in New York, and the reason to care about ISHTA's yoga nidra in particular. She created a nine-step nidra system with Alan Finger — taught as \"Mona Anand's ISHTA Yoga Nidra\" — and designed the \"Yoga Nidra and The Chakras\" training, with recordings aimed at different ends: deep relaxation or sleep, lifting your mood, grounding, or correcting specific chakra and dosha imbalances. She also co-developed Anand Menza Restorative, ISHTA's own take on restorative yoga using visualisation, pranayama, kriya and Ayurveda. She grew up with nidra in Mumbai, has a Master's in International Affairs from Columbia, and leads ISHTA's 200- and 300-hour trainings. If Athena liked the nidra, this is whose system it is."
+        },
+        {
+          "name": "Alan Finger",
+          "title": "Kavi Yogiraj · founder",
+          "note": "Co-founded ISHTA with his father Mani. Now Florida-based, so don't expect him on a Tuesday — but the method is his. His line, quoted in Village Preservation's profile of the studio, is a fair summary of the whole approach: \"the more seriously you take yourself, the more serious your problems.\""
+        },
+        {
+          "name": "Sarah Platt-Finger",
+          "title": "Yogiraj · co-owner, Teacher Training Director",
+          "note": "Built ISHTA's teacher training programme and created the signature class \"Sweat + Samadhi\" — now taught by ISHTA teachers worldwide, and on the schedule at 816 Broadway. Also Florida-based now."
+        },
+        {
+          "name": "Peter Ferko",
+          "title": "Yogiraj · senior trainer",
+          "note": "Teaching ISHTA since 2003, initiated as Yogiraj by Alan Finger in November 2011. Works through breath, alignment and the elemental essences described in tantra yoga — the most technically precise of the senior teachers."
+        },
+        {
+          "name": "Wendy Newton",
+          "title": "Yogiraj · senior trainer, E-RYT 500, RPP",
+          "note": "A student of Alan Finger's since 2002 and a yoga and polarity therapist with her own New York practice. Co-authored \"Tantra of the Yoga Sutras\" with Alan Finger. Worth seeking out if the philosophy side is interesting rather than just the asana."
+        },
+        {
+          "name": "Douglass Stewart",
+          "title": "Senior trainer",
+          "note": "Has taught in the ISHTA tradition and its earlier incarnations — Yoga Zone, Be Yoga, the ISHTA Yoga Center — since 2000. One of the longest continuous teaching histories in the lineage."
+        },
+        {
+          "name": "Kelly Eudailey",
+          "title": "Senior trainer",
+          "note": "Co-leads the teacher trainings with Mona Anand, alongside Ferko, Stewart and Newton."
+        }
+      ],
+      "faculty": [
+        "Phil Schuster", "Susan Ingraham", "Puy Navarro", "Cassandra Ferland",
+        "Mary Jo Marchisello", "Amy Coombs", "Cathy Lilly", "Stephen Mark",
+        "Elissa Lewis", "Helen Jansson", "Jennifer Chang", "Tracy Balzano",
+        "Rina Deshpande", "Amanda Fuller", "Corinne Tocmacov", "Celine Guillaume",
+        "Elena Skovorodko", "Kirsti Craig"
+      ]
+    }
+  },
+
   "events": [
     {
       "title": "ISHTA Basics — the beginner's on-ramp",
@@ -93,7 +150,7 @@ window.ATHENA_DATA = {
       "timeVerified": false,
       "cost": "$32 drop-in (packs from $139 / 5 classes)",
       "url": "https://ishtayoga.com/descriptions",
-      "notes": "A balanced practice that ends with 10–15 minutes of guided yoga nidra — lying completely still while the teacher talks you down into what ISHTA calls \"deep relaxation while exploring an expanded state of awareness.\" This is the single best pick after a bad day at work: you get the movement, and then someone hands you twenty minutes of doing absolutely nothing. Non-negotiable tip — bring a layer, because body temperature drops fast during nidra.",
+      "notes": "A balanced practice that ends with 10–15 minutes of guided yoga nidra — lying completely still while the teacher talks you down into what ISHTA calls \"deep relaxation while exploring an expanded state of awareness.\" This is the single best pick after a bad day at work: you get the movement, and then someone hands you twenty minutes of doing absolutely nothing. The nidra taught here is a specific nine-step system Mona Anand — the Yogiraj based in New York — developed with Alan Finger, so it's more structured than a generic guided relaxation. Non-negotiable tip: bring a layer, because body temperature drops fast during nidra.",
       "confidence": "high"
     },
     {
