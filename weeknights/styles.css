@@ -1,0 +1,270 @@
+/* Jordan & Athena Weeknights — after-dark palette, two accents.
+   Athena = amethyst/rose, Jordan = ember/amber. Layout mirrors the
+   Rayray Big Weekend site: hero, pickers, itinerary, split map+list. */
+
+:root {
+  --ink: #f3eefc;
+  --ink-soft: #b9aed2;
+  --ink-dim: #8b81a5;
+  --bg: #140d24;
+  --bg-2: #1b1033;
+  --card: rgba(255, 255, 255, 0.055);
+  --card-hi: rgba(255, 255, 255, 0.10);
+  --line: rgba(255, 255, 255, 0.13);
+  --accent: #c084fc;
+  --accent-2: #f9a8d4;
+  --glow: rgba(192, 132, 252, 0.42);
+  --radius: 16px;
+  --shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+}
+body.mode-jordan {
+  --accent: #fb923c;
+  --accent-2: #fbbf24;
+  --glow: rgba(251, 146, 60, 0.42);
+  --bg: #1a1008;
+  --bg-2: #26160c;
+  --ink: #fdf4e8;
+  --ink-soft: #d7bfa4;
+  --ink-dim: #a68a6d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Outfit", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { width: min(1180px, 92vw); margin: 0 auto; }
+
+/* ——— ambient background ——— */
+.sky { position: fixed; inset: 0; z-index: -1; overflow: hidden; background:
+  radial-gradient(120% 90% at 50% -20%, var(--bg-2) 0%, var(--bg) 62%); }
+.blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; }
+.blob-a { width: 46vw; height: 46vw; left: -10vw; top: -8vw; background: var(--glow); }
+.blob-b { width: 38vw; height: 38vw; right: -8vw; top: 12vh; background: var(--accent-2); opacity: 0.2; }
+.blob-c { width: 42vw; height: 42vw; left: 30vw; bottom: -18vw; background: var(--accent); opacity: 0.16; }
+
+/* ——— hero ——— */
+.hero { position: relative; padding: 46px 0 24px; }
+.hero .moon { position: absolute; right: 4vw; top: 22px; font-size: 44px; opacity: 0.85;
+  animation: bob 7s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+.hero h1 {
+  margin: 0 0 8px; font-size: clamp(30px, 5.6vw, 54px); font-weight: 800;
+  letter-spacing: -0.022em; line-height: 1.05;
+}
+.hero h1 .glyph { display: inline-block; animation: bob 5s ease-in-out infinite; }
+.tagline { margin: 0 0 14px; max-width: 62ch; color: var(--ink-soft); font-size: clamp(15px, 1.9vw, 18px); line-height: 1.5; }
+.tagline strong { color: var(--ink); }
+.weekline { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0; }
+.week-label {
+  font-weight: 700; padding: 5px 12px; border-radius: 999px;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  color: #1a1030;
+}
+.fresh { color: var(--ink-dim); font-size: 14px; }
+
+/* ——— pickers ——— */
+.modes, .days, .bases { display: flex; flex-wrap: wrap; gap: 8px; }
+.modes { margin: 22px 0 14px; }
+.days { margin: 0 0 12px; }
+.bases { margin: 0 0 14px; }
+
+.md, .day, .base {
+  font: inherit; cursor: pointer; color: var(--ink-soft);
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 999px; padding: 9px 16px; transition: 0.16s ease;
+}
+.md:hover, .day:hover, .base:hover { background: var(--card-hi); color: var(--ink); transform: translateY(-1px); }
+.md { font-weight: 700; font-size: 15px; }
+.md.active, .day.active, .base.active {
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  color: #1a1030; border-color: transparent; font-weight: 700;
+}
+.day { min-width: 68px; text-align: center; }
+
+/* ——— walk slider ——— */
+.travel-row { display: flex; align-items: center; gap: 12px; margin: 4px 0 12px; flex-wrap: wrap; }
+.travel-row label { color: var(--ink-soft); font-size: 14px; }
+.travel-row b { color: var(--accent-2); min-width: 62px; }
+#travel-slider { flex: 1 1 210px; max-width: 340px; accent-color: var(--accent); }
+
+.count { margin: 0 0 16px; color: var(--ink-dim); font-size: 14px; }
+
+/* ——— itinerary ——— */
+.itin {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px 20px; margin: 0 0 20px;
+}
+.itin h2 { margin: 0 0 6px; font-size: 20px; }
+.itin-sum { margin: 0 0 14px; color: var(--ink-soft); line-height: 1.55; }
+.itin-picks { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.itin-opt {
+  font: inherit; text-align: left; cursor: pointer; color: var(--ink);
+  background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
+  border-radius: 12px; padding: 12px 14px; display: grid; gap: 5px; transition: 0.16s ease;
+}
+.itin-opt:hover { background: var(--card-hi); border-color: var(--accent); transform: translateY(-2px); }
+.itin-opt b { font-size: 15px; }
+.io-meta { color: var(--accent-2); font-size: 12.5px; font-weight: 600; }
+.io-note { color: var(--ink-soft); font-size: 13px; line-height: 1.45; }
+
+/* ——— who teaches ——— */
+.teachers { margin: 0 0 20px; }
+.t-block {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 14px 18px;
+}
+.t-block summary { cursor: pointer; font-size: 15px; display: grid; gap: 3px; }
+.t-block summary::marker { color: var(--accent); }
+.t-block[open] summary { margin-bottom: 12px; }
+.t-hint { color: var(--accent-2); font-size: 12.5px; font-weight: 600; }
+.t-lineage {
+  margin: 0 0 14px; color: var(--ink-soft); font-size: 13.5px; line-height: 1.65;
+  border-left: 2px solid var(--line); padding-left: 12px;
+}
+.t-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.teacher {
+  background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line);
+  border-radius: 12px; padding: 11px 13px; display: grid; gap: 4px;
+}
+.teacher b { font-size: 14.5px; }
+.t-title { color: var(--accent-2); font-size: 12px; font-weight: 600; }
+.t-note { color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
+.t-faculty { margin: 12px 0 10px; color: var(--ink-dim); font-size: 12.5px; line-height: 1.7; }
+.t-faculty b { color: var(--ink-soft); }
+
+/* ——— evening weather (only shown when rain is in play) ——— */
+.wx-strip {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 16px; margin: 0 0 18px;
+}
+.wx-label { font-size: 14px; font-weight: 600; margin: 0 0 8px; }
+.wx-hours { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+.wx-h {
+  flex: none; min-width: 64px; text-align: center; font-size: 12.5px;
+  background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line); border-radius: 10px; padding: 7px 6px;
+  display: grid; gap: 2px; color: var(--ink-soft);
+}
+.wx-h b { color: var(--ink); font-size: 11.5px; }
+.wx-h i { font-style: normal; font-size: 11px; color: var(--ink-dim); }
+.wx-h.wet { border-color: #60a5fa; background: rgba(96, 165, 250, 0.12); }
+.wx-h.now { outline: 2px solid var(--accent-2); }
+.day-wx { display: block; font-size: 11px; color: var(--ink-dim); margin-top: 2px; }
+.day.active .day-wx { color: #1a1030; opacity: 0.8; }
+
+/* outdoor session on a wet evening */
+.card-rain { opacity: 0.72; }
+.card-rain .card-head h3::after { content: " 🌧️"; }
+.rain-note { margin: 0 0 8px; font-size: 12.5px; color: #93c5fd; }
+
+/* tonight: countdown + already-started */
+.chip.soon { color: #1a1030; background: linear-gradient(120deg, var(--accent), var(--accent-2)); border-color: transparent; font-weight: 700; }
+.chip.live { color: #86efac; border-color: rgba(134, 239, 172, 0.4); font-weight: 600; }
+.card-past { opacity: 0.55; }
+.card-past .chip.time { text-decoration: line-through; }
+.chip.past { color: var(--ink-dim); }
+
+/* real slots merged from slots.js */
+.slot-teacher { color: var(--ink-soft); }
+.chip.spots { color: var(--ink-soft); }
+
+/* ——— map + list ——— */
+.map-shell { margin: 0 0 26px; }
+.map-split { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; }
+.map-list { max-height: 76vh; overflow-y: auto; padding-right: 6px; display: grid; gap: 12px; align-content: start; }
+.map-pane { position: sticky; top: 16px; height: 76vh; }
+#map { width: 100%; height: 100%; border-radius: var(--radius); border: 1px solid var(--line); }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 15px 17px; transition: 0.16s ease; scroll-margin: 14px;
+}
+.card:hover { background: var(--card-hi); }
+.card.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--glow), var(--shadow); }
+/* the favourite venue leads every list — mark it so the order reads as deliberate */
+.card-fav { border-left: 3px solid var(--accent-2); }
+.fav-star { color: var(--accent-2); }
+.card-head { display: flex; align-items: flex-start; gap: 10px; }
+.card-head h3 { margin: 0; font-size: 17px; font-weight: 700; flex: 1; line-height: 1.3; }
+.num {
+  flex: none; width: 24px; height: 24px; border-radius: 50%; font-size: 12.5px; font-weight: 800;
+  display: grid; place-items: center; color: #1a1030;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+}
+.unpinned { font-size: 13px; opacity: 0.8; cursor: help; }
+.heart { flex: none; font-size: 17px; background: none; border: 0; cursor: pointer; padding: 0 2px; line-height: 1; }
+
+.venue { margin: 7px 0 9px; color: var(--ink-soft); font-size: 13.5px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 9px; }
+.chip {
+  font-size: 12px; padding: 3px 9px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); color: var(--ink-soft);
+}
+.chip.time { color: var(--accent-2); font-weight: 600; }
+.chip.walk { color: var(--ink); }
+
+.nights { margin: 0 0 8px; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+.nights b { color: var(--ink); letter-spacing: 0.02em; }
+.getting { margin: 0 0 8px; font-size: 12.5px; color: var(--ink-dim); }
+.cost { margin: 0 0 9px; font-size: 13px; color: var(--ink-soft); }
+.notes { margin: 0 0 11px; font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); }
+
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; align-items: center; }
+.links a, .ics {
+  font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  text-decoration: none; color: var(--ink);
+  background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line);
+  border-radius: 999px; padding: 6px 12px; transition: 0.16s ease;
+}
+.links a:hover, .ics:hover { background: var(--card-hi); border-color: var(--accent); }
+
+.empty { color: var(--ink-dim); padding: 24px 4px; }
+
+/* map pins */
+.pin { background: none; border: 0; }
+.pin-num {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: 12px; font-weight: 800; color: #1a1030; z-index: 2;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+.pin-emoji { display: none; }
+.pin-active .pin-num { transform: scale(1.28); box-shadow: 0 0 0 5px var(--glow); }
+.home-pin { font-size: 22px; text-align: center; line-height: 30px; filter: drop-shadow(0 2px 5px rgba(0,0,0,.6)); }
+.leaflet-popup-content-wrapper { background: #221541; color: #f3eefc; border-radius: 12px; }
+.leaflet-popup-tip { background: #221541; }
+.leaflet-popup-content { font-family: inherit; font-size: 13px; line-height: 1.5; }
+.leaflet-container a.leaflet-popup-close-button { color: #b9aed2; }
+
+/* ——— note + footer ——— */
+.note {
+  background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: var(--radius); padding: 16px 20px; margin: 0 0 28px;
+}
+.note h2 { margin: 0 0 7px; font-size: 17px; }
+.note p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.6; }
+
+footer { border-top: 1px solid var(--line); padding: 20px 0 40px; }
+footer p { margin: 0 0 5px; color: var(--ink-dim); font-size: 13px; }
+
+/* ——— scrollbar ——— */
+.map-list::-webkit-scrollbar { width: 8px; }
+.map-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 8px; }
+
+/* ——— responsive ——— */
+@media (max-width: 880px) {
+  .map-split { grid-template-columns: 1fr; }
+  .map-pane { position: relative; top: 0; height: 46vh; order: -1; }
+  .map-list { max-height: none; overflow: visible; padding-right: 0; }
+  .hero .moon { font-size: 32px; top: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
