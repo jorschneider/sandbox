@@ -47,8 +47,8 @@ function validateSide(data, label, allowedCats) {
   if (data.favoriteVenue != null && !(data.venues || {})[data.favoriteVenue]) {
     err(label + ": favoriteVenue '" + data.favoriteVenue + "' is not in the venues map");
   }
-  // ISHTA is Athena's favourite and its classes must lead her lists. Losing the
-  // field would silently reshuffle her whole page, so it is not optional.
+  // ISHTA is Athena's favourite; the field drives the ★ on its cards. Lists sort
+  // by start time (Jordan's explicit ask), so this is a marker, not an order.
   if (label === "athena.js" && data.favoriteVenue !== "ISHTA Yoga") {
     err(label + ": favoriteVenue must stay 'ISHTA Yoga' — it is Athena's favourite " +
       "and its classes sort first (got " + JSON.stringify(data.favoriteVenue) + ")");

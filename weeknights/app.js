@@ -70,7 +70,8 @@
   const DAY_LABELS = { mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri" };
   const DAY_FULL = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday" };
 
-  // a side may name one favourite venue; its sessions sort above everything else
+  // a side may name one favourite venue; its cards get a ★ and an accent edge.
+  // (It used to sort first too — Jordan asked for pure time order instead.)
   const FAV_VENUE = data.favoriteVenue || null;
   const isFav = (e) => Boolean(FAV_VENUE) && e.venue === FAV_VENUE;
 
@@ -447,11 +448,9 @@
     if (!it) { itinEl.hidden = true; return; }
     let html = '<h2>' + DAY_FULL[state.day] + (state.day === todayKey ? " — tonight" : "") + "</h2>" +
       '<p class="itin-sum">' + esc(it.summary) + "</p><div class=\"itin-picks\">";
-    // favourite venue leads the night's plan too, without disturbing the rest
-    const picks = it.picks.slice().sort((a, b) => {
-      const ea = byKey[a.key], eb = byKey[b.key];
-      return (ea && isFav(ea) ? 0 : 1) - (eb && isFav(eb) ? 0 : 1);
-    });
+    // the night's plan reads in time order too, earliest first
+    const startOf = (p) => { const e = byKey[p.key]; return e ? (timeOn(e, state.day).start || "") : ""; };
+    const picks = it.picks.slice().sort((a, b) => startOf(a).localeCompare(startOf(b)));
     picks.forEach((p) => {
       const e = byKey[p.key];
       if (!e) return;
@@ -515,9 +514,11 @@
       if (st && st.kind === "past" && !state.showPast) { hiddenPast++; return false; }
       return true;
     }).sort((a, b) =>
-      (isFav(b) ? 1 : 0) - (isFav(a) ? 1 : 0) ||
+      // earliest start first — the scroll reads like the evening. Same start:
+      // nearer wins, then the favourite venue as a final tie-break.
       (timeOn(a, state.day).start || "").localeCompare(timeOn(b, state.day).start || "") ||
-      travelOf(a) - travelOf(b));
+      travelOf(a) - travelOf(b) ||
+      (isFav(b) ? 1 : 0) - (isFav(a) ? 1 : 0));
 
     // the "show what's started" chip only earns its place on tonight's tab
     pastChip.hidden = !(state.day === todayKey && (hiddenPast > 0 || state.showPast));

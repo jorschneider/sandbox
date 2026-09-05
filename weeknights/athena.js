@@ -21,9 +21,9 @@ window.ATHENA_DATA = {
   "updated": "September 4, 2026",
   "who": "Athena",
 
-  /* ISHTA is Athena's favourite, so its classes sort to the top of every list
-     and every night's plan, ahead of the usual by-start-time order. Keep this
-     field — do not drop it in a weekly refresh. */
+  /* ISHTA is Athena's favourite: its cards are starred. Lists sort purely by
+     start time (earliest first) — Jordan asked for that explicitly, so do not
+     reintroduce favourite-first sorting. Keep this field for the star. */
   "favoriteVenue": "ISHTA Yoga",
 
   "venues": {

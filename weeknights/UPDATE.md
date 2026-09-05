@@ -100,13 +100,17 @@ ask Jordan. Do not quietly relax either rule.
 
 ---
 
-## ISHTA leads Athena's page
+## Lists sort by time; ISHTA is starred
 
-`athena.js` carries `"favoriteVenue": "ISHTA Yoga"`. Its classes sort above
-everything else — list, map numbering, and each night's plan — before the usual
-by-start-time order. Favourite cards get a ★. **Do not drop or change this
-field**; `validate.cjs` fails the build if it isn't `ISHTA Yoga`. Give ISHTA
-the most research effort of any venue on her side.
+Every list — and each night's plan — sorts by **start time, earliest first**,
+so the scroll reads like the evening. Jordan asked for this explicitly after an
+earlier version put ISHTA at the top; do not reintroduce favourite-first
+sorting. Same start time: nearer venue wins, then the favourite as a tie-break.
+
+`athena.js` carries `"favoriteVenue": "ISHTA Yoga"`, which now only drives the
+★ and accent edge on ISHTA's cards. **Do not drop or change this field**;
+`validate.cjs` fails the build if it isn't `ISHTA Yoga`. Give ISHTA the most
+research effort of any venue on her side.
 
 ---
 
