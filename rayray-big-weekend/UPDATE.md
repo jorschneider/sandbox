@@ -256,6 +256,210 @@ for this week directly, but STILL preserve the evergreen library.
    `travelMinutes` is a from-Union-Square estimate; `cpwOnly:true` marks the
    uptown ones (beyond ~36 min of Union Sq) so they surface only in Grandma mode.
 
+## Source checklist — fetch EVERY one, EVERY research run
+
+Why this exists: on Sep 19, 2026 the site missed a free 1:30 PM kids' music
+workshop at Children's Magical Garden (Arts for Art's InGardens Festival)
+because no beat covered small community organizations. A same-day sweep of
+the classes below found about forty more toddler-fit events for the same two
+weeks. The research agents must fetch each URL here in addition to the beats
+above and report what they found, even when the answer is "nothing this
+week". A source that cannot be fetched is named in the run summary, never
+silently skipped.
+
+**Community gardens, settlement houses and small arts orgs (LES / East Village / Chinatown)**
+- LUNGS: Harvest Arts Festival mid/late Sept (50+ free events in ~30 gardens,
+  incl. a Kids Day) plus year-round garden events — https://lungsnyc.org/
+  (2026 schedule: /harvest-arts-festival-2026-schedule/); IG @lungsnyc.
+- Arts for Art InGardens Festival: Sat/Sun Sept–mid-Oct, 1:30 PM kids' music
+  workshops in Sept at Children's Magical Garden, then First Street Green —
+  https://www.artsforart.org/ingardens-2026/; IG @artsforart.
+- Elizabeth Street Garden: equinox/solstice parties with face painting, Live
+  Music Sundays 5–7 — https://www.elizabethstreetgarden.com/calendar
+  (append `?format=json` for a machine-readable feed).
+- 6BC Botanical Garden: free weekend concerts; the live data is the embedded
+  Google Calendar — https://www.6bcgarden.org/events-calendar.html.
+- Sara D. Roosevelt Park Coalition / M'Finda Kalunga Garden (sandbox; Arts in
+  the Garden) — https://sdrpc.mkgarden.org/category/events/.
+- Jefferson Market Garden (Saturday 10:30 kids' flower crafts, concerts; the
+  web calendar is stale, Instagram is the truth) —
+  https://www.jeffersonmarketgarden.org/calendar; IG @jeffersonmarketgarden.
+- NYC Parks GreenThumb garden events — https://www.nycgovparks.org/events/greenthumb.
+- Abrons Arts Center / Henry Street Settlement: free Fall Festival mid-Oct
+  with "The Garden", a sensory show for ages 3–5; family events sit inside an
+  adult calendar — https://www.abronsartscenter.org/events.
+- 14th Street Y Jewish Life family holiday events (sukkah dinners, Purim) —
+  https://www.14streety.org/jewish-life/upcoming-jewish-life-events/.
+- La MaMa Kids: monthly, some shows built for 6–36 months (ELEMENTARY) —
+  https://lamama.org/la-mama-kids/.
+- Loisaida Center — https://loisaida.org/events/. Think!Chinatown (Chinatown
+  Arts Festival all October, Mid-Autumn events; Instagram-first) —
+  https://www.thinkchinatown.org/happenings.
+
+**Chinese cultural programming (Mid-Autumn and Lunar New Year matter a lot)**
+- Museum of Chinese in America family festivals (Mid-Autumn late Sept, Lunar
+  New Year; under 5 free) — https://www.mocanyc.org/calendar/.
+- China Institute family festivals (Mid-Autumn, LNY, Dragon Boat) and the
+  Mandarin Munchkins ages 1–2 class — https://chinainstitute.org/upcoming-events/
+  (blocks fetchers: use a browser user agent or the Eventbrite organizer page).
+- Welcome to Chinatown Mid-Autumn Fest (multi-day at Gotham Park, early Oct,
+  lantern painting; IG @welcome.to.chinatown) — https://welcometochinatown.com/events.
+- Yu & Me Books kids' author events — https://yuandmebooks.com/pages/events-at-yu-me-books.
+  Chatham Square NYPL Mandarin–English family storytime (Mon 10:30/11:30) is
+  in the NYPL beat.
+
+**Waterfront, park conservancies, BIDs and state parks**
+- Governors Island (page is JS-rendered; use the JSON feed) —
+  https://www.govisland.com/things-to-do.json — org-in-residence workshops
+  most weekends through Oct 31, Pumpkin Point late Oct; ferry from 10 South
+  St, free before 11 AM on weekends, under 12 free.
+- Washington Square Park Conservancy (NYPL Storytime Under the Trees Tue 11,
+  Art in the Park Wed 3–5, Park Open Studio Thu/Fri/Sat 1–3 in Oct; client-
+  rendered calendar) — https://www.washingtonsqpark.org/calendar; IG @washingtonsquarepk.
+- Madison Square Park Conservancy (home turf) —
+  https://madisonsquarepark.org/community/calendar/; IG @madsqparknyc.
+- Hudson Square BID "Pause in the Plaza" (Tue 12–1:30 craft table + jazz,
+  Sept–Oct) — https://hudsonsquarebid.org/neighborhood/events/.
+- South Street Seaport Museum (monthly family activity, periodic free Family
+  Days) — https://southstreetseaportmuseum.org/visit/programs_events/; The
+  Seaport / Pier 17 — https://theseaport.nyc/events/.
+- NY State Parks NYC region (Marsha P. Johnson SP "Tot Time" Thu 10–11 through
+  Oct; Gantry Plaza) — https://parks.ny.gov/visit/events.
+- Hunters Point Parks Conservancy (Queens Landing open houses, Halloween on
+  the Waterfront late Oct) — https://hunterspointparks.org/events/.
+- Fort Greene Park Conservancy (Storytime in the Park Wed 11 through mid-Oct,
+  Halloween Fest late Oct) — https://www.fortgreenepark.org/calendar.
+- Friends of Washington Market Park, Tribeca (toddler Music in the Playground
+  Tuesdays, Halloween parade late Oct) — https://www.washingtonmarketpark.org/events-at-the-park/.
+- Friends of McGolrick Park (PuppetMobile, McGhoulrick) — https://mcgolrick.org/events;
+  Town Square Greenpoint Children's Halloween Parade (Eventbrite organizer
+  "Town Square BK"); Brooklyn Heights Association Promenade parade —
+  https://thebha.org/events/; Old Stone House "Sing with Suzi in the Park" —
+  https://theoldstonehouse.org/events/; Culture Lab LIC MusiCraftory toddler
+  music-and-craft (Humanitix) — https://www.culturelablic.org/.
+- Riverside Park and Central Park Conservancies (weekend Grandma zone; JSON
+  feeds) — https://riversideparknyc.org/events/,
+  https://www.centralparknyc.org/calendar.json?page=1.
+- NYC Parks rec-center tot programs (Tiny Tots at Alfred E. Smith Rec Center
+  Tue/Fri 11; membership $150/yr, under 18 free) —
+  https://www.nycgovparks.org/events/recreation-centers.
+
+**Museums and cultural institutions with toddler programs**
+- Noguchi Museum "Art for Tots" ages 1–2 (monthly), Stroller Tour, Free
+  First Fridays — https://www.noguchi.org/museum/calendar/browse/families/.
+- Brooklyn Botanic Garden Kids & Families (Fall First Discoveries Wed+Fri
+  10:30–12:30 for ages 4 and under through Nov 6; Discovery Weekends Sat/Sun;
+  under 12 free) — https://www.bbg.org/learn/kids_and_families.
+- The Met "Storytime at The Met" every Tue+Thu 10:15 & 11:00, ages 18 months–6,
+  81st Street Studio; the monthly page lives on engage.metmuseum.org —
+  https://www.metmuseum.org/events/programs/families/storytime.
+- Poster House (Poster Tots ages 2–4 select Saturdays 10:30; Open Studio first
+  Sundays; free Fridays; 10-min walk) — https://posterhouse.org/kids-families/.
+- New Museum Family Day (free, roughly monthly Sunday 11–3) —
+  https://www.newmuseum.org/learn/for-families/.
+- Jewish Museum free Dig & Create Sundays and After School Art Explorers
+  Tuesdays; free Saturdays — https://thejewishmuseum.org/programs/.
+- Brooklyn Children's Museum (free Community Access Thursdays 2–5; Totally
+  Tots 0–6; ~40 min) — https://www.brooklynkids.org/events/.
+- Children's Museum of Manhattan PlayWorks daily schedule (Grandma zone) —
+  https://cmom.org/visit/. Morgan Library Family First Saturdays (ages 3–7,
+  weekend storytime, so usually skipped) — https://www.themorgan.org/programs/list.
+- Lincoln Center free family shows, Saturdays 11 AM at the Rubenstein Atrium —
+  https://lincolncenter.org/series/lincoln-center-presents/v/calendar (filter
+  Kids, Teens, and Families).
+- Guggenheim Stroller Hour / Stroller Tour: Walkers (12–36 months; dates are
+  JS-only) — https://www.guggenheim.org/event/event_series/for-families.
+
+**Live shows, classes, drop-ins and street fairs**
+- Vital Theatre Company: Sunday 11 AM musicals rated ages 2–7 —
+  https://vitaltheatre.org/.
+- Music Together in the City outdoor drop-ins (Mon Madison Sq Park 11:15 & 4,
+  Fri Washington Sq Park 11:15; $44) — https://www.musictogethernyc.com/classes.aspx.
+- Bindlestiff Family Cirkus (free sets at street fairs, ticketed at LPAC) —
+  https://bindlestiff.org/events/.
+- Brooklyn Conservatory of Music free family events and parades — https://bkcm.org/events/.
+- Swedish Cottage Marionette Theatre (weekends, ages 3–7, under 2 free; closes
+  late 2026 for renovation) — https://cityparksfoundation.org/swedish-cottage-marionette-theatre/.
+- Manhattan Youth Downtown Community Center toddler open play (members) —
+  https://www.manhattanyouth.org/community-center/center-classes.
+- McNally Jackson weekday storytimes (SoHo Tue 3 PM & Fri 11 AM; Williamsburg
+  Thu 11:30; Downtown Brooklyn Tue/Fri 4 PM) — https://mcnallyjackson.com/kids-shop.
+  Books Are Magic "Tiny Storytime" 6–36 months (Tue 11 Smith St, Thu 11
+  Montague St) needs confirmation on IG @booksaremagicbk first.
+- WonderSpark Puppets free-show list — https://www.wondersparkpuppets.com/free-shows-nyc;
+  Suzi Shelton shows — https://www.suzishelton.com/shows.
+- Street fairs and parades: Atlantic Antic (last Sunday of Sept) —
+  https://www.atlanticave.org/; Dumboween (Oct 31) — https://dumbo.nyc/dumboween/;
+  BKLYN BOO (Oct 30) — https://www.downtownbrooklyn.com/; Tompkins Square
+  Halloween Dog Parade — https://www.nydogparade.org/; Washington Square Park
+  Children's Halloween Parade (Oct 31, 3 PM) —
+  https://www.nyu.edu/community/nyu-in-nyc/events/annual-children-s-halloween-parade.html.
+
+**Catching Instagram-first organizations.** Most orgs above post on Instagram
+before their website, and the research agents cannot log in there. So for
+each: (1) fetch the org's own schedule page or linktree; (2) look for an
+embedded Google Calendar, a Squarespace `?format=json` feed, or an
+Eventbrite / Humanitix / Luma organizer page; (3) web-search
+"<org> <month> 2026" and confirm on the org's own page. If a source cannot
+be fetched by any of these, say so in the run summary.
+
+## Verified leads for upcoming weeks (found Sep 19, 2026)
+
+Pull each into `nextWeek` when its week arrives, after re-verifying on the
+official page.
+
+- **Sep 28–Oct 4**: Pause in the Plaza rock decorating Tue Sep 29 12–1:30
+  (Hudson Square); Music Together Mon Sep 28 and Fri Oct 2; Storytime at The
+  Met Tue Sep 29 and Thu Oct 1; Tot Time Thu Oct 1 (Williamsburg); BBG First
+  Discoveries Wed Sep 30 and Fri Oct 2, Discovery Weekend Oct 3–4, Fall Family
+  Story Time Sun Oct 4 11 AM; Tiny Tots at Alfred E. Smith Rec Center Tue Sep
+  29 and Fri Oct 2 11–12 (members); Welcome to Chinatown Mid-Autumn Fest
+  Fri–Sun Oct 2–4 1–7 PM, Gotham Park, free with RSVP; La MaMa Kids
+  ELEMENTARY Sat–Sun Oct 3–4 10 AM, ages 6–36 months; City of Forest Day Sat
+  Oct 3 10–2 at Madison Square Park (coloring, arboretum hunt) and 10–1 at
+  Hippo Playground, Riverside Park; Song Bridge Sat Oct 3 2:30 PM, Josie
+  Robertson Plaza, Lincoln Center, free; Suzi Shelton "Wake Up & Dance" Sat
+  Oct 3 10 AM, Gowanus, $15 (verify venue); Brooklyn Museum First Saturday
+  Sat Oct 3 (unverified, site blocks fetches); Prospect Park Zoo Spooktober
+  every October weekend; Poster House Open Studio silkscreen Sun Oct 4 11–2;
+  Wonder in the Woods Sat Oct 3 10–12, Harlem Meer; Fort Greene storytime and
+  Art in the Park Wed Sep 30; Shabbat Dinner in the Sukkah Fri Oct 2 5 PM,
+  14th Street Y.
+- **Oct 5–11**: Jewish Museum After School Art Explorers Tue Oct 6 2:30–4:30
+  (free) and Dig & Create Sun Oct 11 11:30–3 (free); McGolrick Park
+  PuppetMobile Sat Oct 10; BKCM Grand Opening Parade Sun Oct 11 10 AM, Park
+  Slope; Music in the Playground Tue Oct 6 (Tribeca); Pause in the Plaza
+  coloring Tue Oct 6; Indigenous Peoples' Day Mon Oct 12 (schools closed; no
+  in-zone toddler event confirmed yet: hunt NMAI New York and the Seaport
+  Museum; IPDNYC on Randall's Island is out of zone).
+- **Oct 12–18**: Abrons Arts Center Fall Festival Sat Oct 17 12–4 with "The
+  Garden" for ages 3–5 at 1:30 and 2:45 (free RSVP); Brooklyn Bridge Park
+  Harvest Festival Sat Oct 17 11–3, Pier 6; Tompkins Square Halloween Dog
+  Parade Sat Oct 17 mid-morning, Ave B; Poster Tots "Paper Puppets" Sat Oct
+  17 10:30 (ages 2–4, register); Open House New York Oct 16–18; Governors
+  Island Third Saturday Oct 17; Culture Lab MusiCraftory Sun Oct 18 4 PM;
+  Brooklyn Navy Yard open house Oct 17.
+- **Oct 19–25**: Governors Island Pumpkin Point Sat–Sun Oct 24–25 10–5, Nolan
+  Park; Washington Market Park Halloween Parade Sun Oct 25 1 PM (band-led;
+  the best toddler Halloween) and pumpkin carving Sat Oct 24; Fort Greene
+  Park Halloween Fest Sat Oct 24 12–4; Diwali at Times Square Sat Oct 24;
+  Hunters Point "Halloween on the Waterfront" (2025 was Sat Oct 25 4–8);
+  Greenpoint Children's Halloween Parade (2025 was Sun Oct 26 noon, McCarren;
+  Eventbrite "Town Square BK"); Brooklyn Heights Promenade parade (2025 was
+  Sun Oct 26 11 AM); Central Park Pumpkin Flotilla late Oct, Harlem Meer.
+- **Oct 26–Nov 1**: Sing with Suzi Halloween Costume Day Thu Oct 29 10–11,
+  JJ Byrne Playground; BKLYN BOO Fri Oct 30 4–6, Abolitionist Place;
+  Dumboween Sat Oct 31 3 PM parade and Archway party; Washington Square Park
+  Children's Halloween Parade Sat Oct 31 3 PM from the Arch (NYU page not yet
+  posted); Village Halloween Parade Oct 31 7 PM (not for toddlers); New
+  Museum Family Day Sun Nov 1 11–3, free; TCS NYC Marathon Sun Nov 1: cheer
+  from Bedford Ave, Williamsburg, roughly 10 AM–2 PM (L to Bedford); Hudson
+  River Park Pumpkin Smash Sat Nov 7, Pier 84; Asia Society Diwali Sat Nov 7 1–4.
+- **Evergreen indoor candidates for the rainy-day list**: Museum of Illusions
+  (77 Eighth Ave; under 5 free; carry the stroller); Color Factory (251 Spring
+  St; under 3 free; no strollers inside); NYC Fire Museum, reopened Aug 2026 at
+  278 Spring St, Wed–Sun 10–5, under 3 free, kids $6, adults $15.
+
 ## Daily itineraries (exec-sum at the top of each day)
 
 `WEEK_DATA.itineraries` holds a curated plan for EVERY day, mon–sun. This is
