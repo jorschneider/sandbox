@@ -2041,6 +2041,58 @@ window.DATE_DATA = {
       "times": [
         "afternoon"
       ]
+    },
+    {
+      "category": "music",
+      "cost": "Free",
+      "url": "https://www.artsforart.org/ingardens-2026/",
+      "outdoor": true,
+      "confidence": "high",
+      "cpwOnly": false,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "venue": "Children’s Magical Garden",
+      "neighborhood": "Lower East Side",
+      "lat": 40.7206,
+      "lng": -73.9864,
+      "travelMinutes": 22,
+      "travelHow": "M14A-SBS from 14th St & Ave A to Essex/Stanton, then 3-min walk; or a 28-min walk down 2nd Ave",
+      "title": "InGardens Festival: free jazz in Children’s Magical Garden",
+      "when": "Sat Sep 19, 2:00 PM",
+      "days": [
+        "sat"
+      ],
+      "start": "14:00",
+      "end": "17:00",
+      "toddlerNotes": "Arts for Art’s free community-garden series, LES: Smith/Kickofel/Rogers at 2, Joe Morris Trio at 3, open drum-and-dance circle at 4. Bring wine-adjacent picnic energy; a bench under the trees at Stanton & Norfolk. Outdoor; rain date Oct 19."
+    },
+    {
+      "category": "music",
+      "cost": "Free",
+      "url": "https://www.artsforart.org/ingardens-2026/",
+      "outdoor": true,
+      "confidence": "high",
+      "cpwOnly": false,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "venue": "Children’s Magical Garden",
+      "neighborhood": "Lower East Side",
+      "lat": 40.7206,
+      "lng": -73.9864,
+      "travelMinutes": 22,
+      "travelHow": "M14A-SBS from 14th St & Ave A to Essex/Stanton, then 3-min walk; or a 28-min walk down 2nd Ave",
+      "title": "InGardens Festival: free jazz in Children’s Magical Garden (Sunday)",
+      "when": "Sun Sep 20, 2:00 PM",
+      "days": [
+        "sun"
+      ],
+      "start": "14:00",
+      "end": "17:00",
+      "toddlerNotes": "Sunday-afternoon free jazz in a hidden LES garden: Kang/Summers/Nakadegawa-Lee at 2, Eichenberger Trio at 3, Cabrini at 4, Nadien/Salamone at 4:30. Ends in time for dinner on Clinton St. Outdoor; rain date Oct 19."
     }
   ],
   "nextWeek": {
@@ -2749,6 +2801,58 @@ window.DATE_DATA = {
         "times": [
           "evening"
         ]
+      },
+      {
+        "category": "music",
+        "cost": "Free",
+        "url": "https://www.artsforart.org/ingardens-2026/",
+        "outdoor": true,
+        "confidence": "high",
+        "cpwOnly": false,
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "venue": "First Street Green Cultural Park",
+        "neighborhood": "East Village",
+        "lat": 40.7237,
+        "lng": -73.9905,
+        "travelMinutes": 18,
+        "travelHow": "18-min walk down 2nd Ave to E 1st St, or 6 train to Bleecker St then 5-min walk",
+        "title": "InGardens Festival: free jazz + drum circle, First Street Green",
+        "when": "Sat Sep 26, 2:00 PM",
+        "days": [
+          "sat"
+        ],
+        "start": "14:00",
+        "end": "17:00",
+        "toddlerNotes": "Arts for Art’s free outdoor jazz series moves to this small mural-lined park on E 1st St. Choi/Connor at 2, SSAJ/Dglio at 3, then a 4 PM open drum-and-dance circle you can join with your own drum. No kids’ workshop this date; toddlers wander and dance. Outdoor; rain date Oct 19."
+      },
+      {
+        "category": "music",
+        "cost": "Free",
+        "url": "https://www.artsforart.org/ingardens-2026/",
+        "outdoor": true,
+        "confidence": "high",
+        "cpwOnly": false,
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "venue": "First Street Green Cultural Park",
+        "neighborhood": "East Village",
+        "lat": 40.7237,
+        "lng": -73.9905,
+        "travelMinutes": 18,
+        "travelHow": "18-min walk down 2nd Ave to E 1st St, or 6 train to Bleecker St then 5-min walk",
+        "title": "InGardens Festival: free jazz at First Street Green (Sunday)",
+        "when": "Sun Sep 27, 2:00 PM",
+        "days": [
+          "sun"
+        ],
+        "start": "14:00",
+        "end": "17:00",
+        "toddlerNotes": "Free open-air jazz in the mural park on E 1st St: Andrea Wolper and Friends at 2, Christi/Nicholson/Thompson at 3, Colon/Easter at 4. Short sets, come and go; no kids’ workshop this date. Outdoor; rain date Oct 19."
       }
     ]
   }

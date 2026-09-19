@@ -212,7 +212,10 @@ for this week directly, but STILL preserve the evergreen library.
    immersive), with the family price math (under-X free, resident
    pay-what-you-wish) and stroller rules; (b) indoor family-friendly concerts
    (Jazz at Lincoln Center family shows, Carnegie family events, Symphony
-   Space Just Kidding, Bargemusic, free atrium series).
+   Space Just Kidding, Bargemusic, free atrium series, and Arts for Art’s
+   **InGardens Festival** — free weekend jazz with 1:30 PM kids’ music workshops
+   in LES/East Village community gardens every Sat/Sun Sept–mid-Oct;
+   schedule at artsforart.org/ingardens-2026 and @artsforart on Instagram).
    **Frame ages honestly**: verify age recommendations on the official page;
    "all ages welcome" is not "made for toddlers" — say which part of an event
    is actually the toddler part.

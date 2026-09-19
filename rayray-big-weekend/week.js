@@ -288,7 +288,7 @@ window.WEEK_DATA = {
       ]
     },
     "sat": {
-      "summary": "Union Square Greenmarket, then Paws on Parade, then Illumination Light Art Festival.",
+      "summary": "Union Square Greenmarket, then William Parker’s kids’ music workshop at Children’s Magical Garden, then Illumination Light Art Festival.",
       "picks": [
         {
           "slot": "morning",
@@ -322,9 +322,9 @@ window.WEEK_DATA = {
         },
         {
           "slot": "afternoon",
-          "key": "puppetworks-hansel-gretel",
-          "title": "Puppetworks: Hansel & Gretel",
-          "note": "12:30 PM — Puppetworks at Industry City — Hand-carved marionettes doing the Brothers Grimm story with Humperdinck's opera songs —…"
+          "key": "ingardens-festival-kids-music-workshop-with-will",
+          "title": "InGardens Festival: Kids’ Music Workshop with William Parker",
+          "note": "1:30 PM — Children’s Magical Garden, Stanton & Norfolk — William Parker leads a music workshop for ages 2–7, then free jazz sets at 2 and 3 and a 4 PM drum-and-dance circle you can join…"
         },
         {
           "slot": "evening",
@@ -369,9 +369,9 @@ window.WEEK_DATA = {
         },
         {
           "slot": "afternoon",
-          "key": "puppetworks-hansel-gretel",
-          "title": "Puppetworks: Hansel & Gretel",
-          "note": "12:30 PM — Puppetworks at Industry City — Hand-carved marionettes doing the Brothers Grimm story with Humperdinck's opera songs —…"
+          "key": "ingardens-festival-kids-music-workshop-with-will",
+          "title": "InGardens Festival: Kids’ Music Workshop with William Parker (Sunday)",
+          "note": "1:30 PM — Children’s Magical Garden, Stanton & Norfolk — William Parker’s music workshop for ages 2–7 again, then free jazz sets until 5 — free, outdoor, 22 min…"
         },
         {
           "slot": "evening",
@@ -9083,6 +9083,58 @@ window.WEEK_DATA = {
       ]
     },
     {
+      "title": "InGardens Festival: Kids’ Music Workshop with William Parker",
+      "category": "music",
+      "venue": "Children’s Magical Garden",
+      "neighborhood": "Lower East Side",
+      "when": "Sat Sep 19, 1:30 PM (music through 5 PM)",
+      "days": [
+        "sat"
+      ],
+      "cost": "Free",
+      "travelMinutes": 22,
+      "travelHow": "M14A-SBS from 14th St & Ave A to Essex/Stanton, then 3-min walk; or a 28-min walk down 2nd Ave",
+      "toddlerNotes": "Arts for Art’s free community-garden jazz series. 1:30 PM music workshop for ages 2–7 led by bassist William Parker, then Smith/Kickofel/Rogers at 2, Joe Morris Trio at 3, and a 4 PM open drum-and-dance circle — bring a drum or just dance. Garden at Stanton & Norfolk has paths and a pond to roam. Outdoor; rain date Oct 19.",
+      "url": "https://www.artsforart.org/ingardens-2026/",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7206,
+      "lng": -73.9864,
+      "start": "13:30",
+      "end": "17:00",
+      "cpwOnly": false,
+      "event": true,
+      "times": [
+        "afternoon"
+      ]
+    },
+    {
+      "category": "music",
+      "cost": "Free",
+      "url": "https://www.artsforart.org/ingardens-2026/",
+      "outdoor": true,
+      "confidence": "high",
+      "cpwOnly": false,
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "venue": "Children’s Magical Garden",
+      "neighborhood": "Lower East Side",
+      "lat": 40.7206,
+      "lng": -73.9864,
+      "travelMinutes": 22,
+      "travelHow": "M14A-SBS from 14th St & Ave A to Essex/Stanton, then 3-min walk; or a 28-min walk down 2nd Ave",
+      "title": "InGardens Festival: Kids’ Music Workshop with William Parker (Sunday)",
+      "when": "Sun Sep 20, 1:30 PM (music through 5 PM)",
+      "days": [
+        "sun"
+      ],
+      "start": "13:30",
+      "end": "17:00",
+      "toddlerNotes": "Same free garden series as Saturday: 1:30 PM music workshop for ages 2–7 led by bassist William Parker, then Kang/Summers/Nakadegawa-Lee at 2, Eichenberger Trio at 3, Cabrini at 4 and Nadien/Salamone at 4:30. Bring a picnic blanket; garden paths and a pond to roam. Outdoor; rain date Oct 19."
+    },
+    {
       "title": "Sundays on Montague Open Streets: FAD Market + Super Soccer Stars",
       "category": "festival",
       "venue": "Montague St between Clinton and Hicks Sts",
@@ -9712,6 +9764,58 @@ window.WEEK_DATA = {
         "times": [
           "morning"
         ]
+      },
+      {
+        "category": "music",
+        "cost": "Free",
+        "url": "https://www.artsforart.org/ingardens-2026/",
+        "outdoor": true,
+        "confidence": "high",
+        "cpwOnly": false,
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "venue": "First Street Green Cultural Park",
+        "neighborhood": "East Village",
+        "lat": 40.7237,
+        "lng": -73.9905,
+        "travelMinutes": 18,
+        "travelHow": "18-min walk down 2nd Ave to E 1st St, or 6 train to Bleecker St then 5-min walk",
+        "title": "InGardens Festival: Free Jazz + Drum Circle at First Street Green",
+        "when": "Sat Sep 26, 2:00 PM",
+        "days": [
+          "sat"
+        ],
+        "start": "14:00",
+        "end": "17:00",
+        "toddlerNotes": "Arts for Art’s free outdoor jazz series moves to this small mural-lined park on E 1st St. Choi/Connor at 2, SSAJ/Dglio at 3, then a 4 PM open drum-and-dance circle you can join with your own drum. No kids’ workshop this date; toddlers wander and dance. Outdoor; rain date Oct 19."
+      },
+      {
+        "category": "music",
+        "cost": "Free",
+        "url": "https://www.artsforart.org/ingardens-2026/",
+        "outdoor": true,
+        "confidence": "high",
+        "cpwOnly": false,
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "venue": "First Street Green Cultural Park",
+        "neighborhood": "East Village",
+        "lat": 40.7237,
+        "lng": -73.9905,
+        "travelMinutes": 18,
+        "travelHow": "18-min walk down 2nd Ave to E 1st St, or 6 train to Bleecker St then 5-min walk",
+        "title": "InGardens Festival: Free Jazz at First Street Green (Sunday)",
+        "when": "Sun Sep 27, 2:00 PM",
+        "days": [
+          "sun"
+        ],
+        "start": "14:00",
+        "end": "17:00",
+        "toddlerNotes": "Free open-air jazz in the mural park on E 1st St: Andrea Wolper and Friends at 2, Christi/Nicholson/Thompson at 3, Colon/Easter at 4. Short sets, come and go; no kids’ workshop this date. Outdoor; rain date Oct 19."
       }
     ]
   }
