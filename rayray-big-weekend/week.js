@@ -9211,6 +9211,33 @@ window.WEEK_DATA = {
         "evening"
       ],
       "cpwOnly": false
+    },
+    {
+      "title": "Eco Arts Festival at the Climate Imaginarium, Governors Island",
+      "category": "festival",
+      "venue": "Climate Imaginarium, Colonels Row Bldg 406A, Governors Island",
+      "neighborhood": "Governors Island",
+      "when": "Sun Sep 20, 11 AM–4 PM (performances 12:45–2:45)",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free with RSVP (suggested $10 donation); ferry $5 round trip, under 12 free, everyone free before 11 AM on weekends",
+      "travelMinutes": 35,
+      "travelHow": "4/5 to Bowling Green, 5-min walk to the Battery Maritime Building at 10 South St, then the 8-min ferry (every 15 min on weekends)",
+      "toddlerNotes": "Hands-on tables a 2-year-old can join with a hand: paper-making 11–2 and recycled-fabric weaving 2–4, plus performances mid-day and an edible-insect tasting for the brave. Catch the before-11 free ferry and it is a full island day.",
+      "url": "https://www.govisland.com/things-to-do/events/eco-arts-festival-2026",
+      "outdoor": false,
+      "confidence": "medium",
+      "lat": 40.6895,
+      "lng": -74.019,
+      "start": "11:00",
+      "end": "16:00",
+      "event": true,
+      "times": [
+        "morning",
+        "afternoon"
+      ],
+      "cpwOnly": false
     }
   ],
   "nextWeek": {
@@ -10389,6 +10416,347 @@ window.WEEK_DATA = {
         "lng": -73.9962,
         "start": "12:00",
         "end": "18:00",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "NYPL Storytime Under the Trees at Washington Square Park",
+        "category": "storytime",
+        "venue": "Washington Square Park, Northern Reading Alcove",
+        "neighborhood": "Greenwich Village",
+        "when": "Tue Sep 22, 11:00–11:30 AM",
+        "days": [
+          "tue"
+        ],
+        "cost": "Free, no registration",
+        "travelMinutes": 15,
+        "travelHow": "15-min walk down University Pl; the alcove is just inside Washington Sq North",
+        "toddlerNotes": "NYPL librarians read and sing outdoors, designed for little ones; second-to-last session of the season (final is Sep 29). Playground is steps away after.",
+        "url": "https://www.washingtonsqpark.org/programs",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7316,
+        "lng": -73.9973,
+        "start": "11:00",
+        "end": "11:30",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Pause in the Plaza: junk journaling + live jazz",
+        "category": "other",
+        "venue": "Hudson Square Plaza, Spring St & Sixth Ave",
+        "neighborhood": "Hudson Square",
+        "when": "Tue Sep 22, 12:00–1:30 PM",
+        "days": [
+          "tue"
+        ],
+        "cost": "Free",
+        "travelMinutes": 20,
+        "travelHow": "6 train to Spring St, then 10-min walk west; or 25-min walk",
+        "toddlerNotes": "Free craft table on the plaza (stickers, tape, cardstock bookmarks) while a jazz trio plays, Tuesdays through Oct 27. A sticker-fest lunch outing; Sep 29 is rock decorating, Oct 6 coloring pages.",
+        "url": "https://hudsonsquarebid.org/neighborhood/event/pause-in-the-plaza-junk-journaling/",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7256,
+        "lng": -74.004,
+        "start": "12:00",
+        "end": "13:30",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Music in the Playground: toddler movers and shakers",
+        "category": "music",
+        "venue": "Washington Market Park, Greenwich St between Duane and Chambers",
+        "neighborhood": "Tribeca",
+        "when": "Tue Sep 22, morning (time not posted; likely about 10 AM, check @washingtonmarketpark)",
+        "days": [
+          "tue"
+        ],
+        "cost": "Free",
+        "travelMinutes": 20,
+        "travelHow": "1/2/3 to Chambers St, then 5-min walk",
+        "toddlerNotes": "Friends of the park's free toddler music-and-dance session inside the playground, Tuesdays Sep 22, 29 and Oct 6. The page gives no time, so confirm on their Instagram before going.",
+        "url": "https://www.washingtonmarketpark.org/events-at-the-park/",
+        "outdoor": true,
+        "confidence": "low",
+        "lat": 40.7167,
+        "lng": -74.0113,
+        "start": "10:00",
+        "end": "11:00",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Art in the Park with Miss Debbie (Washington Square playground)",
+        "category": "play",
+        "venue": "Washington Square Park playground",
+        "neighborhood": "Greenwich Village",
+        "when": "Wed Sep 23, 3:00–5:00 PM",
+        "days": [
+          "wed"
+        ],
+        "cost": "Free, drop in",
+        "travelMinutes": 15,
+        "travelHow": "15-min walk down University Pl",
+        "toddlerNotes": "Draw, cut and paste at tables inside the playground, all ages with a caregiver, Wednesdays through Oct 28. Perfect post-nap outing: art, then the swings.",
+        "url": "https://www.washingtonsqpark.org/programs",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7302,
+        "lng": -73.9995,
+        "start": "15:00",
+        "end": "17:00",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Storytime in the Park at Fort Greene Park",
+        "category": "storytime",
+        "venue": "Fort Greene Park, bottom of the monument stairs (Myrtle Ave & St Edwards St)",
+        "neighborhood": "Fort Greene",
+        "when": "Wed Sep 23, 11:00–11:45 AM",
+        "days": [
+          "wed"
+        ],
+        "cost": "Free",
+        "travelMinutes": 30,
+        "travelHow": "4/5 to Nevins St, then 12-min walk; or Q to DeKalb Ave",
+        "toddlerNotes": "Brooklyn Public Library librarians plus a guest musician from Urban Stages: songs, books and play on the lawn, Wednesdays through Oct 14.",
+        "url": "https://www.fortgreenepark.org/calendar/storytime-in-the-park-092326",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.693,
+        "lng": -73.9765,
+        "start": "11:00",
+        "end": "11:45",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Tot Time at Marsha P. Johnson State Park",
+        "category": "play",
+        "venue": "Blue Park House, Marsha P. Johnson State Park, 90 Kent Ave",
+        "neighborhood": "Williamsburg",
+        "when": "Thu Sep 24, 10:00–11:00 AM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free; Eventbrite ticket per child, walk-ups fine",
+        "travelMinutes": 24,
+        "travelHow": "L to Bedford Ave, then 12-min walk to the waterfront",
+        "toddlerNotes": "Weekly nature-themed craft plus a guided storytime built for ages 5 and under, run by the state park, Thursdays through Oct 29. The lawn and East River view are the after-party.",
+        "url": "https://www.eventbrite.com/e/tot-time-tickets-1985818770399",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7217,
+        "lng": -73.9623,
+        "start": "10:00",
+        "end": "11:00",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Queens Landing Open House: crafts and creek critters",
+        "category": "animals",
+        "venue": "Queens Landing Boathouse, Hunter's Point South Park (Center Blvd & Borden Ave)",
+        "neighborhood": "Long Island City",
+        "when": "Thu Sep 24, 2:30–4:30 PM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 28,
+        "travelHow": "4/5/6 to Grand Central, 7 to Vernon Blvd–Jackson Av, then 10-min walk",
+        "toddlerNotes": "Crafts plus live Newtown Creek animals in tanks to see up close, in the boathouse on the LIC waterfront. Big lawns and the Hunter's Point playground next door.",
+        "url": "https://hunterspointparks.org/events/",
+        "outdoor": false,
+        "confidence": "high",
+        "lat": 40.7398,
+        "lng": -73.9583,
+        "start": "14:30",
+        "end": "16:30",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Homecoming: For the Harbor (puppet-making + parade), Governors Island",
+        "category": "festival",
+        "venue": "LMCC Arts Center, Bldg 110, Soissons Landing, Governors Island",
+        "neighborhood": "Governors Island",
+        "when": "Sat Sep 26, 10:30 AM–3:30 PM",
+        "days": [
+          "sat"
+        ],
+        "cost": "Free with RSVP; ferry free before 11 AM on weekends, otherwise $5 round trip, under 12 free",
+        "travelMinutes": 35,
+        "travelHow": "4/5 to Bowling Green, walk to the Battery Maritime Building, 8-min ferry (every 15 min weekends)",
+        "toddlerNotes": "Make puppet fish and crabs, fish hats and armbands, then join a pep-rally parade with a marching band for the harbor. Right at the ferry landing, so no trek across the island.",
+        "url": "https://www.govisland.com/things-to-do/events/homecoming-for-the-harbor",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.6919,
+        "lng": -74.0165,
+        "start": "10:30",
+        "end": "15:30",
+        "event": true,
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Seaport Museum Family Day (free admission, climb the tall ship)",
+        "category": "festival",
+        "venue": "South Street Seaport Museum, 12 Fulton St and Pier 16",
+        "neighborhood": "Seaport",
+        "when": "Sat Sep 26, 11 AM–5 PM",
+        "days": [
+          "sat"
+        ],
+        "cost": "Free general admission, book online",
+        "travelMinutes": 20,
+        "travelHow": "4/5 to Fulton St, then 8-min walk to Fulton & South St",
+        "toddlerNotes": "Bingo-card stamp stations, cyanotype printing, a food-themed sensory activity, Lenape games, and climbing aboard the 1885 tall ship Wavertree at Pier 16. Taste of the Seaport's free KidZone runs 12–4 steps away.",
+        "url": "https://southstreetseaportmuseum.org/family-day/",
+        "outdoor": false,
+        "confidence": "high",
+        "lat": 40.7064,
+        "lng": -74.0035,
+        "start": "11:00",
+        "end": "17:00",
+        "event": true,
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Taste of the Seaport KidZone (free)",
+        "category": "festival",
+        "venue": "Seaport Square, 89 South St by Piers 16–17",
+        "neighborhood": "Seaport",
+        "when": "Sat Sep 26, 12:00–4:00 PM",
+        "days": [
+          "sat"
+        ],
+        "cost": "KidZone free, no ticket needed (food tastings $70 for adults)",
+        "travelMinutes": 20,
+        "travelHow": "4/5 to Fulton St, then 8-min walk",
+        "toddlerNotes": "Free kids' activity zone at the food festival, including the museum's fish-for-fun-facts game; pair with the museum's Family Day next door and the Pier 17 rooftop views.",
+        "url": "https://theseaport.nyc/events/taste-of-the-seaport/",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.706,
+        "lng": -74.0018,
+        "start": "12:00",
+        "end": "16:00",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Locomotive Open House in Riverside Park South",
+        "category": "other",
+        "venue": "Locomotive Lawn, Riverside Park South at about W 62nd St",
+        "neighborhood": "Upper West Side",
+        "when": "Sat Sep 26, 10:00 AM–1:00 PM",
+        "days": [
+          "sat"
+        ],
+        "cost": "Free",
+        "travelMinutes": 25,
+        "travelHow": "1 train to 66th St, then 10-min walk west to Riverside Blvd",
+        "toddlerNotes": "A real 1930s locomotive opened up with staff on hand: more look-and-point than hands-on, but train-obsessed toddlers do not care. Cancelled in heavy rain. Good Grandma's-day pick too.",
+        "url": "https://riversideparknyc.org/event/locomotive-open-house-2/2026-09-26/",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.7745,
+        "lng": -73.991,
+        "start": "10:00",
+        "end": "13:00",
+        "event": true,
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Free afternoon music at 6BC Botanical Garden",
+        "category": "music",
+        "venue": "6BC Botanical Garden, E 6th St between Ave B and C",
+        "neighborhood": "East Village",
+        "when": "Sat Sep 26, 3:00–5:00 PM",
+        "days": [
+          "sat"
+        ],
+        "cost": "Free",
+        "travelMinutes": 20,
+        "travelHow": "20-min walk down 1st Ave to E 6th St",
+        "toddlerNotes": "Volunteer-run garden with winding paths and a pond, free weekend concerts on its embedded calendar. Two blocks from LUNGS Kids Day at El Jardín del Paraíso for a garden-hopping afternoon. Time from the garden's Google Calendar; confirm on the day.",
+        "url": "https://www.6bcgarden.org/events-calendar.html",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.7238,
+        "lng": -73.9795,
+        "start": "15:00",
+        "end": "17:00",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "MusiCraftory toddler music and craft at Culture Lab LIC",
+        "category": "music",
+        "venue": "Culture Lab LIC, The Lot, 5-25 46th Ave",
+        "neighborhood": "Long Island City",
+        "when": "Sun Sep 27, 4:00–5:00 PM (doors 3:30)",
+        "days": [
+          "sun"
+        ],
+        "cost": "Unclear: venue page says free with ticket, Humanitix shows $25 per child and pay-what-you-wish adults; check before going",
+        "travelMinutes": 30,
+        "travelHow": "4/5/6 to Grand Central, 7 to Vernon Blvd–Jackson Av, then 10-min walk",
+        "toddlerNotes": "Parachute, scarves, instruments and a craft with Shana: built for exactly this age. Late-afternoon slot; repeats Oct 18.",
+        "url": "https://events.humanitix.com/musicraftory",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.7455,
+        "lng": -73.956,
+        "start": "16:00",
+        "end": "17:00",
         "event": true,
         "times": [
           "afternoon"
