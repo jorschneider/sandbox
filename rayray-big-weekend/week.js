@@ -8403,32 +8403,6 @@ window.WEEK_DATA = {
       ]
     },
     {
-      "title": "Baby Soda Jazz Band in the Garden",
-      "category": "music",
-      "venue": "Miracle Garden, E 3rd St",
-      "neighborhood": "East Village",
-      "when": "Sun Sep 20, 1:00 PM",
-      "days": [
-        "sun"
-      ],
-      "cost": "Free",
-      "travelMinutes": 20,
-      "travelHow": "F to 2nd Ave + 7 min walk, or L to 1st Ave + 11 min walk",
-      "toddlerNotes": "Trad New Orleans jazz quintet in a tiny East Village community garden, part of the LUNGS Harvest Arts Festival. Loose, outdoor, no seating chart — toddlers dance on the path. Two-hour window. Leafy and shaded; narrow garden paths, leave the stroller at the gate.",
-      "url": "https://www.nycgovparks.org/events/2026/09/20/baby-soda-jazz-band-2026-lungs-harvest-arts-festival",
-      "outdoor": true,
-      "confidence": "high",
-      "lat": 40.7226,
-      "lng": -73.984,
-      "start": "13:00",
-      "end": "15:00",
-      "cpwOnly": false,
-      "event": true,
-      "times": [
-        "afternoon"
-      ]
-    },
-    {
       "title": "Toddler Open Play",
       "category": "play",
       "venue": "Kips Bay Library (NYPL)",
@@ -10023,6 +9997,401 @@ window.WEEK_DATA = {
         "event": true,
         "times": [
           "evening"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Music Together outdoor drop-in at Madison Square Park",
+        "category": "music",
+        "venue": "Madison Square Park, meet at 5th Ave & 26th St",
+        "neighborhood": "Flatiron",
+        "when": "Mon Sep 21, 11:15 AM (also 4:00 PM)",
+        "days": [
+          "mon"
+        ],
+        "cost": "$44 drop-in (semester $466)",
+        "travelMinutes": 10,
+        "travelHow": "10-min walk up Broadway",
+        "toddlerNotes": "Real caregiver-and-child music class outdoors, mixed ages 0–4: singing, instruments, movement, 45 minutes. Drop in for a single class; two sittings, 11:15 and 4:00. Runs Mondays through Nov 23.",
+        "url": "https://musictogethernyc.com/location.aspx?loc=18675",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.742,
+        "lng": -73.988,
+        "start": "11:15",
+        "end": "12:00",
+        "event": true,
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Music Together outdoor drop-in at Washington Square Park",
+        "category": "music",
+        "venue": "Washington Square Park lawn near the play hills",
+        "neighborhood": "Greenwich Village",
+        "when": "Fri Sep 25, 11:15 AM–12:00 PM",
+        "days": [
+          "fri"
+        ],
+        "cost": "$44 drop-in",
+        "travelMinutes": 15,
+        "travelHow": "15-min walk down University Pl",
+        "toddlerNotes": "Same outdoor caregiver-and-child music class, Fridays through Nov 20, on the lawn by the Spider Webs and play hills, so the playground is right there after.",
+        "url": "https://www.musictogethernyc.com/location.aspx?loc=20490",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7303,
+        "lng": -73.9975,
+        "start": "11:15",
+        "end": "12:00",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Storytime at The Met: Weather Wonders",
+        "category": "storytime",
+        "venue": "The Met Fifth Avenue, 81st Street Studio (Uris Center)",
+        "neighborhood": "Upper East Side",
+        "when": "Tue Sep 22 & Thu Sep 24, 10:15 or 11:00 AM sittings",
+        "days": [
+          "tue",
+          "thu"
+        ],
+        "cost": "Free with admission; NY residents pay what you wish, under 12 free",
+        "travelMinutes": 30,
+        "travelHow": "4/5/6 to 86th St, then 10-min walk; enter at 81st St",
+        "toddlerNotes": "The Met's own toddler storytime, ages 18 months to 6: picture books, songs and a look at one artwork, 30 minutes, two sittings each morning. Weekday only, so it clears the no-weekend-storytime rule. Runs every Tue and Thu; September theme is weather.",
+        "url": "https://engage.metmuseum.org/events/education/workshops-and-classes/family-programs/fy27/storytime-at-the-met-weather-wonders",
+        "outdoor": false,
+        "confidence": "medium",
+        "lat": 40.7794,
+        "lng": -73.9632,
+        "start": "10:15",
+        "end": "11:30",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Art for Tots (ages 1–2): Opposites at the Noguchi Museum",
+        "category": "play",
+        "venue": "Noguchi Museum, 9-01 33rd Rd at Vernon Blvd",
+        "neighborhood": "Long Island City",
+        "when": "Tue Sep 22, 10:30–11:30 AM",
+        "days": [
+          "tue"
+        ],
+        "cost": "$16 per family; free for members, Cool Culture and SNAP/EBT; register online",
+        "travelMinutes": 42,
+        "travelHow": "N/W to Broadway (Astoria), then 15-min walk; or NYC Ferry to Astoria",
+        "toddlerNotes": "The only NYC museum program built for exactly this age: an hour of sensory texture exploration in the sculpture galleries and garden with a caregiver. Worth the trip; over the 35-minute default, so drag the travel slider up.",
+        "url": "https://www.noguchi.org/museum/calendar/event/2026-09-22-1030-art-for-tots-ages-1-2-opposites/",
+        "outdoor": false,
+        "confidence": "high",
+        "lat": 40.7669,
+        "lng": -73.9382,
+        "start": "10:30",
+        "end": "11:30",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Fall First Discoveries toddler drop-in at Brooklyn Botanic Garden",
+        "category": "play",
+        "venue": "Brooklyn Botanic Garden, Discovery Garden",
+        "neighborhood": "Prospect Heights",
+        "when": "Wed Sep 23 & Fri Sep 25, 10:30 AM–12:30 PM drop-in",
+        "days": [
+          "wed",
+          "fri"
+        ],
+        "cost": "Included with admission: adults $22 at the gate ($23.67 online), under 12 free",
+        "travelMinutes": 35,
+        "travelHow": "4/5 to Nevins St, transfer to 2/3 to Eastern Pkwy–Brooklyn Museum, then 3-min walk to the 990 Washington Ave gate",
+        "toddlerNotes": "Built for ages 4 and under: potting plants, a craft, a story and sensory stations in the fenced children's garden, Wednesdays and Fridays through Nov 6. Cancelled in rain or below 50°F.",
+        "url": "https://www.bbg.org/visit/event/fall_first_discoveries",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.6673,
+        "lng": -73.9636,
+        "start": "10:30",
+        "end": "12:30",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Fall Family Discovery Weekend at Brooklyn Botanic Garden",
+        "category": "play",
+        "venue": "Brooklyn Botanic Garden, Discovery Garden",
+        "neighborhood": "Prospect Heights",
+        "when": "Sat Sep 26 & Sun Sep 27, 10:30 AM–12:30 PM drop-in",
+        "days": [
+          "sat",
+          "sun"
+        ],
+        "cost": "Included with admission: adults $22 at the gate ($23.67 online), under 12 free",
+        "travelMinutes": 35,
+        "travelHow": "4/5 to Nevins St, transfer to 2/3 to Eastern Pkwy–Brooklyn Museum, then 3-min walk",
+        "toddlerNotes": "Volunteer-led hands-on stations across the courtyard, meadow, woodland and marsh of the fenced children's garden; easy for a 2-year-old, then the rest of the garden. Weekends through Oct 31.",
+        "url": "https://www.bbg.org/visit/event/fall_family_discovery_weekends",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.6673,
+        "lng": -73.9636,
+        "start": "10:30",
+        "end": "12:30",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Free Community Access Thursday at Brooklyn Children's Museum",
+        "category": "play",
+        "venue": "Brooklyn Children's Museum, 145 Brooklyn Ave",
+        "neighborhood": "Crown Heights",
+        "when": "Thu Sep 24, 2:00–5:00 PM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free (normally $15/person); reserve online",
+        "travelMinutes": 42,
+        "travelHow": "3 train to Kingston Ave, then 5-min walk; about 40 minutes door to door",
+        "toddlerNotes": "Weekly free window at the city's most toddler-friendly museum: Totally Tots sand, water and sensory play (ages 0–6), ColorLab art 2:15–5, Nature's Engineers 2:30–5, Animal Encounters 3:00. Beyond the 35-minute default, so drag the travel slider up.",
+        "url": "https://www.brooklynkids.org/events/",
+        "outdoor": false,
+        "confidence": "high",
+        "lat": 40.6745,
+        "lng": -73.944,
+        "start": "14:00",
+        "end": "17:00",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "McNally Jackson SoHo Tuesday storytime",
+        "category": "storytime",
+        "venue": "McNally Jackson Books, 52 Prince St",
+        "neighborhood": "SoHo",
+        "when": "Tue Sep 22, 3:00 PM",
+        "days": [
+          "tue"
+        ],
+        "cost": "Free",
+        "travelMinutes": 15,
+        "travelHow": "6 train to Spring St, then 5-min walk; or 22-min walk",
+        "toddlerNotes": "Bookstore read-aloud in the kids' section, about 20 minutes, then browse. Weekly on the store's official schedule; check @mcnallyjackson for a day-of cancellation.",
+        "url": "https://mcnallyjackson.com/kids-shop",
+        "outdoor": false,
+        "confidence": "medium",
+        "lat": 40.7234,
+        "lng": -73.9954,
+        "start": "15:00",
+        "end": "15:30",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "McNally Jackson SoHo Friday storytime",
+        "category": "storytime",
+        "venue": "McNally Jackson Books, 52 Prince St",
+        "neighborhood": "SoHo",
+        "when": "Fri Sep 25, 11:00 AM",
+        "days": [
+          "fri"
+        ],
+        "cost": "Free",
+        "travelMinutes": 15,
+        "travelHow": "6 train to Spring St, then 5-min walk; or 22-min walk",
+        "toddlerNotes": "Friday-morning edition of the SoHo read-aloud, about 20 minutes; pairs with the Elizabeth Street Garden two blocks east.",
+        "url": "https://mcnallyjackson.com/kids-shop",
+        "outdoor": false,
+        "confidence": "medium",
+        "lat": 40.7234,
+        "lng": -73.9954,
+        "start": "11:00",
+        "end": "11:30",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "McNally Jackson Williamsburg storytime",
+        "category": "storytime",
+        "venue": "McNally Jackson Books, 76 N 4th St",
+        "neighborhood": "Williamsburg",
+        "when": "Thu Sep 24, 11:30 AM",
+        "days": [
+          "thu"
+        ],
+        "cost": "Free",
+        "travelMinutes": 18,
+        "travelHow": "L to Bedford Ave, then 5-min walk",
+        "toddlerNotes": "Thursday read-aloud at the Williamsburg store, about 20 minutes; Domino Park playground is a 10-minute walk after.",
+        "url": "https://mcnallyjackson.com/kids-shop",
+        "outdoor": false,
+        "confidence": "medium",
+        "lat": 40.7166,
+        "lng": -73.9615,
+        "start": "11:30",
+        "end": "12:00",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Bilingual Broadway EN VIVO at Lincoln Center (free)",
+        "category": "music",
+        "venue": "David Rubenstein Atrium, 61 W 62nd St",
+        "neighborhood": "Lincoln Center",
+        "when": "Sat Sep 26, 11:00 AM",
+        "days": [
+          "sat"
+        ],
+        "cost": "Free, general admission; Fast Track reservations open the Monday before",
+        "travelMinutes": 25,
+        "travelHow": "1 train to 66th St–Lincoln Center, then 3-min walk",
+        "toddlerNotes": "Broadway songs performed in Spanish in the open atrium, family-friendly and free. Honest caveat: a watch-a-concert format; a 2-year-old dances at the edges and you leave when done.",
+        "url": "https://www.lincolncenter.org/series/lincoln-center-presents/bilingual-broadway-en-vivo-517",
+        "outdoor": false,
+        "confidence": "high",
+        "lat": 40.7711,
+        "lng": -73.9822,
+        "start": "11:00",
+        "end": "12:00",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "WonderSpark Puppets at AMNH ClimateFest",
+        "category": "theater",
+        "venue": "American Museum of Natural History, 200 Central Park West",
+        "neighborhood": "Upper West Side",
+        "when": "Sat Sep 26, puppet shows 11 AM & 3 PM; fest 11 AM–4 PM",
+        "days": [
+          "sat"
+        ],
+        "cost": "Free with museum admission; NY residents pay what you wish",
+        "travelMinutes": 30,
+        "travelHow": "1 train to 79th St, then 10-min walk; or C to 81st St",
+        "toddlerNotes": "Short hand-puppet show \"Climate Guardians\" twice during the museum's ClimateFest, plus hands-on tables. Also a good Grandma's-day pick. Museum pages block checks, so confirm the show times on the day.",
+        "url": "https://www.wondersparkpuppets.com/free-shows-nyc",
+        "outdoor": false,
+        "confidence": "medium",
+        "lat": 40.7813,
+        "lng": -73.974,
+        "start": "11:00",
+        "end": "16:00",
+        "event": true,
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Bindlestiff Family Cirkus matinee at LPAC",
+        "category": "theater",
+        "venue": "LPAC Mainstage, 31-10 Thomson Ave",
+        "neighborhood": "Long Island City",
+        "when": "Sat Sep 26, 2:00–3:00 PM",
+        "days": [
+          "sat"
+        ],
+        "cost": "About $22 (early-bird price on the venue page; confirm at 718-482-5151)",
+        "travelMinutes": 30,
+        "travelHow": "7 train to Court Sq, then 5-min walk",
+        "toddlerNotes": "Loud, silly hour of clowning, juggling and stunts pitched at families. It is a seated show, so bring a fidget plan; the Sunday Atlantic Antic sets are the free, stand-and-wander version.",
+        "url": "https://www.lpac.nyc/upcoming-events/bindlestiff-family",
+        "outdoor": false,
+        "confidence": "medium",
+        "lat": 40.7447,
+        "lng": -73.9367,
+        "start": "14:00",
+        "end": "15:00",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Penguin Goes to Flight School (Vital Theatre, ages 2–7)",
+        "category": "theater",
+        "venue": "Actors Temple Theatre, 339 W 47th St",
+        "neighborhood": "Hell's Kitchen",
+        "when": "Sun Sep 27, 11:00 AM (about 55 min)",
+        "days": [
+          "sun"
+        ],
+        "cost": "$29.50; $25 with code FLY25 through Sep 26",
+        "travelMinutes": 18,
+        "travelHow": "N/Q/R/W to 49th St, then 6-min walk west of 8th Ave",
+        "toddlerNotes": "Original musical explicitly rated ages 2–7, the only stage show in the window that says so. Opening Sunday of a run through Oct 25; short, bright, songs throughout.",
+        "url": "https://vitaltheatre.org/flight/",
+        "outdoor": false,
+        "confidence": "high",
+        "lat": 40.7612,
+        "lng": -73.9895,
+        "start": "11:00",
+        "end": "12:00",
+        "event": true,
+        "times": [
+          "morning"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Atlantic Antic street festival with Bindlestiff Family Cirkus",
+        "category": "festival",
+        "venue": "Atlantic Ave, 4th Ave to the waterfront; circus block at Clinton & Henry",
+        "neighborhood": "Brooklyn Heights / Cobble Hill",
+        "when": "Sun Sep 27, 12:00–6:00 PM; circus sets 1, 3 and 5 PM",
+        "days": [
+          "sun"
+        ],
+        "cost": "Free",
+        "travelMinutes": 25,
+        "travelHow": "4/5 to Borough Hall, then 8-min walk down Court St",
+        "toddlerNotes": "Brooklyn's biggest street fair: Bindlestiff's free outdoor circus sets at 1, 3 and 5 on the Clinton–Henry block, kids' zones with bounce houses and crafts near Henry St and Boerum Pl, food the whole length. Stand-and-wander, stroller fine, leave anytime.",
+        "url": "https://bindlestiff.org/event/atlantic-antic-2/",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.6902,
+        "lng": -73.9962,
+        "start": "12:00",
+        "end": "18:00",
+        "event": true,
+        "times": [
+          "afternoon"
         ],
         "cpwOnly": false
       }
