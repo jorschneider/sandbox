@@ -90,11 +90,35 @@ the Monday routine fired, silently did nothing, and left the site a week
 stale — because nothing verified the outcome. Never report success without
 pasting the health-check output.
 
+## Start every run by syncing from live (`sync-from-live.cjs`)
+
+Production is what Jordan sees; the repo copy is only useful if it matches it.
+Between Aug 3 and Sep 17, 2026 thirteen routine runs deployed correct data but
+their `git push` never landed, so the branch on GitHub fell six weeks behind
+the site and every fresh session started from stale July data. So the FIRST
+command of every routine, right after checkout and before `health.cjs`, is:
+
+```sh
+node rayray-big-weekend/sync-from-live.cjs          # replaces repo files that are behind live
+node rayray-big-weekend/sync-from-live.cjs --check  # report only; exit 1 if the repo is behind
+```
+
+It fetches the live `week.js` and `date.js` and replaces the repo copy of any
+file that is behind (later week, later `updated`, or same week and date but
+different content). It never touches a file when live is unreachable or fails
+to parse (exit 2), and never downgrades a repo copy that is AHEAD of live (a
+push that landed without a deploy — just deploy it). If it replaced anything:
+run the validator, then **commit those files before doing anything else**
+(message: "Sync repo to live <weekLabel>") and push if this session is able
+to. No deploy is needed for them — production already serves them.
+
 ## Monday procedure (do this in order)
 
 The site must NEVER be left showing a past week — **and never jump AHEAD of the
 current week either.** Work in this order so even a partial run leaves it right:
 
+0. **Sync from live first.** `node rayray-big-weekend/sync-from-live.cjs` (see
+   above); validate and commit anything it replaced. Only then continue.
 0. **Anchor to the real date FIRST.** Run `date` and compute
    `thisMonday` = the most recent Monday **on or before today** (if today IS
    Monday, that's today). The current week is always `thisMonday`–Sunday.
@@ -434,7 +458,9 @@ around, and any grandma-zone weekend gems.
 A routine runs EVERY morning and is the reason a bad week can no longer sit
 unnoticed. It is cheap when things are fine and self-healing when they aren't:
 
-1. `node rayray-big-weekend/health.cjs --live`.
+1. `node rayray-big-weekend/sync-from-live.cjs` — if it replaced files, run the
+   validator and commit them (no deploy needed). Then
+   `node rayray-big-weekend/health.cjs --live`.
 2. **Exit 0** → check the repo copy too (`health.cjs` with no flag) in case an
    un-deployed change is pending; if that's green as well, STOP. Send no
    message, open no PR, burn no tokens. Silence is the correct output.
@@ -452,7 +478,8 @@ all, and the Monday routine firing but accomplishing nothing.
 ## Saturday re-verify (second routine)
 
 A smaller Saturday-morning routine re-checks the CURRENT week.js in place (no
-re-research): (1) verify every dated Sat/Sun event against its official page —
+re-research). It starts with `node rayray-big-weekend/sync-from-live.cjs` like
+every run (commit anything it replaced), then: (1) verify every dated Sat/Sun event against its official page —
 cancellations, time changes; (2) upgrade any medium/low-confidence entries by
 verifying their hours/prices on the official visit pages; (3) check the weekend
 forecast and note washouts; (4) if a correction kills or moves an itinerary
