@@ -2085,7 +2085,7 @@ window.DATE_DATA = {
       "lng": -73.9864,
       "travelMinutes": 22,
       "travelHow": "M14A-SBS from 14th St & Ave A to Essex/Stanton, then 3-min walk; or a 28-min walk down 2nd Ave",
-      "title": "InGardens Festival: free jazz in Children’s Magical Garden (Sunday)",
+      "title": "InGardens Festival Sunday: free jazz in Children’s Magical Garden",
       "when": "Sun Sep 20, 2:00 PM",
       "days": [
         "sun"

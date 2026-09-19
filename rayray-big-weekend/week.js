@@ -369,8 +369,8 @@ window.WEEK_DATA = {
         },
         {
           "slot": "afternoon",
-          "key": "ingardens-festival-kids-music-workshop-with-will",
-          "title": "InGardens Festival: Kids’ Music Workshop with William Parker (Sunday)",
+          "key": "ingardens-festival-sunday-kids-music-workshop-wi",
+          "title": "InGardens Festival Sunday: Kids’ Music Workshop with William Parker",
           "note": "1:30 PM — Children’s Magical Garden, Stanton & Norfolk — William Parker’s music workshop for ages 2–7 again, then free jazz sets until 5 — free, outdoor, 22 min…"
         },
         {
@@ -9125,7 +9125,7 @@ window.WEEK_DATA = {
       "lng": -73.9864,
       "travelMinutes": 22,
       "travelHow": "M14A-SBS from 14th St & Ave A to Essex/Stanton, then 3-min walk; or a 28-min walk down 2nd Ave",
-      "title": "InGardens Festival: Kids’ Music Workshop with William Parker (Sunday)",
+      "title": "InGardens Festival Sunday: Kids’ Music Workshop with William Parker",
       "when": "Sun Sep 20, 1:30 PM (music through 5 PM)",
       "days": [
         "sun"
