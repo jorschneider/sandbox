@@ -2093,6 +2093,32 @@ window.DATE_DATA = {
       "start": "14:00",
       "end": "17:00",
       "toddlerNotes": "Sunday-afternoon free jazz in a hidden LES garden: Kang/Summers/Nakadegawa-Lee at 2, Eichenberger Trio at 3, Cabrini at 4, Nadien/Salamone at 4:30. Ends in time for dinner on Clinton St. Outdoor; rain date Oct 19."
+    },
+    {
+      "title": "Autumn Equinox with Laraaji at Elizabeth Street Garden",
+      "category": "music",
+      "venue": "Elizabeth Street Garden",
+      "neighborhood": "Nolita",
+      "when": "Tue Sep 22, 6:00–8:00 PM",
+      "days": [
+        "tue"
+      ],
+      "cost": "Free",
+      "travelMinutes": 16,
+      "travelHow": "6 train to Spring St, then 4-min walk; or 25-min walk",
+      "toddlerNotes": "Ambient legend Laraaji plays the equinox in the sculpture garden, with seasonal tea. Free, outdoors, then dinner on Elizabeth St.",
+      "url": "https://www.elizabethstreetgarden.com/calendar/2026/9/22/equinox-celebration",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7221,
+      "lng": -73.9945,
+      "start": "18:00",
+      "end": "20:00",
+      "event": true,
+      "times": [
+        "evening"
+      ],
+      "cpwOnly": false
     }
   ],
   "nextWeek": {
@@ -2853,6 +2879,32 @@ window.DATE_DATA = {
         "start": "14:00",
         "end": "17:00",
         "toddlerNotes": "Free open-air jazz in the mural park on E 1st St: Andrea Wolper and Friends at 2, Christi/Nicholson/Thompson at 3, Colon/Easter at 4. Short sets, come and go; no kids’ workshop this date. Outdoor; rain date Oct 19."
+      },
+      {
+        "title": "Live Music Sunday finale at Elizabeth Street Garden",
+        "category": "music",
+        "venue": "Elizabeth Street Garden",
+        "neighborhood": "Nolita",
+        "when": "Sun Sep 27, 5:00–7:00 PM",
+        "days": [
+          "sun"
+        ],
+        "cost": "Free",
+        "travelMinutes": 16,
+        "travelHow": "6 train to Spring St, then 4-min walk; or 25-min walk",
+        "toddlerNotes": "Season-closing free live music among the statues, 5 to 7, then Nolita dinner. Sunday golden hour done right.",
+        "url": "https://www.elizabethstreetgarden.com/calendar/2026/6/7/live-music-sunday-mlsz7",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.7221,
+        "lng": -73.9945,
+        "start": "17:00",
+        "end": "19:00",
+        "event": true,
+        "times": [
+          "evening"
+        ],
+        "cpwOnly": false
       }
     ]
   }

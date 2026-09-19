@@ -9159,6 +9159,84 @@ window.WEEK_DATA = {
       "times": [
         "morning"
       ]
+    },
+    {
+      "title": "LUNGS Harvest Arts Festival: Sukkah Decorating for Kids",
+      "category": "festival",
+      "venue": "Siempre Verde Garden",
+      "neighborhood": "Lower East Side",
+      "when": "Sun Sep 20, 10:00 AM–12:00 PM",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free, walk in",
+      "travelMinutes": 24,
+      "travelHow": "M14A-SBS from 14th St & Ave A to Grand/Clinton, then 6-min walk; or 30-min walk",
+      "toddlerNotes": "Part of the LUNGS Harvest Arts Festival (50+ free events in 30 LES gardens through Sep 27). Stanton Street Shul hosts sukkah decorating for children in a small garden at Stanton & Attorney: hang paper chains and gourds, roam the beds. Two hours, come and go.",
+      "url": "https://lungsnyc.org/harvest-arts-festival-2026-schedule/",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7199,
+      "lng": -73.9822,
+      "start": "10:00",
+      "end": "12:00",
+      "event": true,
+      "times": [
+        "morning"
+      ],
+      "cpwOnly": false
+    },
+    {
+      "title": "LUNGS Harvest Arts Festival: Baby Soda string band at Miracle Garden",
+      "category": "music",
+      "venue": "Miracle Garden",
+      "neighborhood": "East Village",
+      "when": "Sun Sep 20, 2:00 PM (Mitchell Cheng at 4)",
+      "days": [
+        "sun"
+      ],
+      "cost": "Free",
+      "travelMinutes": 20,
+      "travelHow": "20-min walk down 2nd Ave to E 3rd St between Ave A and B",
+      "toddlerNotes": "Old-time string band in a tiny community garden on E 3rd St: toddlers dance in the paths, parents sit on the benches. Mitchell Cheng follows at 4. LUNGS Harvest Arts Festival, free and unfussy.",
+      "url": "https://lungsnyc.org/harvest-arts-festival-2026-schedule/",
+      "outdoor": true,
+      "confidence": "medium",
+      "lat": 40.7222,
+      "lng": -73.9819,
+      "start": "14:00",
+      "end": "17:00",
+      "event": true,
+      "times": [
+        "afternoon"
+      ],
+      "cpwOnly": false
+    },
+    {
+      "title": "Autumn Equinox Celebration at Elizabeth Street Garden",
+      "category": "festival",
+      "venue": "Elizabeth Street Garden",
+      "neighborhood": "Nolita",
+      "when": "Tue Sep 22, 6:00–8:00 PM",
+      "days": [
+        "tue"
+      ],
+      "cost": "Free",
+      "travelMinutes": 16,
+      "travelHow": "6 train to Spring St, then 4-min walk; or 25-min walk",
+      "toddlerNotes": "Post-work outing: volunteer face painting for kids, ambient music by Laraaji, seasonal tea, in the sculpture garden between Prince and Spring. Come at 6 for the face painting; the garden is fenced and stroller-friendly.",
+      "url": "https://www.elizabethstreetgarden.com/calendar/2026/9/22/equinox-celebration",
+      "outdoor": true,
+      "confidence": "high",
+      "lat": 40.7221,
+      "lng": -73.9945,
+      "start": "18:00",
+      "end": "20:00",
+      "event": true,
+      "times": [
+        "evening"
+      ],
+      "cpwOnly": false
     }
   ],
   "nextWeek": {
@@ -9816,6 +9894,137 @@ window.WEEK_DATA = {
         "start": "14:00",
         "end": "17:00",
         "toddlerNotes": "Free open-air jazz in the mural park on E 1st St: Andrea Wolper and Friends at 2, Christi/Nicholson/Thompson at 3, Colon/Easter at 4. Short sets, come and go; no kids’ workshop this date. Outdoor; rain date Oct 19."
+      },
+      {
+        "title": "LUNGS Kids Day at El Jardín del Paraíso",
+        "category": "theater",
+        "venue": "El Jardín del Paraíso",
+        "neighborhood": "Loisaida",
+        "when": "Sat Sep 26, 1:00–5:00 PM",
+        "days": [
+          "sat"
+        ],
+        "cost": "Free, walk in",
+        "travelMinutes": 25,
+        "travelHow": "M14D-SBS from 14th St & 1st Ave to Ave D & E 6th St, then 2-min walk; or 25-min walk",
+        "toddlerNotes": "The Harvest Arts Festival's kids' afternoon in the big garden on E 5th St between C and D: Czechoslovak-American Marionette Theatre at 1, Coach Rocco games at 2, Bengali puppets with Sayma Karim at 3, Son Pecadores music and dance at 4. Drop in for any part; ponds and paths to explore between acts.",
+        "url": "https://lungsnyc.org/harvest-arts-festival-2026-schedule/",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7228,
+        "lng": -73.977,
+        "start": "13:00",
+        "end": "17:00",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "MOCA Mid-Autumn Family Festival",
+        "category": "festival",
+        "venue": "Museum of Chinese in America",
+        "neighborhood": "Chinatown",
+        "when": "Sat Sep 26, 10 AM–1 PM or 2–5 PM sessions",
+        "days": [
+          "sat"
+        ],
+        "cost": "$10/person; kids 5 and under free; free with Culture Pass or Cool Culture",
+        "travelMinutes": 15,
+        "travelHow": "6 train to Canal St, then 3-min walk to 215 Centre St",
+        "toddlerNotes": "Mid-Autumn (Sep 25) celebrated the next day: drop-in lantern and mooncake crafts, snowy-skin mooncake making and a tasting station, Tiger Tales shadow puppets, guzheng music, bilingual storytime, Bunny Hop and mooncake-matching games. Author meet-and-greet is pitched 3–8, but the crafts, games and tasting suit a 2-year-old. Pick the morning or afternoon session when booking.",
+        "url": "https://www.mocanyc.org/event/save-the-date-mid-autumn-family-festival-3/",
+        "outdoor": false,
+        "confidence": "high",
+        "lat": 40.7196,
+        "lng": -73.999,
+        "start": "10:00",
+        "end": "17:00",
+        "event": true,
+        "times": [
+          "morning",
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "China Institute Mid-Autumn Festival",
+        "category": "festival",
+        "venue": "China Institute",
+        "neighborhood": "Financial District",
+        "when": "Sat Sep 26, 2:00–5:00 PM (check-in 1:30)",
+        "days": [
+          "sat"
+        ],
+        "cost": "Ticketed on Eventbrite; free and low-cost tiers reported",
+        "travelMinutes": 22,
+        "travelHow": "4/5 to Wall St, then 8-min walk to 100 Washington St; or R/W to Rector St",
+        "toddlerNotes": "Afternoon of Chinese dance and music performances plus hands-on stations: sugar painting, kids' arts and crafts, lacquer fans, instrument try-outs until 3:30; sign up at check-in for mooncake, rice-dough sculpture or dance workshops. All ages; stroller-friendly indoor space.",
+        "url": "https://chinainstitute.org/event/2026-mid-autumn-festival/",
+        "outdoor": false,
+        "confidence": "medium",
+        "lat": 40.7086,
+        "lng": -74.0145,
+        "start": "14:00",
+        "end": "17:00",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "LUNGS Harvest Arts Festival: Rock Painting at First Street Garden",
+        "category": "play",
+        "venue": "First Street Community Garden",
+        "neighborhood": "East Village",
+        "when": "Sun Sep 27, 2:00–3:30 PM",
+        "days": [
+          "sun"
+        ],
+        "cost": "Free, supplies provided",
+        "travelMinutes": 18,
+        "travelHow": "18-min walk down 2nd Ave to E 1st St, or 6 train to Bleecker St then 5-min walk",
+        "toddlerNotes": "Art in the Gardens: rock painting and botanical monotype prints, all ages, all supplies free. The simplest toddler craft in the festival, and it is next door to the Arts for Art jazz sets at First Street Green (2–5 PM) for a two-stop afternoon.",
+        "url": "https://lungsnyc.org/harvest-arts-festival-2026-schedule/",
+        "outdoor": true,
+        "confidence": "high",
+        "lat": 40.7237,
+        "lng": -73.9903,
+        "start": "14:00",
+        "end": "15:30",
+        "event": true,
+        "times": [
+          "afternoon"
+        ],
+        "cpwOnly": false
+      },
+      {
+        "title": "Live Music Sunday at Elizabeth Street Garden (season finale)",
+        "category": "music",
+        "venue": "Elizabeth Street Garden",
+        "neighborhood": "Nolita",
+        "when": "Sun Sep 27, 5:00–7:00 PM",
+        "days": [
+          "sun"
+        ],
+        "cost": "Free",
+        "travelMinutes": 16,
+        "travelHow": "6 train to Spring St, then 4-min walk; or 25-min walk",
+        "toddlerNotes": "Last free live-music evening of the season in the sculpture garden: toddler wanders the gravel paths and statues while the band plays. Early enough for a 7:30 bedtime.",
+        "url": "https://www.elizabethstreetgarden.com/calendar/2026/6/7/live-music-sunday-mlsz7",
+        "outdoor": true,
+        "confidence": "medium",
+        "lat": 40.7221,
+        "lng": -73.9945,
+        "start": "17:00",
+        "end": "19:00",
+        "event": true,
+        "times": [
+          "evening"
+        ],
+        "cpwOnly": false
       }
     ]
   }
