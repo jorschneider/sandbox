@@ -1,0 +1,275 @@
+/* ============================================================
+   THE DEATH OF MAO — teaser trailer
+   Title-card design language borrowed from the Death of Stalin
+   campaign: cream, red, black, brutally condensed type.
+   ============================================================ */
+
+:root {
+  --cream: #efe3c4;
+  --red: #b5121b;
+  --red-deep: #8e0e15;
+  --ink: #141210;
+  --bar: #000;
+  font-size: clamp(10px, 1.05vw, 18px);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: 'Oswald', 'Arial Narrow', Impact, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#stage { position: fixed; inset: 0; }
+
+#gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* ---------- cinematic dressing ---------- */
+
+.letterbox {
+  position: absolute; left: 0; right: 0; height: 11.5%;
+  background: var(--bar); z-index: 30; pointer-events: none;
+}
+#bar-top { top: 0; }
+#bar-bottom { bottom: 0; }
+
+#vignette {
+  position: absolute; inset: 0; z-index: 20; pointer-events: none;
+  background: radial-gradient(ellipse at center,
+              rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 100%);
+}
+
+#grain {
+  position: absolute; inset: -100px; z-index: 21; pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.45s steps(4) infinite;
+}
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-34px, 18px); }
+  50%  { transform: translate(22px, -41px); }
+  75%  { transform: translate(-12px, -22px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ---------- progress / timecode ---------- */
+
+#progress {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
+  z-index: 40; background: rgba(255,255,255,0.12); cursor: pointer;
+  opacity: 0; transition: opacity 0.4s;
+}
+#stage.playing #progress,
+#stage.playing #timecode { opacity: 1; }
+#progress-fill {
+  height: 100%; width: 0%; background: var(--red);
+}
+#timecode {
+  position: absolute; right: 1.2rem; bottom: 1.4%;
+  z-index: 40; color: rgba(255,255,255,0.55);
+  font-size: 0.85rem; letter-spacing: 0.15em;
+  opacity: 0; transition: opacity 0.4s; pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- overlay cards ---------- */
+
+#cards { position: absolute; inset: 0; z-index: 25; pointer-events: none; overflow: hidden; }
+
+.card {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.45s ease;
+}
+.card.on { opacity: 1; visibility: visible; }
+
+/* studio ident */
+.card-studio { color: var(--cream); }
+.card-studio .star { font-size: 2.6rem; color: var(--red); letter-spacing: 0; }
+.card-studio .name {
+  font-size: 2.2rem; font-weight: 600; letter-spacing: 0.55em;
+  margin-top: 1rem; padding-left: 0.55em;
+}
+.card-studio .sub {
+  font-size: 0.95rem; font-weight: 400; letter-spacing: 0.5em;
+  margin-top: 0.9rem; padding-left: 0.5em; color: rgba(239,227,196,0.55);
+}
+
+/* big statement cards */
+.card-big .line {
+  font-size: 4.6rem; line-height: 1.04; font-weight: 700;
+  letter-spacing: 0.04em; color: var(--cream);
+  text-transform: uppercase;
+  max-width: 80vw;
+  transform: scale(1.12);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(.2,1.4,.3,1), opacity 0.25s;
+}
+.card-big .line.red { color: var(--red); }
+.card-big.on .line { transform: scale(1); opacity: 1; }
+.card-big.on .line:nth-child(2) { transition-delay: 0.18s; }
+.card-big.solid { background: var(--ink); }
+
+/* lower thirds */
+.card-lower { justify-content: flex-end; padding-bottom: 14.5%; }
+.card-lower .line {
+  font-size: 1.5rem; font-weight: 500; letter-spacing: 0.32em;
+  color: var(--cream); text-transform: uppercase;
+  border-top: 2px solid var(--red);
+  padding: 0.7rem 1.6rem 0; background: rgba(0,0,0,0.25);
+}
+
+/* critic quote */
+.card-quote { background: var(--cream); }
+.card-quote .stars { color: var(--red); font-size: 3.2rem; letter-spacing: 0.35em; padding-left: 0.35em; }
+.card-quote .text {
+  font-family: 'Playfair Display', Georgia, serif; font-style: italic;
+  color: var(--ink); font-size: 2.7rem; max-width: 72vw; line-height: 1.2;
+  margin-top: 1.4rem;
+}
+.card-quote .src {
+  margin-top: 1.6rem; font-size: 1.05rem; letter-spacing: 0.45em;
+  color: var(--red-deep); text-transform: uppercase; font-weight: 600;
+}
+
+/* cast cards */
+.card-cast { background: var(--red); }
+.card-cast.alt { background: var(--cream); }
+.card-cast .role {
+  font-size: 1.6rem; letter-spacing: 0.6em; padding-left: 0.6em;
+  color: rgba(0,0,0,0.55); font-weight: 500; text-transform: uppercase;
+}
+.card-cast .name {
+  font-size: 7.2rem; line-height: 0.98; font-weight: 700;
+  letter-spacing: 0.02em; text-transform: uppercase;
+  color: var(--cream); margin-top: 1rem;
+  transform: rotate(-2deg) scale(1.18);
+  transition: transform 0.3s cubic-bezier(.2,1.5,.3,1);
+}
+.card-cast.alt .name { color: var(--red); }
+.card-cast.on .name { transform: rotate(-2deg) scale(1); }
+.card-cast .note {
+  margin-top: 1.4rem; font-size: 1.2rem; letter-spacing: 0.3em;
+  color: rgba(20,18,16,0.7); text-transform: uppercase;
+}
+.card-cast .note em { font-family: 'Playfair Display', serif; text-transform: none; letter-spacing: 0.05em; font-size: 1.4rem; }
+
+/* montage flash stamps */
+.card-flash { background: var(--ink); transition-duration: 0.12s; }
+.card-flash .line {
+  font-size: 6rem; font-weight: 700; text-transform: uppercase;
+  color: var(--cream); letter-spacing: 0.05em;
+  transform: rotate(-3deg) scale(1.3);
+  transition: transform 0.16s cubic-bezier(.2,1.6,.4,1);
+}
+.card-flash.red-bg { background: var(--red); }
+.card-flash.red-bg .line { color: var(--ink); }
+.card-flash.on .line { transform: rotate(-3deg) scale(1); }
+
+/* mao quote (quiet beat) */
+.card-mao .text {
+  font-family: 'Playfair Display', Georgia, serif; font-style: italic;
+  font-size: 2.4rem; color: var(--cream); max-width: 64vw; line-height: 1.3;
+}
+.card-mao .src {
+  margin-top: 1.5rem; font-size: 1rem; letter-spacing: 0.5em;
+  color: rgba(239,227,196,0.6); text-transform: uppercase;
+}
+
+/* final title */
+.card-title .kicker {
+  font-size: 1.3rem; letter-spacing: 0.7em; padding-left: 0.7em;
+  color: var(--cream); opacity: 0.85; font-weight: 400;
+}
+.card-title .big {
+  margin-top: 1.6rem;
+  font-size: 9.5rem; line-height: 0.92; font-weight: 700;
+  letter-spacing: 0.01em; color: var(--cream); text-transform: uppercase;
+  text-shadow: 0 0.5rem 3rem rgba(0,0,0,0.65);
+  transform: scale(1.6); opacity: 0;
+  transition: transform 0.42s cubic-bezier(.16,1.3,.3,1), opacity 0.3s;
+}
+.card-title .big .mao { color: #f3c53d; }
+.card-title.on .big { transform: scale(1); opacity: 1; }
+.card-title .tag {
+  margin-top: 2.2rem; font-size: 1.7rem; letter-spacing: 0.55em; padding-left: 0.55em;
+  color: var(--cream); text-transform: uppercase; font-weight: 500;
+  opacity: 0; transition: opacity 0.6s 0.2s;
+}
+.card-title.on .tag { opacity: 1; }
+.card-title .soon {
+  margin-top: 2.6rem; font-size: 1.05rem; letter-spacing: 0.45em; padding-left: 0.45em;
+  color: rgba(239,227,196,0.75); text-transform: uppercase;
+  opacity: 0; transition: opacity 0.6s;
+}
+.card-title.on .soon { opacity: 1; }
+
+/* credits */
+.card-credits { background: #000; }
+.card-credits .block {
+  color: rgba(239,227,196,0.8); font-size: 0.95rem; line-height: 2.1;
+  letter-spacing: 0.28em; text-transform: uppercase; max-width: 80vw;
+}
+.card-credits .fine {
+  margin-top: 2.2rem; font-size: 0.7rem; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.35); text-transform: none; line-height: 1.8;
+}
+
+/* ---------- poster / end overlays ---------- */
+
+#poster, #endcard {
+  position: absolute; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255,255,255,0.10), rgba(0,0,0,0) 60%),
+    var(--cream);
+  transition: opacity 0.8s; cursor: default;
+}
+#endcard { background: var(--ink); display: none; }
+#poster.off, #endcard.off { opacity: 0; pointer-events: none; }
+
+.poster-inner { text-align: center; padding: 2rem; }
+
+.poster-kicker {
+  font-size: 1.05rem; letter-spacing: 0.34em; text-transform: uppercase;
+  color: rgba(20,18,16,0.65); margin-bottom: 2.4rem;
+}
+.poster-kicker em { font-family: 'Playfair Display', serif; text-transform: none; letter-spacing: 0.04em; }
+
+.poster-title { display: flex; flex-direction: column; align-items: center; }
+.poster-title span {
+  display: block; font-weight: 700; text-transform: uppercase;
+  font-size: 8rem; line-height: 0.92; letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.poster-title span:nth-child(2) { color: var(--red); transform: rotate(-2deg); }
+.poster-title span:nth-child(3) { color: var(--ink); }
+.poster-title.small span { font-size: 5.5rem; color: var(--cream); }
+.poster-title.small span:nth-child(2) { color: var(--red); }
+
+.poster-tag {
+  margin-top: 2rem; font-size: 1.35rem; letter-spacing: 0.6em; padding-left: 0.6em;
+  text-transform: uppercase; color: rgba(20,18,16,0.8); font-weight: 500;
+}
+
+#play, #replay {
+  margin-top: 3rem; cursor: pointer;
+  font-family: inherit; font-size: 1.35rem; font-weight: 600;
+  letter-spacing: 0.35em; padding: 1.1rem 3rem 1.1rem 3.35rem;
+  color: var(--cream); background: var(--red); border: none;
+  transition: transform 0.15s, background 0.15s;
+}
+#play:hover, #replay:hover { background: var(--red-deep); transform: scale(1.04); }
+
+.poster-foot {
+  margin-top: 2.2rem; font-size: 0.8rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: rgba(20,18,16,0.45);
+}
+#endcard .poster-foot { color: rgba(239,227,196,0.4); }
