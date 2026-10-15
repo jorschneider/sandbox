@@ -1,0 +1,233 @@
+// Economy tuning harness: plays thousands of headless games with four bot
+// archetypes and reports the numbers that matter for balance.
+//
+//   node tools/sim.mjs [games] [theme]
+//
+// Targets for a healthy party-game economy:
+//  - insured policies that claim: ~30-38%
+//  - playing beats passing: passer mean final should NOT top the table
+//  - informed (intel-aware) > naive > reckless
+//  - bankruptcies (final < 0): under ~12% of players
+//  - winner's mean final around 1.8-2.5x starting capital
+
+import { Game, RULES } from '../js/game.js';
+import { THEMES } from '../js/content.js';
+
+const N = parseInt(process.argv[2] || '3000', 10);
+const THEME = process.argv[3] || 'classic';
+const NPLAY = parseInt(process.env.PLAYERS || '4', 10);
+
+// Deterministic rng per game for reproducibility.
+function lcg(seed) {
+  let s = seed >>> 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
+}
+
+const RATING_PRIOR = { Low: 0.18, Moderate: 0.27, High: 0.34, Unknown: 0.30 };
+
+const cov = (m, tier) => Math.round(m.coverage * tier / 10) * 10;
+
+const STRATS = {
+  // Never plays. The baseline any strategy must beat for the game to work.
+  passer: () => ({}),
+
+  // Undercuts on everything: full coverage at the bottom of the band.
+  reckless: (view, rng) => {
+    const q = {};
+    for (const m of view.market) {
+      q[m.id] = { premium: Math.round(m.band[0] + (m.band[1] - m.band[0]) * 0.1 * rng()), coverage: cov(m, 1) };
+    }
+    return q;
+  },
+
+  // Random tier, random premium in the scaled band, on ~2 of 3 clients.
+  naive: (view, rng) => {
+    const q = {};
+    for (const m of view.market) {
+      if (rng() >= 0.67) continue;
+      const tier = [0.5, 0.75, 1][Math.floor(rng() * 3)];
+      q[m.id] = { premium: Math.round((m.band[0] + (m.band[1] - m.band[0]) * rng()) * tier), coverage: cov(m, tier) };
+    }
+    return q;
+  },
+
+  // Uses the brochure prior plus its own intel; wants a margin; passes on
+  // anything whose band can't cover estimated expected loss. Sizes its
+  // position by confidence: good intel -> full, no intel -> 75%, bad -> 50%.
+  informed: (view, rng) => {
+    const q = {};
+    for (const m of view.market) {
+      let est = RATING_PRIOR[m.rating] ?? 0.28, delta = 0;
+      for (const c of view.you.intel) if (c.clientId === m.id) { est += c.delta; delta += c.delta; }
+      est = Math.max(0.03, est);
+      const rate = est * (1.05 + 0.15 * rng());
+      if (rate > m.band[1] / m.coverage) continue; // can't price it profitably
+      const tier = delta < 0 ? 1 : delta > 0 ? 0.5 : 0.75;
+      const c2 = cov(m, tier);
+      q[m.id] = { premium: Math.max(Math.round(m.band[0] * tier), Math.round(rate * c2)), coverage: c2 };
+    }
+    return q;
+  },
+};
+
+const names = Object.keys(STRATS);
+const agg = {
+  finals: Object.fromEntries(names.map(n => [n, []])),
+  wins: Object.fromEntries(names.map(n => [n, 0])),
+  policies: 0, claims: 0, unsold: 0, clientSeen: 0,
+  premiumSum: 0, lossSum: 0, riskSum: 0,
+  bankrupt: 0, winnerFinals: [],
+  synWon: 0, synVoided: 0,
+  perClient: {},
+};
+
+for (let g = 0; g < N; g++) {
+  const rng = lcg(1000 + g);
+  const game = new Game({ rng, theme: THEME });
+  // rotate seats so no strategy owns an advantage from order
+  const seat = (process.env.SEAT ? process.env.SEAT.split(',') : names.map((_, i) => names[(i + g) % names.length])).slice(0, NPLAY);
+  seat.forEach((s, i) => game.addPlayer('P' + i, s, '🤖', i === 0));
+  const NP = seat.length;
+  game.start();
+
+  // What rate a bot will not go below when bidding for the live lot.
+  const walkAway = (pid, strat, lot) => {
+    if (strat === 'reckless') return 0;
+    if (strat === 'naive') return lot.client.coverage * (0.14 + 0.22 * rng());
+    let est = RATING_PRIOR[lot.client.rating] ?? 0.28;
+    for (const c of game.viewFor(pid).you.intel) if (c.clientId === lot.client.id) est += c.delta;
+    return lot.client.coverage * Math.max(0.05, est) * 1.02; // wants a margin
+  };
+
+  let guard = 0;
+  while (game.phase !== 'results' && guard++ < 6000) {
+    switch (game.phase) {
+      case 'market':
+        game.openQuotes(); // full market diverts to the live lot first
+        break;
+
+      case 'auction': {
+        const a = game.auction;
+        const lot = game.market.find(m => m.client.id === a.clientId);
+        let bid = false;
+        for (let i = 0; i < NP && !bid; i++) {
+          const pid = 'P' + i, strat = seat[i];
+          if (strat === 'passer' || a.leader === pid) continue;
+          const next = a.bid - 25;
+          if (next >= a.floor && next >= walkAway(pid, strat, lot)) bid = !!game.placeBid(pid, next).ok;
+        }
+        if (!bid) { let t = 0; while (game.phase === 'auction' && t++ < 60) game.tick(); }
+        break;
+      }
+
+      case 'quotes':
+        for (let i = 0; i < NP; i++) {
+          game.submitQuotes('P' + i, STRATS[seat[i]](game.viewFor('P' + i), rng));
+        }
+        break;
+
+      case 'reveal':
+        for (const m of game.market) {
+          agg.clientSeen++;
+          const pc = agg.perClient[m.client.id] ??= { seen: 0, sold: 0, claims: 0, premium: 0, loss: 0 };
+          pc.seen++;
+          if (m.winner) {
+            agg.policies++; pc.sold++;
+            agg.premiumSum += m.premium; pc.premium += m.premium;
+            agg.riskSum += game.effectiveRisk(m);
+          } else agg.unsold++;
+        }
+        game.openDeals();
+        break;
+
+      case 'deals': {
+        // Syndication: the winner shops the required layoff at a
+        // proportional price (40% of premium for 40% of the risk).
+        for (const m of game.market) {
+          if (!m.syndicated || !m.winner) continue;
+          const fee = Math.round(0.4 * m.premium);
+          for (let i = 0; i < NP && m.reinsurance.reduce((s, r) => s + r.pct, 0) < 40; i++) {
+            const pid = 'P' + i;
+            if (pid === m.winner) continue;
+            const strat = seat[i];
+            let accepts = false;
+            if (strat === 'reckless') accepts = true;
+            else if (strat === 'naive') accepts = rng() < 0.5;
+            else if (strat === 'informed') {
+              let e = RATING_PRIOR[m.client.rating] ?? 0.28;
+              for (const c of game.viewFor(pid).you.intel) if (c.clientId === m.client.id) e += c.delta;
+              accepts = (m.premium / m.soldCoverage) >= e * 0.95;
+            }
+            if (!accepts) continue;
+            const res = game.proposeDeal(m.winner, { type: 'reinsurance', to: pid, clientId: m.client.id, pct: 40, fee });
+            if (res.ok) game.respondDeal(pid, res.id, true);
+          }
+        }
+        // Shorts: informed bets when its intel says the brochure lies low.
+        for (let i = 0; i < NP; i++) {
+          const pid = 'P' + i, strat = seat[i];
+          if (strat === 'informed') {
+            for (const m of game.market) {
+              let e = RATING_PRIOR[m.client.rating] ?? 0.28, delta = 0;
+              for (const c of game.viewFor(pid).you.intel) if (c.clientId === m.client.id) { e += c.delta; delta += c.delta; }
+              const odds = RULES.shorts.odds[m.client.rating] ?? 0.3;
+              if (delta > 0 && e >= odds + 0.12) { game.placeShort(pid, m.client.id, 200); break; }
+            }
+          } else if (strat === 'naive' && rng() < 0.2) {
+            game.placeShort(pid, game.market[Math.floor(rng() * game.market.length)].client.id, 100);
+          }
+        }
+        game.endDeals();
+        for (const m of game.market) {
+          if (m.syndicated && m.winner) { agg.synWon++; if (m.voided) agg.synVoided++; }
+        }
+        for (const r of game.claims.results) {
+          if (r.insured && r.hit) {
+            agg.claims++;
+            const sold = game.market.find(m => m.client.id === r.clientId).soldCoverage;
+            agg.lossSum += sold;
+            agg.perClient[r.clientId].claims++;
+            agg.perClient[r.clientId].loss += sold;
+          }
+        }
+        break;
+      }
+
+      // Money moves per reveal now, so every file must actually be opened.
+      case 'claims': game.advanceClaims(); break;
+      case 'ledger': game.nextRound(); break;
+      default: guard = 1e9; break;
+    }
+  }
+
+  const ranked = game.players.slice().sort((a, b) => b.capital - a.capital);
+  agg.winnerFinals.push(ranked[0].capital);
+  for (const p of game.players) {
+    agg.finals[p.name].push(p.capital);
+    if (p.capital < 0) agg.bankrupt++;
+    if (game.winnerIds.includes(p.id)) agg.wins[p.name] += 1 / game.winnerIds.length;
+  }
+}
+
+const mean = a => a.reduce((s, x) => s + x, 0) / a.length;
+
+console.log(`\n=== ${THEME} · ${N} games · ${RULES.rounds} rounds · start $${RULES.startingCapital} ===`);
+console.log(`policies sold: ${(agg.policies / agg.clientSeen * 100).toFixed(0)}% of clients | claim rate on insured: ${(agg.claims / agg.policies * 100).toFixed(1)}% | avg effective risk: ${(agg.riskSum / agg.policies * 100).toFixed(1)}%`);
+console.log(`avg premium: $${(agg.premiumSum / agg.policies).toFixed(0)} | avg loss per policy: $${(agg.lossSum / agg.policies).toFixed(0)} | insurer margin per policy: $${((agg.premiumSum - agg.lossSum) / agg.policies).toFixed(0)}`);
+console.log(`players: ${NPLAY} | bankrupt players: ${(agg.bankrupt / (N * NPLAY) * 100).toFixed(1)}% | avg winner final: $${mean(agg.winnerFinals).toFixed(0)} | syndicates voided: ${(agg.synVoided / Math.max(1, agg.synWon) * 100).toFixed(0)}%`);
+console.log('\nstrategy      mean final    win rate');
+for (const n of names) {
+  console.log(`${n.padEnd(12)} $${mean(agg.finals[n]).toFixed(0).padStart(6)}      ${(agg.wins[n] / N * 100).toFixed(1)}%`);
+}
+
+console.log('\nper-client (sold% / claim% when sold / avg margin $):');
+const rows = Object.entries(agg.perClient).map(([id, c]) => {
+  const margin = c.sold ? (c.premium - c.loss) / c.sold : 0;
+  return { id, sold: c.sold / c.seen * 100, claim: c.sold ? c.claims / c.sold * 100 : 0, margin };
+}).sort((a, b) => a.margin - b.margin);
+for (const r of rows) {
+  console.log(`${r.id.padEnd(20)} ${r.sold.toFixed(0).padStart(3)}%   ${r.claim.toFixed(0).padStart(3)}%   ${r.margin.toFixed(0).padStart(6)}`);
+}
