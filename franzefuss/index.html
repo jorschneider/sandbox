@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#14301f" />
+  <title>Franzefuß — an 1890 card game for two phones</title>
+  <meta name="description" content="Franzefuß, the Austrian two-hand card game last codified in 1890, played over the internet on two phones. No app, no sign-up — one player shares a code, the other taps a link." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314301f'/%3E%3Ctext x='16' y='24' font-size='22' text-anchor='middle' fill='%23e8dcc0'%3E%E2%99%A0%3C/text%3E%3C/svg%3E" />
+  <script src="vendor/peerjs.min.js"></script>
+</head>
+<body>
+
+<!-- ------------------------------------------------------------- home --- -->
+<section class="screen is-active" id="screen-home">
+  <div class="sheet">
+    <header class="brand">
+      <div class="pips"><span class="red">♥</span><span>♠</span><span class="red">♦</span><span>♣</span></div>
+      <h1>Franzefuß</h1>
+      <p class="sub">An Austrian card game for two, last printed in 1890.
+        Now for two phones.</p>
+    </header>
+
+    <label class="field">
+      <span>Your name</span>
+      <input id="name-input" type="text" maxlength="16" autocomplete="nickname"
+             placeholder="Player" enterkeyhint="done" />
+    </label>
+
+    <div class="stack">
+      <button class="btn primary" id="btn-create">Start a game</button>
+      <button class="btn" id="btn-join-screen">Join with a code</button>
+      <button class="btn ghost" id="btn-local">Pass &amp; play on one phone</button>
+    </div>
+
+    <div class="teach">
+      <p class="fineprint">Never played? Nobody has. Play a hand against the app
+        and it explains each rule at the moment the rule first matters — about
+        five minutes.</p>
+      <button class="btn" id="btn-learn">Learn by playing</button>
+    </div>
+
+    <div class="teach scrim">
+      <p class="fineprint">Already play? <b>Scrim</b> puts you against the app and
+        then solves the endgame exactly — the position you reached, every
+        decision graded, and the card you should have played.</p>
+      <button class="btn" id="btn-scrim">Scrim &amp; review</button>
+    </div>
+
+    <button class="linkish" id="btn-rules">Rules reference &rsaquo;</button>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- host --- -->
+<section class="screen" id="screen-host">
+  <div class="sheet">
+    <h2>Your code</h2>
+    <div class="code" id="code-display">·····</div>
+    <p class="hint" id="host-hint">Getting a table ready…</p>
+
+    <div class="stack">
+      <button class="btn primary" id="btn-share">Send the link</button>
+      <button class="btn" id="btn-copy">Copy link</button>
+      <button class="btn ghost" id="btn-host-cancel">Back</button>
+    </div>
+
+    <p class="fineprint">
+      The other phone opens the link, or types the code into <b>Join with a code</b>.
+      Cards travel straight between your handsets.
+    </p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------- join --- -->
+<section class="screen" id="screen-join">
+  <div class="sheet">
+    <h2>Join a game</h2>
+    <label class="field">
+      <span>Your name</span>
+      <input id="join-name" type="text" maxlength="16" autocomplete="nickname"
+             placeholder="Player" enterkeyhint="next" />
+    </label>
+    <label class="field">
+      <span>Code from the other phone</span>
+      <input id="code-input" class="code-input" type="text" inputmode="latin"
+             autocapitalize="characters" autocomplete="off" spellcheck="false"
+             maxlength="5" placeholder="ABCDE" enterkeyhint="go" />
+    </label>
+    <p class="hint" id="join-hint"></p>
+
+    <div class="stack">
+      <button class="btn primary" id="btn-join">Join</button>
+      <button class="btn ghost" id="btn-join-cancel">Back</button>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------------------------------- handoff --- -->
+<section class="screen curtain" id="screen-handoff">
+  <div class="sheet">
+    <div class="pips big"><span>♠</span></div>
+    <h2>Pass the phone</h2>
+    <p class="sub" id="handoff-name">to the other player</p>
+    <button class="btn primary" id="btn-handoff">I have it — show my hand</button>
+    <p class="fineprint">Hold it to yourself. The last hand is off the screen.</p>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ rules --- -->
+<section class="screen scrolls" id="screen-rules">
+  <div class="sheet wide">
+    <h2>Franzefuß</h2>
+    <p class="sub">Also Tatteln, Törteln, Därde; in Denmark Frantsfuus-Spillet.
+      Two players, 32 cards, a partie to 100.</p>
+
+    <h3>The pack</h3>
+    <p>Sevens up to aces, 32 cards. One suit is trumps, fixed by the card turned
+      up at the deal.</p>
+    <table class="rules-table">
+      <tr><th>Trumps rank</th><td>J · 9 · A · 10 · K · Q · 8 · 7</td></tr>
+      <tr><th>Other suits</th><td>A · 10 · K · Q · J · 9 · 8 · 7</td></tr>
+    </table>
+    <p>Only card points count, never the number of tricks:</p>
+    <table class="rules-table">
+      <tr><th>Trump J</th><td>20</td><th>Trump 9</th><td>14</td></tr>
+      <tr><th>Ace</th><td>11</td><th>Ten</th><td>10</td></tr>
+      <tr><th>King</th><td>4</td><th>Queen</th><td>3</td></tr>
+      <tr><th>Jack</th><td>2</td><th>9 · 8 · 7</th><td>0</td></tr>
+    </table>
+    <p>That is 152 in the pack, plus <b>10 for the last trick</b> — 162 a deal.</p>
+
+    <h3>The deal</h3>
+    <p>Nine cards each, dealt alternately, non-dealer first. The next card is
+      turned for trumps and the remaining thirteen form the stock.</p>
+
+    <h3>Announcing</h3>
+    <p>Whenever it is your turn to <b>lead</b>, you may first announce a
+      combination from your hand. Your opponent answers from theirs:</p>
+    <table class="rules-table">
+      <tr><th>Yours is better</th><td>you score every combination of that class you hold</td></tr>
+      <tr><th>Theirs is better</th><td><b>they</b> score every one of theirs — the points go across</td></tr>
+      <tr><th>Equal</th><td>it pays nobody</td></tr>
+    </table>
+    <p>So announcing is a risk, not a free roll: call a bare Tattel into a Fuß
+      and you have just handed over 32. It is also the only way a player who
+      never wins a lead can be paid for what they are holding. Sequences and
+      sets are judged separately.</p>
+    <p>A run pays for every shorter run inside it, which is where the game gets
+      its name:</p>
+    <table class="rules-table">
+      <tr><th>Tattel</th><td>run of 3 in a suit</td><td>3</td></tr>
+      <tr><th>Quart</th><td>run of 4 — and the two Tatteln in it</td><td>10</td></tr>
+      <tr><th>Fuß</th><td>run of 5 — three Tatteln, two Quarts</td><td>32</td></tr>
+      <tr><th>Three of a kind</th><td>tens and above only</td><td>3</td></tr>
+      <tr><th>Four of a kind</th><td>beats three whatever the rank</td><td>14</td></tr>
+    </table>
+    <p>Runs use the natural order A K Q J 10 9 8 7 — the ten takes its natural
+      place. Because a growing run keeps paying, a Tattel you announce now and
+      extend later scores again: announce it once more when the card arrives.</p>
+    <p class="fineprint">Announcing tells your opponent what you are holding.
+      That is the whole tension of it.</p>
+
+    <h3>Play</h3>
+    <p>Non-dealer leads. Highest card of the suit led takes the trick, unless it
+      is trumped. The winner leads next.</p>
+    <p><b>While the stock lasts</b> you may play anything you like — no need to
+      follow suit. After each trick the winner draws first, then the loser; the
+      last draw of all is the turned-up trump card.</p>
+    <p><b>Once the stock is gone</b> — the last nine tricks — you must follow
+      suit, you must beat a trump lead if you can, and you must trump when you
+      are void.</p>
+
+    <h3>Robbing</h3>
+    <p>Holding the <b>seven of trumps</b>, you may swap it for the turned-up
+      trump card on your turn, any time the turn-up is still there.</p>
+
+    <h3>Scoring</h3>
+    <p>Count the card points in your tricks, add the ten for the last trick, add
+      whatever you announced. Take <b>none of the last nine tricks</b> and you
+      pay for the whole round: your opponent takes all 162.</p>
+    <p>A partie is played to <b>100</b>, as in Piquet. Deals are large, so a
+      partie is short — historically the round was the unit of stake.</p>
+
+    <h3>The coach</h3>
+    <p>You do not have to read any of this first. Play a hand and the coach
+      explains each rule at the moment it first decides something — what the
+      cards are worth, why trumps rank strangely, when following suit starts to
+      matter. Each lesson appears once. Tapping a dimmed card always tells you
+      why it cannot be played.</p>
+
+    <h3>Where these rules come from</h3>
+    <p class="fineprint">Franzefuß was first recorded in 1801, in Hamburg and in
+      Denmark. The Oeconomische Encyclopädie of 1842 calls it <i>“ein im
+      Oesterreichischen sehr beliebtes Kartenspiel … aus dem bekannten Piquet und
+      dem veralteten Mariage zusammengesetzt”</i> — assembled out of Piquet and
+      Mariage — and that is the shape of it: the trick play is Mariage’s, the
+      combinations and their scoring are Piquet’s.</p>
+    <p class="fineprint">The ruleset here is the last one codified for the
+      Austro-Hungarian market: S. Ulmann, <i>Das Buch der Familienspiele</i>,
+      A. Hartleben, Wien/München/Pest 1890 — the edition that called the game
+      Franzefuß. The nine-card deal is its newer form; eight cards is the older
+      one. The 1829 Vienna rulebook and the many that copied its wording omit the
+      value of the combinations altogether, so those come from Piquet, exactly as
+      the encyclopedia instructs: <i>“die Berechnung der Sequenzen, Stiche und
+      Punktezahl, bis zu der man die ganze Partie spielt, ist genau wie beim
+      Pikett”</i>. Terze 3, Quarte 4, Quinte 15, four of a kind 14, three 3, and a
+      partie to a hundred.</p>
+    <p class="fineprint">Honestly: the game barely outlived the century that made
+      it. It survived as Tärtele in Alsace until the second war, and lives on as
+      Austrian <i>Tartl</i> and Hungarian <i>Tartli</i>. If you were dealt a hand
+      of this in Prague in 1910 you would have been playing something already
+      old-fashioned — and you would have held a German-suited pack, not this one.</p>
+
+    <div class="stack">
+      <button class="btn" id="btn-coach-again">Turn the coach back on</button>
+      <button class="btn ghost" id="btn-rules-back">Back</button>
+    </div>
+  </div>
+</section>
+
+<!-- ------------------------------------------------------------ table --- -->
+<section class="screen" id="screen-table">
+  <div class="table-grid">
+
+    <header class="scoreboard">
+      <div class="player" id="score-them">
+        <span class="who"></span><span class="pts"></span>
+      </div>
+      <div class="deal-info">
+        <span class="trump-badge" id="trump-badge">♠</span>
+        <span class="deal-no" id="deal-no"></span>
+      </div>
+      <div class="player you" id="score-you">
+        <span class="who"></span><span class="pts"></span>
+      </div>
+    </header>
+
+    <div class="opp-hand" id="opp-hand"></div>
+
+    <div class="felt">
+      <div class="stock-area">
+        <div class="stock" id="stock">
+          <span class="stock-count" id="stock-count"></span>
+        </div>
+        <div class="upcard" id="upcard"></div>
+      </div>
+      <div class="trick" id="trick"></div>
+    </div>
+
+    <div class="banner" id="banner"></div>
+
+    <div class="hand-rail">
+      <div class="hand" id="hand"></div>
+    </div>
+
+    <footer class="actions">
+      <button class="btn small ghost" id="btn-leave">Leave</button>
+      <button class="btn small ghost icon" id="btn-help" title="Rules" aria-label="Rules">?</button>
+      <button class="btn small" id="btn-rob" hidden>Rob the turn-up</button>
+      <button class="btn small" id="btn-announce" hidden>Announce</button>
+      <button class="btn small primary" id="btn-play" hidden>Play</button>
+    </footer>
+  </div>
+
+  <!-- overlays ------------------------------------------------------------->
+  <div class="overlay coach" id="overlay-coach" hidden>
+    <div class="sheet">
+      <p class="coach-tag">Coach</p>
+      <h2 id="coach-title"></h2>
+      <div id="coach-body"></div>
+      <button class="btn primary" id="btn-coach-ok">Got it</button>
+      <button class="linkish" id="btn-coach-off">Stop coaching me</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-announce" hidden>
+    <div class="sheet">
+      <h2>Announce</h2>
+      <div id="announce-body"></div>
+      <button class="btn ghost" id="btn-announce-close">Say nothing</button>
+      <p class="fineprint">Your opponent looks at their hand and says good or not
+        good. If theirs is better you score none of that class.</p>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-deal" hidden>
+    <div class="sheet">
+      <h2 id="deal-title">Deal over</h2>
+      <div id="deal-body"></div>
+      <button class="btn primary" id="btn-next">Next deal</button>
+      <button class="btn" id="btn-review" hidden>Review the endgame</button>
+      <p class="hint" id="next-hint"></p>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-match" hidden>
+    <div class="sheet">
+      <h2 id="match-title">Game over</h2>
+      <div id="match-body"></div>
+      <div class="stack">
+        <button class="btn" id="btn-review-match" hidden>Review the endgame</button>
+        <button class="btn primary" id="btn-rematch">Another partie</button>
+        <button class="btn ghost" id="btn-home">Back to the start</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-review" hidden>
+    <div class="sheet">
+      <p class="coach-tag">Endgame review</p>
+      <h2 id="review-title">Solving…</h2>
+      <div id="review-body"></div>
+      <button class="btn primary" id="btn-review-close">Back</button>
+    </div>
+  </div>
+
+  <div class="overlay soft" id="overlay-link" hidden>
+    <div class="sheet">
+      <h2 id="link-title">Reconnecting…</h2>
+      <p class="sub" id="link-body"></p>
+      <button class="btn ghost" id="btn-link-home">Back to the start</button>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
