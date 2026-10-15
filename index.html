@@ -3,50 +3,554 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>THE DEATH OF MAO — Official Teaser Trailer</title>
-  <meta name="description" content="A satirical 3D animated teaser trailer in the spirit of The Death of Stalin. A comedy of succession." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <title>New York Harbor · America's 250th — The Aircraft & the Tall Ships, July 4, 2026</title>
+  <meta name="description" content="Two field guides to America's 250th over New York Harbor, July 4, 2026: every aircraft in the Sail4th 250 aerial review and the first 15 ships of the Parade of Sail — in order, with photos, prices, and what each one does." />
+  <meta name="color-scheme" content="dark" />
+  <style>
+    :root{
+      --bg:#080b13; --bg2:#0d1220; --panel:#111827; --panel2:#161f31;
+      --line:rgba(255,255,255,.08); --line-strong:rgba(255,255,255,.16);
+      --ink:#eef2fb; --muted:#93a1bb; --faint:#5f6d86;
+      --red:#e0384f; --gold:#f0c14b; --sky:#4f9be6; --sky-soft:rgba(79,155,230,.14);
+      --accent:var(--sky); --accent-soft:var(--sky-soft);
+      --radius:16px; --maxw:1120px;
+      --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+    body[data-mode="sea"]{ --accent:#38b6a6; --accent-soft:rgba(56,182,166,.14); }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+      -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+    /* ---------- HERO ---------- */
+    header.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(1200px 500px at 78% -10%, var(--accent-soft), transparent 60%),
+        radial-gradient(900px 460px at 12% 8%, rgba(224,56,79,.12), transparent 62%),
+        linear-gradient(180deg,#0a1120,#080b13);
+      transition:background .4s ease}
+    .hero-grid{position:absolute;inset:0;pointer-events:none;opacity:.5;
+      background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+      background-size:44px 44px;
+      -webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 40%,transparent 78%);
+              mask-image:radial-gradient(120% 90% at 50% 0%,#000 40%,transparent 78%)}
+    .hero-inner{position:relative;padding:56px 0 58px}
+    .flagbar{display:flex;gap:6px;margin-bottom:26px}
+    .flagbar span{height:5px;width:44px;border-radius:3px}
+    .flagbar .r{background:var(--red)} .flagbar .w{background:#eef2fb} .flagbar .b{background:var(--sky)}
+
+    /* toggles */
+    .toolbar{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:30px}
+    .modetabs{display:inline-flex;gap:4px;padding:5px;border:1px solid var(--line-strong);
+      border-radius:999px;background:rgba(255,255,255,.03)}
+    .modetab{appearance:none;border:0;cursor:pointer;font:inherit;font-size:14.5px;font-weight:600;
+      color:var(--muted);background:transparent;padding:9px 20px;border-radius:999px;
+      display:inline-flex;align-items:center;gap:9px;transition:.18s ease;letter-spacing:.01em}
+    .modetab:hover{color:var(--ink)}
+    .modetab.active{background:var(--accent);color:#07101c;box-shadow:0 4px 16px rgba(0,0,0,.35)}
+    body[data-mode="sea"] .modetab.active{color:#04110f}
+
+    .kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.28em;text-transform:uppercase;
+      color:var(--gold);margin:0 0 18px}
+    h1.title{font-size:clamp(38px,7vw,76px);line-height:1.02;margin:0;font-weight:800;letter-spacing:-.02em}
+    h1.title .sub{display:block;color:var(--muted);font-weight:500;font-size:clamp(17px,2.6vw,26px);
+      letter-spacing:.01em;margin-top:16px;max-width:730px}
+    .lede{margin:30px 0 0;max-width:770px;color:#c4cee0;font-size:clamp(16px,2vw,18.5px)}
+    .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+    .chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);
+      background:rgba(255,255,255,.03);padding:8px 14px;border-radius:999px;font-size:13.5px;color:var(--ink)}
+    .chip b{color:var(--gold);font-variant-numeric:tabular-nums}
+    .scrolldown{margin-top:32px;display:inline-flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+    .scrolldown .k{font-family:var(--mono);font-size:12px;border:1px solid var(--line-strong);border-radius:6px;padding:2px 7px}
+
+    /* ---------- SECTIONS ---------- */
+    section{padding:56px 0}
+    .band{border-top:1px solid var(--line)}
+    .wave-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+    .wave-no{font-family:var(--mono);color:var(--accent);font-size:14px;letter-spacing:.2em}
+    h2.wave-title{font-size:clamp(24px,3.6vw,34px);margin:0;font-weight:750;letter-spacing:-.01em}
+    .wave-desc{color:var(--muted);max-width:730px;margin:12px 0 30px}
+
+    /* ---------- CARDS ---------- */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px}
+    .card{position:relative;border:1px solid var(--line);border-radius:var(--radius);
+      background:linear-gradient(180deg,var(--panel2),var(--panel));overflow:hidden;
+      transition:border-color .2s ease,transform .2s ease;display:flex;flex-direction:column}
+    .card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+    .card .stage{position:relative;height:300px;display:flex;align-items:center;justify-content:center;
+      background:
+        radial-gradient(120% 120% at 50% 15%,var(--accent-soft),transparent 60%),
+        repeating-linear-gradient(0deg,transparent 0 21px,rgba(255,255,255,.025) 21px 22px),
+        repeating-linear-gradient(90deg,transparent 0 21px,rgba(255,255,255,.025) 21px 22px);
+      border-bottom:1px solid var(--line)}
+    body[data-mode="sea"] .card .stage{
+      background:
+        radial-gradient(130% 140% at 50% 8%,rgba(56,182,166,.12),transparent 62%),
+        linear-gradient(180deg,transparent 62%,rgba(56,120,150,.16) 74%,rgba(30,70,96,.28)),
+        repeating-linear-gradient(90deg,transparent 0 21px,rgba(255,255,255,.02) 21px 22px)}
+    .card .stage::after{content:"";position:absolute;inset:0;
+      background:radial-gradient(closest-side,transparent 60%,rgba(8,11,19,.55));pointer-events:none}
+    .card img.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .photocredit{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:14px 10px 5px;
+      font-size:10px;line-height:1.35;color:rgba(255,255,255,.62);text-align:right;
+      background:linear-gradient(0deg,rgba(5,8,14,.72),transparent);pointer-events:none;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .evbadge{position:absolute;left:12px;bottom:24px;z-index:3;font-size:10px;font-weight:700;
+      letter-spacing:.08em;text-transform:uppercase;color:#0a0e16;background:var(--gold);
+      padding:3px 8px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px}
+    .gallery figure{margin:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+      background:var(--panel)}
+    .gallery img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
+    .gallery figcaption{padding:12px 14px 14px;font-size:13.5px;color:#c2ccde}
+    .gallery figcaption .cr{display:block;margin-top:3px;font-size:11px;color:var(--faint)}
+    .runno{position:absolute;top:12px;left:14px;z-index:2;font-family:var(--mono);font-size:12px;
+      color:rgba(255,255,255,.75);letter-spacing:.15em;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+    .natflag{position:absolute;top:10px;right:12px;z-index:2;font-size:22px;line-height:1;
+      filter:drop-shadow(0 1px 3px rgba(0,0,0,.7))}
+    .card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
+    .name{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em}
+    .desig{font-family:var(--mono);font-size:12.5px;color:var(--accent);margin-top:3px;letter-spacing:.04em}
+    .tags{display:flex;flex-wrap:wrap;gap:7px}
+    .tag{font-size:11.5px;padding:4px 9px;border-radius:6px;border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.02)}
+    .tag.role{border-color:rgba(240,193,75,.35);color:var(--gold);background:rgba(240,193,75,.06)}
+    .tag.branch{border-color:var(--accent);color:#cfe4f6;background:var(--accent-soft)}
+    .blurb{margin:0;color:#c2ccde;font-size:14.5px}
+    .price{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:auto;
+      border:1px solid rgba(240,193,75,.3);background:rgba(240,193,75,.06);border-radius:10px;padding:9px 12px}
+    .price .k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+    .price .v{font-size:15px;font-weight:750;color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+    .specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;
+      border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line)}
+    .price + .specs, .blurb + .specs{margin-top:0}
+    .blurb ~ .specs:last-child{margin-top:auto}
+    .specs div{background:var(--panel);padding:10px 11px}
+    .specs .k{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+    .specs .v{font-size:13.5px;font-weight:650;margin-top:3px;font-variant-numeric:tabular-nums}
+
+    /* ---------- NOTE / SOURCES ---------- */
+    .note{border:1px solid var(--line);border-left:3px solid var(--gold);
+      background:linear-gradient(180deg,rgba(240,193,75,.05),transparent);
+      border-radius:12px;padding:20px 22px;color:#cdd7e8;font-size:14.5px;max-width:840px}
+    .note h3{margin:0 0 8px;font-size:15px;color:var(--gold);letter-spacing:.02em}
+    ul.src{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:8px}
+    ul.src li{font-size:14px;color:var(--muted);padding-left:20px;position:relative}
+    ul.src li::before{content:"›";position:absolute;left:4px;color:var(--accent)}
+    details.credits{margin-top:16px;font-size:13px;color:var(--muted)}
+    details.credits summary{cursor:pointer;color:var(--ink);font-weight:600;font-size:13.5px}
+    details.credits ul{margin:10px 0 0;padding-left:18px;display:grid;gap:4px}
+    footer{border-top:1px solid var(--line);padding:40px 0 64px;color:var(--faint);font-size:13.5px}
+    footer a{color:var(--muted)}
+    .foot-flag{display:flex;gap:5px;margin-bottom:18px}
+    .foot-flag span{height:4px;width:34px;border-radius:2px}
+
+    @media (max-width:560px){
+      .hero-inner{padding:40px 0 44px}
+      .grid{grid-template-columns:1fr}
+      .gallery{grid-template-columns:1fr}
+      .specs{grid-template-columns:1fr 1fr}
+      .card .stage{height:240px}
+    }
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.modetab,header.hero{transition:none}}
+  </style>
 </head>
-<body>
-  <div id="stage">
-    <canvas id="gl"></canvas>
+<body data-mode="sky">
 
-    <!-- cinematic dressing -->
-    <div id="grain"></div>
-    <div id="vignette"></div>
-    <div id="bar-top" class="letterbox"></div>
-    <div id="bar-bottom" class="letterbox"></div>
+  <header class="hero">
+    <div class="hero-grid"></div>
+    <div class="wrap hero-inner">
+      <div class="flagbar"><span class="r"></span><span class="w"></span><span class="b"></span></div>
+      <div class="toolbar">
+        <div class="modetabs" id="tabs">
+          <button class="modetab" data-m="sky">✈&nbsp; The Sky</button>
+          <button class="modetab" data-m="sea">⛵&nbsp; The Sea</button>
+        </div>
+      </div>
+      <p class="kicker" id="h-kicker"></p>
+      <h1 class="title" id="h-title"></h1>
+      <p class="lede" id="h-lede"></p>
+      <div class="meta-row" id="h-chips"></div>
+      <div class="scrolldown"><span class="k">↓</span> <span id="h-foot"></span></div>
+    </div>
+  </header>
 
-    <!-- timeline overlay cards are injected here -->
-    <div id="cards"></div>
+  <main id="app"></main>
 
-    <!-- progress -->
-    <div id="progress"><div id="progress-fill"></div></div>
-    <div id="timecode">00:00 / 03:00</div>
-
-    <!-- landing / poster overlay -->
-    <div id="poster">
-      <div class="poster-inner">
-        <div class="poster-kicker">People&rsquo;s Pictures presents &mdash; in the spirit of <em>The Death of Stalin</em></div>
-        <h1 class="poster-title"><span>THE</span><span>DEATH</span><span>OF&nbsp;MAO</span></h1>
-        <div class="poster-tag">A&nbsp;COMEDY&nbsp;OF&nbsp;SUCCESSION</div>
-        <button id="play">&#9654;&nbsp;&nbsp;PLAY TRAILER</button>
-        <div class="poster-foot">3-minute 3D animated teaser &middot; sound on &middot; satire, obviously</div>
+  <section class="band">
+    <div class="wrap">
+      <div class="note">
+        <h3>About these lists &amp; how they were sourced</h3>
+        <p>
+          The events were real: on July&nbsp;4, 2026, New York Harbor hosted both the
+          <em>Sail4th&nbsp;250 / America250 International Aerial Review</em> and the
+          <em>International Parade of Sail</em> — described as the largest maritime gathering in
+          American history. Use the <strong>Sky / Sea</strong> toggle above to switch between the
+          two field guides.
+        </p>
+        <p>
+          News outlets confirmed the totals, the Blue Angels leading the flyover, the allied
+          aerobatic teams, and the tall-ship fleet with the USCGC&nbsp;Eagle at its head — but no
+          agency published a full airframe-by-airframe manifest of the 200+ aircraft. So the
+          demonstration teams and the ships shown here are individually confirmed; the U.S. military
+          aircraft are the types documented as making up the America250 formation. The running
+          orders are curated sequences (the ships follow the Parade-of-Sail lineup; the aircraft
+          are grouped as a spectator would see the waves build), not official minute-by-minute
+          timetables.
+        </p>
+        <p>
+          Every card shows one <strong>photograph</strong>, and every image on this page is
+          free-licensed (public domain, Creative Commons, and similar) — sourced from Wikimedia and
+          stored with the page. Cards wearing the gold <strong>★ at the parade</strong> badge, plus
+          the whole gallery below, are photographs taken at the July 4, 2026 event itself, by
+          military photographers and Commons contributors who were on the water and the waterfront;
+          that parade-day photo is always shown first when one exists. The remaining cards fall back
+          to a free photo of the same aircraft type or the same named ship on another day, since
+          news photography from the parade is copyrighted. One exception: no free photograph of the
+          yacht <em>Ticonderoga</em> exists anywhere, so her card shows a clearly-labeled
+          representative 1930s classic yacht instead. Unit prices on the aircraft cards are
+          approximate, publicly cited figures — flyaway or contract unit costs from different budget
+          years, so treat them as ballpark, not invoices.
+        </p>
+        <ul class="src">
+          <li><a href="https://www.cbsnews.com/newyork/news/sail4th-250-list-of-tall-ships-where-to-watch/" target="_blank" rel="noopener">CBS New York — Sail4th 250 list of tall ships &amp; where to watch</a></li>
+          <li><a href="https://sail4th.org/tall-ships" target="_blank" rel="noopener">Sail4th 250 — official tall-ships fleet</a></li>
+          <li><a href="https://www.nbcnewyork.com/250-america-anniversary/track-live-48-tall-ships-sail4th-250/6507729/" target="_blank" rel="noopener">NBC New York — 48 tall ships track live</a></li>
+          <li><a href="https://www.cbsnews.com/newyork/news/sail4th-250-fourth-of-july-new-york-city/" target="_blank" rel="noopener">CBS New York — Sail4th 250 &amp; aerial review details</a></li>
+          <li><a href="https://www.twz.com/space/this-is-the-massive-aerial-armada-that-is-about-to-fly-over-the-capital" target="_blank" rel="noopener">The War Zone — the America250 aerial armada roster</a></li>
+          <li><a href="https://air.show/patrouille-de-france-usa-250/" target="_blank" rel="noopener">air.show — Patrouille de France USA 250 tour</a></li>
+        </ul>
+        <details class="credits">
+          <summary>Photo credits (Wikimedia Commons)</summary>
+          <ul id="credit-list"></ul>
+        </details>
       </div>
     </div>
+  </section>
 
-    <!-- end card -->
-    <div id="endcard">
-      <div class="poster-inner">
-        <h1 class="poster-title small"><span>THE</span><span>DEATH</span><span>OF&nbsp;MAO</span></h1>
-        <button id="replay">&#8635;&nbsp;&nbsp;WATCH IT AGAIN, COMRADE</button>
-      </div>
+  <footer>
+    <div class="wrap">
+      <div class="foot-flag"><span style="background:var(--red)"></span><span style="background:#eef2fb"></span><span style="background:var(--sky)"></span></div>
+      <p>New York Harbor, July 4, 2026 — a field guide to America's 250th, in the sky and on the water.
+      Photographs are free-licensed and credited above; roles, prices, and specifications are
+      approximate, drawn from public sources.</p>
+      <p style="margin-top:6px">Static page · <a href="mao.html">psst — the previous tenant of this URL is still here</a></p>
     </div>
-  </div>
+  </footer>
 
-  <script type="module" src="js/main.js"></script>
+  <script>
+  /* ============================================================
+     PHOTOS — free-licensed (Wikimedia Commons); id -> file + credit.
+     ============================================================ */
+  // [file, credit, atParade] — atParade means the photo was taken at the July 4, 2026 event itself
+  const PHOTOS = {
+    a01:["assets/photos/a01-event.jpg","Edward Shevlin · Public domain",1],
+    a02:["assets/photos/a02.jpg","U.S. Air Force · Public domain"],
+    a03:["assets/photos/a03-event.jpg","Aude · CC BY-SA 4.0",1],
+    a04:["assets/photos/a04.jpg","MSgt Christopher Boitz, USAF · Public domain"],
+    a05:["assets/photos/a05.jpg","TSgt Andy Dunaway, U.S. Army · Public domain"],
+    a06:["assets/photos/a06.jpg","147th Aviation Regiment · Public domain"],
+    a07:["assets/photos/a07.jpg","Sgt. Steven Galimore · CC0"],
+    a08:["assets/photos/a08.jpg","FOX 52 · CC BY-SA 4.0"],
+    a09:["assets/photos/a09.jpg","RotoHead1790 · CC BY-SA 4.0"],
+    a10:["assets/photos/a10.png","U.S. Air Force · Public domain"],
+    a11:["assets/photos/a11.jpg","Ethan Wagner, USAF · Public domain"],
+    a12:["assets/photos/a12.jpg","SrA Audree Campbell, USAF · Public domain"],
+    a13:["assets/photos/a13.jpg","SrA John Linzmeier, USAF · Public domain"],
+    a14:["assets/photos/a14.jpg","MSgt Donald R. Allen, USAF · Public domain"],
+    a15:["assets/photos/a15.jpg","MSgt Andy Dunaway, USAF · Public domain"],
+    a16:["assets/photos/a16-event.jpg","Aude · CC BY-SA 4.0",1],
+    a17:["assets/photos/a17.jpg","MSgt Nicholas Priest, USAF · Public domain"],
+    a18:["assets/photos/a18.jpg","SrA Keifer Bowes, USAF · Public domain"],
+    a19:["assets/photos/a19.jpg","Ben.popeye · CC BY-SA 3.0"],
+    a20:["assets/photos/a20-event.jpg","Aude · CC BY-SA 4.0",1],
+    a21:["assets/photos/a21-event.jpg","Aude · CC BY-SA 4.0",1],
+    a22:["assets/photos/a22-event.jpg","Aude · CC BY-SA 4.0",1],
+    b01:["assets/photos/b01-event.jpg","Aude · CC BY-SA 4.0",1],
+    b02:["assets/photos/b02-event.jpg","Aude · CC BY-SA 4.0",1],
+    b03:["assets/photos/b03-event.jpg","Aude · CC BY-SA 4.0",1],
+    b04:["assets/photos/b04-event.jpg","Aude · CC BY-SA 4.0",1],
+    b05:["assets/photos/b05-event.jpg","Aude · CC BY-SA 4.0",1],
+    b06:["assets/photos/b06-event.jpg","Aude · CC BY-SA 4.0",1],
+    b07:["assets/photos/b07-event.jpg","Aude · CC BY-SA 4.0",1],
+    b08:["assets/photos/b08.jpg","Lt. j.g. John A. Ivancic, USN · Public domain"],
+    b09:["assets/photos/b09.jpg","U.S. Department of Defense · Public domain"],
+    s01:["assets/photos/s01-event.jpg","Sashimi-b · CC BY-SA 4.0",1],
+    s02:["assets/photos/s02.jpg","VollwertBIT · CC BY-SA 2.5"],
+    s03:["assets/photos/s03-event.jpg","Sashimi-b · CC BY-SA 4.0",1],
+    s04:["assets/photos/s04.jpg","Representative 1930s classic yacht (no free photo of Ticonderoga exists) · Myrabella · CC BY-SA 3.0"],
+    s05:["assets/photos/s05-event.jpg","Aude · CC BY-SA 4.0",1],
+    s06:["assets/photos/s06.jpg","Don Ramey Logan · CC BY 4.0"],
+    s07:["assets/photos/s07-event.jpg","Aude · CC BY-SA 4.0",1],
+    s08:["assets/photos/s08.jpg","Dxede5x · CC BY 3.0"],
+    s09:["assets/photos/s09-event.jpg","Aude · CC BY-SA 4.0",1],
+    s10:["assets/photos/s10.jpg","criggle1 · CC BY 2.0"],
+    s11:["assets/photos/s11-event.jpg","Aude · CC BY-SA 4.0",1],
+    s12:["assets/photos/s12-event.jpg","Aude · CC BY-SA 4.0",1],
+    s13:["assets/photos/s13-event.jpg","Aude · CC BY-SA 4.0",1],
+    s14:["assets/photos/s14-event.jpg","Sashimi-b · CC BY-SA 4.0",1],
+    s15:["assets/photos/s15-event.jpg","Aude · CC BY-SA 4.0",1],
+  };
+
+  // Scenes photographed at the event itself, shown in the gallery band.
+  const GALLERY = [
+    ["assets/photos/gal-02.jpg","The Red Arrows draw the American flag in smoke over the harbor","PO1 Elizabeth Vlahos, USCG · Public domain"],
+    ["assets/photos/gal-01.jpg","The Parade of Ships passes beneath the aerial review","J. Passepartout · CC BY-SA 4.0"],
+    ["assets/photos/gal-03.jpg","Chile's Esmeralda under sail as the UAE's Al Fursan streak past","Aude · CC BY-SA 4.0"],
+    ["assets/photos/gal-04.jpg","Tall ships pass Fort Hamilton at the Verrazzano-Narrows","Edward Shevlin · Public domain"],
+    ["assets/photos/gal-06.jpg","A salute fired during the Parade of Ships","J. Passepartout · CC BY-SA 4.0"],
+    ["assets/photos/gal-05.jpg","Crowds line the waterfront to watch the fleet","Sashimi-b · CC BY-SA 4.0"],
+  ];
+
+  /* ============================================================
+     DATA — THE SKY
+     ============================================================ */
+  const AIR_WAVES = [
+    { no:"Wave I", title:"The Lead — Out Front Over the Harbor",
+      desc:"The review opened with the Navy's own. Six blue-and-gold jets crossed the Statue of Liberty in the tight diamond that has led American airshows since 1946.",
+      craft:[
+        {id:"a01",sil:"superhornet",flag:"🇺🇸",run:"01",name:"Blue Angels",desig:"F/A-18E/F Super Hornet",branch:"U.S. Navy",role:"Demonstration / Strike Fighter",price:"~$67M per jet",specs:[["Top speed","Mach 1.6"],["Crew","1–2"],["In service","since 1999"]],blurb:"The Navy's flight demonstration squadron has been the face of naval aviation since 1946, and it led the whole parade in its signature six-jet diamond — canopies sometimes just a few feet apart. The team traded up to the Super Hornet in 2021, flying the same airframe the fleet flies. Off the show circuit, this is the carrier air wing's do-everything fighter: it flies air-to-air combat, precision strike, and reconnaissance, and can even refuel other jets from buddy tanks. Every Blue Angels jet remains a combat airframe that can be returned to squadron service, and every pilot is a fleet aviator on a two-to-three-year tour."},
+      ]},
+    { no:"Wave II", title:"Heavy Iron — Presidential Jet & the Big Movers",
+      desc:"Behind the leaders came the slow, heavy aircraft: the machines that move a president, a fuel depot, and a special-operations arsenal through the sky.",
+      craft:[
+        {id:"a02",sil:"jumbo",flag:"🇺🇸",run:"02",name:"Air Force One",desig:"VC-25 (Boeing 747)",branch:"U.S. Air Force",role:"Presidential Transport",price:"~$2B per aircraft",specs:[["Top speed","~600 mph"],["Range","7,800 mi"],["In service","since 1990"]],blurb:"A heavily modified Boeing 747 that carries the call sign 'Air Force One' whenever the president is aboard. Two of them have served every president since George H.W. Bush, and their replacements — the VC-25B, built from 747-8s — run roughly two billion dollars apiece once the conversions are counted. The aircraft is really a flying White House: hardened communications, an onboard operating room, mid-air refueling capability, and defensive countermeasures mean the commander-in-chief can run the country from 35,000 feet indefinitely. Seeing it in a parade formation, rather than alone on a tarmac, is genuinely rare."},
+        {id:"a03",sil:"herc",flag:"🇺🇸",run:"03",name:"Super Hercules",desig:"KC-130J",branch:"U.S. Marine Corps",role:"Aerial Tanker / Transport",price:"~$75M",specs:[["Top speed","~416 mph"],["Crew","3"],["In service","since 1999"]],blurb:"The Marines' four-engine turboprop workhorse, descended from a C-130 design that first flew in 1954 and simply refuses to be replaced. As a tanker it trails hoses from wing pods to top off jets and helicopters in mid-flight; as a transport it hauls Marines, cargo, and vehicles onto short, rough airstrips no jet could touch. Some carry a bolt-on 'Harvest HAWK' kit of sensors and missiles that turns a cargo hauler into an overwatch aircraft. The Blue Angels' own beloved support plane, 'Fat Albert,' is this same aircraft in blue and gold."},
+        {id:"a04",sil:"herc",flag:"🇺🇸",run:"04",name:"Ghostrider",desig:"AC-130J",branch:"U.S. Air Force (AFSOC)",role:"Gunship",price:"~$165M",specs:[["Armament","30mm + 105mm"],["Crew","~8"],["In service","since 2017"]],blurb:"A Hercules turned into a flying artillery battery, the newest of a gunship line that began with the 'Spectre' over Vietnam. It orbits a target in a steady left-hand circle while a crew of around eight fires side-mounted weapons — a 30mm cannon, a 105mm howitzer, and precision-guided munitions — with sensors that can pick out individual figures in the dark. For special-operations troops pinned down at night, the deep drone of an orbiting AC-130 overhead is famously the sound of relief. It is among the most feared close-support aircraft ever built."},
+      ]},
+    { no:"Wave III", title:"Rotary Wing — The Army & Coast Guard Helicopters",
+      desc:"Lower and slower than the jets, the helicopters thumped up the river in trail: the Army's attack and lift fleet, the Marines' tiltrotor, and the Coast Guard's rescue bird.",
+      craft:[
+        {id:"a05",sil:"helo",flag:"🇺🇸",run:"05",name:"Apache",desig:"AH-64",branch:"U.S. Army",role:"Attack Helicopter",price:"~$35M",specs:[["Top speed","~182 mph"],["Crew","2"],["In service","since 1986"]],blurb:"The Army's tank-killer since 1986: a two-seat gunship carrying up to sixteen Hellfire missiles, rockets, and a 30mm chain gun slaved to the gunner's helmet — point your head, and the gun points with you. The latest AH-64E model adds a mast-mounted Longbow radar that can find and sort dozens of targets through smoke and darkness. It proved itself opening the first air corridors of Desert Storm in 1991 and has flown for a dozen allied armies since. More than 2,500 have been built, making it the most-produced attack helicopter in the Western world."},
+        {id:"a06",sil:"helo",flag:"🇺🇸",run:"06",name:"Black Hawk",desig:"UH-60",branch:"U.S. Army",role:"Utility Helicopter",price:"~$21M",specs:[["Top speed","~183 mph"],["Capacity","11 troops"],["In service","since 1979"]],blurb:"The Army's ubiquitous workhorse since 1979, with more than 4,000 built and variants flying for every U.S. service and dozens of nations. A Black Hawk carries a squad of eleven infantry into an assault, flies medevac with a crew of medics, slings artillery or supplies beneath its belly, and shuttles VIPs — often all in the same week. Special-operations versions carried the raiders to Abbottabad in 2011; VIP versions in glossy 'gold top' paint fly the government's most senior leaders. If you picture an American military helicopter, you are almost certainly picturing this one."},
+        {id:"a07",sil:"chinook",flag:"🇺🇸",run:"07",name:"Chinook",desig:"CH-47",branch:"U.S. Army",role:"Heavy-Lift Helicopter",price:"~$40M",specs:[["Top speed","~196 mph"],["Payload","~24,000 lb"],["In service","since 1962"]],blurb:"Two big rotors and no tail rotor — every bit of engine power goes into lift, which is why this 1962 design still does the Army's heavy hauling. A Chinook can sling a howitzer or a Humvee beneath its hull, swallow more than thirty troops through its rear ramp, and, despite its bulk, it is actually the fastest helicopter in the Army inventory. Chinooks hauled artillery up mountains in Vietnam and resupplied ridgelines in Afghanistan where nothing else could land, sometimes balancing just the rear wheels on a slope to load troops. The Army expects to fly modernized versions into the 2060s — a century of service for one airframe."},
+        {id:"a08",sil:"osprey",flag:"🇺🇸",run:"08",name:"Osprey",desig:"MV-22B",branch:"U.S. Marine Corps",role:"Tiltrotor Transport",price:"~$75M",specs:[["Top speed","~316 mph"],["Capacity","24 troops"],["In service","since 2007"]],blurb:"The shape-shifter: its engine nacelles point up to take off and land like a helicopter, then rotate forward in about twelve seconds to cruise like a turboprop airplane. That trick — decades in development and hard-won — lets it carry two dozen Marines twice as far and twice as fast as the helicopters it replaced, which transformed how the Marine Corps moves. Ospreys have flown assault, resupply, evacuation, and even presidential-support missions, and the Navy uses a version to deliver cargo to aircraft carriers at sea. Nothing else in the parade could hover over the Hudson and then outrun the helicopters home."},
+        {id:"a09",sil:"helo",flag:"🇺🇸",run:"09",name:"Dolphin",desig:"MH-65",branch:"U.S. Coast Guard",role:"Search & Rescue",price:"~$10M",specs:[["Top speed","~178 mph"],["Crew","4"],["In service","since 1984"]],blurb:"The Coast Guard's short-range rescue helicopter — and a genuine local, flying from Air Station Atlantic City patrols over this exact stretch of harbor. A crew of four races to distressed boaters and swimmers, lowers a rescue swimmer on a hoist cable, and lifts survivors from the water; the enclosed fan-in-tail 'fenestron' design gives it a distinctive buzz. Dolphins also fly security patrols over events precisely like this one, intercepting small aircraft that wander into restricted airspace. Since 1984 the type has saved thousands of lives in U.S. waters, one hoist at a time."},
+      ]},
+    { no:"Wave IV", title:"The Fighters — Fast Jets Across the Skyline",
+      desc:"Now the pace picked up. The fourth-generation fighters — the fast, agile jets that dominate the airspace and pound targets on the ground — swept up the Hudson.",
+      craft:[
+        {id:"a10",sil:"viper",flag:"🇺🇸",run:"10",name:"Thunderbirds",desig:"F-16C Fighting Falcon",branch:"U.S. Air Force",role:"Demonstration / Multirole Fighter",price:"~$30M (new-build ~$63M)",specs:[["Top speed","Mach 2"],["Crew","1"],["In service","since 1978"]],blurb:"The Air Force's demonstration squadron has flown since 1953, and since 1983 its mount has been the F-16 — a small, single-engine dogfighter so agile its own pilots nicknamed it the 'Viper.' Born from a 1970s push for a light, affordable fighter, it became the most-produced Western jet fighter of its generation: over 4,600 built, flying with some two dozen air forces. It is genuinely multirole, dogfighting one day and dropping precision bombs the next. True to tradition, the Thunderbirds' show jets are combat aircraft that could be re-armed and returned to a fighting squadron within days."},
+        {id:"a11",sil:"eagle",flag:"🇺🇸",run:"11",name:"Eagle II",desig:"F-15EX",branch:"U.S. Air Force",role:"Air Superiority / Strike",price:"~$90M",specs:[["Top speed","Mach 2.5"],["Weapons","up to 12 AAMs"],["In service","since 2021"]],blurb:"The newest and most powerful member of the Eagle family, delivered starting in 2021 — half a century after the original F-15 first flew. Its lineage carries an unmatched record: F-15s have scored more than a hundred air-to-air kills without ever losing one in air combat. The EX adds modern fly-by-wire controls, a huge digital radar, and the ability to haul up to a dozen air-to-air missiles or the biggest weapons in the inventory, things the stealth jets cannot carry internally. The idea: let stealthy F-35s and F-22s sneak forward as the eyes, while the Eagle II follows as the flying magazine."},
+        {id:"a12",sil:"warthog",flag:"🇺🇸",run:"12",name:"Warthog",desig:"A-10 Thunderbolt II",branch:"U.S. Air Force",role:"Close Air Support",price:"~$9M (1990s dollars)",specs:[["Gun","30mm GAU-8"],["Top speed","~439 mph"],["In service","since 1977"]],blurb:"An airplane designed around a gun: the seven-barrel 30mm GAU-8 Avenger cannon is the size of a small car, and the A-10 was literally built to carry it. A titanium 'bathtub' wraps the pilot, the engines sit high out of the line of ground fire, and the straight wing lets it fly low and slow enough to see friend from foe — everything about it is deliberate, including the ugliness. It shredded armored columns in the Gulf War and covered infantry for twenty years of counterinsurgency, and soldiers love its distinctive BRRRT like no other sound. The Air Force has tried to retire it for decades; Congress, and the troops it protects, keep saying no."},
+        {id:"a13",sil:"superhornet",flag:"🇺🇸",run:"13",name:"Growler",desig:"EA-18G",branch:"U.S. Navy",role:"Electronic Attack",price:"~$80M",specs:[["Top speed","Mach 1.6"],["Crew","2"],["In service","since 2009"]],blurb:"A Super Hornet rebuilt as an invisible weapon: instead of bombs, its pylons carry jamming pods that blind enemy radar and cut enemy communications. A two-person crew — pilot in front, electronic-warfare officer behind — flies ahead of a strike package, filling enemy scopes with noise and, if needed, firing missiles that home on the radars themselves. It is the only dedicated tactical electronic-attack jet in the U.S. inventory, so Growlers escort not just Navy strikes but Air Force ones too. In a modern conflict, no one goes downtown without one."},
+      ]},
+    { no:"Wave V", title:"Stealth & the Tri-Bomber Element",
+      desc:"The heart of the formation: the fifth-generation stealth fighters and the rare 'tri-bomber' — all three of America's strategic bombers flying together, a sight the country almost never sees.",
+      craft:[
+        {id:"a14",sil:"lightning",flag:"🇺🇸",run:"14",name:"Lightning II",desig:"F-35",branch:"USAF · USMC · USN",role:"Stealth Multirole Fighter",price:"~$82M (F-35A)",specs:[["Top speed","Mach 1.6"],["Crew","1"],["In service","since 2015"]],blurb:"The fifth-generation quarterback and the centerpiece of the biggest defense program in history. Stealth shaping keeps it off enemy radar, while a fused suite of sensors — including cameras that let the pilot literally look through the airframe via the helmet — builds one picture of the whole battlefield and shares it with every friendly jet, ship, and battery nearby. It comes in three versions: the A flies from runways, the B lands vertically on amphibious ships, and the C catapults from carriers. Roughly twenty allied nations have bought in, making it the common fighter of the Western world, with over 1,000 delivered."},
+        {id:"a15",sil:"raptor",flag:"🇺🇸",run:"15",name:"Raptor",desig:"F-22",branch:"U.S. Air Force",role:"Stealth Air Superiority",price:"~$143M flyaway",specs:[["Top speed","Mach 2+"],["Supercruise","yes"],["In service","since 2005"]],blurb:"The apex dogfighter, built for exactly one job: owning the sky. It cruises above Mach 1.5 without afterburner — 'supercruise,' which almost nothing else can do — while thrust-vectoring nozzles let it pivot in ways that look physically wrong at airshows. Its stealth means opponents in exercises routinely die without ever seeing it; pilots describe fighting a Raptor as boxing a ghost. Only 187 were built before the line closed in 2011, and it has never been exported — by law, not even to close allies — which makes any public flypast a small event in itself."},
+        {id:"a16",sil:"spirit",flag:"🇺🇸",run:"16",name:"Spirit",desig:"B-2",branch:"U.S. Air Force",role:"Stealth Strategic Bomber",price:"~$2.1B",specs:[["Range","6,900 mi"],["Payload","40,000 lb"],["In service","since 1997"]],blurb:"A flying wing with no tail, no fuselage, and almost no radar signature — arguably the most exotic aircraft ever put into service, at roughly $2 billion each. Only 21 were built, all based at Whiteman Air Force Base in Missouri, from which crews have flown 40-plus-hour round-trip combat missions to the far side of the world, refueling in mid-air and sleeping in shifts on a cot behind the seats. It can slip through the densest air defenses on earth and deliver 40,000 pounds of precision weapons, including the bunker-busters no other aircraft carries. When a B-2 appears over a public event, it is usually visible for about ten seconds — and it is always the thing people remember."},
+        {id:"a17",sil:"lancer",flag:"🇺🇸",run:"17",name:"Lancer",desig:"B-1B",branch:"U.S. Air Force",role:"Supersonic Bomber",price:"~$317M (1998 dollars)",specs:[["Top speed","Mach 1.2"],["Payload","75,000 lb"],["In service","since 1986"]],blurb:"The 'Bone' (from B-One): a swing-wing bomber whose wings sweep back for a fast, low, supersonic dash and spread forward for takeoff and cruise. Designed in the Cold War to streak under Soviet radar, it found a second life as a conventional heavy-hitter, loitering over Afghanistan for hours and delivering precision bombs on call. It carries the largest conventional payload of any U.S. aircraft — up to 75,000 pounds, more than the B-52 or B-2 — and its four afterburning engines make it the loudest, most theatrical flypast in the bomber fleet. Around 40 remain in service as the fleet ages toward replacement by the B-21."},
+        {id:"a18",sil:"strato",flag:"🇺🇸",run:"18",name:"Stratofortress",desig:"B-52",branch:"U.S. Air Force",role:"Strategic Bomber",price:"~$84M (1998 dollars)",specs:[["Engines","8"],["First flight","1952"],["In service","since 1955"]],blurb:"The immortal one: eight engines, a 185-foot wingspan, and a first flight in 1952 — the same airframes have now been flown by the grandchildren of their original crews. About 76 remain in service, and a sweeping modernization with new Rolls-Royce engines and radar is intended to keep them flying into the 2050s, past the design's hundredth birthday. The B-52 has done everything: Cold War nuclear alert, carpet bombing, precision strike, maritime patrol, and cruise-missile trucking from far outside enemy defenses. Cheap to fly (by bomber standards), endlessly adaptable, and impossible to replace, it has outlived several aircraft designed to retire it."},
+      ]},
+    { no:"Wave VI", title:"The Supporting Cast — Trainers, Patrols & Heavy Wings",
+      desc:"Between the bombers and the allied finale came the aircraft that make everything else possible — the airlifters, the patrol planes, the trainers that mint new pilots, and one 80-year-old veteran. Seven of these were photographed over the Hudson that morning.",
+      craft:[
+        {id:"b01",sil:"jumbo",flag:"🇺🇸",run:"19",name:"Globemaster III",desig:"C-17A",branch:"U.S. Air Force",role:"Strategic Airlifter",price:"~$340M",specs:[["Payload","~170,900 lb"],["Range","global (refueled)"],["In service","since 1995"]],blurb:"The jet that moves America's military: tanks, helicopters, field hospitals, and hundreds of troops, delivered across oceans onto runways as short as 3,500 feet. The C-17 is the backbone of every major deployment, disaster response, and evacuation of the past quarter-century — Berlin-Airlift-scale capability in a single airframe. Its most famous hours include hauling 823 people out of Kabul on one flight in 2021. Watching one bank its 170-foot wingspan over the Hudson makes its size suddenly, startlingly real."},
+        {id:"b02",sil:"jumbo",flag:"🇺🇸",run:"20",name:"Poseidon",desig:"P-8A",branch:"U.S. Navy",role:"Maritime Patrol",price:"~$175M",specs:[["Based on","Boeing 737"],["Crew","9"],["In service","since 2013"]],blurb:"A Boeing 737 airliner reborn as a submarine hunter. The Poseidon prowls the oceans with radar, sonobuoys, and torpedoes, tracking submarines and watching sea lanes for hours at a stretch — the modern successor to the Cold War's P-3 Orion. It also flies search-and-rescue and reconnaissance, and versions serve with allies from Australia to Norway. Over a harbor full of warships, it represented the eyes that watch the water everywhere else."},
+        {id:"b03",sil:"herc",flag:"🇺🇸",run:"21",name:"Greyhound",desig:"C-2A",branch:"U.S. Navy",role:"Carrier Onboard Delivery",price:"~$39M (1980s)",specs:[["Role","COD"],["Capacity","~10,000 lb"],["In service","since 1966"]],blurb:"The carrier fleet's delivery truck: for nearly sixty years the twin-turboprop Greyhound has flown mail, spare parts, and passengers from shore onto aircraft carriers at sea, slamming onto the deck and catching the arresting wire like a fighter. Every sailor who ever got a package mid-deployment got it courtesy of a C-2. The type is now in its final years, handing the job to the CMV-22 Osprey, which made its parade appearance a small farewell. Few unglamorous airplanes are more beloved by the people they serve."},
+        {id:"b04",sil:"strato",flag:"🇺🇸",run:"22",name:"Superfortress 'FIFI'",desig:"B-29 (warbird)",branch:"Commemorative Air Force",role:"WWII Heritage Bomber",price:"~$640K in 1944 · priceless now",specs:[["First flight","1942"],["Engines","4 radial"],["Flying B-29s","2 left"]],blurb:"The oldest aircraft in the review by decades: a genuine Boeing B-29 Superfortress, the long-range bomber that ended the Second World War, kept flying by the volunteers of the Commemorative Air Force. FIFI is one of only two B-29s still airworthy on earth, and her four thundering radial engines sound like nothing else in the sky. Her fly-past stitched the 250-year story together — the arsenal of democracy saluting the republic it defended. For many along the river, the old bomber drew louder cheers than the stealth jets."},
+        {id:"b05",sil:"herc",flag:"🇺🇸",run:"23",name:"Huron",desig:"C-12",branch:"U.S. Army & Air Force",role:"Utility Transport",price:"~$6M",specs:[["Based on","King Air"],["Crew","2"],["In service","since 1974"]],blurb:"A military Beechcraft King Air — the unglamorous twin-turboprop that shuttles commanders, couriers, and small cargo between bases, and quietly flies some of the military's reconnaissance and liaison missions. Nearly every service operates a version, and it is many military pilots' first operational cockpit. In a parade of exotic machines, the little Huron represented the thousands of everyday flights that keep a military running. Someone has to carry the paperwork."},
+        {id:"b06",sil:"herc",flag:"🇸🇪",run:"24",name:"Hercules (Sweden)",desig:"C-130H · Tp 84",branch:"Swedish Air Force",role:"Allied Tactical Airlifter",price:"~$30M (then-year)",specs:[["Operator","Flygvapnet"],["In Swedish svc","since 1965"],["NATO","member 2024"]],blurb:"A Swedish Air Force Hercules — Tp 84 in Swedish service — flew in the American formation, a quiet statement from NATO's newest member. Sweden was actually the first export customer for the C-130 back in 1965, and its Hercules fleet has hauled relief and peacekeeping cargo from the Arctic to Africa for six decades. Its presence over the Hudson, two years after Sweden joined the alliance, put 200 years of Swedish-American friendship and a brand-new military bond in one frame."},
+        {id:"b07",sil:"herc",flag:"🇺🇸",run:"25",name:"Hurricane Hunter",desig:"WP-3D Orion",branch:"NOAA",role:"Weather Research",price:"~$36M (1970s)",specs:[["Operator","NOAA"],["Fleet","2 aircraft"],["In service","since 1976"]],blurb:"One of NOAA's two legendary hurricane hunters — 'Kermit' and 'Miss Piggy' — the four-engine turboprops that fly scientists directly into the eyewalls of hurricanes to measure what satellites cannot. Every forecast that gets a coastline evacuated in time owes something to these two airframes and their crews. The only civilian science agency in the review, NOAA brought the parade's most counterintuitive credential: an aircraft that deliberately flies into the worst weather on earth. It has done so for nearly fifty years."},
+        {id:"b08",sil:"lightning",flag:"🇺🇸",run:"26",name:"Goshawk",desig:"T-45",branch:"U.S. Navy",role:"Carrier Jet Trainer",price:"~$17M",specs:[["Trains","naval aviators"],["Carrier capable","yes"],["In service","since 1991"]],blurb:"The orange-and-white jet in which every Navy and Marine Corps tailhook aviator learns the hardest skill in aviation: landing on a carrier. The Goshawk is a navalized cousin of the BAE Hawk — the same family the Red Arrows fly — strengthened with a tailhook and beefy landing gear for deck work. Students fly it from classroom to their first arrested landing at sea. The four-ship that crossed the harbor was tomorrow's fighter pilots, literally in formation behind today's."},
+        {id:"b09",sil:"viper",flag:"🇺🇸",run:"27",name:"Talon",desig:"T-38",branch:"U.S. Air Force",role:"Supersonic Trainer",price:"~$756K (1961)",specs:[["First flight","1959"],["Top speed","Mach 1.3"],["In service","since 1961"]],blurb:"The world's first supersonic trainer and still the jet in which Air Force fighter and bomber pilots earn their wings, sixty years on. The sleek white Talon is the two-seat sibling of the F-5 Tiger fighter, and it has trained tens of thousands of pilots — every astronaut of the Apollo era kept proficient in one, and NASA still flies them as chase planes. Its replacement, the T-7 Red Hawk, is only now arriving, which will make the Talon one of the longest-serving jets in American history. The four-ship over the Hudson wore the classic trainer white."},
+      ]},
+    { no:"Wave VII", title:"Allied Colors — The International Aerobatic Teams",
+      desc:"The finale belonged to America's friends. Four of the world's great demonstration squadrons trailed their national colors in smoke across New York Harbor.",
+      craft:[
+        {id:"a19",sil:"lightning",flag:"🇫🇷",run:"28",name:"Patrouille de France",desig:"Dassault/Dornier Alpha Jet",branch:"French Air & Space Force",role:"Aerobatic Team",price:"~$10M per jet (est.)",specs:[["Jets","8 + A400M"],["Smoke","Bleu-Blanc-Rouge"],["Team since","1953"]],blurb:"France's national team — one of the oldest aerobatic squadrons in the world, flying since 1953 — crossed the Atlantic with eight Alpha Jet trainers and an A400M transport as escort and support. They were guests of honor with special resonance: France was America's first ally, the friendship sealed in 1778, and the Statue of Liberty below them was herself a French gift. Their signature move is releasing an enormous trail of blue, white, and red smoke — the tricolore painted across the sky. The Alpha Jet itself is a nimble French-German trainer that has schooled two generations of European fighter pilots."},
+        {id:"a20",sil:"viper",flag:"🇨🇦",run:"29",name:"Snowbirds",desig:"CT-114 Tutor",branch:"Royal Canadian Air Force",role:"Aerobatic Team",price:"~$1M per jet (1960s)",specs:[["Jets","9"],["Formation","tight 9-ship"],["Team since","1971"]],blurb:"Canada's 431 Air Demonstration Squadron flies nine little straight-winged Tutor jets — 1960s trainers kept immaculate for half a century — in some of the tightest, most delicate formation flying anywhere, wingtips mere feet apart. Where other teams trade on afterburner noise, the Snowbirds trade on grace: nine aircraft moving as a single organism through lazy loops and crossovers. The Tutor is unswept, unafterburned, and thoroughly obsolete, which somehow makes the discipline more impressive, not less. Their appearance over the Hudson was a neighborly salute across the world's longest undefended border."},
+        {id:"a21",sil:"lightning",flag:"🇬🇧",run:"30",name:"Red Arrows",desig:"BAE Hawk T1",branch:"Royal Air Force",role:"Aerobatic Team",price:"~$18M per jet (est.)",specs:[["Jets","9"],["Smoke","Red/White/Blue"],["Team since","1965"]],blurb:"Britain's world-famous squadron: nine scarlet Hawk trainers that have flown nearly five thousand displays in some sixty countries since 1965. Their trademark 'Diamond Nine' formation and red-white-and-blue smoke are among the most recognizable images in aviation — and the Hawk beneath the paint is the jet on which generations of RAF fighter pilots learned their trade. There was a wink in their presence: the adversary of 1776 flying in celebration of the anniversary, 250 years on. Few gestures say 'special relationship' quite like the King's own display team saluting the American harbor."},
+        {id:"a22",sil:"raptor",flag:"🇦🇪",run:"31",name:"Al Fursan",desig:"Aermacchi MB-339 / L-15",branch:"United Arab Emirates Air Force",role:"Aerobatic Team",price:"~$8M per jet (est.)",specs:[["Jets","~7"],["Smoke","Red/Green/White/Black"],["Team since","2010"]],blurb:"'The Knights' — the UAE's national aerobatic team, founded in 2010 and trained with the help of Italy's famed Frecce Tricolori, whose precision style they inherited. Their seven jets trail smoke in red, green, white, and black: the four colors of the Emirati flag, drawn across the New York sky. As the youngest team in the finale they represented the newest of America's close partnerships, alongside the oldest. Their presence rounded out a statement no single air force could make: allied colors from three continents, flying one formation over one harbor."},
+      ]},
+  ];
+
+  /* ============================================================
+     DATA — THE SEA (first 15 of the Parade of Sail, in order)
+     ============================================================ */
+  const SEA_WAVES = [
+    { no:"At the Head of the Fleet", title:"The Flagship",
+      desc:"By tradition the host nation leads its own parade. America's tall ship took the first position, dipping her ensign in a Presidential Review off the Statue of Liberty before the whole fleet followed her up the harbor.",
+      craft:[
+        {id:"s01",rig:["square","square","gaff"],jibs:3,flag:"🇺🇸",run:"01",name:"USCGC Eagle",desig:"Three-masted barque",branch:"U.S. Coast Guard",role:"Sail-Training Flagship",specs:[["Length","≈295 ft"],["Masts","3 (barque)"],["Home","New London, CT"]],blurb:"'America's Tall Ship' — a 295-foot barque and the only active square-rigger in U.S. government service. She was actually built in Germany in 1936 as the naval training ship Horst Wessel and came to America as a war reparation in 1946; Coast Guard crews sailed her across the Atlantic and she has trained officer candidates ever since. Cadets still learn leadership the old way aboard her: hauling on more than 20,000 square feet of sail, standing watch, and climbing rigging that rises nearly 150 feet above the deck. Leading the entire Parade of Sail past the Statue of Liberty is precisely the job she exists for."},
+      ]},
+    { no:"The Parade of Sail", title:"Following the Flagship — Ships 2 through 15",
+      desc:"Behind the Eagle came the fleet, an alternating line of foreign navy square-riggers and American historic schooners. Nearly 50 Class A and B ships from 20 nations sailed the route; these are the first fifteen.",
+      craft:[
+        {id:"s02",rig:["topsail","gaff","gaff"],jibs:2,flag:"🇳🇱",run:"02",name:"Oosterschelde",desig:"Three-masted topsail schooner",branch:"Netherlands",role:"Historic Merchant Sailer",specs:[["Length","≈164 ft"],["Built","1918"],["Masts","3"]],blurb:"The last survivor of a once-great Dutch fleet of three-masted topsail schooners, launched in 1918 to carry freight — everything from timber to bananas — under sail. She was rescued from decay and painstakingly restored in the early 1990s, returning to sea as a floating ambassador for the Netherlands. She has since sailed around the world more than once, including a recent two-year circumnavigation retracing the voyage of Darwin's Beagle with young scientists aboard. A working piece of the age when wind still moved the world's cargo."},
+        {id:"s03",rig:["topsail","gaff"],jibs:3,flag:"🇺🇸",run:"03",name:"Pride of Baltimore II",desig:"Baltimore Clipper (topsail schooner)",branch:"United States",role:"Privateer Reproduction",specs:[["Length","≈157 ft"],["Built","1988"],["Home","Baltimore, MD"]],blurb:"A working reproduction of a War-of-1812 'Baltimore Clipper' — the fast, sharply raked privateer schooners that slipped past the Royal Navy to raid British shipping, and that so infuriated London the Chesapeake became a target. She was built in 1988 to replace the first Pride of Baltimore, tragically lost with four crew in a 1986 squall, and she sails as Maryland's official goodwill ambassador. For her size she crowds on an enormous spread of canvas, and with it she is startlingly quick. Ships exactly like her are the reason 'The Star-Spangled Banner' got written down the bay from her home pier."},
+        {id:"s04",rig:["bermuda","bermuda"],jibs:2,flag:"🇺🇸",run:"04",name:"Ticonderoga",desig:"Schooner yacht",branch:"United States",role:"Classic Racing Yacht",specs:[["Length","≈72 ft"],["Launched","1936"],["Designer","Herreshoff"]],blurb:"'Big Ti' — a 72-foot 1936 design from L. Francis Herreshoff, and one of the most beloved racing yachts ever launched. Her long clipper bow and sweeping sheer made her a beauty; her hull made her a weapon, setting more than thirty elapsed-time course records over her racing career, including a Transpacific record that stood for a generation. She has been lovingly maintained and re-rigged through nearly ninety years of hard sailing. Her place in the line was a reminder that not every tall ship is a navy trainer — some are simply legends of the sea."},
+        {id:"s05",rig:["square","square","square"],jibs:3,flag:"🇦🇷",run:"05",name:"ARA Libertad",desig:"Full-rigged ship",branch:"Argentine Navy",role:"Sail-Training Ship",specs:[["Length","≈340 ft"],["Built","1963"],["Masts","3 (full-rig)"]],blurb:"Argentina's 340-foot training ship, and a true full-rigger — every one of her three towering masts crossed with square sails, nearly 30,000 square feet of canvas in all. Built in Buenos Aires and commissioned in 1963, she carries a ship's company of well over 300, including some 150 naval cadets on each training cruise. She is also genuinely fast: her Atlantic crossing under sail alone set a record that made her famous among tall ships. Few sights on the water match a full-rigged ship with everything set, and the Libertad brought exactly that up the Hudson."},
+        {id:"s06",rig:["topsail","gaff"],jibs:2,flag:"🇺🇸",run:"06",name:"Lynx",desig:"Square topsail schooner",branch:"United States",role:"Living-History Privateer",specs:[["Length","≈122 ft"],["Built","2001"],["Masts","2"]],blurb:"A 2001-built interpretation of an American privateer schooner from the War of 1812 — the original Lynx was captured by the British in 1813, and this ship sails to keep her story alive. Square topsails set above a fore-and-aft rig give her the classic silhouette of the era, and her crew often sails in period dress, firing her six-pounder deck guns in salute. She operates as a floating classroom, teaching schoolchildren history, seamanship, and science on both coasts. 'America's privateer' fit the 250th like a glove: this is the kind of ship the young republic actually fought with."},
+        {id:"s07",rig:["square","gaff","gaff","gaff"],jibs:3,flag:"🇨🇱",run:"07",name:"Esmeralda",desig:"Four-masted barquentine",branch:"Chilean Navy",role:"Sail-Training Ship",specs:[["Length","≈371 ft"],["Built","1954"],["Masts","4"]],blurb:"'La Dama Blanca' — the White Lady — Chile's 371-foot four-masted barquentine, among the longest and tallest sailing ships in the world. Launched in Spain in 1954, she carries square sails on her foremast and fore-and-aft canvas on the other three, nearly 31,000 square feet in total, handled by a company of around 300 sailors and 90 midshipmen. She has represented Chile in nearly every great tall-ships gathering of the past half-century, and her towering white rig is unmistakable from miles away. When she fires a 21-gun salute, the whole harbor knows it."},
+        {id:"s08",rig:["gaff"],jibs:1,flag:"🇺🇸",run:"08",name:"Clearwater",desig:"Hudson River sloop",branch:"United States",role:"Environmental Icon",specs:[["Length","≈106 ft"],["Built","1969"],["Masts","1 (sloop)"]],blurb:"The single-masted sloop that folk singer Pete Seeger willed into existence in 1969 — built in the style of the Dutch-descended cargo sloops that worked this river for two centuries, and launched with the explicit mission of saving it. At the time the Hudson was an open sewer; Clearwater's sails became the banner of the movement that helped push the Clean Water Act through in 1972. She still sails as a floating classroom, teaching tens of thousands of students river science every year. Of every vessel in the parade, none was more literally at home: this exact water is what she was built to defend."},
+        {id:"s09",rig:["square","square","gaff"],jibs:3,flag:"🇨🇴",run:"09",name:"ARC Gloria",desig:"Three-masted barque",branch:"Colombian Navy",role:"Sail-Training Flagship",specs:[["Length","≈250 ft"],["Built","1968"],["Masts","3 (barque)"]],blurb:"Colombia's flagship and the first of the great South American training barques, built in Bilbao in 1968 after — the story goes — the defense minister sketched the deal on a napkin. She carries some 15,000 square feet of sail and a company of around 165, most of them naval cadets learning the sea the old way. The Gloria is famous worldwide for her arrivals: cadets in dress uniform climb out along the yards, standing high above the deck to sing the national anthem as she enters port. She is less a ship with a crew than a national celebration under sail."},
+        {id:"s10",rig:["gaff","gaff"],jibs:2,flag:"🇺🇸",run:"10",name:"American Eagle",desig:"Gloucester fishing schooner",branch:"United States",role:"Historic Windjammer",specs:[["Length","≈92 ft"],["Built","1930"],["Home","Maine coast"]],blurb:"A genuine 1930 Gloucester fishing schooner — the last of that famous fleet ever launched — that spent over fifty years chasing cod and herring before she was rescued and restored in the 1980s. Today she is a National Historic Landmark carrying passengers on windjammer cruises out of Rockland, Maine, her fish holds long since converted to snug cabins. Unlike the reproductions around her in the line, she is the real thing: an actual working survivor of American fishing under sail. Her weathered grace made her one of the parade's quiet treasures."},
+        {id:"s11",rig:["square","gaff","gaff"],jibs:3,flag:"🇩🇴",run:"11",name:"Juan Bautista Cambiaso",desig:"Three-masted barquentine",branch:"Dominican Navy",role:"Sail-Training Ship",specs:[["Rig","Barquentine"],["Masts","3"],["Nation","Dom. Rep."]],blurb:"The Dominican Republic's sail-training barquentine, named for the Italian-born admiral who founded the Dominican navy and led it to victory in the nation's war of independence. She is the country's first true tall ship, acquired in the 2020s to give Dominican cadets what the great South American navies have long had: a school under sail. Square sails on the foremast drive her; fore-and-aft rig behind keeps her handy with a training crew. Her place in the first fifteen marked a proud debut on the world tall-ships stage."},
+        {id:"s12",rig:["gaff","gaff"],jibs:2,flag:"🇺🇸",run:"12",name:"Pioneer",desig:"Iron-hulled schooner",branch:"United States",role:"Museum Sailer (NYC)",specs:[["Length","≈102 ft"],["Built","1885"],["Home","South St. Seaport"]],blurb:"An 1885 schooner and a genuine industrial-age rarity: she is the only iron-hulled American merchant sailing vessel still afloat. Built in Pennsylvania to haul sand and cargo along the Delaware River, she worked for decades under sail and then engine before being restored and given to New York's South Street Seaport Museum in 1970. She now sails the harbor from a pier just downriver of the parade route, taking New Yorkers out onto their own water. In a fleet of visitors, Pioneer was the hometown ship — a piece of the harbor sailing in its own parade."},
+        {id:"s13",rig:["square","square","gaff"],jibs:3,flag:"🇪🇨",run:"13",name:"BAE Guayas",desig:"Three-masted barque",branch:"Ecuadorian Navy",role:"Sail-Training Flagship",specs:[["Length","≈257 ft"],["Built","1976"],["Masts","3 (barque)"]],blurb:"Ecuador's flagship training barque, built in 1976 at the same Bilbao yard that produced Colombia's Gloria — the two are sisters in spirit, part of a family of South American training ships that also includes Venezuela's and Mexico's. She is named for the river on which her home port of Guayaquil stands, and by legend for the indigenous chief Guayas. Cadets from the Ecuadorian naval academy cross oceans aboard her, learning navigation and nerve on the yards a hundred feet up. Like her sisters, she arrives in port with her crew manning the rigging in salute."},
+        {id:"s14",rig:["gaff","gaff"],jibs:2,flag:"🇺🇸",run:"14",name:"Liberty Clipper",desig:"Gaff-rigged schooner",branch:"United States",role:"Passenger Tall Ship",specs:[["Length","≈125 ft"],["Built","1983"],["Home","Boston, MA"]],blurb:"A 125-foot steel schooner built in 1983 on the lines of the mid-1800s coastal packets that once carried passengers and freight along the Atlantic seaboard. She earns her keep the traditional way: summers sailing Boston Harbor with passengers hauling lines alongside the crew, winters trading New England for the Bahamas. Handsome, fast, and unpretentious, she represents the living commercial tradition of American sail — ships that work for a living rather than for a navy. Her name alone earned her a place in a parade about liberty."},
+        {id:"s15",rig:["topsail","gaff"],jibs:2,flag:"🇫🇷",run:"15",name:"Belle Poule",desig:"Two-masted topsail schooner",branch:"French Navy",role:"Sail-Training Schooner",specs:[["Length","≈123 ft"],["Built","1932"],["Masts","2"]],blurb:"A French Navy training schooner launched in 1932, modeled on the Breton schooners that fished the dangerous waters off Iceland a century ago. She carries a rare honor: during the Second World War she escaped to England and served with the Free French, and for it she is one of the few ships entitled to fly the Cross of Lorraine. With her identical sister L'Étoile she has trained French naval officers for over ninety years. France closed the first fifteen as it opened the story of 1776 — the old ally, still under sail, still showing the flag beside America's."},
+      ]},
+  ];
+
+  /* ============================================================
+     MODE CONFIG + RENDER
+     ============================================================ */
+  const MODES = {
+    sky:{
+      title:"The Sky Over New York",
+      sub:"Every aircraft in the Sail4th 250 International Aerial Review — in order, and what each one does.",
+      lede:"On the morning of the nation's Semiquincentennial, more than <b>200 U.S. and allied aircraft</b> — led by the Navy's Blue Angels — paraded over the Statue of Liberty and up the Hudson River, from the Verrazzano-Narrows Bridge to Yonkers. It was billed as the largest peacetime aerial review in the harbor's history. Here is the formation, wave by wave.",
+      chips:[["✈️","<b>31</b> aircraft featured"],["🇺🇸","<b>6</b> U.S. flying services"],["🌐","<b>4</b> allied aerobatic teams"],["🗽","Verrazzano → Hudson → Yonkers"]],
+      foot:"scroll to walk the flight line",
+      waves:AIR_WAVES,
+    },
+    sea:{
+      title:"The Sea Beside New York",
+      sub:"The first 15 ships of the Sail4th 250 Parade of Sail — in order, and what each one is.",
+      lede:"As the jets cleared the harbor, the water took over. The <b>International Parade of Sail</b> — the largest maritime gathering in American history — ran from the Verrazzano-Narrows Bridge, past a Presidential Review at the Statue of Liberty, and up the Hudson to the George Washington Bridge. Nearly 50 Class A and B ships from 20 nations took part. Here are the first fifteen, in the order they led the fleet — beginning with America's own.",
+      chips:[["⛵","<b>15</b> ships, in order"],["🌍","<b>8</b> nations represented"],["🚩","led by USCGC Eagle"],["🗽","Liberty → up the Hudson"]],
+      foot:"scroll to walk the parade of sail",
+      waves:SEA_WAVES,
+    },
+  };
+
+  const app = document.getElementById("app");
+
+  const card = (c) => {
+    // One photograph per card: the parade-day shot when we have it, otherwise
+    // a free-licensed photo of the same aircraft type or named ship.
+    const ph = PHOTOS[c.id];
+    return `
+    <article class="card" data-id="${c.id}">
+      <div class="stage">
+        ${ph ? `<img class="photo" src="${ph[0]}" alt="${c.name} — ${c.desig}" loading="lazy"/>
+                <div class="photocredit">${ph[1]}</div>
+                ${ph[2] ? `<span class="evbadge">★ at the parade</span>` : ``}` : ``}
+        <span class="runno">NO. ${c.run}</span>
+        <span class="natflag" title="origin">${c.flag}</span>
+      </div>
+      <div class="body">
+        <div>
+          <h3 class="name">${c.name}</h3>
+          <div class="desig">${c.desig}</div>
+        </div>
+        <div class="tags">
+          <span class="tag branch">${c.branch}</span>
+          <span class="tag role">${c.role}</span>
+        </div>
+        <p class="blurb">${c.blurb}</p>
+        ${c.price ? `<div class="price"><span class="k">Unit cost (approx.)</span><span class="v">${c.price}</span></div>` : ``}
+        <div class="specs">
+          ${c.specs.map(([k,v2])=>`<div><div class="k">${k}</div><div class="v">${v2}</div></div>`).join("")}
+        </div>
+      </div>
+    </article>`;
+  };
+
+  function render(mode){
+    const M = MODES[mode];
+    document.body.dataset.mode = mode;
+    document.getElementById("h-kicker").textContent = "July 4, 2026 · New York Harbor · America's 250th";
+    document.getElementById("h-title").innerHTML =
+      `${M.title}<span class="sub">${M.sub}</span>`;
+    document.getElementById("h-lede").innerHTML = M.lede;
+    document.getElementById("h-chips").innerHTML =
+      M.chips.map(([e,t])=>`<span class="chip">${e} ${t}</span>`).join("");
+    document.getElementById("h-foot").textContent = M.foot;
+    document.querySelectorAll(".modetab").forEach(b=>
+      b.classList.toggle("active", b.dataset.m===mode));
+
+    app.innerHTML = "";
+    M.waves.forEach(w=>{
+      const sec = document.createElement("section");
+      sec.className = "band";
+      sec.innerHTML = `
+        <div class="wrap">
+          <div class="wave-head">
+            <span class="wave-no">${w.no}</span>
+            <h2 class="wave-title">${w.title}</h2>
+          </div>
+          <p class="wave-desc">${w.desc}</p>
+          <div class="grid">${w.craft.map(card).join("")}</div>
+        </div>`;
+      app.appendChild(sec);
+    });
+    const gal = document.createElement("section");
+    gal.className = "band";
+    gal.innerHTML = `
+      <div class="wrap">
+        <div class="wave-head">
+          <span class="wave-no">From the Day Itself</span>
+          <h2 class="wave-title">Scenes from July 4, 2026</h2>
+        </div>
+        <p class="wave-desc">Free-licensed photographs taken at the event — the sky and the sea sharing one harbor.</p>
+        <div class="gallery">
+          ${GALLERY.map(([src,cap,cr])=>`
+            <figure>
+              <img src="${src}" alt="${cap}" loading="lazy"/>
+              <figcaption>${cap}<span class="cr">${cr}</span></figcaption>
+            </figure>`).join("")}
+        </div>
+      </div>`;
+    app.appendChild(gal);
+
+    document.title = mode==="sea"
+      ? "The Sea Beside New York — Parade of Sail, July 4, 2026"
+      : "The Sky Over New York — America's 250th Aerial Review, July 4, 2026";
+    applyLocalPhotos();
+  }
+
+  /* Local-only photo overrides: files in assets/photos/local/<id>.jpg
+     (gitignored, never deployed) replace that card's photo when viewing
+     locally. On the deployed site the probes 404 and nothing changes. */
+  function applyLocalPhotos(){
+    document.querySelectorAll(".card[data-id]").forEach(cd=>{
+      const id = cd.dataset.id;
+      const probe = new Image();
+      probe.onload = ()=>{
+        let img = cd.querySelector("img.photo");
+        const stage = cd.querySelector(".stage");
+        if(!img){
+          img = document.createElement("img");
+          img.className = "photo"; img.alt = id;
+          stage.prepend(img);
+          const credit = document.createElement("div");
+          credit.className = "photocredit";
+          stage.insertBefore(credit, stage.children[1]);
+        }
+        img.src = probe.src;
+        cd.querySelector(".photocredit").textContent = "your photo · local only, not published";
+        const badge = cd.querySelector(".evbadge");
+        if(badge) badge.remove();
+      };
+      probe.src = `assets/photos/local/${id}.jpg`;
+    });
+  }
+
+  document.getElementById("tabs").addEventListener("click", (e)=>{
+    const btn = e.target.closest(".modetab");
+    if(!btn) return;
+    history.replaceState(null,"",`#${btn.dataset.m}`);
+    render(btn.dataset.m);
+    window.scrollTo({top:0,behavior:"auto"});
+  });
+
+  // photo credits list
+  const names = {};
+  [...AIR_WAVES, ...SEA_WAVES].forEach(w=>w.craft.forEach(c=>names[c.id]=`${c.name} (${c.desig})`));
+  document.getElementById("credit-list").innerHTML =
+    Object.entries(PHOTOS).map(([id,[,cr,ev]])=>`<li>${names[id]||id} — ${cr}${ev?" — photographed at the event":""}</li>`).join("") +
+    GALLERY.map(([,cap,cr])=>`<li>Gallery: ${cap} — ${cr}</li>`).join("");
+
+  const start = location.hash.replace("#","") === "sea" ? "sea" : "sky";
+  render(start);
+  </script>
 </body>
 </html>
