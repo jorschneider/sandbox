@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0b0c10" />
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="CRUX" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<title>CRUX — Bouldering Circuit Coach</title>
+<meta name="description" content="Generate cardio, power-endurance, technique and strength bouldering circuits, then get coached through every block with a guided interval timer. Works offline on your phone at the wall." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0b0c10;
+    --panel:#15171f;
+    --panel-2:#1e212d;
+    --ink:#f4f5f9;
+    --muted:#9096ab;
+    --line:#272b39;
+    --accent:#ff6a3d;       /* hold orange */
+    --accent-2:#ff9a3d;
+    --warmup:#f2b300;       /* amber */
+    --work:#ff5a4d;         /* send red */
+    --rest:#2bd3ab;         /* recovery teal */
+    --cool:#5aa9ff;         /* cooldown blue */
+    --radius:20px;
+    --shadow:0 14px 36px rgba(0,0,0,.5);
+    --ambient:
+      radial-gradient(90% 46% at 12% -6%, rgba(255,106,61,.10), transparent 62%),
+      radial-gradient(70% 38% at 100% -2%, rgba(242,179,0,.05), transparent 55%),
+      radial-gradient(90% 55% at 85% 112%, rgba(90,169,255,.07), transparent 60%);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overscroll-behavior:none;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  body::before{ /* ambient gym-at-night glow behind everything */
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:var(--ambient);
+  }
+  h1,h2,h3,.brand,.big,.chip,.btn,.seg-label,.next-label{font-family:"Oswald",-apple-system,system-ui,sans-serif;}
+  .wrap{max-width:560px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));}
+
+  /* ---------- header ---------- */
+  header.app{display:flex;align-items:center;gap:13px;margin:8px 0 20px}
+  .logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(150deg,var(--accent),var(--accent-2));
+    display:grid;place-items:center;flex:0 0 auto;
+    box-shadow:0 8px 22px rgba(255,106,61,.4), inset 0 1px 0 rgba(255,255,255,.35)}
+  .logo svg{width:25px;height:25px}
+  .brand{font-size:27px;font-weight:700;letter-spacing:2.5px;line-height:1}
+  .brand small{display:block;font-family:inherit;font-weight:500;font-size:10.5px;letter-spacing:3.6px;color:var(--muted);margin-top:4px}
+
+  /* ---------- setup ---------- */
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,0) 42%) ,var(--panel);
+    border:1px solid var(--line);border-radius:var(--radius);padding:17px;margin-bottom:14px;
+    box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.035)}
+  .label{font-size:11px;letter-spacing:2.6px;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:700}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{appearance:none;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);
+    padding:12px 14px;border-radius:13px;font-size:15px;font-weight:600;letter-spacing:.5px;cursor:pointer;
+    transition:transform .12s ease,border-color .18s,background .18s,box-shadow .18s;flex:1 1 auto;min-width:64px;text-align:center;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+  .chip:hover{border-color:#3a4055}
+  .chip:active{transform:scale(.97)}
+  .chip[aria-pressed="true"]{background:linear-gradient(150deg,var(--accent),var(--accent-2));border-color:transparent;color:#221204;
+    box-shadow:0 8px 20px rgba(255,106,61,.42), inset 0 1px 0 rgba(255,255,255,.3)}
+  .focus-grid{display:grid;grid-template-columns:1fr;gap:8px}
+  .focus{display:flex;align-items:flex-start;gap:12px;text-align:left;padding:13px 14px}
+  .focus .dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex:0 0 auto;background:var(--work);
+    box-shadow:0 0 10px color-mix(in srgb, currentColor 60%, transparent),
+               0 0 0 3px color-mix(in srgb, currentColor 14%, transparent)}
+  .focus[aria-pressed="true"] .dot{box-shadow:0 0 0 3px rgba(26,18,6,.25)}
+  .focus .ftxt{display:flex;flex-direction:column;gap:2px}
+  .focus .ftitle{font-size:16px;font-weight:700;letter-spacing:.4px}
+  .focus .fsub{font-size:12.5px;color:var(--muted);font-weight:500;line-height:1.35;font-family:-apple-system,system-ui,sans-serif}
+  .focus[aria-pressed="true"] .fsub{color:#5a3a1a}
+
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .grade-val{font-family:"Oswald";font-size:24px;font-weight:700;color:var(--accent);text-shadow:0 0 20px rgba(255,106,61,.45)}
+  input[type=range]{width:100%;accent-color:var(--accent);height:30px}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+
+  .start{width:100%;border:none;border-radius:17px;padding:19px;margin-top:6px;cursor:pointer;
+    font-family:"Oswald";font-size:20px;font-weight:700;letter-spacing:2.5px;color:#221204;
+    background:linear-gradient(150deg,var(--accent),var(--accent-2));
+    box-shadow:0 14px 32px rgba(255,106,61,.45), 0 3px 8px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.3);
+    transition:transform .08s ease, box-shadow .2s ease}
+  .start:active{transform:translateY(1px) scale(.99);box-shadow:0 8px 20px rgba(255,106,61,.4), inset 0 1px 0 rgba(255,255,255,.3)}
+  .total-line{text-align:center;color:var(--muted);font-size:13px;margin:14px 0 4px}
+  .total-line b{color:var(--ink)}
+  #statsLine{margin-top:16px;letter-spacing:.2px}
+
+  /* ---------- preview list ---------- */
+  .plan{margin-top:2px}
+  .plan-item{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid color-mix(in srgb, var(--line) 70%, transparent)}
+  .plan-item:last-child{border-bottom:none}
+  .plan-bar{width:4px;align-self:stretch;border-radius:4px;flex:0 0 auto}
+  .plan-main{flex:1 1 auto;min-width:0}
+  .plan-name{font-size:14.5px;font-weight:600;letter-spacing:.2px}
+  .plan-sub{font-size:12px;color:var(--muted);line-height:1.35;margin-top:1px}
+  .plan-time{font-family:"Oswald";font-variant-numeric:tabular-nums;font-size:15px;color:var(--muted);flex:0 0 auto}
+
+  /* ---------- player ---------- */
+  #player{position:fixed;inset:0;display:none;flex-direction:column;z-index:50;
+    background:var(--ambient), var(--bg);
+    padding:max(16px,env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom))}
+  #player.show{display:flex;animation:playerIn .32s cubic-bezier(.2,.8,.3,1)}
+  @keyframes playerIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  body.playing{overflow:hidden}
+  .p-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .p-meta{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700;
+    flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .p-top-btns{display:flex;gap:8px;align-items:center;flex:0 0 auto}
+  .exit{background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted);border-radius:11px;padding:8px 12px;font-size:13px;cursor:pointer;font-weight:600;white-space:nowrap}
+  #voiceBtn[aria-pressed="false"]{opacity:.5;text-decoration:line-through}
+  #voiceBtn[aria-pressed="true"]{color:var(--rest);border-color:color-mix(in srgb, var(--rest) 55%, transparent)}
+  .p-progress{height:5px;background:var(--panel-2);border-radius:99px;overflow:hidden;margin:14px 0 0}
+  .p-progress > div{height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    box-shadow:0 0 12px rgba(255,106,61,.55);transition:width .25s linear}
+
+  .stage{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
+  .stage.swap{animation:segIn .38s cubic-bezier(.2,.8,.3,1) both}
+  @keyframes segIn{from{opacity:.15;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+  .seg-kind{font-size:12px;letter-spacing:5px;text-transform:uppercase;font-weight:700;text-shadow:0 0 18px currentColor}
+  .seg-label{font-size:clamp(27px,8.4vw,44px);font-weight:700;line-height:1.05;margin:2px 0;letter-spacing:.5px}
+  .ring-wrap{position:relative;width:min(74vw,300px);aspect-ratio:1;margin:8px 0}
+  .ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+  .ring-bg{fill:none;stroke:var(--panel-2);stroke-width:13}
+  .ring-fg{fill:none;stroke-width:13;stroke-linecap:round;transition:stroke .3s;
+    filter:drop-shadow(0 0 9px color-mix(in srgb, currentColor 65%, transparent))}
+  .big{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .clock{font-size:clamp(56px,17vw,84px);font-weight:700;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:1px;
+    transition:color .25s}
+  .clock.ending{color:var(--accent);text-shadow:0 0 26px rgba(255,106,61,.55)}
+  .rpe{font-size:12px;color:var(--muted);letter-spacing:2px;margin-top:4px;text-transform:uppercase}
+  .seg-sub{max-width:34ch;color:#cbcfdf;font-size:15px;line-height:1.5;font-family:-apple-system,system-ui,sans-serif;min-height:3em}
+  .next{display:flex;align-items:center;gap:8px;justify-content:center;color:var(--muted);font-size:13px;margin-top:6px;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);padding:8px 15px;border-radius:99px;max-width:100%}
+  .next-label{letter-spacing:2px;text-transform:uppercase;font-weight:700;font-size:10.5px}
+  #nextTxt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .controls{display:flex;gap:10px;margin-top:10px}
+  .ctrl{flex:1 1 0;border:1px solid var(--line);color:var(--ink);border-radius:16px;
+    background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0) 50%), var(--panel);
+    padding:15px;font-family:"Oswald";font-size:16px;font-weight:600;letter-spacing:1px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s ease;
+    box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04)}
+  .ctrl:active{transform:scale(.97)}
+  .ctrl.primary{background:linear-gradient(150deg,var(--accent),var(--accent-2));color:#221204;border-color:transparent;flex:1.5 1 0;
+    box-shadow:0 10px 26px rgba(255,106,61,.42), inset 0 1px 0 rgba(255,255,255,.3)}
+  .ctrl svg{width:18px;height:18px}
+
+  /* ---------- done ---------- */
+  .done{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;
+    animation:segIn .45s cubic-bezier(.2,.8,.3,1) both}
+  .done h2{font-size:46px;margin:0;letter-spacing:1px;
+    background:linear-gradient(150deg,var(--accent) 20%,var(--warmup));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 3px 14px rgba(255,106,61,.28))}
+  .done .sub{color:var(--muted);font-size:15px;max-width:30ch;line-height:1.55}
+  .stat-row{display:flex;gap:26px;margin:8px 0}
+  .stat{display:flex;flex-direction:column;gap:3px}
+  .stat b{font-family:"Oswald";font-size:32px;color:var(--accent);text-shadow:0 0 14px rgba(255,106,61,.3)}
+  .stat span{font-size:10.5px;letter-spacing:2.2px;text-transform:uppercase;color:var(--muted)}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:10px;line-height:1.55;opacity:.85}
+  footer a{color:var(--muted)}
+  .hidden{display:none !important}
+  @media (max-width:360px){ .chip{font-size:14px;padding:10px} }
+  @media (prefers-reduced-motion:reduce){ *{animation:none !important;transition:none !important} }
+</style>
+</head>
+<body>
+<div class="wrap" id="setup">
+  <header class="app">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1a1206" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="5" r="2"/><path d="M9 8v4l-3 2 1 5"/><path d="M9 12l4 1 2 4"/><path d="M13 13l4-2"/>
+      </svg>
+    </div>
+    <div class="brand">CRUX<small>BOULDERING CIRCUIT COACH</small></div>
+  </header>
+
+  <div class="card">
+    <p class="label">Session length</p>
+    <div class="chips" id="durChips" role="group" aria-label="Session length">
+      <button class="chip" data-dur="15">15 min</button>
+      <button class="chip" data-dur="30">30 min</button>
+      <button class="chip" data-dur="45">45 min</button>
+      <button class="chip" data-dur="60">60 min</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="label">Focus</p>
+    <div class="focus-grid" id="focusGrid" role="group" aria-label="Workout focus"></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <p class="label" style="margin:0">Your hardest grade</p>
+      <span class="grade-val" id="gradeVal">V4</span>
+    </div>
+    <input type="range" id="grade" min="0" max="12" step="1" value="4" />
+    <p class="hint" id="gradeHint"></p>
+  </div>
+
+  <div class="card plan-card">
+    <div class="row" style="margin-bottom:8px">
+      <p class="label" style="margin:0">Today&rsquo;s plan</p>
+      <span class="total-line" style="margin:0">~<b id="planTotal">25</b> min · <span id="planFocus">Cardio</span></span>
+    </div>
+    <div class="plan" id="plan"></div>
+  </div>
+
+  <button class="start" id="startBtn">▶&nbsp;&nbsp;START SESSION</button>
+  <div class="total-line hidden" id="statsLine"></div>
+
+  <footer>
+    CRUX calls every block in a studio voice, beeps and buzzes on each change,
+    and keeps the screen awake — leave the phone in your bag and just listen.
+    Your music keeps playing underneath. No accounts, works offline.
+  </footer>
+</div>
+
+<!-- ===================== PLAYER ===================== -->
+<div id="player">
+  <div class="p-top">
+    <div class="p-meta"><span id="pIdx">1</span>/<span id="pCount">8</span> · <span id="pName">Cardio</span></div>
+    <div class="p-top-btns">
+      <button class="exit" id="voiceBtn" aria-pressed="true" title="Toggle voice coaching">🔊 Voice</button>
+      <button class="exit" id="exitBtn">✕ End</button>
+    </div>
+  </div>
+  <div class="p-progress"><div id="pBar"></div></div>
+
+  <div class="stage" id="stage">
+    <div class="seg-kind" id="segKind">WARM-UP</div>
+    <div class="seg-label" id="segLabel">Pulse raiser</div>
+    <div class="ring-wrap">
+      <svg viewBox="0 0 260 260">
+        <circle class="ring-bg" cx="130" cy="130" r="116"/>
+        <circle class="ring-fg" id="ring" cx="130" cy="130" r="116"/>
+      </svg>
+      <div class="big">
+        <div class="clock" id="clock">0:30</div>
+        <div class="rpe" id="rpe">EFFORT 3/10</div>
+      </div>
+    </div>
+    <div class="seg-sub" id="segSub"></div>
+    <div class="next"><span class="next-label">Next</span><span id="nextTxt">—</span></div>
+  </div>
+
+  <div class="done hidden" id="done">
+    <h2>SENT. 🤙</h2>
+    <p class="sub">Session complete. Forearms flushed, lungs worked. Hydrate, stretch, and stay off the crimps for the rest of the day.</p>
+    <div class="stat-row">
+      <div class="stat"><b id="dMin">25</b><span>Minutes</span></div>
+      <div class="stat"><b id="dWork">12</b><span>Work blocks</span></div>
+      <div class="stat"><b id="dFocus">Cardio</b><span>Focus</span></div>
+    </div>
+  </div>
+
+  <div class="controls" id="controls">
+    <button class="ctrl" id="prevBtn" title="Previous block">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+    </button>
+    <button class="ctrl primary" id="playBtn"><span id="playIco"></span><span id="playTxt">Pause</span></button>
+    <button class="ctrl" id="nextBtn" title="Skip block">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+    </button>
+  </div>
+  <div class="controls hidden" id="doneControls">
+    <button class="ctrl primary" id="againBtn">New session</button>
+  </div>
+</div>
+
+<script src="audio/manifest.js"></script>
+<script>
+"use strict";
+/* ============================================================
+   CRUX — bouldering circuit generator + guided interval timer
+   Pre-baked studio voice (ElevenLabs); works offline.
+   ============================================================ */
+
+const $ = (id) => document.getElementById(id);
+const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+const roundTo = (x, step) => Math.max(step, Math.round(x / step) * step);
+const fmt = (s) => { s = Math.max(0, Math.round(s)); const m = Math.floor(s/60); const r = s%60; return m + ":" + String(r).padStart(2,"0"); };
+
+/* ---- grade helpers ---- */
+// Express a working range some number of V-grades below the climber's max.
+// belowEasy = harder bound is this many below; belowHard = easier bound this many below.
+function range(maxV, belowHard, belowEasy){
+  const lo = Math.max(0, maxV - belowHard);
+  const hi = Math.max(0, maxV - belowEasy);
+  return lo === hi ? ("V" + lo) : ("V" + lo + "–V" + hi);
+}
+function limitRange(maxV){
+  const lo = Math.max(0, maxV - 1);
+  return "V" + lo + "–V" + (maxV + 1);
+}
+
+/* ---- segment constructors ---- */
+const KIND = {
+  prep:   { css: "var(--muted)", name: "GET READY" },
+  warmup: { css: "var(--warmup)", name: "WARM-UP" },
+  work:   { css: "var(--work)",   name: "WORK" },
+  rest:   { css: "var(--rest)",   name: "RECOVER" },
+  cool:   { css: "var(--cool)",   name: "COOL-DOWN" },
+};
+function seg(kind, label, sub, seconds, rpe){
+  return { kind, label, sub, seconds: Math.max(5, Math.round(seconds)), rpe: rpe || null };
+}
+
+/* ---- shared warm-up / cool-down ---- */
+function warmup(total, g){
+  const pulse = clamp(total*0.08, 90, 300);
+  const easy  = clamp(total*0.12, 150, 420);
+  return [
+    seg("warmup", "Pulse raiser",
+        "Get the blood moving — easy bike, brisk walk, or stairs, plus shoulder circles, wrist prep and hip openers.", pulse, 4),
+    seg("warmup", "Easy climbs + downclimb",
+        "5–8 very easy boulders (" + range(g,6,4) + "). Downclimb whenever it's safe. No hard starts, no max moves.", easy, 4),
+  ];
+}
+function cooldown(total, g){
+  const flush = clamp(total*0.05, 90, 240);
+  const stretch = clamp(total*0.045, 90, 180);
+  return [
+    seg("cool", "Flush traverse",
+        "Easy traversing or 2–3 very easy climbs (" + range(g,7,5) + ") to flush the forearms. Stop before the fingers feel cooked.", flush, 3),
+    seg("cool", "Stretch & shake out",
+        "Shake out forearms. Gentle wrist, shoulder, lat, pec and hip stretches. Breathe it down.", stretch, 2),
+  ];
+}
+function pad(total, g){ // numbers shared across builders
+  const w = warmup(total, g), c = cooldown(total, g);
+  const used = w.concat(c).reduce((a,s)=>a+s.seconds,0);
+  return { w, c, main: Math.max(180, total - used) };
+}
+
+/* ============================================================
+   FOCUS BUILDERS  — each returns a flat list of segments
+   ============================================================ */
+
+function buildCardio(total, g){
+  const { w, c, main } = pad(total, g);
+  const work = range(g,4,2);
+  const segs = [...w];
+  // two continuous blocks bracketing an interval block — fills `main` exactly
+  const rec = clamp(main*0.06, 45, 120);
+  let rounds = clamp(Math.round((main*0.30)/60), 4, 14);
+  const intervalTotal = rounds * 60;               // 40s on / 20s off
+  const cont = Math.max(120, main - intervalTotal - 2*rec);
+  const cont1 = Math.round(cont*0.55), cont2 = cont - cont1;
+  segs.push(seg("work", "Continuous circuit",
+    "Climb an easy boulder (" + work + "), downclimb if safe, then walk straight to the next. Keep moving the whole time — steady sweat, around 6/10.", cont1, 6));
+  segs.push(seg("rest", "Recover", "Walk it off, shake out, sip water. Pick your interval problems.", rec, 2));
+  for (let i = 1; i <= rounds; i++){
+    segs.push(seg("work", "Interval " + i + "/" + rounds,
+      "40s on: keep climbing on big holds and open hands. Step off before failure — never come off pumped-out.", 40, 7));
+    segs.push(seg("rest", "Off", "Down. Breathe. Chalk up for the next one.", 20, 1));
+  }
+  segs.push(seg("rest", "Recover", "Shake out the forearms. One more push to come.", rec, 2));
+  segs.push(seg("work", "Second-wind circuit",
+    "Back on: easy boulders (" + work + "), climb-downclimb-walk. Smooth and continuous — empty the tank without falling.", cont2, 6));
+  return [...segs, ...c];
+}
+
+function buildPowerEndurance(total, g){
+  const { w, c, main } = pad(total, g);
+  const segs = [...w];
+  const rounds  = clamp(Math.round(main / 330), 2, 6);
+  const per = main / rounds;
+  const workWin = clamp(per * 0.55, 120, 240);     // ~4 boulders back to back
+  const restWin = Math.max(90, per - workWin);
+  const grd = range(g,3,1);
+  for (let i = 1; i <= rounds; i++){
+    segs.push(seg("work", "Round " + i + "/" + rounds + " — 4×4",
+      "Climb 4 boulders (" + grd + ") back-to-back with minimal rest between them. Vary it: one slab, one vertical, one overhang, one juggy.", workWin, 8));
+    segs.push(seg("rest", "Full rest", "Sit down, chalk up, recover properly. Plan your next four.", restWin, 1));
+  }
+  return [...segs, ...c];
+}
+
+function buildTechnique(total, g){
+  const { w, c, main } = pad(total, g);
+  const drills = [
+    ["Silent feet", "Climb easy problems (" + range(g,5,3) + ") placing every foot in total silence. No re-adjusting, no scraping. Slow and deliberate."],
+    ["Hover & place", "Hover each foot over the hold for a beat before weighting it. Eyes on the foot until it lands. Precision over speed."],
+    ["Straight-arm flagging", "Stay on straight arms. Use a flag to stop the swing instead of a hand. Hips into the wall."],
+    ["Slow-motion control", "Climb a moderate problem (" + range(g,4,2) + ") at half speed, controlling every move. Pause and balance at each hold."],
+    ["Quiet downclimbing", "Downclimb easy problems with control. Builds footwork, body awareness and stamina at the same time."],
+  ];
+  const n = clamp(Math.round(main / 240), 3, 5);
+  const per = main / n;
+  const restSec = clamp(per * 0.22, 45, 90);
+  const workSec = (main - (n - 1) * restSec) / n;   // fills `main` exactly
+  const segs = [...w];
+  for (let i = 0; i < n; i++){
+    const [name, sub] = drills[i];
+    segs.push(seg("work", name, sub, workSec, 5));
+    if (i < n - 1) segs.push(seg("rest", "Reset", "Step off, relax, mentally rehearse the next drill.", restSec, 1));
+  }
+  return [...segs, ...c];
+}
+
+function buildStrength(total, g){
+  const { w, c, main } = pad(total, g);
+  const n = clamp(Math.round(main / 300), 2, 8);
+  const per = main / n;
+  const grd = limitRange(g);
+  const segs = [...w];
+  for (let i = 1; i <= n; i++){
+    const workSec = clamp(per * 0.30, 60, 150);
+    const restSec = clamp(per - workSec, 90, 240);
+    segs.push(seg("work", "Limit boulder " + i + "/" + n,
+      "Pick something near your limit (" + grd + "). 2–4 quality attempts — fight for it, but stop while moves are crisp.", workSec, 9));
+    segs.push(seg("rest", "Rest hard", "Sit down. Full recovery — strength needs it. Pick or re-try a problem for the next round.", restSec, 1));
+  }
+  return [...segs, ...c];
+}
+
+function buildMixed(total, g){
+  const { w, c, main } = pad(total, g);
+  const segs = [...w];
+  const blocks = [
+    seg("work", "Easy volume",    "Continuous easy circuit (" + range(g,5,3) + "): climb, downclimb, walk on. Build the pump gently.", main*0.22, 6),
+    seg("rest", "Recover",        "Walk it off. Sip water.", main*0.08, 2),
+    seg("work", "Moderate 4×4",   "4 boulders (" + range(g,3,1) + ") back-to-back, minimal rest. Mix the styles.", main*0.20, 7),
+    seg("rest", "Full rest",      "Sit, chalk up, recover.", main*0.10, 1),
+    seg("work", "Limit attempts", "2–3 hard tries on something near your limit (" + limitRange(g) + "). Quality over quantity.", main*0.14, 9),
+    seg("rest", "Rest",           "Shake out. Breathe.", main*0.08, 1),
+    seg("work", "Power-endurance burn", "Find a pumpy circuit or traverse: 45s on / climb continuously, step off before failure.", main*0.18, 8),
+  ];
+  return [...segs, ...blocks, ...c];
+}
+
+// Skill / movement drills (solo-doable). The spoken cue is just the name;
+// the description shows on screen. Use easy-to-moderate problems for all.
+const MOVEMENT_DRILLS = [
+  ["One-hand climbing", "Climb an easy problem using only one hand — the other hovers off. Switch hands each go. Forces precise feet and body position."],
+  ["One foot off", "Climb using only one foot; the other flags to balance. Swap feet between attempts. Builds tension and trust on the working foot."],
+  ["Hover hand & lock-off", "Climb statically: before every hand move, lock off and hover your hand over the hold for two seconds, then place it. Control over the swing."],
+  ["Nose to the wall", "Before each reach, bring your nose toward the next hold — get hips and chest into the wall before you pull. Move your body, not just your arm."],
+  ["No-hands slab", "On a slab, hands off — see how high you climb on feet alone. Weight through the toes and trust the rubber."],
+  ["Precision touch", "Reach for the next hold and freeze a beat right before you touch it, then land it exactly. No regrips, no readjusting."],
+  ["Silent feet", "Place every foot in total silence — no scraping, no banging, no re-adjusting. Slow and deliberate."],
+  ["Straight-arm traverse", "Traverse with arms straight. Use flags and hip turns to stay on the wall instead of pulling in."],
+  ["Open-hand only", "Climb easy problems using only open-hand grips — no crimping. Builds resilient fingers and trust in friction."],
+  ["Quiet downclimbing", "Downclimb easy problems under control. Doubles your footwork mileage and builds stamina."],
+  ["Slow-motion control", "Climb a moderate problem at half speed, pausing and balancing at every hold. Own each position."],
+  ["Foot swaps", "Mid-route, practise quiet, precise foot swaps on a single foothold. Tiny, accurate movements."],
+];
+function buildMovement(total, g){
+  const { w, c, main } = pad(total, g);
+  const n = clamp(Math.round(main / 210), 4, 7);
+  const restSec = clamp(main * 0.05, 30, 75);
+  const workSec = (main - (n - 1) * restSec) / n;          // fills `main` exactly
+  // deterministic window into the pool, shifted by session length for variety
+  const off = ({ 900:0, 1800:3, 2700:6, 3600:9 })[total] || 0;
+  const segs = [...w];
+  for (let i = 0; i < n; i++){
+    const [name, sub] = MOVEMENT_DRILLS[(off + i) % MOVEMENT_DRILLS.length];
+    segs.push(seg("work", name, sub, workSec, 5));
+    if (i < n - 1) segs.push(seg("rest", "Reset", "Step off, relax, mentally rehearse the next drill.", restSec, 1));
+  }
+  return [...segs, ...c];
+}
+
+const FOCI = [
+  { id:"cardio",   title:"Cardio Circuit",        sub:"Continuous easy climbing + intervals. Sweat and lungs, no limit moves.", color:"var(--work)",   build:buildCardio },
+  { id:"power",    title:"Power Endurance · 4×4", sub:"Four boulders back-to-back, repeated. Builds the pump tank.",            color:"#ff8a3d",       build:buildPowerEndurance },
+  { id:"technique",title:"Technique & Footwork",  sub:"Silent-feet and control drills. Low intensity, high attention.",         color:"var(--rest)",   build:buildTechnique },
+  { id:"strength", title:"Strength / Limit",      sub:"Hard boulders, long rests. Few quality attempts near your max.",         color:"#c77dff",       build:buildStrength },
+  { id:"movement", title:"Movement Lab",          sub:"Skill drills — one-hand, hover, nose-to-wall, no-hands slab. Sharpen movement, low intensity.", color:"#ffd23d", build:buildMovement },
+  { id:"mixed",    title:"Mixed Pyramid",         sub:"A bit of everything — volume, 4×4, limit, burn. A full session.",        color:"var(--cool)",   build:buildMixed },
+];
+
+/* ============================================================
+   STATE + SETUP UI
+   ============================================================ */
+const state = {
+  dur: 30,
+  focus: "cardio",
+  grade: 4,
+  voice: true,
+  segs: [],
+};
+load();
+
+function load(){
+  try {
+    const s = JSON.parse(localStorage.getItem("crux") || "{}");
+    // validate against current options so stale/corrupt storage can't crash load or desync the UI
+    if ([15, 30, 45, 60].indexOf(s.dur) !== -1) state.dur = s.dur;
+    if (s.focus && FOCI.some(f => f.id === s.focus)) state.focus = s.focus;
+    if (typeof s.grade === "number") state.grade = clamp(Math.round(s.grade), 0, 12);
+    if (typeof s.voice === "boolean") state.voice = s.voice;
+  } catch(e){}
+}
+function save(){
+  try { localStorage.setItem("crux", JSON.stringify({dur:state.dur, focus:state.focus, grade:state.grade, voice:state.voice})); } catch(e){}
+}
+
+/* build the duration chips state */
+function renderDur(){
+  document.querySelectorAll("#durChips .chip").forEach(c=>{
+    c.setAttribute("aria-pressed", String(Number(c.dataset.dur) === state.dur));
+  });
+}
+document.querySelectorAll("#durChips .chip").forEach(c=>{
+  c.addEventListener("click", ()=>{ state.dur = Number(c.dataset.dur); renderDur(); regenerate(); save(); });
+});
+
+/* focus cards */
+const focusGrid = $("focusGrid");
+FOCI.forEach(f=>{
+  const b = document.createElement("button");
+  b.className = "chip focus";
+  b.dataset.focus = f.id;
+  b.innerHTML = '<span class="dot" style="background:'+f.color+';color:'+f.color+'"></span>'+
+    '<span class="ftxt"><span class="ftitle">'+f.title+'</span><span class="fsub">'+f.sub+'</span></span>';
+  b.addEventListener("click", ()=>{ state.focus = f.id; renderFocus(); regenerate(); save(); });
+  focusGrid.appendChild(b);
+});
+function renderFocus(){
+  document.querySelectorAll("#focusGrid .focus").forEach(c=>{
+    c.setAttribute("aria-pressed", String(c.dataset.focus === state.focus));
+  });
+}
+
+/* grade slider */
+const gradeEl = $("grade");
+gradeEl.addEventListener("input", ()=>{
+  state.grade = Number(gradeEl.value);
+  renderGrade(); regenerate(); save();
+});
+function renderGrade(){
+  gradeEl.value = state.grade;
+  $("gradeVal").textContent = "V" + state.grade;
+  const f = FOCI.find(x=>x.id===state.focus);
+  let working;
+  if (state.focus === "strength") working = limitRange(state.grade);
+  else if (state.focus === "power") working = range(state.grade,3,1);
+  else if (state.focus === "technique") working = range(state.grade,5,2);
+  else if (state.focus === "movement") working = range(state.grade,6,3);
+  else working = range(state.grade,4,2);
+  $("gradeHint").innerHTML = "Working range for a " + f.title.split(" ")[0].toLowerCase() +
+    " session: <b style='color:var(--ink)'>" + working + "</b>. Set this to the hardest grade you can send today.";
+}
+
+/* ---- plan generation + preview ---- */
+function regenerate(){
+  const f = FOCI.find(x=>x.id===state.focus);
+  state.segs = f.build(state.dur * 60, state.grade);
+  renderPlan();
+  primeSessionSoon();   // cache this plan's voice clips while we (likely) have signal
+}
+function totalSeconds(segs){ return segs.reduce((a,s)=>a+s.seconds,0); }
+
+function renderPlan(){
+  const f = FOCI.find(x=>x.id===state.focus);
+  const planEl = $("plan");
+  planEl.innerHTML = "";
+  // Collapse repeated interval/round blocks for a cleaner preview
+  const items = collapse(state.segs);
+  items.forEach(it=>{
+    const row = document.createElement("div");
+    row.className = "plan-item";
+    row.innerHTML =
+      '<div class="plan-bar" style="background:'+KIND[it.kind].css+'"></div>'+
+      '<div class="plan-main"><div class="plan-name">'+it.label+'</div>'+
+      (it.sub ? '<div class="plan-sub">'+it.sub+'</div>' : '')+'</div>'+
+      '<div class="plan-time">'+fmt(it.seconds)+'</div>';
+    planEl.appendChild(row);
+  });
+  $("planTotal").textContent = Math.round(totalSeconds(state.segs)/60);
+  $("planFocus").textContent = f.title;
+}
+// merge consecutive work+rest interval pairs ("Interval 1/8 … 8/8") into one summary row
+function collapse(segs){
+  const out = [];
+  let i = 0;
+  while (i < segs.length){
+    const s = segs[i];
+    const m = s.label.match(/^(Interval|Round)\s+1\/(\d+)/);
+    if (m){
+      const kindWord = m[1], n = Number(m[2]);
+      // find the matching rest that follows the first work
+      const rest = segs[i+1] && segs[i+1].kind === "rest" ? segs[i+1] : null;
+      const onOff = rest ? (fmt(s.seconds)+" on / "+fmt(rest.seconds)+" off") : fmt(s.seconds);
+      out.push({ kind:s.kind, label: n+"× "+kindWord+"s", sub: s.sub, seconds: (s.seconds+(rest?rest.seconds:0))*n });
+      // skip the n work+rest pairs
+      i += rest ? n*2 : n;
+      continue;
+    }
+    out.push(s);
+    i++;
+  }
+  return out;
+}
+
+/* ---- session log + streak ---- */
+// Calendar week (Mon-start, local time) an epoch-ms timestamp falls in.
+function weekIndex(t){
+  const d = new Date(t);
+  d.setHours(12, 0, 0, 0);                        // noon dodges DST edges
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); // back to Monday
+  return Math.round(d.getTime() / 604800000);
+}
+function renderStats(){
+  const el = $("statsLine");
+  let log = [];
+  try { log = JSON.parse(localStorage.getItem("cruxlog") || "[]"); } catch(e){}
+  if (!Array.isArray(log) || !log.length){ el.classList.add("hidden"); return; }
+  const mins = log.reduce((a, e) => a + (e.min || 0), 0);
+  const time = mins >= 60 ? (Math.round(mins / 6) / 10 + " hrs") : (mins + " min");
+  // consecutive weeks with a session; a quiet current week doesn't break it yet
+  const weeks = new Set(log.map(e => weekIndex(e.t)));
+  let w = weekIndex(Date.now());
+  if (!weeks.has(w)) w--;
+  let streak = 0;
+  while (weeks.has(w)){ streak++; w--; }
+  el.innerHTML = (streak ? "🔥 <b>" + streak + "-week streak</b> · " : "") +
+    log.length + " session" + (log.length === 1 ? "" : "s") + " · " + time;
+  el.classList.remove("hidden");
+}
+
+/* initial render */
+renderDur(); renderFocus(); renderGrade(); regenerate(); renderStats();
+
+/* ============================================================
+   PLAYER / TIMER ENGINE
+   ============================================================ */
+const player = $("player");
+const RING_R = 116, RING_C = 2 * Math.PI * RING_R;
+$("ring").style.strokeDasharray = RING_C;
+
+let timer = {
+  segs: [],
+  idx: 0,
+  remaining: 0,
+  running: false,
+  paused: false,
+  raf: 0,
+  last: 0,
+  beepedAt: -1,
+  wakeLock: null,
+  audio: null,
+  explained: new Set(),   // instructions already read out this session
+  startedAt: 0,           // wall-clock session start, for the log
+};
+
+function startSession(){
+  if (!state.segs.length) regenerate();
+  timer.segs = state.segs;
+  primeSession(timer.segs);   // ensure the whole session's voice is cached
+
+  timer.idx = -1;
+  timer.running = true;
+  timer.paused = false;
+  timer.explained = new Set();
+  timer.startedAt = Date.now();
+  // unlock audio within the user gesture + keep background music playing
+  configureAudioSession();
+  try {
+    timer.audio = new (window.AudioContext || window.webkitAudioContext)();
+    if (timer.audio.state === "suspended") timer.audio.resume();
+  } catch(e){ timer.audio = null; }
+  requestWakeLock();
+  player.classList.add("show");
+  document.body.classList.add("playing");
+  $("done").classList.add("hidden");
+  $("stage").classList.remove("hidden");
+  $("controls").classList.remove("hidden");
+  $("doneControls").classList.add("hidden");
+  $("pCount").textContent = timer.segs.length;
+  enterSegment(0);
+  timer.last = performance.now();
+  cancelAnimationFrame(timer.raf);
+  timer.raf = requestAnimationFrame(frame);
+}
+
+function enterSegment(i){
+  timer.idx = i;
+  const s = timer.segs[i];
+  timer.remaining = s.seconds;
+  timer.beepedAt = -1;
+  const k = KIND[s.kind];
+  $("segKind").textContent = k.name;
+  $("segKind").style.color = k.css;
+  $("segLabel").textContent = s.label;
+  $("segSub").textContent = s.sub || "";
+  $("ring").style.stroke = k.css;
+  $("ring").style.color = k.css;   // drives the ring's currentColor glow
+  $("rpe").textContent = s.rpe ? ("EFFORT " + s.rpe + "/10") : "";
+  $("pIdx").textContent = i + 1;
+  $("pName").textContent = FOCI.find(x=>x.id===state.focus).title;
+  const nxt = timer.segs[i+1];
+  $("nextTxt").textContent = nxt ? (nxt.label + " · " + fmt(nxt.seconds)) : "Cool-down done — finish strong";
+  timer.preAnnounced = false;
+  render();
+  // re-trigger the block-change animation
+  const st = $("stage");
+  st.classList.remove("swap"); void st.offsetWidth; st.classList.add("swap");
+  cue(s.kind === "rest" ? "rest" : "go");
+  announce(s);
+  // pre-warm the next block's audio so the transition has no lag
+  if (nxt){
+    primeClip("Next, " + spokenLabel(nxt));
+    primeClip(announceTextOf(nxt));
+    if (nxt.sub && !timer.explained.has(nxt.sub)) primeClip(longAnnounceTextOf(nxt));
+  }
+}
+
+function frame(now){
+  const dt = (now - timer.last) / 1000;
+  timer.last = now;
+  if (timer.running && !timer.paused){
+    timer.remaining -= dt;
+    const cur = timer.segs[timer.idx], nxt = timer.segs[timer.idx+1];
+    const countIn = !!(nxt && nxt.kind === "work");   // spoken 3-2-1 into work blocks
+    // spoken heads-up before a longer block ends (skip when we'll count in instead)
+    if (!timer.preAnnounced && nxt && cur && cur.seconds >= 25 && timer.remaining <= 6 && !countIn){
+      timer.preAnnounced = true;
+      speak("Next, " + spokenLabel(nxt));
+    }
+    // last 3 seconds: spoken "Three / Two / One" into a work block, else a beep
+    const whole = Math.ceil(timer.remaining);
+    if (whole <= 3 && whole >= 1 && whole !== timer.beepedAt && timer.remaining > 0){
+      timer.beepedAt = whole;
+      if (countIn && state.voice && CLIPS && CLIPS[clipHash(COUNT[whole])]) speak(COUNT[whole]);
+      else beep(880, 0.07, 0.25);
+    }
+    if (timer.remaining <= 0){
+      if (timer.idx < timer.segs.length - 1){
+        enterSegment(timer.idx + 1);
+      } else {
+        finish();
+      }
+    }
+  }
+  render();
+  if (timer.running) timer.raf = requestAnimationFrame(frame);   // stop looping once finished/exited
+}
+
+function render(){
+  const s = timer.segs[timer.idx];
+  if (!s) return;
+  $("clock").textContent = fmt(timer.remaining);
+  $("clock").classList.toggle("ending", timer.running && !timer.paused && timer.remaining <= 3.6 && timer.remaining > 0);
+  const frac = clamp(timer.remaining / s.seconds, 0, 1);
+  $("ring").style.strokeDashoffset = RING_C * (1 - frac);
+  // overall progress bar
+  let done = 0;
+  for (let j = 0; j < timer.idx; j++) done += timer.segs[j].seconds;
+  done += (s.seconds - timer.remaining);
+  $("pBar").style.width = (100 * done / totalSeconds(timer.segs)) + "%";
+}
+
+function finish(){
+  timer.running = false;
+  cancelAnimationFrame(timer.raf);
+  releaseWakeLock();
+  cue("done");
+  setTimeout(()=>speak("Session complete. Great work."), 700);
+  $("stage").classList.add("hidden");
+  $("controls").classList.add("hidden");
+  $("done").classList.remove("hidden");
+  $("doneControls").classList.remove("hidden");
+  $("pBar").style.width = "100%";
+  const workCount = timer.segs.filter(s=>s.kind==="work").length;
+  const planMin = Math.round(totalSeconds(timer.segs)/60);
+  $("dMin").textContent = planMin;
+  $("dWork").textContent = workCount;
+  $("dFocus").textContent = FOCI.find(x=>x.id===state.focus).title.split(" ")[0];
+  // log the session (real elapsed time, capped at the plan; skip drive-by exits)
+  try {
+    const mins = Math.min(planMin, Math.round((Date.now() - timer.startedAt) / 60000));
+    if (mins >= 3){
+      const log = JSON.parse(localStorage.getItem("cruxlog") || "[]");
+      log.push({ t: Date.now(), focus: state.focus, min: mins, work: workCount });
+      localStorage.setItem("cruxlog", JSON.stringify(log));
+    }
+  } catch(e){}
+  renderStats();
+}
+
+function exitSession(){
+  timer.running = false;
+  cancelAnimationFrame(timer.raf);
+  releaseWakeLock();
+  stopVoice();
+  player.classList.remove("show");
+  document.body.classList.remove("playing");
+}
+
+/* ---- controls ---- */
+function togglePause(){
+  timer.paused = !timer.paused;
+  setPlayIcon();
+  if (timer.paused){
+    stopVoice();
+    speak("Paused.");
+  } else {
+    timer.last = performance.now();
+    requestWakeLock();
+    speak("Resuming. " + spokenLabel(timer.segs[timer.idx]));
+  }
+}
+function setPlayIcon(){
+  const ico = $("playIco"), txt = $("playTxt");
+  if (timer.paused){
+    ico.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+    txt.textContent = "Resume";
+  } else {
+    ico.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+    txt.textContent = "Pause";
+  }
+}
+function skip(){ if (timer.idx < timer.segs.length - 1) enterSegment(timer.idx + 1); else finish(); }
+function prev(){
+  // if more than 2s into the segment, restart it; otherwise go back one
+  if (timer.remaining < timer.segs[timer.idx].seconds - 2) enterSegment(timer.idx);
+  else enterSegment(Math.max(0, timer.idx - 1));
+}
+
+$("startBtn").addEventListener("click", startSession);
+$("exitBtn").addEventListener("click", exitSession);
+$("playBtn").addEventListener("click", togglePause);
+$("nextBtn").addEventListener("click", skip);
+$("prevBtn").addEventListener("click", prev);
+$("againBtn").addEventListener("click", exitSession);
+$("voiceBtn").addEventListener("click", ()=>{
+  state.voice = !state.voice; save(); setVoiceBtn();
+  if (!state.voice){ stopVoice(); }
+  else { configureAudioSession(); speak("Voice on."); }
+});
+setPlayIcon();
+setVoiceBtn();
+
+// keyboard niceties on desktop
+document.addEventListener("keydown", (e)=>{
+  if (!player.classList.contains("show")) return;
+  if (e.code === "Space"){ e.preventDefault(); togglePause(); }
+  else if (e.code === "ArrowRight") skip();
+  else if (e.code === "ArrowLeft") prev();
+  else if (e.code === "Escape") exitSession();
+});
+
+/* ---- audio cues ---- */
+// Keep background music (Spotify, Apple Music…) playing: duck it during cues
+// instead of pausing it. iOS 16.4+ exposes the Web Audio Session API; on
+// Android short cues duck automatically. Harmless where unsupported.
+function configureAudioSession(){
+  try { if (navigator.audioSession) navigator.audioSession.type = "transient"; } catch(e){}
+}
+function beep(freq, dur, vol){
+  if (!timer.audio) return;
+  try {
+    const o = timer.audio.createOscillator(), g = timer.audio.createGain();
+    o.type = "sine"; o.frequency.value = freq;
+    g.gain.value = vol || 0.2;
+    o.connect(g); g.connect(timer.audio.destination);
+    const t = timer.audio.currentTime;
+    g.gain.setValueAtTime(g.gain.value, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.start(t); o.stop(t + dur);
+  } catch(e){}
+}
+function buzz(pattern){ try { if (navigator.vibrate) navigator.vibrate(pattern); } catch(e){} }
+function cue(type){
+  if (type === "go"){ beep(660, 0.12, 0.3); setTimeout(()=>beep(990, 0.16, 0.3), 130); buzz([120]); }
+  else if (type === "rest"){ beep(440, 0.18, 0.28); buzz([90]); }
+  else if (type === "done"){ beep(523,0.16,0.3); setTimeout(()=>beep(659,0.16,0.3),160); setTimeout(()=>beep(784,0.3,0.3),320); buzz([120,80,120,80,240]); }
+}
+
+/* ---- spoken coaching ---- */
+// "Interval 5/6" -> "Interval 5 of 6"; drop the "— 4×4" tail for speech
+function spokenLabel(s){
+  return s.label.replace(/(\d+)\/(\d+)/, "$1 of $2").replace(/\s*—.*$/, "").replace(/×/g, " by ").trim();
+}
+// Terse form — used once a drill has already been explained this session.
+function announceTextOf(s){
+  if (s.kind === "work") return spokenLabel(s) + ". Go.";   // "Round 3 of 6. Go.", "Continuous circuit. Go."
+  return spokenLabel(s) + ".";                               // rests / warm-up / cool-down: just the name
+}
+// Full form — the first time an instruction appears, the coach reads it out
+// so you don't have to look at the phone. MUST match enumerate.js exactly.
+function longAnnounceTextOf(s){
+  return spokenLabel(s) + ". " + (s.sub || "") + (s.kind === "work" ? " Go." : "");
+}
+function announce(s){
+  if (!s) return;
+  // Explain each distinct instruction once per session, then go terse.
+  if (s.sub && !timer.explained.has(s.sub)){
+    const long = longAnnounceTextOf(s);
+    // Only long clips for a session's first occurrence are baked; if the user
+    // skipped into the middle of an interval set, fall through to the terse form.
+    if (!CLIPS || CLIPS[clipHash(long)]){
+      timer.explained.add(s.sub);
+      speak(long);
+      return;
+    }
+  }
+  speak(announceTextOf(s));
+}
+
+/* Pre-baked studio voice: every phrase the app can say has an MP3 named by a
+   hash of its exact text. We play that clip. If one is missing (un-baked, or
+   offline before it cached) we fall back to the best on-device voice so the
+   coaching never goes silent. */
+const CLIPS = window.CRUX_CLIPS || null;
+const CLIP_V = "2";        // bump when clip audio changes (loudness, voice) to bust caches
+let voiceEl = null;        // single reused <audio> — required for iOS autoplay
+let fbVoice = null;        // chosen device fallback voice
+let speakSeq = 0;          // supersede guard: which speak() call is the latest
+
+function clipHash(str){     // FNV-1a 32-bit — must match the bake script exactly
+  let h = 0x811c9dc5 | 0;
+  for (let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
+function ensureVoiceEl(){
+  if (!voiceEl){ try { voiceEl = new Audio(); voiceEl.preload = "auto"; } catch(e){ voiceEl = null; } }
+  return voiceEl;
+}
+function stopVoice(){
+  try { if (voiceEl){ voiceEl.pause(); } } catch(e){}
+  try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
+}
+function speak(text){
+  if (!state.voice || !text) return;
+  window.__lastSpoken = text;   // debug/test hook: what the coach last said
+  const my = ++speakSeq;
+  const h = clipHash(text);
+  if (CLIPS && CLIPS[h]){
+    const el = ensureVoiceEl();
+    if (el){
+      try {
+        try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch(e){}
+        el.pause();
+        el.src = "audio/" + h + ".mp3?v=" + CLIP_V;   // reuse the unlocked element — never let cues stack
+        const pr = el.play();
+        if (pr && pr.catch) pr.catch((err) => {
+          if (err && err.name === "AbortError") return;   // interrupted by the next cue — expected
+          if (my === speakSeq) fallbackSpeak(text);         // genuine failure, and still the latest cue
+        });
+        return;
+      } catch(e){ /* fall through to device voice */ }
+    }
+  }
+  stopVoice();
+  fallbackSpeak(text);
+}
+// warm the cache for a phrase we're about to need, so transitions have no lag
+function primeClip(text){
+  if (!CLIPS || !text) return;
+  const h = clipHash(text);
+  if (CLIPS[h]){ try { fetch("audio/" + h + ".mp3?v=" + CLIP_V, { cache: "force-cache" }).catch(()=>{}); } catch(e){} }
+}
+const COUNT = { 1: "One", 2: "Two", 3: "Three" };
+// Pre-fetch every clip a whole session will use so it's cached for offline play.
+// Called while configuring (online) and again on START — by the time you're at
+// the gym with no signal, the chosen plan's voice is already cached.
+function sessionPhrases(segs){
+  const set = new Set(["Paused.", "Session complete. Great work.", "Voice on.", "One", "Two", "Three"]);
+  const seen = new Set();
+  for (const s of segs){
+    set.add(announceTextOf(s));
+    if (s.sub && !seen.has(s.sub)){ seen.add(s.sub); set.add(longAnnounceTextOf(s)); }
+    set.add("Next, " + spokenLabel(s));
+    set.add("Resuming. " + spokenLabel(s));
+  }
+  return [...set];
+}
+function primeSession(segs){
+  if (!CLIPS || !segs || !segs.length) return;
+  sessionPhrases(segs).forEach(primeClip);
+}
+var primeTimer = 0;   // var (not let): primeSessionSoon is reached during initial render, before this line runs
+function primeSessionSoon(){ clearTimeout(primeTimer); primeTimer = setTimeout(() => primeSession(state.segs), 800); }
+
+function pickFallbackVoice(){
+  try {
+    const synth = window.speechSynthesis; if (!synth) return null;
+    const vs = synth.getVoices() || []; if (!vs.length) return null;
+    const en = vs.filter(v => /^en(-|_|$)/i.test(v.lang)); const pool = en.length ? en : vs;
+    const score = v => {
+      const n = v.name || ""; let s = 0;
+      if (/Google US English/i.test(n)) s = 100;
+      else if (/Google/i.test(n)) s = 80;
+      else if (/(Samantha|Ava|Allison|Aaron|Evan|Zoe|Nicky|Serena)/i.test(n)) s = 90;
+      else if (/Microsoft.*(Aria|Jenny|Guy|Sonia|Ryan).*Online/i.test(n)) s = 88;
+      else if (/(Natural|Neural|Enhanced|Premium)/i.test(n)) s = 75;
+      if (v.localService === false) s += 8;
+      if (/en-US/i.test(v.lang)) s += 4; else if (/en-GB/i.test(v.lang)) s += 2;
+      if (/(eSpeak|compact|Albert|Zarvox|Fred|Ralph|Junior|Kathy|Bahh|Bells|Boing|Bubbles|Cellos|Wobble|Whisper|Trinoids|Jester|Organ|Deranged|Hysterical)/i.test(n)) s -= 60;
+      return s;
+    };
+    return pool.slice().sort((a, b) => score(b) - score(a))[0] || null;
+  } catch(e){ return null; }
+}
+function fallbackSpeak(text){
+  try {
+    const synth = window.speechSynthesis; if (!synth) return;
+    synth.cancel();
+    if (!fbVoice) fbVoice = pickFallbackVoice();
+    const u = new SpeechSynthesisUtterance(text);
+    if (fbVoice){ u.voice = fbVoice; u.lang = fbVoice.lang; }
+    u.rate = 1.0; u.pitch = 1.0; u.volume = 1.0;
+    synth.speak(u);
+  } catch(e){}
+}
+if (window.speechSynthesis){
+  try { window.speechSynthesis.onvoiceschanged = () => { fbVoice = pickFallbackVoice(); }; } catch(e){}
+}
+function setVoiceBtn(){
+  const b = $("voiceBtn");
+  b.setAttribute("aria-pressed", String(state.voice));
+  b.textContent = state.voice ? "🔊 Voice" : "🔇 Voice";
+}
+
+/* ---- wake lock (keep screen on at the wall) ---- */
+async function requestWakeLock(){
+  try {
+    if ("wakeLock" in navigator){ timer.wakeLock = await navigator.wakeLock.request("screen"); }
+  } catch(e){ timer.wakeLock = null; }
+}
+function releaseWakeLock(){ try { if (timer.wakeLock){ timer.wakeLock.release(); timer.wakeLock = null; } } catch(e){} }
+document.addEventListener("visibilitychange", ()=>{
+  if (document.visibilityState === "visible" && timer.running && !timer.paused) requestWakeLock();
+});
+
+/* ---- offline cache (app shell + voice clips) ---- */
+if ("serviceWorker" in navigator){
+  window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(()=>{}); });
+}
+
+window.__crux = { timer, state };   // debug/test handle
+</script>
+</body>
+</html>
