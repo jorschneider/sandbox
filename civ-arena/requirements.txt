@@ -1,0 +1,21 @@
+# Validated working dependency set for the CivAgent headless self-play path.
+# These pins were verified to import cleanly and run the bundled Unciv.jar
+# engine headlessly (Python 3.11). The version pins matter: CivAgent's code
+# uses llama_index's QueryPipeline, which was removed in newer releases.
+jpype1
+ujson
+loguru
+pyyaml
+numpy
+llama-index==0.10.58
+llama-index-embeddings-ollama==0.1.2
+instructor
+openai>=1.37,<2
+chevron
+pydantic
+httpx
+requests
+pycryptodome
+redis
+flask
+gevent
