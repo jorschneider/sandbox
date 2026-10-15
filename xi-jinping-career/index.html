@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#8f0f14" />
+  <title>Paramount Leader — The Xi Jinping Career Simulator</title>
+  <meta name="description" content="A satirical browser game: govern as Xi Jinping, type any policy, and watch 24 focus-group citizens, 16 power blocs and three newspapers react. Parody — unaffiliated with anyone." />
+  <link rel="canonical" href="https://paramount-leader.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Paramount Leader" />
+  <meta property="og:url" content="https://paramount-leader.vercel.app/" />
+  <meta property="og:title" content="Paramount Leader — The Xi Jinping Career Simulator" />
+  <meta property="og:description" content="Type any policy. 24 pre-screened citizens, 16 power blocs and three newspapers react. Talk to the Politburo by voice, purge a comrade, negotiate with Trump and Putin. Official approval: 98.9%. Satire." />
+  <meta property="og:image" content="https://paramount-leader.vercel.app/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Paramount Leader — The Xi Jinping Career Simulator" />
+  <meta name="twitter:description" content="Type any policy. Talk to the Politburo by voice, purge a comrade, negotiate with Trump and Putin. Official approval: 98.9%. Satire." />
+  <meta name="twitter:image" content="https://paramount-leader.vercel.app/og.png" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23a4131c'/%3E%3Ctext x='50' y='72' font-size='64' text-anchor='middle' fill='%23ffd75e'%3E%E2%98%85%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ LANDING ============ -->
+  <div id="screen-landing" class="screen active">
+    <header class="masthead">
+      <div class="mast-left"><span class="star">★</span> PARAMOUNT LEADER</div>
+      <div class="mast-right">Open Alpha v0.1.4 · harmonized daily</div>
+    </header>
+
+    <section class="hero">
+      <p class="kicker">People&rsquo;s Pictures Interactive presents</p>
+      <h1 id="hero-tagline">Loading five-year plan…</h1>
+      <p class="hero-sub" id="hero-sub"></p>
+      <button class="btn-big" id="btn-start">★ &nbsp;BEGIN YOUR HISTORIC MISSION</button>
+      <p class="hero-foot">Free to start — no credit card required. No exit, either.</p>
+      <div class="hero-stats">
+        <span>1,400,000,000+ players <em>(enrollment automatic)</em></span>
+        <span>★★★★★ 100% five-star reviews <em>(verified by the Ministry of Reviews)</em></span>
+        <span>Type any policy you want <em>(some policies may be harmonized)</em></span>
+      </div>
+      <p class="fineprint"><sup>*</sup>Correctness determined by the simulator.</p>
+    </section>
+
+    <section class="band" id="band-how">
+      <h2 class="band-title">How it works</h2>
+      <div class="how-grid">
+        <div class="how-step"><b>1.</b> Inherit a historical moment. The moment is not optional.</div>
+        <div class="how-step"><b>2.</b> Each quarter, type <i>any policy you want</i> into the directive box. Vague waffle will not move the Politburo.</div>
+        <div class="how-step"><b>3.</b> Watch citizens, power blocs and three newspapers react. One of the newspapers will love it. It always does.</div>
+        <div class="how-step"><b>4.</b> Survive 20 quarters to the Party Congress, where you will be re-elected unanimously, probably.</div>
+      </div>
+    </section>
+
+    <section class="band alt">
+      <h2 class="band-title">Simulation features</h2>
+      <div class="cards-grid" id="features-grid"></div>
+    </section>
+
+    <section class="band">
+      <h2 class="band-title">What players are saying <span class="band-note">(all reviews are five stars; other star counts unavailable)</span></h2>
+      <div class="cards-grid" id="testimonials-grid"></div>
+    </section>
+
+    <section class="band alt">
+      <h2 class="band-title">Membership tiers</h2>
+      <div class="pricing-grid" id="pricing-grid"></div>
+    </section>
+
+    <section class="band">
+      <h2 class="band-title">Frequently asked questions</h2>
+      <div id="faq-list"></div>
+      <div class="center"><button class="btn-big" id="btn-start-2">★ &nbsp;PLAY NOW, COMRADE</button></div>
+    </section>
+
+    <footer class="site-foot" id="disclaimer"></footer>
+  </div>
+
+  <!-- ============ SCENARIO SELECT ============ -->
+  <div id="screen-select" class="screen">
+    <header class="masthead">
+      <div class="mast-left"><span class="star">★</span> PARAMOUNT LEADER</div>
+      <div class="mast-right"><button class="linklike" data-nav="landing">← back to propaganda</button></div>
+    </header>
+    <section class="select-wrap">
+      <h2 class="select-title">Choose your historical moment</h2>
+      <div class="charcreate">
+        <div class="charcreate-head">CHARACTER CREATION</div>
+        <div class="charcreate-body">
+          <span class="lock">🔒</span> <b>Locked.</b> You are Xi Jinping. This has been decided.
+          <span class="charcreate-detail">Age: correct · Background: princeling · Ideology: his own Thought · Communication style: three-hour speeches · Scandal history: none, verified by the scandal-verification department he oversees.</span>
+        </div>
+      </div>
+      <div class="scenario-grid" id="scenario-grid"></div>
+    </section>
+  </div>
+
+  <!-- ============ GAME ============ -->
+  <div id="screen-game" class="screen">
+    <header class="game-topbar">
+      <div class="tb-left"><span class="star">★</span> <span id="tb-scenario">—</span></div>
+      <div class="tb-mid" id="tb-date">Q1 2013 · Turn 1 / 20</div>
+      <div class="tb-right">
+        <span class="tb-stat">Official approval <b id="tb-approval">98.9%</b></span>
+        <span class="tb-stat">GDP growth <b id="tb-gdp">7.8%</b></span>
+      </div>
+    </header>
+
+    <main class="game-grid">
+      <section class="col-main">
+        <div class="briefing card">
+          <div class="card-kicker">QUARTERLY BRIEFING · <span id="brief-date"></span></div>
+          <h3 id="brief-title"></h3>
+          <p id="brief-text"></p>
+          <div class="chips" id="brief-chips"></div>
+        </div>
+
+        <div class="policy card">
+          <div class="card-kicker">DIRECTIVE OF THE PARAMOUNT LEADER</div>
+          <textarea id="policy-input" maxlength="1200" rows="4"
+            placeholder="Type any policy you want. There are no multiple-choice options. There are, however, consequences."></textarea>
+          <div class="policy-row">
+            <span class="charcount"><span id="charcount">0</span>/1200 · monitored for your convenience</span>
+            <button class="btn-big btn-issue" id="btn-issue">📜 ISSUE DIRECTIVE</button>
+          </div>
+        </div>
+
+        <div id="results-feed"></div>
+      </section>
+
+      <aside class="col-side">
+        <div class="card side-card">
+          <div class="card-kicker">STATE OF THE STATE</div>
+          <div id="stats-panel"></div>
+          <div class="internal-note" id="internal-approval"></div>
+        </div>
+        <div class="card side-card sit-card">
+          <div class="card-kicker">THE SITUATION ROOM <span class="muted">(talk · voice)</span></div>
+          <div class="sit-buttons">
+            <button class="sit-launch" id="sit-btn-politburo">🏛️ Convene the Politburo</button>
+            <button class="sit-launch" id="sit-btn-plenum">⚖️ Call a Plenum <span class="sit-launch-note">(purge)</span></button>
+            <button class="sit-launch" id="sit-btn-foreign">🤝 Summon a Foreign Leader</button>
+            <button class="sit-launch" id="sit-btn-speech">📺 Address the Nation</button>
+          </div>
+          <div class="sit-hint">Speak aloud with 🎙️, or type. Replies are read back to you.</div>
+        </div>
+
+        <div class="card side-card">
+          <div class="card-kicker">POWER BLOCS <span class="muted">(support)</span></div>
+          <div class="stakeholder-grid" id="stakeholder-grid"></div>
+        </div>
+        <div class="card side-card">
+          <div class="card-kicker">ACHIEVEMENTS</div>
+          <div id="achievements-list" class="ach-list"></div>
+        </div>
+        <div class="card side-card">
+          <div class="card-kicker">TIMELINE OF GLORIOUS DECISIONS</div>
+          <ol id="timeline" class="timeline"></ol>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- ============ END ============ -->
+  <div id="screen-end" class="screen">
+    <header class="masthead">
+      <div class="mast-left"><span class="star">★</span> PARAMOUNT LEADER</div>
+      <div class="mast-right" id="end-date"></div>
+    </header>
+    <section class="end-wrap">
+      <p class="kicker" id="end-kicker">THE RECORD OF HISTORY, AS APPROVED</p>
+      <h1 id="end-title"></h1>
+      <p class="end-text" id="end-text"></p>
+      <div class="card end-stats" id="end-stats"></div>
+      <div class="card end-stats" id="end-achievements"></div>
+      <div class="end-actions">
+        <button class="btn-big" id="btn-replay">↺ &nbsp;RUN FOR OFFICE AGAIN (UNOPPOSED)</button>
+        <button class="btn-ghost" id="btn-share">Share result</button>
+      </div>
+      <p class="fineprint" id="end-disclaimer"></p>
+    </section>
+  </div>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <script src="content.js"></script>
+  <script src="cast.js"></script>
+  <script src="app.js"></script>
+  <script src="situation.js"></script>
+</body>
+</html>
