@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boundary States in Conformal Field Theories of the Annulus — W. B. Roper (Oxford, 2009), reimagined</title>
+  <meta name="description" content="A speculative, lovingly illustrated reconstruction of Will Roper's unpublished 2009 Oxford DPhil thesis on boundary states in conformal field theory — with interactive 3D figures and a survey of what has happened to the field since." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%232dd4bf' stroke-width='5'/%3E%3Ccircle cx='32' cy='32' r='11' fill='none' stroke='%23f59e0b' stroke-width='5'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <link rel="stylesheet" href="css/annulus.css" />
+</head>
+<body>
+
+  <canvas id="gl" aria-hidden="true"></canvas>
+
+  <nav id="topnav">
+    <a class="brand" href="#top"><span class="ring-mark" aria-hidden="true"></span>Z<sub>αβ</sub>(q)</a>
+    <div class="navlinks">
+      <a href="#about">What this is</a>
+      <a href="#stage">The stage</a>
+      <a href="#duality">Duality</a>
+      <a href="#states">Boundary states</a>
+      <a href="#thesis">The thesis</a>
+      <a href="#since">Since 2009</a>
+    </div>
+  </nav>
+
+  <main id="top">
+
+    <!-- ============================== HERO ============================== -->
+    <header class="hero">
+      <div class="viz-stage hero-stage" id="fig-hero" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <p class="kicker">An imagined reconstruction &middot; D.Phil. thesis &middot; University of Oxford &middot; 2009</p>
+        <h1>Boundary States in<br/>Conformal Field Theories<br/>of the Annulus</h1>
+        <p class="byline">W.&nbsp;B.&nbsp;Roper &middot; University College, Oxford &middot; supervised by Prof.&nbsp;John&nbsp;F.&nbsp;Wheater</p>
+        <p class="hero-note">The thesis is real. It also isn&rsquo;t online &mdash; no PDF, no abstract, just a library catalogue entry.
+        What follows is a physicist&rsquo;s best guess at what is inside it, told with interactive 3D figures,
+        plus an honest survey of everything that has happened to boundary conformal field theory since.</p>
+        <a class="scroll-cue" href="#about">scroll&nbsp;&darr;</a>
+      </div>
+    </header>
+
+    <!-- ============================== ABOUT ============================== -->
+    <section id="about" class="section">
+      <p class="section-kicker">Read this first</p>
+      <h2>What&rsquo;s verified, what&rsquo;s imagined</h2>
+      <div class="fact-grid">
+        <div class="fact verified">
+          <span class="fact-tag">✓ verified</span>
+          <p>The thesis exists: <em>&ldquo;Boundary States in Conformal Field Theories of the Annulus&rdquo;</em>, W.&nbsp;B.&nbsp;Roper,
+          University of Oxford, catalogued 2008 and defended in July 2009. It was never published as a paper or posted online.</p>
+        </div>
+        <div class="fact verified">
+          <span class="fact-tag">✓ verified</span>
+          <p>Will Roper read for his doctorate in mathematics as a Rhodes Scholar at University College, Oxford,
+          supervised by Prof. John&nbsp;F.&nbsp;Wheater of the Rudolf Peierls Centre for Theoretical Physics.</p>
+        </div>
+        <div class="fact verified">
+          <span class="fact-tag">✓ verified</span>
+          <p>Wheater&rsquo;s group had just spent the early 2000s working out boundary states in the <em>c&nbsp;=&nbsp;&minus;2 logarithmic</em>
+          conformal field theory (Kawai&ndash;Wheater, 2001&ndash;02) &mdash; the thorniest known testbed for exactly the question in the title.</p>
+        </div>
+        <div class="fact imagined">
+          <span class="fact-tag">~ imagined</span>
+          <p>Everything in <a href="#thesis">Part IV</a> &mdash; the chapter structure, the results, the emphasis &mdash; is informed
+          speculation reconstructed from the title, the year, and the supervisor&rsquo;s research program. Treat it as historical
+          fan-fiction with footnotes.</p>
+        </div>
+      </div>
+      <p class="aside">The physics in Parts I&ndash;III and V, on the other hand, is the real, standard story &mdash; it&rsquo;s the
+      material any examiner would have expected the first half of such a thesis to contain.</p>
+    </section>
+
+    <!-- ============================== PART I ============================== -->
+    <section id="stage" class="section">
+      <p class="section-kicker">Part I</p>
+      <h2>The stage: an annulus</h2>
+
+      <p>A <strong>conformal field theory</strong> (CFT) is a quantum field theory with no built-in sense of scale:
+      zoom in, zoom out, bend the geometry smoothly &mdash; the physics only cares about angles. In two dimensions this is
+      an absurdly powerful constraint, because the symmetry algebra (the <em>Virasoro algebra</em>, with its famous central
+      charge <span class="m">\(c\)</span>) is infinite-dimensional. Whole families of 2d CFTs can be solved exactly. They
+      describe statistical systems exactly at a critical point &mdash; the Ising magnet at its Curie temperature
+      (<span class="m">\(c=\tfrac12\)</span>) &mdash; and they are the worldsheet theories of string theory.</p>
+
+      <p>But real systems <em>end</em>. A magnet has edges; an open string has endpoints. <strong>Boundary CFT</strong>, founded
+      by John Cardy in the late 1980s, asks: which boundary conditions can a CFT be given without ruining its conformal
+      symmetry? The cleanest laboratory for that question is the surface in this thesis&rsquo;s title.</p>
+
+      <p>The <strong>annulus</strong> &mdash; a disc with a hole, <span class="m">\(q\le|z|\le1\)</span> &mdash; is the unique surface with
+      two boundary circles and exactly one conformal &ldquo;shape&rdquo; parameter, the modulus <span class="m">\(q\)</span>.
+      Under the conformal map</p>
+
+      <div class="eq">$$w=\log z:\qquad \{\,q\le|z|\le1\,\}\;\xrightarrow{\;\sim\;}\;\text{a cylinder of circumference }2\pi\text{ and length }\log\tfrac1q,$$</div>
+
+      <p>it unrolls into a finite cylinder: one independent conformal field theory, pinched between two boundary
+      conditions, call them <span class="bc-a">α</span> on one edge and <span class="bc-b">β</span> on the other.
+      The figure below plays the map on a loop &mdash; the radial direction of the annulus becomes the length of the cylinder.
+      Drag to orbit.</p>
+
+      <figure class="viz">
+        <div class="viz-stage" id="fig-morph">
+          <span class="chip chip-a">boundary α &middot; |z| = q</span>
+          <span class="chip chip-b chip-tr">boundary β &middot; |z| = 1</span>
+        </div>
+        <div class="viz-bar">
+          <span class="viz-live mono" id="morph-label">annulus&ensp;q ≤ |z| ≤ 1</span>
+          <span class="viz-hint">drag to orbit</span>
+        </div>
+        <figcaption><strong>Fig. 1 &mdash; One surface, two pictures.</strong> The exponential map rolls the flat annulus
+        (grid lines spaced uniformly in <span class="m">\(\log r\)</span>) into a cylinder and back. Conformally, they are the
+        same surface; everything in this thesis happens here.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ============================== PART II ============================== -->
+    <section id="duality" class="section">
+      <p class="section-kicker">Part II</p>
+      <h2>One surface, two stories</h2>
+
+      <p>Here is the engine of the whole subject. The partition function of the CFT on the annulus,
+      <span class="m">\(Z_{\alpha\beta}\)</span>, can be computed in two completely different ways, depending on which
+      direction around the cylinder you call <em>time</em>.</p>
+
+      <p><strong>Open-string channel.</strong> Let time run <em>around</em> the cylinder. Then you are watching an open string
+      (a segment) with one endpoint glued to boundary condition <span class="bc-a">α</span> and the other to
+      <span class="bc-b">β</span>, going once around a loop. The partition function simply counts its quantum states.</p>
+
+      <p><strong>Closed-string channel.</strong> Let time run <em>along</em> the cylinder. Now the boundaries are not where
+      strings end &mdash; they are <em>initial and final states</em>. A closed string (a loop) is emitted by the state
+      <span class="m">\(\langle\alpha|\)</span>, propagates the length of the cylinder, and is absorbed by
+      <span class="m">\(|\beta\rangle\)</span>. The boundary condition has become a vector in the closed-string Hilbert
+      space: a <strong>boundary state</strong>. Toggle the channels below.</p>
+
+      <figure class="viz">
+        <div class="viz-stage" id="fig-dual">
+          <span class="chip chip-a chip-bl">boundary α</span>
+          <span class="chip chip-b chip-tr">boundary β</span>
+        </div>
+        <div class="viz-bar">
+          <div class="btn-row">
+            <button class="btn active" data-channel="open">open-string channel</button>
+            <button class="btn" data-channel="closed">closed-string channel</button>
+          </div>
+          <span class="viz-hint">drag to orbit</span>
+        </div>
+        <figcaption><strong>Fig. 2 &mdash; Channel duality.</strong> The same cylinder, sliced two ways: an open string
+        sweeping around the loop, or a closed string carried from one boundary state to the other.</figcaption>
+      </figure>
+
+      <div class="eq-duo">
+        <div class="eq-card active" id="eq-open">
+          <h4>Open-string channel</h4>
+          <div class="eq">$$Z_{\alpha\beta}(q)\;=\;\operatorname{Tr}_{\mathcal H_{\alpha\beta}}\,q^{\,L_0-\frac{c}{24}}\;=\;\sum_i n_{\alpha\beta}^{\;i}\,\chi_i(q)$$</div>
+          <p>A trace over the open-string Hilbert space. The <span class="m">\(n_{\alpha\beta}^{\;i}\)</span> count how many
+          times each representation <span class="m">\(i\)</span> of the symmetry appears &mdash; so they must be
+          <em>non-negative integers</em>.</p>
+        </div>
+        <div class="eq-card" id="eq-closed">
+          <h4>Closed-string channel</h4>
+          <div class="eq">$$Z_{\alpha\beta}\;=\;\langle\alpha|\;\tilde q^{\,\frac12\left(L_0+\bar L_0-\frac{c}{12}\right)}\;|\beta\rangle,
+          \qquad \tilde q = e^{-2\pi i/\tau},\; q = e^{2\pi i\tau}$$</div>
+          <p>A quantum-mechanical amplitude between two boundary states. The two channels are related by the
+          <em>modular transformation</em> <span class="m">\(\tau\mapsto-1/\tau\)</span>, under which characters mix:
+          <span class="m">\(\chi_i(q)=\sum_j S_{ij}\,\chi_j(\tilde q)\)</span>.</p>
+        </div>
+      </div>
+
+      <p>Demanding that <em>both</em> stories describe the same number is a ferociously restrictive consistency condition.
+      In string theory it is how D-branes announce themselves; in statistical mechanics it classifies the boundary
+      conditions of critical systems. It is, almost certainly, the spine of this thesis.</p>
+    </section>
+
+    <!-- ============================== PART III ============================== -->
+    <section id="states" class="section">
+      <p class="section-kicker">Part III</p>
+      <h2>Boundary states: the perfect mirror</h2>
+
+      <p>What kind of vector can <span class="m">\(|\beta\rangle\)</span> be? Conformal symmetry at the boundary means
+      no energy flows across it: every left-moving excitation must reflect into a right-moving one with the same profile.
+      As an operator statement on the state,</p>
+
+      <div class="eq">$$\big(L_n-\bar L_{-n}\big)\,|B\rangle \;=\; 0\qquad\text{for all }n .$$</div>
+
+      <p><strong>Ishibashi (1989):</strong> within each irreducible representation <span class="m">\(j\)</span> of the symmetry
+      algebra there is exactly one solution &mdash; a maximally entangled, mirror-symmetric pairing of left- and right-movers:</p>
+
+      <div class="eq">$$|j\rangle\!\rangle \;=\; \sum_{N}\,|j,N\rangle\otimes\overline{|j,N\rangle}.$$</div>
+
+      <p>But generic linear combinations of Ishibashi states are <em>not</em> physical boundary conditions. <strong>Cardy
+      (1989)</strong> imposed the channel duality of Part II and found the allowed combinations are quantized: there is one
+      consistent boundary state per primary field, with coefficients fixed by the modular S-matrix,</p>
+
+      <div class="eq">$$|\tilde a\rangle \;=\; \sum_j \frac{S_{aj}}{\sqrt{S_{0j}}}\;|j\rangle\!\rangle,
+      \qquad\Longrightarrow\qquad
+      n_{ab}^{\;i} \;=\; \sum_j \frac{S_{aj}\,S_{bj}\,S_{ij}}{S_{0j}} \;=\; N_{ab}^{\;i}\;\in\;\mathbb Z_{\ge0},$$</div>
+
+      <p>the Verlinde fusion numbers &mdash; integers, as the open channel demands. This is one of the great consistency
+      miracles of 2d physics. For the Ising model it hands you exactly three conformal boundary conditions, and they are
+      precisely the physical ones: spins frozen <em>up</em>, frozen <em>down</em>, or left <em>free</em>:</p>
+
+      <div class="eq">$$|\widetilde{+}\rangle=\tfrac{1}{\sqrt2}\,|\mathbf 1\rangle\!\rangle+\tfrac{1}{\sqrt2}\,|\epsilon\rangle\!\rangle+2^{-1/4}\,|\sigma\rangle\!\rangle,\qquad
+      |\widetilde{-}\rangle=\tfrac{1}{\sqrt2}\,|\mathbf 1\rangle\!\rangle+\tfrac{1}{\sqrt2}\,|\epsilon\rangle\!\rangle-2^{-1/4}\,|\sigma\rangle\!\rangle,\qquad
+      |\widetilde{f}\rangle=|\mathbf 1\rangle\!\rangle-|\epsilon\rangle\!\rangle .$$</div>
+
+      <p>The figure shows a boundary circle vibrating in its Ishibashi modes. The two faint curves are the left- and
+      right-moving halves; the bright curve is their sum &mdash; a standing wave, because the boundary reflects perfectly.
+      Switch between pure Ishibashi states and the three physical Cardy states of the Ising model.</p>
+
+      <figure class="viz">
+        <div class="viz-stage" id="fig-wave">
+          <span class="chip chip-l chip-bl">left-movers</span>
+          <span class="chip chip-r chip-tr">right-movers</span>
+        </div>
+        <div class="viz-bar viz-bar-col">
+          <div class="btn-row">
+            <span class="btn-label">Cardy</span>
+            <button class="btn active" data-state="plus">|+̃⟩ fixed up</button>
+            <button class="btn" data-state="minus">|−̃⟩ fixed down</button>
+            <button class="btn" data-state="free">|f̃⟩ free</button>
+            <span class="btn-label">Ishibashi</span>
+            <button class="btn" data-state="i1">|𝟏⟩⟩</button>
+            <button class="btn" data-state="ie">|ε⟩⟩</button>
+            <button class="btn" data-state="is">|σ⟩⟩</button>
+          </div>
+          <div class="coef-panel">
+            <div class="coef" id="coef-1"><span class="coef-name">|𝟏⟩⟩</span><div class="coef-track"><div class="coef-fill"></div></div><span class="coef-val mono">0.71</span></div>
+            <div class="coef" id="coef-e"><span class="coef-name">|ε⟩⟩</span><div class="coef-track"><div class="coef-fill"></div></div><span class="coef-val mono">0.71</span></div>
+            <div class="coef" id="coef-s"><span class="coef-name">|σ⟩⟩</span><div class="coef-track"><div class="coef-fill"></div></div><span class="coef-val mono">0.84</span></div>
+          </div>
+          <div class="state-formula">
+            <div class="sf" id="f-plus">$$|\widetilde{+}\rangle=\tfrac{1}{\sqrt2}|\mathbf 1\rangle\!\rangle+\tfrac{1}{\sqrt2}|\epsilon\rangle\!\rangle+2^{-1/4}|\sigma\rangle\!\rangle$$</div>
+            <div class="sf hidden" id="f-minus">$$|\widetilde{-}\rangle=\tfrac{1}{\sqrt2}|\mathbf 1\rangle\!\rangle+\tfrac{1}{\sqrt2}|\epsilon\rangle\!\rangle-2^{-1/4}|\sigma\rangle\!\rangle$$</div>
+            <div class="sf hidden" id="f-free">$$|\widetilde{f}\rangle=|\mathbf 1\rangle\!\rangle-|\epsilon\rangle\!\rangle$$</div>
+            <div class="sf hidden" id="f-i1">$$|\mathbf 1\rangle\!\rangle=\textstyle\sum_N|\mathbf 1,N\rangle\otimes\overline{|\mathbf 1,N\rangle}$$</div>
+            <div class="sf hidden" id="f-ie">$$|\epsilon\rangle\!\rangle=\textstyle\sum_N|\epsilon,N\rangle\otimes\overline{|\epsilon,N\rangle}$$</div>
+            <div class="sf hidden" id="f-is">$$|\sigma\rangle\!\rangle=\textstyle\sum_N|\sigma,N\rangle\otimes\overline{|\sigma,N\rangle}$$</div>
+          </div>
+        </div>
+        <figcaption><strong>Fig. 3 &mdash; Anatomy of a boundary state (Ising model).</strong> Each Ishibashi family
+        contributes a standing-wave mode; a Cardy state is the particular S-matrix-weighted chord of them that yields an
+        integer open-string spectrum. Note <span class="m">\(|\widetilde{+}\rangle\)</span> and <span class="m">\(|\widetilde{-}\rangle\)</span>
+        differ only by the sign of the <span class="m">\(\sigma\)</span> (spin) component.</figcaption>
+      </figure>
+
+      <p>One more character who will matter later: the overlap of a boundary state with the vacuum,
+      <span class="m">\(g_a=\langle 0|\tilde a\rangle = S_{a0}/\sqrt{S_{00}}\)</span> &mdash; the Affleck&ndash;Ludwig
+      <strong>ground-state degeneracy</strong>. Its logarithm is a boundary analogue of the central charge, and it counts
+      down monotonically along boundary renormalization-group flows (the <em>g-theorem</em>). Keep an eye on it.</p>
+    </section>
+
+    <!-- ============================== PART IV ============================== -->
+    <section id="thesis" class="section">
+      <p class="section-kicker">Part IV &middot; <span class="warn-inline">imagined from here to the end of the section</span></p>
+      <h2>The thesis, reimagined</h2>
+
+      <p>So what did Roper actually <em>do</em> for four years? We can&rsquo;t know &mdash; but the title plus the supervisor make
+      the shape of it easy to guess. By 2005, Cardy&rsquo;s rational story (Parts I&ndash;III) was twenty years old and textbook
+      material. The live problem in Wheater&rsquo;s group was what happens when the tidy assumptions fail &mdash; specifically in
+      <strong>logarithmic CFTs</strong> like the <span class="m">\(c=-2\)</span> triplet model, where representations refuse to
+      decompose, the Verlinde formula breaks, and nobody could fully agree on what the right set of boundary states even was.
+      Kawai &amp; Wheater had proposed one set using symplectic fermions (2001); Gaberdiel, Kausch, Bredthauer and Flohr had
+      competing constructions; the annulus amplitudes were the battleground on which the proposals were judged. A DPhil titled
+      <em>&ldquo;Boundary States in Conformal Field Theories of the Annulus&rdquo;</em>, in that group, in those years, almost
+      writes its own table of contents:</p>
+
+      <div class="toc-grid">
+        <div class="toc-card">
+          <span class="toc-ch">Chapter 1</span>
+          <h4>Conformal field theory in two dimensions</h4>
+          <p>Virasoro algebra, primaries and descendants, characters, minimal models, modular transformations.
+          The standard sixty-page throat-clearing of every worldsheet thesis of the era.</p>
+        </div>
+        <div class="toc-card">
+          <span class="toc-ch">Chapter 2</span>
+          <h4>Boundary CFT and the annulus</h4>
+          <p>Cardy&rsquo;s gluing condition, Ishibashi states, the annulus amplitude in both channels, the Cardy condition
+          and the Verlinde formula. Worked examples: Ising boundary states; Dirichlet and Neumann branes of the free boson,
+          with T-duality exchanging them.</p>
+        </div>
+        <div class="toc-card">
+          <span class="toc-ch">Chapter 3</span>
+          <h4>Free-field boundary states</h4>
+          <p>Symplectic fermions as a free-field laboratory: explicit coherent-state (&ldquo;squeezed state&rdquo;) boundary
+          states, cylinder amplitudes computed head-on, and the first warning signs &mdash; zero modes and logarithms creeping
+          into the characters.</p>
+        </div>
+        <div class="toc-card highlight">
+          <span class="toc-ch">Chapter 4 &middot; the heart of it</span>
+          <h4>Boundary states in the c = −2 triplet model</h4>
+          <p>The indecomposable representations of <span class="m">\(\mathcal W(2,3,3,3)\)</span>; why Verlinde fails; the
+          candidate boundary-state sets (Kawai&ndash;Wheater vs. Gaberdiel&ndash;Kausch) compared by demanding that <em>every</em>
+          annulus amplitude expand in characters with sensible non-negative integer coefficients &mdash; the rational-CFT
+          consistency test, wielded as a weapon in a logarithmic theory.</p>
+        </div>
+        <div class="toc-card">
+          <span class="toc-ch">Chapter 5</span>
+          <h4>Annulus amplitudes, τ-dependence and the failure of factorization</h4>
+          <p>The logarithmic surprise: modular transforms of the triplet characters generate explicit
+          <span class="m">\(\tau\)</span>-dependent coefficients, so the &ldquo;S-matrix&rdquo; isn&rsquo;t a matrix of numbers
+          anymore. What survives of Cardy&rsquo;s construction, what must be replaced, and which open-string spectra are
+          physically acceptable.</p>
+        </div>
+        <div class="toc-card">
+          <span class="toc-ch">Chapter 6</span>
+          <h4>Conclusions and outlook</h4>
+          <p>A consistent (if incomplete) catalogue of annulus partition functions for the logarithmic theory, a conjecture
+          about which boundary states are fundamental, and the customary final paragraph hoping someone will sort out the
+          general logarithmic case. (Spoiler for Part V: someone did.)</p>
+        </div>
+      </div>
+
+      <p class="aside"><strong>Why this guess is defensible:</strong> the title&rsquo;s odd phrasing &mdash; CFTs <em>of</em> the
+      annulus, plural &mdash; suggests a survey across theories of the one geometry, exactly what a
+      compare-the-boundary-state-proposals thesis would be. And every Wheater student of that era (Kawai before him, Atkin
+      after) worked within arm&rsquo;s reach of the <span class="m">\(c=-2\)</span> problem. But to be clear, one more time: the
+      real Chapter 4 could be something else entirely, and only a trip to the Bodleian stacks would settle it.</p>
+    </section>
+
+    <!-- ============================== PART V ============================== -->
+    <section id="since" class="section">
+      <p class="section-kicker">Part V &middot; back to verified history</p>
+      <h2>What happened to the field since 2009</h2>
+
+      <p>Boundary states turned out to be one of the best investments in theoretical physics. A concept built for
+      critical magnets and D-branes in the 1980s has spent the years since 2009 colonizing quantum information,
+      condensed matter, and the black-hole information problem. The short version, in roughly chronological order:</p>
+
+      <ol class="timeline">
+        <li>
+          <span class="tl-year">2009&ndash;2013</span>
+          <h4>Logarithmic boundary CFT grows up</h4>
+          <p>The problem at the (imagined) heart of the thesis got properly solved: Gaberdiel, Runkel &amp; Wood constructed
+          the full consistent boundary theory of the <span class="m">\(c=-2\)</span> triplet model, indecomposable modules and
+          all, and Cardy himself weighed in on logarithmic CFT as the continuum theory of disordered systems. The annulus
+          amplitudes that were once controversial are now textbook exercises in a (still growing) logarithmic literature.</p>
+        </li>
+        <li>
+          <span class="tl-year">2011</span>
+          <h4>Boundary states go holographic: AdS/BCFT</h4>
+          <p>Takayanagi (building on Karch&ndash;Randall) proposed the gravitational dual of a boundary CFT: the boundary
+          extends into the higher-dimensional bulk as an <em>end-of-the-world brane</em>. The Affleck&ndash;Ludwig
+          <span class="m">\(g\)</span>-factor of Part III becomes the tension/angle of the brane. The figure below shows the
+          cartoon every talk in this subject now opens with.</p>
+        </li>
+        <li>
+          <span class="tl-year">2006 &rarr; 2010s</span>
+          <h4>Quantum quenches: boundary states as initial conditions for everything</h4>
+          <p>Calabrese &amp; Cardy&rsquo;s insight &mdash; that a system suddenly yanked away from equilibrium is well modelled by a
+          regularized boundary state, <span class="m">\(|\psi_0\rangle\sim e^{-\tau_0 H}|B\rangle\)</span> &mdash; became the
+          standard analytic handle on thermalization just as cold-atom experiments made quenches routine. Light-cone spreading
+          of entanglement, generalized Gibbs ensembles: boundary states underneath all of it.</p>
+        </li>
+        <li>
+          <span class="tl-year">2012&ndash;present</span>
+          <h4>The bootstrap reaches the boundary</h4>
+          <p>The numerical conformal bootstrap revolution was extended to boundaries and defects (Liendo, Rastelli &amp;
+          van&nbsp;Rees), turning boundary CFT data in <em>higher</em> dimensions &mdash; once thought hopeless &mdash; into
+          something you can corner with crossing equations on a laptop.</p>
+        </li>
+        <li>
+          <span class="tl-year">2016&ndash;2017</span>
+          <h4>The g-theorem becomes quantum information</h4>
+          <p>Friedan&ndash;Konechny&rsquo;s g-theorem got an entropic proof (Casini, Landea &amp; Torroba): the boundary entropy
+          <span class="m">\(\ln g\)</span> decreases under boundary RG flow as a consequence of strong subadditivity of
+          entanglement entropy. Meanwhile Cardy showed bulk RG flows themselves can be steered using boundary states
+          as variational tools.</p>
+        </li>
+        <li>
+          <span class="tl-year">2016&ndash;present</span>
+          <h4>Boundary states classify phases of matter</h4>
+          <p>In condensed matter, whether a symmetric, gapped boundary state <em>exists at all</em> became a diagnostic for
+          symmetry-protected topological phases and anomalies (Cho, Ludwig &amp; Ryu and many after): an anomalous edge is
+          precisely a CFT that admits no symmetric boundary state. Cardy states also became entanglement-spectrum
+          fingerprints of SPT phases.</p>
+        </li>
+        <li>
+          <span class="tl-year">2018&ndash;present</span>
+          <h4>Topological defect lines and non-invertible symmetry</h4>
+          <p>The modern generalized-symmetry program &mdash; arguably the hottest topic in formal QFT &mdash; runs on topological
+          defect lines acting on boundary states (Chang, Lin, Shao, Wang &amp; Yin). Cardy&rsquo;s annulus consistency
+          conditions reappear, upgraded, as the axioms of fusion-category symmetry and the &ldquo;SymTFT&rdquo; sandwich, where
+          a physical theory <em>is</em> a choice of boundary state of a topological bulk.</p>
+        </li>
+        <li>
+          <span class="tl-year">2019&ndash;2021</span>
+          <h4>Black holes: islands and end-of-the-world branes</h4>
+          <p>The breakthrough Page-curve computations of the black-hole information paradox (Penington; Penington, Shenker,
+          Stanford &amp; Yang; Almheiri et al.) model black-hole microstates with end-of-the-world branes &mdash; boundary
+          states again &mdash; and the &ldquo;island formula&rdquo; was sharpened in doubly-holographic AdS/BCFT setups directly
+          descended from the 2011 construction.</p>
+        </li>
+        <li>
+          <span class="tl-year">2019&ndash;present</span>
+          <h4>Measurement-induced phases</h4>
+          <p>The newest arrival: monitored quantum circuits undergo entanglement phase transitions whose critical points are
+          described by (often logarithmic!) boundary conformal field theory &mdash; the <span class="m">\(c=-2\)</span>-style
+          machinery of the imagined Chapter 4, reborn in quantum computing.</p>
+        </li>
+      </ol>
+
+      <figure class="viz">
+        <div class="viz-stage" id="fig-holo"></div>
+        <div class="viz-bar">
+          <span class="viz-live mono" id="holo-readout">brane angle θ = 28°</span>
+          <span class="viz-hint">drag to orbit</span>
+        </div>
+        <figcaption><strong>Fig. 4 &mdash; AdS/BCFT (Takayanagi, 2011).</strong> The CFT lives on the teal half-plane; its
+        boundary (white line) extends into the holographic bulk as an end-of-the-world brane (amber), whose angle encodes
+        the boundary entropy <span class="m">\(\ln g\)</span>. The violet arc is a Ryu&ndash;Takayanagi surface ending on the
+        brane &mdash; the geometry behind the island formula.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ============================== EPILOGUE ============================== -->
+    <section id="epilogue" class="section">
+      <p class="section-kicker">Epilogue</p>
+      <h2>The author&rsquo;s own RG flow</h2>
+      <p>And the author? Will Roper submitted the thesis, left the worldsheet, and underwent the most dramatic
+      boundary flow in the story. He became chief architect at the Missile Defense Agency; founding director of the
+      Pentagon&rsquo;s Strategic Capabilities Office (2012); then Assistant Secretary of the Air Force for Acquisition,
+      Technology &amp; Logistics (2018&ndash;2021), where he championed digital engineering, launched the Skyborg autonomy
+      program, and revealed that the Next Generation Air Dominance program had secretly flown a full-scale demonstrator.
+      He then founded Istari Digital, a company whose pitch &mdash; aircraft assembled and certified from validated digital
+      models before metal is ever bent &mdash; is, if you squint, channel duality for airplanes: the same object, computed
+      in a different representation.</p>
+      <p>The thesis itself still sits, unscanned, in the Oxford stacks. If anyone reading this has Bodleian access:
+      the physics community (population: this webpage) awaits Chapter 4.</p>
+    </section>
+
+    <!-- ============================== SOURCES ============================== -->
+    <section id="sources" class="section">
+      <p class="section-kicker">Appendix</p>
+      <h2>Sources &amp; further reading</h2>
+      <ul class="sources">
+        <li><a href="https://books.google.com/books/about/Boundary_States_in_Conformal_Field_Theor.html?id=DX0cvwEACAAJ">W.&nbsp;B. Roper, <em>Boundary States in Conformal Field Theories of the Annulus</em>, Univ. of Oxford</a> — the catalogue entry that proves the thesis exists.</li>
+        <li><a href="https://en.wikipedia.org/wiki/Will_Roper">Will Roper — Wikipedia</a> — biography, Oxford DPhil under John Wheater, later career.</li>
+        <li><a href="https://doi.org/10.1016/0550-3213(89)90521-X">J. Cardy, “Boundary Conditions, Fusion Rules and the Verlinde Formula,” Nucl. Phys. B 324 (1989) 581</a> — the founding paper of Parts II–III.</li>
+        <li><a href="https://arxiv.org/abs/hep-th/0411189">J. Cardy, “Boundary Conformal Field Theory,” hep-th/0411189</a> — the standard short review, written within a year of the thesis starting.</li>
+        <li><a href="https://doi.org/10.1142/S0217732389000320">N. Ishibashi, “The Boundary and Crosscap States in Conformal Field Theories,” Mod. Phys. Lett. A 4 (1989) 251</a>.</li>
+        <li><a href="https://arxiv.org/abs/hep-th/0103197">S. Kawai &amp; J. F. Wheater, “Modular transformation and boundary states in logarithmic CFT,” hep-th/0103197</a> — the supervisor’s program that anchors the imagined Chapter 4.</li>
+        <li><a href="https://arxiv.org/abs/hep-th/0204154">A. Bredthauer &amp; M. Flohr, “Boundary states in c = −2 logarithmic CFT,” hep-th/0204154</a> — the competing construction.</li>
+        <li><a href="https://arxiv.org/abs/hep-th/0608184">M. Gaberdiel &amp; I. Runkel, “The logarithmic triplet theory with boundary,” hep-th/0608184</a> — the resolution that matured after 2009.</li>
+        <li><a href="https://arxiv.org/abs/1105.5165">T. Takayanagi, “Holographic Dual of BCFT,” arXiv:1105.5165</a>.</li>
+        <li><a href="https://arxiv.org/abs/cond-mat/0601225">P. Calabrese &amp; J. Cardy, “Time-dependence of correlation functions following a quantum quench,” cond-mat/0601225</a>.</li>
+        <li><a href="https://arxiv.org/abs/1210.4258">P. Liendo, L. Rastelli &amp; B. van Rees, “The Bootstrap Program for Boundary CFT,” arXiv:1210.4258</a>.</li>
+        <li><a href="https://arxiv.org/abs/1704.01870">H. Casini, I. Salazar Landea &amp; G. Torroba, “The g-theorem and quantum information theory,” arXiv:1704.01870</a>.</li>
+        <li><a href="https://arxiv.org/abs/1706.01568">J. Cardy, “Bulk renormalization group flows and boundary states,” arXiv:1706.01568</a>.</li>
+        <li><a href="https://arxiv.org/abs/1603.04016">G. Cho, A. Ludwig &amp; S. Ryu, “Universal entanglement spectra of gapped one-dimensional field theories,” arXiv:1603.04016</a>.</li>
+        <li><a href="https://arxiv.org/abs/1802.04445">C.-M. Chang, Y.-H. Lin, S.-H. Shao, Y. Wang &amp; X. Yin, “Topological Defect Lines and RG Flows in 2D,” arXiv:1802.04445</a>.</li>
+        <li><a href="https://arxiv.org/abs/1911.11977">G. Penington, S. Shenker, D. Stanford &amp; Z. Yang, “Replica wormholes and the black hole interior,” arXiv:1911.11977</a> — end-of-the-world branes carrying the information paradox.</li>
+        <li><a href="https://arxiv.org/abs/1808.05953">B. Skinner, J. Ruhman &amp; A. Nahum, “Measurement-Induced Phase Transitions in the Dynamics of Entanglement,” arXiv:1808.05953</a>.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p><strong>Disclaimer, one last time:</strong> the thesis named above is real and verifiably catalogued, but its contents
+      are not public. Part IV of this page is an imagined reconstruction — informed speculation, not scholarship — and should
+      not be cited as a description of Dr. Roper&rsquo;s actual work. Everything else is standard physics with sources linked above.</p>
+      <p class="mono">built with three.js &middot; one canvas, five scenes &middot; 2026</p>
+    </footer>
+
+  </main>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+  <script type="module" src="js/annulus.js"></script>
+</body>
+</html>
