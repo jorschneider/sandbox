@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1b1033">
+  <title>Jordan &amp; Athena Weeknights</title>
+  <meta name="description" content="Weeknight classes within a 15-minute walk of Union Square — yoga, ballet and barre for Athena, jiu jitsu, muay thai and wrestling for Jordan. Refreshed every Monday.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- async so a slow font CDN can never block the page's scripts from booting -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sky">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+    <div class="blob blob-c"></div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="moon" id="hero-moon" aria-hidden="true">🌙</div>
+      <h1><span class="glyph" id="hero-emoji" aria-hidden="true">🧘</span> <span id="hero-name">Weeknights</span></h1>
+      <p class="tagline" id="hero-tagline">Classes within a <strong>15-minute walk of Union Square</strong>.</p>
+      <p class="weekline">
+        <span class="week-label" id="week-label">…</span>
+        <span class="fresh">🗓️ refreshed every Monday</span>
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="modes" id="mode-picker" aria-label="Whose evening?">
+      <button class="md" data-mode="athena">🧘 Athena</button>
+      <button class="md" data-mode="jordan">🥋 Jordan</button>
+    </nav>
+
+    <nav class="days" id="day-picker" aria-label="Pick a night"></nav>
+
+    <div class="bases" role="group" aria-label="Filters">
+      <button class="base" id="plan-chip" aria-pressed="false">❤️ Tonight's shortlist</button>
+      <button class="base" id="copy-plan" hidden>🔗 Copy link</button>
+      <button class="base" id="verified-chip" aria-pressed="false">✅ Pinned times only</button>
+      <button class="base" id="martial-chip" aria-pressed="false" hidden>🥋 Martial arts only</button>
+      <button class="base" id="past-chip" aria-pressed="false" hidden>🕰️ Show what's already started</button>
+    </div>
+
+    <div class="travel-row">
+      <label for="travel-slider" id="travel-lead">🚶 Walk up to</label>
+      <input type="range" id="travel-slider" min="2" max="25" step="1" value="25">
+      <b id="travel-val">25 min</b>
+    </div>
+
+    <p class="count" id="count" aria-live="polite"></p>
+
+    <section class="itin" id="itin" hidden aria-label="Tonight's plan"></section>
+
+    <section class="teachers" id="teachers" hidden aria-label="Who teaches"></section>
+
+    <section class="wx-strip" id="wx-strip" hidden aria-label="Evening weather">
+      <div class="wx-label" id="wx-label"></div>
+      <div class="wx-hours" id="wx-hours"></div>
+    </section>
+
+    <section class="map-shell" id="map-shell">
+      <div class="map-split">
+        <div class="map-list" id="map-list" aria-label="Studios and gyms"></div>
+        <div class="map-pane"><div id="map"></div></div>
+      </div>
+    </section>
+
+    <aside class="note">
+      <h2 id="note-head">🎒 Before you go</h2>
+      <p id="note-body">Most studios want you booked in advance — the small rooms near Union Square fill up.
+        A <em>🔍</em> next to a class means the venue, price and booking link are confirmed but the exact slot
+        rotates weekly behind the studio's booking app: tap through to pin it down.</p>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p id="footer-line">Home base: 112 East 19th Street · walk times are on foot from Union Square.</p>
+      <p id="updated-line"></p>
+    </div>
+  </footer>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="athena.js"></script>
+  <script src="jordan.js"></script>
+  <!-- generated weekly by fetch-schedules.cjs; the page works without it -->
+  <script src="slots.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
