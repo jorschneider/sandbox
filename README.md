@@ -37,6 +37,50 @@ step, no external assets beyond two Google Fonts. Three.js is vendored.
 - **Cinematic dressing** — 2.39:1 letterbox, animated film grain,
   vignette, ACES tone mapping, a breath of handheld camera.
 
+## Also in here: *Track One* — a US–China AI diplomacy game
+
+Served at **`/game`** (a self-contained second page; the trailer is untouched).
+
+> *Who should the U.S. talk to in China on AI?* You are the U.S. delegation
+> at the first U.S.–China AI dialogue. Staff six negotiation tracks with the
+> right Chinese counterparts, survive the talks, and bring home a communiqué.
+
+A playable gloss on Matt Sheehan's essay — both of its open questions: *who*
+to talk to, and *what* to talk about. Four phases:
+**who's in the room?** (you don't pick China's delegation — Beijing fields its
+comfortable, face-saving default, and you spend limited *leverage* to pull the
+real power-holders into the room; the powerful, closed orgs cost the most),
+**set the agenda** (table 3 of 7 items drawn from the essay — testing
+best-practices is its explicit lean, binding-verification its warned-against
+trap; Beijing's appetite and the room you built decide what lands), **the
+negotiation** (each tabled item plays as a *live two-beat exchange* — the
+seated counterpart opens in character, you answer line by line — interleaved
+with event cards the system throws at you anyway; four meters: Trust,
+Progress, U.S. Backing, China Buy-In), and **the readout** (a procedurally assembled joint statement, a diplomatic stamp, and
+"six months on" epilogues earned by your specific choices). The scoring encodes
+the essay's thesis — *progress only counts if someone powerful can deliver it* —
+and the staffing phase encodes its caveat: *you don't get to choose your
+counterparts; China does.*
+
+Phase A ripples through Phase B mechanically: options unlock or strengthen
+depending on who you pulled into the room ("Because TC260 is in the room…"),
+some events only fire for certain delegations (cheap out on the lead and
+Beijing reopens the question mid-talks), and a few choices *reseat the table*
+for the rest of the run. One "consult the China hands" per run reveals the
+forecast behind each option. A–D / 1–4 and Enter play it from the keyboard.
+
+A second mode, **+5 Years: Read the Tells**, inverts the exercise: instead of
+choosing counterparts, you're shown a reshuffled 2031 org chart and have to
+*infer* what the bureaucratic shift implies about AI's real impact and how
+Beijing is choosing to deal with it — treating the chart as a costly signal of
+private belief. Two of the futures bake in a triangulation discipline (an
+ambiguous tell that only resolves against a second signal). You're scored on
+read accuracy and rated as an analyst.
+
+Same no-build stack: vanilla JS modules, the constructivist red/blue/parchment
+title-card look, an ambient three.js globe, and a tiny procedural WebAudio
+score. All content is drawn from — and was fact-checked against — the essay.
+
 ## Running it
 
 Any static file server works:
