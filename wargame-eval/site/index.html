@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WarBench — can language models command a war?</title>
+<meta name="description" content="Frontier LLMs play both sides of the CSIS Taiwan Operational Wargame against each other, adjudicated by a deterministic, rules-faithful engine.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <div class="brand"><span class="dot"></span> WarBench</div>
+  <nav class="navlinks">
+    <a href="#results">Leaderboard</a>
+    <a href="#strategies">Strategies</a>
+    <a href="#anatomy">A game</a>
+    <a href="#how">How it works</a>
+    <a href="#trashtalk">Trash talk</a>
+  </nav>
+</div></div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <h1>Can Chinese models take&nbsp;Taiwan?</h1>
+    <p class="tag">We put frontier and Chinese open models in command of a 2028 invasion &mdash;
+      and scored how far each one got.</p>
+    <p class="lede">In the CSIS Taiwan Operational Wargame, each model commands <em>both sides</em>
+      &mdash; <span class="sides"><span class="chip red">RED · China</span>
+      vs <span class="chip blue">BLUE · US / Japan / Taiwan</span></span> &mdash; while a
+      deterministic, rules-faithful engine adjudicates every move. The headline number is
+      <strong>offense</strong>: how much of Taiwan a model seizes when it runs the PLA. We pit the
+      Western frontier &mdash; <strong>Claude Opus&nbsp;4.8</strong> &mdash; against the most
+      advanced Chinese models &mdash; <strong>DeepSeek, Qwen, GLM, MiniMax</strong> &mdash;
+      and each takes its turn as the invader.</p>
+    <p class="byline">A research prototype built on the published CSIS wargame
+      &ldquo;The First Battle of the Next War.&rdquo; <span id="genline"></span></p>
+  </header>
+
+  <section id="why">
+    <p class="eyebrow">The gap</p>
+    <h2>Models ace isolated tasks. Can they run a campaign?</h2>
+    <p>Benchmarks mostly measure execution: answer this question, write this function, pass
+      this exam. Real command is different &mdash; a sequence of interdependent decisions under
+      uncertainty, against an adversary who is adapting to you, where the cost of a mistake
+      compounds over days. WarBench puts two models on opposite sides of a serious operational
+      wargame and asks: who manages escalation, allocates scarce forces, and reads the
+      opponent better?</p>
+    <p>The wargame is <strong>CSIS&rsquo;s Taiwan Operational Wargame</strong> &mdash; a 2028
+      Chinese invasion of Taiwan, the model from the report
+      <em>The First Battle of the Next War</em>. Crucially, its rules state that combat is
+      resolved by <strong>&ldquo;objective criteria &hellip; computer programs, Excel
+      spreadsheets, and lookup tables with die rolls,&rdquo;</strong> not by a human umpire&rsquo;s
+      judgment. So we make the adjudicator <strong>deterministic code</strong> &mdash; the models
+      are the <em>players</em>, and the engine resolves their orders exactly as the umpire would.</p>
+    <div class="callout">
+      <strong>Why that matters.</strong> A coded referee makes the eval <strong>reproducible</strong>
+      (same orders + seed &rarr; same game), gives an <strong>objective</strong> winner from the
+      rulebook&rsquo;s victory conditions, and removes the bias and noise of an LLM judge. The only
+      judgment calls in a game are the two commanders&rsquo; orders.
+    </div>
+  </section>
+
+  <section id="how">
+    <p class="eyebrow">How it works</p>
+    <h2>Two commanders, eleven phases, a coded umpire</h2>
+    <p>Each turn is 3.5 days; games run four to eight turns &mdash; the intense opening weeks of the
+      campaign. Every turn, the engine shows each side what it can see (fog of war from an ISR
+      phase) and the legal orders for the current phase. Each model returns
+      <strong>structured orders</strong> &mdash; how many missile salvos at which targets, how many
+      sorties to CAP vs. anti-ship strike, how many amphibious flotillas to commit, ground
+      posture &mdash; and the engine resolves them with the CSIS calculators.</p>
+
+    <figure class="turnfig">
+      <ol class="tflow">
+        <li class="auto"><span class="tn">1</span><div class="tb"><b>Reinforcement</b>
+          <span class="who">auto</span><p>US entry timing applies; Taiwanese reserves arrive; captured facilities repair.</p></div></li>
+        <li class="red"><span class="tn">2</span><div class="tb"><b>RED missile salvos</b>
+          <span class="who red">RED</span><p>China fires ballistic &amp; cruise missiles at airfields, Kadena, carriers &mdash; SAM intercept, then Table&nbsp;5C kill rolls.</p></div></li>
+        <li class="both"><span class="tn">3</span><div class="tb"><b>Air missions</b>
+          <span class="who red">RED</span><span class="who blue">BLUE</span><p>Both allocate sorties &mdash; CAP, escort, strike. Quality-weighted air combat decides who owns the sky.</p></div></li>
+        <li class="blue"><span class="tn">4</span><div class="tb"><b>Submarine barrier</b>
+          <span class="who blue">BLUE</span><p>The coalition commits submarine squadrons to the strait to ambush the crossing fleet.</p></div></li>
+        <li class="red"><span class="tn">5</span><div class="tb"><b>Amphibious lift</b>
+          <span class="who red">RED</span><p>China commits flotillas. Barrier + anti-ship strike (Table&nbsp;5H) attrit them; survivors deliver lodgment (60&times;afloat/36).</p></div></li>
+        <li class="red"><span class="tn">6</span><div class="tb"><b>Ground assault</b>
+          <span class="who red">RED</span><p>Press or consolidate ashore. The ground CRT resolves the fight for the ports &amp; airfields.</p></div></li>
+        <li class="auto"><span class="tn">7</span><div class="tb"><b>Adjudicate &amp; check victory</b>
+          <span class="who">auto</span><p>Score the position on the victory spectrum; a decisive result ends the game early.</p></div></li>
+      </ol>
+      <figcaption>The decision-bearing phases of the CSIS cycle of play, repeated every turn. Illegal
+        or impossible orders are clamped and recorded &mdash; a commander that can&rsquo;t issue valid
+        orders is itself a signal.</figcaption>
+    </figure>
+
+    <h3>The outcome is computed, not voted on</h3>
+    <p>Victory is scored on the rulebook&rsquo;s spectrum &mdash; the prospect for Taiwan&rsquo;s
+      continuity &mdash; from <em>Chinese victory</em> through <em>stalemate</em> to
+      <em>Chinese defeat</em>, read directly off the game state: how much PLA lodgment is ashore,
+      how many functional ports and airfields China holds, and how badly the amphibious fleet was
+      attrited.</p>
+
+    <figure class="vspec">
+      <svg viewBox="0 0 720 168" role="img" aria-label="The victory spectrum from Chinese victory to Chinese defeat.">
+        <defs>
+          <linearGradient id="vg" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#b23a2e"/><stop offset="0.5" stop-color="#cfc8ba"/>
+            <stop offset="1" stop-color="#28508c"/>
+          </linearGradient>
+        </defs>
+        <rect x="20" y="56" width="680" height="34" rx="6" fill="url(#vg)"/>
+        <g stroke="#fffdf8" stroke-width="2">
+          <line x1="156" y1="56" x2="156" y2="90"/><line x1="292" y1="56" x2="292" y2="90"/>
+          <line x1="428" y1="56" x2="428" y2="90"/><line x1="564" y1="56" x2="564" y2="90"/>
+        </g>
+        <g class="vlbl" text-anchor="middle">
+          <text x="88" y="47">Chinese<tspan x="88" dy="13">victory</tspan></text>
+          <text x="224" y="47">stalemate,<tspan x="224" dy="13">trending China</tspan></text>
+          <text x="360" y="47">indeterminate<tspan x="360" dy="13">stalemate</tspan></text>
+          <text x="496" y="47">stalemate,<tspan x="496" dy="13">trending Taiwan</tspan></text>
+          <text x="632" y="47">Chinese<tspan x="632" dy="13">defeat</tspan></text>
+        </g>
+        <g class="vwho">
+          <text x="20" y="112" fill="#b23a2e">◀ China seizes Taiwan</text>
+          <text x="700" y="112" fill="#28508c" text-anchor="end">Taiwan holds ▶</text>
+        </g>
+        <text class="vdrv" x="360" y="146" text-anchor="middle">Driven by: PLA lodgment ashore &nbsp;·&nbsp; functional ports/airfields held &nbsp;·&nbsp; how much of the amphibious fleet survived</text>
+      </svg>
+    </figure>
+  </section>
+
+  <section id="faithful">
+    <p class="eyebrow">Fidelity</p>
+    <h2>Grounded in the actual CSIS tables</h2>
+    <p>The engine&rsquo;s combat is not hand-waved &mdash; the core calculators are ported from the CSIS
+      workbooks and rulebook tables, each checked against the source by &ldquo;golden&rdquo; tests that
+      reproduce the workbook&rsquo;s own cached outputs.</p>
+    <details class="more">
+      <summary>The six faithful calculators</summary>
+      <ul class="clean">
+        <li><b>Casualty calculator</b> &mdash; per-side personnel losses &amp; KIA (exact, all four nations).</li>
+        <li><b>Amphibious lift</b> &mdash; the exact <code>60 &times; afloat / 36</code> formula with the turn-1 surge.</li>
+        <li><b>Air combat</b> &mdash; the real per-airframe Quality constants (J-20/F-35/F-22 = 8, &hellip;).</li>
+        <li><b>Ground combat CRT</b> &mdash; terrain modifiers, odds bands, step losses, FEBA movement (worked example reproduced).</li>
+        <li><b>Airbase missile attack</b> &mdash; SAM intercept on 1&ndash;18, hardened-shelter kills on 1&ndash;15, open on 1&ndash;17.</li>
+        <li><b>Anti-ship strike</b> &mdash; rules Table&nbsp;5H: each leaking missile rolls a d20 for ship hits; a natural 20 destroys the flotilla.</li>
+      </ul>
+      <p class="muted">A 30&nbsp;km hex ground game (with Taiwan&rsquo;s real Table&nbsp;10A order of
+        battle) and scenario excursions (delayed US entry, a neutral Japan) are also implemented.
+        Two minor calculators remain representative and are flagged as such.</p>
+    </details>
+  </section>
+
+  <section id="scoring">
+    <p class="eyebrow">Scoring</p>
+    <h2>Offense is the headline</h2>
+    <p>The CSIS <em>historical</em> base case is strongly <strong>defender-favored</strong> &mdash;
+      the coalition almost always repels the invasion, which is itself the report&rsquo;s finding. But
+      that makes a poor benchmark: if everyone loses as RED, nothing separates the models. So the
+      featured run uses a <strong>balanced scenario</strong> &mdash; a maximal PLA sealift and a
+      one-turn lag in US entry &mdash; calibrated so the invasion is genuinely winnable and the
+      outcome depends on <em>how well each side is played</em>. (The historical case is still on the
+      board, for honesty.) Each model commands both sides, so WarBench reports:</p>
+    <ul class="clean">
+      <li><b>Offense</b> &mdash; the headline: how much of Taiwan a model takes as <span class="chip red">RED</span> (a continuous score from lodgment, force ratio, fleet survival). Higher is a better invader.</li>
+      <li><b>Defense</b> &mdash; how little it concedes as <span class="chip blue">BLUE</span>. Lower is a better defender.</li>
+      <li><b>Outcome &amp; Elo</b> &mdash; head-to-head on the victory spectrum, sides swapped to cancel side advantage.</li>
+    </ul>
+    <p class="muted">Providers occasionally return an empty or garbled reply &mdash; transient
+      flakiness, not a model&rsquo;s strategy. We <strong>retry past it</strong> (with backoff) rather
+      than score it, so a model&rsquo;s orders are its own; a scripted baseline only steps in on the rare
+      turn a model never answers at all. The handful of games where that still left a side mostly
+      scripted are flagged <em>degraded</em> and excluded. One model, <strong>GPT&#8209;5.5</strong>,
+      couldn&rsquo;t be evaluated this run at all &mdash; our OpenAI account hit its billing quota
+      mid-tournament &mdash; so it&rsquo;s left off the board rather than ranked on heuristic play.</p>
+  </section>
+
+  <section id="results">
+    <p class="eyebrow">The result · <span id="ngames">live</span> games</p>
+    <h2>So &mdash; can they take Taiwan?</h2>
+    <p class="verdict" id="verdict"></p>
+    <div class="findings" id="findings"></div>
+
+    <h3>Who gets furthest as the invader</h3>
+    <p class="muted">Offense is the share of Taiwan a model seizes commanding the PLA &mdash; lodgment
+      ashore, force ratio, and fleet survival. The field is closer on raw skill than you&rsquo;d expect.</p>
+    <div class="barchart" id="offchart"></div>
+
+    <h3>The junk we retry past</h3>
+    <p class="muted">Reliability used to look like a real axis &mdash; until we looked closely. A focused
+      probe asked each model for orders <span id="ivtrials">30</span>&times; across the six phases; this is
+      what came back when it <em>didn&rsquo;t</em> return a usable order. The dominant mode is an
+      <b>empty reply</b> &mdash; the provider intermittently returns no content at all. We first suspected
+      our own harness was starving the reasoning models of tokens, but raising the budget 5&times; barely
+      moved it (DeepSeek returns empty 4 of 30 either way), so it&rsquo;s plain intermittent flakiness, not
+      a token limit. So we stopped scoring it: the tournament now <strong>retries past these</strong> until
+      the model actually answers. We show the breakdown only to be honest about what we&rsquo;re absorbing
+      &mdash; it doesn&rsquo;t move the rankings.</p>
+    <div class="ivbars" id="ivbars"></div>
+    <div class="ivlegend" id="ivlegend"></div>
+    <div class="ivex" id="ivex"></div>
+    <p class="muted" id="iv-empty" hidden>The error breakdown appears once the diagnostic has run.</p>
+
+    <h3>How the games ended</h3>
+    <div class="obar" id="outcomebar"></div>
+    <p class="muted" id="outcometxt"></p>
+
+    <p class="unevalnote" id="unevaluated" hidden></p>
+
+    <details class="more">
+      <summary>Open the full leaderboard &amp; every game</summary>
+      <p class="runmeta" id="runmeta"></p>
+      <table class="board" id="board">
+        <thead><tr>
+          <th class="model">Model</th>
+          <th title="Share of Taiwan seized as RED — higher is a better invader">Offense&nbsp;↗</th>
+          <th title="Chinese-success conceded as BLUE — lower is a better defender">Defense</th>
+          <th>Win&nbsp;rate</th><th>Elo</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </details>
+  </section>
+
+  <section id="strategies">
+    <p class="eyebrow">How they think</p>
+    <h2>Six commanders, six doctrines</h2>
+    <p>Each model writes a rationale for every order, so we can read its actual thinking and
+      measure its playstyle from the orders themselves (turns it failed to order validly are filtered out).
+      Two numbers separate the field most: how much of the amphibious fleet a model throws across
+      as <span class="chip red">RED</span> per turn (aggression), and how many submarine squadrons
+      it commits to the barrier as <span class="chip blue">BLUE</span> (sea denial).</p>
+    <div class="strats" id="strats"></div>
+    <p class="muted" id="strats-empty" hidden>Strategy profiles appear once a run is analyzed.</p>
+  </section>
+
+  <section id="anatomy">
+    <p class="eyebrow">Anatomy of a game · turn by turn</p>
+    <h2 id="anatomy-h">How a Chinese model takes Taiwan</h2>
+    <p id="anatomy-sub" class="muted"></p>
+    <div class="storyturns" id="storyturns"></div>
+    <div class="callout" id="anatomy-out"></div>
+    <p class="muted" id="anatomy-empty" hidden>The walkthrough appears once a clean Chinese-victory game is available.</p>
+  </section>
+
+  <section id="trashtalk">
+    <p class="eyebrow">Bonus · graded by an LLM judge</p>
+    <h2>Trash talk</h2>
+    <p>Every commander can drop an in-character taunt at the enemy each turn. So we also asked
+      Claude&nbsp;Opus &mdash; blind to who won &mdash; to grade each model&rsquo;s smack talk on wit,
+      menace, and battlefield specificity. Whether a model bothers to talk trash at all is part of
+      the score.</p>
+    <div class="talk" id="talk"></div>
+    <p class="muted" id="talk-empty" hidden>Trash-talk grades land once the featured run finishes
+      and the judge has scored it.</p>
+  </section>
+
+  <section id="code">
+    <p class="eyebrow">Reproduce</p>
+    <h2>It&rsquo;s all code</h2>
+    <p>The engine, the faithful calculator ports with golden tests, the hex ground game, the model
+      commanders, and the tournament harness are open. Heuristic (no-API) commanders let the whole
+      pipeline &mdash; and the test suite &mdash; run with zero network access.</p>
+    <p><code>pip install -e ".[claude]"</code> &middot; <code>pytest -q</code> &middot;
+      <code>python analysis/run_real_tournament.py</code> &middot;
+      <code>python analysis/build_site.py</code></p>
+  </section>
+
+  <footer>
+    WarBench is a research prototype and an <em>adaptation</em> of the CSIS Taiwan Operational
+    Wargame (Cancian, Cancian &amp; Heginbotham), not an official CSIS product. Scenarios depict a
+    hypothetical conflict for analytic purposes. Built with the
+    <a href="https://github.com/jorschneider/sandbox">wargame-eval</a> harness.
+  </footer>
+
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  var D = window.WARBENCH_DATA || { runs: [] };
+  var gen = document.getElementById('genline');
+  if (D.generated) gen.textContent = 'Data generated ' + D.generated + '.';
+  function fmt(x) { return (x === null || x === undefined) ? '—' : x; }
+  function setText(id, s) { var e = document.getElementById(id); if (e) e.textContent = s; }
+  function originTag(m) {
+    return m && m.origin ? ' <span class="origin' + (m.cn ? ' cn' : '') + '">' + m.origin + '</span>' : '';
+  }
+  var OUTCOMES = [
+    ['CHINESE_VICTORY', 'Chinese victory', '#b23a2e'],
+    ['STALEMATE_TREND_CHINA', 'stalemate, trending China', '#d98b80'],
+    ['STALEMATE_INDETERMINATE', 'indeterminate', '#cfc8ba'],
+    ['STALEMATE_TREND_AGAINST_CHINA', 'stalemate, trending Taiwan', '#7fa0c8'],
+    ['CHINESE_DEFEAT', 'Chinese defeat', '#28508c']
+  ];
+
+  // The featured competitive run drives the whole results story.
+  var featured = (D.runs || []).filter(function (r) { return r.competitive; })[0] || (D.runs || [])[0];
+
+  renderTrashTalk();
+  renderStrategies();
+  renderStoryGame();
+  renderInvalid();
+  if (featured) { renderStory(featured); }
+
+  // Anatomy of a game — a Chinese model beats an American model, turn by turn.
+  function renderStoryGame() {
+    var s = D.story_game;
+    var box = document.getElementById('storyturns');
+    if (!s) { var e = document.getElementById('anatomy-empty'); if (e) e.hidden = false; return; }
+    document.getElementById('anatomy-h').innerHTML =
+      'How ' + s.red + ' takes Taiwan from ' + s.blue;
+    document.getElementById('anatomy-sub').innerHTML =
+      '<span class="chip red">' + s.red + '</span> (' + s.red_origin + ') invades; ' +
+      '<span class="chip blue">' + s.blue + '</span> (' + s.blue_origin + ') defends. The lodgment ' +
+      'builds wave by wave while Taiwan&rsquo;s defense is ground down &mdash; here it is, turn by turn.';
+    var maxv = Math.max.apply(null, s.turns.map(function (t) { return Math.max(t.lodgment, t.ground); })) || 1;
+    var maxc = s.amphib_initial || 11;
+    box.innerHTML = s.turns.map(function (t) {
+      var th = Math.round(5 + (t.committed / maxc) * 24);
+      var lp = Math.round(t.lodgment / maxv * 100), gp = Math.round(t.ground / maxv * 100);
+      var pips = '';
+      for (var i = 0; i < s.facilities_total; i++) pips += '<i class="pip' + (i < t.facilities ? ' on' : '') + '"></i>';
+      var oc = OUTCOMES.filter(function (o) { return o[0] === t.class; })[0];
+      var clab = oc ? oc[1] : (t.class || '').replace(/_/g, ' ').toLowerCase();
+      var ccol = oc ? oc[2] : '#8a7f6b';
+      return '<div class="gturn">' +
+        '<div class="gth"><span class="gtn">TURN ' + t.turn + '</span>' +
+          '<span class="gtc" style="color:' + ccol + ';border-color:' + ccol + '">' + clab + '</span></div>' +
+        '<div class="cross"><span class="bank cn">' + s.red + '<small>China · invades</small></span>' +
+          '<span class="lane"><span class="clabel">' + t.committed + ' flotillas across' +
+            (t.sunk ? ' &middot; &minus;' + t.sunk + ' sunk' : '') + '</span>' +
+            '<span class="wave" style="height:' + th + 'px"></span></span>' +
+          '<span class="bank we">' + s.blue + '<small>defends</small></span></div>' +
+        '<div class="gbars">' +
+          '<div class="gbar"><label>PLA ashore</label><span class="trk"><span class="fil red" style="width:' + lp + '%"></span></span><b>' + Math.round(t.lodgment) + '</b></div>' +
+          '<div class="gbar"><label>Taiwan defense</label><span class="trk"><span class="fil blue" style="width:' + gp + '%"></span></span><b>' + Math.round(t.ground) + '</b></div>' +
+          '<div class="pips">' + pips + '<span>' + t.facilities + ' / ' + s.facilities_total + ' ports &amp; airfields taken</span></div>' +
+        '</div>' +
+        (t.caption ? '<p class="gtcap">&ldquo;' + t.caption + '&rdquo;</p>' : '') +
+      '</div>';
+    }).join('');
+    var last = s.turns[s.turns.length - 1];
+    var foe = s.blue_west ? 'the Western frontier model, ' + s.blue
+                          : 'a rival Chinese model, ' + s.blue;
+    document.getElementById('anatomy-out').innerHTML =
+      '<strong>Result.</strong> By turn ' + s.turns.length + ', Taiwan&rsquo;s defense is spent and <b>' +
+      last.facilities + ' of ' + s.facilities_total + '</b> ports and airfields have fallen, with ' +
+      Math.round(last.lodgment) + ' PLA strength ashore &mdash; a Chinese victory over ' + foe + '.';
+  }
+
+  // Why orders go invalid — per-model stacked breakdown of failure types + examples.
+  function renderInvalid() {
+    var IVCOLORS = {
+      'valid': '#cbd7c4',
+      'prose, not JSON': '#d98b3a', 'markdown-wrapped': '#c9a227', 'truncated JSON': '#b23a2e',
+      'wrong shape': '#7a5a9b', 'empty reply': '#8a7f6b', 'rate limited (429)': '#28508c',
+      'request rejected (400)': '#5a86b8', 'timeout / network': '#6c6760', 'server error': '#3a3833'
+    };
+    function ivColor(cat) {
+      if (IVCOLORS[cat]) return IVCOLORS[cat];
+      if (cat.indexOf('server') === 0) return '#3a3833';
+      if (cat.indexOf('http') === 0) return '#5a86b8';
+      return '#9b8f7a';
+    }
+    var data = D.invalid || [];
+    if (!data.length) { var e = document.getElementById('iv-empty'); if (e) e.hidden = false; return; }
+    setText('ivtrials', data[0].trials || 30);
+    var seen = {};
+    document.getElementById('ivbars').innerHTML = data.map(function (m) {
+      var segs = [['valid', m.valid]].concat(Object.keys(m.categories).map(function (k) {
+        return [k, m.categories[k]];
+      }).sort(function (a, b) { return b[1] - a[1]; }));
+      var bar = segs.filter(function (s) { return s[1] > 0; }).map(function (s) {
+        if (s[0] !== 'valid') seen[s[0]] = true;
+        return '<span class="ivseg" style="flex:' + s[1] + ';background:' + ivColor(s[0]) +
+          '" title="' + s[0] + ': ' + s[1] + '"></span>';
+      }).join('');
+      var origin = m.origin ? '<span class="origin' + (m.cn ? ' cn' : '') + '">' + m.origin + '</span>' : '';
+      return '<div class="ivrow"><span class="ivl">' + m.label + origin + '</span>' +
+        '<span class="ivt">' + bar + '</span>' +
+        '<span class="ivv">' + (m.invalid ? m.invalid + ' bad' : 'clean') + '</span></div>';
+    }).join('');
+    document.getElementById('ivlegend').innerHTML =
+      '<span class="ivlk"><i style="background:' + ivColor('valid') + '"></i>valid order</span>' +
+      Object.keys(seen).map(function (k) {
+        return '<span class="ivlk"><i style="background:' + ivColor(k) + '"></i>' + k + '</span>';
+      }).join('');
+    // a few concrete examples of bad output
+    var ex = [];
+    data.forEach(function (m) {
+      Object.keys(m.examples || {}).forEach(function (cat) {
+        ex.push({ label: m.label, cat: cat, text: m.examples[cat].text, phase: m.examples[cat].phase });
+      });
+    });
+    var pref = { 'prose, not JSON': 0, 'truncated JSON': 1, 'wrong shape': 2, 'markdown-wrapped': 3 };
+    ex.sort(function (a, b) { return (pref[a.cat] == null ? 9 : pref[a.cat]) - (pref[b.cat] == null ? 9 : pref[b.cat]); });
+    document.getElementById('ivex').innerHTML = ex.slice(0, 4).map(function (e) {
+      return '<div class="ivcard"><div class="ivch"><b>' + e.label + '</b> &middot; <span>' + e.cat +
+        '</span> &middot; <span class="ivph">' + e.phase.replace(/_/g, ' ').toLowerCase() + '</span></div>' +
+        '<code>' + e.text.replace(/</g, '&lt;').replace(/&(?!lt;)/g, '&amp;') + '</code></div>';
+    }).join('');
+  }
+
+  function renderStory(run) {
+    var ms = run.models.slice();
+    setText('ngames', run.n_valid);
+
+    var byOff = ms.slice().sort(function (a, b) { return (b.offense || 0) - (a.offense || 0); });
+    var inv = byOff[0], ru = byOff[1];
+    var def = ms.slice().sort(function (a, b) { return (a.defense || 1) - (b.defense || 1); })[0];
+    var valid = run.games.filter(function (g) { return !g.degraded; });
+    var cv = valid.filter(function (g) { return g.outcome === 'CHINESE_VICTORY'; }).length;
+    var cwin = valid.filter(function (g) {
+      return g.outcome === 'CHINESE_VICTORY' || g.outcome === 'STALEMATE_TREND_CHINA'; }).length;
+
+    // The Western models (however many) and how they fared on defense: did any
+    // Chinese invader take Taiwan from one, and what was their best result?
+    var wests = ms.filter(function (m) { return !m.cn; });
+    var westLabels = wests.map(function (m) { return m.label; });
+    var cnLabels = ms.filter(function (m) { return m.cn; }).map(function (m) { return m.label; });
+    function orank(o) { for (var i = 0; i < OUTCOMES.length; i++) if (OUTCOMES[i][0] === o) return i; return 9; }
+    function olabel(o) { var m = OUTCOMES.filter(function (x) { return x[0] === o; })[0]; return m ? m[1] : null; }
+    var vsWest = valid.filter(function (g) {
+      return westLabels.indexOf(g.blue) >= 0 && cnLabels.indexOf(g.red) >= 0; });
+    vsWest.sort(function (a, b) { return orank(a.outcome) - orank(b.outcome); });
+    var breaches = vsWest.filter(function (g) { return g.outcome === 'CHINESE_VICTORY'; });
+    var bestVsWestLbl = vsWest.length ? olabel(vsWest[0].outcome) : null;
+    var westNamesOr = westLabels.join(' or '), westNamesAnd = westLabels.join(' &amp; ');
+
+    // --- verdict -----------------------------------------------------------
+    var v = '';
+    if (inv && ru) {
+      v = 'The most effective invader is <b>' + inv.label + '</b>' + (inv.cn ? ', a Chinese model,' : '') +
+          ' &mdash; it seizes the most of Taiwan, with <b>' + ru.label + '</b>' +
+          (ru.cn ? ', another Chinese model,' : '') + ' close behind. ';
+      if (wests.length && !breaches.length) {
+        v += 'But on defense the Western frontier holds: <b>no Chinese model took Taiwan outright from ' +
+             westNamesOr + '</b>' + (bestVsWestLbl ? ' &mdash; their best was a ' + bestVsWestLbl : '') +
+             '. ';
+      } else if (breaches.length) {
+        v += 'And this time the Western frontier <b>cracked</b>: ' + breaches.map(function (g) {
+               return '<b>' + g.red + '</b> took Taiwan outright from <b>' + g.blue + '</b>';
+             }).join('; ') + '. ';
+      }
+      v += 'Across the board, <b>' + cwin + '</b> of ' + run.n_valid + ' games leaned China and <b>' + cv +
+           '</b> were outright victories' +
+           (cv && !breaches.length ? ' &mdash; every one of them against a Chinese defender.' : '.');
+    }
+    document.getElementById('verdict').innerHTML = v;
+
+    // --- finding cards -----------------------------------------------------
+    var cards = [
+      { k: 'Best invader', m: inv, v: inv.label,
+        s: 'offense ' + fmt(inv.offense) + ' · ' + Math.round(inv.win_rate * 100) + '% wins',
+        n: 'The most aggressive commander &mdash; it throws the biggest first wave across the strait.' },
+      { k: 'Toughest defender', m: def, v: def.label,
+        s: 'concedes ' + fmt(def.defense) + ' as BLUE',
+        n: 'Gives up the least of Taiwan when defending &mdash; the hardest island in the field to crack.' },
+      wests.length && (breaches.length
+        ? { k: 'The wall cracked', v: breaches.length + (breaches.length === 1 ? ' breach' : ' breaches'),
+            s: breaches.map(function (g) { return g.red + ' beat ' + g.blue; }).join(' · '),
+            n: 'For the first time a Chinese model took Taiwan outright from a Western defender.' }
+        : { k: 'The defensive wall', m: wests.length === 1 ? wests[0] : null,
+            v: westNamesAnd + ' held',
+            s: '0 Chinese victories against ' + (wests.length === 1 ? 'it' : 'them'),
+            n: 'No Chinese invader broke the Western frontier on defense' +
+               (bestVsWestLbl ? ' &mdash; the best they managed was a ' + bestVsWestLbl + '.' : '.') }),
+      { k: 'A real contest', v: cv + ' / ' + run.n_valid + ' Chinese victories',
+        s: 'balanced scenario',
+        n: 'The invasion is genuinely winnable here, so command quality &mdash; not the map &mdash; decides it.' }
+    ];
+    document.getElementById('findings').innerHTML = cards.filter(Boolean).map(function (c) {
+      return '<div class="fcard"><div class="fk">' + c.k + '</div>' +
+        '<div class="fv">' + c.v + (c.m ? originTag(c.m) : '') + '</div>' +
+        '<div class="fs">' + c.s + '</div><div class="fn">' + c.n + '</div></div>';
+    }).join('');
+
+    // --- offense bar chart -------------------------------------------------
+    var maxOff = inv.offense || 1;
+    document.getElementById('offchart').innerHTML = byOff.map(function (m) {
+      var pct = Math.round(100 * (m.offense || 0) / maxOff);
+      return '<div class="brow"><span class="bl">' + m.label + originTag(m) + '</span>' +
+        '<span class="bt"><span class="bf ' + (m.cn ? 'cn' : 'we') + '" style="width:' + pct + '%"></span></span>' +
+        '<span class="bv">' + fmt(m.offense) + '</span></div>';
+    }).join('');
+
+    // --- the un-evaluable model note (provider-side, not ranked) -----------
+    var un = run.unevaluated || [];
+    var unEl = document.getElementById('unevaluated');
+    if (unEl) {
+      if (un.length) {
+        unEl.hidden = false;
+        unEl.innerHTML = un.map(function (u) {
+          return '<b>' + u.label + '</b> (' + u.origin + ') isn&rsquo;t on the board. ' + u.reason;
+        }).join(' ');
+      } else { unEl.hidden = true; }
+    }
+
+    // --- outcome distribution ---------------------------------------------
+    var counts = {};
+    valid.forEach(function (g) { counts[g.outcome] = (counts[g.outcome] || 0) + 1; });
+    var segs = OUTCOMES.filter(function (o) { return counts[o[0]]; }).map(function (o) {
+      var n = counts[o[0]];
+      return '<span class="seg" style="flex:' + n + ';background:' + o[2] + '" title="' + o[1] + ': ' + n + '">' +
+        '<span class="segn">' + n + '</span></span>';
+    }).join('');
+    document.getElementById('outcomebar').innerHTML = segs;
+    var cwin = (counts.CHINESE_VICTORY || 0) + (counts.STALEMATE_TREND_CHINA || 0);
+    document.getElementById('outcometxt').innerHTML =
+      '<b>' + cwin + '</b> of ' + run.n_valid + ' games leaned China &mdash; <b>' + cv +
+      '</b> of them outright victories. The invader has real teeth in this scenario, but rarely a clean sweep.';
+
+    // --- the tucked-away full table ---------------------------------------
+    document.getElementById('runmeta').innerHTML =
+      '<strong>' + run.scenario + '.</strong> ' + run.n_valid + ' valid games' +
+      (run.n_degraded ? ' (' + run.n_degraded + ' degraded, excluded)' : '') +
+      ', ' + run.turns + ' turns each.';
+    var maxBar = inv.offense || 1, tb = document.querySelector('#board tbody');
+    tb.innerHTML = '';
+    byOff.forEach(function (m) {
+      var offW = Math.round(46 * (m.offense || 0) / maxBar);
+      var defW = Math.round(46 * (1 - Math.min(1, (m.defense || 0) / maxBar)));
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="model">' + m.label + originTag(m) + '</td>' +
+        '<td><span class="bar off" style="width:' + offW + 'px"></span> <span class="num">' + fmt(m.offense) + '</span></td>' +
+        '<td><span class="bar def" style="width:' + defW + 'px"></span> <span class="num">' + fmt(m.defense) + '</span></td>' +
+        '<td><span class="num">' + Math.round(m.win_rate * 100) + '%</span></td>' +
+        '<td><span class="num">' + m.elo + '</span></td>';
+      tb.appendChild(tr);
+    });
+  }
+
+  // "How they think" — each model's LLM-summarized doctrine + playstyle bars + a real rationale.
+  function renderStrategies() {
+    var s = D.strategies || [];
+    var box = document.getElementById('strats');
+    var empty = document.getElementById('strats-empty');
+    if (!s.length) { if (empty) empty.hidden = false; return; }
+    if (empty) empty.hidden = true;
+    var maxAgg = Math.max.apply(null, s.map(function (x) { return (x.red && x.red.amphib_aggression) || 0; })) || 11;
+    box.innerHTML = '';
+    s.forEach(function (m) {
+      var agg = (m.red && m.red.amphib_aggression) || 0;
+      var press = (m.red && m.red.press_pct);
+      var bar = (m.blue && m.blue.barrier);
+      var aggW = Math.round(100 * agg / maxAgg);
+      var origin = m.origin ? '<span class="origin' + (m.cn ? ' cn' : '') + '">' + m.origin + '</span>' : '';
+      var ex = m.example ? '<div class="sx">&ldquo;' + m.example.text + '&rdquo;' +
+        '<span class="sxp">' + (m.example.role === 'RED' ? 'as RED · ' : 'as BLUE · ') +
+        m.example.phase.replace(/_/g, ' ').toLowerCase() + '</span></div>' : '';
+      var c = document.createElement('div');
+      c.className = 'scard';
+      c.innerHTML =
+        '<div class="sh"><span class="sm">' + m.label + '</span>' + origin + '</div>' +
+        (m.doctrine ? '<div class="doc">' + m.doctrine + '</div>' : '') +
+        (m.signature ? '<div class="sig">Signature: ' + m.signature + '</div>' : '') +
+        '<div class="smetrics">' +
+          '<div class="met"><span class="ml">Amphib aggression</span>' +
+            '<span class="mbarw"><span class="mbar" style="width:' + aggW + '%"></span></span>' +
+            '<span class="mv">' + fmt(agg) + '<small>/11 flotillas·turn</small></span></div>' +
+          '<div class="met"><span class="ml">Ground press</span>' +
+            '<span class="mv">' + (press != null ? Math.round(press * 100) + '%' : '—') + '</span></div>' +
+          '<div class="met"><span class="ml">Sub barrier (as BLUE)</span>' +
+            '<span class="mv">' + (bar != null ? bar : '—') + '<small>/3 SUBRON</small></span></div>' +
+        '</div>' + ex;
+      box.appendChild(c);
+    });
+  }
+
+  // Trash-talk showcase (LLM-judged). Rendered once from the global grades.
+  function renderTrashTalk() {
+    var talk = D.trash_talk || [];
+    var box = document.getElementById('talk');
+    var empty = document.getElementById('talk-empty');
+    if (!talk.length) { if (empty) empty.hidden = false; return; }
+    if (empty) empty.hidden = true;
+    box.innerHTML = '';
+    talk.forEach(function (t, i) {
+      var c = document.createElement('div');
+      c.className = 'tcard';
+      var origin = t.origin ? '<span class="origin' + (t.cn ? ' cn' : '') + '">' + t.origin + '</span>' : '';
+      c.innerHTML =
+        '<div class="th"><span class="rank">#' + (i + 1) + '</span>' +
+          '<span class="tm">' + t.label + '</span>' + origin +
+          '<span class="score">' + (t.score != null ? t.score.toFixed(1) : '—') + '<small>/10</small></span></div>' +
+        '<blockquote>&ldquo;' + t.best_line + '&rdquo;</blockquote>' +
+        (t.comment ? '<div class="tc">' + t.comment + '</div>' : '');
+      box.appendChild(c);
+    });
+  }
+})();
+</script>
+</body>
+</html>

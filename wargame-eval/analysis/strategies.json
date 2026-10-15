@@ -1,0 +1,242 @@
+{
+  "claude-opus-4-8": {
+    "label": "Opus 4.8",
+    "origin": "Anthropic",
+    "cn": false,
+    "red": {
+      "amphib_aggression": 7.05,
+      "press_pct": 0.95,
+      "missile_mix": {
+        "taiwan_airfields": 0.417,
+        "okinawa_kadena": 0.199,
+        "guam": 0.127,
+        "carriers": 0.095,
+        "ships": 0.162
+      },
+      "missile_top": "taiwan_airfields",
+      "air_mix": {
+        "cap": 0.303,
+        "escort_strike": 0.291,
+        "strike_blue_airbases": 0.189,
+        "ground_support": 0.217
+      }
+    },
+    "blue": {
+      "barrier": 3.0,
+      "air_mix": {
+        "cap": 0.246,
+        "strike_amphibs": 0.651,
+        "strike_airbases": 0.009,
+        "ground_support": 0.095
+      }
+    },
+    "n_rationales": 240,
+    "example": {
+      "role": "RED",
+      "phase": "RED_MISSILE",
+      "text": "Turn 3 of 4: my lodgment (140) dwarfs Taiwan ground (42.4) but supply is low at 20 and 4 of 11 flotillas are already gone. I must keep the amphib pipeline alive and the supply flowing. CJ-20 ALCMs (18) plus DF-21C/17 (7) hit Taiwan airfields to suppress fighters threatening my landing waves and to crater runways supporting Taiwan's defense. DF-26B (8) ranges Guam to keep BLUE tankers/bombers degraded and slow reinforcement. Reserve the 32 YJ anti-ship and SAG/picket screen for the carrier and ARG when they close to launch range rather than wasting salvos at standoff now. Goal: protect the lodgment and force a sustainable beachhead by the final turn."
+    },
+    "doctrine": "Race the clock: front-load amphibious mass, seize ports for supply, suppress airfields, reserve anti-ship for naval phase. Relentless aggression.",
+    "signature": "Full-send flotilla waves while cratering Taiwan runways."
+  },
+  "deepseek/deepseek-v4-pro": {
+    "label": "DeepSeek V4 Pro",
+    "origin": "DeepSeek",
+    "cn": true,
+    "red": {
+      "amphib_aggression": 7.21,
+      "press_pct": 0.9,
+      "missile_mix": {
+        "taiwan_airfields": 0.35,
+        "okinawa_kadena": 0.202,
+        "guam": 0.058,
+        "carriers": 0.146,
+        "ships": 0.244
+      },
+      "missile_top": "taiwan_airfields",
+      "air_mix": {
+        "cap": 0.332,
+        "escort_strike": 0.202,
+        "strike_blue_airbases": 0.221,
+        "ground_support": 0.246
+      }
+    },
+    "blue": {
+      "barrier": 2.87,
+      "air_mix": {
+        "cap": 0.285,
+        "strike_amphibs": 0.54,
+        "strike_airbases": 0.022,
+        "ground_support": 0.153
+      }
+    },
+    "n_rationales": 193,
+    "example": {
+      "role": "RED",
+      "phase": "RED_MISSILE",
+      "text": "Phase is RED_MISSILE. We have limited ballistic missiles (DF-11: 9, DF-16: 5, DF-21C/17: 7) and no DF-15B or DF-26 left. Our primary objective is to degrade BLUE airpower to protect the amphibious fleet. Enemy air estimate shows 6x 4.5 and 6x 5th gen, likely based on Taiwan or rotating from carriers. We allocate 2 salvos to Taiwan airfields to suppress their 4.5/5th gen sortie generation. No strikes on Okinawa or Guam as we lack the range/missiles to penetrate their defenses effectively this turn. No anti-ship or carrier strikes as we must conserve YJ-anti-ship missiles for the amphibious phase and the enemy CSGs are not yet in range of our land-based anti-ship missiles. Focus on the immediate air threat to enable our next move."
+    },
+    "doctrine": "RED: missile-first suppression then phased amphibious surge to overwhelm; BLUE: all-in submarine barrier attrition on amphibs as center of gravity.",
+    "signature": "Commit all three subrons to barrier; missile-suppress airfields then surge flotillas."
+  },
+  "gpt-5.5": {
+    "label": "GPT-5.5",
+    "origin": "OpenAI",
+    "cn": false,
+    "red": {
+      "amphib_aggression": 8.3,
+      "press_pct": 0.97,
+      "missile_mix": {
+        "taiwan_airfields": 0.292,
+        "okinawa_kadena": 0.188,
+        "guam": 0.153,
+        "carriers": 0.191,
+        "ships": 0.177
+      },
+      "missile_top": "taiwan_airfields",
+      "air_mix": {
+        "cap": 0.3,
+        "escort_strike": 0.241,
+        "strike_blue_airbases": 0.198,
+        "ground_support": 0.261
+      }
+    },
+    "blue": {
+      "barrier": 3.0,
+      "air_mix": {
+        "cap": 0.255,
+        "strike_amphibs": 0.644,
+        "strike_airbases": 0.0,
+        "ground_support": 0.101
+      }
+    },
+    "n_rationales": 228,
+    "example": {
+      "role": "RED",
+      "phase": "RED_MISSILE",
+      "text": "Use all remaining land-attack missiles to keep BLUE airpower suppressed while avoiding excessive damage to Taiwan infrastructure we may need to operate. Kadena is the priority because surviving 5th-gen fighters and tankers there can still contest the strait; Guam gets a heavy strike to disrupt bombers and tanker support. Only a light allocation goes to Taiwan airfields to slow local sortie generation without ruining the facilities we intend to seize. With no carriers present, all anti-ship fires go against the remaining surface threat, especially the SAG/ARG that could interfere with our amphibious sustainment into Kaohsiung."
+    },
+    "doctrine": "Pure sealift-denial attrition: concentrate all subs and air on sinking amphibious flotillas to starve the lodgment, ignoring airbases.",
+    "signature": "All submarines to Strait barrier; air strikes amphibs over airfields."
+  },
+  "minimax/minimax-m3": {
+    "label": "MiniMax M3",
+    "origin": "MiniMax",
+    "cn": true,
+    "red": {
+      "amphib_aggression": 6.62,
+      "press_pct": 0.89,
+      "missile_mix": {
+        "taiwan_airfields": 0.306,
+        "okinawa_kadena": 0.217,
+        "guam": 0.127,
+        "carriers": 0.108,
+        "ships": 0.242
+      },
+      "missile_top": "taiwan_airfields",
+      "air_mix": {
+        "cap": 0.268,
+        "escort_strike": 0.289,
+        "strike_blue_airbases": 0.236,
+        "ground_support": 0.208
+      }
+    },
+    "blue": {
+      "barrier": 2.72,
+      "air_mix": {
+        "cap": 0.464,
+        "strike_amphibs": 0.448,
+        "strike_airbases": 0.024,
+        "ground_support": 0.064
+      }
+    },
+    "n_rationales": 156,
+    "example": {
+      "role": "RED",
+      "phase": "RED_MISSILE",
+      "text": "Turn 3 of 4. PLA lodgment is 95.3 (massive), supply is 8.0 (critically low - only ~8 days of supply remaining). The amphibious fleet has 8 of 11 flotillas remaining. Enemy air is degraded (0 4th gen, only 9 4.5gen, 7 5thgen, 1 bomber, 4 tankers). Enemy naval shows 0 CSG, 2 SAGs, 3 subrons, 1 ARG, 3 subrons on barrier. The priority now is NOT wasting missiles on airfields/Okinawa/Guam/carriers when the real objective is sustaining the lodgment and protecting the amphibious fleet. With supply at 8.0, I need to focus on enabling the sealift. However, the schema only allows allocation of salvos against targets. Given the lodgment is already massive (95.3) and supply is the binding constraint, I should allocate missiles to suppress enemy naval assets that threaten my amphibious fleet and to neutralize remaining enemy airbases that could strike my lodgment. But the schema only lists taiwan_airfields, okinawa_kadena, guam, carriers, ships. With enemy CSG at 0, carriers target is empty. Okinawa and Guam strikes are wasteful when my fleet needs protection. Taiwan airfields are already functionally 1.0 but enemy air is minimal. The biggest threat to my 8 remaining amphibious flotillas is enemy subs (3 subrons + 3 on barrier) and SAGs. I should allocate heavily to ships to clear the path. Using YJ-anti-ship (31 available) and DF-21C/17 (7) and DF-26 (5) and DF-26B (3) against enemy naval. Allocating 0 to airfields/Okinawa/Guam/carriers and concentrating on ships makes sense. Let me allocate: ships = 46 (all anti-ship missiles: 31 YJ + 7 DF-21C/17 + 5 DF-26 + 3 DF-26B = 46). This is a massive anti-ship salvo to break through to enable resupply of my lodgment."
+    },
+    "doctrine": "Sea-denial attrition: identify amphibious flotillas as center of gravity, saturate submarine barrier, strangle lodgment supply rather than contest beachhead.",
+    "signature": "All subrons on barrier interdicting amphibious flotillas at sea."
+  },
+  "qwen/qwen3.7-max": {
+    "label": "Qwen3.7 Max",
+    "origin": "Alibaba",
+    "cn": true,
+    "red": {
+      "amphib_aggression": 7.15,
+      "press_pct": 0.97,
+      "missile_mix": {
+        "taiwan_airfields": 0.416,
+        "okinawa_kadena": 0.139,
+        "guam": 0.067,
+        "carriers": 0.147,
+        "ships": 0.23
+      },
+      "missile_top": "taiwan_airfields",
+      "air_mix": {
+        "cap": 0.237,
+        "escort_strike": 0.258,
+        "strike_blue_airbases": 0.224,
+        "ground_support": 0.281
+      }
+    },
+    "blue": {
+      "barrier": 2.95,
+      "air_mix": {
+        "cap": 0.169,
+        "strike_amphibs": 0.678,
+        "strike_airbases": 0.03,
+        "ground_support": 0.123
+      }
+    },
+    "n_rationales": 234,
+    "example": {
+      "role": "RED",
+      "phase": "RED_MISSILE",
+      "text": "With a massive lodgment advantage (133.7 vs 37.6), our priority is securing the sea lines of communication and preventing US naval intervention from disrupting our supply flow. We are preserving Taiwan's infrastructure for our own logistical use once fully secured, hence zero strikes on Taiwan airfields. Instead, we focus our YJ and DF-21 anti-ship missiles on the remaining US CSG and escort ships, while using CJ-20s and remaining DF-21s to suppress forward bases at Kadena and Guam to limit US air and bomber sorties."
+    },
+    "doctrine": "BLUE-focused sea-denial: starve the lodgment by severing maritime reinforcement, prioritizing anti-shipping strikes over ground support throughout.",
+    "signature": "All submarines to barrier; mass sorties striking amphibious flotillas."
+  },
+  "z-ai/glm-5.2": {
+    "label": "GLM-5.2",
+    "origin": "Zhipu",
+    "cn": true,
+    "red": {
+      "amphib_aggression": 6.22,
+      "press_pct": 0.88,
+      "missile_mix": {
+        "taiwan_airfields": 0.319,
+        "okinawa_kadena": 0.157,
+        "guam": 0.121,
+        "carriers": 0.125,
+        "ships": 0.278
+      },
+      "missile_top": "taiwan_airfields",
+      "air_mix": {
+        "cap": 0.297,
+        "escort_strike": 0.164,
+        "strike_blue_airbases": 0.214,
+        "ground_support": 0.325
+      }
+    },
+    "blue": {
+      "barrier": 2.41,
+      "air_mix": {
+        "cap": 0.235,
+        "strike_amphibs": 0.53,
+        "strike_airbases": 0.038,
+        "ground_support": 0.197
+      }
+    },
+    "n_rationales": 193,
+    "example": {
+      "role": "RED",
+      "phase": "RED_MISSILE",
+      "text": "Turn 3 of 4: PLA lodgment is strong at 134.7 but supply is thin at 16.0 and Kaohsiung port is only 45% functional. Priority is suppressing Taiwan airfields to prevent BLUE air from interdicting our supply lines and reinforcing ground. We need to degrade Taoyuan, Kaohsiung-Intl, and Chiayi to keep the skies clear for our follow-on forces. Kadena remains a major threat with 4.5 and 5th gen aircraft staging through there - hitting it hard reduces sorties against our amphibious fleet. Guam is worth a moderate strike to keep bomber ops disrupted. No carriers detected so zero allocation there. For ships, the enemy has 1 SAG, 3 subrons, 3 subrons on barrier, and 1 ARG - the submarines on barrier are the critical threat to our amphibious flotillas (8 remaining of 11). Allocating 18 YJ anti-ship salvos to clear surface combatants and pressure the barrier subs, protecting our fleet as it continues resupply runs to Kaohsiung. Total: 12+8+6+0+18=44. Available missiles: DF-11(7)+DF-16(5)+DF-21C/17(7)+DF-26B(6)+CJ-10/20(9)+CJ-20-ALCM(25)=59 for land attack, plus 25 YJ for ships. 44 is within budget."
+    },
+    "doctrine": "Laser-focused on amphibious fleet as center of gravity; severs sea bridge to starve lodgment regardless of beachhead size.",
+    "signature": "Mass subs on barrier plus all-sortie strikes against flotillas."
+  }
+}

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wargame-eval"
+version = "0.1.0"
+description = "LLM-vs-LLM eval on the CSIS Taiwan Operational Wargame"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+claude = ["anthropic>=0.40"]
+dev = ["pytest>=7"]
+
+[project.scripts]
+wargame-eval = "wargame_eval.runner:main"
+
+[tool.setuptools]
+packages = ["wargame_eval", "wargame_eval.agents"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
