@@ -1,0 +1,12 @@
+# The harness itself has ZERO required dependencies -- the offline demo
+# (mock provider + lexicon judge) and the tests run on the Python standard
+# library alone (Python 3.10+).
+#
+# The packages below are OPTIONAL and only needed for live runs against real
+# models. Without them, the live adapters fall back to a small stdlib HTTP
+# client, so these are conveniences, not requirements.
+#
+#   pip install -r requirements.txt
+
+anthropic>=0.40    # live --provider anthropic / --judge-model anthropic:*
+openai>=1.40       # live --provider openai   / --judge-model openai:*
