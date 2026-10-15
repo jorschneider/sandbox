@@ -1,0 +1,386 @@
+/* ════════════════════════════════════════════════════════════════
+   THE DOSSIER — variant skin, loaded via ?style=dossier
+   Full commitment pass: the page IS a leaked case file. Typewriter
+   headlines, a classified cover sheet for a hero, folder-tab nav,
+   coffee-ringed manila paper, stapled exhibits, redaction bars.
+   Single-mode by design: dark theme is forced to the same manila.
+   Only local assets; the one added font is self-hosted.
+   ════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'Special Elite';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/SpecialElite-400-latin.woff2) format('woff2');
+}
+
+/* ---------- tokens: one palette, both themes ---------- */
+:root, :root[data-theme="light"], :root[data-theme="dark"] {
+  color-scheme: light;
+  --page: #e7d7ab;            /* warm manila envelope */
+  --surface: #f2e8cd;         /* file-folder cream */
+  --ink: #1d1a13;             /* typewriter black */
+  --ink-2: #46402f;
+  --muted: #6d6448;
+  --hair: #d2c294;
+  --rule: #97875c;
+  --accent: #9b1c1c;          /* rubber-stamp red */
+  --accent-soft: rgba(155, 28, 28, 0.09);
+  --cream: #f6eed7;
+  --s1: #33526e;  --s1-ink: #f6eed7;   /* archival blue ink   */
+  --s2: #4a5a2e;  --s2-ink: #f6eed7;   /* drab olive ink      */
+  --s3: #8a4a3a;  --s3-ink: #f6eed7;   /* faded oxblood ink   */
+  --shadow: 0 1px 2px rgba(72, 55, 18, .18), 0 10px 26px rgba(72, 55, 18, .16);
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  --type: 'Special Elite', 'Courier New', var(--mono);
+}
+::selection { color: var(--cream); }
+:root[data-theme="dark"] ::selection { background: var(--accent); color: var(--cream); }
+
+html { scroll-padding-top: 6.75rem; } /* banner + nav are taller now */
+
+/* ---------- texture: aged paper, coffee rings, vignette ---------- */
+body {
+  background-color: var(--page);
+  background-image:
+    /* coffee ring, upper right */
+    radial-gradient(circle at 82% 14%, transparent 0 92px, rgba(97, 74, 26, .10) 93px 97px, rgba(97, 74, 26, .045) 98px 101px, transparent 102px),
+    /* smaller coffee ring, lower left */
+    radial-gradient(circle at 9% 68%, transparent 0 60px, rgba(97, 74, 26, .085) 61px 64px, rgba(97, 74, 26, .04) 65px 67px, transparent 68px),
+    /* slight vignette */
+    radial-gradient(ellipse at 50% 42%, transparent 55%, rgba(60, 45, 15, .16) 100%),
+    /* paper grain */
+    repeating-linear-gradient(105deg, rgba(97, 74, 26, .028) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(15deg, rgba(255, 250, 228, .05) 0 3px, transparent 3px 9px),
+    repeating-linear-gradient(90deg, rgba(97, 74, 26, .015) 0 1px, transparent 1px 4px);
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat;
+  background-attachment: fixed, fixed, fixed, scroll, scroll, scroll;
+}
+main { counter-reset: exhibit; }
+
+/* ---------- headline typeface: the typewriter ---------- */
+h1, h2, h3, .brand {
+  font-family: var(--type);
+  font-weight: 400; /* single weight — hierarchy via size/case/tracking */
+}
+/* beat the base sheet's heavier-specificity bold rules; Special Elite
+   has no 700, and synthesized bold ruins the typewriter look */
+#hero h1, .take-head h3, .path-card h3, .viz-title, footer.site .fbrand {
+  font-weight: 400;
+}
+h2 {
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  font-size: clamp(1.45rem, 3.6vw, 2.05rem);
+  line-height: 1.25;
+}
+.take-head h3 {
+  font-size: 1.05rem; text-transform: uppercase; letter-spacing: .14em;
+}
+.path-card h3 { font-size: 1.05rem; line-height: 1.4; }
+
+/* ════════════════════════════════════════════════════════════════
+   CLASSIFICATION BANNER — top of page, the fiction disclaimer
+   ════════════════════════════════════════════════════════════════ */
+#topnav::before {
+  content: "SCENARIO EXERCISE — THIS IS FICTION, NOT INTELLIGENCE";
+  display: block;
+  background: var(--accent);
+  color: var(--cream);
+  font: 700 .72rem/1.3 var(--mono);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .22em;
+  padding: .5rem .75rem .45rem;
+}
+@media (max-width: 700px) {
+  #topnav::before { font-size: .5625rem; letter-spacing: .06em; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   NAV — folder tabs on a shelf
+   ════════════════════════════════════════════════════════════════ */
+#topnav {
+  background: var(--page);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border-bottom: 2px solid var(--rule);
+}
+.brand { font-size: 1rem; letter-spacing: .1em; }
+.nav-links { align-self: stretch; align-items: flex-end; gap: .3rem; }
+.nav-links a {
+  font-family: var(--mono); font-size: .7rem; line-height: 1.2;
+  text-transform: uppercase; letter-spacing: .05em;
+  border: 1px solid var(--rule); border-radius: 0;
+  background: var(--surface);
+  padding: .42rem .6rem .5rem;
+}
+.nav-links a.active {
+  background: var(--page);
+  border-bottom-color: transparent;   /* tab lifted — bottom border cut */
+  padding-top: .68rem;
+  color: var(--accent); font-weight: 700;
+}
+#themeToggle { border-radius: 0; border-color: var(--rule); }
+#progress { height: 3px; }
+
+/* ════════════════════════════════════════════════════════════════
+   HERO — the classified cover sheet
+   ════════════════════════════════════════════════════════════════ */
+#hero {
+  padding: 3.25rem 1.25rem 3.5rem;
+  text-align: left;
+  border-bottom: 0;
+}
+#hero .col-wide {
+  border: 7px double var(--rule);
+  background: var(--surface);
+  padding: clamp(1.4rem, 4vw, 2.75rem) clamp(1.1rem, 4vw, 2.75rem) clamp(1.75rem, 4vw, 3rem);
+  box-shadow: var(--shadow);
+}
+#hero .kicker {
+  display: block;
+  font-family: var(--mono); font-weight: 700;
+  font-size: .72rem; letter-spacing: .2em;
+  margin-bottom: 1.5rem;
+}
+#hero .kicker::before {          /* case-file header strip */
+  content: "CASE FILE Nº GLM-6 — EYES ONLY";
+  display: block;
+  background: var(--ink);
+  color: var(--page);
+  font: 700 .72rem/1.35 var(--mono);
+  letter-spacing: .18em;
+  padding: .5rem .8rem .42rem;
+  margin-bottom: 1.4rem;
+}
+#hero h1 {
+  text-transform: uppercase;
+  font-size: clamp(1.9rem, 5.4vw, 3.7rem);
+  line-height: 1.12; letter-spacing: .015em;
+  max-width: none; margin: 0;
+}
+#hero .deck { margin: 1.6rem 0 0; max-width: 40rem; }
+.hero-meta {
+  font-family: var(--mono); font-size: .71rem;
+  text-transform: uppercase; letter-spacing: .14em;
+  margin-top: 1.75rem;
+}
+/* HTML text starts "By the ChinaTalk team…" → reads "FILED BY THE…" */
+.hero-meta::before { content: "FILED "; font-weight: 700; color: var(--accent); }
+
+/* hero chips → stamped classification boxes */
+.hero-paths { justify-content: flex-start; margin: 2.25rem 0 0; gap: .9rem; }
+.hero-paths a {
+  font-family: var(--mono); font-size: .72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em; line-height: 1.5;
+  border-radius: 0; background: transparent;
+  border: 2px solid var(--ink-2);
+  padding: .5rem .8rem .42rem;
+}
+.hero-paths a:nth-child(1) { color: var(--s1); border-color: var(--s1); transform: rotate(-1.1deg); }
+.hero-paths a:nth-child(2) { color: var(--s2); border-color: var(--s2); transform: rotate(.7deg); }
+.hero-paths a:nth-child(3) { color: var(--s3); border-color: var(--s3); transform: rotate(-.6deg); }
+.hero-paths a:hover { background: var(--accent-soft); color: inherit; }
+.hero-paths .pct { color: inherit; }
+.dot, .swatch { border-radius: 1px; }
+
+/* ---------- shared chrome goes typewriter/mono ---------- */
+.kicker {
+  font-family: var(--mono); font-weight: 700;
+  letter-spacing: .24em; font-size: .72rem;
+}
+sup.fn a { font-family: var(--mono); }
+footer.site {
+  font-family: var(--mono); font-size: .71rem;
+  text-transform: uppercase; letter-spacing: .08em;
+  border-top: 4px double var(--rule);
+}
+footer.site .fbrand { font-family: var(--type); font-size: .9rem; letter-spacing: .2em; }
+
+/* ---------- datemarks become file codes ---------- */
+.datemark {
+  font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .2em; color: var(--ink-2);
+}
+.datemark::before { content: "FILE // "; color: var(--accent); font-weight: 700; }
+.datemark::after { background: var(--rule); }
+
+/* ---------- scenario headers: dossier folder tabs ---------- */
+.scen-head { position: relative; border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+.scen-head::before {           /* second hairline of the double rule */
+  content: ""; position: absolute; top: 4px; left: 0; right: 0;
+  height: 1px; background: var(--rule);
+}
+.scen-chip {                   /* the chip IS the folder tab */
+  position: absolute; left: 0; bottom: 100%; margin: 0;
+  font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .2em; color: var(--accent);
+  background: var(--surface); border: 1px solid var(--rule); border-bottom: 0;
+  border-radius: .5rem .5rem 0 0; padding: .4rem .9rem .3rem;
+}
+.scen-odds {
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .03em;
+}
+
+/* ---------- path cards: file folders with colored tabs ---------- */
+.path-card {
+  border-radius: 0 .4rem .2rem .2rem; border-color: var(--rule);
+  background: var(--surface);
+}
+.path-card::before {           /* was a top strip; now a folder tab */
+  top: -.6rem; left: .9rem; right: auto; width: 5rem; height: .6rem;
+  border-radius: .4rem .4rem 0 0;
+}
+.path-num { font-family: var(--mono); letter-spacing: .22em; color: var(--accent); }
+.path-odds {
+  font-family: var(--mono); font-size: .68rem;
+  text-transform: uppercase; letter-spacing: .06em;
+}
+
+/* ---------- FICTIONAL badge: a rubber stamp, amplified ---------- */
+.fict {
+  font-family: var(--mono); font-size: .84rem; font-weight: 700;
+  letter-spacing: .18em; color: var(--accent);
+  border: 2px solid var(--accent); border-radius: 0;
+  padding: .3rem .5rem .25rem .68rem;
+  background: rgba(155, 28, 28, .05);
+  transform: rotate(-4deg);
+  margin: .1rem .65rem .2rem .15rem; vertical-align: 2px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   FIGURES — stapled exhibits with photo corners
+   ════════════════════════════════════════════════════════════════ */
+.fig-frame {
+  position: relative;
+  border-radius: 0; border-color: var(--rule);
+  box-shadow: 0 2px 3px rgba(72, 55, 18, .18), 0 14px 30px rgba(72, 55, 18, .22);
+}
+figure.fig:nth-of-type(odd) .fig-frame { transform: rotate(-.6deg); }
+figure.fig:nth-of-type(even) .fig-frame { transform: rotate(.7deg); }
+figure.fig { counter-increment: exhibit; }
+figure.fig img { border-radius: 0; }
+/* manila photo-mounting corners, top-left and bottom-right */
+.fig-frame::before, .fig-frame::after {
+  content: ""; position: absolute; width: 2.1rem; height: 2.1rem;
+  z-index: 2; pointer-events: none;
+}
+.fig-frame::before {
+  top: 0; left: 0;
+  background: linear-gradient(to bottom right,
+    var(--page) 0 47%, rgba(72, 55, 18, .45) 47% 52%, transparent 52%);
+}
+.fig-frame::after {
+  bottom: 0; right: 0;
+  background: linear-gradient(to top left,
+    var(--page) 0 47%, rgba(72, 55, 18, .45) 47% 52%, transparent 52%);
+}
+figure.fig figcaption {
+  font-family: var(--mono); font-size: .72rem;
+  letter-spacing: .02em; margin-top: 1.1rem;
+}
+figure.fig figcaption::before {
+  content: "EXHIBIT " counter(exhibit, upper-alpha) " — ";
+  font-weight: 700; color: var(--accent);
+  text-transform: uppercase; letter-spacing: .18em;
+}
+figure.fig figcaption .fign { text-transform: uppercase; letter-spacing: .1em; }
+
+/* ---------- pull quotes: intercepted transmissions ---------- */
+blockquote.pull { border-left: 5px solid var(--ink); padding-left: 1.35rem; }
+blockquote.pull::before {
+  content: "INTERCEPT"; display: block;
+  font: 700 .6875rem/1 var(--mono); letter-spacing: .3em;
+  color: var(--accent); margin-bottom: .7rem;
+}
+blockquote.pull footer {
+  font-family: var(--mono); font-size: .71rem;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+
+/* ---------- upshots: stamped assessments ---------- */
+.upshot { border-top: 4px double var(--rule); }
+.upshot::before {
+  content: "ASSESSMENT"; display: block; width: fit-content;
+  font: 700 .8125rem/1 var(--mono); letter-spacing: .24em;
+  color: var(--accent); border: 2px solid var(--accent);
+  padding: .4rem .6rem .35rem .84rem;
+  transform: rotate(-2deg); margin-bottom: 1.1rem;
+}
+.upshot .tag { font-family: var(--mono); letter-spacing: .2em; }
+
+/* Black Box only: decorative redaction bars in the padding zone
+   above the assessment — never painted over real text */
+#s3 .upshot {
+  padding-top: 5rem;
+  background-image:
+    repeating-linear-gradient(90deg,
+      var(--ink) 0 6.5rem, transparent 6.5rem 7.25rem,
+      var(--ink) 7.25rem 12rem, transparent 12rem 12.75rem),
+    repeating-linear-gradient(90deg,
+      var(--ink) 0 4.25rem, transparent 4.25rem 5rem,
+      var(--ink) 5rem 10.5rem, transparent 10.5rem 11.25rem);
+  background-repeat: no-repeat, no-repeat;
+  background-size: min(100%, 29rem) 1.05rem, min(72%, 21rem) 1.05rem;
+  background-position: 0 1.95rem, 0 3.45rem;
+}
+
+/* ---------- method note: inserted memo slip ---------- */
+.note {
+  border-radius: 0; border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent); background: var(--surface);
+}
+.note strong.tag { font-family: var(--mono); letter-spacing: .22em; }
+
+/* ---------- odds chart card: the tally sheet ---------- */
+.viz-card {
+  font-family: var(--mono); border-radius: 0;
+  border: 1px solid var(--rule); background: var(--surface);
+}
+.viz-title { text-transform: uppercase; letter-spacing: .14em; font-size: 1rem; }
+.viz-sub, .viz-note { font-size: .71rem; }
+.viz-legend li { font-size: .7rem; text-transform: uppercase; letter-spacing: .07em; }
+.viz-rows { gap: 0; }
+.viz-row { padding: .55rem 0; border-bottom: 1px solid var(--hair); }
+.viz-row:last-child { border-bottom: 0; }
+.viz-name { font-size: .71rem; text-transform: uppercase; letter-spacing: .05em; }
+.seg:first-child, .seg:last-child { border-radius: 0; }
+#tableToggle {
+  font-family: var(--mono); border-radius: 0; border-color: var(--rule);
+  text-transform: uppercase; letter-spacing: .1em;
+}
+#oddsTable thead th { text-transform: uppercase; letter-spacing: .08em; font-size: .7rem; }
+#oddsTable caption { font-family: var(--mono); }
+.viz-tip { font-family: var(--mono); border-radius: 0; }
+
+/* ---------- your-odds widget (same tally sheet) ---------- */
+.ow-row label { text-transform: uppercase; letter-spacing: .05em; font-size: .71rem; }
+.ow-hist-title { text-transform: uppercase; letter-spacing: .1em; font-size: .71rem; }
+.hist-head { text-transform: uppercase; letter-spacing: .05em; font-size: .68rem; }
+.hist-bar { border-radius: 0; }
+.ow-status, .ow-verdict { font-size: .72rem; }
+
+/* ---------- team takes: interview transcripts ---------- */
+.take { border-radius: 0; border-color: var(--rule); background: var(--surface); }
+.take-rank { font-family: var(--mono); font-size: .71rem; letter-spacing: .02em; }
+
+/* ---------- buttons & subscribe ---------- */
+.btn {
+  font-family: var(--mono); border-radius: 0;
+  text-transform: uppercase; letter-spacing: .14em; color: var(--cream);
+}
+:root[data-theme="dark"] .btn { color: var(--cream); }
+.vote-card {
+  border-radius: 0; border: 1px solid var(--rule); background: var(--surface);
+  outline: 1px solid var(--rule); outline-offset: 5px;
+}
+
+/* ---------- footnotes: endnotes on file paper ---------- */
+#footnotes {
+  background: var(--surface);
+  border-top: 4px double var(--rule);
+  box-shadow: inset 0 8px 18px -14px rgba(72, 55, 18, .35);
+}
+.fn-list li::marker { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+.fn-back { font-family: var(--mono); }

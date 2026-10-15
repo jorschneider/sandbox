@@ -1,0 +1,377 @@
+/* ============================================================
+   console.css — "Inference console" skin, rev 2 (full commitment)
+   Loaded after the inline <style> when ?style=console is set.
+   Terminal/eval-harness first, article second. Dark-first,
+   single-mode: forces the same palette in both themes.
+   No external resources beyond the local JetBrains Mono woff2.
+   Body prose stays Source Serif 4 at >=1rem.
+
+   Headline width math (JetBrains Mono advance ~0.6em; 0.62em used
+   for safety). h1 breaks only at real spaces, so the longest
+   unbreakable chunk is "A MYTHOS MODEL" (14 chars, nbsp-bound)
+   plus the ~0.51em cursor = 9.19em.
+   - 390px viewport: window inner = 390 - 40 (section pad)
+     - 2 (border) - 35.2 (win pad) = 312.8px. Font-size resolves
+     to 8.2vw = 31.98px -> 9.19em = 293.9px. Fits.
+   - 1440px: font-size caps at 4.5rem = 72px; longest line
+     "WHEN CHINA GETS" = 15 x 0.62em = 669.6px inside the ~860px
+     window -> wraps to 2 lines (<= 3 required).
+   ============================================================ */
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(../assets/fonts/JetBrainsMono-800-latin.woff2) format('woff2');
+}
+
+:root, :root[data-theme="light"], :root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0c0e12;
+  --surface: #12151b;
+  --ink: #ece8dd;        /* warm off-white for serif prose */
+  --ink-2: #bdb7a8;      /* 9.7:1 on page */
+  --muted: #837d6f;      /* 4.7:1 on page */
+  --hair: #1f2530;
+  --rule: #333d4d;
+  --accent: #ffb454;     /* amber, 11:1 on page */
+  --accent-soft: rgba(255, 180, 84, 0.10);
+  --accent-dim: color-mix(in srgb, #ffb454 70%, #0c0e12);
+  --frame: color-mix(in srgb, #ffb454 45%, #0c0e12); /* bright window chrome */
+  --s1: #53b9ff;  --s1-ink: #06121c;   /* 9.0:1 on page, dark label ink */
+  --s2: #5ee08a;  --s2-ink: #06150c;   /* 11.5:1 */
+  --s3: #ff6ec7;  --s3-ink: #1c0813;   /* 7.6:1 */
+  --shadow: none;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --panel-hi: #1a1f28;   /* titlebar strips, quoted stdout */
+}
+
+/* faint static scanlines over the page (~2% white; no animation) */
+body {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 3px),
+    var(--page);
+}
+
+::selection { background: var(--accent); color: #0c0e12; }
+:root[data-theme="dark"] ::selection { background: var(--accent); color: #0c0e12; }
+
+/* ============================================================
+   HEADLINES — JetBrains Mono 800, uppercase, phosphor glow
+   ============================================================ */
+h2 {
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  font-size: clamp(1.45rem, 1rem + 1.9vw, 2rem); /* mono runs wide: sized down */
+  line-height: 1.25;
+  color: var(--accent);
+  text-shadow: 0 0 12px color-mix(in srgb, currentColor 30%, transparent);
+}
+
+/* ============================================================
+   NAV AS STATUS BAR
+   ============================================================ */
+#topnav { border-bottom: 1px solid var(--rule); }
+.nav-inner { font-family: var(--mono); }
+.brand { color: var(--ink); letter-spacing: .08em; }
+.brand::before { content: "▮ "; color: var(--accent); }
+.nav-links a {
+  border-radius: 2px; font-size: .75rem; text-transform: lowercase;
+}
+#themeToggle { font-family: var(--mono); border-radius: 2px; order: 2; }
+#topnav .nav-inner::after {
+  content: "mem 71% · tok/s 842 · CN-frontier: ONLINE";
+  flex: none; order: 1;
+  font-size: .6875rem; line-height: 1; letter-spacing: .06em;
+  white-space: nowrap;
+  color: var(--accent-dim);
+}
+@media (max-width: 899.98px) { #topnav .nav-inner::after { display: none; } }
+#progress { height: 3px; background: var(--accent); }
+
+/* ---------- kickers as prompt lines ---------- */
+.kicker { font-family: var(--mono); letter-spacing: .1em; }
+.kicker::before { content: "> "; }
+
+/* ============================================================
+   HERO AS TERMINAL SESSION — left-aligned window w/ titlebar
+   ============================================================ */
+#hero {
+  text-align: left;
+  border-bottom: 0;
+  padding: 2.75rem 1.25rem 3.75rem;
+}
+#hero .col-wide {
+  --winpad: clamp(1.1rem, 3vw, 2rem);
+  padding: 0 var(--winpad) 2.5rem;
+  border: 1px solid var(--frame);
+  background: var(--surface);
+}
+/* titlebar strip: three gradient dots + mono session title */
+#hero .col-wide::before {
+  content: "glm6-eval — zsh — 128×42";
+  display: block;
+  margin: 0 calc(-1 * var(--winpad)) 2.5rem;
+  padding: .55rem 3.9rem;
+  font-family: var(--mono);
+  font-size: .6875rem; line-height: 1; letter-spacing: .08em;
+  text-align: center;
+  color: var(--muted);
+  background:
+    radial-gradient(circle at 16px 50%, #ff5f56 3px, transparent 3.5px),
+    radial-gradient(circle at 32px 50%, #ffbd2e 3px, transparent 3.5px),
+    radial-gradient(circle at 48px 50%, #27c93f 3px, transparent 3.5px),
+    var(--panel-hi);
+  border-bottom: 1px solid var(--frame);
+}
+/* kicker becomes a shell prompt; original text demoted to a comment line */
+#hero .kicker {
+  text-transform: none;
+  letter-spacing: .04em;
+  color: var(--muted);
+}
+#hero .kicker::before {
+  content: "$ run scenario --country=CN\A# ";
+  white-space: pre-line;
+  color: var(--accent);
+}
+#hero h1 {
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em; /* tight tracking */
+  /* fluid under ~435px (8.2vw) so the nbsp-bound "A MYTHOS MODEL"
+     chunk + cursor always fits; caps at 4.5rem (2 lines at 1440px) */
+  font-size: clamp(1.6rem, min(0.9rem + 4.9vw, 8.2vw), 4.5rem);
+  line-height: 1.12;
+  max-width: none; margin: 0;
+  color: var(--accent);
+  text-shadow: 0 0 12px rgba(255, 180, 84, .30);
+}
+/* blinking block cursor (static when reduced motion is preferred) */
+#hero h1::after {
+  content: "▌";
+  font-family: var(--mono);
+  font-size: .72em;
+  line-height: 1;
+  margin-left: .08em;
+  color: var(--accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  #hero h1::after { animation: cursor-blink 1.1s steps(1, end) infinite; }
+}
+@keyframes cursor-blink { 50% { opacity: 0; } }
+
+/* deck stays serif, dimmer, left-set */
+#hero .deck {
+  margin: 1.6rem 0 0;
+  max-width: 38rem;
+  color: color-mix(in srgb, var(--ink-2) 75%, var(--muted));
+}
+.hero-meta { font-family: var(--mono); }
+
+/* hero-paths chips -> mono status badges: [s1 Let It Rip ≈33% ] */
+.hero-paths { margin: 2.25rem 0 0; justify-content: flex-start; }
+.hero-paths a {
+  font-family: var(--mono); font-size: .75rem;
+  gap: .45rem; padding: .45rem .7rem;
+  border-radius: 2px; border-color: var(--rule);
+  background: var(--panel-hi);
+}
+.hero-paths a .dot { display: none; }
+.hero-paths a::after { content: "]"; color: var(--muted); }
+.hero-paths a:nth-of-type(1)::before { content: "[s1"; font-weight: 700; color: var(--s1); }
+.hero-paths a:nth-of-type(2)::before { content: "[s2"; font-weight: 700; color: var(--s2); }
+.hero-paths a:nth-of-type(3)::before { content: "[s3"; font-weight: 700; color: var(--s3); }
+.hero-paths .pct { color: var(--accent); }
+
+/* ============================================================
+   BOOT LOG MOMENT — #setup kicker gains a log line
+   ============================================================ */
+#setup .kicker::after {
+  content: "\A[ok] weights loaded · [ok] safety off";
+  white-space: pre-line;
+  text-transform: none;
+  font-weight: 400;
+  font-size: .71rem;
+  letter-spacing: .05em;
+  color: var(--muted);
+}
+
+/* ---------- datemarks as log timestamps ---------- */
+.datemark { font-family: var(--mono); letter-spacing: .1em; color: var(--ink-2); }
+.datemark::before { content: "["; color: var(--muted); }
+.datemark::after {
+  content: "]"; display: inline; width: auto; height: auto;
+  background: transparent; margin-left: 0; vertical-align: baseline;
+  color: var(--muted);
+}
+
+/* ---------- quoted stdout blocks (text stays serif) ---------- */
+blockquote.pull {
+  background: var(--panel-hi);
+  border-left: 3px solid var(--accent);
+  border-radius: 0;
+  padding: 1.1rem 1.35rem 1.1rem 1.5rem;
+}
+blockquote.pull footer { font-family: var(--mono); }
+
+/* ---------- flat panels: square, bordered, unshadowed ---------- */
+.path-card, .take, .note, .vote-card, .viz-card {
+  border-radius: 2px;
+  border-color: var(--rule);
+}
+.path-card::before { left: 0; right: 0; border-radius: 0; }
+.path-num, .path-odds { font-family: var(--mono); }
+.path-card h3 {
+  font-family: var(--display); font-weight: 800;
+  font-size: .9375rem; line-height: 1.4;
+  text-transform: uppercase; letter-spacing: .01em;
+}
+.note strong.tag { font-family: var(--mono); }
+.note strong.tag::before { content: "# "; }
+.fn-list li:target { border-radius: 2px; }
+.upshot { border-top: 1px dashed var(--rule); }
+.upshot .tag { font-family: var(--mono); }
+.dot { border-radius: 1px; } /* status dots go square */
+
+/* ============================================================
+   SECTION HEADERS AS PANES — breadcrumb + full-width rule,
+   h2 in the scenario's syntax color (all >=4.5:1 on page bg)
+   ============================================================ */
+.scenario { border-top-color: var(--rule); }
+.scen-head { margin-bottom: 2.25rem; }
+.scen-chip {
+  display: flex; align-items: center; gap: .5rem;
+  font-family: var(--mono); font-size: .75rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: lowercase;
+  margin-bottom: 1.1rem;
+}
+.scen-chip .dot { display: none; }
+.scen-chip::before { content: "//"; }
+.scen-chip::after { content: ""; flex: 1 1 auto; min-width: 2rem; height: 1px; background: var(--rule); }
+#s1 .scen-chip { color: var(--s1); }
+#s2 .scen-chip { color: var(--s2); }
+#s3 .scen-chip { color: var(--s3); }
+#s1 .scen-head h2 { color: var(--s1); }  /* 9.0:1 on #0c0e12 */
+#s2 .scen-head h2 { color: var(--s2); }  /* 11.5:1 */
+#s3 .scen-head h2 { color: var(--s3); }  /* 7.6:1 */
+.scen-odds { font-family: var(--mono); }
+.take-rank { font-family: var(--mono); }
+.take-head h3 {
+  font-family: var(--display); font-weight: 800;
+  font-size: 1.05rem; text-transform: lowercase; letter-spacing: 0;
+}
+.take-head h3::before { content: "~/"; color: var(--muted); }
+
+/* ============================================================
+   FIGURES AS TERMINAL PANES (still — no animation)
+   ============================================================ */
+.fig-frame {
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.fig-frame::before {
+  content: ""; display: block; height: 15px;
+  background:
+    radial-gradient(circle at 11px 50%, #ff5f56 2.5px, transparent 3px),
+    radial-gradient(circle at 25px 50%, #ffbd2e 2.5px, transparent 3px),
+    radial-gradient(circle at 39px 50%, #27c93f 2.5px, transparent 3px),
+    var(--panel-hi);
+  border-bottom: 1px solid var(--rule);
+}
+.fig-frame.pad::before { margin: -.75rem -.75rem .75rem; }
+figure.fig img { border-radius: 0; }
+figure.fig figcaption { font-family: var(--mono); font-size: .78rem; }
+figure.fig figcaption::before { content: "fig:// "; color: var(--muted); }
+figure.fig figcaption .fign { color: var(--accent); }
+/* NOTE: no filters anywhere — dark figures (tweet, ExploitBench)
+   keep their native contrast */
+
+/* FICTIONAL badge: linter-warning tag — conspicuous, never smaller */
+.fict {
+  font-family: var(--mono);
+  font-size: .6875rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  padding: .05rem .4rem;
+}
+.fict::before { content: "["; }
+.fict::after { content: "]"; }
+
+/* ============================================================
+   CHART + WIDGET AS EVAL TABLE
+   ============================================================ */
+.viz-card { font-family: var(--mono); }
+/* pane titlebar strip on eval cards + subscribe card */
+.viz-card::before, .vote-card::before {
+  content: ""; display: block; height: 15px;
+  margin: -1.5rem -1.5rem 1.3rem;
+  background:
+    radial-gradient(circle at 11px 50%, #ff5f56 2.5px, transparent 3px),
+    radial-gradient(circle at 25px 50%, #ffbd2e 2.5px, transparent 3px),
+    radial-gradient(circle at 39px 50%, #27c93f 2.5px, transparent 3px),
+    var(--panel-hi);
+  border-bottom: 1px solid var(--rule);
+}
+.vote-card::before { margin: -3rem -1.5rem 2rem; }
+.viz-title {
+  font-family: var(--display); font-weight: 800;
+  text-transform: uppercase; letter-spacing: .02em;
+}
+#tableToggle {
+  font-family: var(--mono);
+  border-radius: 2px; border-color: var(--rule);
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.swatch { border-radius: 0; }
+.seg:first-child { border-radius: 0; }
+.seg:last-child { border-radius: 0; }
+.seg-label { font-family: var(--mono); }
+#oddsTable thead th { border-bottom: 1px solid var(--rule); }
+.viz-tip {
+  font-family: var(--mono);
+  background: var(--panel-hi); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 2px;
+  box-shadow: none;
+}
+
+/* your-odds widget (inherits mono from .viz-card) */
+.ow-row output { color: var(--accent); }        /* slider readouts: amber */
+.hist-bar { border-radius: 0; }                  /* square histogram bars */
+.hist-bar.you::after { border-radius: 0; }       /* square "you" marker */
+.ow-range { border-radius: 0; }
+.ow-status { font-family: var(--mono); }
+
+/* ---------- buttons: [ SUBMIT ]-style outline, mono uppercase ---------- */
+.btn, :root[data-theme="dark"] .btn {
+  font-family: var(--mono);
+  font-size: .8438rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  background: transparent; color: var(--accent);
+  border: 1px solid var(--accent); border-radius: 2px;
+}
+.btn::before { content: "[ "; }
+.btn::after { content: " ]"; }
+.btn:hover, :root[data-theme="dark"] .btn:hover {
+  background: var(--accent); color: #0c0e12; filter: none;
+}
+.btn-sm { padding: .5rem 1rem; font-size: .75rem; }
+
+/* ---------- footnotes as a log ---------- */
+.fn-list { font-family: var(--mono); }
+.fn-list li { font-size: .8125rem; line-height: 1.7; }
+#footnotes { border-top: 1px solid var(--rule); }
+
+/* ---------- footer ---------- */
+footer.site { font-family: var(--mono); border-top: 1px solid var(--rule); }
+footer.site .fbrand { letter-spacing: .08em; }
+footer.site .fbrand::before { content: "▮ "; }
