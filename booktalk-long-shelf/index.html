@@ -1,0 +1,1655 @@
+<!doctype html><html lang="en"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>BookTalk Long Shelf</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Forty-seven great books published by 2010, sorted into eleven themes with linked reception notes, for BookTalk, the reading series by Jordan Schneider and Julian Gewirtz.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400;1,7..72,500&display=swap">
+<style>
+/* Layout: a library wall whose top shelf holds the dozen to start with, a theme map, then eleven
+   shelves of cards. Ledger-green paper, rubric-red ink. */
+:root {
+  --paper: #F3F4F0;
+  --wall: #E2E5DE;
+  --plank: #9EA396;
+  --ink: #1B1C19;
+  --muted: #5B6058;
+  --rule: #CBCFC6;
+  --rubric: #A8291C;
+  --on-rubric: #FFFFFF;
+  --wash: #E7E9E3;
+  --spine-edge: rgba(0, 0, 0, .16);
+  --shadow: rgba(27, 28, 25, .22);
+
+  /* Buckram bindings: physical objects, same in both themes */
+  --b-graphite: #2F302C;
+  --b-steel: #3E5A73;
+  --b-navy: #22324F;
+  --b-oxblood: #6A1F27;
+  --b-oat: #D9CFB8;
+  --b-green: #234B3B;
+  --b-slate: #4D5966;
+  --b-black: #1F1E1B;
+  --b-mustard: #B98A2E;
+  --b-plum: #4C2F4E;
+  --b-teal: #285F62;
+  --b-sky: #9DB3BD;
+  --b-light: #F2EDE1;
+  --b-dark: #1E1C18;
+
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Literata", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --step--2: 0.75rem;
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.625rem;
+  --step-3: 2.25rem;
+  --step-4: clamp(3.25rem, 2.2rem + 6vw, 6rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121411;
+    --wall: #1A1D18;
+    --plank: #4B5046;
+    --ink: #E7E8E2;
+    --muted: #A1A59B;
+    --rule: #30332D;
+    --rubric: #E06450;
+    --on-rubric: #1B0C08;
+    --wash: #1E211C;
+    --spine-edge: rgba(255, 255, 255, .16);
+    --shadow: rgba(0, 0, 0, .55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121411;
+  --wall: #1A1D18;
+  --plank: #4B5046;
+  --ink: #E7E8E2;
+  --muted: #A1A59B;
+  --rule: #30332D;
+  --rubric: #E06450;
+  --on-rubric: #1B0C08;
+  --wash: #1E211C;
+  --spine-edge: rgba(255, 255, 255, .16);
+  --shadow: rgba(0, 0, 0, .55);
+  color-scheme: dark;
+}
+
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: var(--rubric); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--rubric); outline-offset: 3px; }
+cite { font-style: italic; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.wrap {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 720px) {
+  .wrap {
+    padding-left: max(32px, env(safe-area-inset-left, 0px));
+    padding-right: max(32px, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* ---------- Header: the wall and the top shelf ---------- */
+.top { background: var(--wall); }
+.top-inner { display: grid; gap: 2rem; padding-block: 2.75rem 1.5rem; }
+.hero { display: grid; gap: 1rem; }
+.eyebrow {
+  margin: 0;
+  display: flex; flex-wrap: wrap; gap: .25rem 1rem;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--step--1); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted);
+}
+.eyebrow .mark { color: var(--rubric); }
+h1 {
+  margin: 0;
+  font-family: var(--font-body); font-style: italic; font-weight: 400;
+  font-size: var(--step-4); line-height: .92; letter-spacing: -0.025em;
+  font-variation-settings: "opsz" 72;
+  text-wrap: balance;
+}
+.deck {
+  margin: .25rem 0 0; max-width: 42rem;
+  font-size: clamp(1.125rem, 1rem + .55vw, 1.375rem); line-height: 1.45;
+  text-wrap: pretty;
+}
+.byline { margin: 0; font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted); }
+.jump { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; font-family: var(--font-display); font-weight: 600; font-size: var(--step--1); letter-spacing: .1em; text-transform: uppercase; }
+.jump a { text-decoration: none; border-bottom: 1px solid var(--rubric); padding-bottom: 2px; }
+.jump a:hover { color: var(--rubric); }
+
+.shelf-fig { margin: 0; display: grid; gap: .75rem; min-width: 0; }
+.shelf-scroll { overflow-x: auto; overflow-y: hidden; padding-top: 20px; scrollbar-width: thin; }
+.shelf { display: flex; align-items: flex-end; width: max-content; }
+.sg { display: grid; }
+.books { display: flex; align-items: flex-end; gap: 3px; padding-inline: 10px; height: 248px; }
+.plank {
+  height: 24px; background: var(--plank);
+  display: flex; align-items: center; padding-inline: 10px;
+}
+.plank span {
+  font-family: var(--font-mono); font-size: 10.5px; line-height: 1;
+  background: var(--paper); color: var(--ink);
+  padding: 3px 6px; border-radius: 1px; white-space: nowrap;
+}
+.bookend { width: 14px; height: 150px; margin-inline: 4px; background: var(--plank); border-radius: 2px 2px 0 0; }
+.shelf-cap { margin: 0; font-family: var(--font-mono); font-size: var(--step--2); color: var(--muted); }
+
+.spine {
+  position: relative; flex: none; box-sizing: border-box;
+  width: var(--w); height: var(--h);
+  background: var(--bg); color: var(--fg);
+  border-radius: 2px 2px 0 0;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 16px 0 14px;
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1px var(--spine-edge), inset -5px 0 0 rgba(0, 0, 0, .13), inset 4px 0 0 rgba(255, 255, 255, .07);
+  transition: transform .18s ease;
+}
+.spine::before, .spine::after {
+  content: ""; position: absolute; left: 4px; right: 4px; height: 3px;
+  border-top: 1px solid currentColor; border-bottom: 1px solid currentColor; opacity: .32;
+}
+.spine::before { top: 6px; }
+.spine::after { bottom: 6px; }
+a.spine:hover { transform: translateY(-6px); }
+a.spine:focus-visible { outline-offset: 2px; }
+.sp-no { font-family: var(--font-mono); font-weight: 500; font-size: 12px; line-height: 1; }
+.sp-title {
+  writing-mode: vertical-rl; flex: none;
+  max-height: calc(var(--h) - 126px); max-width: calc(var(--w) - 8px); overflow: hidden;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: 11px; line-height: 1.15; letter-spacing: .04em; text-transform: uppercase;
+}
+.done .sp-title { max-height: calc(var(--h) - 110px); }
+.sp-author {
+  writing-mode: vertical-rl; margin-top: auto;
+  max-height: 80px; overflow: hidden;
+  font-family: var(--font-display); font-weight: 500;
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase; opacity: .82;
+}
+.sp-label {
+  font-family: var(--font-mono); font-size: 9px; line-height: 1.1; text-align: center;
+  background: var(--b-light); color: var(--b-dark);
+  padding: 3px 3px; border-radius: 1px; white-space: nowrap;
+}
+.spine.slot {
+  background: transparent; color: var(--muted);
+  border: 2px dashed var(--plank); box-shadow: none;
+  justify-content: center;
+}
+.spine.slot::before, .spine.slot::after { display: none; }
+.sp-q { font-family: var(--font-body); font-style: italic; font-size: 30px; line-height: 1; margin-top: auto; }
+.slot .sp-label { margin-top: auto; }
+.slip {
+  position: absolute; top: -15px; right: 6px;
+  width: 9px; height: 26px; background: var(--rubric);
+  transform: rotate(4deg) translateY(8px); opacity: 0;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.spine.is-picked .slip { opacity: 1; transform: rotate(4deg); }
+
+/* ---------- Main ---------- */
+main { display: grid; gap: 4.5rem; padding-block: 3.25rem 5rem; }
+body.has-tray main { padding-bottom: 9rem; }
+
+.label {
+  margin: 0 0 1rem;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--step--1); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted);
+}
+.intro { display: grid; gap: 2.75rem; }
+@media (min-width: 900px) { .intro { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 4.5rem; } }
+.intro > div { min-width: 0; }
+.sofar { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; }
+.sofar li { display: grid; gap: .15rem; }
+.sofar .no { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: .04em; color: var(--rubric); }
+.sofar cite { font-size: var(--step-1); line-height: 1.3; }
+.sofar .by { font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted); }
+.sofar p { margin: .35rem 0 0; max-width: 34rem; }
+.thread { margin: 1.75rem 0 0; max-width: 36rem; padding-left: 1rem; border-left: 2px solid var(--rubric); }
+.rules { margin: 0; padding-left: 1.4rem; display: grid; gap: .55rem; }
+.rules li { padding-left: .25rem; }
+.rules li::marker { font-family: var(--font-mono); font-size: .9em; color: var(--rubric); }
+.howto { margin: 1.75rem 0 0; font-size: 1rem; color: var(--muted); max-width: 30rem; }
+.howto b { font-family: var(--font-display); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .875em; color: var(--ink); }
+
+.sec-head { display: grid; gap: .5rem; padding-bottom: 1.25rem; border-bottom: 2px solid var(--ink); }
+.sec-head h2 {
+  margin: 0; display: flex; align-items: center; gap: .85rem;
+  font-family: var(--font-body); font-weight: 600;
+  font-size: var(--step-3); line-height: 1.1; letter-spacing: -0.01em; text-wrap: balance;
+}
+.sec-head p { margin: 0; color: var(--muted); max-width: 44rem; }
+section[id], article[id], div[id] { scroll-margin-top: 1.5rem; }
+section[id]:focus, article[id]:focus, div[id]:focus { outline: none; }
+
+.badge {
+  flex: none; display: inline-grid; place-items: center;
+  width: 2.6rem; height: 2.6rem; border-radius: 2px;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--font-mono); font-weight: 500; font-size: 1.05rem; line-height: 1; letter-spacing: 0;
+}
+
+/* ---------- The map ---------- */
+.board { margin-top: 1.5rem; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.board-row { display: grid; grid-template-columns: minmax(0, 1fr); border-top: 1px solid var(--rule); }
+.board-row:first-child { border-top: 0; }
+@media (min-width: 760px) { .board-row { grid-template-columns: 12.5rem minmax(0, 1fr); } }
+.row-head {
+  display: flex; align-items: baseline; gap: .6rem; padding: .7rem .8rem;
+  background: var(--wash); text-decoration: none;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--step--1); letter-spacing: .1em; text-transform: uppercase; line-height: 1.3;
+}
+.row-head .n { font-family: var(--font-mono); font-weight: 500; letter-spacing: 0; color: var(--rubric); }
+.row-head:hover { color: var(--rubric); }
+@media (min-width: 760px) { .row-head { padding-top: 1.05rem; border-right: 1px solid var(--rule); } }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; padding: .8rem; align-content: flex-start; min-width: 0; }
+.chip {
+  display: inline-flex; align-items: baseline; gap: .45rem; max-width: 100%;
+  padding: .32rem .6rem; border: 1px solid var(--rule); border-radius: 2px;
+  background: var(--paper); text-decoration: none; font-size: .95rem; line-height: 1.3;
+  transition: opacity .15s ease;
+}
+.chip cite { min-width: 0; }
+.chip .yr { font-family: var(--font-mono); font-size: var(--step--2); color: var(--muted); }
+.chip .dot { flex: none; align-self: center; width: 7px; height: 7px; border-radius: 50%; background: var(--rubric); }
+.chip:hover { border-color: var(--ink); }
+.chip.is-picked { border-color: var(--rubric); box-shadow: inset 3px 0 0 var(--rubric); }
+.chip.is-out { opacity: .38; }
+.board-note { margin: .9rem 0 0; font-family: var(--font-mono); font-size: var(--step--2); color: var(--muted); }
+
+/* ---------- Filters ---------- */
+.list { display: grid; gap: 4.5rem; }
+.filters {
+  display: grid; gap: .8rem; padding: 1rem;
+  border: 1px solid var(--rule); border-radius: 2px; background: var(--wash);
+}
+.f-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.f-label {
+  margin: 0 .35rem 0 0; min-width: 4.5rem;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--step--2); letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+}
+.f-btn {
+  display: inline-flex; align-items: baseline; gap: .4rem;
+  font-family: var(--font-display); font-weight: 600; font-size: var(--step--1); letter-spacing: .05em;
+  padding: .42rem .72rem; border: 1px solid var(--rule); border-radius: 2px;
+  background: var(--paper); color: var(--ink); cursor: pointer;
+}
+.f-btn span { font-family: var(--font-mono); font-weight: 400; font-size: var(--step--2); color: var(--muted); }
+.f-btn:hover { border-color: var(--ink); }
+.f-btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.f-btn[aria-pressed="true"] span { color: inherit; opacity: .75; }
+.f-status { margin: 0; font-family: var(--font-mono); font-size: var(--step--2); color: var(--muted); }
+.f-empty { margin: 0; font-size: 1rem; }
+.v-tools { display: flex; flex-wrap: wrap; gap: .3rem 1rem; align-items: baseline; }
+.v-tools .linkbtn { font-family: var(--font-mono); font-size: var(--step--2); }
+.v-fallback textarea { width: 100%; font-family: var(--font-mono); font-size: var(--step--2); }
+.others { margin: .1rem 0 0; font-family: var(--font-mono); font-size: var(--step--2); color: var(--muted); flex-basis: 100%; }
+.others b { font-weight: 600; color: var(--ink); }
+.linkbtn { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-color: var(--rubric); text-underline-offset: .18em; }
+
+/* ---------- Shelves of cards ---------- */
+.theme { display: grid; }
+.grid { display: grid; column-gap: 3rem; }
+@media (min-width: 860px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.book { display: flex; flex-direction: column; gap: .7rem; padding-block: 1.9rem; border-bottom: 1px solid var(--rule); min-width: 0; }
+.b-top {
+  margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .7rem;
+  font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); line-height: 1.4;
+}
+.b-no { color: var(--rubric); font-weight: 500; }
+.tag { display: inline-block; padding: .12rem .4rem; border-radius: 2px; letter-spacing: .08em; line-height: 1.3; }
+.tag.start { background: var(--rubric); color: var(--on-rubric); }
+.tag.prov { border: 1px dashed var(--muted); color: var(--ink); }
+.b-title {
+  margin: 0; font-family: var(--font-body); font-style: italic; font-weight: 500;
+  font-size: 1.45rem; line-height: 1.18; text-wrap: balance; font-variation-settings: "opsz" 36;
+}
+.b-title cite { font-style: inherit; }
+.b-sub { margin: -.4rem 0 0; font-style: italic; font-size: .95rem; line-height: 1.4; color: var(--muted); }
+.b-by { margin: -.25rem 0 0; font-weight: 600; font-size: 1rem; line-height: 1.4; }
+.book p.b-what, .book p.b-lens, .book p.b-ask, .book p.rec { margin: 0; max-width: 38rem; }
+.b-what { font-size: 1rem; line-height: 1.55; }
+.k {
+  display: block; margin-bottom: .1rem;
+  font-family: var(--font-display); font-weight: 600; font-style: normal;
+  font-size: var(--step--2); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted);
+}
+.b-lens { font-weight: 600; font-size: 1.0625rem; line-height: 1.45; text-wrap: pretty; }
+.b-ask { font-size: 1rem; line-height: 1.5; font-style: italic; padding-left: .85rem; border-left: 2px solid var(--rubric); }
+.rec { font-size: .9375rem; line-height: 1.55; padding-top: .75rem; border-top: 1px dashed var(--rule); }
+.rec .k { color: var(--rubric); }
+
+.pick {
+  justify-self: start; align-self: flex-start;
+  display: inline-flex; align-items: center; gap: .55rem;
+  margin-top: .3rem;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--step--2); letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink); background: transparent;
+  border: 1px solid currentColor; border-radius: 2px;
+  padding: .4rem .7rem; cursor: pointer;
+}
+.pick:hover { background: var(--wash); }
+.pick svg { width: 9px; height: 13px; flex: none; }
+.pick path { fill: none; stroke: currentColor; stroke-width: 1.5; }
+.pick[aria-pressed="true"] { background: var(--rubric); border-color: var(--rubric); color: var(--on-rubric); }
+.pick[aria-pressed="true"] path { fill: currentColor; }
+
+.b-act { display: flex; flex-wrap: wrap; align-items: stretch; gap: .6rem; margin-top: .3rem; }
+.b-act .pick { margin-top: 0; }
+.vote { display: inline-flex; }
+.vote-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 2.6rem; min-height: 2.1rem; padding: 0 .6rem;
+  color: var(--ink); background: transparent;
+  border: 1px solid currentColor; border-radius: 2px; cursor: pointer;
+}
+.vote-btn + .vote-btn { margin-left: -1px; }
+.vote-btn:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.vote-btn:last-child { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.vote-btn:hover { background: var(--wash); }
+.vote-btn svg { width: 16px; height: 16px; flex: none; }
+.vote-btn path { fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linejoin: round; }
+.vote-btn[data-v="-1"] svg { transform: rotate(180deg); }
+.vote-btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); position: relative; }
+.vote-btn[aria-pressed="true"] path { fill: currentColor; }
+.vote-btn:focus-visible, .pick:focus-visible { outline: 2px solid var(--rubric); outline-offset: 2px; }
+
+/* ---------- Double bills and notes ---------- */
+.bills { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; column-gap: 3rem; }
+@media (min-width: 860px) { .bills { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.bill { display: grid; gap: .45rem; align-content: start; padding-block: 1.4rem; border-bottom: 1px solid var(--rule); }
+.bill h3 {
+  margin: 0; font-family: var(--font-display); font-weight: 600;
+  font-size: var(--step--1); letter-spacing: .12em; text-transform: uppercase; color: var(--rubric);
+}
+.bill-books { margin: 0; font-size: 1.125rem; line-height: 1.4; }
+.bill-books .plus { font-family: var(--font-mono); font-size: .85em; color: var(--muted); padding-inline: .3rem; }
+.bill-books .read { color: var(--muted); }
+.bill p.premise { margin: 0; font-size: 1rem; max-width: 34rem; }
+.notes { display: grid; gap: 1rem; }
+.notes p { margin: 0; max-width: 46rem; }
+
+.colophon {
+  display: grid; gap: .4rem; padding-top: 1.25rem; border-top: 2px solid var(--ink);
+  font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted);
+}
+.colophon p { margin: 0; max-width: 46rem; }
+
+/* ---------- Shortlist tray ---------- */
+.tray {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  background: var(--ink); color: var(--paper);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -10px 28px var(--shadow);
+}
+.tray :focus-visible { outline-color: var(--paper); }
+.tray-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding-block: .85rem; }
+.tray-count { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: var(--step--1); letter-spacing: .12em; text-transform: uppercase; }
+.tray-count strong { font-size: 1.25em; font-variant-numeric: tabular-nums; }
+.tray-actions { display: flex; gap: .6rem; }
+.btn {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--step--1); letter-spacing: .12em; text-transform: uppercase;
+  padding: .55rem .95rem; border-radius: 2px; cursor: pointer;
+  border: 1px solid var(--paper); background: var(--paper); color: var(--ink);
+}
+.btn.ghost { background: transparent; color: var(--paper); }
+.tray-fallback { display: grid; gap: .4rem; padding-bottom: .9rem; }
+.tray-fallback label { font-family: var(--font-mono); font-size: var(--step--2); }
+.tray-fallback textarea {
+  width: 100%; box-sizing: border-box; resize: vertical;
+  font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.5;
+  background: var(--paper); color: var(--ink); border: 0; border-radius: 2px; padding: .75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spine, .slip, .chip { transition: none; }
+  a.spine:hover { transform: none; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="hero">
+      <p class="eyebrow"><span class="mark">BookTalk</span><span>The long list</span><span>November 2026</span></p>
+      <h1>The long shelf</h1>
+      <p class="deck">Forty-seven books, from 1872 to 2010, on eleven shelves. Each one gets at AI by way of something else: missile labs and machine shops, a Qing sorcery scare, a medieval stirrup and some monks.</p>
+      <p class="byline">A reading list for Jordan Schneider and Julian Gewirtz. Every pick comes with its reviews.</p>
+      <nav class="jump" aria-label="Sections">
+        <a href="#map">The map</a>
+        <a href="#list">The shelves</a>
+        <a href="#double-bills">Double bills</a>
+        <a href="#notes">Near misses</a>
+      </nav>
+    </div>
+
+    <figure class="shelf-fig">
+      <div class="shelf-scroll" role="region" aria-label="The BookTalk shelf" tabindex="0">
+        <div class="shelf">
+          <div class="sg">
+            <div class="books">
+              <div class="spine done" role="img" aria-label="No. 1, already read: The Social History of the Machine Gun by John Ellis" style="--w:46px;--h:220px;--bg:var(--b-graphite);--fg:var(--b-light)">
+                <span class="sp-title">The Machine Gun</span>
+                <span class="sp-author">Ellis</span>
+                <span class="sp-label">No.&nbsp;1</span>
+              </div>
+              <div class="spine done" role="img" aria-label="No. 2, up next: Men, Machines, and Modern Times by Elting E. Morison" style="--w:46px;--h:232px;--bg:var(--b-steel);--fg:var(--b-light)">
+                <span class="sp-title">Men, Machines &amp; Modern Times</span>
+                <span class="sp-author">Morison</span>
+                <span class="sp-label">No.&nbsp;2</span>
+              </div>
+              <div class="spine slot" role="img" aria-label="No. 3, open slot" style="--w:44px;--h:220px">
+                <span class="sp-q">?</span>
+                <span class="sp-label">No.&nbsp;3</span>
+              </div>
+            </div>
+            <div class="plank"><span>Read · Next · Open</span></div>
+          </div>
+          <div class="sg" aria-hidden="true">
+            <div class="books"><div class="bookend"></div></div>
+            <div class="plank"></div>
+          </div>
+          <div class="sg">
+            <div class="books">
+              <a class="spine" href="#heavens-and-earth" data-id="heavens-and-earth" aria-label="Start here, No. 03: …the Heavens and the Earth by Walter A. McDougall" style="--w:56px;--h:232px;--bg:var(--b-navy);--fg:var(--b-light)"><span class="slip" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">03</span><span class="sp-title" aria-hidden="true">Heavens &amp; Earth</span><span class="sp-author" aria-hidden="true">McDougall</span></a>
+              <a class="spine" href="#shock-of-the-old" data-id="shock-of-the-old" aria-label="Start here, No. 05: The Shock of the Old by David Edgerton" style="--w:44px;--h:214px;--bg:var(--b-sky);--fg:var(--b-dark)"><span class="slip" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">05</span><span class="sp-title" aria-hidden="true">Shock of the Old</span><span class="sp-author" aria-hidden="true">Edgerton</span></a>
+              <a class="spine" href="#military-incompetence" data-id="military-incompetence" aria-label="Start here, No. 10: On the Psychology of Military Incompetence by Norman F. Dixon" style="--w:50px;--h:228px;--bg:var(--b-black);--fg:var(--b-light)"><span class="slip" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">10</span><span class="sp-title" aria-hidden="true">Military Incompetence</span><span class="sp-author" aria-hidden="true">Dixon</span></a>
+              <a class="spine" href="#tools-of-empire" data-id="tools-of-empire" aria-label="Start here, No. 11: The Tools of Empire by Daniel R. Headrick" style="--w:46px;--h:218px;--bg:var(--b-green);--fg:var(--b-light)"><span class="slip" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">11</span><span class="sp-title" aria-hidden="true">Tools of Empire</span><span class="sp-author" aria-hidden="true">Headrick</span></a>
+              <a class="spine" href="#newspeak-to-cyberspeak" data-id="newspeak-to-cyberspeak" aria-label="Start here, No. 18: From Newspeak to Cyberspeak by Slava Gerovitch" style="--w:52px;--h:230px;--bg:var(--b-graphite);--fg:var(--b-light)"><span class="slip" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">18</span><span class="sp-title" aria-hidden="true">Newspeak to Cyberspeak</span><span class="sp-author" aria-hidden="true">Gerovitch</span></a>
+              <a class="spine" href="#labor-and-monopoly-capital" data-id="labor-and-monopoly-capital" aria-label="Start here, No. 23: Labor and Monopoly Capital by Harry Braverman" style="--w:48px;--h:224px;--bg:var(--b-plum);--fg:var(--b-light)"><span class="slip" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">23</span><span class="sp-title" aria-hidden="true">Labor &amp; Monopoly Capital</span><span class="sp-author" aria-hidden="true">Braverman</span></a>
+              <a class="spine" href="#forces-of-production" data-id="forces-of-production" aria-label="Start here, No. 25: Forces of Production by David F. Noble" style="--w:56px;--h:228px;--bg:var(--b-oxblood);--fg:var(--b-light)"><span class="slip" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">25</span><span class="sp-title" aria-hidden="true">Forces of Production</span><span class="sp-author" aria-hidden="true">Noble</span></a>
+              <a class="spine" href="#soulstealers" data-id="soulstealers" aria-label="Start here, No. 40: Soulstealers by Philip A. Kuhn" style="--w:46px;--h:218px;--bg:var(--b-teal);--fg:var(--b-light)"><span class="slip" aria-hidden="true"></span><span class="sp-no" aria-hidden="true">40</span><span class="sp-title" aria-hidden="true">Soulstealers</span><span class="sp-author" aria-hidden="true">Kuhn</span></a>
+            </div>
+            <div class="plank"><span>Start here · eight to begin with</span></div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="shelf-cap">Numbers match the list below. Tap a spine to jump to it; a red slip marks your shortlist.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="intro" aria-label="About the series">
+    <div>
+      <h2 class="label">So far</h2>
+      <ol class="sofar">
+        <li>
+          <span class="no">No. 1 · Read</span>
+          <cite>The Social History of the Machine Gun</cite>
+          <span class="by">John Ellis, 1975</span>
+          <p>How one weapon remade war, empire and the officer class’s idea of itself.</p>
+        </li>
+        <li>
+          <span class="no">No. 2 · Up next</span>
+          <cite>Men, Machines, and Modern Times</cite>
+          <span class="by">Elting E. Morison, 1966</span>
+          <p>Essays on how institutions fight even a plainly better machine, starting with the Navy and continuous-aim gunfire.</p>
+        </li>
+      </ol>
+      <p class="thread">The shelves below keep pulling on threads from those two: who designs a technology and for whom, how states race for it, how institutions absorb or refuse it, and what it does to work, trust and safety.</p>
+    </div>
+    <div>
+      <h2 class="label">House rules</h2>
+      <ol class="rules">
+        <li>Published in 2010 or earlier.</li>
+        <li>Great on its own terms. Every card links a prize, serious reviews or its field’s verdict. Famous books whose central claim is disputed carry a <b>Provocation</b> tag.</li>
+        <li>Mostly not about AI. The handful that are (Turkle, Penrose, <cite>The Fifth Generation</cite> and a few novels) argued about it before it worked.</li>
+        <li>Enough story and argument to fill an hour.</li>
+      </ol>
+      <p class="howto">Filter by kind of book, or show only the eight marked <b>Start here</b>. Mark books with <b>Shortlist</b>, then use <b>Copy list</b> to send your picks along. Picks stay in your own browser. Give any book a thumbs up or down, then filter by your votes. Votes stay in your browser. Use <b>Email my votes</b> or <b>Copy my votes</b> to send them along.</p>
+    </div>
+  </section>
+
+  <section id="map" tabindex="-1" aria-labelledby="map-h">
+    <header class="sec-head">
+      <h2 id="map-h">The map</h2>
+      <p>Forty-seven books on eleven shelves, oldest first within each. A red dot marks the eight to start with. Tap a title to jump to it.</p>
+    </header>
+    <div class="board">
+      <div class="board-row"><a class="row-head" href="#t-race"><span class="n">01</span><span>The Race</span></a><div class="chips"><a class="chip" href="#networks-of-power" data-id="networks-of-power"><cite>Networks of Power</cite><span class="yr">1983</span></a><a class="chip" href="#fifth-generation" data-id="fifth-generation"><cite>The Fifth Generation</cite><span class="yr">1983</span></a><a class="chip is-start" href="#heavens-and-earth" data-id="heavens-and-earth"><span class="dot" aria-hidden="true"></span><cite>…the Heavens and the Earth</cite><span class="yr">1985</span><span class="sr">, start here</span></a><a class="chip" href="#rich-nation-strong-army" data-id="rich-nation-strong-army"><cite>“Rich Nation, Strong Army”</cite><span class="yr">1994</span></a><a class="chip is-start" href="#shock-of-the-old" data-id="shock-of-the-old"><span class="dot" aria-hidden="true"></span><cite>The Shock of the Old</cite><span class="yr">2006</span><span class="sr">, start here</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-lab"><span class="n">02</span><span>The Lab</span></a><div class="chips"><a class="chip" href="#turbojet-revolution" data-id="turbojet-revolution"><cite>The Origins of the Turbojet Revolution</cite><span class="yr">1980</span></a><a class="chip" href="#soul-of-a-new-machine" data-id="soul-of-a-new-machine"><cite>The Soul of a New Machine</cite><span class="yr">1981</span></a><a class="chip" href="#crystal-fire" data-id="crystal-fire"><cite>Crystal Fire</cite><span class="yr">1997</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-war"><span class="n">03</span><span>The War Room</span></a><div class="chips"><a class="chip" href="#medieval-technology" data-id="medieval-technology"><cite>Medieval Technology and Social Change</cite><span class="yr">1962</span></a><a class="chip is-start" href="#military-incompetence" data-id="military-incompetence"><span class="dot" aria-hidden="true"></span><cite>On the Psychology of Military Incompetence</cite><span class="yr">1976</span><span class="sr">, start here</span></a><a class="chip is-start" href="#tools-of-empire" data-id="tools-of-empire"><span class="dot" aria-hidden="true"></span><cite>The Tools of Empire</cite><span class="yr">1981</span><span class="sr">, start here</span></a><a class="chip" href="#pursuit-of-power" data-id="pursuit-of-power"><cite>The Pursuit of Power</cite><span class="yr">1982</span></a><a class="chip" href="#command-in-war" data-id="command-in-war"><cite>Command in War</cite><span class="yr">1985</span></a><a class="chip" href="#inventing-accuracy" data-id="inventing-accuracy"><cite>Inventing Accuracy</cite><span class="yr">1990</span></a><a class="chip" href="#winning-the-next-war" data-id="winning-the-next-war"><cite>Winning the Next War</cite><span class="yr">1991</span></a><a class="chip" href="#closed-world" data-id="closed-world"><cite>The Closed World</cite><span class="yr">1996</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-state"><span class="n">04</span><span>The State</span></a><div class="chips"><a class="chip" href="#passions-and-interests" data-id="passions-and-interests"><cite>The Passions and the Interests</cite><span class="yr">1977</span></a><a class="chip is-start" href="#newspeak-to-cyberspeak" data-id="newspeak-to-cyberspeak"><span class="dot" aria-hidden="true"></span><cite>From Newspeak to Cyberspeak</cite><span class="yr">2002</span><span class="sr">, start here</span></a><a class="chip" href="#red-plenty" data-id="red-plenty"><cite>Red Plenty</cite><span class="yr">2010</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-work"><span class="n">05</span><span>The Shop Floor</span></a><div class="chips"><a class="chip" href="#human-condition" data-id="human-condition"><cite>The Human Condition</cite><span class="yr">1958</span></a><a class="chip" href="#english-working-class" data-id="english-working-class"><cite>The Making of the English Working Class</cite><span class="yr">1963</span></a><a class="chip" href="#working" data-id="working"><cite>Working</cite><span class="yr">1974</span></a><a class="chip is-start" href="#labor-and-monopoly-capital" data-id="labor-and-monopoly-capital"><span class="dot" aria-hidden="true"></span><cite>Labor and Monopoly Capital</cite><span class="yr">1974</span><span class="sr">, start here</span></a><a class="chip" href="#more-work-for-mother" data-id="more-work-for-mother"><cite>More Work for Mother</cite><span class="yr">1983</span></a><a class="chip is-start" href="#forces-of-production" data-id="forces-of-production"><span class="dot" aria-hidden="true"></span><cite>Forces of Production</cite><span class="yr">1984</span><span class="sr">, start here</span></a><a class="chip" href="#american-system" data-id="american-system"><cite>From the American System to Mass Production</cite><span class="yr">1984</span></a><a class="chip" href="#smart-machine" data-id="smart-machine"><cite>In the Age of the Smart Machine</cite><span class="yr">1988</span></a><a class="chip" href="#when-computers-were-human" data-id="when-computers-were-human"><cite>When Computers Were Human</cite><span class="yr">2005</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-archive"><span class="n">06</span><span>The Archive</span></a><div class="chips"><a class="chip" href="#printing-press" data-id="printing-press"><cite>The Printing Press as an Agent of Change</cite><span class="yr">1979</span></a><a class="chip" href="#orality-and-literacy" data-id="orality-and-literacy"><cite>Orality and Literacy</cite><span class="yr">1982</span></a><a class="chip" href="#control-revolution" data-id="control-revolution"><cite>The Control Revolution</cite><span class="yr">1986</span></a><a class="chip" href="#too-much-to-know" data-id="too-much-to-know"><cite>Too Much to Know</cite><span class="yr">2010</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-accident"><span class="n">07</span><span>The Accident</span></a><div class="chips"><a class="chip" href="#pearl-harbor" data-id="pearl-harbor"><cite>Pearl Harbor</cite><span class="yr">1962</span></a><a class="chip" href="#risk-society" data-id="risk-society"><cite>Risk Society</cite><span class="yr">1986</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-mind"><span class="n">08</span><span>The Mind</span></a><div class="chips"><a class="chip" href="#second-self" data-id="second-self"><cite>The Second Self</cite><span class="yr">1984</span></a><a class="chip" href="#emperors-new-mind" data-id="emperors-new-mind"><cite>The Emperor’s New Mind</cite><span class="yr">1989</span></a><a class="chip" href="#mechanizing-proof" data-id="mechanizing-proof"><cite>Mechanizing Proof</cite><span class="yr">2001</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-china"><span class="n">09</span><span>China &amp; the Long View</span></a><div class="chips"><a class="chip" href="#china-builds-the-bomb" data-id="china-builds-the-bomb"><cite>China Builds the Bomb</cite><span class="yr">1988</span></a><a class="chip" href="#machines-as-measure" data-id="machines-as-measure"><cite>Machines as the Measure of Men</cite><span class="yr">1989</span></a><a class="chip is-start" href="#soulstealers" data-id="soulstealers"><span class="dot" aria-hidden="true"></span><cite>Soulstealers</cite><span class="yr">1990</span><span class="sr">, start here</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-fiction"><span class="n">10</span><span>Novels &amp; Stories</span></a><div class="chips"><a class="chip" href="#erewhon" data-id="erewhon"><cite>Erewhon</cite><span class="yr">1872</span></a><a class="chip" href="#player-piano" data-id="player-piano"><cite>Player Piano</cite><span class="yr">1952</span></a><a class="chip" href="#canticle-for-leibowitz" data-id="canticle-for-leibowitz"><cite>A Canticle for Leibowitz</cite><span class="yr">1959</span></a><a class="chip" href="#labyrinths" data-id="labyrinths"><cite>Labyrinths</cite><span class="yr">1962</span></a></div></div>
+      <div class="board-row"><a class="row-head" href="#t-lives"><span class="n">11</span><span>Lives</span></a><div class="chips"><a class="chip" href="#henry-adams" data-id="henry-adams"><cite>The Education of Henry Adams</cite><span class="yr">1918</span></a><a class="chip" href="#von-neumann-and-wiener" data-id="von-neumann-and-wiener"><cite>John von Neumann and Norbert Wiener</cite><span class="yr">1980</span></a><a class="chip" href="#dream-machine" data-id="dream-machine"><cite>The Dream Machine</cite><span class="yr">2001</span></a></div></div>
+    </div>
+  </section>
+
+  <div class="list" id="list" tabindex="-1">
+    <div class="filters" role="group" aria-label="Filter the shelves">
+      <div class="f-row"><p class="f-label" aria-hidden="true">Kind</p><button class="f-btn" type="button" data-cat="all" aria-pressed="true">All <span>47</span></button><button class="f-btn" type="button" data-cat="history" aria-pressed="false">History <span>22</span></button><button class="f-btn" type="button" data-cat="reportage" aria-pressed="false">Reportage <span>2</span></button><button class="f-btn" type="button" data-cat="social" aria-pressed="false">Social science <span>10</span></button><button class="f-btn" type="button" data-cat="ideas" aria-pressed="false">Ideas <span>5</span></button><button class="f-btn" type="button" data-cat="fiction" aria-pressed="false">Fiction <span>5</span></button><button class="f-btn" type="button" data-cat="lives" aria-pressed="false">Lives <span>3</span></button></div>
+      <div class="f-row"><p class="f-label" aria-hidden="true">Show</p><button class="f-btn" type="button" data-toggle="start" aria-pressed="false">Start here only <span>8</span></button><button class="f-btn" type="button" data-toggle="picked" aria-pressed="false">My shortlist only <span id="f-picked-n">0</span></button></div>
+      <div class="f-row"><p class="f-label" aria-hidden="true">Votes</p><button class="f-btn" type="button" data-vote="all" aria-pressed="true">Any</button><button class="f-btn" type="button" data-vote="up" aria-pressed="false">Liked <span id="f-up-n">0</span></button><button class="f-btn" type="button" data-vote="down" aria-pressed="false">Disliked <span id="f-down-n">0</span></button><button class="f-btn" type="button" data-vote="none" aria-pressed="false">Not voted <span id="f-none-n">47</span></button></div>
+      <p class="f-status" aria-live="polite"><span id="f-count">47</span> of 47 books showing</p>
+      <div class="v-tools"><p class="f-status" id="v-where">Votes are saved in this browser.</p><button class="linkbtn" type="button" id="email-votes">Email my votes</button><button class="linkbtn" type="button" id="copy-votes">Copy my votes</button></div>
+      <p class="f-status" id="v-others" hidden></p>
+      <div class="v-fallback" id="votes-fallback" hidden><label class="f-status" for="votes-text">Copy this text and send it along:</label><textarea id="votes-text" rows="6" readonly></textarea></div>
+      <p class="f-empty" id="f-empty" hidden>No books match those filters. <button class="linkbtn" type="button" id="f-reset">Show all</button></p>
+    </div>
+
+    <section class="theme" id="t-picks" tabindex="-1" aria-labelledby="t-picks-h" hidden>
+      <header class="sec-head">
+        <h2 id="t-picks-h"><span class="badge" aria-hidden="true">00</span>Your picks</h2>
+        <p>Your shortlist and thumbs-up books come first, in shelf order. Books you pick now move up here the next time you open the page. <span class="sr" id="picks-n"></span></p>
+      </header>
+      <div class="grid" id="picks-grid">
+      </div>
+    </section>
+
+    <section class="theme" id="t-race" tabindex="-1" aria-labelledby="t-race-h">
+      <header class="sec-head">
+        <h2 id="t-race-h"><span class="badge" aria-hidden="true">01</span>The Race</h2>
+        <p>Sputnik moments, national champions, bubbles and the politics of catching up. <span class="sr">5 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="networks-of-power" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="networks-of-power-t">
+        <p class="b-top"><span class="b-no">No. 01</span><span>History · 1983</span></p>
+        <h3 class="b-title" id="networks-of-power-t"><cite>Networks of Power</cite></h3>
+        <p class="b-sub">Electrification in Western Society, 1880–1930</p>
+        <p class="b-by">Thomas P. Hughes</p>
+        <p class="b-what">How Edison, Insull and their counterparts in Berlin and London built electric power systems, and why each country’s came out different.</p>
+        <p class="b-lens"><span class="k">The angle</span>AI is turning into a power-grid story. Hughes’s “reverse salients,” the laggard parts that hold a whole system back, are the right tool for chips, data centers and transmission lines.</p>
+        <p class="b-ask"><span class="k">Episode question</span>What is AI’s reverse salient today: chips, power, data or people?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Society for the History of Technology’s Dexter Prize (<a href="https://www.press.jhu.edu/books/title/2031/networks-power" target="_blank" rel="noopener noreferrer">Johns Hopkins University Press</a>, <a href="https://en.wikipedia.org/wiki/Sidney_Edelstein_Prize" target="_blank" rel="noopener noreferrer">prize list</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="networks-of-power" data-title="Networks of Power" data-by="Hughes, 1983"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Networks of Power"><button class="vote-btn" type="button" data-id="networks-of-power" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="networks-of-power" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="fifth-generation" tabindex="-1" data-cat="ideas" data-start="0" aria-labelledby="fifth-generation-t">
+        <p class="b-top"><span class="b-no">No. 02</span><span>Polemic · 1983</span><span class="tag prov">Provocation</span></p>
+        <h3 class="b-title" id="fifth-generation-t"><cite>The Fifth Generation</cite></h3>
+        <p class="b-sub">Artificial Intelligence and Japan’s Computer Challenge to the World</p>
+        <p class="b-by">Edward A. Feigenbaum and Pamela McCorduck</p>
+        <p class="b-what">Two AI insiders warn that Japan’s state-backed Fifth Generation project will seize the lead in “knowledge processing” unless America answers.</p>
+        <p class="b-lens"><span class="k">The angle</span>The last time America panicked about an Asian AI program. The program fizzled; the panic still moved money in Washington.</p>
+        <p class="b-ask"><span class="k">Episode question</span>What did the 1980s panic get wrong about Japan that today’s might be getting wrong about China?</p>
+        <p class="rec"><span class="k">Reception</span>The <a href="https://www.csmonitor.com/1983/0812/081232.html" target="_blank" rel="noopener noreferrer">Christian Science Monitor</a> found it “highly useful for anyone interested in this crucial race.” Joseph Weizenbaum took it apart in <a href="https://www.nybooks.com/articles/1983/10/27/the-computer-in-your-future/" target="_blank" rel="noopener noreferrer">The New York Review of Books</a>, and John McCarthy noted that <a href="https://www.saildart.org/FIFTH%5BE83,JMC%5D1" target="_blank" rel="noopener noreferrer">nobody at ICOT</a> was working on common sense.</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="fifth-generation" data-title="The Fifth Generation" data-by="Feigenbaum &amp; McCorduck, 1983"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Fifth Generation"><button class="vote-btn" type="button" data-id="fifth-generation" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="fifth-generation" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="heavens-and-earth" tabindex="-1" data-cat="history" data-start="1" aria-labelledby="heavens-and-earth-t">
+        <p class="b-top"><span class="b-no">No. 03</span><span>History · 1985</span><span class="tag start">Start here</span></p>
+        <h3 class="b-title" id="heavens-and-earth-t"><cite>…the Heavens and the Earth</cite></h3>
+        <p class="b-sub">A Political History of the Space Age</p>
+        <p class="b-by">Walter A. McDougall</p>
+        <p class="b-what">How Sputnik turned American and Soviet leaders into technocrats, and the space race into a contest over which system could command technological change.</p>
+        <p class="b-lens"><span class="k">The angle</span>The template for every “Sputnik moment,” including the one declared when DeepSeek shipped. McDougall is skeptical of what crash programs do to the states that run them.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Did the Sputnik panic make America stronger, or just more like the rival it feared?</p>
+        <p class="rec"><span class="k">Reception</span>Won the <a href="https://www.pulitzer.org/winners/walter-mcdougall" target="_blank" rel="noopener noreferrer">1986 Pulitzer Prize for History</a> and the Society for the History of Technology’s <a href="https://en.wikipedia.org/wiki/Sidney_Edelstein_Prize" target="_blank" rel="noopener noreferrer">Dexter Prize</a>. NASA historian Roger Launius calls it a “classic study in the arena of space policy history” (<a href="https://en.wikipedia.org/wiki/...The_Heavens_and_the_Earth" target="_blank" rel="noopener noreferrer">summary of its reception</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="heavens-and-earth" data-title="…the Heavens and the Earth" data-by="McDougall, 1985"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on …the Heavens and the Earth"><button class="vote-btn" type="button" data-id="heavens-and-earth" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="heavens-and-earth" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="rich-nation-strong-army" tabindex="-1" data-cat="social" data-start="0" aria-labelledby="rich-nation-strong-army-t">
+        <p class="b-top"><span class="b-no">No. 04</span><span>Political economy · 1994</span></p>
+        <h3 class="b-title" id="rich-nation-strong-army-t"><cite>“Rich Nation, Strong Army”</cite></h3>
+        <p class="b-sub">National Security and the Technological Transformation of Japan</p>
+        <p class="b-by">Richard J. Samuels</p>
+        <p class="b-what">Japan’s long campaign, from the Meiji arsenals to the 1990s, to absorb foreign technology, spread it through industry and nurture its own producers, all in the name of security.</p>
+        <p class="b-lens"><span class="k">The angle</span>A rulebook for techno-nationalism written a generation before Beijing’s version: what it takes to make a borrowed technology your own.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is China’s AI strategy Meiji Japan’s playbook with more compute?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Association for Asian Studies’ 1996 John Whitney Hall Book Prize and the Arisawa Memorial Prize; the Hall citation called it “a book with many lessons” (<a href="https://news.mit.edu/1996/samuels-0522" target="_blank" rel="noopener noreferrer">MIT News</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="rich-nation-strong-army" data-title="“Rich Nation, Strong Army”" data-by="Samuels, 1994"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on “Rich Nation, Strong Army”"><button class="vote-btn" type="button" data-id="rich-nation-strong-army" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="rich-nation-strong-army" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="shock-of-the-old" tabindex="-1" data-cat="history" data-start="1" aria-labelledby="shock-of-the-old-t">
+        <p class="b-top"><span class="b-no">No. 05</span><span>History · 2006</span><span class="tag start">Start here</span></p>
+        <h3 class="b-title" id="shock-of-the-old-t"><cite>The Shock of the Old</cite></h3>
+        <p class="b-sub">Technology and Global History since 1900</p>
+        <p class="b-by">David Edgerton</p>
+        <p class="b-what">A history of technology in use rather than invention: horses in Hitler’s army, corrugated iron, the rickshaw and the long afterlife of “old” machines.</p>
+        <p class="b-lens"><span class="k">The angle</span>The corrective to invention-centered AI talk. What matters is who uses a technology and how widely, not who demos it first.</p>
+        <p class="b-ask"><span class="k">Episode question</span>If Edgerton wrote about AI in 2026, what would be his horses and corrugated iron?</p>
+        <p class="rec"><span class="k">Reception</span>The Sunday Times said Edgerton “eviscerates our obsession with novelty,” the Times called it iconoclastic, and Simon Jenkins wrote in the Guardian that it was a book he could use (<a href="https://profilebooks.com/work/the-shock-of-the-old/" target="_blank" rel="noopener noreferrer">Profile Books</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="shock-of-the-old" data-title="The Shock of the Old" data-by="Edgerton, 2006"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Shock of the Old"><button class="vote-btn" type="button" data-id="shock-of-the-old" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="shock-of-the-old" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-lab" tabindex="-1" aria-labelledby="t-lab-h">
+      <header class="sec-head">
+        <h2 id="t-lab-h"><span class="badge" aria-hidden="true">02</span>The Lab</h2>
+        <p>How builders actually build: teams, managers, deadlines, and the inventions that got away. <span class="sr">3 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="turbojet-revolution" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="turbojet-revolution-t">
+        <p class="b-top"><span class="b-no">No. 06</span><span>History · 1980</span></p>
+        <h3 class="b-title" id="turbojet-revolution-t"><cite>The Origins of the Turbojet Revolution</cite></h3>
+        
+        <p class="b-by">Edward W. Constant II</p>
+        <p class="b-what">Why the jet engine came from outsiders in Britain and Germany: engineers who saw, years ahead, that the piston engine and propeller would hit a wall.</p>
+        <p class="b-lens"><span class="k">The angle</span>Constant’s “presumptive anomaly,” the prediction that a dominant technology will fail before it actually does, is the best frame for arguing about whether scaling will hit a wall.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Who sees a technology’s limits first, and does deep learning have a presumptive anomaly?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Society for the History of Technology’s Dexter Prize in 1981 (<a href="https://en.wikipedia.org/wiki/Sidney_Edelstein_Prize" target="_blank" rel="noopener noreferrer">prize list</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="turbojet-revolution" data-title="The Origins of the Turbojet Revolution" data-by="Constant, 1980"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Origins of the Turbojet Revolution"><button class="vote-btn" type="button" data-id="turbojet-revolution" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="turbojet-revolution" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="soul-of-a-new-machine" tabindex="-1" data-cat="reportage" data-start="0" aria-labelledby="soul-of-a-new-machine-t">
+        <p class="b-top"><span class="b-no">No. 07</span><span>Reportage · 1981</span></p>
+        <h3 class="b-title" id="soul-of-a-new-machine-t"><cite>The Soul of a New Machine</cite></h3>
+        
+        <p class="b-by">Tracy Kidder</p>
+        <p class="b-what">Kidder embeds with a Data General team racing to build a 32-bit minicomputer, and watches how engineers are driven, managed and burned out.</p>
+        <p class="b-lens"><span class="k">The angle</span>Still the best book about life on a frontier team, written about a machine nobody remembers. “Signing up” and the pinball theory of reward (win, and you get to play again) are alive in every lab.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Why do brilliant people sign up for brutal crunches, and who captures the value?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Pulitzer Prize for General Nonfiction and the 1982 National Book Award; the <cite>New York Times</cite> said Kidder raised his subject “to a high level of narrative art” (<a href="https://en.wikipedia.org/wiki/The_Soul_of_a_New_Machine" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="soul-of-a-new-machine" data-title="The Soul of a New Machine" data-by="Kidder, 1981"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Soul of a New Machine"><button class="vote-btn" type="button" data-id="soul-of-a-new-machine" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="soul-of-a-new-machine" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="crystal-fire" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="crystal-fire-t">
+        <p class="b-top"><span class="b-no">No. 08</span><span>History · 1997</span></p>
+        <h3 class="b-title" id="crystal-fire-t"><cite>Crystal Fire</cite></h3>
+        <p class="b-sub">The Birth of the Information Age</p>
+        <p class="b-by">Michael Riordan and Lillian Hoddeson</p>
+        <p class="b-what">The invention of the transistor at Bell Labs in 1947, and the rivalries among Shockley, Bardeen and Brattain behind it.</p>
+        <p class="b-lens"><span class="k">The angle</span>Every chip in today’s export-control fight descends from this lab bench. It is also a portrait of William Shockley, a brilliant and impossible manager.</p>
+        <p class="b-ask"><span class="k">Episode question</span>What made Bell Labs work, and could an AI lab copy it?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Society for the History of Technology’s first Sally Hacker Prize in 1999 and became the basis for the PBS documentary <cite>Transistorized!</cite> (<a href="https://en.wikipedia.org/wiki/Crystal_Fire:_The_Birth_of_the_Information_Age" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="crystal-fire" data-title="Crystal Fire" data-by="Riordan &amp; Hoddeson, 1997"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Crystal Fire"><button class="vote-btn" type="button" data-id="crystal-fire" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="crystal-fire" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-war" tabindex="-1" aria-labelledby="t-war-h">
+      <header class="sec-head">
+        <h2 id="t-war-h"><span class="badge" aria-hidden="true">03</span>The War Room</h2>
+        <p>Command, conquest and the weapons that changed who wins, from the stirrup to the Cold War’s closed world. <span class="sr">8 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="medieval-technology" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="medieval-technology-t">
+        <p class="b-top"><span class="b-no">No. 09</span><span>History · 1962</span><span class="tag prov">Provocation</span></p>
+        <h3 class="b-title" id="medieval-technology-t"><cite>Medieval Technology and Social Change</cite></h3>
+        <p class="b-by">Lynn White Jr.</p>
+        <p class="b-what">Three essays arguing that the stirrup, the heavy plough and new sources of power remade medieval Europe, most famously that the stirrup gave rise to feudalism.</p>
+        <p class="b-lens"><span class="k">The angle</span>The boldest case for one small device reordering a whole society. Read it with its critics to ask how seriously to take claims that AI alone will remake armies and states.</p>
+        <p class="b-ask"><span class="k">Episode question</span>If AI is the new stirrup, who become the new knights?</p>
+        <p class="rec"><span class="k">Reception</span>Won the History of Science Society’s 1963 Pfizer Award, and Joseph Needham called it “the most stimulating book of the century on the history of technology” (<a href="https://en.wikipedia.org/wiki/Lynn_Townsend_White_Jr." target="_blank" rel="noopener noreferrer">Wikipedia</a>). The stirrup thesis has drawn heavy fire ever since (<a href="https://en.wikipedia.org/wiki/Great_Stirrup_Controversy" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="medieval-technology" data-title="Medieval Technology and Social Change" data-by="White, 1962"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Medieval Technology and Social Change"><button class="vote-btn" type="button" data-id="medieval-technology" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="medieval-technology" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="military-incompetence" tabindex="-1" data-cat="social" data-start="1" aria-labelledby="military-incompetence-t">
+        <p class="b-top"><span class="b-no">No. 10</span><span>Psychology · 1976</span><span class="tag start">Start here</span></p>
+        <h3 class="b-title" id="military-incompetence-t"><cite>On the Psychology of Military Incompetence</cite></h3>
+        <p class="b-by">Norman F. Dixon</p>
+        <p class="b-what">A psychologist works through a century of British military disasters, from the Crimea to the fall of Singapore, and argues they came from the kind of person armies promote.</p>
+        <p class="b-lens"><span class="k">The angle</span>Big institutions reward people who follow rules, flatter superiors and dread looking foolish, then hand them the new technology. Read it to ask who ends up in charge of AI adoption at the Pentagon, or in the PLA.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Do militaries select for exactly the leaders worst placed to use AI well?</p>
+        <p class="rec"><span class="k">Reception</span>Has drawn favourable reviews for over 40 years, is still used in leadership studies, and in 2015 topped BookFinder’s list of the most sought out-of-print books in the US (<a href="https://en.wikipedia.org/wiki/On_the_Psychology_of_Military_Incompetence" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="military-incompetence" data-title="On the Psychology of Military Incompetence" data-by="Dixon, 1976"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on On the Psychology of Military Incompetence"><button class="vote-btn" type="button" data-id="military-incompetence" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="military-incompetence" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="tools-of-empire" tabindex="-1" data-cat="history" data-start="1" aria-labelledby="tools-of-empire-t">
+        <p class="b-top"><span class="b-no">No. 11</span><span>History · 1981</span><span class="tag start">Start here</span></p>
+        <h3 class="b-title" id="tools-of-empire-t"><cite>The Tools of Empire</cite></h3>
+        <p class="b-sub">Technology and European Imperialism in the Nineteenth Century</p>
+        <p class="b-by">Daniel R. Headrick</p>
+        <p class="b-what">How steamboats, quinine and breech-loading guns let Europe conquer much of Africa and Asia cheaply in the nineteenth century.</p>
+        <p class="b-lens"><span class="k">The angle</span>The sequel to the machine-gun episode: a technology gap so wide that conquest became cheap. Read it to ask whether an AI gap between countries could ever open that far.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Could a lead in frontier AI ever be as decisive as quinine and the steamboat were?</p>
+        <p class="rec"><span class="k">Reception</span>Reviewed across business, economic, African and Asian history journals, including <a href="https://www.cambridge.org/core/journals/journal-of-african-history/article/technology-and-imperialism-the-tools-of-empire-technology-and-european-imperialism-in-the-nineteenth-century-by-daniel-r-headrick-new-york-and-oxford-oxford-university-press-1981-pp-x-221-1050-paperback-495/979360513189893CFB3931C329074555" target="_blank" rel="noopener noreferrer">the Journal of African History</a> and <a href="https://www.cambridge.org/core/journals/business-history-review/article/tools-of-empire-technology-and-european-imperialism-in-the-nineteenth-century-by-daniel-r-headrick-new-york-oxford-university-press-1981-pp-x-221-1495-cloth-695-paper/6E69D82185D4BF870C80D63A66A8B7FD" target="_blank" rel="noopener noreferrer">Business History Review</a>.</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="tools-of-empire" data-title="The Tools of Empire" data-by="Headrick, 1981"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Tools of Empire"><button class="vote-btn" type="button" data-id="tools-of-empire" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="tools-of-empire" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="pursuit-of-power" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="pursuit-of-power-t">
+        <p class="b-top"><span class="b-no">No. 12</span><span>History · 1982</span></p>
+        <h3 class="b-title" id="pursuit-of-power-t"><cite>The Pursuit of Power</cite></h3>
+        <p class="b-sub">Technology, Armed Force, and Society since A.D. 1000</p>
+        <p class="b-by">William H. McNeill</p>
+        <p class="b-what">A thousand years of how markets, states and weapons shaped each other, starting with the commercial boom of eleventh-century China.</p>
+        <p class="b-lens"><span class="k">The angle</span>McNeill’s case that war became a market business, with states buying what merchants and inventors could sell. It frames the fight over whether labs or governments set the pace of military AI.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is military AI being driven by states or by markets, and does the answer change who wins?</p>
+        <p class="rec"><span class="k">Reception</span>Reviewed for the New York Times by Stanley Hoffmann (<a href="https://en.wikipedia.org/wiki/William_H._McNeill_(historian)" target="_blank" rel="noopener noreferrer">Wikipedia</a>); its publisher still sells it as a “magnificent synthesis of military, technological, and social history” (<a href="https://www.press.uchicago.edu/ucp/books/book/chicago/P/bo5975947.html" target="_blank" rel="noopener noreferrer">University of Chicago Press</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="pursuit-of-power" data-title="The Pursuit of Power" data-by="McNeill, 1982"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Pursuit of Power"><button class="vote-btn" type="button" data-id="pursuit-of-power" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="pursuit-of-power" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="command-in-war" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="command-in-war-t">
+        <p class="b-top"><span class="b-no">No. 13</span><span>History · 1985</span></p>
+        <h3 class="b-title" id="command-in-war-t"><cite>Command in War</cite></h3>
+        
+        <p class="b-by">Martin van Creveld</p>
+        <p class="b-what">Command from antiquity to Vietnam as a problem of information: how commanders gathered it, filtered it and coped with never having enough.</p>
+        <p class="b-lens"><span class="k">The angle</span>Every promise that AI will lift the fog of war has precedents here. Van Creveld’s answer was never more data; it was command organized to live with uncertainty.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Does AI shrink the fog of war, or just move it?</p>
+        <p class="rec"><span class="k">Reception</span>In the Naval Institute’s <cite>Proceedings</cite>, Michael Palmer called it excellent, original and significant (<a href="https://www.usni.org/magazines/proceedings/1985/november/book-reviews-professional-reading-book-list" target="_blank" rel="noopener noreferrer">USNI</a>); Brian Bond found it “absorbing reading for military historians” in <cite>International Security</cite> (<a href="https://muse.jhu.edu/journals/international_security/summary/v011/11.4.bond.html" target="_blank" rel="noopener noreferrer">Project MUSE</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="command-in-war" data-title="Command in War" data-by="van Creveld, 1985"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Command in War"><button class="vote-btn" type="button" data-id="command-in-war" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="command-in-war" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="inventing-accuracy" tabindex="-1" data-cat="social" data-start="0" aria-labelledby="inventing-accuracy-t">
+        <p class="b-top"><span class="b-no">No. 14</span><span>Sociology · 1990</span></p>
+        <h3 class="b-title" id="inventing-accuracy-t"><cite>Inventing Accuracy</cite></h3>
+        <p class="b-sub">A Historical Sociology of Nuclear Missile Guidance</p>
+        <p class="b-by">Donald MacKenzie</p>
+        <p class="b-what">How American missiles got more accurate: less through the march of physics than through lab rivalries, service politics and fights over what “accuracy” meant.</p>
+        <p class="b-lens"><span class="k">The angle</span>Capabilities don’t simply arrive; labs, militaries and politics decide what counts. A natural companion to the fights over AI benchmarks.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Who decides what counts as an AI capability, and what happens when the measure becomes the target?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Society for Social Studies of Science’s <a href="https://en.wikipedia.org/wiki/Ludwik_Fleck_Prize" target="_blank" rel="noopener noreferrer">Ludwik Fleck Prize</a>, its annual book award.</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="inventing-accuracy" data-title="Inventing Accuracy" data-by="MacKenzie, 1990"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Inventing Accuracy"><button class="vote-btn" type="button" data-id="inventing-accuracy" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="inventing-accuracy" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="winning-the-next-war" tabindex="-1" data-cat="social" data-start="0" aria-labelledby="winning-the-next-war-t">
+        <p class="b-top"><span class="b-no">No. 15</span><span>Political science · 1991</span></p>
+        <h3 class="b-title" id="winning-the-next-war-t"><cite>Winning the Next War</cite></h3>
+        <p class="b-sub">Innovation and the Modern Military</p>
+        <p class="b-by">Stephen Peter Rosen</p>
+        <p class="b-what">How twentieth-century militaries really adopted new ways of fighting, from carrier aviation to helicopters: through new career paths for young officers more than budgets or defeats.</p>
+        <p class="b-lens"><span class="k">The angle</span>The sequel to Morison’s gunfire story. If you want to know whether the Pentagon will truly use AI, Rosen says to watch the promotion boards.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Who in today’s military gets promoted for mastering AI, and who gets passed over?</p>
+        <p class="rec"><span class="k">Reception</span>Won the 1992 Edgar S. Furniss Book Award for an outstanding contribution to national security studies (<a href="https://en.wikipedia.org/wiki/Stephen_Peter_Rosen" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="winning-the-next-war" data-title="Winning the Next War" data-by="Rosen, 1991"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Winning the Next War"><button class="vote-btn" type="button" data-id="winning-the-next-war" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="winning-the-next-war" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="closed-world" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="closed-world-t">
+        <p class="b-top"><span class="b-no">No. 16</span><span>History · 1996</span></p>
+        <h3 class="b-title" id="closed-world-t"><cite>The Closed World</cite></h3>
+        <p class="b-sub">Computers and the Politics of Discourse in Cold War America</p>
+        <p class="b-by">Paul N. Edwards</p>
+        <p class="b-what">How Cold War strategy shaped computing, from the SAGE air-defense network to the military money behind early AI and cognitive science.</p>
+        <p class="b-lens"><span class="k">The angle</span>AI grew up on Pentagon funding and a dream of total command and control. Edwards shows the machines and the metaphors, the mind as computer, developing together.</p>
+        <p class="b-ask"><span class="k">Episode question</span>How much of AI’s DNA is still Cold War command and control?</p>
+        <p class="rec"><span class="k">Reception</span>Howard Rheingold called it “one of the most important books of the 20th century” (<a href="https://www.powells.com/book/closed-world-computers-the-politics-of-discourse-in-cold-war-america-9780262550284" target="_blank" rel="noopener noreferrer">Powell’s</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="closed-world" data-title="The Closed World" data-by="Edwards, 1996"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Closed World"><button class="vote-btn" type="button" data-id="closed-world" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="closed-world" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-state" tabindex="-1" aria-labelledby="t-state-h">
+      <header class="sec-head">
+        <h2 id="t-state-h"><span class="badge" aria-hidden="true">04</span>The State</h2>
+        <p>Planners, cyberneticians and an old argument over whether self-interest can tame power. <span class="sr">3 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="passions-and-interests" tabindex="-1" data-cat="ideas" data-start="0" aria-labelledby="passions-and-interests-t">
+        <p class="b-top"><span class="b-no">No. 17</span><span>Intellectual history · 1977</span></p>
+        <h3 class="b-title" id="passions-and-interests-t"><cite>The Passions and the Interests</cite></h3>
+        <p class="b-sub">Political Arguments for Capitalism before Its Triumph</p>
+        <p class="b-by">Albert O. Hirschman</p>
+        <p class="b-what">How seventeenth- and eighteenth-century thinkers came to argue that the steady pursuit of gain could tame more dangerous passions, like ambition and the lust for power.</p>
+        <p class="b-lens"><span class="k">The angle</span>The original alignment argument: make a powerful drive safe by channelling it into a predictable one. Read it to ask whether tying AI to commercial interest makes it tamer or just stronger.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is profit a safe harness for AI, the way Montesquieu hoped commerce would be for princes?</p>
+        <p class="rec"><span class="k">Reception</span>Princeton keeps it in print as a classic, with a foreword by Amartya Sen; reviewers called it “a fresh and exciting argument of a fascinating thesis” (<a href="https://press.princeton.edu/books/paperback/9780691160252/the-passions-and-the-interests" target="_blank" rel="noopener noreferrer">Princeton University Press</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="passions-and-interests" data-title="The Passions and the Interests" data-by="Hirschman, 1977"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Passions and the Interests"><button class="vote-btn" type="button" data-id="passions-and-interests" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="passions-and-interests" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="newspeak-to-cyberspeak" tabindex="-1" data-cat="history" data-start="1" aria-labelledby="newspeak-to-cyberspeak-t">
+        <p class="b-top"><span class="b-no">No. 18</span><span>History · 2002</span><span class="tag start">Start here</span></p>
+        <h3 class="b-title" id="newspeak-to-cyberspeak-t"><cite>From Newspeak to Cyberspeak</cite></h3>
+        <p class="b-sub">A History of Soviet Cybernetics</p>
+        <p class="b-by">Slava Gerovitch</p>
+        <p class="b-what">How cybernetics went from a “bourgeois pseudoscience” in Stalin’s USSR to the language Soviet scientists hoped would rationalize the planned economy.</p>
+        <p class="b-lens"><span class="k">The angle</span>The history behind <cite>Red Plenty</cite>: scientists who believed computers would make the plan work, and a party that let them talk but not decide.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Can a one-party state let AI reform it, or only borrow its vocabulary?</p>
+        <p class="rec"><span class="k">Reception</span>Honourable mention for the 2003 Vucinich Book Prize; David Holloway called it “by far the best-informed and most insightful account of cybernetics in the Soviet Union” (<a href="https://web.mit.edu/slava/homepage/newspeak.htm" target="_blank" rel="noopener noreferrer">author’s page</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="newspeak-to-cyberspeak" data-title="From Newspeak to Cyberspeak" data-by="Gerovitch, 2002"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on From Newspeak to Cyberspeak"><button class="vote-btn" type="button" data-id="newspeak-to-cyberspeak" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="newspeak-to-cyberspeak" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="red-plenty" tabindex="-1" data-cat="fiction" data-start="0" aria-labelledby="red-plenty-t">
+        <p class="b-top"><span class="b-no">No. 19</span><span>Novel and history · 2010</span></p>
+        <h3 class="b-title" id="red-plenty-t"><cite>Red Plenty</cite></h3>
+        
+        <p class="b-by">Francis Spufford</p>
+        <p class="b-what">The Soviet dream of outproducing capitalism through mathematics, told in linked stories about Kantorovich, Khrushchev and the economists, engineers and fixers of the planned economy.</p>
+        <p class="b-lens"><span class="k">The angle</span>The original dream of running an economy by computer. With AI planning agents back in vogue, it reads as both temptation and warning.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Could AI do what Gosplan couldn’t, or is the problem knowledge rather than computing power?</p>
+        <p class="rec"><span class="k">Reception</span>Adam Roberts in <cite>Strange Horizons</cite> called it “a brilliant intervention into utopian discourses,” and it was listed for the Orwell Prize, the Ondaatje Prize and the BSFA Award (<a href="https://en.wikipedia.org/wiki/Red_Plenty" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="red-plenty" data-title="Red Plenty" data-by="Spufford, 2010"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Red Plenty"><button class="vote-btn" type="button" data-id="red-plenty" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="red-plenty" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-work" tabindex="-1" aria-labelledby="t-work-h">
+      <header class="sec-head">
+        <h2 id="t-work-h"><span class="badge" aria-hidden="true">05</span>The Shop Floor</h2>
+        <p>Who does the work, who loses the skill, and who decides. <span class="sr">9 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="human-condition" tabindex="-1" data-cat="ideas" data-start="0" aria-labelledby="human-condition-t">
+        <p class="b-top"><span class="b-no">No. 20</span><span>Philosophy · 1958</span></p>
+        <h3 class="b-title" id="human-condition-t"><cite>The Human Condition</cite></h3>
+        
+        <p class="b-by">Hannah Arendt</p>
+        <p class="b-what">Arendt separates labor, work and action, and asks what a society loses when everything becomes producing and consuming.</p>
+        <p class="b-lens"><span class="k">The angle</span>The prologue opens with Sputnik and warns that automation may leave us “a society of laborers without labor.” Few books ask the post-work question as hard.</p>
+        <p class="b-ask"><span class="k">Episode question</span>If AI does the labor, what is left for us to do, and will we know how to do it?</p>
+        <p class="rec"><span class="k">Reception</span>Reviewing it in <cite>Encounter</cite> in 1959, W. H. Auden confessed to a “jealous possessiveness” toward the book (<a href="https://hac.bard.edu/amor-mundi/arendt-auden-2012-12-10" target="_blank" rel="noopener noreferrer">Hannah Arendt Center</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="human-condition" data-title="The Human Condition" data-by="Arendt, 1958"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Human Condition"><button class="vote-btn" type="button" data-id="human-condition" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="human-condition" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="english-working-class" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="english-working-class-t">
+        <p class="b-top"><span class="b-no">No. 21</span><span>History · 1963</span></p>
+        <h3 class="b-title" id="english-working-class-t"><cite>The Making of the English Working Class</cite></h3>
+        
+        <p class="b-by">E. P. Thompson</p>
+        <p class="b-what">How English workers made themselves a class between 1780 and 1832, including the Luddites, whom Thompson rescues from “the enormous condescension of posterity.”</p>
+        <p class="b-lens"><span class="k">The angle</span>The Luddites were fighting what machines were being used to do to them, more than the machines themselves. Read it before calling anyone an AI Luddite.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Were the Luddites wrong, and who are today’s?</p>
+        <p class="rec"><span class="k">Reception</span>The Modern Library ranked it thirtieth among the hundred best nonfiction books of the twentieth century, and Sidney Pollard called it “a landmark in English historiography” (<a href="https://en.wikipedia.org/wiki/The_Making_of_the_English_Working_Class" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="english-working-class" data-title="The Making of the English Working Class" data-by="Thompson, 1963"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Making of the English Working Class"><button class="vote-btn" type="button" data-id="english-working-class" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="english-working-class" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="working" tabindex="-1" data-cat="reportage" data-start="0" aria-labelledby="working-t">
+        <p class="b-top"><span class="b-no">No. 22</span><span>Oral history · 1974</span></p>
+        <h3 class="b-title" id="working-t"><cite>Working</cite></h3>
+        <p class="b-sub">People Talk About What They Do All Day and How They Feel About What They Do</p>
+        <p class="b-by">Studs Terkel</p>
+        <p class="b-what">More than a hundred Americans, from a steelworker and a waitress to an executive, describe their jobs and what the jobs mean to them.</p>
+        <p class="b-lens"><span class="k">The angle</span>Before arguing about which jobs AI will take, hear people describe them. Terkel catches the pride, boredom and dignity that productivity numbers miss.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Which of Terkel’s jobs would AI improve, and which would it hollow out?</p>
+        <p class="rec"><span class="k">Reception</span>A bestseller when it appeared, it became a Broadway musical and inspired a 2023 Netflix series hosted by Barack Obama (<a href="https://en.wikipedia.org/wiki/Working_(Terkel_book)" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="working" data-title="Working" data-by="Terkel, 1974"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Working"><button class="vote-btn" type="button" data-id="working" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="working" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="labor-and-monopoly-capital" tabindex="-1" data-cat="social" data-start="1" aria-labelledby="labor-and-monopoly-capital-t">
+        <p class="b-top"><span class="b-no">No. 23</span><span>Sociology · 1974</span><span class="tag start">Start here</span></p>
+        <h3 class="b-title" id="labor-and-monopoly-capital-t"><cite>Labor and Monopoly Capital</cite></h3>
+        <p class="b-sub">The Degradation of Work in the Twentieth Century</p>
+        <p class="b-by">Harry Braverman</p>
+        <p class="b-what">A former coppersmith argues that management uses each new machine to strip skill out of jobs and move know-how from workers to managers.</p>
+        <p class="b-lens"><span class="k">The angle</span>The deskilling thesis that Noble and Zuboff argue with. Read it to ask whether AI deskills office work or moves expertise to whoever owns the model.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Does AI take the skill out of white-collar jobs, or put it back in?</p>
+        <p class="rec"><span class="k">Reception</span>Started what became known as the labor process debate, has been called one of the most important sociological books of its era, and topped the Wall Street Journal’s 2009 list of the five best books on working (<a href="https://en.wikipedia.org/wiki/Labor_and_Monopoly_Capital" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="labor-and-monopoly-capital" data-title="Labor and Monopoly Capital" data-by="Braverman, 1974"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Labor and Monopoly Capital"><button class="vote-btn" type="button" data-id="labor-and-monopoly-capital" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="labor-and-monopoly-capital" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="more-work-for-mother" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="more-work-for-mother-t">
+        <p class="b-top"><span class="b-no">No. 24</span><span>History · 1983</span></p>
+        <h3 class="b-title" id="more-work-for-mother-t"><cite>More Work for Mother</cite></h3>
+        <p class="b-sub">The Ironies of Household Technology from the Open Hearth to the Microwave</p>
+        <p class="b-by">Ruth Schwartz Cowan</p>
+        <p class="b-what">Why labor-saving household machines didn’t save housewives time: standards rose with every new appliance.</p>
+        <p class="b-lens"><span class="k">The angle</span>The best history of a labor-saving tool that raised expectations instead of cutting hours. Watch for the same pattern in office AI.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Will AI give knowledge workers more time, or more work?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Society for the History of Technology’s Dexter Prize in 1984. Early reviews were mixed, but it has since become a standard source in women’s studies and the history of technology (<a href="https://en.wikipedia.org/wiki/Ruth_Schwartz_Cowan" target="_blank" rel="noopener noreferrer">Ruth Schwartz Cowan</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="more-work-for-mother" data-title="More Work for Mother" data-by="Cowan, 1983"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on More Work for Mother"><button class="vote-btn" type="button" data-id="more-work-for-mother" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="more-work-for-mother" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="forces-of-production" tabindex="-1" data-cat="history" data-start="1" aria-labelledby="forces-of-production-t">
+        <p class="b-top"><span class="b-no">No. 25</span><span>History · 1984</span><span class="tag start">Start here</span></p>
+        <h3 class="b-title" id="forces-of-production-t"><cite>Forces of Production</cite></h3>
+        <p class="b-sub">A Social History of Industrial Automation</p>
+        <p class="b-by">David F. Noble</p>
+        <p class="b-what">How American industry chose numerically controlled machine tools over a rival technology that would have kept skilled machinists in charge.</p>
+        <p class="b-lens"><span class="k">The angle</span>Automation is a choice about who holds control. Noble shows managers and the Air Force picking the design that took knowledge off the shop floor.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Who is choosing which kind of AI automation gets built, and for whose benefit?</p>
+        <p class="rec"><span class="k">Reception</span>James Fallows called it a “prodigious accomplishment” in <a href="https://www.nybooks.com/articles/1984/09/27/a-parable-of-automation/" target="_blank" rel="noopener noreferrer">The New York Review of Books</a>, and Carroll Pursell predicted in the American Historical Review that it would become a classic in its field. David Brody attacked its dogmatism in Science; <a href="https://www.historyoftechnology.org/memorials/david-noble/" target="_blank" rel="noopener noreferrer">SHOT’s memorial to Noble</a> lays out the fight.</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="forces-of-production" data-title="Forces of Production" data-by="Noble, 1984"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Forces of Production"><button class="vote-btn" type="button" data-id="forces-of-production" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="forces-of-production" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="american-system" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="american-system-t">
+        <p class="b-top"><span class="b-no">No. 26</span><span>History · 1984</span></p>
+        <h3 class="b-title" id="american-system-t"><cite>From the American System to Mass Production, 1800–1932</cite></h3>
+        <p class="b-sub">The Development of Manufacturing Technology in the United States</p>
+        <p class="b-by">David A. Hounshell</p>
+        <p class="b-what">How American factories got from interchangeable parts at the federal armories to Ford’s moving assembly line, and how much slower and harder that was than the legend says.</p>
+        <p class="b-lens"><span class="k">The angle</span>Interchangeable parts took decades and federal money before they paid for themselves. A sober guide to how long a general-purpose technology takes to reach the factory floor.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is AI still at the armory stage, or already at Highland Park?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Society for the History of Technology’s 1987 Dexter Prize (<a href="https://en.wikipedia.org/wiki/David_A._Hounshell" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="american-system" data-title="From the American System to Mass Production, 1800–1932" data-by="Hounshell, 1984"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on From the American System to Mass Production, 1800–1932"><button class="vote-btn" type="button" data-id="american-system" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="american-system" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="smart-machine" tabindex="-1" data-cat="social" data-start="0" aria-labelledby="smart-machine-t">
+        <p class="b-top"><span class="b-no">No. 27</span><span>Sociology · 1988</span></p>
+        <h3 class="b-title" id="smart-machine-t"><cite>In the Age of the Smart Machine</cite></h3>
+        <p class="b-sub">The Future of Work and Power</p>
+        <p class="b-by">Shoshana Zuboff</p>
+        <p class="b-what">Years of fieldwork in pulp mills and offices as computers arrived, and the managers and workers who fought over what the machines would be for.</p>
+        <p class="b-lens"><span class="k">The angle</span>Zuboff’s distinction is the one to borrow: computers can automate work, or “informate” it by giving workers new knowledge. Which one AI does is a management choice.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Will companies use AI to automate their workers or to informate them?</p>
+        <p class="rec"><span class="k">Reception</span>Merle Rubin in the <cite>Christian Science Monitor</cite> found it thorough and thoughtful, “lucid, even passionate at times” (<a href="https://www.csmonitor.com/layout/set/amphtml/1988/0714/dbagg.html" target="_blank" rel="noopener noreferrer">review</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="smart-machine" data-title="In the Age of the Smart Machine" data-by="Zuboff, 1988"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on In the Age of the Smart Machine"><button class="vote-btn" type="button" data-id="smart-machine" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="smart-machine" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="when-computers-were-human" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="when-computers-were-human-t">
+        <p class="b-top"><span class="b-no">No. 28</span><span>History · 2005</span></p>
+        <h3 class="b-title" id="when-computers-were-human-t"><cite>When Computers Were Human</cite></h3>
+        
+        <p class="b-by">David Alan Grier</p>
+        <p class="b-what">Three centuries of human computers, many of them women, who calculated comet orbits, navigation and artillery tables by hand until machines took the job and the name.</p>
+        <p class="b-lens"><span class="k">The angle</span>The last job called “computer” was automated away. Grier shows how the work was organized, who did it and what became of them.</p>
+        <p class="b-ask"><span class="k">Episode question</span>What happened to the human computers, and what does it predict for knowledge workers now?</p>
+        <p class="rec"><span class="k">Reception</span>George Dyson called it an “authoritative, engaging, and richly detailed account,” and the IEEE Annals of the History of Computing recommended it to every historian of computing (<a href="https://press.princeton.edu/node/18064" target="_blank" rel="noopener noreferrer">Princeton University Press</a>). It won a 2006 Independent Publisher Book Award.</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="when-computers-were-human" data-title="When Computers Were Human" data-by="Grier, 2005"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on When Computers Were Human"><button class="vote-btn" type="button" data-id="when-computers-were-human" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="when-computers-were-human" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-archive" tabindex="-1" aria-labelledby="t-archive-h">
+      <header class="sec-head">
+        <h2 id="t-archive-h"><span class="badge" aria-hidden="true">06</span>The Archive</h2>
+        <p>Memory, writing, print and information overload: earlier moments when a new medium remade memory and trust. <span class="sr">4 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="printing-press" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="printing-press-t">
+        <p class="b-top"><span class="b-no">No. 29</span><span>History · 1979</span></p>
+        <h3 class="b-title" id="printing-press-t"><cite>The Printing Press as an Agent of Change</cite></h3>
+        
+        <p class="b-by">Elizabeth L. Eisenstein</p>
+        <p class="b-what">How print transformed European thought by standardizing, preserving and multiplying texts, and helped make the Reformation and the Scientific Revolution possible.</p>
+        <p class="b-lens"><span class="k">The angle</span>Everyone calls AI the new printing press; this is the book on what the press actually did. The abridged <cite>Printing Revolution in Early Modern Europe</cite> is the podcast-length version.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is AI an agent of change the way print was, or just a faster copier?</p>
+        <p class="rec"><span class="k">Reception</span>Praised for bringing historical rigor to McLuhan’s hunches about print, and still contested: in 2002 the <cite>American Historical Review</cite> staged a debate between Eisenstein and her critic Adrian Johns (<a href="https://en.wikipedia.org/wiki/Elizabeth_Eisenstein" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="printing-press" data-title="The Printing Press as an Agent of Change" data-by="Eisenstein, 1979"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Printing Press as an Agent of Change"><button class="vote-btn" type="button" data-id="printing-press" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="printing-press" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="orality-and-literacy" tabindex="-1" data-cat="ideas" data-start="0" aria-labelledby="orality-and-literacy-t">
+        <p class="b-top"><span class="b-no">No. 30</span><span>Media theory · 1982</span></p>
+        <h3 class="b-title" id="orality-and-literacy-t"><cite>Orality and Literacy</cite></h3>
+        <p class="b-sub">The Technologizing of the Word</p>
+        <p class="b-by">Walter J. Ong</p>
+        <p class="b-what">How writing and print restructured human thought, and how cultures without writing think, remember and argue.</p>
+        <p class="b-lens"><span class="k">The angle</span>Ong’s “secondary orality,” a new oral culture built on electronic media, fits the chatbot: knowledge delivered as conversation rather than text.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Are chatbots taking us back toward an oral culture?</p>
+        <p class="rec"><span class="k">Reception</span>Ong’s most widely known work, translated into eleven languages (<a href="https://en.wikipedia.org/wiki/Walter_J._Ong" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="orality-and-literacy" data-title="Orality and Literacy" data-by="Ong, 1982"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Orality and Literacy"><button class="vote-btn" type="button" data-id="orality-and-literacy" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="orality-and-literacy" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="control-revolution" tabindex="-1" data-cat="social" data-start="0" aria-labelledby="control-revolution-t">
+        <p class="b-top"><span class="b-no">No. 31</span><span>Sociology · 1986</span></p>
+        <h3 class="b-title" id="control-revolution-t"><cite>The Control Revolution</cite></h3>
+        <p class="b-sub">Technological and Economic Origins of the Information Society</p>
+        <p class="b-by">James R. Beniger</p>
+        <p class="b-what">The information society didn’t start with computers. It began in the nineteenth century, when railroads, factories and markets moved faster than anyone could control them.</p>
+        <p class="b-lens"><span class="k">The angle</span>AI as the latest answer to a crisis of control: information technology arrives when the flow of goods and data outruns the people managing it.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is AI a new revolution, or the latest chapter of Beniger’s?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Association of American Publishers’ 1986 award for the most outstanding book in the social and behavioral sciences, and in 2007 the International Communication Association’s Fellows Book Award for standing the test of time (<a href="https://annenberg.usc.edu/node/23996" target="_blank" rel="noopener noreferrer">USC Annenberg</a>). Cosma Shalizi called it “undoubtedly the best work ever done by a professor of communications” (<a href="https://www.bactra.org/reviews/beniger" target="_blank" rel="noopener noreferrer">The Bactra Review</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="control-revolution" data-title="The Control Revolution" data-by="Beniger, 1986"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Control Revolution"><button class="vote-btn" type="button" data-id="control-revolution" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="control-revolution" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="too-much-to-know" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="too-much-to-know-t">
+        <p class="b-top"><span class="b-no">No. 32</span><span>History · 2010</span></p>
+        <h3 class="b-title" id="too-much-to-know-t"><cite>Too Much to Know</cite></h3>
+        <p class="b-sub">Managing Scholarly Information before the Modern Age</p>
+        <p class="b-by">Ann M. Blair</p>
+        <p class="b-what">How Renaissance scholars coped with a flood of printed books, using anthologies, encyclopedias, indexes and note-taking systems that literally cut and pasted text.</p>
+        <p class="b-lens"><span class="k">The angle</span>Information overload and the tools to tame it, centuries before search and summarization, along with the old complaint that shortcuts make readers lazy.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is AI summarization the florilegium of our age, and is the panic the same panic?</p>
+        <p class="rec"><span class="k">Reception</span>James Delbourgo, in Times Higher Education, found it timely and erudite (<a href="https://timeshighereducation.com/node/80761" target="_blank" rel="noopener noreferrer">review</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="too-much-to-know" data-title="Too Much to Know" data-by="Blair, 2010"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Too Much to Know"><button class="vote-btn" type="button" data-id="too-much-to-know" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="too-much-to-know" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-accident" tabindex="-1" aria-labelledby="t-accident-h">
+      <header class="sec-head">
+        <h2 id="t-accident-h"><span class="badge" aria-hidden="true">07</span>The Accident</h2>
+        <p>Missed warnings, and the risks modern societies make for themselves. <span class="sr">2 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="pearl-harbor" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="pearl-harbor-t">
+        <p class="b-top"><span class="b-no">No. 33</span><span>History · 1962</span></p>
+        <h3 class="b-title" id="pearl-harbor-t"><cite>Pearl Harbor</cite></h3>
+        <p class="b-sub">Warning and Decision</p>
+        <p class="b-by">Roberta Wohlstetter</p>
+        <p class="b-what">Why America was surprised at Pearl Harbor even though its codebreakers were reading Japanese traffic: the signals were buried in noise.</p>
+        <p class="b-lens"><span class="k">The angle</span>The classic case that more information doesn’t mean better warning. Required for anyone who thinks AI will end intelligence failures.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Would an AI analyst have caught the signal, or drowned in the noise faster?</p>
+        <p class="rec"><span class="k">Reception</span>Won the 1963 <a href="https://en.wikipedia.org/wiki/Bancroft_Prize" target="_blank" rel="noopener noreferrer">Bancroft Prize</a>; the military historian Eugene Rasor called it “the best and most comprehensive study” of the failure (<a href="https://en.wikipedia.org/wiki/Roberta_Wohlstetter" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="pearl-harbor" data-title="Pearl Harbor" data-by="Wohlstetter, 1962"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Pearl Harbor"><button class="vote-btn" type="button" data-id="pearl-harbor" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="pearl-harbor" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="risk-society" tabindex="-1" data-cat="social" data-start="0" aria-labelledby="risk-society-t">
+        <p class="b-top"><span class="b-no">No. 34</span><span>Sociology · 1986</span></p>
+        <h3 class="b-title" id="risk-society-t"><cite>Risk Society</cite></h3>
+        <p class="b-sub">Towards a New Modernity</p>
+        <p class="b-by">Ulrich Beck</p>
+        <p class="b-what">Beck argues that modern societies are increasingly organized around risks they manufacture themselves, often invisible to ordinary people and defined by experts.</p>
+        <p class="b-lens"><span class="k">The angle</span>AI risk is a textbook manufactured risk: global, hard to see and fought over by experts. Beck predicted the politics, including the collapse of trust when experts disagree.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Who gets to define AI’s risks, and what happens to trust when the experts split?</p>
+        <p class="rec"><span class="k">Reception</span>Published in German just after Chernobyl, it became a highly influential, catalytic work of social theory (<a href="https://en.wikipedia.org/wiki/Risk_society" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="risk-society" data-title="Risk Society" data-by="Beck, 1986"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Risk Society"><button class="vote-btn" type="button" data-id="risk-society" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="risk-society" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-mind" tabindex="-1" aria-labelledby="t-mind-h">
+      <header class="sec-head">
+        <h2 id="t-mind-h"><span class="badge" aria-hidden="true">08</span>The Mind</h2>
+        <p>Machines that seem to think, and whether we can ever check their reasoning. <span class="sr">3 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="second-self" tabindex="-1" data-cat="social" data-start="0" aria-labelledby="second-self-t">
+        <p class="b-top"><span class="b-no">No. 35</span><span>Sociology · 1984</span></p>
+        <h3 class="b-title" id="second-self-t"><cite>The Second Self</cite></h3>
+        <p class="b-sub">Computers and the Human Spirit</p>
+        <p class="b-by">Sherry Turkle</p>
+        <p class="b-what">An MIT sociologist’s interviews with children, hackers and early PC owners about how computers changed the way they thought about minds, life and themselves.</p>
+        <p class="b-lens"><span class="k">The angle</span>Children arguing over whether a computer toy is alive are the ancestors of today’s AI-companion users. Turkle watched people bond with machines decades before chatbots.</p>
+        <p class="b-ask"><span class="k">Episode question</span>What do our relationships with chatbots say about us?</p>
+        <p class="rec"><span class="k">Reception</span>Christopher Lehmann-Haupt in the <cite>New York Times</cite> called it “a brilliant and challenging discussion presented with extraordinary clarity” (<a href="https://www.penguinrandomhouse.com/books/654470/the-second-self-twentieth-anniversary-edition-by-sherry-turkle/" target="_blank" rel="noopener noreferrer">Penguin Random House</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="second-self" data-title="The Second Self" data-by="Turkle, 1984"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Second Self"><button class="vote-btn" type="button" data-id="second-self" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="second-self" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="emperors-new-mind" tabindex="-1" data-cat="ideas" data-start="0" aria-labelledby="emperors-new-mind-t">
+        <p class="b-top"><span class="b-no">No. 36</span><span>Popular science · 1989</span><span class="tag prov">Provocation</span></p>
+        <h3 class="b-title" id="emperors-new-mind-t"><cite>The Emperor’s New Mind</cite></h3>
+        <p class="b-sub">Concerning Computers, Minds, and the Laws of Physics</p>
+        <p class="b-by">Roger Penrose</p>
+        <p class="b-what">A great mathematical physicist argues that human understanding isn’t algorithmic, so no digital computer can think as we do, and that consciousness depends on physics we don’t yet understand.</p>
+        <p class="b-lens"><span class="k">The angle</span>The most serious argument from physics that machines can’t truly understand. Most AI researchers think it’s wrong; working out exactly why is the episode.</p>
+        <p class="b-ask"><span class="k">Episode question</span>If Penrose is right, what are today’s models doing instead of thinking?</p>
+        <p class="rec"><span class="k">Reception</span>Won the 1990 Science Book Prize, while philosophers, computer scientists and roboticists have attacked its thesis as mistaken (<a href="https://en.wikipedia.org/wiki/The_Emperor%27s_New_Mind" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="emperors-new-mind" data-title="The Emperor’s New Mind" data-by="Penrose, 1989"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Emperor’s New Mind"><button class="vote-btn" type="button" data-id="emperors-new-mind" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="emperors-new-mind" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="mechanizing-proof" tabindex="-1" data-cat="social" data-start="0" aria-labelledby="mechanizing-proof-t">
+        <p class="b-top"><span class="b-no">No. 37</span><span>Sociology of science · 2001</span></p>
+        <h3 class="b-title" id="mechanizing-proof-t"><cite>Mechanizing Proof</cite></h3>
+        <p class="b-sub">Computing, Risk, and Trust</p>
+        <p class="b-by">Donald MacKenzie</p>
+        <p class="b-what">The long effort to prove software and chips correct, and the fights over what counts as a proof once a machine does the checking.</p>
+        <p class="b-lens"><span class="k">The angle</span>From the author of <cite>Inventing Accuracy</cite>, the question under every AI safety plan: when can you trust a machine’s reasoning, and who checks the checker?</p>
+        <p class="b-ask"><span class="k">Episode question</span>Will anyone ever prove an AI system safe, or will we only come to trust it?</p>
+        <p class="rec"><span class="k">Reception</span>Brian Hayes in American Scientist called it a “well-informed, nontechnical description” with “pleasantly informal” prose (<a href="https://www.americanscientist.org/node/952" target="_blank" rel="noopener noreferrer">American Scientist</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="mechanizing-proof" data-title="Mechanizing Proof" data-by="MacKenzie, 2001"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Mechanizing Proof"><button class="vote-btn" type="button" data-id="mechanizing-proof" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="mechanizing-proof" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-china" tabindex="-1" aria-labelledby="t-china-h">
+      <header class="sec-head">
+        <h2 id="t-china-h"><span class="badge" aria-hidden="true">09</span>China &amp; the Long View</h2>
+        <p>Sorcerers, bomb builders and the Western machines once held up as the measure of civilization. <span class="sr">3 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="china-builds-the-bomb" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="china-builds-the-bomb-t">
+        <p class="b-top"><span class="b-no">No. 38</span><span>History · 1988</span></p>
+        <h3 class="b-title" id="china-builds-the-bomb-t"><cite>China Builds the Bomb</cite></h3>
+        
+        <p class="b-by">John Wilson Lewis and Xue Litai</p>
+        <p class="b-what">How China built and tested its first atomic bomb in 1964 after the Soviets pulled their help: mass mobilization, a scientific elite and political will.</p>
+        <p class="b-lens"><span class="k">The angle</span>The precedent for building capability under technology denial. Read it with chip export controls in mind.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Do export controls slow a determined state, or speed its self-reliance?</p>
+        <p class="rec"><span class="k">Reception</span><cite>Publishers Weekly</cite> called it “this important work of scholarship” (<a href="https://www.publishersweekly.com/9780804714525" target="_blank" rel="noopener noreferrer">review</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="china-builds-the-bomb" data-title="China Builds the Bomb" data-by="Lewis &amp; Xue, 1988"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on China Builds the Bomb"><button class="vote-btn" type="button" data-id="china-builds-the-bomb" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="china-builds-the-bomb" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="machines-as-measure" tabindex="-1" data-cat="history" data-start="0" aria-labelledby="machines-as-measure-t">
+        <p class="b-top"><span class="b-no">No. 39</span><span>History · 1989</span></p>
+        <h3 class="b-title" id="machines-as-measure-t"><cite>Machines as the Measure of Men</cite></h3>
+        <p class="b-sub">Science, Technology, and Ideologies of Western Dominance</p>
+        <p class="b-by">Michael Adas</p>
+        <p class="b-what">How Europeans came to judge other civilizations, China and India above all, by their machines and science.</p>
+        <p class="b-lens"><span class="k">The angle</span>Technology as a yardstick of civilization: a lead in machines hardened into an ideology of superiority. AI is becoming the new yardstick.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Will AI capability become the new measure of nations, and who gets ranked below?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Society for the History of Technology’s Dexter Prize in 1991; Alan Charles Kors reviewed it in The New York Times (<a href="https://en.wikipedia.org/wiki/Michael_Adas" target="_blank" rel="noopener noreferrer">Michael Adas</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="machines-as-measure" data-title="Machines as the Measure of Men" data-by="Adas, 1989"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Machines as the Measure of Men"><button class="vote-btn" type="button" data-id="machines-as-measure" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="machines-as-measure" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="soulstealers" tabindex="-1" data-cat="history" data-start="1" aria-labelledby="soulstealers-t">
+        <p class="b-top"><span class="b-no">No. 40</span><span>History · 1990</span><span class="tag start">Start here</span></p>
+        <h3 class="b-title" id="soulstealers-t"><cite>Soulstealers</cite></h3>
+        <p class="b-sub">The Chinese Sorcery Scare of 1768</p>
+        <p class="b-by">Philip A. Kuhn</p>
+        <p class="b-what">A panic over sorcerers said to steal souls by clipping men’s queues, and how the Qianlong emperor used it to discipline his own bureaucracy.</p>
+        <p class="b-lens"><span class="k">The angle</span>A moral panic over an invisible threat, and an autocrat who turned it into a tool of control. Read it against today’s fears of deepfakes and AI subversion.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Who benefits from a panic over an invisible, technical threat?</p>
+        <p class="rec"><span class="k">Reception</span>Won the Association for Asian Studies’ Joseph Levenson Prize, and its Chinese translation sold more than 100,000 copies (<a href="https://en.wikipedia.org/wiki/Philip_A._Kuhn" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="soulstealers" data-title="Soulstealers" data-by="Kuhn, 1990"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Soulstealers"><button class="vote-btn" type="button" data-id="soulstealers" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="soulstealers" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-fiction" tabindex="-1" aria-labelledby="t-fiction-h">
+      <header class="sec-head">
+        <h2 id="t-fiction-h"><span class="badge" aria-hidden="true">10</span>Novels &amp; Stories</h2>
+        <p>Fiction that saw it coming, or saw around it. <span class="sr">4 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="erewhon" tabindex="-1" data-cat="fiction" data-start="0" aria-labelledby="erewhon-t">
+        <p class="b-top"><span class="b-no">No. 41</span><span>Satire · 1872</span></p>
+        <h3 class="b-title" id="erewhon-t"><cite>Erewhon</cite></h3>
+        
+        <p class="b-by">Samuel Butler</p>
+        <p class="b-what">A traveler finds a country that destroyed its machines centuries earlier, afraid they would evolve consciousness and enslave their makers.</p>
+        <p class="b-lens"><span class="k">The angle</span>Its “Book of the Machines” chapters make one of the earliest arguments that machines could evolve past us. The Erewhonians did what today’s pause advocates only propose.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is <cite>Erewhon</cite> a satire of machine-smashers, or a warning that they had a point?</p>
+        <p class="rec"><span class="k">Reception</span>George Orwell praised the “imagination of a very high order” behind it, and Alan Turing cited its warning (<a href="https://en.wikipedia.org/wiki/Erewhon" target="_blank" rel="noopener noreferrer">Erewhon</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="erewhon" data-title="Erewhon" data-by="Butler, 1872"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Erewhon"><button class="vote-btn" type="button" data-id="erewhon" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="erewhon" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="player-piano" tabindex="-1" data-cat="fiction" data-start="0" aria-labelledby="player-piano-t">
+        <p class="b-top"><span class="b-no">No. 42</span><span>Novel · 1952</span></p>
+        <h3 class="b-title" id="player-piano-t"><cite>Player Piano</cite></h3>
+        
+        <p class="b-by">Kurt Vonnegut</p>
+        <p class="b-what">In a future America run by engineers and managers, automated factories have made most workers useless, and a plant manager drifts toward rebels who want to smash the machines.</p>
+        <p class="b-lens"><span class="k">The angle</span>The first great novel of automation anxiety, drawn from Vonnegut’s years at General Electric. Its question is not whether the machines work, but what people are for once they do.</p>
+        <p class="b-ask"><span class="k">Episode question</span>What are people for once the machines work?</p>
+        <p class="rec"><span class="k">Reception</span>Groff Conklin called it “a biting, vividly alive and very effectively understated anti-Utopia,” and it was nominated for the 1953 International Fantasy Award (<a href="https://en.wikipedia.org/wiki/Player_Piano_(novel)" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="player-piano" data-title="Player Piano" data-by="Vonnegut, 1952"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Player Piano"><button class="vote-btn" type="button" data-id="player-piano" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="player-piano" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="canticle-for-leibowitz" tabindex="-1" data-cat="fiction" data-start="0" aria-labelledby="canticle-for-leibowitz-t">
+        <p class="b-top"><span class="b-no">No. 43</span><span>Novel · 1959</span></p>
+        <h3 class="b-title" id="canticle-for-leibowitz-t"><cite>A Canticle for Leibowitz</cite></h3>
+        
+        <p class="b-by">Walter M. Miller Jr.</p>
+        <p class="b-what">After a nuclear war, monks spend centuries copying the surviving scraps of science, including a blueprint they revere without understanding, until civilization rebuilds and repeats its mistakes.</p>
+        <p class="b-lens"><span class="k">The angle</span>Faithfully copying what you don’t understand, for centuries: a strange mirror for language models, and a novel about whether knowledge saves us.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Are the monks of Leibowitz the first language models?</p>
+        <p class="rec"><span class="k">Reception</span>Won the 1961 Hugo Award, and <cite>Time</cite> later called it “an extraordinary novel” (<a href="https://en.wikipedia.org/wiki/A_Canticle_for_Leibowitz" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="canticle-for-leibowitz" data-title="A Canticle for Leibowitz" data-by="Miller, 1959"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on A Canticle for Leibowitz"><button class="vote-btn" type="button" data-id="canticle-for-leibowitz" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="canticle-for-leibowitz" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="labyrinths" tabindex="-1" data-cat="fiction" data-start="0" aria-labelledby="labyrinths-t">
+        <p class="b-top"><span class="b-no">No. 44</span><span>Stories · 1962</span></p>
+        <h3 class="b-title" id="labyrinths-t"><cite>Labyrinths</cite></h3>
+        <p class="b-sub">Selected Stories and Other Writings</p>
+        <p class="b-by">Jorge Luis Borges</p>
+        <p class="b-what">Stories of an infinite library, a man who forgets nothing, forking paths and a writer who recomposes <cite>Don Quixote</cite> word for word.</p>
+        <p class="b-lens"><span class="k">The angle</span>“The Library of Babel” is a model’s possibility space, “Funes the Memorious” is overfitting, and “Pierre Menard” is the authorship question.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Is a language model the Library of Babel with a search box?</p>
+        <p class="rec"><span class="k">Reception</span>Published soon after Borges shared the Prix Formentor with Samuel Beckett; in 2008 the Society of Authors named it one of fifty outstanding translations of the previous half-century (<a href="https://en.wikipedia.org/wiki/Labyrinths_(short_story_collection)" target="_blank" rel="noopener noreferrer">Wikipedia</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="labyrinths" data-title="Labyrinths" data-by="Borges, 1962"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on Labyrinths"><button class="vote-btn" type="button" data-id="labyrinths" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="labyrinths" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+    <section class="theme" id="t-lives" tabindex="-1" aria-labelledby="t-lives-h">
+      <header class="sec-head">
+        <h2 id="t-lives-h"><span class="badge" aria-hidden="true">11</span>Lives</h2>
+        <p>Biographies and memoirs of the people who built, funded and fretted over the machines. <span class="sr">3 books.</span></p>
+      </header>
+      <div class="grid">
+      <article class="book" id="henry-adams" tabindex="-1" data-cat="lives" data-start="0" aria-labelledby="henry-adams-t">
+        <p class="b-top"><span class="b-no">No. 45</span><span>Memoir · 1918</span></p>
+        <h3 class="b-title" id="henry-adams-t"><cite>The Education of Henry Adams</cite></h3>
+        
+        <p class="b-by">Henry Adams</p>
+        <p class="b-what">A Boston patrician’s account of how his education failed to prepare him for a world remade by technology, including the chapter “The Dynamo and the Virgin.”</p>
+        <p class="b-lens"><span class="k">The angle</span>Before the dynamos at the 1900 Paris Exposition, Adams felt a new force he couldn’t understand. The founding memoir of technological vertigo.</p>
+        <p class="b-ask"><span class="k">Episode question</span>What is our dynamo, and what would Adams make of it?</p>
+        <p class="rec"><span class="k">Reception</span>Won the 1919 Pulitzer Prize, and the Modern Library ranked it first among the 100 best English-language nonfiction books of the twentieth century (<a href="https://en.wikipedia.org/wiki/The_Education_of_Henry_Adams" target="_blank" rel="noopener noreferrer">The Education of Henry Adams</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="henry-adams" data-title="The Education of Henry Adams" data-by="Adams, 1918"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Education of Henry Adams"><button class="vote-btn" type="button" data-id="henry-adams" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="henry-adams" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="von-neumann-and-wiener" tabindex="-1" data-cat="lives" data-start="0" aria-labelledby="von-neumann-and-wiener-t">
+        <p class="b-top"><span class="b-no">No. 46</span><span>Double biography · 1980</span></p>
+        <h3 class="b-title" id="von-neumann-and-wiener-t"><cite>John von Neumann and Norbert Wiener</cite></h3>
+        <p class="b-sub">From Mathematics to the Technologies of Life and Death</p>
+        <p class="b-by">Steve J. Heims</p>
+        <p class="b-what">Two prodigies who founded the computer age and split over military power: von Neumann embraced it, and Wiener refused weapons work after 1945.</p>
+        <p class="b-lens"><span class="k">The angle</span>The two paths open to every AI researcher today, made concrete.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Von Neumann or Wiener: which would you be at a frontier lab?</p>
+        <p class="rec"><span class="k">Reception</span>Physics Today’s reviewer, Robert Andersen, rated it “highly recommended,” while faulting its prose (<a href="https://aip.brightspotcdn.com/PTO.v34.i9.79_1.online.pdf" target="_blank" rel="noopener noreferrer">Physics Today, 1981</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="von-neumann-and-wiener" data-title="John von Neumann and Norbert Wiener" data-by="Heims, 1980"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on John von Neumann and Norbert Wiener"><button class="vote-btn" type="button" data-id="von-neumann-and-wiener" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="von-neumann-and-wiener" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      <article class="book" id="dream-machine" tabindex="-1" data-cat="lives" data-start="0" aria-labelledby="dream-machine-t">
+        <p class="b-top"><span class="b-no">No. 47</span><span>Biography · 2001</span></p>
+        <h3 class="b-title" id="dream-machine-t"><cite>The Dream Machine</cite></h3>
+        <p class="b-sub">J. C. R. Licklider and the Revolution That Made Computing Personal</p>
+        <p class="b-by">M. Mitchell Waldrop</p>
+        <p class="b-what">Licklider, a psychologist turned Pentagon program manager, funded the people who built time-sharing, networking and personal computing.</p>
+        <p class="b-lens"><span class="k">The angle</span>His 1960 essay “Man-Computer Symbiosis” is the copilot vision, sixty years early. And he shows how much one visionary funder can do.</p>
+        <p class="b-ask"><span class="k">Episode question</span>Who is today’s Licklider, and could a government program manager still matter that much?</p>
+        <p class="rec"><span class="k">Reception</span><a href="https://www.kirkusreviews.com/book-reviews/m-mitchell-waldrop/the-dream-machine-2/" target="_blank" rel="noopener noreferrer">Kirkus</a> called it “a rollicking account of a good, old-fashioned visionary,” and Stripe Press brought it back into print in 2018 (<a href="https://www.booksamillion.com/p/Dream-Machine/M-Mitchell-Waldrop/9781732265110" target="_blank" rel="noopener noreferrer">2018 edition</a>).</p>
+        <div class="b-act"><button class="pick" type="button" aria-pressed="false" data-id="dream-machine" data-title="The Dream Machine" data-by="Waldrop, 2001"><svg viewBox="0 0 10 14" aria-hidden="true"><path d="M1 1h8v12l-4-3-4 3z"/></svg><span>Shortlist</span></button><div class="vote" role="group" aria-label="Your vote on The Dream Machine"><button class="vote-btn" type="button" data-id="dream-machine" data-v="1" aria-pressed="false" aria-label="Thumbs up" title="Thumbs up"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button><button class="vote-btn" type="button" data-id="dream-machine" data-v="-1" aria-pressed="false" aria-label="Thumbs down" title="Thumbs down"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7h2.5v7.5H1.5z M4 7.5l3-5.5c1 0 1.7.9 1.5 1.9L8 6.5h5c1 0 1.7.9 1.5 1.8l-1.2 5c-.2.7-.8 1.2-1.5 1.2H4"/></svg></button></div></div>
+      </article>
+      </div>
+    </section>
+  </div>
+
+  <section id="double-bills" tabindex="-1" aria-labelledby="bills-h">
+    <header class="sec-head">
+      <h2 id="bills-h">Double bills</h2>
+      <p>Pairings that would make a two-part episode, or one good argument.</p>
+    </header>
+    <ul class="bills">
+      <li class="bill">
+        <h3>Two Sputnik moments</h3>
+        <p class="bill-books"><a href="#heavens-and-earth"><cite>…the Heavens and the Earth</cite></a><span class="plus" aria-hidden="true">+</span><a href="#fifth-generation"><cite>The Fifth Generation</cite></a></p>
+        <p class="premise">Sputnik built NASA. The 1983 panic over Japan’s AI program helped launch DARPA’s Strategic Computing Initiative (Roland and Shiman’s <cite>Strategic Computing</cite> tells that story). Which one was DeepSeek?</p>
+      </li>
+      <li class="bill">
+        <h3>The GE episode</h3>
+        <p class="bill-books"><a href="#forces-of-production"><cite>Forces of Production</cite></a><span class="plus" aria-hidden="true">+</span><a href="#player-piano"><cite>Player Piano</cite></a></p>
+        <p class="premise">Vonnegut wrote his novel after years at General Electric watching machine tools get automated; Noble’s history includes a long fight over the same kind of machines inside a GE jet-engine plant.</p>
+      </li>
+      <li class="bill">
+        <h3>Who keeps the skill</h3>
+        <p class="bill-books"><a href="#labor-and-monopoly-capital"><cite>Labor and Monopoly Capital</cite></a><span class="plus" aria-hidden="true">+</span><a href="#forces-of-production"><cite>Forces of Production</cite></a><span class="plus" aria-hidden="true">+</span><a href="#smart-machine"><cite>In the Age of the Smart Machine</cite></a></p>
+        <p class="premise">Braverman says machines strip skill from work, Noble shows managers choosing the machines that do it, and Zuboff finds computers that could go either way.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="notes" class="notes" tabindex="-1" aria-labelledby="notes-h">
+    <header class="sec-head">
+      <h2 id="notes-h">Near misses</h2>
+    </header>
+    <p>Cut in the last round, and still worth a look: Alfred Chandler’s <cite>The Visible Hand</cite>, AnnaLee Saxenian’s <cite>Regional Advantage</cite> and <cite>The New Argonauts</cite>, Tim Wu’s <cite>The Master Switch</cite>, Geoffrey Bowker and Susan Leigh Star’s <cite>Sorting Things Out</cite>, Lucy Suchman’s <cite>Plans and Situated Actions</cite>, Alex Roland and Philip Shiman’s <cite>Strategic Computing</cite>, Albert Hirschman’s <cite>The Rhetoric of Reaction</cite> and <cite>Development Projects Observed</cite>, Jonathan Spence’s <cite>Treason by the Book</cite>, Stephen Biddle’s <cite>Military Power</cite>, Norbert Wiener’s <cite>The Human Use of Human Beings</cite>, Herbert Simon’s memoir <cite>Models of My Life</cite>, Leslie Berlin’s <cite>The Man Behind the Microchip</cite>, Edwin Hutchins’s <cite>Cognition in the Wild</cite>, Michael Lewis’s <cite>Moneyball</cite>, Ezra Vogel’s <cite>Japan as Number One</cite> and Kazuo Ishiguro’s <cite>Never Let Me Go</cite>.</p>
+    <p>Left off on purpose: <cite>Frankenstein</cite>, <cite>R.U.R.</cite>, <cite>I, Robot</cite>, <cite>2001</cite> and <cite>Neuromancer</cite>. They are about AI head-on, and you have read them.</p>
+  </section>
+
+  <footer class="colophon">
+    <p>Compiled for BookTalk in November 2026. Years are first publication; for translated novels, the original edition.</p>
+    <p>Reception notes link to their sources. Double bills and near misses weren’t vetted the same way.</p>
+    <p>Shortlist picks stay in your own browser. Use Copy list to send them on. Votes are private to each reader: saved to your Claude account when you can, otherwise in this browser.</p>
+  </footer>
+</main>
+
+<div class="tray" id="tray" hidden>
+  <div class="wrap">
+    <div class="tray-inner">
+      <p class="tray-count" aria-live="polite"><strong id="tray-n">0</strong> <span id="tray-word">books</span> on your shortlist</p>
+      <div class="tray-actions">
+        <button class="btn" type="button" id="copy-btn">Copy list</button>
+        <button class="btn ghost" type="button" id="clear-btn">Clear</button>
+      </div>
+    </div>
+    <div class="tray-fallback" id="tray-fallback" hidden>
+      <label for="tray-text">Your browser blocked copying. Select this text and copy it.</label>
+      <textarea id="tray-text" rows="6" readonly></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var KEY = 'booktalk-deep-cuts-picks';
+  var buttons = Array.prototype.slice.call(document.querySelectorAll('.pick'));
+  var order = buttons.map(function (b) { return b.dataset.id; });
+  var info = {};
+  buttons.forEach(function (b) { info[b.dataset.id] = { title: b.dataset.title, by: b.dataset.by }; });
+
+  var picks = [];
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || '[]');
+    if (Array.isArray(saved)) picks = saved.filter(function (id) { return info[id]; });
+  } catch (e) { picks = []; }
+
+  var tray = document.getElementById('tray');
+  var trayN = document.getElementById('tray-n');
+  var trayWord = document.getElementById('tray-word');
+  var copyBtn = document.getElementById('copy-btn');
+  var clearBtn = document.getElementById('clear-btn');
+  var fallback = document.getElementById('tray-fallback');
+  var textArea = document.getElementById('tray-text');
+  var marks = Array.prototype.slice.call(document.querySelectorAll('.spine[data-id], .chip[data-id]'));
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip[data-id]'));
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.book'));
+  var themes = Array.prototype.slice.call(document.querySelectorAll('.theme'));
+  var catBtns = Array.prototype.slice.call(document.querySelectorAll('.f-btn[data-cat]'));
+  var toggleBtns = Array.prototype.slice.call(document.querySelectorAll('.f-btn[data-toggle]'));
+  var countEl = document.getElementById('f-count');
+  var emptyEl = document.getElementById('f-empty');
+  var pickedN = document.getElementById('f-picked-n');
+  var state = { cat: 'all', start: false, picked: false, vote: 'all' };
+
+  /* ---------- Your picks first: shortlist and thumbs-up books move to the top ---------- */
+  var picksSec = document.getElementById('t-picks');
+  var picksGrid = document.getElementById('picks-grid');
+  var picksN = document.getElementById('picks-n');
+  var homes = Array.prototype.slice.call(document.querySelectorAll('.book')).map(function (c) {
+    return { card: c, grid: c.parentNode };
+  });
+  function arrange() {
+    var n = 0;
+    homes.forEach(function (h) {
+      var mine = picks.indexOf(h.card.id) !== -1 || votes[h.card.id] === 1;
+      (mine ? picksGrid : h.grid).appendChild(h.card);
+      if (mine) n++;
+    });
+    picksSec.hidden = n === 0;
+    picksSec.dataset.count = String(n);
+    picksN.textContent = n + (n === 1 ? ' book.' : ' books.');
+  }
+
+  /* ---------- Votes: private per reader ---------- */
+  var VKEY = 'booktalk-long-shelf-votes';
+  var voteBtns = Array.prototype.slice.call(document.querySelectorAll('.vote-btn'));
+  var voteFilterBtns = Array.prototype.slice.call(document.querySelectorAll('.f-btn[data-vote]'));
+  var upN = document.getElementById('f-up-n');
+  var downN = document.getElementById('f-down-n');
+  var noneN = document.getElementById('f-none-n');
+  var whereEl = document.getElementById('v-where');
+  var votes = {};
+
+  function cleanVotes(obj) {
+    var out = {};
+    if (obj && typeof obj === 'object') {
+      Object.keys(obj).forEach(function (id) {
+        var v = obj[id];
+        if (info[id] && (v === 1 || v === -1)) out[id] = v;
+      });
+    }
+    return out;
+  }
+  try { votes = cleanVotes(JSON.parse(localStorage.getItem(VKEY) || '{}')); } catch (e) { votes = {}; }
+
+  function saveVotesLocal() {
+    try { localStorage.setItem(VKEY, JSON.stringify(votes)); } catch (e) { /* storage unavailable */ }
+  }
+
+  function renderVotes() {
+    var up = 0, down = 0;
+    voteBtns.forEach(function (b) {
+      var v = votes[b.dataset.id];
+      b.setAttribute('aria-pressed', v === Number(b.dataset.v) ? 'true' : 'false');
+    });
+    Object.keys(votes).forEach(function (id) { if (votes[id] === 1) up++; else if (votes[id] === -1) down++; });
+    upN.textContent = String(up);
+    downN.textContent = String(down);
+    noneN.textContent = String(order.length - up - down);
+  }
+
+  /* Account storage: one shared doc per reader at votes/<id>. Everyone who can
+     open the page reads all of them; each reader writes only their own. */
+  var remote = null, writing = false, pendingWrite = false, touched = false;
+  var myId = null, others = {}, names = {}, userApi = null;
+  var othersEl = document.getElementById('v-others');
+  var LOCAL_MSG = 'Votes are saved in this browser. Use Copy my votes to send them along.';
+  function flushRemote(retried) {
+    if (!remote) return;
+    if (writing) { pendingWrite = true; return; }
+    writing = true; pendingWrite = false;
+    var body = { votes: JSON.parse(JSON.stringify(votes)), updatedAt: Date.now() };
+    remote.set(body).then(function () {
+      writing = false;
+      if (pendingWrite) flushRemote();
+    }, function (err) {
+      writing = false;
+      var code = err && err.code;
+      if ((code === 'unavailable' || !code) && !retried) {
+        setTimeout(function () { flushRemote(true); }, 400 + Math.random() * 600);
+        return;
+      }
+      remote = null;
+      whereEl.textContent = LOCAL_MSG;
+    });
+  }
+
+  function nameOf(id) { return names[id] || 'Another reader'; }
+
+  function renderOthers() {
+    var ids = Object.keys(others).filter(function (id) {
+      var v = others[id];
+      return Object.keys(v).length > 0;
+    });
+    ids.sort(function (a, b) { return nameOf(a).localeCompare(nameOf(b)); });
+    cards.forEach(function (c) {
+      var ups = [], downs = [];
+      ids.forEach(function (uid) {
+        var v = others[uid][c.id];
+        if (v === 1) ups.push(nameOf(uid)); else if (v === -1) downs.push(nameOf(uid));
+      });
+      var el = c.querySelector('.others');
+      if (!ups.length && !downs.length) { if (el) el.hidden = true; return; }
+      if (!el) {
+        el = document.createElement('p');
+        el.className = 'others';
+        (c.querySelector('.b-act') || c).appendChild(el);
+      }
+      el.hidden = false;
+      el.textContent = '';
+      function part(label, list) {
+        if (!list.length) return;
+        if (el.childNodes.length) el.appendChild(document.createTextNode(' · '));
+        el.appendChild(document.createTextNode(label + ' '));
+        list.forEach(function (n, i) {
+          if (i) el.appendChild(document.createTextNode(', '));
+          var b = document.createElement('b');
+          b.textContent = n;
+          el.appendChild(b);
+        });
+      }
+      part('Thumbs up from', ups);
+      part('Thumbs down from', downs);
+    });
+    if (!ids.length) { othersEl.hidden = true; return; }
+    othersEl.hidden = false;
+    othersEl.textContent = 'Also voting: ' + ids.map(function (uid) {
+      var up = 0, down = 0;
+      Object.keys(others[uid]).forEach(function (k) { if (others[uid][k] === 1) up++; else down++; });
+      return nameOf(uid) + ' (' + up + ' up, ' + down + ' down)';
+    }).join('; ') + '.';
+  }
+
+  function resolveNames(ids) {
+    var missing = ids.filter(function (id) { return !(id in names); });
+    if (!userApi || !missing.length) return;
+    missing.forEach(function (id) { names[id] = ''; });
+    userApi.profiles(missing).then(function (map) {
+      Object.keys(map || {}).forEach(function (id) { names[id] = (map[id] && map[id].name) || ''; });
+      renderOthers();
+    }, function () { /* names stay generic */ });
+  }
+
+  function watchOthers(db) {
+    db.collection('votes').onSnapshot(function (snap) {
+      var next = {};
+      snap.docs.forEach(function (d) {
+        if (d.id === myId) return;
+        var data = d.data() || {};
+        next[d.id] = cleanVotes(data.votes);
+      });
+      others = next;
+      resolveNames(Object.keys(next));
+      renderOthers();
+    }, function () { /* shared votes unavailable: own votes still work */ });
+  }
+
+  function adopt(data) {
+    if (!touched) {
+      votes = cleanVotes(data.votes);
+      saveVotesLocal();
+      renderVotes();
+      arrange();
+      applyFilter();
+    }
+  }
+
+  (function connectVotes() {
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    var done = false;
+    var timer = setTimeout(function () { done = true; }, 10000);
+    Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (caps) {
+      var db = caps[0], user = caps[1];
+      if (done || !db || !user) return null;
+      userApi = user;
+      return user.id().then(function (uid) {
+        if (done) return null;
+        if (!uid) {
+          clearTimeout(timer); done = true;
+          watchOthers(db);
+          return null;
+        }
+        myId = uid;
+        var ref = db.doc('votes/' + uid);
+        var oldRef = db.doc('data/users/' + uid + '/booktalk-votes');
+        return ref.get().then(function (snap) {
+          if (snap.exists) return { snap: snap, migrate: false };
+          return oldRef.get().then(function (old) { return { snap: old, migrate: old.exists }; },
+            function () { return { snap: snap, migrate: false }; });
+        }).then(function (r) {
+          if (done) return null;
+          clearTimeout(timer); done = true;
+          remote = ref;
+          whereEl.textContent = 'Your votes save to your Claude account, and everyone who can open this page sees them.';
+          if (r.snap.exists) {
+            adopt(r.snap.data() || {});
+            if (touched || r.migrate) flushRemote();
+          } else if (touched) {
+            flushRemote();
+          }
+          watchOthers(db);
+          return null;
+        });
+      });
+    }).catch(function () { clearTimeout(timer); done = true; remote = null; });
+  })();
+
+  /* Copy my votes: works for everyone, signed in or not. */
+  var copyVotesBtn = document.getElementById('copy-votes');
+  var votesFallback = document.getElementById('votes-fallback');
+  var votesText = document.getElementById('votes-text');
+  function votesListText() {
+    var ups = order.filter(function (id) { return votes[id] === 1; });
+    var downs = order.filter(function (id) { return votes[id] === -1; });
+    function lines(list) {
+      return list.length ? list.map(function (id) { return '- ' + info[id].title + ' (' + info[id].by + ')'; }).join('\n') : '- none';
+    }
+    return 'My BookTalk votes\n\nThumbs up:\n' + lines(ups) + '\n\nThumbs down:\n' + lines(downs);
+  }
+  document.getElementById('email-votes').addEventListener('click', function () {
+    window.location.href = 'mailto:?subject=' + encodeURIComponent('My BookTalk votes') + '&body=' + encodeURIComponent(votesListText());
+  });
+  var votesTimer = null;
+  copyVotesBtn.addEventListener('click', function () {
+    var text = votesListText();
+    function showFallback() {
+      votesText.value = text;
+      votesFallback.hidden = false;
+      votesText.focus();
+      votesText.select();
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () {
+        votesFallback.hidden = true;
+        copyVotesBtn.textContent = 'Copied';
+        clearTimeout(votesTimer);
+        votesTimer = setTimeout(function () { copyVotesBtn.textContent = 'Copy my votes'; }, 1800);
+      }, showFallback);
+    } catch (e) {
+      showFallback();
+    }
+  });
+
+  voteBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var id = b.dataset.id, v = Number(b.dataset.v);
+      if (votes[id] === v) delete votes[id]; else votes[id] = v;
+      touched = true;
+      saveVotesLocal();
+      renderVotes();
+      if (state.vote !== 'all') applyFilter();
+      flushRemote();
+    });
+  });
+
+  function voteOk(id) {
+    var v = votes[id];
+    if (state.vote === 'up') return v === 1;
+    if (state.vote === 'down') return v === -1;
+    if (state.vote === 'none') return !v;
+    return true;
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(picks)); } catch (e) { /* storage unavailable: picks last for this visit */ }
+  }
+
+  function sorted() {
+    return picks.slice().sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); });
+  }
+
+  function applyFilter() {
+    var shown = 0;
+    cards.forEach(function (c) {
+      var ok = (state.cat === 'all' || c.dataset.cat === state.cat) &&
+        (!state.start || c.dataset.start === '1') &&
+        (!state.picked || picks.indexOf(c.id) !== -1) &&
+        voteOk(c.id);
+      c.hidden = !ok;
+      if (ok) shown++;
+    });
+    themes.forEach(function (t) { t.hidden = !t.querySelector('.book:not([hidden])'); });
+    chips.forEach(function (ch) {
+      var target = document.getElementById(ch.dataset.id);
+      ch.classList.toggle('is-out', !!(target && target.hidden));
+    });
+    countEl.textContent = String(shown);
+    emptyEl.hidden = shown > 0;
+    catBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.cat === state.cat ? 'true' : 'false'); });
+    toggleBtns.forEach(function (b) { b.setAttribute('aria-pressed', state[b.dataset.toggle] ? 'true' : 'false'); });
+    voteFilterBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.vote === state.vote ? 'true' : 'false'); });
+  }
+
+  function resetFilters() {
+    state.cat = 'all'; state.start = false; state.picked = false; state.vote = 'all';
+    applyFilter();
+  }
+
+  function render() {
+    buttons.forEach(function (b) {
+      var on = picks.indexOf(b.dataset.id) !== -1;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.querySelector('span').textContent = on ? 'Shortlisted' : 'Shortlist';
+    });
+    marks.forEach(function (m) {
+      m.classList.toggle('is-picked', picks.indexOf(m.dataset.id) !== -1);
+    });
+    var n = picks.length;
+    tray.hidden = n === 0;
+    document.body.classList.toggle('has-tray', n > 0);
+    trayN.textContent = String(n);
+    trayWord.textContent = n === 1 ? 'book' : 'books';
+    pickedN.textContent = String(n);
+    if (n === 0) fallback.hidden = true;
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var id = b.dataset.id;
+      var i = picks.indexOf(id);
+      if (i === -1) picks.push(id); else picks.splice(i, 1);
+      save();
+      render();
+      if (state.picked) applyFilter();
+    });
+  });
+
+  catBtns.forEach(function (b) {
+    b.addEventListener('click', function () { state.cat = b.dataset.cat; applyFilter(); });
+  });
+  toggleBtns.forEach(function (b) {
+    b.addEventListener('click', function () { state[b.dataset.toggle] = !state[b.dataset.toggle]; applyFilter(); });
+  });
+  voteFilterBtns.forEach(function (b) {
+    b.addEventListener('click', function () { state.vote = b.dataset.vote; applyFilter(); });
+  });
+  document.getElementById('f-reset').addEventListener('click', resetFilters);
+
+  function listText() {
+    return 'My BookTalk shortlist:\n' + sorted().map(function (id, i) {
+      return (i + 1) + '. ' + info[id].title + ' (' + info[id].by + ')';
+    }).join('\n');
+  }
+
+  var resetTimer = null;
+  copyBtn.addEventListener('click', function () {
+    var text = listText();
+    function showFallback() {
+      textArea.value = text;
+      fallback.hidden = false;
+      textArea.focus();
+      textArea.select();
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () {
+        fallback.hidden = true;
+        copyBtn.textContent = 'Copied';
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () { copyBtn.textContent = 'Copy list'; }, 1800);
+      }, showFallback);
+    } catch (e) {
+      showFallback();
+    }
+  });
+
+  clearBtn.addEventListener('click', function () {
+    picks = [];
+    save();
+    render();
+    if (state.picked) applyFilter();
+  });
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  Array.prototype.slice.call(document.querySelectorAll('a[href^="#"]')).forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      var id = a.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if (!target) return;
+      ev.preventDefault();
+      if (target.hidden || (target.closest && target.closest('[hidden]'))) resetFilters();
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      try { target.focus({ preventScroll: true }); } catch (e) { /* older browsers */ }
+    });
+  });
+
+  render();
+  renderVotes();
+  arrange();
+  applyFilter();
+})();
+</script>
+
+</body></html>
